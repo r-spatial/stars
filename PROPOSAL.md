@@ -28,6 +28,8 @@ to large data on disk, and massive data on a remote server while
 using a unified user interface that follows the [tidy tools
 manifesto](https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html).
 
+Now that [simple features for R](https://github.com/edzer/sfr) has provided a large modernizing of the handling and analysis vector data (points, lines, polygons) in R, it is time for raster data to catch up. This proposal aims at 2D/3D temporal rasters, as well as time series of feature data.
+
 _Italics: the [R Consortium call](https://www.r-consortium.org/projects/call-for-proposals); deadline [Feb 10, 2017](https://www.r-consortium.org/blog/2016/12/06/call-for-proposals)_
 
 ## The Problem
