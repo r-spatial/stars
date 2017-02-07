@@ -93,6 +93,14 @@ memory and builds on [xts](https://CRAN.R-project.org/package=xts)
 for temporal, and [sp](https://CRAN.R-project.org/package=sp)
 for spatial reference.
 
+The [R Consortium ISC Distributed Computing Working
+Group](https://wiki.r-consortium.org/view/Distributed_Computing_Working_Group)
+has started to develop an API for distributed
+computing; an initial version is available in package
+[ddR](https://github.com/vertica/ddR). It aims at generic R data
+structures, and works towards relieving users from worrying that
+data is distributed.
+
 Relevant work outside R includes
 * [GDAL](http://www.gdal.org/), in particular gdal [virtual tiles](http://www.gdal.org/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
 * [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities
@@ -108,18 +116,18 @@ feasible](http://r-spatial.org/2016/11/29/openeo.html),
 we will have to work towards a solution where the data
 are accessed over a web service interface. 
 
-Possible interface for this is [opencpu](http://www.opencpu.org/)
-or [Rserve](https://cran.r-project.org/package=Rserve), but the
-final choice depends on how the service back-end organizes its data
-and processes.
+Possible interface for this is [opencpu](http://www.opencpu.org/),
+[Rserve](https://cran.r-project.org/package=Rserve), or
+[ddR](https://github.com/vertica/ddR), but the final choice depends
+on how the service back-end organizes its data and processes.
 
 ## The Plan: 
 
 _How are you going to solve the problem? Include the concrete actions you will take and an estimated timeline. What are likely failure modes and how will you recover from them?_
 
 We will develop an R package and container infrastructure that 
-* supports dense arrays with heterogeneous records, 
-* supports flexible reference from array dimensions to space, where space can be gridded (2D/3D raster) or a set of simple features (irregular)
+* supports dense, n-dimensional arrays with heterogeneous records, 
+* supports flexible reference from array dimensions to space, where space can be gridded (2D/3D raster) or a set of simple features (1D, irregular)
 * supports flexible reference from array dimensions to time (`POSIXct`, `Date`)
 * allow for regular arrays (fixed cell size / time step) and irregular arrays
 * allows working in memory, on local disc, and on a remote computer (using a web service interface),
@@ -159,7 +167,7 @@ Jeroen Ooms)
 
 _Please describe how you think the ISC can help. If you are looking for a cash grant include a detailed itemised budget and spending plan. We expect that most of the budget will be allocated for people, but we will consider funding travel, equipment and services, such as cloud computing resources with good justification. If you are seeking to start an ISC working group, then please describe the goals of the group and provide the name of the individual who will be committed to leading and managing the group’s activities. Also describe how you think the ISC can we help promote your project._
 
-We will use most funding to actually develop the R package and web service API. Total costs are estimated at 10,000 USD, and break down in:
+We will use most funding to develop the R package and web service API. Total costs are estimated at 10,000 USD, and break down in:
 * workshop: travel costs for Etienne Racine and Michael Sumner to visit Muenster, or another venue (USD 2500).
 * Programming, project communication: (USD 7000).
 * Cloud deployment in the Amazon cloud (USD 500).
@@ -168,5 +176,4 @@ We will use most funding to actually develop the R package and web service API. 
 
 _How will you ensure that your work is available to the widest number of people? Please specify the open source license will you use, how you will host your code so that others can contribute, and how you will publicise your work. We encourage you to plan at least two blog posts to the R consortium blog: one to announce the project, and one to write up what you achieved._
 
-We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues. The project will involve on github, most likely in the [r-spatial](https://github.com/r-spatial/) organisation.We will work under a permissive open source license, probably LGPL-2.1.  Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and scientific outlets are foreseen.
-
+We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues. The project will involve on github, most likely in the [r-spatial](https://github.com/r-spatial/) organisation.We will work under a permissive open source license, probably LGPL-2.1.  Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.
