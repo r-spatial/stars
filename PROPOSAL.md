@@ -4,38 +4,35 @@
 Sumner](https://github.com/mdsumer/), [Etienne
 Racine](https://github.com/etiennebr)
 
+For a fully hyperlinked version of this proposal is found at
+https://github.com/edzer/stars/blob/master/PROPOSAL.md
+
 ## Summary
 
 A lot of spatiotemporal data takes the form of dense,
 multidimensional arrays. Examples are
 
 * population counts by region, year and age group 
-* meteorological data by variable, time step and sensor location 
-* satellite imagery, e.g. energy by color, location and time step
-* or climate data (e.g. surface temperature by location, time and climate scenario). 
+* weather data by variable, time step and sensor location 
+* satellite imagery, e.g. energy by spectral band, location (pixel) and time of collection
+* climate model data, e.g. surface temperature by location, time and climate scenario. 
+* financial data, e.g. share price by company and time
 
-Although such data _can_ be represented in long tables, it is
-rarely done in for larger datasets because it has to replicate
-dimension indexes, and because the array form provides faster
-access.  R's native arrays 
-* can't handle heterogeneous data records (e.g. consisting of a `numeric`, a `logical` and a `Date`) like we typically find in data.frame's, 
+Although such data _can_ be represented in long tables, for larger
+datasets the array form is beneficial because does not replicate
+dimension indexes, and the array form provides faster access by
+being implicitly indexed. R's native arrays have a number of limitations, they
+* can't handle heterogeneous data records (e.g. consisting of a `numeric`, a `logical` and a `Date`) like we typically have in data.frame's, 
 * can only deal with in-memory data, and 
 * do not handle spatial or temporal array dimensions. 
 
 This project will (i) implement a flexible and generic
-multidimensional array model for heterogeneous records that
-(ii) handles strong spatial and temporal referencing of
-array indexes, and (iii) scales from moderately sized _in-
-memory_ data, to large _on-disk_ data, and to massive
-data held in one or more remote servers, while using
-a unified user interface that follows the [tidy tools
+multidimensional array model for heterogeneous records that (ii)
+handles strong spatial and temporal referencing of array indexes,
+and (iii) scales from moderately sized _in- memory_ data, to large
+_on-disk_ data, and to massive data held in on remote servers,
+while using a unified user interface that follows the [tidy tools
 manifesto](https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html).
-
-Now that [simple features for R](https://github.com/edzer/sfr) has
-provided a large modernizing of the handling and analysis vector
-data (points, lines, polygons) in R, it is time for raster data to
-catch up. This proposal aims at 2D/3D temporal rasters, as well as
-time series of feature data.
 
 _Italics: the [R Consortium call](https://www.r-consortium.org/projects/call-for-proposals); deadline [Feb 10, 2017](https://www.r-consortium.org/blog/2016/12/06/call-for-proposals)_
 
@@ -56,6 +53,13 @@ Today, many people use R for large spatiotemporal data, but hit
 limits related to usability, user interface, and scalability. The
 [r-sig-geo](https://stat.ethz.ch/pipermail/r-sig-geo/) mailing list
 documents many of these cases.
+
+Now that the [simple features for R](https://github.com/edzer/sfr)
+project has provided a large modernizing of the handling and analysis
+vector data (points, lines, polygons) in R in a tidyverse-friendly
+fashion, it is time for raster data to catch up. This proposal
+aims at spatiotemporal raster data, as well as time series of
+feature data.
 
 ### Existing work
 
@@ -103,7 +107,7 @@ data is distributed.
 
 Relevant work outside R includes
 * [GDAL](http://www.gdal.org/), in particular gdal [virtual tiles](http://www.gdal.org/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
-* [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities
+* [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but strong scalability andwith extreme flexibility for array manipulation
 * [SciDB4geo](https://github.com/appelmar/scidb4geo), a SciDB Plugin
 for Managing Spatial and Temporal Reference Information of Arrays, and
 [SciDB4gdal](https://github.com/appelmar/scidb4geo), a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time
@@ -112,9 +116,14 @@ for Managing Spatial and Temporal Reference Information of Arrays, and
 
 Since there is a definite trend that
 [downloading Earth observation data is no longer
-feasible](http://r-spatial.org/2016/11/29/openeo.html),
-we will have to work towards a solution where the data
-are accessed over a web service interface. 
+feasible](http://r-spatial.org/2016/11/29/openeo.html), we will
+have to work towards solutions where the data are accessed over
+a web service interface. Cloud services such as AWS are starting
+to give access to the large remote sensing imagery archives of e.g.
+[Landsat](https://aws.amazon.com/blogs/aws/start-using-landsat-on-aws/),
+MODIS and
+[Sentinel](http://sentinel-pds.s3-website.eu-central-1.amazonaws.com/)
+satellites.
 
 Possible interface for this is [opencpu](http://www.opencpu.org/),
 [Rserve](https://cran.r-project.org/package=Rserve), or
