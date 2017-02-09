@@ -4,7 +4,7 @@
 Sumner](https://github.com/mdsumer/), [Etienne
 Racine](https://github.com/etiennebr)
 
-For a fully hyperlinked version of this proposal is found at
+A fully hyperlinked version of this proposal is found at
 https://github.com/edzer/stars/blob/master/PROPOSAL.md
 
 ## Summary
@@ -19,10 +19,10 @@ multidimensional arrays. Examples are
 * financial data, e.g. share price by company and time
 
 Although such data _can_ be represented in long tables, for larger
-datasets the array form is beneficial because does not replicate
+datasets the array form is beneficial because it does not replicate
 dimension indexes, and the array form provides faster access by
 being implicitly indexed. R's native arrays have a number of limitations, they
-* can't handle heterogeneous data records (e.g. consisting of a `numeric`, a `logical` and a `Date`) like we typically have in data.frame's, 
+* cannot handle heterogeneous data records (e.g. consisting of a `numeric`, a `logical` and a `Date`) like we typically have in data.frame's, 
 * can only deal with in-memory data, and 
 * do not handle spatial or temporal array dimensions. 
 
@@ -30,32 +30,29 @@ This project will (i) implement a flexible and generic
 multidimensional array model for heterogeneous records that (ii)
 handles strong spatial and temporal referencing of array indexes,
 and (iii) scales from moderately sized _in- memory_ data, to large
-_on-disk_ data, and to massive data held in on remote servers,
+_on-disk_ data, and to massive data held on remote servers,
 while using a unified user interface that follows the [tidy tools
 manifesto](https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html).
 
-_Italics: the [R Consortium call](https://www.r-consortium.org/projects/call-for-proposals); deadline [Feb 10, 2017](https://www.r-consortium.org/blog/2016/12/06/call-for-proposals)_
 
 ## The Problem
 
-_What problem do you want to solve? Why is it a problem? Who does it affect? What will solving the problem enable? This section should include a brief summary of existing work, such as R packages that may be relevant._
-
 How do we handle and analyze large amounts of spatially referenced
 time series data in R? How do we handle satellite imagery that don't
-fit on a local disc, with R, or for which we need a small cluster
+fit on a local disc with R, or for which we need a small cluster
 to finish computation within acceptable time? How can we quickly
 and easily develop an analysis by testing it on a small portion of
 the spatiotemporal datasets, before deploying it on the massive
 data set?  How can we use pipe-based workflows or dplyr-verbs on such
 data sets? How can we visualy explore high-dimensional raster data?
 
-Today, many people use R for large spatiotemporal data, but hit
+Today, people use R for large spatiotemporal data, but hit
 limits related to usability, user interface, and scalability. The
 [r-sig-geo](https://stat.ethz.ch/pipermail/r-sig-geo/) mailing list
 documents many of these cases.
 
 Now that the [simple features for R](https://github.com/edzer/sfr)
-project has provided a large modernizing of the handling and analysis
+project has largely modernized the handling and analysis
 vector data (points, lines, polygons) in R in a tidyverse-friendly
 fashion, it is time for raster data to catch up. This proposal
 aims at spatiotemporal raster data, as well as time series of
@@ -97,7 +94,8 @@ memory and builds on [xts](https://CRAN.R-project.org/package=xts)
 for temporal, and [sp](https://CRAN.R-project.org/package=sp)
 for spatial reference.
 
-The [R Consortium ISC Distributed Computing Working
+With support from the R Consortium,
+the [Distributed Computing Working
 Group](https://wiki.r-consortium.org/view/Distributed_Computing_Working_Group)
 has started to develop an API for distributed
 computing; an initial version is available in package
@@ -107,7 +105,7 @@ data is distributed.
 
 Relevant work outside R includes
 * [GDAL](http://www.gdal.org/), in particular gdal [virtual tiles](http://www.gdal.org/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
-* [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but strong scalability andwith extreme flexibility for array manipulation
+* [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods
 * [SciDB4geo](https://github.com/appelmar/scidb4geo), a SciDB Plugin
 for Managing Spatial and Temporal Reference Information of Arrays, and
 [SciDB4gdal](https://github.com/appelmar/scidb4geo), a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time
@@ -121,28 +119,21 @@ have to work towards solutions where the data are accessed over
 a web service interface. Cloud services such as AWS are starting
 to give access to the large remote sensing imagery archives of e.g.
 [Landsat](https://aws.amazon.com/blogs/aws/start-using-landsat-on-aws/),
-MODIS and
+[MODIS](https://aws.amazon.com/public-datasets/modis/) and
 [Sentinel](http://sentinel-pds.s3-website.eu-central-1.amazonaws.com/)
 satellites.
 
-Possible interface for this is [opencpu](http://www.opencpu.org/),
-[Rserve](https://cran.r-project.org/package=Rserve), or
-[ddR](https://github.com/vertica/ddR), but the final choice depends
-on how the service back-end organizes its data and processes.
-
 ## The Plan: 
-
-_How are you going to solve the problem? Include the concrete actions you will take and an estimated timeline. What are likely failure modes and how will you recover from them?_
 
 We will develop an R package and container infrastructure that 
 * supports dense, n-dimensional arrays with heterogeneous records, 
 * supports flexible reference from array dimensions to space, where space can be gridded (2D/3D raster) or a set of simple features (1D, irregular)
 * supports flexible reference from array dimensions to time (`POSIXct`, `Date`)
-* allow for regular arrays (fixed cell size / time step) and irregular arrays
+* supports regular arrays (fixed cell size / time step) as well as irregular arrays
 * allows working in memory, on local disc, and on a remote computer (using a web service interface),
-* allows R functions to be passed on to the web service back-end, and executed there (potentially in parallel),
+* allows R functions to be passed on to the web service back-end, and executed there in parallel,
 * uses in-memory proxies to large arrays, allowing to work with the first _n_ records before computations are carried out on the full arrays (similar to how dplyr does this)
-* allows pipe-based workflows, uses `data.frame`s, and dplyr-style verbs.
+* allows pipe-based workflows, using `data.frame`s, and dplyr-style verbs.
 
 We will document the software and provide tutorials and reproducible
 data analysis examples using locally downloaded imagery, as well as
@@ -152,9 +143,9 @@ container images.
 We will document the RESTful API that connects the R client with the
 web service holding (and processing) the big Earth observation data.
 
-We will also develop a migration path for the raster package (over
-43K lines of R, C and C++ code), and its functionality, into the
-new infrastructure.
+We will also develop and discuss a migration path for the raster
+package (which has 43K lines of R, C and C++ code), and its
+functionality, into the new infrastructure.
 
 We will publish the resulting products in an open access form,
 in the R journal, but also in a journal (or on a conference) more
@@ -168,16 +159,13 @@ Timeline:
 * Month 9-12: experiment with different back-ends: file-based, or database such as SciDB
 
 Failure modes:
-* we can't get the RESTful API to work properly; solution path: ask the rOpenSci people for help (Scott Chamberlain,
-Jeroen Ooms)
+* we can't get the RESTful API to work properly; solution path: ask the rOpenSci community for help (Scott Chamberlain, Jeroen Ooms)
 * downloading large image sets is too cumbersome (slow) for the larger tutorial examples; solution path: deploy a test server for teaching/experimenting purposes in the Amazon cloud, where Landsat and Sentinel imagery is readily available
 
 ## How Can The ISC Help: 
 
-_Please describe how you think the ISC can help. If you are looking for a cash grant include a detailed itemised budget and spending plan. We expect that most of the budget will be allocated for people, but we will consider funding travel, equipment and services, such as cloud computing resources with good justification. If you are seeking to start an ISC working group, then please describe the goals of the group and provide the name of the individual who will be committed to leading and managing the group’s activities. Also describe how you think the ISC can we help promote your project._
-
-We will use most funding to develop the R package and web service API. Total costs are estimated at 10,000 USD, and break down in:
-* workshop: travel costs for Etienne Racine and Michael Sumner to visit Muenster, or another venue (USD 2500).
+We will use most funding to develop the R package and web service API. Total costs will be 10,000 USD, and breaks down in:
+* workshop: travel costs for Etienne Racine and Michael Sumner to visit Muenster, or another venue where we can all meet (USD 2500).
 * Programming, project communication: (USD 7000).
 * Cloud deployment in the Amazon cloud (USD 500).
 
@@ -185,4 +173,4 @@ We will use most funding to develop the R package and web service API. Total cos
 
 _How will you ensure that your work is available to the widest number of people? Please specify the open source license will you use, how you will host your code so that others can contribute, and how you will publicise your work. We encourage you to plan at least two blog posts to the R consortium blog: one to announce the project, and one to write up what you achieved._
 
-We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues. The project will involve on github, most likely in the [r-spatial](https://github.com/r-spatial/) organisation.We will work under a permissive open source license, probably LGPL-2.1.  Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.
+We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.
