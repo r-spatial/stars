@@ -171,6 +171,4 @@ We will use most funding to develop the R package and web service API. Total cos
 
 ## Dissemination: 
 
-_How will you ensure that your work is available to the widest number of people? Please specify the open source license will you use, how you will host your code so that others can contribute, and how you will publicise your work. We encourage you to plan at least two blog posts to the R consortium blog: one to announce the project, and one to write up what you achieved._
-
 We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.
