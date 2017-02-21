@@ -22,6 +22,7 @@ Although such data _can_ be represented in long tables, for larger
 datasets the array form is beneficial because it does not replicate
 dimension indexes, and the array form provides faster access by
 being implicitly indexed. R's native arrays have a number of limitations, they
+
 * cannot handle heterogeneous data records (e.g. consisting of a `numeric`, a `logical` and a `Date`) like we typically have in data.frame's, 
 * can only deal with in-memory data, and 
 * do not handle spatial or temporal array dimensions. 
@@ -104,6 +105,7 @@ structures, and works towards relieving users from worrying that
 data is distributed.
 
 Relevant work outside R includes
+
 * [GDAL](http://www.gdal.org/), in particular gdal [virtual tiles](http://www.gdal.org/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
 * [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods
 * [SciDB4geo](https://github.com/appelmar/scidb4geo), a SciDB Plugin
@@ -126,6 +128,7 @@ satellites.
 ## The Plan: 
 
 We will develop an R package and container infrastructure that 
+
 * supports dense, n-dimensional arrays with heterogeneous records, 
 * supports flexible reference from array dimensions to space, where space can be gridded (2D/3D raster) or a set of simple features (1D, irregular)
 * supports flexible reference from array dimensions to time (`POSIXct`, `Date`)
@@ -152,6 +155,7 @@ in the R journal, but also in a journal (or on a conference) more
 directed to the Earth observation community.
 
 Timeline:
+
 * Month 1-2: work out design, decide web service technology, basic web service API design
 * Month 3-6: programming the R package, testing with smaller data sets
 * Month 7-8: testing on larger datasets, develop test cases, deploy on docker containers
@@ -159,12 +163,14 @@ Timeline:
 * Month 9-12: experiment with different back-ends: file-based, or database such as SciDB
 
 Failure modes:
+
 * we can't get the RESTful API to work properly; solution path: ask the rOpenSci community for help (Scott Chamberlain, Jeroen Ooms)
 * downloading large image sets is too cumbersome (slow) for the larger tutorial examples; solution path: deploy a test server for teaching/experimenting purposes in the Amazon cloud, where Landsat and Sentinel imagery is readily available
 
 ## How Can The ISC Help: 
 
 We will use most funding to develop the R package and web service API. Total costs will be 10,000 USD, and breaks down in:
+
 * workshop: travel costs for Etienne Racine and Michael Sumner to visit Muenster, or another venue where we can all meet (USD 2500).
 * Programming, project communication: (USD 7000).
 * Cloud deployment in the Amazon cloud (USD 500).
