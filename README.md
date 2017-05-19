@@ -24,6 +24,8 @@ are developed and tested on samples before they are evaluated for
 complete datasets, and discuss the challenges of visualiasation and
 storage in such workflows. 
 
+Read the full proposal [here](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
+
 ### Acknowledgment
 
 This project will be realized with financial
