@@ -4,9 +4,6 @@
 Sumner](https://github.com/mdsumer/), [Etienne
 Racine](https://github.com/etiennebr)
 
-A fully hyperlinked version of this proposal is found at
-https://github.com/edzer/stars/blob/master/PROPOSAL.md
-
 ## Summary
 
 A lot of spatiotemporal data takes the form of dense,
