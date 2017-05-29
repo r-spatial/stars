@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/edzer/stars.png?branch=master)](https://travis-ci.org/edzer/stars)
 [![codecov](https://codecov.io/gh/edzer/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/edzer/stars)
-
 [![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 
 Spatiotemporal data often comes in the form of dense arrays,
