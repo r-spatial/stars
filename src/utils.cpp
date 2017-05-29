@@ -26,18 +26,19 @@ Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVecto
 		Rcpp::CharacterVector options) {
 
 	int err = 0;
-	char **options_char = create_options(options).data();
-	GDALWarpAppOptions* opt = GDALWarpAppOptionsNew(options_char, NULL);
 
 	std::vector<GDALDatasetH> src_pt(src.size());
 	for (int i; i < src.size(); i++)
 		src_pt[i] = GDALOpen((const char *) src[i], GA_ReadOnly);
-	GDALDatasetH dst_pt = GDALOpen((const char *) dst[0], GA_Update);
-	GDALDatasetH result = GDALWarp(NULL, dst_pt, src.size(), src_pt.data(), opt, &err);
+
+	std::vector <char *> options_char = create_options(options);
+	GDALWarpAppOptions* opt = GDALWarpAppOptionsNew(options_char.data(), NULL);
+
+	// this is R, we recklessly overwrite:
+	GDALDatasetH result = GDALWarp((const char *) dst[0], NULL, src.size(), src_pt.data(), opt, &err);
 	GDALWarpAppOptionsFree(opt);
 	for (int i; i < src.size(); i++)
 		GDALClose(src_pt[i]);
-	GDALClose(dst_pt);
 	if (result != NULL)
 		GDALClose(result);
 	if (result == NULL || err)
@@ -51,15 +52,15 @@ Rcpp::LogicalVector CPL_gdalrasterize(Rcpp::CharacterVector src, Rcpp::Character
 		Rcpp::CharacterVector options) {
 
 	int err = 0;
-	char **options_char = create_options(options).data();
-	GDALRasterizeOptions* opt =  GDALRasterizeOptionsNew(options_char, NULL);
+	std::vector <char *> options_char = create_options(options);
+	GDALRasterizeOptions* opt =  GDALRasterizeOptionsNew(options_char.data(), NULL);
 
-	GDALDatasetH src_pt = GDALOpen((const char *) src[0], GA_ReadOnly);
+	// GDALDatasetH src_pt = GDALOpen((const char *) src[0], GA_ReadOnly);
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_VECTOR | GA_ReadOnly, NULL, NULL, NULL);
 	GDALDatasetH dst_pt = GDALOpen((const char *) dst[0], GA_Update);
 	GDALDatasetH result = GDALRasterize(NULL, dst_pt, src_pt, opt, &err);
 	GDALRasterizeOptionsFree(opt);
 	GDALClose(src_pt);
-	GDALClose(dst_pt);
 	if (result != NULL)
 		GDALClose(result);
 	if (result == NULL || err)

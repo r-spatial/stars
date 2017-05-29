@@ -6,9 +6,9 @@
 #' @param quiet logical; suppress printed output
 #' @param options layer opening options
 #' @return \code{st_gdalwarp} and \code{st_gdalrasterize} return \code{NULL} (invisibly) on success, an error message on failure.
-#' \code{st_gdalinfo} returns the raster metadata
+#' \code{st_gdalinfo} returns the raster metadata as character vector
 #' @export
-st_gdalinfo = function(name, options, quiet = FALSE) {
+st_gdalinfo = function(name, options = character(0), quiet = FALSE) {
 	ret = CPL_gdalinfo(name, options)
 	if (! quiet)
 		cat(ret)
@@ -17,7 +17,7 @@ st_gdalinfo = function(name, options, quiet = FALSE) {
 
 #' @name gdal_utils
 #' @export
-st_gdalwarp = function(source, destination, options) {
+st_gdalwarp = function(source, destination, options = character(0)) {
 	if (! CPL_gdalwarp(source, destination, options))
 		stop("st_gdalwarp: an error occured")
 	else
@@ -26,7 +26,7 @@ st_gdalwarp = function(source, destination, options) {
 
 #' @name gdal_utils
 #' @export
-st_gdalrasterize = function(source, destination, options) {
+st_gdalrasterize = function(source, destination, options = character(0)) {
 	if (! CPL_gdalrasterize(source, destination, options))
 		stop("st_gdalrasterize: an error occured")
 	else

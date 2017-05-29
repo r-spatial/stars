@@ -9,11 +9,11 @@
 \alias{st_gdalrasterize}
 \title{Native interface to gdal utils}
 \usage{
-st_gdalinfo(name, options, quiet = FALSE)
+st_gdalinfo(name, options = character(0), quiet = FALSE)
 
-st_gdalwarp(source, destination, options)
+st_gdalwarp(source, destination, options = character(0))
 
-st_gdalrasterize(source, destination, options)
+st_gdalrasterize(source, destination, options = character(0))
 }
 \arguments{
 \item{name}{character; name of input layer}
@@ -28,7 +28,7 @@ st_gdalrasterize(source, destination, options)
 }
 \value{
 \code{st_gdalwarp} and \code{st_gdalrasterize} return \code{NULL} (invisibly) on success, an error message on failure.
-\code{st_gdalinfo} returns the raster metadata
+\code{st_gdalinfo} returns the raster metadata as character vector
 }
 \description{
 Native interface to gdal utils
