@@ -1,6 +1,8 @@
 # stars: spatiotemporal tidy arrays for R
 
 [![Build Status](https://travis-ci.org/edzer/stars.png?branch=master)](https://travis-ci.org/edzer/stars)
+[![Coverage Status](https://img.shields.io/codecov/c/github/edzer/sfr/master.svg)](https://codecov.io/github/edzer/stars?branch=master)
+[![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 
 Spatiotemporal data often comes in the form of dense arrays,
 with space and time being array dimensions. Examples include
