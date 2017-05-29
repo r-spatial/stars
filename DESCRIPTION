@@ -1,0 +1,34 @@
+Package: stars
+Version: 0.0
+Title: Scalable, Spatiotemporal Tidy Arrays for R
+Description: Support for Scalable, Spatiotemporal Arrays in R, using GDAL bindings.
+Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de"),
+	person("Michael", "Sumner", role = "ctb"),
+	person("Etienne", "Racine", role = "ctb"))
+Depends:
+    R (>= 3.3.0)
+Imports: 
+    Rcpp, 
+	magrittr,
+	sf
+Suggests: 
+    testthat, 
+    knitr, 
+    tibble, 
+    dplyr, 
+    tidyr, 
+    geosphere (>= 1.5-5), 
+    maptools, 
+    maps
+LinkingTo: Rcpp, sf
+VignetteBuilder: knitr
+SystemRequirements: GDAL (>= 2.1.0), PROJ.4 (>= 4.8.0)
+License: Apache License
+URL: https://github.com/edzer/stars/
+BugReports: https://github.com/edzer/stars/issues/
+Collate:
+	init.R
+	dataset.R
+	utils.R
+	RcppExports.R
+RoxygenNote: 6.0.1
