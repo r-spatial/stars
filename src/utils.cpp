@@ -13,8 +13,8 @@
 
 // [[Rcpp::export]]
 Rcpp::CharacterVector CPL_gdalinfo(Rcpp::CharacterVector obj, Rcpp::CharacterVector options) {
-	char **options_char = create_options(options).data();
-	GDALInfoOptions* opt = GDALInfoOptionsNew(options_char, NULL);
+	std::vector <char *> options_char = create_options(options);
+	GDALInfoOptions* opt = GDALInfoOptionsNew(options_char.data(), NULL);
 	GDALDatasetH ds = GDALOpen((const char *) obj[0], GA_ReadOnly);
 	Rcpp::CharacterVector ret = GDALInfo(ds, opt);
 	GDALInfoOptionsFree(opt);
