@@ -2,3 +2,4 @@ proposal*
 documents
 cleanup
 .travis.yml
+cov

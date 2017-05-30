@@ -1,7 +1,7 @@
 # stars: spatiotemporal tidy arrays for R
 
 [![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars)
-[![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
+[![codecov](https://codecov.io/github/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/github/r-spatial/stars?branch=master)
 [![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 
 Spatiotemporal data often comes in the form of dense arrays,
