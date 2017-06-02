@@ -1,15 +1,14 @@
 #' Native interface to gdal utils
 #' @name gdal_utils
-#' @param name character; name of input layer
-#' @param source character; name(s) of input layer(s)
+#' @param source character; name of input layer; for \code{st_gdalwarp} this can be more than one
 #' @param destination character; name of output layer
 #' @param quiet logical; suppress printed output
 #' @param options layer opening options
 #' @return \code{st_gdalwarp} and \code{st_gdalrasterize} return \code{NULL} (invisibly) on success, an error message on failure.
 #' \code{st_gdalinfo} returns the raster metadata as character vector
 #' @export
-st_gdalinfo = function(name, options = character(0), quiet = FALSE) {
-	ret = CPL_gdalinfo(name, options)
+st_gdalinfo = function(source, options = character(0), quiet = FALSE) {
+	ret = CPL_gdalinfo(source, options)
 	if (! quiet)
 		cat(ret)
 	invisible(ret)
