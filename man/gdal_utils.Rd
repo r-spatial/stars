@@ -9,20 +9,18 @@
 \alias{st_gdalrasterize}
 \title{Native interface to gdal utils}
 \usage{
-st_gdalinfo(name, options = character(0), quiet = FALSE)
+st_gdalinfo(source, options = character(0), quiet = FALSE)
 
 st_gdalwarp(source, destination, options = character(0))
 
 st_gdalrasterize(source, destination, options = character(0))
 }
 \arguments{
-\item{name}{character; name of input layer}
+\item{source}{character; name of input layer; for \code{st_gdalwarp} this can be more than one}
 
 \item{options}{layer opening options}
 
 \item{quiet}{logical; suppress printed output}
-
-\item{source}{character; name(s) of input layer(s)}
 
 \item{destination}{character; name of output layer}
 }

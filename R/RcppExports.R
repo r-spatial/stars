@@ -33,10 +33,6 @@ CPL_proj_is_valid <- function(proj4string) {
     .Call('stars_CPL_proj_is_valid', PACKAGE = 'stars', proj4string)
 }
 
-CPL_proj_info <- function(type) {
-    .Call('stars_CPL_proj_info', PACKAGE = 'stars', type)
-}
-
 CPL_gdalinfo <- function(obj, options) {
     .Call('stars_CPL_gdalinfo', PACKAGE = 'stars', obj, options)
 }

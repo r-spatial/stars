@@ -17,7 +17,6 @@ extern SEXP stars_CPL_gdal_version(SEXP);
 extern SEXP stars_CPL_gdalwarp(SEXP, SEXP, SEXP);
 extern SEXP stars_CPL_get_crs(SEXP, SEXP);
 extern SEXP stars_CPL_GetMetadata(SEXP, SEXP, SEXP);
-extern SEXP stars_CPL_proj_info(SEXP);
 extern SEXP stars_CPL_proj_is_valid(SEXP);
 extern SEXP stars_CPL_proj_version(SEXP);
 
@@ -31,7 +30,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"stars_CPL_gdalwarp",         (DL_FUNC) &stars_CPL_gdalwarp,         3},
     {"stars_CPL_get_crs",          (DL_FUNC) &stars_CPL_get_crs,          2},
     {"stars_CPL_GetMetadata",      (DL_FUNC) &stars_CPL_GetMetadata,      3},
-    {"stars_CPL_proj_info",        (DL_FUNC) &stars_CPL_proj_info,        1},
     {"stars_CPL_proj_is_valid",    (DL_FUNC) &stars_CPL_proj_is_valid,    1},
     {"stars_CPL_proj_version",     (DL_FUNC) &stars_CPL_proj_version,     1},
     {NULL, NULL, 0}

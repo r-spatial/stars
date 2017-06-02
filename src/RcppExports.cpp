@@ -92,17 +92,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// CPL_proj_info
-Rcpp::List CPL_proj_info(int type);
-RcppExport SEXP stars_CPL_proj_info(SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_proj_info(type));
-    return rcpp_result_gen;
-END_RCPP
-}
 // CPL_gdalinfo
 Rcpp::CharacterVector CPL_gdalinfo(Rcpp::CharacterVector obj, Rcpp::CharacterVector options);
 RcppExport SEXP stars_CPL_gdalinfo(SEXP objSEXP, SEXP optionsSEXP) {
