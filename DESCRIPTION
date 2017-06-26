@@ -14,6 +14,7 @@ Imports:
 Suggests: 
     testthat, 
     knitr, 
+    covr,
     tibble, 
     dplyr, 
     tidyr, 
