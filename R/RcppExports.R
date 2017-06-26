@@ -9,10 +9,6 @@ CPL_get_crs <- function(obj, options) {
     .Call('stars_CPL_get_crs', PACKAGE = 'stars', obj, options)
 }
 
-CPL_add_one <- function(inv) {
-    .Call('stars_CPL_add_one', PACKAGE = 'stars', inv)
-}
-
 CPL_gdal_init <- function() {
     invisible(.Call('stars_CPL_gdal_init', PACKAGE = 'stars'))
 }

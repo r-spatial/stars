@@ -30,17 +30,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// CPL_add_one
-Rcpp::NumericVector CPL_add_one(Rcpp::NumericVector inv);
-RcppExport SEXP stars_CPL_add_one(SEXP invSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type inv(invSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_add_one(inv));
-    return rcpp_result_gen;
-END_RCPP
-}
 // CPL_gdal_init
 void CPL_gdal_init();
 RcppExport SEXP stars_CPL_gdal_init() {

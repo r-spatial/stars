@@ -21,7 +21,7 @@ Suggests:
     geosphere (>= 1.5-5), 
     maptools, 
     maps
-LinkingTo: Rcpp, sf
+LinkingTo: Rcpp
 VignetteBuilder: knitr
 SystemRequirements: GDAL (>= 2.1.0), PROJ.4 (>= 4.8.0)
 License: Apache License

@@ -8,7 +8,6 @@
 */
 
 /* .Call calls */
-extern SEXP stars_CPL_add_one(SEXP);
 extern SEXP stars_CPL_gdal_cleanup_all();
 extern SEXP stars_CPL_gdalinfo(SEXP, SEXP);
 extern SEXP stars_CPL_gdal_init();
@@ -21,7 +20,6 @@ extern SEXP stars_CPL_proj_is_valid(SEXP);
 extern SEXP stars_CPL_proj_version(SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"stars_CPL_add_one",          (DL_FUNC) &stars_CPL_add_one,          1},
     {"stars_CPL_gdal_cleanup_all", (DL_FUNC) &stars_CPL_gdal_cleanup_all, 0},
     {"stars_CPL_gdalinfo",         (DL_FUNC) &stars_CPL_gdalinfo,         2},
     {"stars_CPL_gdal_init",        (DL_FUNC) &stars_CPL_gdal_init,        0},
