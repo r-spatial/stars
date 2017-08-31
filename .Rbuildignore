@@ -3,3 +3,4 @@ documents
 cleanup
 .travis.yml
 cov
+^\.httr-oauth$
