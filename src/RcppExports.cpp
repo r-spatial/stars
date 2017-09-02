@@ -30,6 +30,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_read_gdal
+Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose);
+RcppExport SEXP _stars_CPL_read_gdal(SEXP fnameSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type fname(fnameSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(CPL_read_gdal(fname, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CPL_gdal_init
 void CPL_gdal_init();
 RcppExport SEXP _stars_CPL_gdal_init() {
@@ -123,6 +135,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_stars_CPL_GetMetadata", (DL_FUNC) &_stars_CPL_GetMetadata, 3},
     {"_stars_CPL_get_crs", (DL_FUNC) &_stars_CPL_get_crs, 2},
+    {"_stars_CPL_read_gdal", (DL_FUNC) &_stars_CPL_read_gdal, 2},
     {"_stars_CPL_gdal_init", (DL_FUNC) &_stars_CPL_gdal_init, 0},
     {"_stars_CPL_gdal_cleanup_all", (DL_FUNC) &_stars_CPL_gdal_cleanup_all, 0},
     {"_stars_CPL_gdal_version", (DL_FUNC) &_stars_CPL_gdal_version, 1},

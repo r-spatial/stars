@@ -5,13 +5,13 @@
 // from sf:gdal.cpp
 // Rcpp::CharacterVector -> NULL-terminated array of strings
 std::vector<char *> create_options(Rcpp::CharacterVector options, bool prnt) {
-    std::vector<char *> ret(options.size() + 1);
+    std::vector<char *> ret;
     for (int i = 0; i < options.size(); i++) {
-        ret[i] = (char *) (options[i]);
+        ret.push_back((char *) (options[i]));
 		if (prnt)
 			Rcpp::Rcout << options[i] << std::endl;
 	}
-    ret[options.size()] = NULL;
+    ret.push_back((char *) NULL);
     return ret;
 }
 

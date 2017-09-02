@@ -31,5 +31,6 @@ Collate:
 	init.R
 	dataset.R
 	utils.R
+	stars.R
 	RcppExports.R
 RoxygenNote: 6.0.1

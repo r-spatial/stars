@@ -1,5 +1,6 @@
 #' @importFrom sf sf_extSoftVersion
 #' @importFrom Rcpp evalCpp
+#' @importFrom graphics image.default
 #' @useDynLib stars
 NULL
 
