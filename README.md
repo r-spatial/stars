@@ -32,7 +32,7 @@ Read the full proposal [here](https://github.com/edzer/stars/blob/master/PROPOSA
 
 ### Acknowledgment
 
-This project will be realized with financial
+This project is being realized with financial
 [support](https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants)
 from the
 

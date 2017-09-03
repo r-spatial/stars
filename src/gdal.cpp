@@ -21,7 +21,7 @@ Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = tr
 
 	if (verbose) {
 		Rcpp::Rcout << "Size is " << 
-        poDataset->GetRasterXSize() << " x " <<  poDataset->GetRasterYSize() << "x" <<
+        poDataset->GetRasterXSize() << " x " <<  poDataset->GetRasterYSize() << " x " <<
         poDataset->GetRasterCount() << std::endl;
 
 		if (poDataset->GetProjectionRef() != NULL)
@@ -64,7 +64,6 @@ Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = tr
 			std::vector<double> buf( poBand->GetXSize() );
 			CPLErr err = poBand->RasterIO( GF_Read, 0, row, poBand->GetXSize(), 1,
                   	buf.data(), buf.size(), 1, GDT_Float64, 0, 0);
-//poBand->RasterIO( GF_Read, 0, 0, nXSize, 1, pafScanline, nXSize, 1, GDT_Float32, 0, 0 );
 			if (err == CE_Failure)
 				Rcpp::stop("read failure");
 			mat(_, i++) = Rcpp::NumericVector(buf.begin(), buf.end());
@@ -74,6 +73,6 @@ Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = tr
 	dims(0) = poBand->GetXSize();
 	dims(1) = poBand->GetYSize();
 	dims(2) = poDataset->GetRasterCount();
-	mat.attr("dim") = dims;
+	mat.attr("dim") = dims; // converts to array
 	return mat;
 }
