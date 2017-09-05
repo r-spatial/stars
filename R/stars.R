@@ -2,7 +2,8 @@
 
 #' read raster/array dataset from file or connection
 #' @param file character; file name to read
-#' @param ... ignored
+#' @param options character; opening options
+#' @param driver character; driver to use for opening file
 #' @return object of class \code{stars}
 #' @export
 #' @example
@@ -25,7 +26,6 @@ image.stars = function(x, ..., band = 1) {
 }
 
 #' @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
-#' @export
 xy_from_colrow = function(x, geotransform) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
 # 0-based indices:

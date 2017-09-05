@@ -10,7 +10,9 @@ st_stars(file, options = character(0), driver = character(0))
 \arguments{
 \item{file}{character; file name to read}
 
-\item{...}{ignored}
+\item{options}{character; opening options}
+
+\item{driver}{character; driver to use for opening file}
 }
 \value{
 object of class \code{stars}
