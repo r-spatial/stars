@@ -5,15 +5,17 @@
 
 #include "stars.h"
 
+using namespace Rcpp;
+
 // [[Rcpp::export]]
-Rcpp::CharacterVector CPL_GetMetadata(Rcpp::CharacterVector obj, Rcpp::CharacterVector domain_item,
-		Rcpp::CharacterVector options) {
+CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item,
+		CharacterVector options) {
 	
 	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL, 
 		create_options(options).data());
 	if (ds == NULL)
 		return NA_STRING;
-	Rcpp::CharacterVector ret;
+	CharacterVector ret;
 	if (domain_item.size() == 0)
 		ret = charpp2CV(GDALGetMetadata(ds, NULL));
 	else if (domain_item.size() == 1) {
@@ -22,7 +24,7 @@ Rcpp::CharacterVector CPL_GetMetadata(Rcpp::CharacterVector obj, Rcpp::Character
 		else
 			 ret = charpp2CV(GDALGetMetadata(ds, domain_item[0]));
 	} else if (domain_item.size() == 2) // domain and item
-		ret = Rcpp::CharacterVector::create(GDALGetMetadataItem(ds, domain_item[1], domain_item[0]));
+		ret = CharacterVector::create(GDALGetMetadataItem(ds, domain_item[1], domain_item[0]));
 	else
 		ret = NA_STRING;
 	GDALClose(ds);
@@ -30,8 +32,8 @@ Rcpp::CharacterVector CPL_GetMetadata(Rcpp::CharacterVector obj, Rcpp::Character
 }
 
 // [[Rcpp::export]]
-Rcpp::List CPL_get_crs(Rcpp::CharacterVector obj, Rcpp::CharacterVector options) {
-	Rcpp::List ret(4);
+List CPL_get_crs(CharacterVector obj, CharacterVector options) {
+	List ret(4);
 	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL, 
 		create_options(options).data());
 	if (ds == NULL)
@@ -40,7 +42,7 @@ Rcpp::List CPL_get_crs(Rcpp::CharacterVector obj, Rcpp::CharacterVector options)
 	ret(1) = GDALGetProjectionRef(ds);
 	double gt[6];
 	GDALGetGeoTransform(ds, gt);
-	Rcpp::NumericVector gt_r(6);
+	NumericVector gt_r(6);
 	for (int i = 0; i < 6; i++)
 		gt_r(i) = gt[i];
 	ret(2) =  gt_r;
@@ -50,10 +52,10 @@ Rcpp::List CPL_get_crs(Rcpp::CharacterVector obj, Rcpp::CharacterVector options)
 	if (retval == FALSE)
 		return ret;
 
-	Rcpp::NumericVector gt_r_inv(6);
+	NumericVector gt_r_inv(6);
 	for (int i = 0; i < 6; i++)
 		gt_r_inv(i) = gt_inv[i];
 	ret(3) =  gt_r;
-	ret.attr("names") = Rcpp::CharacterVector::create("nbands", "crs", "gt", "gt_inv");
+	ret.attr("names") = CharacterVector::create("nbands", "crs", "gt", "gt_inv");
 	return ret;
 }

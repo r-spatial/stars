@@ -5,7 +5,7 @@
 \title{read raster/array dataset from file or connection
 read raster/array dataset from file or connection}
 \usage{
-st_stars(file, ...)
+st_stars(file, options = character(0), driver = character(0))
 }
 \arguments{
 \item{file}{character; file name to read}

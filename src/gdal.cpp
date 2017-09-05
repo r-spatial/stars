@@ -1,38 +1,44 @@
 #include "Rcpp.h"
-#include "gdal_priv.h"
+#include <gdal_priv.h>
+#include <ogr_api.h>
+#include <ogr_geometry.h>
+#include <ogr_srs_api.h>
+
+#include "stars.h"
 
 using namespace Rcpp;
 
+NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset);
+
 // [[Rcpp::export]]
-Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = true)
-{
+List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVector driver,
+		bool read_data = true) {
     GDALDataset  *poDataset;
-    poDataset = (GDALDataset *) GDALOpen(fname[0], GA_ReadOnly );
+	poDataset = (GDALDataset *) GDALOpenEx(fname[0], GA_ReadOnly,
+		driver.size() ? create_options(driver).data() : NULL,
+		options.size() ? create_options(options).data() : NULL,
+		NULL);
     if( poDataset == NULL )
-        Rcpp::stop("file not found");
+        stop("file not found");
 
+	CharacterVector Driver = CharacterVector::create(
+        poDataset->GetDriver()->GetDescription(),
+        poDataset->GetDriver()->GetMetadataItem( GDAL_DMD_LONGNAME ));
+
+	// geotransform:
 	double adfGeoTransform[6];
-	Rcpp::Rcout << "Driver: " << 
-        poDataset->GetDriver()->GetDescription() << "/" <<
-        poDataset->GetDriver()->GetMetadataItem( GDAL_DMD_LONGNAME ) << std::endl;
-
 	if (poDataset->GetGeoTransform( adfGeoTransform ) != CE_None )
-		Rcpp::stop("cannot get geotransform");
-
-	if (verbose) {
-		Rcpp::Rcout << "Size is " << 
-        poDataset->GetRasterXSize() << " x " <<  poDataset->GetRasterYSize() << " x " <<
-        poDataset->GetRasterCount() << std::endl;
-
-		if (poDataset->GetProjectionRef() != NULL)
-			Rcpp::Rcout << "Projection is " << poDataset->GetProjectionRef() << std::endl;
-
-		Rcpp::Rcout << "Origin = (" << 
-           	adfGeoTransform[0] << "," << adfGeoTransform[3] << ")" << std::endl;
-		Rcpp::Rcout << "Pixel Size = (" << 
-           	adfGeoTransform[1] << "," << adfGeoTransform[5] << ")" << std::endl;
-	}
+		stop("cannot get geotransform");
+	NumericVector geotransform = NumericVector::create(
+		adfGeoTransform[0],
+		adfGeoTransform[1],
+		adfGeoTransform[2],
+		adfGeoTransform[3],
+		adfGeoTransform[4],
+		adfGeoTransform[5]);
 /*	 
+	// from GDAL tutorial:
+
 	int             nBlockXSize, nBlockYSize;
 	int             bGotMin, bGotMax;
 	double          adfMinMax[2];
@@ -42,8 +48,7 @@ Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = tr
         	GDALGetDataTypeName(poBand->GetRasterDataType()),
         	GDALGetColorInterpretationName(
            	poBand->GetColorInterpretation()) ); 
-*/
-/*
+
 	adfMinMax[0] = poBand->GetMinimum( &bGotMin );
 	adfMinMax[1] = poBand->GetMaximum( &bGotMax );
 	if( ! (bGotMin && bGotMax) )
@@ -55,24 +60,65 @@ Rcpp::NumericMatrix CPL_read_gdal(Rcpp::CharacterVector fname, bool verbose = tr
     	printf( "Band has a color table with %d entries.\n",
              		poBand->GetColorTable()->GetColorEntryCount() );
 */
+	// projection:
+	const char *wkt = poDataset->GetProjectionRef();
+	CharacterVector proj = CharacterVector::create(wkt);
+
+	// proj4string:
+	OGRSpatialReference *sr = new OGRSpatialReference;
+	char **ppt = (char **) &wkt;
+	sr->importFromWkt(ppt);
+	char *proj4; 
+	sr->exportToProj4(&proj4); // need to error check?
+	CharacterVector p4 = CharacterVector::create(proj4); // need to CPLFree?
+	delete sr;
+
+
 	GDALRasterBand *poBand = poDataset->GetRasterBand( 1 );
-	Rcpp::NumericMatrix mat( poBand->GetXSize(), poBand->GetYSize() * poDataset->GetRasterCount());
+	List ReturnList = List::create(
+		_["filename"] = fname,
+		_["driver"] = Driver,
+		_["cols"] = NumericVector::create(1, poDataset->GetRasterXSize()),
+		_["rows"] = NumericVector::create(1, poDataset->GetRasterYSize()),
+		_["bands"] = NumericVector::create(1, poDataset->GetRasterCount()),
+		_["proj_wkt"] = proj,
+		_["proj4string"] = p4,
+		_["geotransform"] = geotransform,
+        _["datatype"] =	GDALGetDataTypeName(poBand->GetRasterDataType())
+	);
+	if (read_data)
+		ReturnList.attr("data") = CPL_read_gdal_data(ReturnList, poDataset);
+
+	GDALClose(poDataset);
+	return ReturnList;
+}
+
+NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset) {
+
+	IntegerVector x = meta["cols"];
+	IntegerVector y = meta["rows"];
+	IntegerVector bands = meta["bands"];
+
+	// GDALRasterBand *poBand = poDataset->GetRasterBand( 1 );
+	NumericMatrix mat( diff(x)[0] + 1, (diff(y)[0] + 1) * (diff(bands)[0] + 1) );
+
 	size_t i = 0;
-	for (size_t band = 0; band < poDataset->GetRasterCount(); band++) {
-		poBand = poDataset->GetRasterBand( band + 1 );
-		for (size_t row = 0; row < poBand->GetYSize(); row++) {
-			std::vector<double> buf( poBand->GetXSize() );
-			CPLErr err = poBand->RasterIO( GF_Read, 0, row, poBand->GetXSize(), 1,
+	for (size_t band = bands(0); band <= bands(1); band++) { // unlike x & y, band is 1-based
+		GDALRasterBand *poBand = poDataset->GetRasterBand( band );
+		for (size_t row = y(0) - 1; row < y(1); row++) {
+			std::vector<double> buf( diff(x)[0] + 1 );
+			CPLErr err = poBand->RasterIO( GF_Read, x(0) - 1, row, x(1), 1,
                   	buf.data(), buf.size(), 1, GDT_Float64, 0, 0);
 			if (err == CE_Failure)
-				Rcpp::stop("read failure");
-			mat(_, i++) = Rcpp::NumericVector(buf.begin(), buf.end());
+				stop("read failure");
+			mat(_, i++) = NumericVector(buf.begin(), buf.end());
 		}
 	}
-	Rcpp::IntegerVector dims(3);
-	dims(0) = poBand->GetXSize();
-	dims(1) = poBand->GetYSize();
-	dims(2) = poDataset->GetRasterCount();
-	mat.attr("dim") = dims; // converts to array
+
+	// dim:
+	IntegerVector dims = IntegerVector::create(diff(x)[0] + 1, diff(y)[0] + 1,
+		diff(bands)[0] + 1);
+	dims.attr("names") = CharacterVector::create("x", "y", "band");
+	mat.attr("dim") = dims;
 	return mat;
 }

@@ -9,8 +9,8 @@ CPL_get_crs <- function(obj, options) {
     .Call('_stars_CPL_get_crs', PACKAGE = 'stars', obj, options)
 }
 
-CPL_read_gdal <- function(fname, verbose = TRUE) {
-    .Call('_stars_CPL_read_gdal', PACKAGE = 'stars', fname, verbose)
+CPL_read_gdal <- function(fname, options, driver, read_data = TRUE) {
+    .Call('_stars_CPL_read_gdal', PACKAGE = 'stars', fname, options, driver, read_data)
 }
 
 CPL_gdal_init <- function() {
