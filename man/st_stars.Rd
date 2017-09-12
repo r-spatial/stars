@@ -20,6 +20,8 @@ st_stars(file, options = character(0), driver = character(0),
 
 \item{keep_meta}{logical; should metadata be kept in attribute \code{properties}?}
 
+\item{x}{stars object to plot}
+
 \item{...}{passed on to \code{image.default}}
 
 \item{band}{integer; which band (dimension) to plot}
@@ -35,4 +37,7 @@ read raster/array dataset from file or connection
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = st_stars(tif)
+image(x)
 }

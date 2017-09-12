@@ -52,7 +52,7 @@ sst = x[[1]]
 hist(sst) # gives units, even if wrong
 ```
 
-TODO: add time dimension (with n = 1)
+TODO: add time dimension (with n = 1); parse time from metadata
 
 TODO: single NetCDF with multiple time and multiple depths
 

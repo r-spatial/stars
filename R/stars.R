@@ -95,12 +95,14 @@ st_stars = function(file, options = character(0), driver = character(0), keep_me
 }
 
 #' @name st_stars
+#' @param x stars object to plot
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param ... passed on to \code{image.default}
 #' @export
-#' @example
-#' x = st_stars("stars/inst/tif/L7_ETMs.tif")
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = st_stars(tif)
 #' image(x)
 image.stars = function(x, ..., band = 1, attr = 1) {
 	x = x[[attr]]
