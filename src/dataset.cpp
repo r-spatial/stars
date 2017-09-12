@@ -38,24 +38,26 @@ List CPL_get_crs(CharacterVector obj, CharacterVector options) {
 		create_options(options).data());
 	if (ds == NULL)
 		return ret;
+
 	ret(0) = GDALGetRasterCount(ds);
+
 	ret(1) = GDALGetProjectionRef(ds);
+
 	double gt[6];
 	GDALGetGeoTransform(ds, gt);
 	NumericVector gt_r(6);
 	for (int i = 0; i < 6; i++)
 		gt_r(i) = gt[i];
 	ret(2) =  gt_r;
+
 	double gt_inv[6];
-
 	int retval = GDALInvGeoTransform(gt, gt_inv);
-	if (retval == FALSE)
-		return ret;
-
 	NumericVector gt_r_inv(6);
 	for (int i = 0; i < 6; i++)
-		gt_r_inv(i) = gt_inv[i];
+		gt_r_inv(i) = retval ? gt_inv[i] : NA_REAL;
 	ret(3) =  gt_r;
+
 	ret.attr("names") = CharacterVector::create("nbands", "crs", "gt", "gt_inv");
+
 	return ret;
 }

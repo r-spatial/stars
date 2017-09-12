@@ -2,10 +2,14 @@
 % Please edit documentation in R/stars.R
 \name{st_stars}
 \alias{st_stars}
-\title{read raster/array dataset from file or connection
-read raster/array dataset from file or connection}
+\alias{st_stars}
+\alias{image.stars}
+\title{read raster/array dataset from file or connection}
 \usage{
-st_stars(file, options = character(0), driver = character(0))
+st_stars(file, options = character(0), driver = character(0),
+  keep_meta = FALSE)
+
+\method{image}{stars}(x, ..., band = 1, attr = 1)
 }
 \arguments{
 \item{file}{character; file name to read}
@@ -13,11 +17,22 @@ st_stars(file, options = character(0), driver = character(0))
 \item{options}{character; opening options}
 
 \item{driver}{character; driver to use for opening file}
+
+\item{keep_meta}{logical; should metadata be kept in attribute \code{properties}?}
+
+\item{...}{passed on to \code{image.default}}
+
+\item{band}{integer; which band (dimension) to plot}
+
+\item{attr}{integer; which attribute to plot}
 }
 \value{
 object of class \code{stars}
 }
 \description{
 read raster/array dataset from file or connection
-read raster/array dataset from file or connection
+}
+\examples{
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = st_stars(tif)
 }

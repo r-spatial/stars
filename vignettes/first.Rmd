@@ -1,0 +1,63 @@
+---
+title: "spatiotemporal tidy arrays for R; first steps"
+author: "Edzer Pebesma"
+date: "September 12, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r}
+library(stars)
+```
+
+### Landsat image: GeoTIFF
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = st_stars(tif)
+str(x)
+x
+```
+
+### Overviews
+We can read rasters at a lower resolution when they contain so-called overviews. For this
+GeoTIFF file, the were created with the `gdaladdo` utility, in particular
+```
+gdaladdo -r average L7_ETMs.tif  2 4 8 16
+```
+which adds course resolution versions by averaging blocks of pixels.
+
+```{r}
+x = st_stars(tif, options = c("OVERVIEW_LEVEL=1"))
+image(x)
+x = st_stars(tif, options = c("OVERVIEW_LEVEL=2"))
+image(x)
+x = st_stars(tif, options = c("OVERVIEW_LEVEL=3"))
+image(x)
+```
+
+TODO: aspect ratio, title, values along x and y axis, degree symbols
+
+### single NetCDF
+```{r}
+nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+(x = st_stars(nc))
+image(x)
+library(units)
+sapply(x, units)
+sst = x[[1]]
+hist(sst) # gives units, even if wrong
+```
+
+TODO: add time dimension (with n = 1)
+
+TODO: single NetCDF with multiple time and multiple depths
+
+### multiple NetCDFs
+
+join, based on time.
+
+### dimensions to attributes and vice versa
