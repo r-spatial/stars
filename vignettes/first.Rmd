@@ -1,8 +1,14 @@
 ---
 title: "spatiotemporal tidy arrays for R; first steps"
 author: "Edzer Pebesma"
-date: "September 12, 2017"
-output: html_document
+output:
+  html_document:
+    toc: true
+    theme: united
+vignette: >
+  %\VignetteIndexEntry{Spatiotemporal tidy arrays for R; first steps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
