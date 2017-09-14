@@ -3,30 +3,47 @@
 \name{st_stars}
 \alias{st_stars}
 \alias{st_stars}
+\alias{st_stars.character}
+\alias{st_stars}
+\alias{st_stars.list}
+\alias{st_stars}
 \alias{image.stars}
 \title{read raster/array dataset from file or connection}
 \usage{
-st_stars(file, options = character(0), driver = character(0),
-  keep_meta = FALSE)
+st_stars(x, ...)
 
-\method{image}{stars}(x, ..., band = 1, attr = 1)
+\method{st_stars}{character}(x, ..., options = character(0),
+  driver = character(0), sub = TRUE, quiet = FALSE)
+
+\method{st_stars}{list}(x, ..., dimensions = NULL)
+
+\method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1,
+  xlab = names(dims)[1], ylab = names(dims)[2])
 }
 \arguments{
-\item{file}{character; file name to read}
+\item{x}{if character, file name to read; if list: list with arrays}
+
+\item{...}{passed on to \code{image.default}}
 
 \item{options}{character; opening options}
 
 \item{driver}{character; driver to use for opening file}
 
-\item{keep_meta}{logical; should metadata be kept in attribute \code{properties}?}
+\item{sub}{integer or logical; sub-datasets to be read}
 
-\item{x}{stars object to plot}
+\item{quiet}{logical; print progress output?}
 
-\item{...}{passed on to \code{image.default}}
+\item{dimensions}{object of class dimensions}
 
 \item{band}{integer; which band (dimension) to plot}
 
 \item{attr}{integer; which attribute to plot}
+
+\item{asp}{numeric; aspect ratio of image}
+
+\item{xlab}{character; x axis label}
+
+\item{ylab}{character; y axis label}
 }
 \value{
 object of class \code{stars}

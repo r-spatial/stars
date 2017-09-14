@@ -7,21 +7,25 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.p
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
     R (>= 3.3.0)
-Imports: 
+Imports:
     Rcpp, 
 	magrittr,
+	abind,
 	units,
 	sf
 Suggests: 
-    testthat, 
-    knitr, 
+    testthat,
+    knitr,
     covr,
-    tibble, 
-    dplyr, 
-    tidyr, 
+    tibble,
+    dplyr,
+    tidyr,
     geosphere (>= 1.5-5), 
     maptools, 
-    maps
+    maps,
+	ggplot2,
+	ggthemes,
+	viridis
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 SystemRequirements: GDAL (>= 2.1.0), PROJ.4 (>= 4.8.0)

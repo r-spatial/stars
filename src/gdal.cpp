@@ -116,11 +116,26 @@ NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset, Numeri
 	IntegerVector y = meta["rows"];
 	IntegerVector bands = meta["bands"];
 
-	// GDALRasterBand *poBand = poDataset->GetRasterBand( 1 );
-	NumericMatrix mat( diff(x)[0] + 1, (diff(y)[0] + 1) * (diff(bands)[0] + 1) );
+	size_t nx = diff(x)[0] + 1, ny = diff(y)[0] + 1, nbands = diff(bands)[0] + 1,
+		resample = 1; // still need to find out what resample exactly does, and how it interacts with/should change geotransform
 
-	size_t i = 0;
-	for (size_t band = bands(0); band <= bands(1); band++) { // unlike x & y, band is 1-based
+	// GDALRasterBand *poBand = poDataset->GetRasterBand( 1 );
+	NumericMatrix mat( (nx / resample) * (ny / resample), nbands );
+
+	IntegerVector band_index(nbands);
+	for (int j = 0, i = bands(0); i <= bands(1); i++)
+		band_index(j++) = i;
+	// read the full set of bands:
+	CPLErr err = poDataset->RasterIO( GF_Read,
+			x(0) - 1, y(0) - 1,
+			nx, ny,
+			mat.begin(),
+			nx / resample, ny / resample,
+			GDT_Float64, nbands, band_index.begin(), 0, 0, 0);
+	if (err == CE_Failure)
+		stop("read failure");
+
+	for (size_t band = bands(0), i = 0; band <= bands(1); band++) { // unlike x & y, band is 1-based
 		GDALRasterBand *poBand = poDataset->GetRasterBand( band );
 		NumericVector nodatavalue = NumericVector::create(NA_REAL);
 		int success = 0, has_scale = 0, has_offset = 0;
@@ -135,32 +150,26 @@ NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset, Numeri
 		if (has_offset)
 			offset = poBand->GetOffset(NULL);
 		// char *units = poBand->GetUnits();
-		for (size_t row = y(0) - 1; row < y(1); row++) {
-			std::vector<double> buf( diff(x)[0] + 1 );
-			CPLErr err = poBand->RasterIO( GF_Read, x(0) - 1, row, x(1), 1,
-                  	buf.data(), buf.size(), 1, GDT_Float64, 0, 0);
-			if (err == CE_Failure)
-				stop("read failure");
-			if (! NumericVector::is_na(nodatavalue[0])) {
-				for (size_t i = 0; i < buf.size(); i++)
-					if (buf[i] == nodatavalue[0])
-						buf[i] = NA_REAL;
+		if (! NumericVector::is_na(nodatavalue[0]) || has_offset || has_scale) {
+			NumericVector nv = mat(_, band - 1);
+			for (size_t i = 0; i < nv.size(); i++) {
+				if (nv[i] == nodatavalue[0])
+					nv[i] = NA_REAL;
+				else
+					nv[i] = (nv[i] * scale) + offset;
 			}
-			if (has_offset || has_scale) {
-				for (size_t i = 0; i < buf.size(); i++)
-					buf[i] = (buf[i] * scale) + offset;
-			}
-			mat(_, i++) = NumericVector(buf.begin(), buf.end());
+			mat(_, band - 1) = nv;
 		}
+		checkUserInterrupt();
 	}
 
 	// dim:
 	IntegerVector dims;
 	if (diff(bands)[0] == 0) { // one band:
-		dims = IntegerVector::create(diff(x)[0] + 1, diff(y)[0] + 1);
+		dims = IntegerVector::create(nx / resample, ny / resample);
 		dims.attr("names") = CharacterVector::create("x", "y");
 	} else {
-		dims = IntegerVector::create(diff(x)[0] + 1, diff(y)[0] + 1, diff(bands)[0] + 1);
+		dims = IntegerVector::create(nx / resample, ny / resample, diff(bands)[0] + 1);
 		dims.attr("names") = CharacterVector::create("x", "y", "band");
 	}
 	mat.attr("dim") = dims;

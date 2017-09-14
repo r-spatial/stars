@@ -1,53 +1,33 @@
 ## read raster/array dataset from file or connection
 
-bind = function(lst, units) {
-	ns = names(lst)
-	if (length(lst)) {
-		pr = lst[[1]]
-		for (i in 1:length(lst)) { # includes 1 <--> 1, to drop attributes
-			if (any(attr(pr, "cols") != attr(lst[[i]], "cols")))
-				stop("cols don't match")
-			if (any(attr(pr, "rows") != attr(lst[[i]], "rows")))
-				stop("rows don't match")
-			if (any(attr(pr, "geotransform") != attr(lst[[i]], "geotransform")))
-				stop("geotransform parameters don't match")
-			attributes(lst[[i]]) = NULL
-			attr(lst[[i]], "dim") = dim(pr)
-		}
-	}
-	lst = unlist(lst, recursive = FALSE)
-	if (any(!is.na(units)))
-		for (i in 1:length(lst))
-			if (!is.na(units[i]))
-				lst[[i]] = set_units(lst[[i]], make_unit(units[i]))
-	attributes(lst) = attributes(pr)
-	names(lst) = ns
-	lst
+create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
+		geotransform = rep(NA_real_, 6), refsys = NA_character_) {
+	list(from = from, to = to, offset = offset, delta = delta, 
+		geotransform = geotransform, refsys = refsys)
 }
 
-create_dimensions = function(dims, properties) {
-	if (!is.null(properties$properties)) # messy!
-		properties = properties$properties
-	df = data.frame(row.names = names(dims))
-	df$from = 1
-	df$from[1:2] = c(properties$cols[1], properties$rows[1])
-	df$to = dims
-	df$to[1:2] = c(properties$cols[2], properties$rows[2])
-	df$offset = NA_real_
-	df$delta = NA_real_
-	df$geotransform = vector("list", nrow(df))
-	if (! is.null(properties$geotransform)) {
-		df[[1, "geotransform"]] = properties$geotransform
-		df[[2, "geotransform"]] = properties$geotransform
-		df$offset[1:2] = properties$geotransform[c(1,4)]
-		df$delta[1:2] = properties$geotransform[c(2,6)]
+create_dimensions = function(dims, pr = NULL) {
+	if (!is.null(pr) && !is.null(pr$properties)) # messy!
+		pr = pr$properties
+	lst = vector("list", length(dims))
+	names(lst) = names(dims)
+	if (!is.null(pr)) {
+		for (i in names(lst)) {
+			lst[[i]] = switch(i,
+				x = create_dimension(from = pr$cols[1], to = pr$cols[2], offset = pr$geotransform[1], 
+					delta = pr$geotransform[2], geotransform = pr$geotransform, 
+					refsys = if (is.null(pr$proj4string)) NA_character_ else pr$proj4string),
+				y = create_dimension(from = pr$rows[1], to = pr$rows[2], offset = pr$geotransform[4],
+					delta = pr$geotransform[6], geotransform = pr$geotransform, 
+					refsys = if (is.null(pr$proj4string)) NA_character_ else pr$proj4string),
+				create_dimension(from = 1, to = dims[i]) # time? depth+units?
+			)
+		}
+	} else {
+		for (i in names(lst))
+			lst[[i]] = create_dimension(from = 1, to = dims[i])
 	}
-	df$refsys = NA_character_
-	if (! is.null(properties$proj4string)) {
-		df[[1, "refsys"]] = properties$proj4string
-		df[[2, "refsys"]] = properties$proj4string
-	}
-	df
+	structure(lst, class = "dimensions")
 }
 
 read_units = function(sub_ds, names) {
@@ -62,55 +42,89 @@ read_units = function(sub_ds, names) {
 	}
 	for (i in 1:length(sub_ds))
 		units[i] = get_u(sub_ds[[i]], names[i])
-	print(units)
 	units
 }
 
 #' read raster/array dataset from file or connection
-#' @param file character; file name to read
+#' @param x if character, file name to read; if list: list with arrays
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file
-#' @param keep_meta logical; should metadata be kept in attribute \code{properties}?
+#' @param sub integer or logical; sub-datasets to be read
+#' @param quiet logical; print progress output?
 #' @return object of class \code{stars}
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
-st_stars = function(file, options = character(0), driver = character(0), keep_meta = FALSE) {
-	properties = CPL_read_gdal(file, options, driver, TRUE)
-	ret = if (properties$bands[2] == 0) { # read sub-datasets:
-		sub_ds = st_get_subdatasets(file, options)
-		ret = lapply(sub_ds, st_stars, options = options, driver = properties$driver[1], keep_meta = TRUE)
-		names(ret) = sapply(strsplit(unlist(sub_ds), ":"), tail, 1)
-		units = read_units(sub_ds, names(ret))
-		bind(ret, units)
+st_stars = function(x, ...) UseMethod("st_stars")
+
+#' @name st_stars
+#' @export
+st_stars.character = function(x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
+	properties = CPL_read_gdal(x, options, driver, TRUE)
+	if (properties$bands[2] == 0) { # read sub-datasets:
+		sub_ds = st_get_subdatasets(x, options)[sub]
+		nms = sapply(strsplit(unlist(sub_ds), ":"), tail, 1)
+		read_stars = function(x, options, driver, keep_meta, quiet) {
+			if (! quiet)
+				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
+			st_stars(x, options = options, driver = driver, keep_meta = keep_meta)
+		}
+		ret = lapply(sub_ds, read_stars, options = options, driver = properties$driver[1], quiet = quiet)
+		units = read_units(sub_ds, nms)
+		if (! quiet)
+			cat("\n")
+		ret = do.call(c, ret)
+		for (i in 1:length(ret))
+			if (! is.na(units[i]))
+				ret[[i]] = set_units(ret[[i]], make_unit(units[i]))
+		names(ret) = nms
+		ret
 	} else  {
-		structure(list(attr(properties, "data")),
-			names = file,
-			class = "stars",
-			properties = structure(properties, data = NULL))
+		data = attr(properties, "data")
+		properties = structure(properties, data = NULL)
+		structure(list(data),
+			names = x,
+			dimensions = create_dimensions(dim(data), structure(properties, data = NULL)),
+			class = "stars")
 	}
-	dimensions = create_dimensions(dim(ret[[1]]), attr(ret, "properties"))
-	structure(ret, dimensions = dimensions, properties = if (keep_meta) properties else NULL)
 }
 
 #' @name st_stars
-#' @param x stars object to plot
+#' @param dimensions object of class dimensions
+#' @export
+st_stars.list = function(x, ..., dimensions = NULL) {
+	if (length(x) > 1) {
+		for (i in 2:length(x))
+			if (!identical(dim(x[[1]]), dim(x[[i]])))
+				stop("dim attributes not identical")
+	}
+	if (is.null(dimensions))
+		dimensions = create_dimensions(x)
+	structure(x, dimensions = dimensions, class = "stars")
+}
+
+
+#' @name st_stars
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
+#' @param asp numeric; aspect ratio of image
+#' @param xlab character; x axis label
+#' @param ylab character; y axis label
 #' @param ... passed on to \code{image.default}
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
 #' image(x)
-image.stars = function(x, ..., band = 1, attr = 1) {
+image.stars = function(x, ..., band = 1, attr = 1, asp = 1, xlab = names(dims)[1], ylab = names(dims)[2]) {
+	dims = expand_dimensions(x)
 	x = x[[attr]]
 	x = if (length(dim(x)) == 3)
 			x[ , rev(seq_len(dim(x)[2])), band]
 		else
 			x[ , rev(seq_len(dim(x)[2]))]
-	image.default(unclass(x), ...)
+	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, ...)
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
@@ -124,24 +138,130 @@ xy_from_colrow = function(x, geotransform) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
+expand_dimensions = function(x) {
+	dimensions = attr(x, "dimensions")
+	lst = vector("list", length(dimensions))
+	names(lst) = names(dimensions)
+	if ("x" %in% names(lst)) {
+		x = dimensions[["x"]]
+		gt = x$geotransform
+		if (! all(is.na(gt)))
+			lst[["x"]] = xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
+		else
+			stop("cannot determine x and y coordinates without geotransform")
+	}
+	if ("y" %in% names(lst)) {
+		y = dimensions[["y"]]
+		gt = y$geotransform
+		if (! all(is.na(gt)))
+			lst[["y"]] = xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
+		else
+			stop("cannot determine x and y coordinates without geotransform")
+	}
+	for (nm in setdiff(names(lst), c("x", "y"))) {
+		dm = dimensions[[nm]]
+		lst[[nm]] = if (is.na(dm$offset) || is.na(dm$delta))
+				seq(dm$from, dm$to)
+			else
+				seq(from = dm$offset, by = dm$delta, length.out = dm$to - dm$from)
+	}
+	lst
+}
+
 #' @export
 as.data.frame.stars = function(x, ...) {
-	meta = attr(x, "properties")
-	xc = xy_from_colrow(cbind(do.call(seq, as.list(meta$cols - 1)) + .5, 0), meta$geotransform)[,1]
-	yc = xy_from_colrow(cbind(0, do.call(seq, as.list(meta$rows - 1)) + .5), meta$geotransform)[,2]
-	band = do.call(seq, as.list(meta$bands))
-	coords = expand.grid(x = xc, y = yc, band = band)
-	data.frame(coords, z = c(x))
+	## FIXME: now ignores possible affine parameters:
+	dims = attr(x, "dimensions")
+	lapply(dims, 
+		function(x) { 
+			aff = x$geotransform[c(3,5)]
+			if (!is.na(aff) && any(aff != 0)) 
+				stop("affine transformation needed") 
+		}
+	)
+	coords = do.call(expand.grid, expand_dimensions(x))
+	data.frame(coords, lapply(x, c))
+}
+
+#' @export
+print.dimensions = function(x, ..., digits = 6) {
+	lst = lapply(x, function(.) { .$geotransform = paste(signif(.$geotransform, digits = digits), collapse = ", "); . })
+	ret = data.frame(do.call(rbind, lapply(lst, format, digits = digits)))
+	names(ret) = names(lst[[1]])
+	print(ret)
 }
 
 #' @export
 print.stars = function(x, ...) {
-	cat("stars object with", length(dim(x[[1]])), "dimensions and", length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
+	cat("stars object with", length(dim(x)), "dimensions and", length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
 	cat("attribute(s):\n")
-	print(summary(data.frame(lapply(x, as.vector))))
+	print(summary(as.data.frame(lapply(x, as.vector), optional = TRUE)))
 	cat("dimension(s):\n")
-	if (any(do.call(rbind, attr(x, "dimensions")$geotransform)[,c(3,5)] != 0))
-		print(attr(x, "dimensions"))
+	lst = attr(x, "dimensions")
+	print(lst, ...)
+}
+
+#' @export
+aperm.stars = function(a, perm = NULL, ...) {
+	if (is.null(perm))
+		perm = rev(seq_along(dim(a)))
+	if (is.character(perm) && is.null(dimnames(a[[1]]))) {
+		ns = names(attr(a, "dimensions"))
+		dn = lapply(as.list(dim(a)), seq_len)
+		names(dn) = ns
+		print(dn)
+		for (i in seq_along(a))
+			dimnames(a[[i]]) = dn
+	}
+	dimensions = structure(attr(a, "dimensions")[perm], class = "dimensions")
+	structure(lapply(a, aperm, perm = perm, ...), 
+		dimensions = dimensions, class = "stars")
+}
+
+#' @export
+dim.stars = function(x, ...) {
+	if (length(x) == 0)
+		integer(0)
 	else
-		print(attr(x, "dimensions")[,-5])
+		dim(x[[1]])
+}
+
+check_equal_dimensions = function(lst) {
+	if (length(lst) > 1) {
+		for (i in 2:length(lst))
+			if (!identical(attr(lst[[1]], "dimensions"), attr(lst[[i]], "dimensions")))
+				stop(paste("object 1 and", i, "have different dimensions"))
+	}
+	TRUE
+}
+
+handle_dimensions = function(dots, along) {
+	stop("not yet implemented")
+}
+
+#' @export
+c.stars = function(..., along = NA_integer_) {
+	dots = list(...)
+	if (is.na(along)) { # merge attributes
+		check_equal_dimensions(dots)
+		st_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
+	} else {
+		if (length(dots) == 1 && is.na(along)) # attributes to array dimension:
+			along = length(dim(dots[[1]]) + 1)
+		ret = if (length(dots) == 1 && along == length(dim(dots[[1]])) + 1) { # collapse:
+			dn = names(dots[[1]])
+			do.call(abind, c(dots, along = along))
+		} else { # loop over attributes:
+			mapply(abind, ..., along = along)
+		}
+		dims = handle_dimensions(dots, along)
+		structure(ret, dimensions = dim, class = "star")
+	}
+}
+
+#' @export
+adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
+	dims = attr(x, "dimensions")[-drop]
+	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
+	# deal with dimensions table
 }

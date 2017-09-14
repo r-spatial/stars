@@ -37,23 +37,51 @@ gdaladdo -r average L7_ETMs.tif  2 4 8 16
 which adds course resolution versions by averaging blocks of pixels.
 
 ```{r}
-x = st_stars(tif, options = c("OVERVIEW_LEVEL=1"))
+(x = st_stars(tif, options = c("OVERVIEW_LEVEL=1")))
 image(x)
-x = st_stars(tif, options = c("OVERVIEW_LEVEL=2"))
+(x = st_stars(tif, options = c("OVERVIEW_LEVEL=2")))
 image(x)
-x = st_stars(tif, options = c("OVERVIEW_LEVEL=3"))
+(x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
 image(x)
 ```
 
 TODO: aspect ratio, title, values along x and y axis, degree symbols
 
+### `as.data.frame`
+
+```{r}
+names(x) = "value"
+df = as.data.frame(x)
+library(ggplot2)
+library(viridis)
+library(ggthemes)
+ggplot() +  
+  geom_tile(data=df, aes(x=x, y=y, fill=value), alpha=0.8) + 
+  facet_wrap("band") +
+  scale_fill_viridis() +
+  coord_equal() +
+  theme_map() +
+  theme(legend.position="bottom") +
+  theme(legend.key.width=unit(2, "cm"))
+```
+
+### `aperm`
+change (permute) dimension order:
+```{r}
+aperm(x, c(1,3,2))
+aperm(x, c("band", "x", "y"))
+```
+
 ### single NetCDF
+
+The AVHRR Sea surface temperature file was downloaded from ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF-uncompress/1981/AVHRR/avhrr-only-v2.19810901.nc
+
 ```{r}
 nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
 (x = st_stars(nc))
 image(x)
 library(units)
-sapply(x, units)
+sapply(x, function(u) as.character(units(u)))
 sst = x[[1]]
 hist(sst) # gives units, even if wrong
 ```

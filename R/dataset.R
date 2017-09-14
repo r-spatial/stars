@@ -30,8 +30,9 @@ st_get_metadata = function(file, domain_item = character(0), options = character
 }
 
 parse_metadata = function(md) {
-	lst = lapply(strsplit(md, "="), function(x) x[[2]])
-	names(lst) = sapply(strsplit(md, "="), function(x) x[[1]])
+	splt = strsplit(md, "=")
+	lst = lapply(splt, function(x) if (length(x) <= 1) NA_character_ else x[[2]])
+	names(lst) = sapply(splt, function(x) x[[1]])
 	structure(lst, class = "gdal_metadata")
 }
 
