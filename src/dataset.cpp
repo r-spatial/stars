@@ -7,19 +7,15 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item,
-		CharacterVector options) {
-	
-	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL, 
-		create_options(options).data());
+CharacterVector get_meta_data(GDALDatasetH ds, CharacterVector domain_item) {
+
+	CharacterVector ret;
 	if (ds == NULL)
 		return NA_STRING;
-	CharacterVector ret;
 	if (domain_item.size() == 0)
 		ret = charpp2CV(GDALGetMetadata(ds, NULL));
 	else if (domain_item.size() == 1) {
-		if (domain_item[0] == NA_STRING)
+		if (CharacterVector::is_na(domain_item[0]))
 			 ret = charpp2CV(GDALGetMetadataDomainList(ds));
 		else
 			 ret = charpp2CV(GDALGetMetadata(ds, domain_item[0]));
@@ -27,6 +23,16 @@ CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item
 		ret = CharacterVector::create(GDALGetMetadataItem(ds, domain_item[1], domain_item[0]));
 	else
 		ret = NA_STRING;
+	return(ret);
+}
+
+// [[Rcpp::export]]
+CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item,
+		CharacterVector options) {
+	
+	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL, 
+		create_options(options).data());
+	CharacterVector ret = get_meta_data(ds, domain_item);
 	GDALClose(ds);
 	return ret;
 }

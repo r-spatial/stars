@@ -27,22 +27,46 @@ create_dimensions = function(dims, pr = NULL) {
 		for (i in names(lst))
 			lst[[i]] = create_dimension(from = 1, to = dims[i])
 	}
+	if (! is.null(pr$dim_extra)) {
+		for (d in names(pr$dim_extra))
+			lst[[d]] = create_dimension(from = 1, to = 1, offset = pr$dim_extra[[d]])
+	}
 	structure(lst, class = "dimensions")
 }
 
-read_units = function(sub_ds, names) {
-	units = rep(NA_character_, length(sub_ds))
-	get_u = function(ds, nm) {
-		md = st_get_metadata(ds)
-		i = grep(paste0(nm, "#units"), md)
+parse_meta = function(pr, name) {
+	meta = pr$meta
+	name = tail(strsplit(name, ":")[[1]], 1)
+	get_val = function(pattern, meta) {
+		i = grep(pattern, meta)
 		if (length(i))
-			strsplit(md[i], "=")[[1]][2]
+			strsplit(meta[i], "=")[[1]][2]
 		else
 			NA_character_
 	}
-	for (i in 1:length(sub_ds))
-		units[i] = get_u(sub_ds[[i]], names[i])
-	units
+	# unit:
+	pr$units = get_val(paste0(name, "#units"), meta)
+	# extra dims: NETCDF_DIM_EXTRA={time,zlev}
+	val = get_val("NETCDF_DIM_EXTRA", meta)
+	if (! is.na(val)) {
+		val = substr(val, 2, nchar(val)-1) # e.g. "{time,depth}" removes { }
+		val = strsplit(val, ",")[[1]]
+		if (length(val)) {
+			pr$dim_extra = vector("list", length(val))
+			names(pr$dim_extra) = val
+			for (v in val) {
+				rhs = get_val(paste0("NETCDF_DIM_", v, "_VALUES"), meta)
+				if (!is.na(rhs))
+					pr$dim_extra[[v]] = as.numeric(rhs)
+				else {
+					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
+					pr$dim_extra[[v]] = as.numeric(rhs)
+				}
+				pr$dim_extra[[v]] = set_units(pr$dim_extra[[v]], get_val(paste0(v, "#units"), meta))
+			}
+		}
+	}
+	pr
 }
 
 #' read raster/array dataset from file or connection
@@ -68,22 +92,19 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		read_stars = function(x, options, driver, keep_meta, quiet) {
 			if (! quiet)
 				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
-			st_stars(x, options = options, driver = driver, keep_meta = keep_meta)
+			st_stars(x, options = options, driver = driver)
 		}
 		ret = lapply(sub_ds, read_stars, options = options, driver = properties$driver[1], quiet = quiet)
-		units = read_units(sub_ds, nms)
 		if (! quiet)
 			cat("\n")
-		ret = do.call(c, ret)
-		for (i in 1:length(ret))
-			if (! is.na(units[i]))
-				ret[[i]] = set_units(ret[[i]], make_unit(units[i]))
-		names(ret) = nms
-		ret
+		structure(do.call(c, ret), names = nms)
 	} else  {
 		data = attr(properties, "data")
-		properties = structure(properties, data = NULL)
-		structure(list(data),
+		properties = parse_meta(structure(properties, data = NULL), x)
+		if (! is.na(properties$units))
+			data = set_units(data, make_unit(properties$units))
+		newdim = structure(rep(1, length(properties$dim_extra)), names = names(properties$dim_extra))
+		structure(list(structure(data, dim = c(dim(data), newdim))),
 			names = x,
 			dimensions = create_dimensions(dim(data), structure(properties, data = NULL)),
 			class = "stars")
@@ -109,6 +130,8 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param asp numeric; aspect ratio of image
+#' @param rgb integer; specify three bands to form an rgb composite
+#' @param maxColorValue numeric; passed on to \link{rgb}
 #' @param xlab character; x axis label
 #' @param ylab character; y axis label
 #' @param ... passed on to \code{image.default}
@@ -117,12 +140,21 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
 #' image(x)
-image.stars = function(x, ..., band = 1, attr = 1, asp = 1, xlab = names(dims)[1], ylab = names(dims)[2]) {
+image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
+		xlab = names(dims)[1], ylab = names(dims)[2]) {
 	dims = expand_dimensions(x)
 	x = x[[attr]]
-	x = if (length(dim(x)) == 3)
-			x[ , rev(seq_len(dim(x)[2])), band]
-		else
+	x = if (length(dim(x)) == 3) {
+			if (is.null(rgb))
+				x[ , rev(seq_len(dim(x)[2])), band]
+			else {
+				xy = dim(x)[1:2]
+				x = structure(x[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
+				x = rgb(x, maxColorValue = maxColorValue) # FIXME: deal with NAs
+				dim(x) = xy
+				return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
+			}
+		} else
 			x[ , rev(seq_len(dim(x)[2]))]
 	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, ...)
 }
@@ -193,7 +225,8 @@ print.dimensions = function(x, ..., digits = 6) {
 
 #' @export
 print.stars = function(x, ...) {
-	cat("stars object with", length(dim(x)), "dimensions and", length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
+	cat("stars object with", length(dim(x)), "dimensions and", 
+		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
 	cat("attribute(s):\n")
 	print(summary(as.data.frame(lapply(x, as.vector), optional = TRUE)))
 	cat("dimension(s):\n")

@@ -17,8 +17,8 @@ st_stars(x, ...)
 
 \method{st_stars}{list}(x, ..., dimensions = NULL)
 
-\method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1,
-  xlab = names(dims)[1], ylab = names(dims)[2])
+\method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
+  maxColorValue = 1, xlab = names(dims)[1], ylab = names(dims)[2])
 }
 \arguments{
 \item{x}{if character, file name to read; if list: list with arrays}
@@ -40,6 +40,10 @@ st_stars(x, ...)
 \item{attr}{integer; which attribute to plot}
 
 \item{asp}{numeric; aspect ratio of image}
+
+\item{rgb}{integer; specify three bands to form an rgb composite}
+
+\item{maxColorValue}{numeric; passed on to \link{rgb}}
 
 \item{xlab}{character; x axis label}
 

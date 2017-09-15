@@ -91,6 +91,14 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 			nodatavalue = poBand->GetNoDataValue(NULL);
 	}
 
+	CharacterVector items = get_meta_data((GDALDatasetH) poDataset, NA_STRING);
+	CharacterVector sub = NA_STRING;
+	for (size_t i; i < items.size(); i++) {
+		// Rcpp::Rcout << items[i] << std::endl;
+		if (items[i] == "SUBDATASETS")
+			sub = get_meta_data(poDataset, "SUBDATASETS");
+	}
+
 	List ReturnList = List::create(
 		_["filename"] = fname,
 		_["driver"] = Driver,
@@ -100,8 +108,10 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 		_["proj_wkt"] = proj,
 		_["proj4string"] = p4,
 		_["geotransform"] = geotransform,
-        _["datatype"] =	poBand != NULL ? GDALGetDataTypeName(poBand->GetRasterDataType()) : CharacterVector::create(NA_STRING)
-		// _["nodatavalue"] = nodatavalue
+        _["datatype"] =	poBand != NULL ? 
+			GDALGetDataTypeName(poBand->GetRasterDataType()) : CharacterVector::create(NA_STRING),
+		_["sub"] = sub,
+		_["meta"] = get_meta_data(poDataset, CharacterVector::create())
 	);
 	if (read_data)
 		ReturnList.attr("data") = CPL_read_gdal_data(ReturnList, poDataset, nodatavalue);
@@ -117,7 +127,8 @@ NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset, Numeri
 	IntegerVector bands = meta["bands"];
 
 	size_t nx = diff(x)[0] + 1, ny = diff(y)[0] + 1, nbands = diff(bands)[0] + 1,
-		resample = 1; // still need to find out what resample exactly does, and how it interacts with/should change geotransform
+		resample = 1; // still need to find out what resample exactly does, 
+		              // and how it interacts with/should change geotransform
 
 	// GDALRasterBand *poBand = poDataset->GetRasterBand( 1 );
 	NumericMatrix mat( (nx / resample) * (ny / resample), nbands );
