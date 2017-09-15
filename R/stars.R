@@ -142,17 +142,22 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' image(x)
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
 		xlab = names(dims)[1], ylab = names(dims)[2]) {
+
+	if (any(dim(x) == 1))
+		x = adrop(x)
+
 	dims = expand_dimensions(x)
-	x = x[[attr]]
+	x = unclass(x[[ attr ]])
 	x = if (length(dim(x)) == 3) {
 			if (is.null(rgb))
 				x[ , rev(seq_len(dim(x)[2])), band]
 			else {
+				stop("not yet supported")
 				xy = dim(x)[1:2]
 				x = structure(x[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
 				x = rgb(x, maxColorValue = maxColorValue) # FIXME: deal with NAs
 				dim(x) = xy
-				return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
+				#return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
 			}
 		} else
 			x[ , rev(seq_len(dim(x)[2]))]

@@ -14,18 +14,13 @@ Imports:
 	units,
 	sf
 Suggests: 
+	ggplot2,
+	ggthemes,
+	viridis,
     testthat,
     knitr,
     covr,
-    tibble,
-    dplyr,
-    tidyr,
-    geosphere (>= 1.5-5), 
-    maptools, 
-    maps,
-	ggplot2,
-	ggthemes,
-	viridis
+	rmarkdown
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 SystemRequirements: GDAL (>= 2.1.0), PROJ.4 (>= 4.8.0)
