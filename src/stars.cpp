@@ -1,3 +1,6 @@
+#include "cpl_port.h"
+#include "gdal.h"
+
 #include "Rcpp.h"
 
 #include "stars.h"
