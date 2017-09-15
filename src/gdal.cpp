@@ -76,8 +76,10 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 		char **ppt = (char **) &wkt;
 		sr->importFromWkt(ppt);
 		char *proj4; 
-		sr->exportToProj4(&proj4); // need to error check?
+		if (sr->exportToProj4(&proj4) != OGRERR_NONE) // need to error check?
+			stop("failure to export SRS to proj.4");
 		p4 = CharacterVector::create(proj4); // need to CPLFree?
+		CPLFree(proj4);
 		delete sr;
 	}
 
