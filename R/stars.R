@@ -80,6 +80,7 @@ parse_meta = function(pr, name) {
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
+#' x1 = st_stars(tif, options = "OVERVIEW_LEVEL=1")
 st_stars = function(x, ...) UseMethod("st_stars")
 
 #' @name st_stars
