@@ -58,6 +58,7 @@ read raster/array dataset from file or connection
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
+x1 = st_stars(tif, options = "OVERVIEW_LEVEL=1")
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
 image(x)

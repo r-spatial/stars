@@ -95,7 +95,7 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 
 	CharacterVector items = get_meta_data((GDALDatasetH) poDataset, NA_STRING);
 	CharacterVector sub = NA_STRING;
-	for (size_t i; i < items.size(); i++) {
+	for (int i = 0; i < items.size(); i++) {
 		// Rcpp::Rcout << items[i] << std::endl;
 		if (items[i] == "SUBDATASETS")
 			sub = get_meta_data(poDataset, "SUBDATASETS");
@@ -148,7 +148,7 @@ NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset, Numeri
 	if (err == CE_Failure)
 		stop("read failure");
 
-	for (size_t band = bands(0), i = 0; band <= bands(1); band++) { // unlike x & y, band is 1-based
+	for (int band = bands(0); band <= bands(1); band++) { // unlike x & y, band is 1-based
 		GDALRasterBand *poBand = poDataset->GetRasterBand( band );
 		NumericVector nodatavalue = NumericVector::create(NA_REAL);
 		int success = 0, has_scale = 0, has_offset = 0;
@@ -165,7 +165,7 @@ NumericMatrix CPL_read_gdal_data(Rcpp::List meta, GDALDataset *poDataset, Numeri
 		// char *units = poBand->GetUnits();
 		if (! NumericVector::is_na(nodatavalue[0]) || has_offset || has_scale) {
 			NumericVector nv = mat(_, band - 1);
-			for (size_t i = 0; i < nv.size(); i++) {
+			for (int i = 0; i < nv.size(); i++) {
 				if (nv[i] == nodatavalue[0])
 					nv[i] = NA_REAL;
 				else

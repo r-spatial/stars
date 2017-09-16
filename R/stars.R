@@ -14,12 +14,16 @@ create_dimensions = function(dims, pr = NULL) {
 	if (!is.null(pr)) {
 		for (i in names(lst)) {
 			lst[[i]] = switch(i,
-				x = create_dimension(from = pr$cols[1], to = pr$cols[2], offset = pr$geotransform[1], 
+				x = create_dimension(from = pr$cols[1], to = pr$cols[2], 
+					offset = pr$geotransform[1], 
 					delta = pr$geotransform[2], geotransform = pr$geotransform, 
-					refsys = if (is.null(pr$proj4string)) NA_character_ else pr$proj4string),
-				y = create_dimension(from = pr$rows[1], to = pr$rows[2], offset = pr$geotransform[4],
+					refsys = if (is.null(pr$proj4string)) NA_character_ 
+						else pr$proj4string),
+				y = create_dimension(from = pr$rows[1], to = pr$rows[2], 
+					offset = pr$geotransform[4],
 					delta = pr$geotransform[6], geotransform = pr$geotransform, 
-					refsys = if (is.null(pr$proj4string)) NA_character_ else pr$proj4string),
+					refsys = if (is.null(pr$proj4string)) NA_character_ 
+						else pr$proj4string),
 				create_dimension(from = 1, to = dims[i]) # time? depth+units?
 			)
 		}
@@ -62,7 +66,8 @@ parse_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
 					pr$dim_extra[[v]] = as.numeric(rhs)
 				}
-				pr$dim_extra[[v]] = set_units(pr$dim_extra[[v]], get_val(paste0(v, "#units"), meta))
+				pr$dim_extra[[v]] = set_units(pr$dim_extra[[v]], 
+					get_val(paste0(v, "#units"), meta))
 			}
 		}
 	}
@@ -88,7 +93,10 @@ st_stars = function(x, ...) UseMethod("st_stars")
 st_stars.character = function(x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
 	properties = CPL_read_gdal(x, options, driver, TRUE)
 	if (properties$bands[2] == 0) { # read sub-datasets:
-		sub_ds = st_get_subdatasets(x, options)[sub]
+		subs = parse_metadata(properties$sub)
+		sub_ds = subs[seq(1, length(subs), by = 2)]
+		sub_ds = sub_ds[sub]
+		# sub_ds = st_get_subdatasets(x, options)[sub] # -> would open x twice
 		nms = sapply(strsplit(unlist(sub_ds), ":"), tail, 1)
 		read_stars = function(x, options, driver, keep_meta, quiet) {
 			if (! quiet)

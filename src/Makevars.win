@@ -2,11 +2,13 @@ COMPILED_BY ?= gcc-4.6.3
 RWINLIB = lib${subst gcc,,${COMPILED_BY}}${R_ARCH}
 
 PKG_CPPFLAGS =\
-	-I../windows/gdal2-2.2.0/include/gdal
+	-I../windows/gdal2-2.2.0/include/gdal \
+	-I../windows/gdal2-2.2.0/include/geos \
+	-I../windows/gdal2-2.2.0/include/proj
 
 PKG_LIBS = \
 	-L../windows/gdal2-2.2.0/${RWINLIB} \
-	-lgdal -lsqlite3 -lspatialite \
+	-lgdal -lsqlite3 -lspatialite -lproj -lgeos_c -lgeos  \
 	-ljson-c -lnetcdf -lpq -lintl -lwebp -lcurl -lssh2 -lssl -lcrypto \
 	-lhdf5_hl -lhdf5 -lexpat -lfreexl -lcfitsio \
 	-lpng16 -ljpeg -ltiff -lgeotiff -lgif -lxml2 -llzma -lszip -lz \
