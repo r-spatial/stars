@@ -38,7 +38,7 @@ create_dimensions = function(dims, pr = NULL) {
 	structure(lst, class = "dimensions")
 }
 
-parse_meta = function(pr, name) {
+parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
 	name = tail(strsplit(name, ":")[[1]], 1)
 	get_val = function(pattern, meta) {
@@ -91,31 +91,40 @@ st_stars = function(x, ...) UseMethod("st_stars")
 #' @name st_stars
 #' @export
 st_stars.character = function(x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
+
 	properties = CPL_read_gdal(x, options, driver, TRUE)
+
 	if (properties$bands[2] == 0) { # read sub-datasets:
-		subs = parse_metadata(properties$sub)
-		sub_ds = subs[seq(1, length(subs), by = 2)]
-		sub_ds = sub_ds[sub]
-		# sub_ds = st_get_subdatasets(x, options)[sub] # -> would open x twice
-		nms = sapply(strsplit(unlist(sub_ds), ":"), tail, 1)
+		sub_names = split_strings(properties$sub) # get named list
+		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
+		sub_datasets = sub_datasets[sub]
+		# sub_datasets = st_get_subdatasets(x, options)[sub] # -> would open x twice
+
+		# FIXME: only for NetCDF:
+		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
+
 		read_stars = function(x, options, driver, keep_meta, quiet) {
 			if (! quiet)
 				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
 			st_stars(x, options = options, driver = driver)
 		}
-		ret = lapply(sub_ds, read_stars, options = options, driver = properties$driver[1], quiet = quiet)
+		ret = lapply(sub_datasets, read_stars, options = options, 
+			driver = properties$driver[1], quiet = quiet)
 		if (! quiet)
 			cat("\n")
 		structure(do.call(c, ret), names = nms)
 	} else  {
 		data = attr(properties, "data")
-		properties = parse_meta(structure(properties, data = NULL), x)
-		if (! is.na(properties$units))
+		properties = structure(properties, data = NULL)
+		if (properties$driver[1] == "NetCDF")
+			properties = parse_netcdf_meta(properties, x)
+		if (! is.null(properties$units) && ! is.na(properties$units))
 			data = set_units(data, make_unit(properties$units))
-		newdim = structure(rep(1, length(properties$dim_extra)), names = names(properties$dim_extra))
-		structure(list(structure(data, dim = c(dim(data), newdim))),
+		newdims = structure(rep(1, length(properties$dim_extra)), 
+			names = names(properties$dim_extra))
+		structure(list(structure(data, dim = c(dim(data), newdims))),
 			names = x,
-			dimensions = create_dimensions(dim(data), structure(properties, data = NULL)),
+			dimensions = create_dimensions(dim(data), properties),
 			class = "stars")
 	}
 }

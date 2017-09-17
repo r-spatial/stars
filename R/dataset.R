@@ -24,22 +24,22 @@ st_get_metadata = function(file, domain_item = character(0), options = character
 		stop("domain_item[1] not found in available metadata domains")
 	p = CPL_GetMetadata(file, domain_item, options)
 	if (!is.na(domain_item[1]) && parse)
-		parse_metadata(p)
+		split_strings(p)
 	else
 		p
 }
 
-parse_metadata = function(md) {
-	splt = strsplit(md, "=")
+split_strings = function(md, split = "=") {
+	splt = strsplit(md, split)
 	lst = lapply(splt, function(x) if (length(x) <= 1) NA_character_ else x[[2]])
-	names(lst) = sapply(splt, function(x) x[[1]])
+	structure(lst, names = sapply(splt, function(x) x[[1]]))
 	structure(lst, class = "gdal_metadata")
 }
 
 #' @name get_get_metadata
 #' @param name logical; retrieve name of subdataset? If \code{FALSE}, retrieve description
 #' @export
-#' @return \code{st_get_subdatasets} returns a zero-length list if \code{file} does not have subdatasets.
+#' @return \code{st_get_subdatasets} returns a zero-length list if \code{file} does not have subdatasets, and else a named list with subdatasets.
 st_get_subdatasets = function(file, options = character(0), name = TRUE) {
 	if (!("SUBDATASETS" %in% CPL_GetMetadata(file, NA_character_, options)))
 		list()

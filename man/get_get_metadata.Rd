@@ -26,7 +26,7 @@ st_get_subdatasets(file, options = character(0), name = TRUE)
 \value{
 named list with metadata items
 
-\code{st_get_subdatasets} returns a zero-length list if \code{file} does not have subdatasets.
+\code{st_get_subdatasets} returns a zero-length list if \code{file} does not have subdatasets, and else a named list with subdatasets.
 }
 \description{
 get metadata of a raster layer
