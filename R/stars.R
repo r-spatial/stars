@@ -92,6 +92,11 @@ st_stars = function(x, ...) UseMethod("st_stars")
 #' @export
 st_stars.character = function(x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
 
+	if (length(x) > 1) { # recurse:
+		ret = lapply(x, st_stars, options = options, driver = driver, sub = sub, quiet = quiet)
+		return(do.call(c, c(ret, along = 3)))
+	}
+
 	properties = CPL_read_gdal(x, options, driver, TRUE)
 
 	if (properties$bands[2] == 0) { # read sub-datasets:
@@ -116,7 +121,7 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 	} else  {
 		data = attr(properties, "data")
 		properties = structure(properties, data = NULL)
-		if (properties$driver[1] == "NetCDF")
+		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		if (! is.null(properties$units) && ! is.na(properties$units))
 			data = set_units(data, make_unit(properties$units))
@@ -292,7 +297,18 @@ check_equal_dimensions = function(lst) {
 }
 
 handle_dimensions = function(dots, along) {
-	stop("not yet implemented")
+	dims = attr(dots[[1]], "dimensions")
+	offset = sapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
+	if (length(unique(diff(offset))) == 1) { # regular, sorted
+		dims[[along]]$offset = min(offset)
+		dims[[along]]$delta = diff(offset)[1]
+	} else {
+		dims[[along]]$values = offset
+		dims[[along]]$delta = NA_real_
+	}
+	dims[[along]]$from = 1
+	dims[[along]]$to = length(offset)
+	dims
 }
 
 #' @export
@@ -308,10 +324,10 @@ c.stars = function(..., along = NA_integer_) {
 			dn = names(dots[[1]])
 			do.call(abind, c(dots, along = along))
 		} else { # loop over attributes:
-			mapply(abind, ..., along = along)
+			mapply(abind, ..., along = along, SIMPLIFY = FALSE)
 		}
 		dims = handle_dimensions(dots, along)
-		structure(ret, dimensions = dim, class = "star")
+		structure(ret, dimensions = dims, class = "stars")
 	}
 }
 
