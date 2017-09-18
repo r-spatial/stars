@@ -3,7 +3,7 @@
 #' @importFrom abind abind adrop
 #' @importFrom Rcpp evalCpp
 #' @importFrom sf sf_extSoftVersion st_crs
-#' @importFrom units make_unit set_units
+#' @import units
 #' @useDynLib stars
 NULL
 

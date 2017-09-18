@@ -1,5 +1,13 @@
 ## read raster/array dataset from file or connection
 
+#' get dimensions from stars object
+#' @export
+st_dimensions = function(x, ...) UseMethod("st_dimensions")
+
+#' @export
+#' @name st_dimensions
+st_dimensions.stars = function(x, ...) attr(x, "dimensions")
+
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		geotransform = rep(NA_real_, 6), refsys = NA_character_) {
 	list(from = from, to = to, offset = offset, delta = delta, 
@@ -32,8 +40,10 @@ create_dimensions = function(dims, pr = NULL) {
 			lst[[i]] = create_dimension(from = 1, to = dims[i])
 	}
 	if (! is.null(pr$dim_extra)) {
-		for (d in names(pr$dim_extra))
-			lst[[d]] = create_dimension(from = 1, to = 1, offset = pr$dim_extra[[d]])
+		for (d in names(pr$dim_extra)) {
+			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) "POSIXct" else NA_character_
+			lst[[d]] = create_dimension(from = 1, to = 1, offset = pr$dim_extra[[d]], refsys = refsys)
+		}
 	}
 	structure(lst, class = "dimensions")
 }
@@ -68,6 +78,8 @@ parse_netcdf_meta = function(pr, name) {
 				}
 				pr$dim_extra[[v]] = set_units(pr$dim_extra[[v]], 
 					get_val(paste0(v, "#units"), meta))
+				if (v == "time")
+					pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
 			}
 		}
 	}
@@ -245,8 +257,17 @@ as.data.frame.stars = function(x, ...) {
 
 #' @export
 print.dimensions = function(x, ..., digits = 6) {
-	lst = lapply(x, function(.) { .$geotransform = paste(signif(.$geotransform, digits = digits), collapse = ", "); . })
-	ret = data.frame(do.call(rbind, lapply(lst, format, digits = digits)))
+	lst = lapply(x, function(y) { 
+			aff = y$geotransform[c(3,5)]
+			y$geotransform = if (any(!is.na(aff)) && any(aff != 0))
+				paste(signif(y$geotransform, digits = digits), collapse = ", ")
+			else
+				NULL
+			y
+		}
+	)
+	lst = lapply(lst, function(x) lapply(x, format, digits = digits))
+	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	names(ret) = names(lst[[1]])
 	print(ret)
 }
@@ -298,7 +319,8 @@ check_equal_dimensions = function(lst) {
 
 handle_dimensions = function(dots, along) {
 	dims = attr(dots[[1]], "dimensions")
-	offset = sapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
+	offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
+	offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
 	if (length(unique(diff(offset))) == 1) { # regular, sorted
 		dims[[along]]$offset = min(offset)
 		dims[[along]]$delta = diff(offset)[1]

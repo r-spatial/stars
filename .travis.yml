@@ -20,8 +20,8 @@ before_install:
   - cd gdal* 
   - ./configure
   - make
-  - make install
-  - ldconfig
+  - sudo make install
+  - sudo ldconfig
   - cd ..
 
 warnings_are_errors: true
