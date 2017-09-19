@@ -23,7 +23,7 @@ before_install:
   - make
   - sudo make install
   - sudo ldconfig
-  - cd ./stars
+  - cd ../stars
 
 
 warnings_are_errors: true
