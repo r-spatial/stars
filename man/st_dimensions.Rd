@@ -10,6 +10,14 @@ st_dimensions(x, ...)
 
 \method{st_dimensions}{stars}(x, ...)
 }
+\arguments{
+\item{x}{object to retrieve dimensions information from}
+
+\item{...}{further arguments}
+}
+\value{
+the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
+}
 \description{
 get dimensions from stars object
 }

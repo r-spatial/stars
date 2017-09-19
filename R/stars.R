@@ -2,6 +2,9 @@
 
 #' get dimensions from stars object
 #' @export
+#' @param x object to retrieve dimensions information from 
+#' @param ... further arguments
+#' @return the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
 st_dimensions = function(x, ...) UseMethod("st_dimensions")
 
 #' @export
