@@ -214,7 +214,7 @@ xy_from_colrow = function(x, geotransform) {
 }
 
 expand_dimensions = function(x) {
-	dimensions = attr(x, "dimensions")
+	dimensions = st_dimensions(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
 	if ("x" %in% names(lst)) {
@@ -235,10 +235,12 @@ expand_dimensions = function(x) {
 	}
 	for (nm in setdiff(names(lst), c("x", "y"))) {
 		dm = dimensions[[nm]]
-		lst[[nm]] = if (is.na(dm$offset) || is.na(dm$delta))
+		lst[[nm]] = if (!is.null(dm$values))
+				dm$values 
+			else if (is.na(dm$offset) || is.na(dm$delta))
 				seq(dm$from, dm$to)
 			else
-				seq(from = dm$offset, by = dm$delta, length.out = dm$to - dm$from)
+				seq(from = dm$offset, by = dm$delta, length.out = dm$to - dm$from + 1)
 	}
 	lst
 }
@@ -249,9 +251,11 @@ as.data.frame.stars = function(x, ...) {
 	dims = attr(x, "dimensions")
 	lapply(dims, 
 		function(x) { 
-			aff = x$geotransform[c(3,5)]
-			if (!is.na(aff) && any(aff != 0)) 
-				stop("affine transformation needed") 
+			if (!is.null(x$geotransform)) {
+				aff = x$geotransform[c(3,5)]
+				if (!all(is.na(aff)) && any(aff != 0)) 
+					stop("affine transformation needed") 
+			}
 		}
 	)
 	coords = do.call(expand.grid, expand_dimensions(x))
@@ -342,6 +346,13 @@ handle_dimensions = function(dots, along) {
 	dims
 }
 
+propagate_units = function(new, old) {
+	for (i in seq_along(new))
+		if (inherits(old[[i]], "units"))
+			units(new[[i]]) <- units(old[[i]])
+	new
+}
+
 #' @export
 c.stars = function(..., along = NA_integer_) {
 	dots = list(...)
@@ -355,7 +366,7 @@ c.stars = function(..., along = NA_integer_) {
 			dn = names(dots[[1]])
 			do.call(abind, c(dots, along = along))
 		} else { # loop over attributes:
-			mapply(abind, ..., along = along, SIMPLIFY = FALSE)
+			propagate_units(mapply(abind, ..., along = along, SIMPLIFY = FALSE), dots[[1]])
 		}
 		dims = handle_dimensions(dots, along)
 		structure(ret, dimensions = dims, class = "stars")
@@ -364,7 +375,40 @@ c.stars = function(..., along = NA_integer_) {
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
-	dims = attr(x, "dimensions")[-drop]
+	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
 	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
 	# deal with dimensions table
+}
+
+# convert x/y gdal dimensions into a list of points, or a list of square polygons
+#' @export
+st_as_sfc.stars = function(x, ..., as_points = TRUE) {
+
+	form_polys = function(cc, dm) { # form square polygons from a long matrix with corner points
+		stopifnot(prod(dm) == nrow(cc))
+		lst = vector("list", length = prod(dm - 1))
+		for (x in 1:(dm[1]-1)) {
+			for (y in 1:(dm[2]-1)) {
+				i1 = (y - 1) * dm[1] + x      # top-left
+				i2 = (y - 1) * dm[1] + x + 1  # top-right
+				i3 = (y - 0) * dm[1] + x + 1  # bottom-right
+				i4 = (y - 0) * dm[1] + x      # bottlom-left
+				lst[[ (y-1)*(dm[1]-1) + x ]] = sf::st_polygon(list(cc[c(i1,i2,i3,i4,i1),]))
+			}
+		}
+		lst
+	}
+
+	d = st_dimensions(x)
+	stopifnot(identical(d$x$geotransform, d$y$geotransform))
+	xy = if (as_points) # grid cell centres:
+		expand.grid(x = seq(d$x$from, d$x$to) - 0.5, y = seq(d$y$from, d$y$to) - 0.5)
+	else # grid corners: from 0 to n
+		expand.grid(x = seq(d$x$from - 1, d$x$to), y = seq(d$y$from - 1, d$y$to))
+	cc = xy_from_colrow(as.matrix(xy), d$x$geotransform)
+	lst = if (as_points)
+			unlist(apply(cc, 1, function(x) list(sf::st_point(x))), recursive = FALSE)
+		else
+			form_polys(cc, dim(x)[c("x", "y")] + 1)
+	st_sfc(lst, crs = d$x$refsys)
 }

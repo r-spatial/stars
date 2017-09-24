@@ -2,7 +2,7 @@
 #' @importFrom utils tail
 #' @importFrom abind abind adrop
 #' @importFrom Rcpp evalCpp
-#' @importFrom sf sf_extSoftVersion st_crs
+#' @import sf
 #' @import units
 #' @useDynLib stars
 NULL

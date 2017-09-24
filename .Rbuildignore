@@ -4,3 +4,4 @@ cleanup
 .travis.yml
 ^\.httr-oauth$
 appveyor.yml
+codecov.yml
