@@ -41,7 +41,10 @@ st_as_sfc.stars = function(x, ..., as_points = TRUE) {
 		..., as_points = as_points)
 }
 
-#' convert x y raster dimension in to simple feature geometry (points or polygons)
+#' replace x y raster dimensions with simple feature geometry list (points or polygons)
+#' @param x object of class \code{stars}
+#' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
+#' @return object of class \code{stars} with x and y raster dimensions replace by sfc geometry list
 #' @export
 st_xy2sfc = function(x, as_points = TRUE) {
 

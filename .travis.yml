@@ -25,7 +25,6 @@ before_install:
   - sudo ldconfig
   - cd ../stars
 
-
 warnings_are_errors: true
 
 after_success:
