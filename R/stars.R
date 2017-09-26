@@ -12,9 +12,9 @@ st_dimensions = function(x, ...) UseMethod("st_dimensions")
 st_dimensions.stars = function(x, ...) attr(x, "dimensions")
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
-		geotransform = rep(NA_real_, 6), refsys = NA_character_) {
+		geotransform = rep(NA_real_, 6), refsys = NA_character_, values = NULL) {
 	list(from = from, to = to, offset = offset, delta = delta, 
-		geotransform = geotransform, refsys = refsys)
+		geotransform = geotransform, refsys = refsys, values = values)
 }
 
 create_dimensions = function(dims, pr = NULL) {
@@ -334,7 +334,7 @@ handle_dimensions = function(dots, along) {
 	dims = attr(dots[[1]], "dimensions")
 	offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
 	offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
-	if (length(unique(diff(offset))) == 1) { # regular, sorted
+	if (length(unique(diff(offset))) == 1) { # regular & sorted
 		dims[[along]]$offset = min(offset)
 		dims[[along]]$delta = diff(offset)[1]
 	} else {
@@ -378,37 +378,4 @@ adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
 	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
 	# deal with dimensions table
-}
-
-# convert x/y gdal dimensions into a list of points, or a list of square polygons
-#' @export
-st_as_sfc.stars = function(x, ..., as_points = TRUE) {
-
-	form_polys = function(cc, dm) { # form square polygons from a long matrix with corner points
-		stopifnot(prod(dm) == nrow(cc))
-		lst = vector("list", length = prod(dm - 1))
-		for (x in 1:(dm[1]-1)) {
-			for (y in 1:(dm[2]-1)) {
-				i1 = (y - 1) * dm[1] + x      # top-left
-				i2 = (y - 1) * dm[1] + x + 1  # top-right
-				i3 = (y - 0) * dm[1] + x + 1  # bottom-right
-				i4 = (y - 0) * dm[1] + x      # bottlom-left
-				lst[[ (y-1)*(dm[1]-1) + x ]] = sf::st_polygon(list(cc[c(i1,i2,i3,i4,i1),]))
-			}
-		}
-		lst
-	}
-
-	d = st_dimensions(x)
-	stopifnot(identical(d$x$geotransform, d$y$geotransform))
-	xy = if (as_points) # grid cell centres:
-		expand.grid(x = seq(d$x$from, d$x$to) - 0.5, y = seq(d$y$from, d$y$to) - 0.5)
-	else # grid corners: from 0 to n
-		expand.grid(x = seq(d$x$from - 1, d$x$to), y = seq(d$y$from - 1, d$y$to))
-	cc = xy_from_colrow(as.matrix(xy), d$x$geotransform)
-	lst = if (as_points)
-			unlist(apply(cc, 1, function(x) list(sf::st_point(x))), recursive = FALSE)
-		else
-			form_polys(cc, dim(x)[c("x", "y")] + 1)
-	st_sfc(lst, crs = d$x$refsys)
 }
