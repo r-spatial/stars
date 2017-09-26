@@ -270,6 +270,9 @@ print.dimensions = function(x, ..., digits = 6) {
 				paste(signif(y$geotransform, digits = digits), collapse = ", ")
 			else
 				NULL
+			if (length(y$values) > 2)
+				y$values = paste0(format(y$values[1]), ", ..., ", 
+					format(tail(y$values, 1)))
 			y
 		}
 	)

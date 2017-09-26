@@ -73,7 +73,7 @@ st_xy2sfc = function(x, as_points = TRUE) {
 st_as_sf.stars = function(x, ..., as_points = TRUE) {
 	x = st_xy2sfc(x, as_points = as_points)
 	sfc = st_dimensions(x)$sfc$values
-	dfs = lapply(x, as.data.frame)
+	dfs = lapply(x, as.data.frame) # may choose units method
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
 	names(df) = make.names(rep(names(x), nc), unique = TRUE)

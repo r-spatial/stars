@@ -111,7 +111,8 @@ List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVect
 		_["proj4string"] = p4,
 		_["geotransform"] = geotransform,
         _["datatype"] =	poBand != NULL ? 
-			GDALGetDataTypeName(poBand->GetRasterDataType()) : CharacterVector::create(NA_STRING),
+			GDALGetDataTypeName(poBand->GetRasterDataType()) :
+			CharacterVector::create(NA_STRING),
 		_["sub"] = sub,
 		_["meta"] = get_meta_data(poDataset, CharacterVector::create())
 	);
