@@ -2,7 +2,7 @@
 
 # convert x/y gdal dimensions into a list of points, or a list of square polygons
 #' @export
-st_as_sfc.dimensions = function(x, ..., as_points = TRUE) {
+st_as_sfc.dimensions = function(x, ..., as_points = NA) {
 
 	stopifnot(identical(names(x), c("x", "y")))
 	form_polys = function(cc, dm) { # form square polygons from a long matrix with corner points
@@ -28,7 +28,7 @@ st_as_sfc.dimensions = function(x, ..., as_points = TRUE) {
 		else # grid corners: from 0 to n
 			expand.grid(x = seq(x$from - 1, x$to), y = seq(y$from - 1, y$to))
 	cc = xy_from_colrow(as.matrix(xy), x$geotransform)
-	lst = if (as_points)
+	lst = if (isTRUE(as_points))
 			unlist(apply(cc, 1, function(x) list(sf::st_point(x))), recursive = FALSE)
 		else
 			form_polys(cc, c(x$to, y$to) + 1)
@@ -36,7 +36,7 @@ st_as_sfc.dimensions = function(x, ..., as_points = TRUE) {
 }
 
 #' @export
-st_as_sfc.stars = function(x, ..., as_points = TRUE) {
+st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 	st_as_sfc(structure(st_dimensions(x)[c("x", "y")], class = "dimensions"),
 		..., as_points = as_points)
 }
@@ -46,7 +46,7 @@ st_as_sfc.stars = function(x, ..., as_points = TRUE) {
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @return object of class \code{stars} with x and y raster dimensions replace by sfc geometry list
 #' @export
-st_xy2sfc = function(x, as_points = TRUE) {
+st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point) {
 
 	d = st_dimensions(x)
 
@@ -70,7 +70,7 @@ st_xy2sfc = function(x, as_points = TRUE) {
 }
 
 #' @export
-st_as_sf.stars = function(x, ..., as_points = TRUE) {
+st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 	x = st_xy2sfc(x, as_points = as_points)
 	sfc = st_dimensions(x)$sfc$values
 	dfs = lapply(x, as.data.frame) # may choose units method

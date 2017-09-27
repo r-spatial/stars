@@ -4,7 +4,7 @@
 \alias{st_xy2sfc}
 \title{replace x y raster dimensions with simple feature geometry list (points or polygons)}
 \usage{
-st_xy2sfc(x, as_points = TRUE)
+st_xy2sfc(x, as_points = st_dimensions(x)$x$point)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
