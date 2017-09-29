@@ -143,15 +143,21 @@ as.data.frame.stars = function(x, ...) {
 }
 
 #' @export
-print.stars = function(x, ...) {
+print.stars = function(x, ..., n = 1e5) {
 	add_units = function(x) {
 		f = function(obj) if (inherits(obj, "units")) paste0("[", as.character(units(obj)), "]") else ""
 		paste(names(x), sapply(x, f))
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
 		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
-	cat("attribute(s):\n")
-	df = as.data.frame(lapply(x, as.vector), optional = TRUE)
+	cat("attribute(s)")
+	df = if (prod(dim(x)) > n) {
+		cat(paste0(", of first ", n, " cells:\n"))
+		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE)
+	} else {
+		cat(":\n")
+		as.data.frame(lapply(x, as.vector), optional = TRUE)
+	}
 	names(df) = add_units(x)
 	print(summary(df))
 	cat("dimension(s):\n")
