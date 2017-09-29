@@ -33,6 +33,10 @@ CPL_proj_is_valid <- function(proj4string) {
     .Call('_stars_CPL_proj_is_valid', PACKAGE = 'stars', proj4string)
 }
 
+CPL_xy2sfc <- function(cc, dim, to_points) {
+    .Call('_stars_CPL_xy2sfc', PACKAGE = 'stars', cc, dim, to_points)
+}
+
 CPL_gdalinfo <- function(obj, options) {
     .Call('_stars_CPL_gdalinfo', PACKAGE = 'stars', obj, options)
 }

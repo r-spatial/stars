@@ -2,22 +2,27 @@
 
 # convert x/y gdal dimensions into a list of points, or a list of square polygons
 #' @export
-st_as_sfc.dimensions = function(x, ..., as_points = NA) {
+st_as_sfc.dimensions = function(x, ..., as_points = NA, use_cpp = FALSE) {
 
 	stopifnot(identical(names(x), c("x", "y")))
-	form_polys = function(cc, dm) { # form square polygons from a long matrix with corner points
-		stopifnot(prod(dm) == nrow(cc))
-		lst = vector("list", length = prod(dm - 1))
-		for (y in 1:(dm[2]-1)) {
-			for (x in 1:(dm[1]-1)) {
-				i1 = (y - 1) * dm[1] + x      # top-left
-				i2 = (y - 1) * dm[1] + x + 1  # top-right
-				i3 = (y - 0) * dm[1] + x + 1  # bottom-right
-				i4 = (y - 0) * dm[1] + x      # bottlom-left
-				lst[[ (y-1)*(dm[1]-1) + x ]] = sf::st_polygon(list(cc[c(i1,i2,i3,i4,i1),]))
+
+	xy2sfc = function(cc, dm, as_points) { # form points or polygons from a matrix with corner points
+		if (as_points)
+			unlist(apply(cc, 1, function(x) list(sf::st_point(x))), recursive = FALSE)
+		else {
+			stopifnot(prod(dm) == nrow(cc))
+			lst = vector("list", length = prod(dm - 1))
+			for (y in 1:(dm[2]-1)) {
+				for (x in 1:(dm[1]-1)) {
+					i1 = (y - 1) * dm[1] + x      # top-left
+					i2 = (y - 1) * dm[1] + x + 1  # top-right
+					i3 = (y - 0) * dm[1] + x + 1  # bottom-right
+					i4 = (y - 0) * dm[1] + x      # bottlom-left
+					lst[[ (y-1)*(dm[1]-1) + x ]] = sf::st_polygon(list(cc[c(i1,i2,i3,i4,i1),]))
+				}
 			}
+			lst
 		}
-		lst
 	}
 
 	y = x$y
@@ -28,11 +33,11 @@ st_as_sfc.dimensions = function(x, ..., as_points = NA) {
 		else # grid corners: from 0 to n
 			expand.grid(x = seq(x$from - 1, x$to), y = seq(y$from - 1, y$to))
 	cc = xy_from_colrow(as.matrix(xy), x$geotransform)
-	lst = if (isTRUE(as_points))
-			unlist(apply(cc, 1, function(x) list(sf::st_point(x))), recursive = FALSE)
-		else
-			form_polys(cc, c(x$to, y$to) + 1)
-	st_sfc(lst, crs = x$refsys)
+	dims = c(x$to, y$to) + 1
+	if (use_cpp)
+		structure(CPL_xy2sfc(cc, dims, as_points), crs = st_crs(x$refsys), n_empty = 0L)
+	else
+		st_sfc(xy2sfc(cc, dims, as_points), crs = x$refsys)
 }
 
 #' @export
@@ -44,9 +49,10 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 #' replace x y raster dimensions with simple feature geometry list (points or polygons)
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
+#' @param ... arguments passed on to \code{st_as_sfc}
 #' @return object of class \code{stars} with x and y raster dimensions replace by sfc geometry list
 #' @export
-st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point) {
+st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 
 	d = st_dimensions(x)
 
@@ -55,7 +61,7 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point) {
 
 	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2))
 
-	sfc = st_as_sfc(x, as_points = as_points)
+	sfc = st_as_sfc(x, as_points = as_points, ...)
 	# overwrite x:
 	d[["x"]] = create_dimension(from = 1, to = length(sfc), values = sfc)
 	# rename:
@@ -71,7 +77,7 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point) {
 
 #' @export
 st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
-	x = st_xy2sfc(x, as_points = as_points)
+	x = st_xy2sfc(x, as_points = as_points, ...)
 	sfc = st_dimensions(x)$sfc$values
 	dfs = lapply(x, as.data.frame) # may choose units method
 	nc = sapply(dfs, ncol)

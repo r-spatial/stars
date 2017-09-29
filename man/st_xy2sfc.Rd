@@ -4,12 +4,14 @@
 \alias{st_xy2sfc}
 \title{replace x y raster dimensions with simple feature geometry list (points or polygons)}
 \usage{
-st_xy2sfc(x, as_points = st_dimensions(x)$x$point)
+st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ...)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
 \item{as_points}{logical; if \code{TRUE}, generate points at cell centers, else generate polygons}
+
+\item{...}{arguments passed on to \code{st_as_sfc}}
 }
 \value{
 object of class \code{stars} with x and y raster dimensions replace by sfc geometry list

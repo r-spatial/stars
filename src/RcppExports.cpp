@@ -95,6 +95,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_xy2sfc
+List CPL_xy2sfc(NumericMatrix cc, NumericVector dim, bool to_points);
+RcppExport SEXP _stars_CPL_xy2sfc(SEXP ccSEXP, SEXP dimSEXP, SEXP to_pointsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type cc(ccSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type dim(dimSEXP);
+    Rcpp::traits::input_parameter< bool >::type to_points(to_pointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(CPL_xy2sfc(cc, dim, to_points));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CPL_gdalinfo
 Rcpp::CharacterVector CPL_gdalinfo(Rcpp::CharacterVector obj, Rcpp::CharacterVector options);
 RcppExport SEXP _stars_CPL_gdalinfo(SEXP objSEXP, SEXP optionsSEXP) {
@@ -143,6 +156,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_stars_CPL_gdal_version", (DL_FUNC) &_stars_CPL_gdal_version, 1},
     {"_stars_CPL_proj_version", (DL_FUNC) &_stars_CPL_proj_version, 1},
     {"_stars_CPL_proj_is_valid", (DL_FUNC) &_stars_CPL_proj_is_valid, 1},
+    {"_stars_CPL_xy2sfc", (DL_FUNC) &_stars_CPL_xy2sfc, 3},
     {"_stars_CPL_gdalinfo", (DL_FUNC) &_stars_CPL_gdalinfo, 2},
     {"_stars_CPL_gdalwarp", (DL_FUNC) &_stars_CPL_gdalwarp, 3},
     {"_stars_CPL_gdalrasterize", (DL_FUNC) &_stars_CPL_gdalrasterize, 3},
