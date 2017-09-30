@@ -13,12 +13,12 @@ List CPL_xy2sfc(NumericMatrix cc, NumericVector dim, bool to_points) {
 	bb.attr("class") = "bbox";
 	if (to_points) {
 		List ret(cc.nrow());
-		CharacterVector cls = CharacterVector::create("XY", "POINT", "sfg");
-		NumericVector pt;
+		NumericVector point(2);
+		point.attr("class") = CharacterVector::create("XY", "POINT", "sfg");
 		for (size_t i; i < cc.nrow(); i++) {
-			pt = cc(i,_);
-			pt.attr("class") = cls; // surprisingly, this needs to be inside the for loop
-			ret(i) = clone(pt);
+			point(0) = cc(i, 0);
+			point(1) = cc(i, 1);
+			ret(i) = clone(point);
 		}
 		ret.attr("class") = CharacterVector::create("sfc_POINT", "sfc");
 		ret.attr("precision") = NumericVector::create(0.0);
@@ -31,11 +31,16 @@ List CPL_xy2sfc(NumericMatrix cc, NumericVector dim, bool to_points) {
 		List ret((dim[0] - 1) * (dim[1] - 1));
 		for (size_t y = 0; y < dim[1] - 1; y++) { // rows
 			for (size_t x = 0; x < dim[0] - 1; x++) { // cols
-				points(0,_) = cc(y * dim[0] + x,           _);
-				points(1,_) = cc(y * dim[0] + x + 1,       _);
-				points(2,_) = cc((y + 1) * dim[0] + x + 1, _);
-				points(3,_) = cc((y + 1) * dim[0] + x,     _);
-				points(4,_) = cc(y * dim[0] + x,           _);
+				points(0,0) = cc(y * dim[0] + x,           0); // top left
+				points(0,1) = cc(y * dim[0] + x,           1); // top left
+				points(1,0) = cc(y * dim[0] + x + 1,       0); // top right
+				points(1,1) = cc(y * dim[0] + x + 1,       1); // top right
+				points(2,0) = cc((y + 1) * dim[0] + x + 1, 0); // bottom right
+				points(2,1) = cc((y + 1) * dim[0] + x + 1, 1); // bottom right
+				points(3,0) = cc((y + 1) * dim[0] + x,     0); // bottom left
+				points(3,1) = cc((y + 1) * dim[0] + x,     1); // bottom left
+				points(4,0) = cc(y * dim[0] + x,           0); // top left
+				points(4,1) = cc(y * dim[0] + x,           1); // top left
 				polygon(0) = points;
 				ret( y * (dim[0] - 1) + x ) = clone(polygon);
 			}
