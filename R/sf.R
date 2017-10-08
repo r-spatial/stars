@@ -85,3 +85,23 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 	names(df) = make.names(rep(names(x), nc), unique = TRUE)
 	st_sf(df, geom = sfc)
 }
+
+#' @export
+st_stars.sf = function(x, ..., times = NULL) {
+	geom = st_geometry(x)
+	dots = list(...)
+	data = if (length(dots)) {
+			if (length(dots) == 1 && is.list(dots[[1]]))
+				dots[[1]]
+			else
+				dots
+		} else
+			structure(list(as.matrix(st_set_geometry(x, NULL))), names = deparse(substitute(x)))
+	dimensions = list(
+		sfc = create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom),
+		time = create_dimension(1, ncol(data), values = times))
+	class(dimensions) = "dimensions"
+	structure(data,
+		dimensions = dimensions,
+		class = "stars")
+}
