@@ -1,0 +1,92 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Linking to GDAL 2.2.0, proj.4 4.9.2
+> library(sf)
+Linking to GEOS 3.5.1, GDAL 2.2.0, proj.4 4.9.2, lwgeom 2.3.3 r15473
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+ /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
+ Min.   : 12.00                                     
+ 1st Qu.: 58.00                                     
+ Median : 71.00                                     
+ Mean   : 69.24                                     
+ 3rd Qu.: 83.00                                     
+ Max.   :137.00                                     
+dimension(s):
+     from to  offset   delta
+x       1 22  288776 452.114
+y       1 22 9120761    -456
+band    1  6      NA      NA
+                                                                               refsys
+x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+band                                                                               NA
+     point values
+x    FALSE   NULL
+y    FALSE   NULL
+band    NA   NULL
+> names(x) = "L7_ETM"
+> image(x)
+> (sfc = st_as_sfc(x, as_points = FALSE))
+Geometry set for 484 features 
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
+epsg (SRID):    NA
+proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
+First 5 geometries:
+POLYGON ((288776.250000803 9120760.75002874, 28...
+POLYGON ((289228.363637155 9120760.75002874, 28...
+POLYGON ((289680.477273507 9120760.75002874, 29...
+POLYGON ((290132.59090986 9120760.75002874, 290...
+POLYGON ((290584.704546212 9120760.75002874, 29...
+> plot(sfc, add  =TRUE)
+> (sfc = st_as_sfc(x, as_points = TRUE))
+Geometry set for 484 features 
+geometry type:  POINT
+dimension:      XY
+bbox:           xmin: 289002.3 ymin: 9110957 xmax: 298496.7 ymax: 9120533
+epsg (SRID):    NA
+proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
+First 5 geometries:
+POINT (289002.306818979 9120532.75002874)
+POINT (289454.420455331 9120532.75002874)
+POINT (289906.534091683 9120532.75002874)
+POINT (290358.647728036 9120532.75002874)
+POINT (290810.761364388 9120532.75002874)
+> plot(sfc, add = TRUE)
+> 
+> sf = st_as_sf(x, as_points = FALSE)
+> plot(sf, border = NA)
+> 
+> sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE)
+> sfc2 <- st_as_sfc(x, as_points = TRUE, use_cpp = FALSE)
+> identical(sfc1, sfc2)
+[1] TRUE
+> 
+> sfc1 <- st_as_sfc(x, as_points = FALSE, use_cpp = TRUE)
+> sfc2 <- st_as_sfc(x, as_points = FALSE, use_cpp = FALSE)
+> identical(sfc1, sfc2)
+[1] TRUE
+> 
+> proc.time()
+   user  system elapsed 
+  1.216   0.288   1.200 
