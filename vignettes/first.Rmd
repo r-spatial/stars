@@ -21,7 +21,7 @@ library(stars)
 ```
 
 ### Landsat image: GeoTIFF
-```{r}
+```{r, eval=FALSE}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
 str(x)
@@ -36,7 +36,7 @@ gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
 which adds course resolution versions by averaging blocks of pixels.
 
-```{r}
+```{r eval=FALSE}
 (x = st_stars(tif, options = c("OVERVIEW_LEVEL=1")))
 image(x)
 (x = st_stars(tif, options = c("OVERVIEW_LEVEL=2")))
@@ -49,7 +49,7 @@ TODO: aspect ratio, title, values along x and y axis, degree symbols
 
 ### `as.data.frame`
 
-```{r}
+```{r eval=FALSE}
 names(x) = "value"
 df = as.data.frame(x)
 library(ggplot2)
@@ -67,7 +67,7 @@ ggplot() +
 
 ### `aperm`
 change (permute) dimension order:
-```{r}
+```{r eval=FALSE}
 aperm(x, c(1,3,2))
 aperm(x, c("band", "x", "y"))
 ```
