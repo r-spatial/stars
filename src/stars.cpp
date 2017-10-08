@@ -21,7 +21,7 @@ std::vector<char *> create_options(Rcpp::CharacterVector options, bool prnt) {
 Rcpp::CharacterVector charpp2CV(char **cp) {
 // NULL-terminated array of strings -> Rcpp::CharacterVector
 	int n = 0;
-	while (cp[n] != NULL)
+	while (cp && cp[n] != NULL)
 		n++; // count
 	Rcpp::CharacterVector ret(n);
 	for (int i; i < n; i++)
