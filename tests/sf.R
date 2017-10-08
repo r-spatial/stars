@@ -1,8 +1,12 @@
 library(stars)
 library(sf)
-tif = system.file("tif/L7_ETMs.tif", package = "stars")
-(x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
-names(x) = "L7_ETM"
+nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+#tif = system.file("tif/L7_ETMs.tif", package = "stars")
+(x = st_stars(nc)) #, options = c("OVERVIEW_LEVEL=3")))
+# names(x) = "L7_ETM"
+
+library(abind)
+x = adrop(x)
 image(x)
 (sfc = st_as_sfc(x, as_points = FALSE))
 plot(sfc, add  =TRUE)

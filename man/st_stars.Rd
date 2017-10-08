@@ -56,10 +56,11 @@ object of class \code{stars}
 read raster/array dataset from file or connection
 }
 \examples{
-tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
-x1 = st_stars(tif, options = "OVERVIEW_LEVEL=1")
-tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
-image(x)
+nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+x = st_stars(nc)
+# x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")
+nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+x = st_stars(nc)
+library(abind)
+image(adrop(x))
 }

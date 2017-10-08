@@ -9,7 +9,8 @@
 #' @param parse logical; should metadata be parsed into a named list (\code{TRUE}) or returned as character data?
 #' @return named list with metadata items
 #' @examples
-#' f = system.file("tif/L7_ETMs.tif", package="stars")
+#' #f = system.file("tif/L7_ETMs.tif", package="stars")
+#' f = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
 #' st_get_metadata(f)
 #' st_get_metadata(f, NA_character_)
 #' # try(st_get_metadata(f, "wrongDomain"))
