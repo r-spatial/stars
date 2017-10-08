@@ -24,7 +24,7 @@ Rcpp::CharacterVector charpp2CV(char **cp) {
 	while (cp && cp[n] != NULL)
 		n++; // count
 	Rcpp::CharacterVector ret(n);
-	for (int i; i < n; i++)
+	for (int i = 0; i < n; i++)
 		ret(i) = cp[i];
 	return ret;
 }
