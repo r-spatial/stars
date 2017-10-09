@@ -14,13 +14,17 @@ Imports:
 	units,
 	sf
 Suggests: 
+    covr,
 	ggplot2,
 	ggthemes,
-	viridis,
-    testthat,
+	gstat,
     knitr,
-    covr,
-	rmarkdown
+	maps,
+	plm,
+	rmarkdown,
+	sp,
+    testthat,
+	viridis
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 SystemRequirements: GDAL (>= 2.1.0), PROJ.4 (>= 4.8.0)
@@ -35,3 +39,4 @@ Collate:
 	dimensions.R
 	stars.R
 	RcppExports.R
+RoxygenNote: 6.0.1

@@ -1,5 +1,5 @@
 
-R version 3.4.1 (2017-06-30) -- "Single Candle"
+R version 3.4.2 (2017-09-28) -- "Short Summer"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(stars)
-Linking to GDAL 2.2.0, proj.4 4.9.2
+Linking to GDAL 2.2.1, proj.4 4.9.2
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = st_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -42,27 +42,10 @@ x    FALSE   NULL
 y    FALSE   NULL
 band    NA   NULL
 > 
-> nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-> (x = st_stars(nc))
-sst, anom, err, ice, 
-stars object with 4 dimensions and 4 attributes
-attribute(s), of first 1e+05 cells:
- sst [degrees C] anom [degrees C] err [degrees C] ice [percentage]
- Min.   :-1.80   Min.   :-4.69    Min.   :0.110   Min.   :0.010   
- 1st Qu.:-1.19   1st Qu.:-0.06    1st Qu.:0.300   1st Qu.:0.730   
- Median :-1.05   Median : 0.52    Median :0.300   Median :0.830   
- Mean   :-0.32   Mean   : 0.23    Mean   :0.295   Mean   :0.766   
- 3rd Qu.:-0.20   3rd Qu.: 0.71    3rd Qu.:0.300   3rd Qu.:0.870   
- Max.   : 9.36   Max.   : 3.70    Max.   :0.480   Max.   :1.000   
- NA's   :13360   NA's   :13360    NA's   :13360   NA's   :27377   
-dimension(s):
-     from   to     offset delta  refsys point values
-x       1 1440          0  0.25      NA    NA   NULL
-y       1  720         90 -0.25      NA    NA   NULL
-time    1    1 1981-09-01    NA POSIXct    NA   NULL
-zlev    1    1   0 meters    NA      NA    NA   NULL
+> #nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+> #(x = st_stars(nc))
 > image(x)
 > 
 > proc.time()
    user  system elapsed 
-  2.544   0.304   2.542 
+  1.044   0.252   1.056 
