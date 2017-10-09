@@ -2,7 +2,7 @@ Package: stars
 Version: 0.0
 Title: Scalable, Spatiotemporal Tidy Arrays for R
 Description: Support for Scalable, Spatiotemporal Arrays in R, using GDAL bindings.
-Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de"),
+Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de", comment = c(ORCID = "0000-0001-8049-7069")),
 	person("Michael", "Sumner", role = "ctb"),
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
