@@ -93,6 +93,8 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
 		xlab = names(dims)[1], ylab = names(dims)[2]) {
 
+	stopifnot(!is_affine(st_dimensions(x)))
+
 	if (any(dim(x) == 1))
 		x = adrop(x)
 
@@ -125,9 +127,15 @@ xy_from_colrow = function(x, geotransform) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
+is_affine = function(dimensions) {
+	any(sapply(dimensions, function(x) 
+		! all(is.na(x$geotransform)) && any(x$geotransform[c(3, 5)] != 0)))
+}
+
 #' @export
 as.data.frame.stars = function(x, ...) {
 	## FIXME: now ignores possible affine parameters:
+	stopifnot(!is_affine(st_dimensions(x)))
 	dims = attr(x, "dimensions")
 	lapply(dims, 
 		function(x) { 

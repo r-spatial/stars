@@ -21,7 +21,7 @@ library(stars)
 ```
 
 ### Landsat image: GeoTIFF
-```{r, eval=FALSE}
+```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
 str(x)
@@ -36,7 +36,7 @@ gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
 which adds course resolution versions by averaging blocks of pixels.
 
-```{r eval=FALSE}
+```{r}
 (x = st_stars(tif, options = c("OVERVIEW_LEVEL=1")))
 image(x)
 (x = st_stars(tif, options = c("OVERVIEW_LEVEL=2")))
@@ -49,7 +49,7 @@ TODO: aspect ratio, title, values along x and y axis, degree symbols
 
 ### `as.data.frame`
 
-```{r eval=FALSE}
+```{r}
 names(x) = "value"
 df = as.data.frame(x)
 library(ggplot2)
@@ -67,7 +67,7 @@ ggplot() +
 
 ### `aperm`
 change (permute) dimension order:
-```{r eval=FALSE}
+```{r}
 aperm(x, c(1,3,2))
 aperm(x, c("band", "x", "y"))
 ```
@@ -86,12 +86,36 @@ sst = x[[1]]
 hist(sst) # gives units, even if wrong
 ```
 
+
+### Raster with axes not aligned to N/E; conversion to `sf`
+An example of a raster with rows and columns that are not aligned with E-W and N-S is
+the following:
+
+```{r}
+geomatrix = system.file("tif/geomatrix.tif", package = "stars")
+x = st_stars(geomatrix)
+st_dimensions(x)
+library(sf)
+s = st_as_sf(x, as_points = FALSE)
+plot(s, axes =TRUE)
+```
+
+
 TODO: add time dimension (with n = 1); parse time from metadata
 
-TODO: single NetCDF with multiple time and multiple depths
+TODO: single NetCDF wi multiple time and multiple depths
+
+TODO: conversion to and from raster
 
 ### multiple NetCDFs
 
-join, based on time.
+DONE: join arrays, based on time, when list of nc files.
+Done: image() breaks on non N/E aligned grid
 
 ### dimensions to attributes and vice versa
+
+`as.data.frame` converts dimensions to attributes, but all of them at once;
+`st_as_sf` converts x/y into simple feature geometries, other things into attributes;
+controlled, one-by one?
+
+
