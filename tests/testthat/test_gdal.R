@@ -3,6 +3,8 @@ context("gdal utils")
 #library(stars)
 
 test_that('st_gdal_utils work', {
+  skip_on_appveyor()
+
   fname = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
   st_gdal_utils("info", fname)
   sd2 = st_get_subdatasets(fname)[[2]]
@@ -10,9 +12,7 @@ test_that('st_gdal_utils work', {
   tf = tempfile()
   tf2 = tempfile()
   tf3 = tempfile()
-  skip_on_appveyor(
-    expect_true(st_gdal_utils("warp", sd2, tf))
-  )
+  expect_true(st_gdal_utils("warp", sd2, tf))
   expect_true(st_gdal_utils("rasterize", sd2, tf))
   expect_true(st_gdal_utils("translate", sd2, tf))
   expect_true(st_gdal_utils("vectortranslate", sd2, tf2))
