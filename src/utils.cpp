@@ -55,10 +55,8 @@ Rcpp::LogicalVector CPL_gdalrasterize(Rcpp::CharacterVector src, Rcpp::Character
 	std::vector <char *> options_char = create_options(options);
 	GDALRasterizeOptions* opt =  GDALRasterizeOptionsNew(options_char.data(), NULL);
 
-	// GDALDatasetH src_pt = GDALOpen((const char *) src[0], GA_ReadOnly);
 	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_VECTOR | GA_ReadOnly, NULL, NULL, NULL);
-	GDALDatasetH dst_pt = GDALOpen((const char *) dst[0], GA_Update);
-	GDALDatasetH result = GDALRasterize(NULL, dst_pt, src_pt, opt, &err);
+	GDALDatasetH result = GDALRasterize((const char *) dst[0], NULL, src_pt, opt, &err);
 	GDALRasterizeOptionsFree(opt);
 	GDALClose(src_pt);
 	if (result != NULL)

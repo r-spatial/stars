@@ -22,92 +22,9 @@ Type 'q()' to quit R.
 > test_check("stars")
 Loading required package: stars
 Linking to GDAL 2.1.2, proj.4 4.9.3
-Driver: netCDF/Network Common Data Format
-Files: /home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc
-Size is 512, 512
-Coordinate System is `'
-Metadata:
-  NC_GLOBAL#Contact=Dick Reynolds, email: Richard.W.Reynolds@noaa.gov & Chunying Liu, email: Chunying.liu@noaa.gov
-  NC_GLOBAL#Conventions=CF-1.0
-  NC_GLOBAL#creation_date=2011-05-04
-  NC_GLOBAL#History=Version 2.0
-  NC_GLOBAL#Source=NOAA/National Climatic Data Center
-  NC_GLOBAL#title=Daily-OI-V2, final, Data (Ship, Buoy, AVHRR, GSFC-ice)
-Subdatasets:
-  SUBDATASET_1_NAME=NETCDF:"/home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc":sst
-  SUBDATASET_1_DESC=[1x1x720x1440] sst (16-bit integer)
-  SUBDATASET_2_NAME=NETCDF:"/home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc":anom
-  SUBDATASET_2_DESC=[1x1x720x1440] anom (16-bit integer)
-  SUBDATASET_3_NAME=NETCDF:"/home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc":err
-  SUBDATASET_3_DESC=[1x1x720x1440] err (16-bit integer)
-  SUBDATASET_4_NAME=NETCDF:"/home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc":ice
-  SUBDATASET_4_DESC=[1x1x720x1440] ice (16-bit integer)
-Corner Coordinates:
-Upper Left  (    0.0,    0.0)
-Lower Left  (    0.0,  512.0)
-Upper Right (  512.0,    0.0)
-Lower Right (  512.0,  512.0)
-Center      (  256.0,  256.0)
-Driver: netCDF/Network Common Data Format
-Files: /home/edzer/git/stars.Rcheck/stars/nc/avhrr-only-v2.19810901.nc
-Size is 1440, 720
-Coordinate System is `'
-Origin = (0.000000000000000,90.000000000000000)
-Pixel Size = (0.250000000000000,-0.250000000000000)
-Metadata:
-  anom#add_offset=0
-  anom#long_name=Daily sea surface temperature anomalies
-  anom#scale_factor=0.0099999998
-  anom#units=degrees C
-  anom#valid_max=1200
-  anom#valid_min=-1200
-  anom#_FillValue=-999
-  lat#grids=Uniform grid from -89.875 to 89.875 by 0.25
-  lat#long_name=Latitude
-  lat#units=degrees_north
-  lon#grids=Uniform grid from 0.125 to 359.875 by 0.25
-  lon#long_name=Longitude
-  lon#units=degrees_east
-  NC_GLOBAL#Contact=Dick Reynolds, email: Richard.W.Reynolds@noaa.gov & Chunying Liu, email: Chunying.liu@noaa.gov
-  NC_GLOBAL#Conventions=CF-1.0
-  NC_GLOBAL#creation_date=2011-05-04
-  NC_GLOBAL#History=Version 2.0
-  NC_GLOBAL#Source=NOAA/National Climatic Data Center
-  NC_GLOBAL#title=Daily-OI-V2, final, Data (Ship, Buoy, AVHRR, GSFC-ice)
-  NETCDF_DIM_EXTRA={time,zlev}
-  NETCDF_DIM_time_DEF={1,5}
-  NETCDF_DIM_time_VALUES=1339
-  NETCDF_DIM_zlev_DEF={1,5}
-  NETCDF_DIM_zlev_VALUES=0
-  time#long_name=Center time of the day
-  time#units=days since 1978-01-01 00:00:00
-  zlev#actual_range=0, 0
-  zlev#long_name=Sea surface height
-  zlev#units=meters
-Corner Coordinates:
-Upper Left  (   0.0000000,  90.0000000) 
-Lower Left  (   0.0000000, -90.0000000) 
-Upper Right (     360.000,      90.000) 
-Lower Right (     360.000,     -90.000) 
-Center      ( 180.0000000,   0.0000000) 
-Band 1 Block=1440x1 Type=Int16, ColorInterp=Undefined
-  NoData Value=-999
-  Unit Type: degrees C
-  Offset: 0,   Scale:0.00999999977648258
-  Metadata:
-    add_offset=0
-    long_name=Daily sea surface temperature anomalies
-    NETCDF_DIM_time=1339
-    NETCDF_DIM_zlev=0
-    NETCDF_VARNAME=anom
-    scale_factor=0.0099999998
-    units=degrees C
-    valid_max=1200
-    valid_min=-1200
-    _FillValue=-999
 testthat results ================================================================
-OK: 8 SKIPPED: 0 FAILED: 0
+OK: 6 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.788   0.268   0.737 
+  0.728   0.284   0.666 
