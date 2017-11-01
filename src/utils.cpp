@@ -41,10 +41,7 @@ Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVecto
 		GDALClose(src_pt[i]);
 	if (result != NULL)
 		GDALClose(result);
-	if (result == NULL || err)
-		return false;
-	else
-		return true;
+	return result == NULL || err;
 }
 
 // [[Rcpp::export]]
@@ -63,17 +60,113 @@ Rcpp::LogicalVector CPL_gdalrasterize(Rcpp::CharacterVector src, Rcpp::Character
 	GDALClose(src_pt);
 	if (result != NULL)
 		GDALClose(result);
-	if (result == NULL || err)
-		return false;
-	else
-		return true;
+	return result == NULL || err;
 }
 
-// still todo:
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdaltranslate(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options) {
 
-// GDALTranslate
-// GDALVectorTranslate
-// GDALDEMProcessing
-// GDALNearBlack
-// GDALGrid
-// GDALBuildVRT
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALTranslateOptions* opt =  GDALTranslateOptionsNew(options_char.data(), NULL);
+
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_RASTER | GA_ReadOnly, NULL, NULL, NULL);
+	GDALDatasetH result = GDALTranslate((const char *) dst[0], src_pt, opt, &err);
+	GDALTranslateOptionsFree(opt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdalvectortranslate(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options) {
+
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALVectorTranslateOptions* opt =  GDALVectorTranslateOptionsNew(options_char.data(), NULL);
+
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_VECTOR | GA_ReadOnly, NULL, NULL, NULL);
+	// GDALDatasetH dst_pt = GDALOpen((const char *) dst[0], GA_Update);
+	GDALDatasetH result = GDALVectorTranslate((const char *) dst[0], NULL, 1, &src_pt, opt, &err);
+	GDALVectorTranslateOptionsFree(opt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdalbuildvrt(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options) {
+
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALBuildVRTOptions* opt = GDALBuildVRTOptionsNew(options_char.data(), NULL);
+
+	std::vector<const char *> srcpt(src.size());
+	for (int i = 0; i < src.size(); i++)
+		srcpt[i] = (const char *) src[i];
+
+	GDALDatasetH result = GDALBuildVRT((const char *) dst[0], src.size(), NULL, srcpt.data(), opt, &err);
+
+	GDALBuildVRTOptionsFree(opt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdaldemprocessing(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options, Rcpp::CharacterVector processing, Rcpp::CharacterVector colorfilename) {
+
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALDEMProcessingOptions* opt =  GDALDEMProcessingOptionsNew(options_char.data(), NULL);
+
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_RASTER | GA_ReadOnly, NULL, NULL, NULL);
+	GDALDatasetH result = GDALDEMProcessing((const char *) dst[0], src_pt, 
+		processing.size() == 0 ? NULL : (const char *) processing[0], 
+		colorfilename.size() == 0 ? NULL : (const char *) colorfilename[0], 
+		opt, &err);
+	GDALDEMProcessingOptionsFree(opt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdalnearblack(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options) {
+
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALNearblackOptions* opt =  GDALNearblackOptionsNew(options_char.data(), NULL);
+
+	// GDALDatasetH src_pt = GDALOpen((const char *) src[0], GA_ReadOnly);
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_VECTOR | GA_ReadOnly, NULL, NULL, NULL);
+	GDALDatasetH dst_pt = GDALOpen((const char *) dst[0], GA_Update);
+	GDALDatasetH result = GDALNearblack(NULL, dst_pt, src_pt, opt, &err);
+	GDALNearblackOptionsFree(opt);
+	GDALClose(src_pt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector CPL_gdalgrid(Rcpp::CharacterVector src, Rcpp::CharacterVector dst,
+		Rcpp::CharacterVector options) {
+
+	int err = 0;
+	std::vector <char *> options_char = create_options(options);
+	GDALGridOptions* opt =  GDALGridOptionsNew(options_char.data(), NULL);
+
+	GDALDatasetH src_pt = GDALOpenEx((const char *) src[0], GDAL_OF_ALL | GA_ReadOnly, NULL, NULL, NULL);
+	GDALDatasetH result = GDALGrid((const char *) dst[0], src_pt, opt, &err);
+	GDALGridOptionsFree(opt);
+	GDALClose(src_pt);
+	if (result != NULL)
+		GDALClose(result);
+	return result == NULL || err;
+}

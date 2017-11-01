@@ -97,7 +97,8 @@ x = st_stars(geomatrix)
 st_dimensions(x)
 library(sf)
 s = st_as_sf(x, as_points = FALSE)
-plot(s, axes =TRUE)
+par(cex.axis = .7) # font size axis tic labels 
+plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
 

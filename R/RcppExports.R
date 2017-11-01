@@ -49,3 +49,27 @@ CPL_gdalrasterize <- function(src, dst, options) {
     .Call('_stars_CPL_gdalrasterize', PACKAGE = 'stars', src, dst, options)
 }
 
+CPL_gdaltranslate <- function(src, dst, options) {
+    .Call('_stars_CPL_gdaltranslate', PACKAGE = 'stars', src, dst, options)
+}
+
+CPL_gdalvectortranslate <- function(src, dst, options) {
+    .Call('_stars_CPL_gdalvectortranslate', PACKAGE = 'stars', src, dst, options)
+}
+
+CPL_gdalbuildvrt <- function(src, dst, options) {
+    .Call('_stars_CPL_gdalbuildvrt', PACKAGE = 'stars', src, dst, options)
+}
+
+CPL_gdaldemprocessing <- function(src, dst, options, processing, colorfilename) {
+    .Call('_stars_CPL_gdaldemprocessing', PACKAGE = 'stars', src, dst, options, processing, colorfilename)
+}
+
+CPL_gdalnearblack <- function(src, dst, options) {
+    .Call('_stars_CPL_gdalnearblack', PACKAGE = 'stars', src, dst, options)
+}
+
+CPL_gdalgrid <- function(src, dst, options) {
+    .Call('_stars_CPL_gdalgrid', PACKAGE = 'stars', src, dst, options)
+}
+
