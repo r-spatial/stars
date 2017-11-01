@@ -6,9 +6,9 @@ test_that('st_gdal_utils work', {
   skip_on_appveyor()
 
   fname = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-  st_gdal_utils("info", fname)
+  info = st_gdal_utils("info", fname, quiet = TRUE)
   sd2 = st_get_subdatasets(fname)[[2]]
-  st_gdal_utils("info", sd2)
+  info = st_gdal_utils("info", sd2, quiet = TRUE)
   tf = tempfile()
   tf2 = tempfile()
   tf3 = tempfile()

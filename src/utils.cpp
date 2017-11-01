@@ -1,4 +1,5 @@
 #include "cpl_port.h"
+#include "cpl_conv.h" // CPLFree()
 #include "gdal.h"
 
 #include "gdal_utils.h" // requires 2.1
@@ -16,7 +17,9 @@ Rcpp::CharacterVector CPL_gdalinfo(Rcpp::CharacterVector obj, Rcpp::CharacterVec
 	std::vector <char *> options_char = create_options(options);
 	GDALInfoOptions* opt = GDALInfoOptionsNew(options_char.data(), NULL);
 	GDALDatasetH ds = GDALOpen((const char *) obj[0], GA_ReadOnly);
-	Rcpp::CharacterVector ret = GDALInfo(ds, opt);
+	char *ret_val = GDALInfo(ds, opt);
+	Rcpp::CharacterVector ret = ret_val; // copies
+	CPLFree(ret_val);
 	GDALInfoOptionsFree(opt);
 	return ret;
 }
@@ -34,11 +37,11 @@ Rcpp::LogicalVector CPL_gdalwarp(Rcpp::CharacterVector src, Rcpp::CharacterVecto
 	std::vector <char *> options_char = create_options(options);
 	GDALWarpAppOptions* opt = GDALWarpAppOptionsNew(options_char.data(), NULL);
 
-	// this is R, we recklessly overwrite:
 	GDALDatasetH result = GDALWarp((const char *) dst[0], NULL, src.size(), src_pt.data(), opt, &err);
 	GDALWarpAppOptionsFree(opt);
 	for (int i; i < src.size(); i++)
-		GDALClose(src_pt[i]);
+		if (src_pt[i] != NULL)
+			GDALClose(src_pt[i]);
 	if (result != NULL)
 		GDALClose(result);
 	return result == NULL || err;
