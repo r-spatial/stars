@@ -10,7 +10,9 @@ test_that('st_gdal_utils work', {
   tf = tempfile()
   tf2 = tempfile()
   tf3 = tempfile()
-  expect_true(st_gdal_utils("warp", sd2, tf))
+  skip_on_appveyor(
+    expect_true(st_gdal_utils("warp", sd2, tf))
+  )
   expect_true(st_gdal_utils("rasterize", sd2, tf))
   expect_true(st_gdal_utils("translate", sd2, tf))
   expect_true(st_gdal_utils("vectortranslate", sd2, tf2))
