@@ -2,11 +2,25 @@ context("gdal utils")
 
 #library(stars)
 
-test_that('st_gdalinfo works', {
+test_that('st_gdal_utils work', {
   fname = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-  #st_gdalinfo(fname)
-
-  st_get_subdatasets(fname)
+  st_gdal_utils("info", fname)
+  sd2 = st_get_subdatasets(fname)[[2]]
+  st_gdal_utils("info", sd2)
+  tf = tempfile()
+  tf2 = tempfile()
+  tf3 = tempfile()
+  expect_true(st_gdal_utils("warp", sd2, tf))
+  expect_true(st_gdal_utils("rasterize", sd2, tf))
+  expect_true(st_gdal_utils("translate", sd2, tf))
+  expect_true(st_gdal_utils("vectortranslate", sd2, tf2))
+  expect_warning(st_gdal_utils("nearblack", sd2, tf))
+  # create point geom:
+  library(sf)
+  points = system.file("gpkg/nc.gpkg", package="sf")
+  expect_true(st_gdal_utils("grid", points, tf))
+  expect_true(st_gdal_utils("buildvrt", sd2, tf3))
+  expect_true(st_gdal_utils("demprocessing", sd2, tf, processing = "hillshade"))
 })
 
 #st_gdalinfo("NETCDF:avhrr-only-v2.19810901.nc:anom")

@@ -2,31 +2,29 @@
 % Please edit documentation in R/utils.R
 \name{gdal_utils}
 \alias{gdal_utils}
-\alias{st_gdalinfo}
-\alias{gdal_utils}
-\alias{st_gdalwarp}
-\alias{gdal_utils}
-\alias{st_gdalrasterize}
+\alias{st_gdal_utils}
 \title{Native interface to gdal utils}
 \usage{
-st_gdalinfo(source, options = character(0), quiet = FALSE)
-
-st_gdalwarp(source, destination, options = character(0))
-
-st_gdalrasterize(source, destination, options = character(0))
+st_gdal_utils(util = "info", source, destination, options = character(0),
+  quiet = FALSE, processing = character(0), colorfilename = character(0))
 }
 \arguments{
-\item{source}{character; name of input layer; for \code{st_gdalwarp} this can be more than one}
+\item{util}{character; one of \code{info}, \code{warp}, \code{rasterize}, \code{translate}, \code{vectortranslate}, \code{buildvrt}, \code{demprocessing}, \code{nearblack}, \code{grid}}
 
-\item{options}{layer opening options}
-
-\item{quiet}{logical; suppress printed output}
+\item{source}{character; name of input layer(s); for \code{warp} or \code{buidvrt} this can be more than one}
 
 \item{destination}{character; name of output layer}
+
+\item{options}{character; layer opening options}
+
+\item{quiet}{logical; if \code{TRUE}, suppress printing of output for \code{info}}
+
+\item{processing}{character; processing options for \code{demprocessing}}
+
+\item{colorfilename}{character; name of color file for \code{demprocessing} (mandatory if \code{processing="color-relief"})}
 }
 \value{
-\code{st_gdalwarp} and \code{st_gdalrasterize} return \code{NULL} (invisibly) on success, an error message on failure.
-\code{st_gdalinfo} returns the raster metadata as character vector
+\code{info} returns a character vector with the raster metadata; all other utils return (invisibly) a logical indicating success (i.e., \code{TRUE}); in case of failure, an error is raised.
 }
 \description{
 Native interface to gdal utils

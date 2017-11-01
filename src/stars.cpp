@@ -6,7 +6,7 @@
 #include "stars.h"
 
 // from sf:gdal.cpp
-// Rcpp::CharacterVector -> NULL-terminated array of strings
+// Rcpp::CharacterVector -> NULL-terminated std::vector of (char *)
 std::vector<char *> create_options(Rcpp::CharacterVector options, bool prnt) {
     std::vector<char *> ret;
     for (int i = 0; i < options.size(); i++) {
