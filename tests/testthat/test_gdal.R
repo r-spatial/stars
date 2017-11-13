@@ -15,7 +15,7 @@ test_that('st_gdal_utils work', {
   tf3 = tempfile()
   #tf = "foo"
   #st_gdal_utils("rasterize", points, tif) -> need a good example
-  st_gdal_utils("warp", sd2, tf, c("-t_srs", "+proj=utm +zone=11 +datum=WGS84"))
+  #st_gdal_utils("warp", sd2, tf, c("-t_srs", "+proj=utm +zone=11 +datum=WGS84"))
   #expect_true(st_gdal_utils("warp", sd2, tf, c("-t_srs", "+proj=utm +zone=11 +datum=WGS84")))
   #st_gdal_utils("warp", sd2, tf, c("-t_srs", "+proj=utm +zone=11 +datum=WGS84"))
   #expect_true(st_gdal_utils("warp", sd2, tf))

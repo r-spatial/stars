@@ -102,6 +102,9 @@ plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
 
+## conversion to/from raster:
+
+
 
 TODO: single NetCDF with multiple time and multiple depths
 
@@ -118,5 +121,4 @@ Done: add time dimension (with n = 1); parse time from metadata
 `as.data.frame` converts dimensions to attributes, but all of them at once;
 `st_as_sf` converts x/y into simple feature geometries, other things into attributes;
 controlled, one-by one?
-
 

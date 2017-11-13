@@ -31,7 +31,6 @@ st_as_stars.Raster = function(x, ...) {
 	st_stars(list(v), dimensions = structure(dimensions, class = "dimensions"))
 }
 
-##coerce...
 st_as_raster = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
 	stopifnot(length(dim(x)) %in% c(2, 3))
