@@ -5,16 +5,16 @@
 
 using namespace Rcpp;
 
-// CPL_GetMetadata
-CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item, CharacterVector options);
-RcppExport SEXP _stars_CPL_GetMetadata(SEXP objSEXP, SEXP domain_itemSEXP, SEXP optionsSEXP) {
+// CPL_get_metadata
+CharacterVector CPL_get_metadata(CharacterVector obj, CharacterVector domain_item, CharacterVector options);
+RcppExport SEXP _stars_CPL_get_metadata(SEXP objSEXP, SEXP domain_itemSEXP, SEXP optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type obj(objSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type domain_item(domain_itemSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type options(optionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_GetMetadata(obj, domain_item, options));
+    rcpp_result_gen = Rcpp::wrap(CPL_get_metadata(obj, domain_item, options));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -228,7 +228,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_stars_CPL_GetMetadata", (DL_FUNC) &_stars_CPL_GetMetadata, 3},
+    {"_stars_CPL_get_metadata", (DL_FUNC) &_stars_CPL_get_metadata, 3},
     {"_stars_CPL_get_crs", (DL_FUNC) &_stars_CPL_get_crs, 2},
     {"_stars_CPL_read_gdal", (DL_FUNC) &_stars_CPL_read_gdal, 4},
     {"_stars_CPL_gdal_init", (DL_FUNC) &_stars_CPL_gdal_init, 0},

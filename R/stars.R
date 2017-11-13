@@ -29,7 +29,7 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		sub_names = split_strings(properties$sub) # get named list
 		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
 		sub_datasets = sub_datasets[sub]
-		# sub_datasets = st_get_subdatasets(x, options)[sub] # -> would open x twice
+		# sub_datasets = gdal_subdatasets(x, options)[sub] # -> would open x twice
 
 		# FIXME: only for NetCDF:
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)

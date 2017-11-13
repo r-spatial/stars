@@ -2,15 +2,15 @@
 % Please edit documentation in R/dataset.R
 \name{get_get_metadata}
 \alias{get_get_metadata}
-\alias{st_get_metadata}
+\alias{gdal_metadata}
 \alias{get_get_metadata}
-\alias{st_get_subdatasets}
+\alias{gdal_subdatasets}
 \title{get metadata of a raster layer}
 \usage{
-st_get_metadata(file, domain_item = character(0), options = character(0),
+gdal_metadata(file, domain_item = character(0), options = character(0),
   parse = TRUE)
 
-st_get_subdatasets(file, options = character(0), name = TRUE)
+gdal_subdatasets(file, options = character(0), name = TRUE)
 }
 \arguments{
 \item{file}{file name}
@@ -26,7 +26,7 @@ st_get_subdatasets(file, options = character(0), name = TRUE)
 \value{
 named list with metadata items
 
-\code{st_get_subdatasets} returns a zero-length list if \code{file} does not have subdatasets, and else a named list with subdatasets.
+\code{gdal_subdatasets} returns a zero-length list if \code{file} does not have subdatasets, and else a named list with subdatasets.
 }
 \description{
 get metadata of a raster layer
@@ -34,8 +34,8 @@ get metadata of a raster layer
 \examples{
 #f = system.file("tif/L7_ETMs.tif", package="stars")
 f = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-st_get_metadata(f)
-st_get_metadata(f, NA_character_)
-# try(st_get_metadata(f, "wrongDomain"))
-# st_get_metadata(f, c("", "AREA_OR_POINT"))
+gdal_metadata(f)
+gdal_metadata(f, NA_character_)
+# try(gdal_metadata(f, "wrongDomain"))
+# gdal_metadata(f, c("", "AREA_OR_POINT"))
 }

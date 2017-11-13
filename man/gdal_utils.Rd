@@ -2,10 +2,9 @@
 % Please edit documentation in R/utils.R
 \name{gdal_utils}
 \alias{gdal_utils}
-\alias{st_gdal_utils}
 \title{Native interface to gdal utils}
 \usage{
-st_gdal_utils(util = "info", source, destination, options = character(0),
+gdal_utils(util = "info", source, destination, options = character(0),
   quiet = FALSE, processing = character(0), colorfilename = character(0))
 }
 \arguments{

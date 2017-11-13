@@ -9,8 +9,8 @@
 #' @param colorfilename character; name of color file for \code{demprocessing} (mandatory if \code{processing="color-relief"})
 #' @return \code{info} returns a character vector with the raster metadata; all other utils return (invisibly) a logical indicating success (i.e., \code{TRUE}); in case of failure, an error is raised.
 #' @export
-st_gdal_utils = function(util = "info", source, destination, options = character(0), 
-	quiet = FALSE, processing = character(0), colorfilename = character(0)) {
+gdal_utils = function(util = "info", source, destination, options = character(0), 
+		quiet = FALSE, processing = character(0), colorfilename = character(0)) {
 	ret = switch(util,
 			info = CPL_gdalinfo(source, options),
 			warp = CPL_gdalwarp(source, destination, options),
@@ -31,7 +31,7 @@ st_gdal_utils = function(util = "info", source, destination, options = character
 	} else {
 		# ret indicates error:
 		if (ret)
-			stop("st_gdal_utils: an error occured")
+			stop("gdal_utils: an error occured")
 		invisible(! ret) # success
 	}
 }

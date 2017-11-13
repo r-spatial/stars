@@ -30,7 +30,7 @@ CharacterVector get_meta_data(GDALDatasetH ds, CharacterVector domain_item) {
 }
 
 // [[Rcpp::export]]
-CharacterVector CPL_GetMetadata(CharacterVector obj, CharacterVector domain_item,
+CharacterVector CPL_get_metadata(CharacterVector obj, CharacterVector domain_item,
 		CharacterVector options) {
 	
 	GDALDatasetH ds = GDALOpenEx(obj[0], GDAL_OF_RASTER | GDAL_OF_READONLY, NULL, NULL, 
@@ -64,7 +64,7 @@ List CPL_get_crs(CharacterVector obj, CharacterVector options) {
 	NumericVector gt_r_inv(6);
 	for (int i = 0; i < 6; i++)
 		gt_r_inv(i) = retval ? gt_inv[i] : NA_REAL;
-	ret(3) =  gt_r;
+	ret(3) =  gt_r_inv;
 
 	ret.attr("names") = CharacterVector::create("nbands", "crs", "gt", "gt_inv");
 
