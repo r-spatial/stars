@@ -6,13 +6,14 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.p
 	person("Michael", "Sumner", role = "ctb"),
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
+	sf (>= 0.5-5),
     R (>= 3.3.0)
 Imports:
     Rcpp, 
 	magrittr,
 	abind,
-	units,
-	sf
+	methods,
+	units
 Suggests: 
     covr,
 	ggplot2,
@@ -23,6 +24,7 @@ Suggests:
 	plm,
 	rmarkdown,
 	sp,
+	raster,
     testthat,
 	viridis
 LinkingTo: Rcpp
@@ -38,5 +40,6 @@ Collate:
 	sf.R
 	dimensions.R
 	stars.R
+	raster.R
 	RcppExports.R
 RoxygenNote: 6.0.1

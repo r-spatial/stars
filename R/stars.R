@@ -84,6 +84,8 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' @param maxColorValue numeric; passed on to \link{rgb}
 #' @param xlab character; x axis label
 #' @param ylab character; y axis label
+#' @param xlim x axis limits
+#' @param ylim y axis limits
 #' @param ... passed on to \code{image.default}
 #' @export
 #' @examples
@@ -91,7 +93,7 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' x = st_stars(tif)
 #' image(x)
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
-		xlab = names(dims)[1], ylab = names(dims)[2]) {
+		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), ylim = range(dims$y)) {
 
 	stopifnot(!is_affine(st_dimensions(x)))
 
@@ -113,7 +115,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 			}
 		} else
 			x[ , rev(seq_len(dim(x)[2]))]
-	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, ...)
+	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, 
+		xlim = xlim, ylim = ylim, ...)
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
@@ -192,10 +195,11 @@ aperm.stars = function(a, perm = NULL, ...) {
 
 #' @export
 dim.stars = function(x, ...) {
+	d = st_dimensions(x)
 	if (length(x) == 0)
 		integer(0)
 	else
-		dim(x[[1]])
+		structure(dim(x[[1]]), names = names(d))
 }
 
 propagate_units = function(new, old) {
@@ -230,4 +234,23 @@ adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
 	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
 	# deal with dimensions table
+}
+
+#' @export
+st_bbox.stars = function(obj) {
+	d = st_dimensions(obj)
+	stopifnot(all(c("x", "y") %in% names(d)))
+	gt = attr(obj, "dimensions")$x$geotransform
+	stopifnot(length(gt) == 6 && !any(is.na(gt)))
+	x = c(gt[1], gt[1] + dim(obj)["x"] * gt[2])
+	y = c(gt[4], gt[4] + dim(obj)["y"] * gt[6])
+	bb = c(min(x), min(y), max(x), max(y))
+	structure(bb, names = c("xmin", "ymin", "xmax", "ymax"), class = "bbox")
+}
+
+#' @export
+st_crs.stars = function(x, ...) {
+	d = st_dimensions(x)
+	stopifnot(!is.null(d$x))
+	st_crs(d$x$refsys)
 }

@@ -11,21 +11,26 @@ st_dimensions.stars = function(x, ...) attr(x, "dimensions")
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL) {
-	if (!is.null(values) && is.atomic(values) && length(ud <- unique(diff(values))) == 1) {
+	if (! is.null(values)) {
 		from = 1
 		to = length(values)
-		offset = values[1]
-		delta = values[2] - values[1]
-		values = NULL
-		if (inherits(offset, "POSIXct"))
-			refsys = "POSIXct"
-		if (inherits(offset, "Date"))
-			refsys = "Date"
+		if (is.character(values) || is.factor(values)) {
+			values = as.character(values)
+		} else if (is.atomic(values) && length(ud <- unique(diff(values))) == 1) {
+			offset = values[1]
+			delta = values[2] - values[1]
+			values = NULL
+			if (inherits(offset, "POSIXct"))
+				refsys = "POSIXct"
+			if (inherits(offset, "Date"))
+				refsys = "Date"
+		}
+		if (inherits(values, "sfc_POINT"))
+			point = TRUE
 	}
-	if (inherits(values, "sfc_POINT"))
-		point = TRUE
-	list(from = from, to = to, offset = offset, delta = delta, 
-		geotransform = geotransform, refsys = refsys, point = point, values = values)
+	structure(list(from = from, to = to, offset = offset, delta = delta, 
+		geotransform = geotransform, refsys = refsys, point = point, values = values),
+		class = "dimension")
 }
 
 create_dimensions = function(dims, pr = NULL) {
@@ -187,4 +192,12 @@ combine_dimensions = function(dots, along) {
 	dims[[along]]$from = 1
 	dims[[along]]$to = length(offset)
 	dims
+}
+
+#' @export
+seq.dimension = function(from, ...) { # does what expand_dimensions also does, for single dimension
+	if (!is.null(from$values))
+		from$values
+	else
+		from$offset + (seq(from$from, from$to) - 1) * from$delta
 }

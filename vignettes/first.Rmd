@@ -102,9 +102,8 @@ plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
 
-TODO: add time dimension (with n = 1); parse time from metadata
 
-TODO: single NetCDF wi multiple time and multiple depths
+TODO: single NetCDF with multiple time and multiple depths
 
 TODO: conversion to and from raster
 
@@ -112,6 +111,7 @@ TODO: conversion to and from raster
 
 DONE: join arrays, based on time, when list of nc files.
 Done: image() breaks on non N/E aligned grid
+Done: add time dimension (with n = 1); parse time from metadata
 
 ### dimensions to attributes and vice versa
 

@@ -1,5 +1,6 @@
 #' @importFrom graphics image.default
 #' @importFrom utils tail
+#' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop
 #' @importFrom Rcpp evalCpp
 #' @import sf
@@ -10,6 +11,8 @@ NULL
 #' @importFrom magrittr %>%
 #' @export
 magrittr::`%>%`
+
+setOldClass("stars")
 
 .stars_cache <- new.env(FALSE, parent=globalenv())
 

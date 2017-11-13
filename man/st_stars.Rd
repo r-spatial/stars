@@ -18,7 +18,8 @@ st_stars(x, ...)
 \method{st_stars}{list}(x, ..., dimensions = NULL)
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
-  maxColorValue = 1, xlab = names(dims)[1], ylab = names(dims)[2])
+  maxColorValue = 1, xlab = names(dims)[1], ylab = names(dims)[2],
+  xlim = range(dims$x), ylim = range(dims$y))
 }
 \arguments{
 \item{x}{if character, file name to read; if list: list with arrays}
@@ -48,6 +49,10 @@ st_stars(x, ...)
 \item{xlab}{character; x axis label}
 
 \item{ylab}{character; y axis label}
+
+\item{xlim}{x axis limits}
+
+\item{ylim}{y axis limits}
 }
 \value{
 object of class \code{stars}
