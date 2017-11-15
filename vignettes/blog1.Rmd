@@ -14,6 +14,7 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(collapse = TRUE)
+ev = FALSE
 ```
 
 This is the first of a planned series of blogs on the
@@ -107,7 +108,7 @@ which is clearly identical to the above when $gt_3$ and $gt_5$ are zero, but oth
 # Reading a raster time series: netcdf
 
 Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
-```{r}
+```{r eval=ev}
 prec = st_stars("data/full_data_daily_2013.nc")
 ```
 (Note that this 380 Mb file is not included; data are described [here](ftp://ftp.dwd.de/pub/data/gpcc/html/fulldata-daily_v1_doi_download.html), and were downloaded from [here](ftp://ftp.dwd.de/pub/data/gpcc/full_data_daily_V1/full_data_daily_2013.nc.gz)).
@@ -128,7 +129,7 @@ For this dataset we can see that
 Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 
 We read the data by giving `st_stars` a vector with character names:
-```{r}
+```{r eval=ev}
 x = c(
 "avhrr/avhrr-only-v2.19810901.nc",
 "avhrr/avhrr-only-v2.19810902.nc",
@@ -145,14 +146,14 @@ x = c(
 ```
 
 Next, we remove all but the first attribute, and drop a singular dimension using `adrop`:
-```{r}
+```{r eval=ev}
 y[[2]] = y[[3]] = y[[4]] = NULL
 library(abind)
 (y = adrop(y))
 ```
 
 We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
-```{r}
+```{r eval=ev}
 df = as.data.frame(y)
 df$sst = unclass(df$sst)
 library(ggplot2)
@@ -168,7 +169,7 @@ ggplot() +
   theme(legend.key.width=unit(2, "cm"))
 ```
 
-## Arbitrary dimensioned arrays
+# Arbitrary dimensioned arrays
 
 `stars` arrays have no limits as to the number of dimensions they span - we can create a 4-attribute, 7-dimensional array with 3 values along each dimension by
 ```{r}
@@ -179,4 +180,6 @@ c = array(25.3, dim = d)
 d = array(3+4i, dim = d)
 st_stars(list(a = a, b = b, c = c, d = d))
 ```
+
+
 
