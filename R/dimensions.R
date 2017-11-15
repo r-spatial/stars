@@ -14,9 +14,9 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 	if (! is.null(values)) {
 		from = 1
 		to = length(values)
-		if (is.character(values) || is.factor(values)) {
+		if (is.character(values) || is.factor(values))
 			values = as.character(values)
-		} else if (is.atomic(values) && length(ud <- unique(diff(values))) == 1) {
+		else if (is.atomic(values) && length(ud <- unique(diff(values))) == 1) {
 			offset = values[1]
 			delta = values[2] - values[1]
 			values = NULL
@@ -63,8 +63,15 @@ create_dimensions = function(dims, pr = NULL) {
 	if (! is.null(pr$dim_extra)) {
 		for (d in names(pr$dim_extra)) {
 			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) "POSIXct" else NA_character_
-			lst[[d]] = create_dimension(from = 1, to = 1, offset = pr$dim_extra[[d]], refsys = refsys)
+			de = pr$dim_extra[[d]]
+			diff.de = diff(de)
+			lst[[d]] = if (length(unique(diff.de)) <= 1) {
+					delta = if (length(diff.de)) diff.de[1] else NA_real_
+					create_dimension(from = 1, to = length(de), offset = de[1], delta = delta, refsys = refsys)
+				} else
+					create_dimension(from = 1, to = length(de), values = de, refsys = refsys)
 		}
+		lst[["band"]] = NULL
 	}
 	structure(lst, class = "dimensions")
 }
@@ -92,9 +99,10 @@ parse_netcdf_meta = function(pr, name) {
 			names(pr$dim_extra) = val
 			for (v in val) {
 				rhs = get_val(paste0("NETCDF_DIM_", v, "_VALUES"), meta)
-				if (!is.na(rhs))
-					pr$dim_extra[[v]] = as.numeric(rhs)
-				else {
+				if (!is.na(rhs)) {
+					rhs = strsplit(gsub("[\\{\\}]" , "", rhs), ",")
+					pr$dim_extra[[v]] = as.numeric(rhs[[1]])
+				} else {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
 					pr$dim_extra[[v]] = as.numeric(rhs)
 				}
@@ -151,7 +159,7 @@ expand_dimensions = function(x) {
 
 #' @export
 print.dimensions = function(x, ..., digits = 6) {
-	lst = lapply(x, function(y) { 
+	lst = lapply(x, function(y) {
 			aff = y$geotransform[c(3,5)]
 			y$geotransform = if (any(!is.na(aff)) && any(aff != 0))
 				paste(signif(y$geotransform, digits = digits), collapse = ", ")

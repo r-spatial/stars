@@ -52,10 +52,14 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		properties = parse_meta(properties)
 		if (! is.null(properties$units) && ! is.na(properties$units))
 			data = set_units(data, make_unit(properties$units))
-		newdims = structure(rep(1, length(properties$dim_extra)), 
-			names = names(properties$dim_extra))
-		structure(list(structure(data, dim = c(dim(data), newdims))),
-			names = x,
+
+		newdims = lengths(properties$dim_extra)
+		data = if (length(newdims))
+				structure(data, dim = c(dim(data)[1:2], newdims))
+			else
+				structure(data, dim = dim(data))
+		#structure(list(structure(data, dim = c(dim(data), newdims))),
+		structure(list(data), names = x,
 			dimensions = create_dimensions(dim(data), properties),
 			class = "stars")
 	}
@@ -66,12 +70,12 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 #' @export
 st_stars.list = function(x, ..., dimensions = NULL) {
 	if (length(x) > 1) {
-		for (i in 2:length(x))
+		for (i in seq_along(x)[-1])
 			if (!identical(dim(x[[1]]), dim(x[[i]])))
 				stop("dim attributes not identical")
 	}
 	if (is.null(dimensions))
-		dimensions = create_dimensions(x)
+		dimensions = create_dimensions(dim(x[[1]]))
 	structure(x, dimensions = dimensions, class = "stars")
 }
 
@@ -172,8 +176,7 @@ print.stars = function(x, ..., n = 1e5) {
 	names(df) = add_units(x)
 	print(summary(df))
 	cat("dimension(s):\n")
-	lst = attr(x, "dimensions")
-	print(lst, ...)
+	print(st_dimensions(x), ...)
 }
 
 #' @export
@@ -198,8 +201,10 @@ dim.stars = function(x, ...) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
 		integer(0)
-	else
+	else {
+		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))
+	}
 }
 
 propagate_units = function(new, old) {

@@ -1,0 +1,182 @@
+---
+title: "spatiotemporal arrays for R: first stars blog"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    theme: united
+vignette: >
+  %\VignetteIndexEntry{Spatiotemporal tidy arrays for R; first steps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+This is the first of a planned series of blogs on the
+[stars](https://github.com/r-spatial/stars) project, an R-Consortium
+funded project for _spatiotemporal tidy arrays with R_.
+
+The goals of the stars project are
+
+* to handle raster data in a way that integrates well with the [sf](https://github.com/r-spatial/sf) project and with the [tidyverse](https://www.tidyverse.org/)
+* to handle array data (time series, or otherwise functional data) where time and space are among the dimensions
+* to do this in a scalable way, i.e. deal with cases where data are too large to fit in memory or on disk
+* to think about a migration path for the large and famous [raster](https://cran.r-project.org/package=raster) in the same directions
+
+In its current stage `stars` and (as planned) does not have
+
+* scalability to large data sets; everything is still in memory
+* writing data back to disk
+
+The package is loaded by
+```{r}
+library(stars)
+```
+Spatiotemporal arrays are stored in objects of class `stars`; 
+methods for class `stars` currently available are
+```
+methods(class = "stars")
+```
+Note that _everything_  in the `stars` api may still be subject to change in the next few months.
+
+# Reading a satellite image
+
+We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = st_stars(tif)
+image(x)
+```
+
+We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions: `x`, `y` and `band`, and one attribute.
+```{r}
+x
+```
+
+Each dimension has a name; the meaning of the fields of a single dimension are:
+
+|*field* |*meaning*                             |
+|--------|--------------------------------------|
+| from   | the origin index (1)                 |
+| to     | the final index (dim(x)[i])          |
+| offset | the start value for this dimension   |
+| delta  | the step size for this dimension     |
+| refsys | the reference system, or proj4string |
+| point  | logical; whether cells refer to points, or intervals |
+| values | the sequence of values for this dimension (e.g., geometries) |
+
+This means that for an index i (starting at $i=1$) along a certain dimension, the corresponding dimension value (coordinate, time) is $\mbox{offset} + (i-1) \times \mbox{delta}$. This value then refers to the start (edge) of the cell or interval; in order to get the interval middle or cell centre, one needs to add half an offset. 
+
+Dimension `band` is a simple sequence from 1 to 6. Although bands refer to colors, their wavelength values (or intervals) are not available in the file metadata; in case they were, they could have been stored in the `values` field.
+
+For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is ne1gative: this means that consecutive array values have decreasing $y$ values: cells are ordered from top to bottom, opposite the direction of the $y$ axis.
+
+`st_stars` (which later may become `st_read`) reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
+
+# Affine grids
+
+The GDAL model can deal also with spatial rasters that are regular but not aligned with $x$ and $y$: affine grids. An example is given here:
+
+```{r}
+geomatrix = system.file("tif/geomatrix.tif", package = "stars")
+x = st_stars(geomatrix)
+try(image(x))
+library(sf)
+s = st_as_sf(x, as_points = FALSE)
+par(cex.axis = .7) # font size axis tic labels 
+plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
+```
+
+We see that `image` no longer works, but will complain about an affine grid;
+```{r}
+st_dimensions(x)
+```
+
+further reveals that we now have a `geotransform` field shown in the dimension table; this is only done when the affine parameters are non-zero. The geotransform field has six parameters, $gt_1,...,gt_6$, and $x$ and $y$ are computed from column pixel i and row pixel j by
+
+$$x = gt_1 + (i-1) gt_2 + (j-1) gt_3$$
+    
+$$y = gt_4 + (i-1) gt_5 + (j-1) gt_6$$
+    
+which is clearly identical to the above when $gt_3$ and $gt_5$ are zero, but otherwise not.
+
+# Reading a raster time series: netcdf
+
+Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
+```{r}
+prec = st_stars("data/full_data_daily_2013.nc")
+```
+(Note that this 380 Mb file is not included; data are described [here](ftp://ftp.dwd.de/pub/data/gpcc/html/fulldata-daily_v1_doi_download.html), and were downloaded from [here](ftp://ftp.dwd.de/pub/data/gpcc/full_data_daily_V1/full_data_daily_2013.nc.gz)).
+
+We see that
+```{r}
+prec
+```
+
+For this dataset we can see that
+
+* variables have units associated
+* time is now a dimension, with proper units and time steps
+* missing values for the fourth variable were not taken care off correctly
+
+## Reading datasets from multiple files
+
+Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
+
+We read the data by giving `st_stars` a vector with character names:
+```{r}
+x = c(
+"avhrr/avhrr-only-v2.19810901.nc",
+"avhrr/avhrr-only-v2.19810902.nc",
+"avhrr/avhrr-only-v2.19810903.nc",
+"avhrr/avhrr-only-v2.19810904.nc",
+"avhrr/avhrr-only-v2.19810905.nc",
+"avhrr/avhrr-only-v2.19810906.nc",
+"avhrr/avhrr-only-v2.19810907.nc",
+"avhrr/avhrr-only-v2.19810908.nc",
+"avhrr/avhrr-only-v2.19810909.nc"
+)
+
+(y = st_stars(x, quiet = TRUE))
+```
+
+Next, we remove all but the first attribute, and drop a singular dimension using `adrop`:
+```{r}
+y[[2]] = y[[3]] = y[[4]] = NULL
+library(abind)
+(y = adrop(y))
+```
+
+We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
+```{r}
+df = as.data.frame(y)
+df$sst = unclass(df$sst)
+library(ggplot2)
+library(viridis)
+library(ggthemes)
+ggplot() +  
+  geom_tile(data=df, aes(x=x, y=y, fill=sst), alpha=0.8) + 
+  facet_wrap("time") +
+  scale_fill_viridis() +
+  coord_equal() +
+  theme_map() +
+  theme(legend.position="bottom") +
+  theme(legend.key.width=unit(2, "cm"))
+```
+
+## Arbitrary dimensioned arrays
+
+`stars` arrays have no limits as to the number of dimensions they span - we can create a 4-attribute, 7-dimensional array with 3 values along each dimension by
+```{r}
+d = structure(rep(3,7), names = paste0("dim", letters[1:7]))
+a = array(TRUE, dim = d)
+b = array("a", dim = d)
+c = array(25.3, dim = d)
+d = array(3+4i, dim = d)
+st_stars(list(a = a, b = b, c = c, d = d))
+```
+

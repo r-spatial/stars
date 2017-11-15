@@ -77,17 +77,25 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 
 #' @export
 st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
-	x = st_xy2sfc(x, as_points = as_points, ...)
+
+	if (all(c("x", "y") %in% names(st_dimensions(x))))
+		x = st_xy2sfc(x, as_points = as_points, ...)
+
 	sfc = st_dimensions(x)$sfc$values
 	dfs = lapply(x, as.data.frame) # may choose units method
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
-	names(df) = make.names(rep(names(x), nc), unique = TRUE)
-	st_sf(df, geom = sfc)
+	names(df) = if (length(x) > 1)
+			make.names(rep(names(x), nc), unique = TRUE)
+		else
+			colnames(dfs[[1]])
+	st_sf(df, geometry = sfc)
 }
 
+#' @name st_stars
+#' @param times time instances
 #' @export
-st_stars.sf = function(x, ..., times = NULL) {
+st_stars.sf = function(x, ..., times = colnames(data[[1]])) {
 	geom = st_geometry(x)
 	dots = list(...)
 	data = if (length(dots)) {
@@ -99,9 +107,7 @@ st_stars.sf = function(x, ..., times = NULL) {
 			structure(list(as.matrix(st_set_geometry(x, NULL))), names = deparse(substitute(x)))
 	dimensions = list(
 		sfc = create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom),
-		time = create_dimension(1, ncol(data), values = times))
+		time = create_dimension(from = 1, to = ncol(data[[1]]), values = times))
 	class(dimensions) = "dimensions"
-	structure(data,
-		dimensions = dimensions,
-		class = "stars")
+	st_stars(data, dimensions = dimensions)
 }
