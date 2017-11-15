@@ -1,7 +1,7 @@
 # Scalable, spatiotemporal Tidy Arrays for R
 
 [Edzer Pebesma](https://github.com/edzer/), [Michael
-Sumner](https://github.com/mdsumer/), [Etienne
+Sumner](https://github.com/mdsumner/), [Etienne
 Racine](https://github.com/etiennebr)
 
 ## Summary
