@@ -114,7 +114,7 @@ prec = st_stars("data/full_data_daily_2013.nc")
 (Note that this 380 Mb file is not included; data are described [here](ftp://ftp.dwd.de/pub/data/gpcc/html/fulldata-daily_v1_doi_download.html), and were downloaded from [here](ftp://ftp.dwd.de/pub/data/gpcc/full_data_daily_V1/full_data_daily_2013.nc.gz)).
 
 We see that
-```{r}
+```{r eval=ev}
 prec
 ```
 
