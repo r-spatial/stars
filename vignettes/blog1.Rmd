@@ -35,11 +35,13 @@ In its current stage `stars` and (as planned) does not have
 
 The package is loaded by
 ```{r}
+# devtools::install_github("r-spatial/stars")
 library(stars)
 ```
 Spatiotemporal arrays are stored in objects of class `stars`; 
 methods for class `stars` currently available are
-```
+
+``` {r}
 methods(class = "stars")
 ```
 Note that _everything_  in the `stars` api may still be subject to change in the next few months.
@@ -74,7 +76,7 @@ This means that for an index i (starting at $i=1$) along a certain dimension, th
 
 Dimension `band` is a simple sequence from 1 to 6. Although bands refer to colors, their wavelength values (or intervals) are not available in the file metadata; in case they were, they could have been stored in the `values` field.
 
-For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is ne1gative: this means that consecutive array values have decreasing $y$ values: cells are ordered from top to bottom, opposite the direction of the $y$ axis.
+For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cells are ordered from top to bottom, opposite the direction of the $y$ axis.
 
 `st_stars` (which later may become `st_read`) reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
 
@@ -86,24 +88,28 @@ The GDAL model can deal also with spatial rasters that are regular but not align
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = st_stars(geomatrix)
 try(image(x))
-library(sf)
+
 s = st_as_sf(x, as_points = FALSE)
 par(cex.axis = .7) # font size axis tic labels 
 plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
-We see that `image` no longer works, but will complain about an affine grid;
+We need to use `try()` with `image()` because it complains about an affine grid.
+
+Looking at the dimensions
 ```{r}
 st_dimensions(x)
 ```
 
-further reveals that we now have a `geotransform` field shown in the dimension table; this is only done when the affine parameters are non-zero. The geotransform field has six parameters, $gt_1,...,gt_6$, and $x$ and $y$ are computed from column pixel i and row pixel j by
+further reveals that we now have a `geotransform` field shown in the dimension table; this is only displayed when the affine parameters are non-zero. The geotransform field has six parameters, $gt_1,...,gt_6$ 
+that are used to transform internal raster coordinates (column pixel $i$ and row pixel $j$) 
+to world coordinates ($x$, $y$):
 
 $$x = gt_1 + (i-1) gt_2 + (j-1) gt_3$$
     
 $$y = gt_4 + (i-1) gt_5 + (j-1) gt_6$$
     
-which is clearly identical to the above when $gt_3$ and $gt_5$ are zero, but otherwise not.
+When $gt_3$ and $gt_5$ are zero, the $x$ and $y$ are parallel to $i$ and $j$, which makes it appear unrotated.
 
 # Reading a raster time series: netcdf
 
