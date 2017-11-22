@@ -25,14 +25,6 @@ CPL_gdal_version <- function(what = "RELEASE_NAME") {
     .Call('_stars_CPL_gdal_version', PACKAGE = 'stars', what)
 }
 
-CPL_proj_version <- function(b = FALSE) {
-    .Call('_stars_CPL_proj_version', PACKAGE = 'stars', b)
-}
-
-CPL_proj_is_valid <- function(proj4string) {
-    .Call('_stars_CPL_proj_is_valid', PACKAGE = 'stars', proj4string)
-}
-
 CPL_xy2sfc <- function(cc, dim, to_points) {
     .Call('_stars_CPL_xy2sfc', PACKAGE = 'stars', cc, dim, to_points)
 }

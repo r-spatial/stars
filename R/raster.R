@@ -51,6 +51,10 @@ st_as_raster = function(x, ...) {
 	}
 }
 
+#' Coerce stars object into a Raster raster or brick
+#' 
+#' Coerce stars object into a Raster raster or brick
+#' @param from object to coerce
 #' @name as
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Raster-method

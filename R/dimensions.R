@@ -9,6 +9,15 @@ st_dimensions = function(x, ...) UseMethod("st_dimensions")
 #' @name st_dimensions
 st_dimensions.stars = function(x, ...) attr(x, "dimensions")
 
+#' @export
+#' @name st_dimensions
+st_dimensions.default = function(x, ...) {
+	d = list(...)
+	if (! missing(x))
+		d = append(list(x), d)
+	structure(lapply(d, function(y) create_dimension(values = y)), class = "dimensions")
+}
+
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL) {
 	if (! is.null(values)) {
@@ -27,6 +36,8 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		}
 		if (inherits(values, "sfc_POINT"))
 			point = TRUE
+		if (inherits(values, "sfc") && !is.na(st_crs(values)) && is.na(refsys))
+			refsys = st_crs(values)$proj4string
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
 		geotransform = geotransform, refsys = refsys, point = point, values = values),
@@ -125,8 +136,14 @@ parse_meta = function(properties) {
 	properties
 }
 
-expand_dimensions = function(x) {
-	dimensions = st_dimensions(x)
+expand_dimensions = function(x, ...) UseMethod("expand_dimensions")
+
+expand_dimensions.stars = function(x) {
+	expand_dimensions(st_dimensions(x))
+}
+
+expand_dimensions.dimensions = function(x) {
+	dimensions = x
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
 	if ("x" %in% names(lst)) {
@@ -156,6 +173,9 @@ expand_dimensions = function(x) {
 	}
 	lst
 }
+
+#' @export
+dim.dimensions = function(x) lengths(expand_dimensions(x))
 
 #' @export
 print.dimensions = function(x, ..., digits = 6) {

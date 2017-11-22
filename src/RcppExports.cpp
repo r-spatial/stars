@@ -73,28 +73,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// CPL_proj_version
-std::string CPL_proj_version(bool b);
-RcppExport SEXP _stars_CPL_proj_version(SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< bool >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_proj_version(b));
-    return rcpp_result_gen;
-END_RCPP
-}
-// CPL_proj_is_valid
-Rcpp::List CPL_proj_is_valid(std::string proj4string);
-RcppExport SEXP _stars_CPL_proj_is_valid(SEXP proj4stringSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type proj4string(proj4stringSEXP);
-    rcpp_result_gen = Rcpp::wrap(CPL_proj_is_valid(proj4string));
-    return rcpp_result_gen;
-END_RCPP
-}
 // CPL_xy2sfc
 List CPL_xy2sfc(NumericMatrix cc, NumericVector dim, bool to_points);
 RcppExport SEXP _stars_CPL_xy2sfc(SEXP ccSEXP, SEXP dimSEXP, SEXP to_pointsSEXP) {
@@ -234,8 +212,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_stars_CPL_gdal_init", (DL_FUNC) &_stars_CPL_gdal_init, 0},
     {"_stars_CPL_gdal_cleanup_all", (DL_FUNC) &_stars_CPL_gdal_cleanup_all, 0},
     {"_stars_CPL_gdal_version", (DL_FUNC) &_stars_CPL_gdal_version, 1},
-    {"_stars_CPL_proj_version", (DL_FUNC) &_stars_CPL_proj_version, 1},
-    {"_stars_CPL_proj_is_valid", (DL_FUNC) &_stars_CPL_proj_is_valid, 1},
     {"_stars_CPL_xy2sfc", (DL_FUNC) &_stars_CPL_xy2sfc, 3},
     {"_stars_CPL_gdalinfo", (DL_FUNC) &_stars_CPL_gdalinfo, 2},
     {"_stars_CPL_gdalwarp", (DL_FUNC) &_stars_CPL_gdalwarp, 3},

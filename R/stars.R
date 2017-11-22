@@ -25,7 +25,7 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 
 	properties = CPL_read_gdal(x, options, driver, TRUE)
 
-	if (properties$bands[2] == 0) { # read sub-datasets:
+	if (properties$bands[2] == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list
 		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
 		sub_datasets = sub_datasets[sub]
@@ -44,9 +44,9 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		if (! quiet)
 			cat("\n")
 		structure(do.call(c, ret), names = nms)
-	} else  {
+	} else  { # we have one single array:
 		data = attr(properties, "data")
-		properties = structure(properties, data = NULL)
+		properties = structure(properties, data = NULL) # remove data from properties
 		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
@@ -58,7 +58,6 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 				structure(data, dim = c(dim(data)[1:2], newdims))
 			else
 				structure(data, dim = dim(data))
-		#structure(list(structure(data, dim = c(dim(data), newdims))),
 		structure(list(data), names = x,
 			dimensions = create_dimensions(dim(data), properties),
 			class = "stars")
@@ -197,7 +196,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 }
 
 #' @export
-dim.stars = function(x, ...) {
+dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
 		integer(0)
@@ -238,7 +237,7 @@ c.stars = function(..., along = NA_integer_) {
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
 	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
-	# deal with dimensions table
+	# TODO: deal with dimensions table
 }
 
 #' @export
@@ -256,6 +255,13 @@ st_bbox.stars = function(obj) {
 #' @export
 st_crs.stars = function(x, ...) {
 	d = st_dimensions(x)
-	stopifnot(!is.null(d$x))
-	st_crs(d$x$refsys)
+	if ("x" %in% names(d))
+		st_crs(d$x$refsys)
+	else { # search for simple features:
+		i = sapply(d, function(y) inherits(y$values, "sfc"))
+		if (any(i))
+			st_crs(d[[i[1]]]$values)
+		else
+			st_crs(NA)
+	}
 }

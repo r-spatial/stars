@@ -1,5 +1,5 @@
 ---
-title: "spatiotemporal arrays for R: first stars blog"
+title: "spatiotemporal arrays for R: stars blog one"
 author: "Edzer Pebesma"
 output:
   html_document:
@@ -51,8 +51,9 @@ Note that _everything_  in the `stars` api may still be subject to change in the
 We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
-image(x)
+x <- tif %>% st_stars 
+par(mar = rep(0,4))
+image(x, col = grey((4:10)/10))
 ```
 
 We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions: `x`, `y` and `band`, and one attribute.
@@ -74,31 +75,31 @@ Each dimension has a name; the meaning of the fields of a single dimension are:
 
 This means that for an index i (starting at $i=1$) along a certain dimension, the corresponding dimension value (coordinate, time) is $\mbox{offset} + (i-1) \times \mbox{delta}$. This value then refers to the start (edge) of the cell or interval; in order to get the interval middle or cell centre, one needs to add half an offset. 
 
-Dimension `band` is a simple sequence from 1 to 6. Although bands refer to colors, their wavelength values (or intervals) are not available in the file metadata; in case they were, they could have been stored in the `values` field.
+Dimension `band` is a simple sequence from 1 to 6. Although bands refer to colors, their wavelength values (or b in the `values` field.
 
 For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cells are ordered from top to bottom, opposite the direction of the $y$ axis.
 
-`st_stars` (which later may become `st_read`) reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
+`st_stars` reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
+
+The data structure `stars` is an extension of the `tbl_cube` found in `dplyr`; we can convert to that by
+```{r}
+as.tbl_cube(x)
+```
 
 # Affine grids
 
 The GDAL model can deal also with spatial rasters that are regular but not aligned with $x$ and $y$: affine grids. An example is given here:
 
 ```{r}
-geomatrix = system.file("tif/geomatrix.tif", package = "stars")
-x = st_stars(geomatrix)
-try(image(x))
-
-s = st_as_sf(x, as_points = FALSE)
 par(cex.axis = .7) # font size axis tic labels 
-plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
+geomatrix = system.file("tif/geomatrix.tif", package = "stars")
+geomatrix %>% st_stars %>% st_as_sf(as_points = FALSE) %>%
+  plot(axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
-
-We need to use `try()` with `image()` because it complains about an affine grid.
 
 Looking at the dimensions
 ```{r}
-st_dimensions(x)
+geomatrix %>% st_stars %>% st_dimensions
 ```
 
 further reveals that we now have a `geotransform` field shown in the dimension table; this is only displayed when the affine parameters are non-zero. The geotransform field has six parameters, $gt_1,...,gt_6$ 
@@ -151,16 +152,15 @@ x = c(
 (y = st_stars(x, quiet = TRUE))
 ```
 
-Next, we remove all but the first attribute, and drop a singular dimension using `adrop`:
+Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
 ```{r eval=ev}
-y[[2]] = y[[3]] = y[[4]] = NULL
 library(abind)
-(y = adrop(y))
+z <- y %>% select(sst) %>% adrop
 ```
 
 We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
 ```{r eval=ev}
-df = as.data.frame(y)
+df = as.data.frame(z)
 df$sst = unclass(df$sst)
 library(ggplot2)
 library(viridis)
@@ -175,17 +175,41 @@ ggplot() +
   theme(legend.key.width=unit(2, "cm"))
 ```
 
-# Arbitrary dimensioned arrays
+# More complex arrays 
 
-`stars` arrays have no limits as to the number of dimensions they span - we can create a 4-attribute, 7-dimensional array with 3 values along each dimension by
+Like `tbl_cube`, `stars` arrays have no limits to the number of dimensions they handle. An example is the origin-destination (OD) matrix, by time and travel mode.
+
+## OD: space x space x travel mode x time x time
+
+We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patters over the day, for a certain period.
+
 ```{r}
-d = structure(rep(3,7), names = paste0("dim", letters[1:7]))
-a = array(TRUE, dim = d)
-b = array("a", dim = d)
-c = array(25.3, dim = d)
-d = array(3+4i, dim = d)
-st_stars(list(a = a, b = b, c = c, d = d))
+nc = st_read(system.file("gpkg/nc.gpkg", package="sf")) 
+to = from = st_geometry(nc) # 100 polygons: O and D regions
+mode = c("car", "bike", "foot") # travel mode
+day = 1:100 # arbitrary
+library(units)
+units(day) = make_unit("days since 2015-01-01")
+hour = set_units(0:23, h) # hour of day
+dims = st_dimensions(origin = from, destination = to, mode = mode, day = day, hour = hour)
+(n = dim(dims))
+traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
+(st = st_stars(list(traffic = traffic),  dimensions = dims))
 ```
 
+This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
+```{r}
+st %>% as.tbl_cube 
+```
 
-
+The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
+```{r}
+b <- st %>% as.tbl_cube %>%
+  filter(mode == "bike") %>%
+  group_by(hour) %>%
+  summarise(traffic = mean(traffic)) %>%
+  as.data.frame()
+require(ggforce)
+ggplot() +  
+  geom_line(data=b, aes(x=hour, y=traffic))
+```
