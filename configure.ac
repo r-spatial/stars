@@ -176,104 +176,11 @@ else
   AC_MSG_ERROR([pcs.csv not found in GDAL data directory.])
 fi
 
-# Optional local copy of GDAL datadir and PROJ_LIB
-
-data_copy=no
-AC_ARG_WITH([data-copy],
-    AC_HELP_STRING([--with-data-copy=yes/no],
-               [local copy of data directories in package, default no]),
-               [data_copy=$withval])
-if test "${data_copy}" = "yes" ; then
-AC_MSG_NOTICE([Copy data for:])
-  proj_lib0="${PROJ_LIB}"
-  AC_ARG_WITH([proj-data],
-    AC_HELP_STRING([--with-proj-data=DIR],
-                   [location of PROJ.4 data directory]),
-    [proj_lib1=$withval])
-  if test -n "${proj_lib0}" ; then
-    proj_lib="${proj_lib0}"
-  else
-    proj_lib="${proj_lib1}"
-  fi
-  if test -n "${proj_lib}" ; then
-    if test -d "${proj_lib}" ; then
-      cp -r "${proj_lib}" "${R_PACKAGE_DIR}"
-      AC_MSG_NOTICE([  PROJ.4: ${proj_lib}])
-    else
-      AC_MSG_ERROR([PROJ.4 data files not found; set environment variable PROJ_LIB=DIR or --with-proj-data=DIR.])
-    fi
-  else
-      AC_MSG_ERROR([PROJ.4 data files not found; set environment variable PROJ_LIB=DIR or --with-proj-data=DIR.])
-  fi
-
-  if test -d "${GDAL_DATADIR}" ; then
-    cp -r "${GDAL_DATADIR}" "${R_PACKAGE_DIR}"
-    AC_MSG_NOTICE([  GDAL: ${GDAL_DATADIR}])
-  else
-    AC_MSG_ERROR([GDAL data files not found.])
-  fi
-fi
-
-#
-# test whether PROJ.4 is available to gdal:
-#
-
-gdal_has_proj=no
-[cat > gdal_proj.cpp <<_EOCONF
-#include <gdal.h>
-#include <ogr_srs_api.h>
-#include <ogr_spatialref.h>
-int main(int argc, char *argv[]) {
-	OGRSpatialReference *dest = new OGRSpatialReference;
-	OGRSpatialReference *src = new OGRSpatialReference;
-    src->importFromEPSG(4326);
-    dest->importFromEPSG(3857);
-	OGRCoordinateTransformation *ct = OGRCreateCoordinateTransformation(src, dest);
-	return(ct == NULL); // signals PROJ.4 is not available through gdal
-}
-_EOCONF]
-
-AC_MSG_CHECKING(GDAL: checking whether PROJ.4 is available for linking:)
-${CXX} ${CPPFLAGS} -o gdal_proj gdal_proj.cpp ${LIBS} 2> errors.txt
-if test `echo $?` -ne 0 ; then
-gdal_has_proj=no
-AC_MSG_RESULT(no)
-else
-gdal_has_proj=yes
-AC_MSG_RESULT(yes)
-fi
-
-if test "${gdal_has_proj}" = no; then
-   cat errors.txt
-   AC_MSG_NOTICE([Install failure: compilation and/or linkage problems.])
-   AC_MSG_ERROR([cannot link projection code])
-fi
-
-AC_MSG_CHECKING(GDAL: checking whether PROJ.4 is available fur running:)
-./gdal_proj
-if test `echo $?` -ne 0 ; then
-gdal_has_proj=no
-AC_MSG_RESULT(no)
-else
-gdal_has_proj=yes
-AC_MSG_RESULT(yes)
-fi
-if test "${gdal_has_proj}" = no; then
-   AC_MSG_ERROR([OGRCoordinateTransformation() does not return a coord.trans: PROJ.4 not available?])
-fi
-rm -fr errors.txt gdal_proj.cpp gdal_proj
-
 AC_SUBST([PKG_CPPFLAGS], ["${INPKG_CPPFLAGS} ${GDAL_CPPFLAGS}"])
 AC_SUBST([PKG_LIBS], ["${INPKG_LIBS} ${GDAL_LIBS}"])
 if test "${NEED_DEPS}" = yes; then
    AC_SUBST([PKG_LIBS], ["${PKG_LIBS}"])
 fi
-
-# honor PKG_xx overrides
-# for CPPFLAGS we will superfluously double R's flags
-# since we'll set PKG_CPPFLAGS with this, but that shouldn't hurt
-CPPFLAGS="${CPPFLAGS} ${PKG_CPPFLAGS}"
-LIBS="${LIBS} ${PKG_LIBS}"
 
 #
 # concluding substitution
