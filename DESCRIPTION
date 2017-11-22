@@ -6,13 +6,15 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.p
 	person("Michael", "Sumner", role = "ctb"),
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
-	sf (>= 0.5-5),
-    R (>= 3.3.0)
+    R (>= 3.3.0),
+	dplyr (>= 0.7-0),
+	magrittr,
+	sf (>= 0.5-5)
 Imports:
     Rcpp, 
-	magrittr,
 	abind,
 	methods,
+	rlang,
 	units
 Suggests: 
     covr,
@@ -41,5 +43,6 @@ Collate:
 	dimensions.R
 	stars.R
 	raster.R
+	tidyverse.R
 	RcppExports.R
 RoxygenNote: 6.0.1
