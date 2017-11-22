@@ -203,7 +203,7 @@ st %>% as.tbl_cube
 ```
 
 The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
-```{r}
+```{r eval=ev}
 b <- st %>% as.tbl_cube %>%
   filter(mode == "bike") %>%
   group_by(hour) %>%
