@@ -57,8 +57,9 @@ pull.stars = function (.data, var = -1)
 }
 
 #' @name dplyr
+#' @param x object of class \code{stars}
 #' @export
-as.tbl_cube.stars = function(x) {
+as.tbl_cube.stars = function(x, ...) {
 	cleanup = function(y) {
 		if (is.list(y))
 			seq_along(y)
