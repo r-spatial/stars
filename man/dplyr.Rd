@@ -21,7 +21,7 @@
 
 \method{pull}{stars}(.data, var = -1)
 
-\method{as.tbl_cube}{stars}(x)
+\method{as.tbl_cube}{stars}(x, ...)
 }
 \arguments{
 \item{.data}{see \link[dplyr]{filter}}
@@ -31,6 +31,8 @@
 \item{.dots}{see \link[dplyr]{filter}}
 
 \item{var}{see \link[dplyr]{pull}}
+
+\item{x}{object of class \code{stars}}
 }
 \description{
 dplyr verbs for stars objects
