@@ -8,14 +8,14 @@
 \alias{st_dimensions.default}
 \title{get dimensions from stars object}
 \usage{
-st_dimensions(x, ...)
+st_dimensions(.x, ...)
 
-\method{st_dimensions}{stars}(x, ...)
+\method{st_dimensions}{stars}(.x, ...)
 
-\method{st_dimensions}{default}(x, ...)
+\method{st_dimensions}{default}(.x, ...)
 }
 \arguments{
-\item{x}{object to retrieve dimensions information from}
+\item{.x}{object to retrieve dimensions information from}
 
 \item{...}{further arguments}
 }

@@ -1,21 +1,24 @@
 #' get dimensions from stars object
 #' @export
-#' @param x object to retrieve dimensions information from 
+#' @param .x object to retrieve dimensions information from 
 #' @param ... further arguments
 #' @return the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
-st_dimensions = function(x, ...) UseMethod("st_dimensions")
+st_dimensions = function(.x, ...) UseMethod("st_dimensions")
 
 #' @export
 #' @name st_dimensions
-st_dimensions.stars = function(x, ...) attr(x, "dimensions")
+st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 #' @name st_dimensions
-st_dimensions.default = function(x, ...) {
+st_dimensions.default = function(.x, ...) {
 	d = list(...)
-	if (! missing(x))
-		d = append(list(x), d)
-	structure(lapply(d, function(y) create_dimension(values = y)), class = "dimensions")
+	if (! missing(.x))
+		d = append(list(.x), d)
+	ret = structure(lapply(d, function(y) create_dimension(values = y)), class = "dimensions")
+	if (is.null(names(ret)) || any(names(ret) == ""))
+		names(ret) = make.names(seq_along(ret))
+	ret
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
