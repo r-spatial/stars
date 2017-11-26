@@ -20,7 +20,7 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 
 	if (length(x) > 1) { # recurse:
 		ret = lapply(x, st_stars, options = options, driver = driver, sub = sub, quiet = quiet)
-		return(do.call(c, c(ret, along = 3)))
+		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
 	}
 
 	properties = CPL_read_gdal(x, options, driver, TRUE)
@@ -28,11 +28,13 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 	if (properties$bands[2] == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list
 		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
-		sub_datasets = sub_datasets[sub]
 		# sub_datasets = gdal_subdatasets(x, options)[sub] # -> would open x twice
 
 		# FIXME: only for NetCDF:
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
+		names(sub_datasets) = nms
+		sub_datasets = sub_datasets[sub]
+		nms = names(sub_datasets)
 
 		read_stars = function(x, options, driver, keep_meta, quiet) {
 			if (! quiet)
@@ -50,10 +52,8 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
-		if (! is.null(properties$units) && ! is.na(properties$units)) {
-			print(c("[", properties$units, "]"))
+		if (! is.null(properties$units) && ! is.na(properties$units))
 			data = set_units(data, make_unit(properties$units))
-		}
 
 		newdims = lengths(properties$dim_extra)
 		data = if (length(newdims))
