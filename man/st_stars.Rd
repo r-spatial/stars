@@ -72,5 +72,5 @@ x = st_stars(tif)
 # x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
-image(x)
+image(x, col = grey((3:9)/10))
 }
