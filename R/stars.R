@@ -50,8 +50,10 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
-		if (! is.null(properties$units) && ! is.na(properties$units))
+		if (! is.null(properties$units) && ! is.na(properties$units)) {
+			print(c("[", properties$units, "]"))
 			data = set_units(data, make_unit(properties$units))
+		}
 
 		newdims = lengths(properties$dim_extra)
 		data = if (length(newdims))
@@ -94,7 +96,7 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
-#' image(x)
+#' image(x, col = grey((3:9)/10))
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
 		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), ylim = range(dims$y)) {
 

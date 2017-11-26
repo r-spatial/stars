@@ -120,10 +120,13 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
 					pr$dim_extra[[v]] = as.numeric(rhs)
 				}
-				pr$dim_extra[[v]] = set_units(pr$dim_extra[[v]], 
-					get_val(paste0(v, "#units"), meta))
-				if (v == "time")
-					pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
+				u = get_val(paste0(v, "#units"), meta)
+				if (! is.na(u)) {
+					# print(c("[", u, "]"))
+					units(pr$dim_extra[[v]]) = make_unit(u)
+					if (v == "time")
+						pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
+				}
 			}
 		}
 	}

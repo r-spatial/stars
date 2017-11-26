@@ -5,6 +5,8 @@
 st_as_sfc.dimensions = function(x, ..., as_points = NA, use_cpp = FALSE) {
 
 	stopifnot(identical(names(x), c("x", "y")))
+	if (is.na(as_points))
+		stop("as_points should be set to TRUE (`points') or FALSE (`polygons')")
 
 	xy2sfc = function(cc, dm, as_points) { # form points or polygons from a matrix with corner points
 		if (as_points)
@@ -55,9 +57,14 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 
 	d = st_dimensions(x)
+	olddim = dim(x)
 
 	if (!all(c("x", "y") %in% names(d)))
 		stop("x and/or y not among dimensions")
+
+	xy_pos = match(c("x", "y"), names(d))
+	if (! all(xy_pos == 1:2))
+		stop("x and y need to be first and second dimension")
 
 	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2))
 
@@ -68,10 +75,8 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 	names(d)[names(d) == "x"] = "sfc"
 	# remove y:
 	d[["y"]] = NULL
-	newdim = sapply(d, function(x) x$to)
-	newdim = c(length(sfc), prod(newdim[-1]))
 	for (i in seq_along(x))
-		dim(x[[i]]) = newdim
+		dim(x[[i]]) = c(length(sfc), olddim[-xy_pos])
 	structure(x, dimensions = d, class = "stars")
 }
 
@@ -82,7 +87,8 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 		x = st_xy2sfc(x, as_points = as_points, ...)
 
 	sfc = st_dimensions(x)$sfc$values
-	dfs = lapply(x, as.data.frame) # may choose units method
+	# may choose units method -> is broken; drop units TODO: if fixed:
+	dfs = lapply(x, function(y) as.data.frame(unclass(y))) 
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
 	names(df) = if (length(x) > 1)
