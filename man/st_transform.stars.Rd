@@ -32,6 +32,3 @@ image(y, add = TRUE)
 plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 }
-\seealso{
-\link[sf]{st_transform}
-}

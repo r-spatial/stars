@@ -53,7 +53,7 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
 		if (! is.null(properties$units) && ! is.na(properties$units))
-			data = set_units(data, make_unit(properties$units))
+			units(data) = make_unit(properties$units)
 
 		newdims = lengths(properties$dim_extra)
 		data = if (length(newdims))

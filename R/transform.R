@@ -42,13 +42,14 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 
 # transform grid x to dimensions target
 transform_grid_grid = function(x, target) {
-	new_pts = st_as_sfc(target, as_points = TRUE)
-	pts = st_transform(new_pts, st_crs(x))
+	#new_pts = st_as_sfc(target, as_points = TRUE)
+	new_pts = st_coordinates(target)
+	pts = sf_project(target$x$refsys, st_crs(x)$proj4string, new_pts)
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = ceiling(xy_from_colrow(st_coordinates(pts), d$x$geotransform, inverse = TRUE)) 
+	xy = ceiling(xy_from_colrow(pts, d$x$geotransform, inverse = TRUE)) 
 	xy[ xy[,1] < 1 | xy[,1] > d$x$to | xy[,2] < 1 | xy[,2] > d$y$to, ] = NA
 
 	from = x[[1]] #[,,1]
