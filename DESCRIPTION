@@ -44,5 +44,6 @@ Collate:
 	stars.R
 	raster.R
 	tidyverse.R
+	transform.R
 	RcppExports.R
 RoxygenNote: 6.0.1

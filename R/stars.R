@@ -100,7 +100,7 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
 		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), ylim = range(dims$y)) {
 
-	stopifnot(!is_affine(st_dimensions(x)))
+	stopifnot(!has_affine(x))
 
 	if (any(dim(x) == 1))
 		x = adrop(x)
@@ -125,37 +125,48 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
-xy_from_colrow = function(x, geotransform) {
+xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
 # 0-based indices:
 # Xp = geotransform[0] + P*geotransform[1] + L*geotransform[2];
 # Yp = geotransform[3] + P*geotransform[4] + L*geotransform[5];
+	if (inverse) {
+		geotransform = CPL_inv_geotransform(geotransform)
+		if (any(is.na(geotransform)))
+			stop("geotransform not invertible")
+	}
 	stopifnot(ncol(x) == 2)
 	matrix(geotransform[c(1, 4)], nrow(x), 2, byrow = TRUE) + 
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-is_affine = function(dimensions) {
-	any(sapply(dimensions, function(x) 
+has_affine = function(x) {
+	dimensions = st_dimensions(x)
+	has_raster(x) &&
+		any(sapply(dimensions, function(x) 
 		! all(is.na(x$geotransform)) && any(x$geotransform[c(3, 5)] != 0)))
+}
+
+has_raster = function(x)
+	all(c("x", "y") %in% names(st_dimensions(x)))
+
+has_sfc = function(x)
+	all(c("sfc") %in% names(st_dimensions(x)))
+
+#' @export
+st_coordinates.stars = function(x, ...) {
+	if (has_affine(x))
+		stop("affine transformation needed") 
+	do.call(expand.grid, expand_dimensions(x))
+}
+
+st_coordinates.dimensions = function(x, ...) {
+	st_coordinates(st_stars(list(), dimensions = x))
 }
 
 #' @export
 as.data.frame.stars = function(x, ...) {
-	## FIXME: now ignores possible affine parameters:
-	stopifnot(!is_affine(st_dimensions(x)))
-	dims = attr(x, "dimensions")
-	lapply(dims, 
-		function(x) { 
-			if (!is.null(x$geotransform)) {
-				aff = x$geotransform[c(3,5)]
-				if (!all(is.na(aff)) && any(aff != 0)) 
-					stop("affine transformation needed") 
-			}
-		}
-	)
-	coords = do.call(expand.grid, expand_dimensions(x))
-	data.frame(coords, lapply(x, c))
+	data.frame(st_coordinates(x), lapply(x, c))
 }
 
 #' @export
@@ -248,10 +259,16 @@ st_bbox.stars = function(obj) {
 	stopifnot(all(c("x", "y") %in% names(d)))
 	gt = attr(obj, "dimensions")$x$geotransform
 	stopifnot(length(gt) == 6 && !any(is.na(gt)))
-	x = c(gt[1], gt[1] + dim(obj)["x"] * gt[2])
-	y = c(gt[4], gt[4] + dim(obj)["y"] * gt[6])
-	bb = c(min(x), min(y), max(x), max(y))
-	structure(bb, names = c("xmin", "ymin", "xmax", "ymax"), class = "bbox")
+
+
+	nx = dim(obj)["x"]
+	ny = dim(obj)["y"]
+	bb = rbind(c(0,0), c(nx, 0), c(nx, ny), c(0, ny))
+	xy = xy_from_colrow(bb, gt)
+	bb = c(min(xy[,1]), min(xy[,2]), max(xy[,1]), max(xy[,2]))
+	structure(bb, names = c("xmin", "ymin", "xmax", "ymax"), 
+		crs = st_crs(obj),
+		class = "bbox")
 }
 
 #' @export

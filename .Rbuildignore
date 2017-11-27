@@ -6,3 +6,4 @@ cleanup
 appveyor.yml
 codecov.yml
 cov
+^docs$

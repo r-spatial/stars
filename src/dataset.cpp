@@ -70,3 +70,16 @@ List CPL_get_crs(CharacterVector obj, CharacterVector options) {
 
 	return ret;
 }
+// [[Rcpp::export]]
+NumericVector CPL_inv_geotransform(NumericVector gt_r) {
+	if (gt_r.size() != 6)
+		stop("wrong length geotransform");
+	double gt_inv[6], gt[6];
+	for (int i = 0; i < 6; i++)
+		gt[i] = gt_r[i];
+	int retval = GDALInvGeoTransform(gt, gt_inv);
+	NumericVector gt_r_inv(6);
+	for (int i = 0; i < 6; i++)
+		gt_r_inv(i) = retval ? gt_inv[i] : NA_REAL;
+	return gt_r_inv;
+}

@@ -59,7 +59,7 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 	d = st_dimensions(x)
 	olddim = dim(x)
 
-	if (!all(c("x", "y") %in% names(d)))
+	if (! has_raster(x))
 		stop("x and/or y not among dimensions")
 
 	xy_pos = match(c("x", "y"), names(d))
@@ -77,14 +77,14 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 	d[["y"]] = NULL
 	for (i in seq_along(x))
 		dim(x[[i]]) = c(length(sfc), olddim[-xy_pos])
-	structure(x, dimensions = d, class = "stars")
+	structure(x, dimensions = d)
 }
 
 #' @export
-st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
+st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = FALSE) {
 
-	if (all(c("x", "y") %in% names(st_dimensions(x))))
-		x = st_xy2sfc(x, as_points = as_points, ...)
+	if (has_raster(x))
+		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
 
 	sfc = st_dimensions(x)$sfc$values
 	# may choose units method -> is broken; drop units TODO: if fixed:
@@ -95,6 +95,11 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 			make.names(rep(names(x), nc), unique = TRUE)
 		else
 			colnames(dfs[[1]])
+	if (na.rm) {
+		keep = apply(df, 1, function(x) any(!is.na(x)))
+		df = df[keep, ]
+		sfc = sfc[keep]
+	}
 	st_sf(df, geometry = sfc)
 }
 

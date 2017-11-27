@@ -16,7 +16,22 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(stars)
-Linking to GDAL 2.2.1, proj.4 4.9.2
+Loading required package: dplyr
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: magrittr
+Loading required package: sf
+Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3
+Linking to GDAL 2.1.2
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = st_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -45,7 +60,23 @@ band    NA   NULL
 > #nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
 > #(x = st_stars(nc))
 > image(x)
+> gdal_crs(tif)
+$nbands
+[1] 6
+
+$crs
+Coordinate Reference System:
+  No EPSG code
+  proj4string: "+proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+
+$gt
+[1]  288776.3      28.5       0.0 9120760.8       0.0     -28.5
+
+$gt_inv
+[1] -1.013250e+04  3.508772e-02  0.000000e+00  3.200267e+05  0.000000e+00
+[6] -3.508772e-02
+
 > 
 > proc.time()
    user  system elapsed 
-  1.044   0.252   1.056 
+  0.768   0.252   0.740 

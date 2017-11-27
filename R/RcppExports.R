@@ -9,6 +9,10 @@ CPL_get_crs <- function(obj, options) {
     .Call('_stars_CPL_get_crs', PACKAGE = 'stars', obj, options)
 }
 
+CPL_inv_geotransform <- function(gt_r) {
+    .Call('_stars_CPL_inv_geotransform', PACKAGE = 'stars', gt_r)
+}
+
 CPL_read_gdal <- function(fname, options, driver, read_data = TRUE) {
     .Call('_stars_CPL_read_gdal', PACKAGE = 'stars', fname, options, driver, read_data)
 }

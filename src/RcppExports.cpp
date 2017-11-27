@@ -30,6 +30,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CPL_inv_geotransform
+NumericVector CPL_inv_geotransform(NumericVector gt_r);
+RcppExport SEXP _stars_CPL_inv_geotransform(SEXP gt_rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type gt_r(gt_rSEXP);
+    rcpp_result_gen = Rcpp::wrap(CPL_inv_geotransform(gt_r));
+    return rcpp_result_gen;
+END_RCPP
+}
 // CPL_read_gdal
 List CPL_read_gdal(CharacterVector fname, CharacterVector options, CharacterVector driver, bool read_data);
 RcppExport SEXP _stars_CPL_read_gdal(SEXP fnameSEXP, SEXP optionsSEXP, SEXP driverSEXP, SEXP read_dataSEXP) {
@@ -208,6 +219,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_stars_CPL_get_metadata", (DL_FUNC) &_stars_CPL_get_metadata, 3},
     {"_stars_CPL_get_crs", (DL_FUNC) &_stars_CPL_get_crs, 2},
+    {"_stars_CPL_inv_geotransform", (DL_FUNC) &_stars_CPL_inv_geotransform, 1},
     {"_stars_CPL_read_gdal", (DL_FUNC) &_stars_CPL_read_gdal, 4},
     {"_stars_CPL_gdal_init", (DL_FUNC) &_stars_CPL_gdal_init, 0},
     {"_stars_CPL_gdal_cleanup_all", (DL_FUNC) &_stars_CPL_gdal_cleanup_all, 0},
