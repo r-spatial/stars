@@ -80,50 +80,6 @@ st_stars.list = function(x, ..., dimensions = NULL) {
 	structure(x, dimensions = dimensions, class = "stars")
 }
 
-
-#' @name st_stars
-#' @param band integer; which band (dimension) to plot
-#' @param attr integer; which attribute to plot
-#' @param asp numeric; aspect ratio of image
-#' @param rgb integer; specify three bands to form an rgb composite
-#' @param maxColorValue numeric; passed on to \link{rgb}
-#' @param xlab character; x axis label
-#' @param ylab character; y axis label
-#' @param xlim x axis limits
-#' @param ylim y axis limits
-#' @param ... passed on to \code{image.default}
-#' @export
-#' @examples
-#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
-#' x = st_stars(tif)
-#' image(x, col = grey((3:9)/10))
-image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
-		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), ylim = range(dims$y)) {
-
-	stopifnot(!has_affine(x))
-
-	if (any(dim(x) == 1))
-		x = adrop(x)
-
-	dims = expand_dimensions(x)
-	x = unclass(x[[ attr ]])
-	x = if (length(dim(x)) == 3) {
-			if (is.null(rgb))
-				x[ , rev(seq_len(dim(x)[2])), band]
-			else {
-				stop("not yet supported")
-				xy = dim(x)[1:2]
-				x = structure(x[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
-				x = rgb(x, maxColorValue = maxColorValue) # FIXME: deal with NAs
-				dim(x) = xy
-				#return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
-			}
-		} else
-			x[ , rev(seq_len(dim(x)[2]))]
-	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, 
-		xlim = xlim, ylim = ylim, ...)
-}
-
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
 xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
@@ -283,4 +239,11 @@ st_crs.stars = function(x, ...) {
 		else
 			st_crs(NA)
 	}
+}
+
+#' @export
+"[.stars" = function(x, i, j,..., drop = FALSE) {
+	if (!missing(j))
+		stop("don't know what to do with argument j!")
+	st_stars(unclass(x)[i], dimensions = st_dimensions(x))
 }

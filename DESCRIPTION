@@ -43,6 +43,7 @@ Collate:
 	dimensions.R
 	stars.R
 	raster.R
+	plot.R
 	tidyverse.R
 	transform.R
 	RcppExports.R

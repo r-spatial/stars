@@ -21,6 +21,11 @@ st_dimensions.default = function(.x, ...) {
 	ret
 }
 
+#' @export
+"[.dimensions" = function(x,i,j,...,drop=FALSE) {
+	structure(unclass(x)[i], class = "dimensions")
+}
+
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL) {
 	if (! is.null(values)) {

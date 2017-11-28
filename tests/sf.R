@@ -32,7 +32,7 @@ colnames(m) = c("a", "b", "c")
 foo = st_sf(m, geom = x)
 st_stars(foo)
 st_stars(foo, times = NULL)
-st = st_stars(foo, times = Sys.Date() + 0:2)
+st = st_stars(foo, times = as.Date("2017-11-27") + 0:2)
 st
 st_as_sf(st)
 st_as_sf(st_stars(foo))
