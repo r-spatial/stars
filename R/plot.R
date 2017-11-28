@@ -1,9 +1,9 @@
 #' @export
-plot.stars = function(x, y, ..., mfrow = c(10,10), names = names(x)[1]) {
+plot.stars = function(x, y, ..., mfrow = c(10,10), main = names(x)[1]) {
 	flatten = function(x, i) {
 		d = st_dimensions(x)
-		x = x[[1]]
 		dims = dim(x)
+		x = x[[1]]
 		aux = setdiff(names(dims), c("x", "y"))
 		newdims = c(dims[c("x", "y")], prod(dims[aux]))
 		dim(x) = newdims
@@ -15,20 +15,25 @@ plot.stars = function(x, y, ..., mfrow = c(10,10), names = names(x)[1]) {
 		dims = dim(x)
 		if (length(dims) == 2)
 			image(x, ...)
-		else {
-			n = ceiling(sqrt(dims[3]))
-			par(mfrow = c(n,n), mar = c(0,0, if (is.null(names)) 0 else 1.1,0))
+		else { # simply loop over dimensions 3:
+			mfrow = get_mfrow(st_bbox(x), dims[3], par("din"))
+			title_sz = if (is.null(main)) 
+					0
+				else
+					1.1
+			par(mfrow = mfrow, mar = c(0, 0, title_sz, 0))
+			labels = format(expand_dimensions(st_dimensions(x))[[3]])
 			for (i in seq_len(dims[3])) {
 				image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, ...)
-				if (!is.null(names))
-					title(paste0(names, ": ", i))
+				if (!is.null(main))
+					title(paste0(main, ": ", labels[i]))
 				box()
 			}
 		}
 	} else if (has_sfc(x)) {
 		plot(st_as_sf(x, ...), border = NA)
 	} else
-		stop("no raster, no features: don't know how to plot!")
+		stop("no raster, no features geometries: don't know how to plot!")
 }
 
 #' @name st_stars
@@ -72,4 +77,23 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 			x[ , rev(seq_len(dim(x)[2]))]
 	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, 
 		xlim = xlim, ylim = ylim, ...)
+}
+
+#### copied from sf/R/plot.R -- remove on merge
+get_mfrow = function(bb, n, total_size = c(1,1)) {
+	asp = diff(bb[c(1,3)])/diff(bb[c(2,4)])
+	size = function(nrow, n, asp) {
+		ncol = ceiling(n / nrow)
+		xsize = total_size[1] / ncol
+		ysize = xsize  / asp
+		if (xsize * ysize * n > prod(total_size)) {
+			ysize = total_size[2] / nrow
+			xsize = ysize * asp
+		}
+		xsize * ysize
+	}
+	sz = vapply(1:n, function(x) size(x, n, asp), 0.0)
+	nrow = which.max(sz)
+	ncol = ceiling(n / nrow)
+	structure(c(nrow, ncol), names = c("nrow", "ncol"))
 }

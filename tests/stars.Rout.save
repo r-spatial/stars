@@ -76,11 +76,13 @@ $gt_inv
 [1] -1.013250e+04  3.508772e-02  0.000000e+00  3.200267e+05  0.000000e+00
 [6] -3.508772e-02
 
+> plot(x, col = grey((4:10)/10), names = NULL)
 > 
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = st_stars(geomatrix)
 > y = st_transform(x, st_crs(4326))
 > 
+> 
 > proc.time()
    user  system elapsed 
-  0.884   0.304   0.869 
+  1.924   0.304   1.926 
