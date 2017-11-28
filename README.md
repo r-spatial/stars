@@ -1,7 +1,7 @@
 # stars: spatiotemporal tidy arrays for R
 
 [![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars)
+<!-- [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars) -->
 [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 
