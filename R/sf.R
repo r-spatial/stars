@@ -86,15 +86,20 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = 
 	if (has_raster(x))
 		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
 
+	if (!has_sfc(x))
+		stop("no feature geometry column found")
+
+	# FIXME: this probably only works for 2D arrays, now
 	sfc = st_dimensions(x)$sfc$values
 	# may choose units method -> is broken; drop units TODO: if fixed:
-	dfs = lapply(x, function(y) as.data.frame(unclass(y))) 
+	dfs = lapply(x, function(y) as.data.frame(y))
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
-	names(df) = if (length(x) > 1)
-			make.names(rep(names(x), nc), unique = TRUE)
-		else
-			colnames(dfs[[1]])
+	if (length(dim(x)) > 1) {
+		labels = format(expand_dimensions(st_dimensions(x))[[2]])
+		names(df) = apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ")
+	} else
+		names(df) = names(x)
 	if (na.rm) {
 		keep = apply(df, 1, function(x) any(!is.na(x)))
 		df = df[keep, ]

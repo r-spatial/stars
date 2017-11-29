@@ -1,5 +1,12 @@
+#' plot stars object, with subplots for each level of first non-spatial dimension
+#'
+#' @name plot.stars
+#' @param x object of class \code{stars}
+#' @param y ignored
+#' @param one_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
+#' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @export
-plot.stars = function(x, y, ..., mfrow = c(10,10), main = names(x)[1]) {
+plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 	flatten = function(x, i) {
 		d = st_dimensions(x)
 		dims = dim(x)
@@ -12,31 +19,44 @@ plot.stars = function(x, y, ..., mfrow = c(10,10), main = names(x)[1]) {
 	if (!missing(y))
 		stop("y argument should be missing")
 	if (has_raster(x)) {
+		zlim = if (one_zlim)
+				range(unclass(x[[1]]), na.rm = TRUE)
+			else
+				rep(NA_real_, 2)
 		dims = dim(x)
-		if (length(dims) == 2)
+		if (length(dims) == 2) {
 			image(x, ...)
-		else { # simply loop over dimensions 3:
+			if (!is.null(main))
+				title(main)
+		} else { # simply loop over dimensions 3:
 			mfrow = get_mfrow(st_bbox(x), dims[3], par("din"))
 			title_sz = if (is.null(main)) 
 					0
 				else
 					1.1
 			par(mfrow = mfrow, mar = c(0, 0, title_sz, 0))
-			labels = format(expand_dimensions(st_dimensions(x))[[3]])
+			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
-				image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, ...)
-				if (!is.null(main))
-					title(paste0(main, ": ", labels[i]))
+				if (one_zlim)
+					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, zlim = zlim,...)
+				else
+					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, ...)
+				if (!is.null(main)) {
+					if (length(main) == dims[3])
+						title(main[i])
+					else
+						title(paste(main, format(labels[i])))
+				}
 				box()
 			}
 		}
 	} else if (has_sfc(x)) {
-		plot(st_as_sf(x, ...), border = NA)
+		plot(st_as_sf(x), ...)
 	} else
 		stop("no raster, no features geometries: don't know how to plot!")
 }
 
-#' @name st_stars
+#' @name plot.stars
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param asp numeric; aspect ratio of image
@@ -46,6 +66,7 @@ plot.stars = function(x, y, ..., mfrow = c(10,10), main = names(x)[1]) {
 #' @param ylab character; y axis label
 #' @param xlim x axis limits
 #' @param ylim y axis limits
+#' @param useRaster logical; see \link{image.default}
 #' @param ... passed on to \code{image.default}
 #' @export
 #' @examples
@@ -53,7 +74,8 @@ plot.stars = function(x, y, ..., mfrow = c(10,10), main = names(x)[1]) {
 #' x = st_stars(tif)
 #' image(x, col = grey((3:9)/10))
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
-		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), ylim = range(dims$y)) {
+		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), 
+		ylim = range(dims$y), useRaster = TRUE) {
 
 	stopifnot(!has_affine(x))
 
@@ -76,7 +98,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 		} else
 			x[ , rev(seq_len(dim(x)[2]))]
 	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, 
-		xlim = xlim, ylim = ylim, ...)
+		xlim = xlim, ylim = ylim, useRaster = useRaster, ...)
 }
 
 #### copied from sf/R/plot.R -- remove on merge

@@ -6,6 +6,7 @@
 #' @param driver character; driver to use for opening file
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
+#' @param ... ignored
 #' @return object of class \code{stars}
 #' @export
 #' @examples

@@ -1,3 +1,4 @@
+# convert arrays to data.frame, in long form
 to_df = function(x) {
 	as.data.frame(lapply(x, c))
 }
