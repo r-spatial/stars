@@ -222,10 +222,8 @@ st_bbox.stars = function(obj) {
 	ny = dim(obj)["y"]
 	bb = rbind(c(0,0), c(nx, 0), c(nx, ny), c(0, ny))
 	xy = xy_from_colrow(bb, gt)
-	bb = c(min(xy[,1]), min(xy[,2]), max(xy[,1]), max(xy[,2]))
-	structure(bb, names = c("xmin", "ymin", "xmax", "ymax"), 
-		crs = st_crs(obj),
-		class = "bbox")
+	bb = c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+	structure(bb, crs = st_crs(obj), class = "bbox")
 }
 
 #' @export

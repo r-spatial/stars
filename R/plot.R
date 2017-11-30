@@ -74,30 +74,32 @@ plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 #' x = st_stars(tif)
 #' image(x, col = grey((3:9)/10))
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
-		xlab = names(dims)[1], ylab = names(dims)[2], xlim = range(dims$x), 
-		ylim = range(dims$y), useRaster = TRUE) {
+		xlab = names(dims)[1], ylab = names(dims)[2], xlim = st_bbox(x)$xlim,
+		ylim = st_bbox(x)$ylim, useRaster = TRUE) {
 
-	stopifnot(!has_affine(x))
+	stopifnot(!has_affine(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
 		x = adrop(x)
 
+	force(xlim)
+	force(ylim)
 	dims = expand_dimensions(x)
-	x = unclass(x[[ attr ]])
-	x = if (length(dim(x)) == 3) {
+	ar = unclass(x[[ attr ]])
+	ar = if (length(dim(x)) == 3) {
 			if (is.null(rgb))
-				x[ , rev(seq_len(dim(x)[2])), band]
+				ar[ , rev(seq_len(dim(ar)[2])), band]
 			else {
 				stop("not yet supported")
-				xy = dim(x)[1:2]
-				x = structure(x[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
-				x = rgb(x, maxColorValue = maxColorValue) # FIXME: deal with NAs
-				dim(x) = xy
+				xy = dim(ar)[1:2]
+				ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
+				ar = rgb(ar, maxColorValue = maxColorValue) # FIXME: deal with NAs
+				dim(ar) = xy
 				#return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
 			}
 		} else
-			x[ , rev(seq_len(dim(x)[2]))]
-	image.default(dims[[1]], rev(dims[[2]]), unclass(x), asp = asp, xlab = xlab, ylab = ylab, 
+			ar[ , rev(seq_len(dim(ar)[2]))]
+	image.default(dims[[1]], rev(dims[[2]]), unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
 		xlim = xlim, ylim = ylim, useRaster = useRaster, ...)
 }
 
