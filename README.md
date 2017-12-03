@@ -28,6 +28,12 @@ are developed and tested on samples before they are evaluated for
 complete datasets, and discuss the challenges of visualiasation and
 storage in such workflows. 
 
+## Progress
+
+* blog post: [first](http://r-spatial.org/r/2017/11/23/stars1.html)
+
+## Proposal
+
 Read the full proposal [here](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
 ### Acknowledgment
