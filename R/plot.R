@@ -3,11 +3,11 @@
 #' @name plot.stars
 #' @param x object of class \code{stars}
 #' @param y ignored
-#' @param one_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
+#' @param join_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @export
-plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
-	flatten = function(x, i) {
+plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
+	flatten = function(x, i) { # collapse all non-x/y dims into one
 		d = st_dimensions(x)
 		dims = dim(x)
 		x = x[[1]]
@@ -19,7 +19,7 @@ plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 	if (!missing(y))
 		stop("y argument should be missing")
 	if (has_raster(x)) {
-		zlim = if (one_zlim)
+		zlim = if (join_zlim)
 				range(unclass(x[[1]]), na.rm = TRUE)
 			else
 				rep(NA_real_, 2)
@@ -30,14 +30,14 @@ plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 				title(main)
 		} else { # simply loop over dimensions 3:
 			mfrow = get_mfrow(st_bbox(x), dims[3], par("din"))
-			title_sz = if (is.null(main)) 
+			title_size = if (is.null(main)) 
 					0
 				else
 					1.1
-			par(mfrow = mfrow, mar = c(0, 0, title_sz, 0))
+			par(mfrow = mfrow, mar = c(0, 0, title_size, 0))
 			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
-				if (one_zlim)
+				if (join_zlim)
 					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, zlim = zlim,...)
 				else
 					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, ...)
@@ -68,6 +68,7 @@ plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 #' @param ylim y axis limits
 #' @param useRaster logical; see \link{image.default}
 #' @param ... passed on to \code{image.default}
+#' @param text_values logical; print values as text on image?
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -75,32 +76,47 @@ plot.stars = function(x, y, ..., one_zlim = TRUE, main = names(x)[1]) {
 #' image(x, col = grey((3:9)/10))
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
 		xlab = names(dims)[1], ylab = names(dims)[2], xlim = st_bbox(x)$xlim,
-		ylim = st_bbox(x)$ylim, useRaster = TRUE) {
+		ylim = st_bbox(x)$ylim, useRaster = TRUE, text_values = FALSE) {
 
-	stopifnot(!has_affine(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
+	stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
 		x = adrop(x)
 
+	y_is_neg = st_dimensions(x)[["y"]]$delta < 0
+
 	force(xlim)
 	force(ylim)
 	dims = expand_dimensions(x)
+
+	if (y_is_neg)
+		dims[[2]] = rev(dims[[2]])
+
 	ar = unclass(x[[ attr ]])
 	ar = if (length(dim(x)) == 3) {
-			if (is.null(rgb))
-				ar[ , rev(seq_len(dim(ar)[2])), band]
-			else {
+			if (is.null(rgb)) {
+				if (y_is_neg) 
+					ar = ar[ , rev(seq_len(dim(ar)[2])), band]
+				ar
+			} else {
 				stop("not yet supported")
+				# if (y_is_neg) ...
 				xy = dim(ar)[1:2]
 				ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
 				ar = rgb(ar, maxColorValue = maxColorValue) # FIXME: deal with NAs
 				dim(ar) = xy
 				#return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
 			}
-		} else
-			ar[ , rev(seq_len(dim(ar)[2]))]
-	image.default(dims[[1]], rev(dims[[2]]), unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
+		} else {
+			if (y_is_neg)
+				ar = ar[ , rev(seq_len(dim(ar)[2]))]
+			ar
+		}
+	image.default(dims[[1]], dims[[2]], unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
 		xlim = xlim, ylim = ylim, useRaster = useRaster, ...)
+
+	if (text_values)
+		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
 }
 
 #### copied from sf/R/plot.R -- remove on merge

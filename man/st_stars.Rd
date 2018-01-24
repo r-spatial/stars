@@ -8,21 +8,25 @@
 \alias{st_stars.character}
 \alias{st_stars}
 \alias{st_stars.list}
+\alias{st_stars}
+\alias{st_stars.default}
 \title{read raster/array dataset from file or connection}
 \usage{
-\method{st_stars}{sf}(x, ..., times = colnames(data[[1]]))
+\method{st_stars}{sf}(.x, ..., times = colnames(data[[1]]))
 
-st_stars(x, ...)
+st_stars(.x, ...)
 
-\method{st_stars}{character}(x, ..., options = character(0),
+\method{st_stars}{character}(.x, ..., options = character(0),
   driver = character(0), sub = TRUE, quiet = FALSE)
 
-\method{st_stars}{list}(x, ..., dimensions = NULL)
+\method{st_stars}{list}(.x, ..., dimensions = NULL)
+
+\method{st_stars}{default}(.x, ...)
 }
 \arguments{
-\item{x}{if character, file name to read; if list: list with arrays}
+\item{.x}{if character, name of file(s) to read; if list: list with arrays}
 
-\item{...}{ignored}
+\item{...}{arrays to be compiled into a stars object}
 
 \item{times}{time instances}
 

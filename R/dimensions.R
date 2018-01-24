@@ -18,6 +18,10 @@ st_dimensions.default = function(.x, ...) {
 	ret = structure(lapply(d, function(y) create_dimension(values = y)), class = "dimensions")
 	if (is.null(names(ret)) || any(names(ret) == ""))
 		names(ret) = make.names(seq_along(ret))
+
+	if (all(c("x", "y") %in% names(ret)) && all(is.na(ret[["x"]]$geotransform)))
+		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+
 	ret
 }
 
@@ -57,7 +61,7 @@ create_dimensions = function(dims, pr = NULL) {
 		pr = pr$properties
 	lst = vector("list", length(dims))
 	names(lst) = names(dims)
-	if (!is.null(pr)) {
+	if (! is.null(pr)) {
 		for (i in names(lst)) {
 			lst[[i]] = switch(i,
 				x = create_dimension(from = pr$cols[1], to = pr$cols[2], 
@@ -76,7 +80,7 @@ create_dimensions = function(dims, pr = NULL) {
 			)
 		}
 	} else {
-		for (i in names(lst))
+		for (i in seq_along(lst))
 			lst[[i]] = create_dimension(from = 1, to = dims[i])
 	}
 	if (! is.null(pr$dim_extra)) {

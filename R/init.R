@@ -1,4 +1,4 @@
-#' @importFrom graphics image.default image par plot title box
+#' @importFrom graphics image.default image par plot title box text
 #' @importFrom utils tail
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop

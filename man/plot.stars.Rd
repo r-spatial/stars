@@ -6,11 +6,12 @@
 \alias{image.stars}
 \title{plot stars object, with subplots for each level of first non-spatial dimension}
 \usage{
-\method{plot}{stars}(x, y, ..., one_zlim = TRUE, main = names(x)[1])
+\method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1])
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
   maxColorValue = 1, xlab = names(dims)[1], ylab = names(dims)[2],
-  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, useRaster = TRUE)
+  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, useRaster = TRUE,
+  text_values = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -19,7 +20,7 @@
 
 \item{...}{passed on to \code{image.default}}
 
-\item{one_zlim}{logical; if \code{TRUE}, compute a single zlim for all subplots from array range}
+\item{join_zlim}{logical; if \code{TRUE}, compute a single zlim for all subplots from array range}
 
 \item{main}{character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles}
 
@@ -42,6 +43,8 @@
 \item{ylim}{y axis limits}
 
 \item{useRaster}{logical; see \link{image.default}}
+
+\item{text_values}{logical; print values as text on image?}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension

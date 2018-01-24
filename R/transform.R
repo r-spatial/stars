@@ -12,7 +12,7 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				diff(bb[c("xmin", "xmax")]) * diff(bb[c("ymin", "ymax")])
 			else 
 				st_area(envelope_new)
-		ratio = if (has_affine(x)) {
+		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
 				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), d$x$geotransform)
 				cellarea = sum((xy[1,] - xy[2,])^2) / 2 # lenght is cell diagonal

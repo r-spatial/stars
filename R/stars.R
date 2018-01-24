@@ -1,24 +1,25 @@
 ## read raster/array dataset from file or connection
 
 #' read raster/array dataset from file or connection
-#' @param x if character, file name to read; if list: list with arrays
+#' @param .x if character, name of file(s) to read; if list: list with arrays
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
-#' @param ... ignored
+#' @param ... arrays to be compiled into a stars object
 #' @return object of class \code{stars}
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
 #' # x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")
-st_stars = function(x, ...) UseMethod("st_stars")
+st_stars = function(.x, ...) UseMethod("st_stars")
 
 #' @name st_stars
 #' @export
-st_stars.character = function(x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
+st_stars.character = function(.x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
 
+	x = .x
 	if (length(x) > 1) { # recurse:
 		ret = lapply(x, st_stars, options = options, driver = driver, sub = sub, quiet = quiet)
 		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
@@ -70,15 +71,34 @@ st_stars.character = function(x, ..., options = character(0), driver = character
 #' @name st_stars
 #' @param dimensions object of class dimensions
 #' @export
-st_stars.list = function(x, ..., dimensions = NULL) {
-	if (length(x) > 1) {
-		for (i in seq_along(x)[-1])
-			if (!identical(dim(x[[1]]), dim(x[[i]])))
+st_stars.list = function(.x, ..., dimensions = NULL) {
+	if (length(.x) > 1) {
+		for (i in seq_along(.x)[-1])
+			if (!identical(dim(.x[[1]]), dim(.x[[i]])))
 				stop("dim attributes not identical")
 	}
 	if (is.null(dimensions))
-		dimensions = create_dimensions(dim(x[[1]]))
-	structure(x, dimensions = dimensions, class = "stars")
+		dimensions = create_dimensions(dim(.x[[1]]))
+	structure(.x, dimensions = dimensions, class = "stars")
+}
+
+#' @name st_stars
+#' @export
+st_stars.default = function(.x, ...) {
+	args = if (is.null(.x))
+			list(...)
+		else
+			append(list(.x), list(...))
+	isdim = sapply(args, inherits, what = "dimensions")
+	dimensions = if (!any(isdim))
+			do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
+		else
+			args[[ which(isdim)[1] ]]
+	if (any(isdim))
+		args = args[-which(isdim)]
+	if (is.null(names(args)))
+		names(args) = paste0("A", seq_along(args))
+	st_stars(args, dimensions = dimensions)
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
@@ -97,7 +117,7 @@ xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-has_affine = function(x) {
+has_rotate_or_shear = function(x) {
 	dimensions = st_dimensions(x)
 	has_raster(x) &&
 		any(sapply(dimensions, function(x) 
@@ -112,7 +132,7 @@ has_sfc = function(x)
 
 #' @export
 st_coordinates.stars = function(x, ...) {
-	if (has_affine(x))
+	if (has_rotate_or_shear(x))
 		stop("affine transformation needed") 
 	do.call(expand.grid, expand_dimensions(x))
 }
@@ -211,12 +231,11 @@ adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 }
 
 #' @export
-st_bbox.stars = function(obj) {
+st_bbox.stars = function(obj, ...) {
 	d = st_dimensions(obj)
 	stopifnot(all(c("x", "y") %in% names(d)))
 	gt = attr(obj, "dimensions")$x$geotransform
 	stopifnot(length(gt) == 6 && !any(is.na(gt)))
-
 
 	nx = dim(obj)["x"]
 	ny = dim(obj)["y"]

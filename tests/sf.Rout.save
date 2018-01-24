@@ -1,5 +1,5 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -72,11 +72,11 @@ bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
 epsg (SRID):    NA
 proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
 First 5 geometries:
-POLYGON ((288776.250000803 9120760.75002874, 28...
-POLYGON ((289228.363637155 9120760.75002874, 28...
-POLYGON ((289680.477273507 9120760.75002874, 29...
-POLYGON ((290132.59090986 9120760.75002874, 290...
-POLYGON ((290584.704546212 9120760.75002874, 29...
+POLYGON ((288776.3 9120761, 289228.4 9120761, 2...
+POLYGON ((289228.4 9120761, 289680.5 9120761, 2...
+POLYGON ((289680.5 9120761, 290132.6 9120761, 2...
+POLYGON ((290132.6 9120761, 290584.7 9120761, 2...
+POLYGON ((290584.7 9120761, 291036.8 9120761, 2...
 > plot(sfc, add  =TRUE)
 > (sfc = st_as_sfc(x, as_points = TRUE))
 Geometry set for 484 features 
@@ -86,11 +86,11 @@ bbox:           xmin: 289002.3 ymin: 9110957 xmax: 298496.7 ymax: 9120533
 epsg (SRID):    NA
 proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
 First 5 geometries:
-POINT (289002.306818979 9120532.75002874)
-POINT (289454.420455331 9120532.75002874)
-POINT (289906.534091683 9120532.75002874)
-POINT (290358.647728036 9120532.75002874)
-POINT (290810.761364388 9120532.75002874)
+POINT (289002.3 9120533)
+POINT (289454.4 9120533)
+POINT (289906.5 9120533)
+POINT (290358.6 9120533)
+POINT (290810.8 9120533)
 > plot(sfc, add = TRUE)
 > 
 > sf = st_as_sf(x, as_points = FALSE)
@@ -179,4 +179,4 @@ proj4string:    NA
 > 
 > proc.time()
    user  system elapsed 
-  1.176   0.316   1.188 
+  1.260   0.264   1.203 
