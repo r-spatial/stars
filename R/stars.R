@@ -55,7 +55,7 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
 		if (! is.null(properties$units) && ! is.na(properties$units))
-			units(data) = make_unit(properties$units)
+			units(data) = try_as_units(properties$units)
 
 		newdims = lengths(properties$dim_extra)
 		data = if (length(newdims))
@@ -155,7 +155,7 @@ print.stars = function(x, ..., n = 1e5) {
 	cat("stars object with", length(dim(x)), "dimensions and", 
 		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
 	cat("attribute(s)")
-	df = if (prod(dim(x)) > n) {
+	df = if (prod(dim(x)) > 10 * n) {
 		cat(paste0(", of first ", n, " cells:\n"))
 		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE)
 	} else {
@@ -265,3 +265,22 @@ st_crs.stars = function(x, ...) {
 		stop("don't know what to do with argument j!")
 	st_stars(unclass(x)[i], dimensions = st_dimensions(x))
 }
+
+#f <- function(x, ...) {
+#  mc <- match.call(expand.dots = TRUE)
+#  mc[[1]] <- `[`
+#  eval(mc, parent.frame(1), parent.frame(2))
+#}
+#
+#
+#slice <- function(x, along, index) {
+#  #stopifnot(length(index) == 1)
+#    
+#  nd <- length(dim(x))
+#  indices <- rep(list(missing_arg()), nd)
+#  indices[[along]] <- index
+#  
+#  expr(x[!!!indices])
+#}
+#
+#eval(slice(x, 1, 1:3))

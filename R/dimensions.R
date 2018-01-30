@@ -132,7 +132,7 @@ parse_netcdf_meta = function(pr, name) {
 				u = get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
 					# print(c("[", u, "]"))
-					units(pr$dim_extra[[v]]) = make_unit(u)
+					units(pr$dim_extra[[v]]) = try_as_units(u)
 					if (v == "time")
 						pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
 				}
@@ -140,6 +140,15 @@ parse_netcdf_meta = function(pr, name) {
 		}
 	}
 	pr
+}
+
+try_as_units = function(u) {
+	un = try(as_units(u), silent = TRUE)
+	if (inherits(un, "try-error")) {
+		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
+		NULL
+	} else
+		un
 }
 
 parse_meta = function(properties) {
