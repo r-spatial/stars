@@ -26,7 +26,7 @@ st_dimensions.default = function(.x, ...) {
 }
 
 #' @export
-"[.dimensions" = function(x,i,j,...,drop=FALSE) {
+"[.dimensions" = function(x, i, j,..., drop = FALSE) {
 	structure(unclass(x)[i], class = "dimensions")
 }
 
@@ -173,17 +173,22 @@ expand_dimensions.dimensions = function(x) {
 	if ("x" %in% names(lst)) {
 		x = dimensions[["x"]]
 		gt = x$geotransform
-		if (! all(is.na(gt)))
-			lst[["x"]] = xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-		else
+		if (! all(is.na(gt))) {
+			lst[["x"]] = if (!is.null(x$values))
+					x$values
+				else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
+		} else
 			stop("cannot determine x and y coordinates without geotransform")
 	}
 	if ("y" %in% names(lst)) {
 		y = dimensions[["y"]]
 		gt = y$geotransform
-		if (! all(is.na(gt)))
-			lst[["y"]] = xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-		else
+		if (! all(is.na(gt))) {
+			lst[["y"]] = if (!is.null(y$values))
+					y$values
+				else
+					xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
+		} else
 			stop("cannot determine x and y coordinates without geotransform")
 	}
 	for (nm in setdiff(names(lst), c("x", "y"))) {
@@ -193,7 +198,7 @@ expand_dimensions.dimensions = function(x) {
 			else if (is.na(dm$offset) || is.na(dm$delta))
 				seq(dm$from, dm$to)
 			else
-				seq(from = dm$offset, by = dm$delta, length.out = dm$to - dm$from + 1)
+				seq(from = dm$offset + (dm$from - 1)*dm$delta, by = dm$delta, length.out = dm$to - dm$from + 1)
 	}
 	lst
 }
@@ -212,6 +217,8 @@ print.dimensions = function(x, ..., digits = 6) {
 			if (length(y$values) > 2)
 				y$values = paste0(format(y$values[1]), ", ..., ", 
 					format(tail(y$values, 1)))
+			if (!is.na(y$refsys) && nchar(y$refsys) > 28)
+				y$refsys = paste0(substr(y$refsys, 1L, 25),"...")
 			y
 		}
 	)
@@ -247,9 +254,32 @@ combine_dimensions = function(dots, along) {
 }
 
 #' @export
-seq.dimension = function(from, ...) { # does what expand_dimensions also does, for single dimension
+seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensions also does, for single dimension
 	if (!is.null(from$values))
 		from$values
 	else
-		from$offset + (seq(from$from, from$to) - 1) * from$delta
+		from$offset + (seq(from$from, from$to) - 1 + 0.5 * center) * from$delta
+}
+
+#' @export
+`[.dimension` = function(x, i, ..., values = NULL) {
+	if (!missing(i)) {
+		if (!is.na(x$from)) {
+			rang = x$from:x$to
+			if (all(diff(i) == 1)) {
+				if (min(i) < 1 || max(i) > length(rang))
+					stop("invalid range selected")
+				sel = rang[i]
+				x$from = min(sel)
+				x$to = max(sel)
+			} else { # invalidates delta
+				x$from = x$to = x$delta = x$offset = NA
+				x$values = values[i]
+			}
+		} else {
+			stopifnot(!is.null(x$values))
+			x$values = x$values[i]
+		}
+	}
+	x
 }

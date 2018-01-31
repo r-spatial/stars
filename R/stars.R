@@ -84,7 +84,7 @@ st_stars.list = function(.x, ..., dimensions = NULL) {
 
 #' @name st_stars
 #' @export
-st_stars.default = function(.x, ...) {
+st_stars.default = function(.x = NULL, ...) {
 	args = if (is.null(.x))
 			list(...)
 		else
@@ -126,6 +126,11 @@ has_rotate_or_shear = function(x) {
 
 has_raster = function(x)
 	all(c("x", "y") %in% names(st_dimensions(x)))
+
+is_rectilinear = function(x) {
+	d = st_dimensions(x)
+	has_raster(x) && (is.na(d$x$delta) || is.na(d$y$delta))
+}
 
 has_sfc = function(x)
 	all(c("sfc") %in% names(st_dimensions(x)))
@@ -237,11 +242,16 @@ st_bbox.stars = function(obj, ...) {
 	gt = attr(obj, "dimensions")$x$geotransform
 	stopifnot(length(gt) == 6 && !any(is.na(gt)))
 
-	nx = dim(obj)["x"]
-	ny = dim(obj)["y"]
-	bb = rbind(c(0,0), c(nx, 0), c(nx, ny), c(0, ny))
-	xy = xy_from_colrow(bb, gt)
-	bb = c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+	bb = if (is.null(d$x$values) && is.null(d$y$values)) {
+		bb = rbind(c(d$x$from-1,d$y$from-1), c(d$x$to, d$y$from-1), c(d$x$to, d$y$to), c(d$x$from-1, d$y$to))
+		xy = xy_from_colrow(bb, gt)
+		c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+	} else {
+		e = expand_dimensions(d)
+		rx = range(e$x)
+		ry = range(e$y)
+		c(xmin = min(e$x), ymin = min(e$y), xmax = max(e$x), ymax = max(e$y))
+	}
 	structure(bb, crs = st_crs(obj), class = "bbox")
 }
 
@@ -260,27 +270,36 @@ st_crs.stars = function(x, ...) {
 }
 
 #' @export
-"[.stars" = function(x, i, j,..., drop = FALSE) {
-	if (!missing(j))
-		stop("don't know what to do with argument j!")
-	st_stars(unclass(x)[i], dimensions = st_dimensions(x))
+"[.stars" = function(x, i = TRUE, ..., drop = FALSE) {
+  #st_stars(unclass(x)[i], dimensions = st_dimensions(x))
+  missing.i = missing(i)
+  mc <- match.call(expand.dots = TRUE)
+  # select list elements from x, based on i:
+  d = attr(x, "dimensions")
+  ed = expand_dimensions(d)
+  x = unclass(x)[i]
+  # selects also on dimensions:
+  if (length(mc) > 3) {
+    mc[[1]] <- `[`
+    if (! missing(i))
+		mc[[3]] <- NULL # remove i
+	mc[["drop"]] = FALSE
+	for (i in names(x)) {
+		mc[[2]] = as.name(i)
+		x[[i]] = eval(mc, x)
+	}
+	mc0 = mc[1:3] # "[", x, first dim
+	j = 3 # first dim
+	for (i in names(d)) {
+		mc0[[2]] = as.name(i)
+		mc0[[3]] = mc[[j]]
+		mc0[["values"]] = ed[[i]]
+		d[[i]] = eval(mc0, d)
+		j = j + 1
+	}
+  }
+  if (drop)
+  	adrop(st_stars(x, dimensions = d))
+  else
+  	st_stars(x, dimensions = d)
 }
-
-#f <- function(x, ...) {
-#  mc <- match.call(expand.dots = TRUE)
-#  mc[[1]] <- `[`
-#  eval(mc, parent.frame(1), parent.frame(2))
-#}
-#
-#
-#slice <- function(x, along, index) {
-#  #stopifnot(length(index) == 1)
-#    
-#  nd <- length(dim(x))
-#  indices <- rep(list(missing_arg()), nd)
-#  indices[[along]] <- index
-#  
-#  expr(x[!!!indices])
-#}
-#
-#eval(slice(x, 1, 1:3))

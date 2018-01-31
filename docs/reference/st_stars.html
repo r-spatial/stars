@@ -71,6 +71,9 @@
       <a href="../articles/blog1.html">spatiotemporal arrays for R: stars blog one</a>
     </li>
     <li>
+      <a href="../articles/data_model.html">stars: data model</a>
+    </li>
+    <li>
       <a href="../articles/first.html">spatiotemporal tidy arrays for R; first steps</a>
     </li>
   </ul>
@@ -106,32 +109,30 @@
     
 
     <pre class="usage"><span class='co'># S3 method for sf</span>
-<span class='fu'>st_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fu'>colnames</span>(<span class='no'>data</span><span class='kw'>[[</span><span class='fl'>1</span>]]))
+<span class='fu'>st_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fu'>colnames</span>(<span class='no'>data</span><span class='kw'>[[</span><span class='fl'>1</span>]]))
 
-<span class='fu'>st_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>st_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>st_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
+<span class='fu'>st_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
   <span class='kw'>driver</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>sub</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>st_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>dimensions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>st_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>dimensions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='co'># S3 method for stars</span>
-<span class='fu'>image</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>asp</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>maxColorValue</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>dims</span>)[<span class='fl'>1</span>], <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>dims</span>)[<span class='fl'>2</span>],
-  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'>range</span>(<span class='no'>dims</span>$<span class='no'>x</span>), <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>range</span>(<span class='no'>dims</span>$<span class='no'>y</span>))</pre>
+<span class='co'># S3 method for default</span>
+<span class='fu'>st_stars</span>(<span class='kw'>.x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>if character, file name to read; if list: list with arrays</p></td>
+      <th>.x</th>
+      <td><p>if character, name of file(s) to read; if list: list with arrays</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed on to <code>image.default</code></p></td>
+      <td><p>arrays to be compiled into a stars object</p></td>
     </tr>
     <tr>
       <th>times</th>
@@ -157,42 +158,6 @@
       <th>dimensions</th>
       <td><p>object of class dimensions</p></td>
     </tr>
-    <tr>
-      <th>band</th>
-      <td><p>integer; which band (dimension) to plot</p></td>
-    </tr>
-    <tr>
-      <th>attr</th>
-      <td><p>integer; which attribute to plot</p></td>
-    </tr>
-    <tr>
-      <th>asp</th>
-      <td><p>numeric; aspect ratio of image</p></td>
-    </tr>
-    <tr>
-      <th>rgb</th>
-      <td><p>integer; specify three bands to form an rgb composite</p></td>
-    </tr>
-    <tr>
-      <th>maxColorValue</th>
-      <td><p>numeric; passed on to rgb</p></td>
-    </tr>
-    <tr>
-      <th>xlab</th>
-      <td><p>character; x axis label</p></td>
-    </tr>
-    <tr>
-      <th>ylab</th>
-      <td><p>character; y axis label</p></td>
-    </tr>
-    <tr>
-      <th>xlim</th>
-      <td><p>x axis limits</p></td>
-    </tr>
-    <tr>
-      <th>ylim</th>
-      <td><p>y axis limits</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -203,10 +168,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>tif</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
 <span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>st_stars</span>(<span class='no'>tif</span>)
-<span class='co'># x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")</span>
-<span class='no'>tif</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>st_stars</span>(<span class='no'>tif</span>)
-<span class='fu'>image</span>(<span class='no'>x</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>grey</span>((<span class='fl'>3</span>:<span class='fl'>9</span>)/<span class='fl'>10</span>))</div><div class='img'><img src='st_stars-4.png' alt='' width='700' height='432.632880098887' /></div></pre>
+<span class='co'># x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

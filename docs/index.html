@@ -48,6 +48,9 @@
       <a href="articles/blog1.html">spatiotemporal arrays for R: stars blog one</a>
     </li>
     <li>
+      <a href="articles/data_model.html">stars: data model</a>
+    </li>
+    <li>
       <a href="articles/first.html">spatiotemporal tidy arrays for R; first steps</a>
     </li>
   </ul>
@@ -88,12 +91,24 @@
 </ul>
 <p>Currently, R does not have infrastructure to handle and analyse such arrays easily. Package raster is probably still the most powerful package for handling this kind of data in memory and on disk, but does not address non-raster time series, rasters time series with multiple attributes, rasters with mixed type attributes, or spatially distributed sets of satellite images.</p>
 <p>This project will not only deal with these cases, but also extend the “in memory or on disk” model to that where the data are held remotely in cloud storage, which is a more feasible option e.g. for satellite data collected Today. We will implement pipe-based workflows that are developed and tested on samples before they are evaluated for complete datasets, and discuss the challenges of visualiasation and storage in such workflows.</p>
+<div id="progress" class="section level2">
+<h2 class="hasAnchor">
+<a href="#progress" class="anchor"></a>Progress</h2>
+<ul>
+<li>blog post: <a href="http://r-spatial.org/r/2017/11/23/stars1.html">first</a>
+</li>
+</ul>
+</div>
+<div id="proposal" class="section level2">
+<h2 class="hasAnchor">
+<a href="#proposal" class="anchor"></a>Proposal</h2>
 <p>Read the full proposal <a href="https://github.com/edzer/stars/blob/master/PROPOSAL.md">here</a>.</p>
 <div id="acknowledgment" class="section level3">
 <h3 class="hasAnchor">
 <a href="#acknowledgment" class="anchor"></a>Acknowledgment</h3>
 <p>This project is being realized with financial <a href="https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants">support</a> from the</p>
 <p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400"></a></p>
+</div>
 </div>
 </div>
   </div>
@@ -117,7 +132,6 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/r-spatial/stars"><img src="https://travis-ci.org/r-spatial/stars.png?branch=master" alt="Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/edzerpebesma/stars"><img src="https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://codecov.io/gh/r-spatial/stars"><img src="https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg" alt="codecov"></a></li>
 <li><a href="https://cran.r-project.org/package=stars"><img src="http://www.r-pkg.org/badges/version/stars" alt="CRAN"></a></li>
 </ul>

@@ -30,11 +30,17 @@ st_as_sfc.dimensions = function(x, ..., as_points = NA, use_cpp = FALSE) {
 	y = x$y
 	x = x$x
 	stopifnot(identical(x$geotransform, y$geotransform))
-	xy = if (as_points) # grid cell centres:
+	cc = if (!is.na(x$from) && !is.na(y$from)) {
+		xy = if (as_points) # grid cell centres:
 			expand.grid(x = seq(x$from, x$to) - 0.5, y = seq(y$from, y$to) - 0.5)
 		else # grid corners: from 0 to n
 			expand.grid(x = seq(x$from - 1, x$to), y = seq(y$from - 1, y$to))
-	cc = xy_from_colrow(as.matrix(xy), x$geotransform)
+		xy_from_colrow(as.matrix(xy), x$geotransform)
+	} else {
+		if (!as_points)
+			stop("grid cell sizes not available")
+		expand.grid(x = x$values, y = y$values)
+	}
 	dims = c(x$to, y$to) + 1
 	if (use_cpp)
 		structure(CPL_xy2sfc(cc, dims, as_points), crs = st_crs(x$refsys), n_empty = 0L)

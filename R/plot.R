@@ -5,8 +5,10 @@
 #' @param y ignored
 #' @param join_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
+#' @param axes logical; should axes be added to the plot?
+#' @param downsample logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.
 #' @export
-plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
+plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, downsample = TRUE) {
 	flatten = function(x, i) { # collapse all non-x/y dims into one
 		d = st_dimensions(x)
 		dims = dim(x)
@@ -24,8 +26,13 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
 			else
 				rep(NA_real_, 2)
 		dims = dim(x)
+		if (downsample) {
+			n = dims * 0 + 1 # keep names
+			n[c("x", "y")] = get_downsample(dims)
+			x = st_downsample(x, n)
+		}
 		if (length(dims) == 2) {
-			image(x, ...)
+			image(x, ..., axes = axes)
 			if (!is.null(main))
 				title(main)
 		} else { # simply loop over dimensions 3:
@@ -34,13 +41,14 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
 					0
 				else
 					1.1
-			par(mfrow = mfrow, mar = c(0, 0, title_size, 0))
+			opar = par(mfrow = mfrow, mar = c(axes * 2.1, axes * 2.1, title_size, 0))
+			on.exit(par(opar))
 			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
 				if (join_zlim)
-					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, zlim = zlim,...)
+					image(flatten(x, i), xlab = "", ylab = "", axes = axes, zlim = zlim,...)
 				else
-					image(flatten(x, i), xlab = "", ylab = "", axes = FALSE, ...)
+					image(flatten(x, i), xlab = "", ylab = "", axes = axes, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
@@ -51,9 +59,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
 			}
 		}
 	} else if (has_sfc(x)) {
-		plot(st_as_sf(x), ...)
+		plot(st_as_sf(x), ..., axes = axes)
 	} else
-		stop("no raster, no features geometries: don't know how to plot!")
+		stop("no raster, no features geometries: no default plot method set up yet!")
 }
 
 #' @name plot.stars
@@ -66,7 +74,6 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
 #' @param ylab character; y axis label
 #' @param xlim x axis limits
 #' @param ylim y axis limits
-#' @param useRaster logical; see \link{image.default}
 #' @param ... passed on to \code{image.default}
 #' @param text_values logical; print values as text on image?
 #' @export
@@ -74,49 +81,59 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1]) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = st_stars(tif)
 #' image(x, col = grey((3:9)/10))
-image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = 1,
-		xlab = names(dims)[1], ylab = names(dims)[2], xlim = st_bbox(x)$xlim,
-		ylim = st_bbox(x)$ylim, useRaster = TRUE, text_values = FALSE) {
+#' image(x, rgb = c(1,3,5)) # rgb composite
+image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = max(x[[attr]]),
+		xlab = if (!axes) "" else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
+		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE) {
 
+	dots = list(...)
 	stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
 		x = adrop(x)
 
-	y_is_neg = st_dimensions(x)[["y"]]$delta < 0
-
 	force(xlim)
 	force(ylim)
 	dims = expand_dimensions(x)
 
+	y_is_neg = all(diff(dims$y) < 0)
 	if (y_is_neg)
 		dims[[2]] = rev(dims[[2]])
 
-	ar = unclass(x[[ attr ]])
-	ar = if (length(dim(x)) == 3) {
-			if (is.null(rgb)) {
-				if (y_is_neg) 
-					ar = ar[ , rev(seq_len(dim(ar)[2])), band]
-				ar
-			} else {
-				stop("not yet supported")
-				# if (y_is_neg) ...
-				xy = dim(ar)[1:2]
-				ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
-				ar = rgb(ar, maxColorValue = maxColorValue) # FIXME: deal with NAs
-				dim(ar) = xy
-				#return(rasterImage(x[ , rev(seq_len(dim(x)[2]))], 0, 0, 1, 1, interpolate = FALSE))
-			}
-		} else {
-			if (y_is_neg)
-				ar = ar[ , rev(seq_len(dim(ar)[2]))]
-			ar
+	ar = unclass(x[[ attr ]]) # raw data matrix/array
+	if (!is.null(rgb)) {
+		if (is_rectilinear(x))
+			warning("rectilinear rgb grid is plotted as regular grid")
+		xy = dim(ar)[1:2]
+		ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
+		nas = apply(ar, 1, function(x) any(is.na(x)))
+		ar = rgb(ar[!nas,], maxColorValue = maxColorValue)
+		mat = rep(NA_character_, prod(xy))
+		mat[!nas] = ar
+		dim(mat) = xy
+		if (dev.capabilities("rasterImage")$rasterImage != "yes")
+			stop("rgb plotting not supported on this device")
+		if (! isTRUE(dots$add)) {
+			plot.new()
+			plot.window(xlim = xlim, ylim = ylim, asp = asp)
 		}
-	image.default(dims[[1]], dims[[2]], unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
-		xlim = xlim, ylim = ylim, useRaster = useRaster, ...)
-
+		rasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE)
+	} else { 
+		if (y_is_neg) {
+			ar = if (length(dim(x)) == 3)
+				ar[ , rev(seq_len(dim(ar)[2])), band]
+			else
+				ar[ , rev(seq_len(dim(ar)[2]))]
+		}
+		image.default(dims[[1]], dims[[2]], unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
+			xlim = xlim, ylim = ylim, axes = axes,...)
+	}
 	if (text_values)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
+	if (axes) { # FIXME: deal with long/lat axes the way sf does
+		axis(1)
+		axis(2)
+	}
 }
 
 #### copied from sf/R/plot.R -- remove on merge
@@ -136,4 +153,19 @@ get_mfrow = function(bb, n, total_size = c(1,1)) {
 	nrow = which.max(sz)
 	ncol = ceiling(n / nrow)
 	structure(c(nrow, ncol), names = c("nrow", "ncol"))
+}
+
+st_downsample = function(x, n) {
+	stopifnot(all(n >= 1))
+	d = dim(x)
+	n = rep(n, length.out = length(d))
+	args = rep(list(rlang::missing_arg()), length(d)+1)
+	for (i in seq_along(d))
+		if (n[i] != 1)
+			args[[i+1]] = seq(1, d[i], n[i])
+	eval(rlang::expr(x[!!!args]))
+}
+
+get_downsample = function(dims, px = dev.size("px")) { 
+	floor(sqrt(prod(dims) / prod(px)))
 }

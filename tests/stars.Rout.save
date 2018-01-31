@@ -1,5 +1,5 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -30,32 +30,24 @@ The following objects are masked from 'package:base':
 
 Loading required package: magrittr
 Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3
-Linking to GDAL 2.1.2
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+Linking to GDAL 2.2.1
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = st_stars(tif))
 stars object with 3 dimensions and 1 attribute
-attribute(s), of first 1e+05 cells:
+attribute(s):
  /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 47.00                                     
- 1st Qu.: 65.00                                     
- Median : 76.00                                     
- Mean   : 77.34                                     
- 3rd Qu.: 87.00                                     
+ Min.   :  1.00                                     
+ 1st Qu.: 54.00                                     
+ Median : 69.00                                     
+ Mean   : 68.91                                     
+ 3rd Qu.: 86.00                                     
  Max.   :255.00                                     
 dimension(s):
-     from  to  offset delta
-x       1 349  288776  28.5
-y       1 352 9120761 -28.5
-band    1   6      NA    NA
-                                                                               refsys
-x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-band                                                                               NA
-     point values
-x    FALSE   NULL
-y    FALSE   NULL
-band    NA   NULL
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6      NA    NA                           NA    NA   NULL
 > 
 > #nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
 > #(x = st_stars(nc))
@@ -85,4 +77,4 @@ $gt_inv
 > 
 > proc.time()
    user  system elapsed 
-  1.924   0.304   1.926 
+  2.226   0.255   2.177 

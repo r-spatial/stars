@@ -1,5 +1,5 @@
 
-R version 3.4.2 (2017-09-28) -- "Short Summer"
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -46,11 +46,11 @@ The following objects are masked from 'package:testthat':
     equals, is_less_than, not
 
 Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3
-Linking to GDAL 2.1.2
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+Linking to GDAL 2.2.1
 testthat results ================================================================
 OK: 6 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.792   0.292   0.751 
+  0.762   0.236   0.668 

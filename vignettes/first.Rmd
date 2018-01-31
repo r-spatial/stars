@@ -81,7 +81,7 @@ nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
 (x = st_stars(nc))
 image(x)
 library(units)
-sapply(x, function(u) as.character(units(u)))
+sapply(x[1:3], function(u) as.character(units(u)))
 sst = x[[1]]
 hist(sst) # gives units, even if wrong
 ```

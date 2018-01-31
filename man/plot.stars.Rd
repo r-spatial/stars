@@ -6,12 +6,13 @@
 \alias{image.stars}
 \title{plot stars object, with subplots for each level of first non-spatial dimension}
 \usage{
-\method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1])
+\method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
+  axes = FALSE, downsample = TRUE)
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
-  maxColorValue = 1, xlab = names(dims)[1], ylab = names(dims)[2],
-  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, useRaster = TRUE,
-  text_values = FALSE)
+  maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else names(dims)[1],
+  ylab = if (!axes) "" else names(dims)[2], xlim = st_bbox(x)$xlim,
+  ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -23,6 +24,10 @@
 \item{join_zlim}{logical; if \code{TRUE}, compute a single zlim for all subplots from array range}
 
 \item{main}{character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles}
+
+\item{axes}{logical; should axes be added to the plot?}
+
+\item{downsample}{logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.}
 
 \item{band}{integer; which band (dimension) to plot}
 
@@ -42,8 +47,6 @@
 
 \item{ylim}{y axis limits}
 
-\item{useRaster}{logical; see \link{image.default}}
-
 \item{text_values}{logical; print values as text on image?}
 }
 \description{
@@ -53,4 +56,5 @@ plot stars object, with subplots for each level of first non-spatial dimension
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = st_stars(tif)
 image(x, col = grey((3:9)/10))
+image(x, rgb = c(1,3,5)) # rgb composite
 }

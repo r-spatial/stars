@@ -21,7 +21,7 @@ st_stars(.x, ...)
 
 \method{st_stars}{list}(.x, ..., dimensions = NULL)
 
-\method{st_stars}{default}(.x, ...)
+\method{st_stars}{default}(.x = NULL, ...)
 }
 \arguments{
 \item{.x}{if character, name of file(s) to read; if list: list with arrays}

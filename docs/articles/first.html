@@ -48,6 +48,9 @@
       <a href="../articles/blog1.html">spatiotemporal arrays for R: stars blog one</a>
     </li>
     <li>
+      <a href="../articles/data_model.html">stars: data model</a>
+    </li>
+    <li>
       <a href="../articles/first.html">spatiotemporal tidy arrays for R; first steps</a>
     </li>
   </ul>
@@ -95,8 +98,9 @@
 ##     intersect, setdiff, setequal, union
 ## Loading required package: magrittr
 ## Loading required package: sf
-## Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3
-## Linking to GDAL 2.1.2</code></pre></div>
+## Loading required package: methods
+## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+## Linking to GDAL 2.2.1</code></pre></div>
 <div id="landsat-image-geotiff" class="section level3">
 <h3 class="hasAnchor">
 <a href="#landsat-image-geotiff" class="anchor"></a>Landsat image: GeoTIFF</h3>
@@ -141,27 +145,19 @@ x =<span class="st"> </span><span class="kw">st_stars</span>(tif)
 ##  - attr(*, "class")= chr "stars"
 x
 ## stars object with 3 dimensions and 1 attribute
-## attribute(s), of first 1e+05 cells:
+## attribute(s):
 ##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   : 47.00                                                      
-##  1st Qu.: 65.00                                                      
-##  Median : 76.00                                                      
-##  Mean   : 77.34                                                      
-##  3rd Qu.: 87.00                                                      
+##  Min.   :  1.00                                                      
+##  1st Qu.: 54.00                                                      
+##  Median : 69.00                                                      
+##  Mean   : 68.91                                                      
+##  3rd Qu.: 86.00                                                      
 ##  Max.   :255.00                                                      
 ## dimension(s):
-##      from  to  offset delta
-## x       1 349  288776  28.5
-## y       1 352 9120761 -28.5
-## band    1   6      NA    NA
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-##      point values
-## x    FALSE   NULL
-## y    FALSE   NULL
-## band    NA   NULL</code></pre></div>
+##      from  to  offset delta                       refsys point values
+## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1   6      NA    NA                           NA    NA   NULL</code></pre></div>
 </div>
 <div id="overviews" class="section level3">
 <h3 class="hasAnchor">
@@ -180,18 +176,10 @@ x
 ##  3rd Qu.: 84                                                         
 ##  Max.   :209                                                         
 ## dimension(s):
-##      from to  offset   delta
-## x       1 88  288776 113.028
-## y       1 88 9120761    -114
-## band    1  6      NA      NA
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-##      point values
-## x    FALSE   NULL
-## y    FALSE   NULL
-## band    NA   NULL
+##      from to  offset   delta                       refsys point values
+## x       1 88  288776 113.028 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 88 9120761    -114 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1  6      NA      NA                           NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw">st_stars</span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=2"</span>)))
@@ -205,18 +193,10 @@ x
 ##  3rd Qu.: 84.00                                                      
 ##  Max.   :152.00                                                      
 ## dimension(s):
-##      from to  offset   delta
-## x       1 44  288776 226.057
-## y       1 44 9120761    -228
-## band    1  6      NA      NA
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-##      point values
-## x    FALSE   NULL
-## y    FALSE   NULL
-## band    NA   NULL
+##      from to  offset   delta                       refsys point values
+## x       1 44  288776 226.057 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 44 9120761    -228 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1  6      NA      NA                           NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-3-2.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw">st_stars</span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=3"</span>)))
@@ -230,18 +210,10 @@ x
 ##  3rd Qu.: 83.00                                                      
 ##  Max.   :137.00                                                      
 ## dimension(s):
-##      from to  offset   delta
-## x       1 22  288776 452.114
-## y       1 22 9120761    -456
-## band    1  6      NA      NA
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-##      point values
-## x    FALSE   NULL
-## y    FALSE   NULL
-## band    NA   NULL
+##      from to  offset   delta                       refsys point values
+## x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1  6      NA      NA                           NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-3-3.png" width="672"></p>
 <p>TODO: aspect ratio, title, values along x and y axis, degree symbols</p>
@@ -256,13 +228,13 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 <span class="kw">library</span>(viridis)
 ## Loading required package: viridisLite
 <span class="kw">library</span>(ggthemes)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() +<span class="st">  </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>(<span class="dt">data=</span>df, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">fill=</span>value), <span class="dt">alpha=</span><span class="fl">0.8</span>) +<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="st">"band"</span>) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/viridis/topics/scale_viridis">scale_fill_viridis</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed">coord_equal</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggthemes/topics/theme_map">theme_map</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.position=</span><span class="st">"bottom"</span>) +
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>(<span class="dt">data=</span>df, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">fill=</span>value), <span class="dt">alpha=</span><span class="fl">0.8</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="st">"band"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/viridis/topics/scale_viridis">scale_fill_viridis</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed">coord_equal</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggthemes/topics/theme_map">theme_map</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.position=</span><span class="st">"bottom"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.key.width=</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/reexports">unit</a></span>(<span class="dv">2</span>, <span class="st">"cm"</span>))</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
 </div>
@@ -282,18 +254,10 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 ##  3rd Qu.: 83.00  
 ##  Max.   :137.00  
 ## dimension(s):
-##      from to  offset   delta
-## x       1 22  288776 452.114
-## band    1  6      NA      NA
-## y       1 22 9120761    -456
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-##      point values
-## x    FALSE   NULL
-## band    NA   NULL
-## y    FALSE   NULL
+##      from to  offset   delta                       refsys point values
+## x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1  6      NA      NA                           NA    NA   NULL
+## y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL
 <span class="kw">aperm</span>(x, <span class="kw">c</span>(<span class="st">"band"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>))
 ## $x
 ##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22
@@ -313,18 +277,10 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 ##  3rd Qu.: 83.00  
 ##  Max.   :137.00  
 ## dimension(s):
-##      from to  offset   delta
-## band    1  6      NA      NA
-## x       1 22  288776 452.114
-## y       1 22 9120761    -456
-##                                                                                refsys
-## band                                                                               NA
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-##      point values
-## band    NA   NULL
-## x    FALSE   NULL
-## y    FALSE   NULL</code></pre></div>
+##      from to  offset   delta                       refsys point values
+## band    1  6      NA      NA                           NA    NA   NULL
+## x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL</code></pre></div>
 </div>
 <div id="single-netcdf" class="section level3">
 <h3 class="hasAnchor">
@@ -333,28 +289,34 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"nc/avhrr-only-v2.19810901.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
 (<span class="dt">x =</span> <span class="kw">st_stars</span>(nc))
 ## sst, anom, err, ice,
+## Warning: ignoring unrecognized unit: percentage
 ## stars object with 4 dimensions and 4 attributes
 ## attribute(s), of first 1e+05 cells:
-##  sst [degrees C] anom [degrees C] err [degrees C] ice [percentage]
-##  Min.   :-1.80   Min.   :-4.69    Min.   :0.110   Min.   :0.010   
-##  1st Qu.:-1.19   1st Qu.:-0.06    1st Qu.:0.300   1st Qu.:0.730   
-##  Median :-1.05   Median : 0.52    Median :0.300   Median :0.830   
-##  Mean   :-0.32   Mean   : 0.23    Mean   :0.295   Mean   :0.766   
-##  3rd Qu.:-0.20   3rd Qu.: 0.71    3rd Qu.:0.300   3rd Qu.:0.870   
-##  Max.   : 9.36   Max.   : 3.70    Max.   :0.480   Max.   :1.000   
-##  NA's   :13360   NA's   :13360    NA's   :13360   NA's   :27377   
+##    sst [°*C]       anom [°*C]      err [°*C]          ice       
+##  Min.   :-1.80   Min.   :-4.69   Min.   :0.110   Min.   :0.010  
+##  1st Qu.:-1.19   1st Qu.:-0.06   1st Qu.:0.300   1st Qu.:0.730  
+##  Median :-1.05   Median : 0.52   Median :0.300   Median :0.830  
+##  Mean   :-0.32   Mean   : 0.23   Mean   :0.295   Mean   :0.766  
+##  3rd Qu.:-0.20   3rd Qu.: 0.71   3rd Qu.:0.300   3rd Qu.:0.870  
+##  Max.   : 9.36   Max.   : 3.70   Max.   :0.480   Max.   :1.000  
+##  NA's   :13360   NA's   :13360   NA's   :13360   NA's   :27377  
 ## dimension(s):
 ##      from   to     offset delta  refsys point values
 ## x       1 1440          0  0.25      NA    NA   NULL
 ## y       1  720         90 -0.25      NA    NA   NULL
 ## time    1    1 1981-09-01    NA POSIXct    NA   NULL
-## zlev    1    1   0 meters    NA      NA    NA   NULL
+## zlev    1    1        0 m    NA      NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(units)
-<span class="kw">sapply</span>(x, function(u) <span class="kw">as.character</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">units</a></span>(u)))
-##          sst         anom          err          ice 
-##  "degrees C"  "degrees C"  "degrees C" "percentage"
+## 
+## Attaching package: 'units'
+## The following object is masked from 'package:base':
+## 
+##     %*%
+<span class="kw">sapply</span>(x[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], <span class="cf">function</span>(u) <span class="kw">as.character</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">units</a></span>(u)))
+##   sst  anom   err 
+## "°*C" "°*C" "°*C"
 sst =<span class="st"> </span>x[[<span class="dv">1</span>]]
 <span class="kw">hist</span>(sst) <span class="co"># gives units, even if wrong</span></code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-6-2.png" width="672"></p>
@@ -370,12 +332,12 @@ x =<span class="st"> </span><span class="kw">st_stars</span>(geomatrix)
 ##   from to  offset delta                        geotransform
 ## x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
 ## y    1 20 1144003  -1.5 1841000, 1.5, -5, 1144000, -5, -1.5
-##                                               refsys point values
-## x +proj=utm +zone=11 +datum=WGS84 +units=m +no_defs   TRUE   NULL
-## y +proj=utm +zone=11 +datum=WGS84 +units=m +no_defs   TRUE   NULL
+##                         refsys point values
+## x +proj=utm +zone=11 +datum...  TRUE   NULL
+## y +proj=utm +zone=11 +datum...  TRUE   NULL
 <span class="kw">library</span>(sf)
 s =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/sf/topics/st_as_sf">st_as_sf</a></span>(x, <span class="dt">as_points =</span> <span class="ot">FALSE</span>)
-<span class="kw">par</span>(<span class="dt">cex.axis =</span> .<span class="dv">7</span>) <span class="co"># font size axis tic labels </span>
+<span class="kw">par</span>(<span class="dt">cex.axis =</span> <span class="fl">.7</span>) <span class="co"># font size axis tic labels </span>
 <span class="kw"><a href="http://www.rdocumentation.org/packages/sf/topics/plot">plot</a></span>(s, <span class="dt">axes =</span><span class="ot">TRUE</span>, <span class="dt">main =</span> <span class="st">"geomatrix.tif"</span>, <span class="dt">graticule =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
 </div>

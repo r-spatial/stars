@@ -48,6 +48,9 @@
       <a href="../articles/blog1.html">spatiotemporal arrays for R: stars blog one</a>
     </li>
     <li>
+      <a href="../articles/data_model.html">stars: data model</a>
+    </li>
+    <li>
       <a href="../articles/first.html">spatiotemporal tidy arrays for R; first steps</a>
     </li>
   </ul>
@@ -111,16 +114,17 @@
 ##     intersect, setdiff, setequal, union
 ## Loading required package: magrittr
 ## Loading required package: sf
-## Linking to GEOS 3.5.1, GDAL 2.1.2, proj.4 4.9.3
-## Linking to GDAL 2.1.2</code></pre></div>
+## Loading required package: methods
+## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+## Linking to GDAL 2.2.1</code></pre></div>
 <p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">methods</span>(<span class="dt">class =</span> <span class="st">"stars"</span>)
-##  [1] aperm          as.data.frame  as.tbl_cube    c             
-##  [5] coerce         dim            filter         image         
-##  [9] initialize     mutate         print          pull          
-## [13] select         show           slotsFromS3    st_as_sf      
-## [17] st_as_sfc      st_bbox        st_coordinates st_crs        
-## [21] st_dimensions  st_transform  
+##  [1] [              aperm          as.data.frame  as.tbl_cube   
+##  [5] c              coerce         dim            filter        
+##  [9] image          initialize     mutate         plot          
+## [13] print          pull           select         show          
+## [17] slotsFromS3    st_as_sf       st_as_sfc      st_bbox       
+## [21] st_coordinates st_crs         st_dimensions  st_transform  
 ## see '?methods' for accessing help and source code</code></pre></div>
 <p>Note that <em>everything</em> in the <code>stars</code> api may still be subject to change in the next few months.</p>
 <div id="reading-a-satellite-image" class="section level1">
@@ -128,34 +132,26 @@
 <a href="#reading-a-satellite-image" class="anchor"></a>Reading a satellite image</h1>
 <p>We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tif =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-x &lt;-<span class="st"> </span>tif %&gt;%<span class="st"> </span>st_stars 
+x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="st"> </span>st_stars 
 <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>))
-<span class="kw">image</span>(x, <span class="dt">col =</span> <span class="kw">grey</span>((<span class="dv">4</span>:<span class="dv">10</span>)/<span class="dv">10</span>))</code></pre></div>
+<span class="kw">image</span>(x, <span class="dt">col =</span> <span class="kw">grey</span>((<span class="dv">4</span><span class="op">:</span><span class="dv">10</span>)<span class="op">/</span><span class="dv">10</span>))</code></pre></div>
 <p><img src="blog1_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 <p>We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (<code>x</code>) has three dimensions: <code>x</code>, <code>y</code> and <code>band</code>, and one attribute.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x
 ## stars object with 3 dimensions and 1 attribute
-## attribute(s), of first 1e+05 cells:
+## attribute(s):
 ##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   : 47.00                                                      
-##  1st Qu.: 65.00                                                      
-##  Median : 76.00                                                      
-##  Mean   : 77.34                                                      
-##  3rd Qu.: 87.00                                                      
+##  Min.   :  1.00                                                      
+##  1st Qu.: 54.00                                                      
+##  Median : 69.00                                                      
+##  Mean   : 68.91                                                      
+##  3rd Qu.: 86.00                                                      
 ##  Max.   :255.00                                                      
 ## dimension(s):
-##      from  to  offset delta
-## x       1 349  288776  28.5
-## y       1 352 9120761 -28.5
-## band    1   6      NA    NA
-##                                                                                refsys
-## x    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## y    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-## band                                                                               NA
-##      point values
-## x    FALSE   NULL
-## y    FALSE   NULL
-## band    NA   NULL</code></pre></div>
+##      from  to  offset delta                       refsys point values
+## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+## band    1   6      NA    NA                           NA    NA   NULL</code></pre></div>
 <p>Each dimension has a name; the meaning of the fields of a single dimension are:</p>
 <table class="table">
 <thead><tr class="header">
@@ -209,19 +205,19 @@ x &lt;-<span class="st"> </span>tif %&gt;%<span class="st"> </span>st_stars
 <h1 class="hasAnchor">
 <a href="#affine-grids" class="anchor"></a>Affine grids</h1>
 <p>The GDAL model can deal also with spatial rasters that are regular but not aligned with <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>: affine grids. An example is given here:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">cex.axis =</span> .<span class="dv">7</span>) <span class="co"># font size axis tic labels </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">cex.axis =</span> <span class="fl">.7</span>) <span class="co"># font size axis tic labels </span>
 geomatrix =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/geomatrix.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-geomatrix %&gt;%<span class="st"> </span>st_stars %&gt;%<span class="st"> </span><span class="kw">st_as_sf</span>(<span class="dt">as_points =</span> <span class="ot">FALSE</span>) %&gt;%
+geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>(<span class="dt">as_points =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">plot</span>(<span class="dt">axes =</span><span class="ot">TRUE</span>, <span class="dt">main =</span> <span class="st">"geomatrix.tif"</span>, <span class="dt">graticule =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="blog1_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <p>Looking at the dimensions</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geomatrix %&gt;%<span class="st"> </span>st_stars %&gt;%<span class="st"> </span>st_dimensions
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span class="op">%&gt;%</span><span class="st"> </span>st_dimensions
 ##   from to  offset delta                        geotransform
 ## x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
 ## y    1 20 1144003  -1.5 1841000, 1.5, -5, 1144000, -5, -1.5
-##                                               refsys point values
-## x +proj=utm +zone=11 +datum=WGS84 +units=m +no_defs   TRUE   NULL
-## y +proj=utm +zone=11 +datum=WGS84 +units=m +no_defs   TRUE   NULL</code></pre></div>
+##                         refsys point values
+## x +proj=utm +zone=11 +datum...  TRUE   NULL
+## y +proj=utm +zone=11 +datum...  TRUE   NULL</code></pre></div>
 <p>further reveals that we now have a <code>geotransform</code> field shown in the dimension table; this is only displayed when the affine parameters are non-zero. The geotransform field has six parameters, <span class="math inline">\(gt_1,...,gt_6\)</span> that are used to transform internal raster coordinates (column pixel <span class="math inline">\(i\)</span> and row pixel <span class="math inline">\(j\)</span>) to world coordinates (<span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>):</p>
 <p><span class="math display">\[x = gt_1 + (i-1) gt_2 + (j-1) gt_3\]</span></p>
 <p><span class="math display">\[y = gt_4 + (i-1) gt_5 + (j-1) gt_6\]</span></p>
@@ -261,20 +257,20 @@ geomatrix %&gt;%<span class="st"> </span>st_stars %&gt;%<span class="st"> </span
 (<span class="dt">y =</span> <span class="kw">st_stars</span>(x, <span class="dt">quiet =</span> <span class="ot">TRUE</span>))</code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(abind)
-z &lt;-<span class="st"> </span>y %&gt;%<span class="st"> </span><span class="kw">select</span>(sst) %&gt;%<span class="st"> </span>adrop</code></pre></div>
+z &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(sst) <span class="op">%&gt;%</span><span class="st"> </span>adrop</code></pre></div>
 <p>We can now graph the sea surface temperature (SST) using <code>ggplot</code>, which needs data in a long table form, and without units:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">as.data.frame</span>(z)
-df$sst =<span class="st"> </span><span class="kw">unclass</span>(df$sst)
+df<span class="op">$</span>sst =<span class="st"> </span><span class="kw">unclass</span>(df<span class="op">$</span>sst)
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(viridis)
 <span class="kw">library</span>(ggthemes)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() +<span class="st">  </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>(<span class="dt">data=</span>df, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">fill=</span>sst), <span class="dt">alpha=</span><span class="fl">0.8</span>) +<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="st">"time"</span>) +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/viridis/topics/scale_viridis">scale_fill_viridis</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed">coord_equal</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggthemes/topics/theme_map">theme_map</a></span>() +
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.position=</span><span class="st">"bottom"</span>) +
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st">  </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_tile">geom_tile</a></span>(<span class="dt">data=</span>df, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">fill=</span>sst), <span class="dt">alpha=</span><span class="fl">0.8</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="st">"time"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/viridis/topics/scale_viridis">scale_fill_viridis</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed">coord_equal</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggthemes/topics/theme_map">theme_map</a></span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.position=</span><span class="st">"bottom"</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.key.width=</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/reexports">unit</a></span>(<span class="dv">2</span>, <span class="st">"cm"</span>))</code></pre></div>
 </div>
 </div>
@@ -296,10 +292,15 @@ df$sst =<span class="st"> </span><span class="kw">unclass</span>(df$sst)
 ## proj4string:    +proj=longlat +datum=NAD27 +no_defs
 to =<span class="st"> </span>from =<span class="st"> </span><span class="kw">st_geometry</span>(nc) <span class="co"># 100 polygons: O and D regions</span>
 mode =<span class="st"> </span><span class="kw">c</span>(<span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span>) <span class="co"># travel mode</span>
-day =<span class="st"> </span><span class="dv">1</span>:<span class="dv">100</span> <span class="co"># arbitrary</span>
+day =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># arbitrary</span>
 <span class="kw">library</span>(units)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">units</a></span>(day) =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/make_unit">make_unit</a></span>(<span class="st">"days since 2015-01-01"</span>)
-hour =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">set_units</a></span>(<span class="dv">0</span>:<span class="dv">23</span>, h) <span class="co"># hour of day</span>
+## 
+## Attaching package: 'units'
+## The following object is masked from 'package:base':
+## 
+##     %*%
+<span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">units</a></span>(day) =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/deprecated">make_unit</a></span>(<span class="st">"days since 2015-01-01"</span>)
+hour =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/set_units">set_units</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">23</span>, h) <span class="co"># hour of day</span>
 dims =<span class="st"> </span><span class="kw">st_dimensions</span>(<span class="dt">origin =</span> from, <span class="dt">destination =</span> to, <span class="dt">mode =</span> mode, <span class="dt">day =</span> day, <span class="dt">hour =</span> hour)
 (<span class="dt">n =</span> <span class="kw">dim</span>(dims))
 ##      origin destination        mode         day        hour 
@@ -308,13 +309,13 @@ traffic =<span class="st"> </span><span class="kw">array</span>(<span class="kw"
 (<span class="dt">st =</span> <span class="kw">st_stars</span>(<span class="kw">list</span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))
 ## stars object with 5 dimensions and 1 attribute
 ## attribute(s), of first 1e+05 cells:
-##     traffic      
-##  Min.   : 0.000  
-##  1st Qu.: 8.000  
-##  Median :10.000  
-##  Mean   : 9.992  
-##  3rd Qu.:12.000  
-##  Max.   :26.000  
+##     traffic  
+##  Min.   : 0  
+##  1st Qu.: 8  
+##  Median :10  
+##  Mean   :10  
+##  3rd Qu.:12  
+##  Max.   :30  
 ## dimension(s):
 ##             from  to                    offset                     delta
 ## origin         1 100                        NA                        NA
@@ -322,35 +323,35 @@ traffic =<span class="st"> </span><span class="kw">array</span>(<span class="kw"
 ## mode           1   3                        NA                        NA
 ## day            1 100 1 (days since 2015-01-01) 1 (days since 2015-01-01)
 ## hour           1  24                       0 h                       1 h
-##                                          refsys point
-## origin      +proj=longlat +datum=NAD27 +no_defs    NA
-## destination +proj=longlat +datum=NAD27 +no_defs    NA
-## mode                                         NA    NA
-## day                                          NA    NA
-## hour                                         NA    NA
+##                                   refsys point
+## origin      +proj=longlat +datum=NAD2...    NA
+## destination +proj=longlat +datum=NAD2...    NA
+## mode                                  NA    NA
+## day                                   NA    NA
+## hour                                  NA    NA
 ##                                                                          values
-## origin      MULTIPOLYGON (((-81.4727554..., ..., MULTIPOLYGON (((-78.6557159...
-## destination MULTIPOLYGON (((-81.4727554..., ..., MULTIPOLYGON (((-78.6557159...
+## origin      MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3...
+## destination MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3...
 ## mode                                                             car, ..., foot
 ## day                                                                        NULL
 ## hour                                                                       NULL</code></pre></div>
 <p>This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a <code>tbl_cube</code>, the simple feature geometry dimensions need to be replaced by indexes:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">st %&gt;%<span class="st"> </span>as.tbl_cube 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">st <span class="op">%&gt;%</span><span class="st"> </span>as.tbl_cube 
 ## Source: local array [72,000,000 x 5]
 ## D: origin [int, 100]
 ## D: destination [int, 100]
 ## D: mode [chr, 3]
-## D: day [units, 100]
-## D: hour [units, 24]
+## D: day [[(days since 2015-01-01)], 100]
+## D: hour [[h], 24]
 ## M: traffic [int]</code></pre></div>
 <p>The following demonstrates how <code>dplyr</code> can filter bike travel, and compute mean bike traffic by hour of day:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span>st %&gt;%<span class="st"> </span>as.tbl_cube %&gt;%
-<span class="st">  </span><span class="kw">filter</span>(mode ==<span class="st"> "bike"</span>) %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(hour) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">traffic =</span> <span class="kw">mean</span>(traffic)) %&gt;%
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span>st <span class="op">%&gt;%</span><span class="st"> </span>as.tbl_cube <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(mode <span class="op">==</span><span class="st"> "bike"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(hour) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">traffic =</span> <span class="kw">mean</span>(traffic)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">as.data.frame</span>()
 <span class="kw">require</span>(ggforce)
-<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() +<span class="st">  </span>
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="dt">data=</span>b, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>hour, <span class="dt">y=</span>traffic))</code></pre></div>
 </div>
 </div>

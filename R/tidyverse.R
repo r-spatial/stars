@@ -70,3 +70,16 @@ as.tbl_cube.stars = function(x, ...) {
 	dims = lapply(expand_dimensions(x), cleanup)
 	tbl_cube(dims, c(unclass(x)))
 }
+
+# example from HW's advanced R:
+#slice <- function(x, along, index) {
+#  #stopifnot(length(index) == 1)
+#    
+#  nd <- length(dim(x))
+#  indices <- rep(list(missing_arg()), nd)
+#  indices[[along]] <- index
+#  
+#  expr(x[!!!indices])
+#}
+#
+#eval(slice(x, 1, 1:3))
