@@ -7,8 +7,12 @@
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @param axes logical; should axes be added to the plot?
 #' @param downsample logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.
+#' @param nbreaks number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.
+#' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
+#' @param col colors to use for grid cells
 #' @export
-plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, downsample = TRUE) {
+plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, 
+		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks)) {
 	flatten = function(x, i) { # collapse all non-x/y dims into one
 		d = st_dimensions(x)
 		dims = dim(x)
@@ -18,6 +22,23 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		dim(x) = newdims
 		st_stars(list(x[,,i]), dimensions = d[c("x", "y")])
 	}
+	if (missing(nbreaks) && !missing(col))
+		nbreaks = length(col) + 1
+
+	if (is.character(breaks)) { # compute breaks from values:
+		pdx = prod(dim(x[[1]]))
+		# take a regular sample from x[[1]]:
+		values = as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))]
+		n.unq = length(unique(na.omit(values)))
+		breaks = if (! all(is.na(values)) && n.unq > 1) {
+			if (utils::packageVersion("classInt") > "0.2-1")
+				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
+			else
+				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks)$brks
+		} else
+			range(values, na.rm = TRUE) # lowest and highest!
+	}
+
 	if (!missing(y))
 		stop("y argument should be missing")
 	if (has_raster(x)) {
@@ -32,7 +53,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			x = st_downsample(x, n)
 		}
 		if (length(dims) == 2) {
-			image(x, ..., axes = axes)
+			image(x, ..., axes = axes, breaks = breaks, col = col)
 			if (!is.null(main))
 				title(main)
 		} else { # simply loop over dimensions 3:
@@ -46,9 +67,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
 				if (join_zlim)
-					image(flatten(x, i), xlab = "", ylab = "", axes = axes, zlim = zlim,...)
+					image(flatten(x, i), xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = breaks, col = col, ...)
 				else
-					image(flatten(x, i), xlab = "", ylab = "", axes = axes, ...)
+					image(flatten(x, i), xlab = "", ylab = "", axes = axes, breaks = breaks, col = col, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
@@ -117,7 +138,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 			plot.new()
 			plot.window(xlim = xlim, ylim = ylim, asp = asp)
 		}
-		rasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE)
+		rasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE, ...)
 	} else { 
 		if (y_is_neg) {
 			ar = if (length(dim(x)) == 3)
@@ -156,12 +177,12 @@ get_mfrow = function(bb, n, total_size = c(1,1)) {
 }
 
 st_downsample = function(x, n) {
-	stopifnot(all(n >= 1))
+	stopifnot(all(n >= 0))
 	d = dim(x)
 	n = rep(n, length.out = length(d))
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	for (i in seq_along(d))
-		if (n[i] != 1)
+		if (n[i] > 1)
 			args[[i+1]] = seq(1, d[i], n[i])
 	eval(rlang::expr(x[!!!args]))
 }

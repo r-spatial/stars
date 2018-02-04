@@ -15,7 +15,8 @@ Imports:
     Rcpp, 
 	abind,
 	rlang,
-	units
+	units,
+	classInt
 Suggests: 
     covr,
 	ggplot2,

@@ -7,7 +7,8 @@
 \title{plot stars object, with subplots for each level of first non-spatial dimension}
 \usage{
 \method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
-  axes = FALSE, downsample = TRUE)
+  axes = FALSE, downsample = TRUE, nbreaks = 11, breaks = "quantile",
+  col = grey(1:(nbreaks - 1)/nbreaks))
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
   maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else names(dims)[1],
@@ -28,6 +29,12 @@
 \item{axes}{logical; should axes be added to the plot?}
 
 \item{downsample}{logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.}
+
+\item{nbreaks}{number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.}
+
+\item{breaks}{actual color breaks, or a method name used for \link[classInt]{classIntervals}.}
+
+\item{col}{colors to use for grid cells}
 
 \item{band}{integer; which band (dimension) to plot}
 
