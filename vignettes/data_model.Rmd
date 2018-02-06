@@ -1,0 +1,115 @@
+---
+title: 'stars: data model'
+author: "Edzer Pebesma"
+date: "December 10, 2017"
+output:
+  html_document:
+    toc: true
+    theme: united
+vignette: >
+  %\VignetteIndexEntry{Stars: data model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+set.seed(13579)
+```
+
+This vignette explains the data model of `stars` objects, with illustrations.
+
+## Grid types
+
+### Regular grids
+With a very simple file created from a $4 \times 5$ matrix
+```{r fig.width=4.5, fig.height=4}
+suppressPackageStartupMessages(library(stars))
+m = matrix(1:20, nrow = 5, ncol = 4)
+dim(m) = c(x = 5, y = 4) # named dim
+(s = st_stars(m))
+```
+we see that
+
+* the rows (5) are mapped to the first dimension, the x-coordinate
+* the columns (4) are mapped to the second dimension, the y-coordinate
+* the `from` and `to` fields of the dimensions are redundant, as they also are present in the array dimension:
+
+```{r}
+dim(s[[1]])
+```
+* offset and delta specify how increasing row/column index maps to x and y coordinate values
+
+When we plot this object, using the `image` method for `stars` objects, we see
+```{r fig.width=4.5, fig.height=4}
+image(s, text_values = TRUE, axes = TRUE)
+```
+
+Where it becomes clear that $(0,0)$ is the origin of the grid (grid corner), and $1$ the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are **regular**: grid cell size is constant everywhere.
+
+Most grid data comes with y coordinates (grid rows) going from North to South (top to bottom); this is established using a negative `delta`. We see that the grid origing $(0,0)$ did not change:
+```{r fig.width=4.5, fig.height=4}
+attr(s, "dimensions")$y$delta = -1
+attr(s, "dimensions")$x$geotransform[6] = -1
+attr(s, "dimensions")$y$geotransform[6] = -1
+image(s, text_values = TRUE, axes = TRUE)
+```
+
+An example is the GeoTIFF carried in the package, which has a negative `delta` for the `y`-coordinate:
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+st_dimensions(st_stars(tif))["y"]
+```
+
+### Regular grids: rotated
+
+`x` and `y` coordinate grids carry a `geotransform` field, used to compute $x$ and $y$ coordinates from grid index $i$ and $j$:
+
+$$x = gt_1 + (i-1) gt_2 + (j-1) gt_3$$
+    
+$$y = gt_4 + (i-1) gt_5 + (j-1) gt_6$$
+We can rotate grids by setting $gt_3$ and $gt_5$ to a constant, non-zero value:
+
+```{r}
+attr(s, "dimensions")$x$geotransform[c(3,5)] = 0.1
+attr(s, "dimensions")$y$geotransform[c(3,5)] = 0.1
+# FIXME: use image()
+plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
+```
+
+The rotation angle, in degrees, is
+
+```{r}
+atan2(0.1, 1) * 180 / pi
+```
+
+### Regular grids: sheared, sheared and rotated
+
+Sheared grids are obtained when the two rotation coefficients, $gt_3$ and $gt_5$, are unequal:
+```{r}
+attr(s, "dimensions")$x$geotransform[c(3,5)] = c(0.1, 0.2)
+attr(s, "dimensions")$y$geotransform[c(3,5)] = c(0.1, 0.2)
+plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
+```
+
+Now, the y-axis and x-axis have different rotation in degrees of respectively
+```{r}
+atan2(c(0.1, 0.2), 1) * 180 / pi
+```
+
+## Rectilinear grids
+
+[Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.
+
+```{r}
+x = c(0,0.5,1,2,4,5)
+y = c(0.3,0.5,1,2,2.2)
+r = st_stars(list(m = m), dimensions = st_dimensions(x = x, y = y))
+r
+#plot(st_as_sf(r, as_points = FALSE), axes = TRUE, nbreaks = 20)
+image(x, y, m, col = sf.colors(21))
+x1 = c(0.25,0.75,1.5,3,4.5)
+y1 = c(0.4,0.75,1.5,2.1)
+image(x1, y1, m, col = sf.colors(21))
+```

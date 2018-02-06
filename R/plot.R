@@ -25,6 +25,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
 
+	dots = list(...)
+
 	if (is.character(breaks)) { # compute breaks from values:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
@@ -52,7 +54,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			n[c("x", "y")] = get_downsample(dims)
 			x = st_downsample(x, n)
 		}
-		if (length(dims) == 2) {
+		if (length(dims) == 2 || !is.null(dots$rgb)) {
 			image(x, ..., axes = axes, breaks = breaks, col = col)
 			if (!is.null(main))
 				title(main)
