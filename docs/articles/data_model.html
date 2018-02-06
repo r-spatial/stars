@@ -125,14 +125,14 @@ m =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</s
 <li>offset and delta specify how increasing row/column index maps to x and y coordinate values</li>
 </ul>
 <p>When we plot this object, using the <code>image</code> method for <code>stars</code> objects, we see</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">image</span>(s, <span class="dt">text_values =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">image</span>(s, <span class="dt">text_values =</span> <span class="ot">TRUE</span>, <span class="dt">axes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="data_model_files/figure-html/unnamed-chunk-3-1.png" width="432"></p>
 <p>Where it becomes clear that <span class="math inline">\((0,0)\)</span> is the origin of the grid (grid corner), and <span class="math inline">\(1\)</span> the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are <strong>regular</strong>: grid cell size is constant everywhere.</p>
 <p>Most grid data comes with y coordinates (grid rows) going from North to South (top to bottom); this is established using a negative <code>delta</code>. We see that the grid origing <span class="math inline">\((0,0)\)</span> did not change:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">attr</span>(s, <span class="st">"dimensions"</span>)<span class="op">$</span>y<span class="op">$</span>delta =<span class="st"> </span><span class="dv">-1</span>
 <span class="kw">attr</span>(s, <span class="st">"dimensions"</span>)<span class="op">$</span>x<span class="op">$</span>geotransform[<span class="dv">6</span>] =<span class="st"> </span><span class="dv">-1</span>
 <span class="kw">attr</span>(s, <span class="st">"dimensions"</span>)<span class="op">$</span>y<span class="op">$</span>geotransform[<span class="dv">6</span>] =<span class="st"> </span><span class="dv">-1</span>
-<span class="kw">image</span>(s, <span class="dt">text_values =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<span class="kw">image</span>(s, <span class="dt">text_values =</span> <span class="ot">TRUE</span>, <span class="dt">axes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="data_model_files/figure-html/unnamed-chunk-4-1.png" width="432"></p>
 <p>An example is the GeoTIFF carried in the package, which has a negative <code>delta</code> for the <code>y</code>-coordinate:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tif =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)

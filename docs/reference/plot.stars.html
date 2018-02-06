@@ -110,7 +110,8 @@
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>join_zlim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>x</span>)[<span class='fl'>1</span>],
-  <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>nbreaks</span> <span class='kw'>=</span> <span class='fl'>11</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"quantile"</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>grey</span>(<span class='fl'>1</span>:(<span class='no'>nbreaks</span> - <span class='fl'>1</span>)/<span class='no'>nbreaks</span>))
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>image</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>asp</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -148,6 +149,18 @@
     <tr>
       <th>downsample</th>
       <td><p>logical; if <code>TRUE</code> will try to plot not many more pixels than actually are visibule.</p></td>
+    </tr>
+    <tr>
+      <th>nbreaks</th>
+      <td><p>number of color breaks; should be one more than number of colors. If missing and <code>col</code> is specified, it is derived from that.</p></td>
+    </tr>
+    <tr>
+      <th>breaks</th>
+      <td><p>actual color breaks, or a method name used for <a href='http://www.rdocumentation.org/packages/classInt/topics/classIntervals'>classIntervals</a>.</p></td>
+    </tr>
+    <tr>
+      <th>col</th>
+      <td><p>colors to use for grid cells</p></td>
     </tr>
     <tr>
       <th>band</th>
