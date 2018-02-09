@@ -283,3 +283,16 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 	}
 	x
 }
+
+#' @export
+dimnames.stars = function(x) {
+	names(st_dimensions(x))
+}
+
+#' @export
+`dimnames<-.stars` = function(x, value) {
+	for (i in seq_along(x))
+		names(dim(x[[i]])) = value
+	names(attr(x, "dimensions")) = value
+	x
+}

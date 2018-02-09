@@ -58,7 +58,7 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
-#' @return object of class \code{stars} with x and y raster dimensions replace by sfc geometry list
+#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 #' @export
 st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 

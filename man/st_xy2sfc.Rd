@@ -14,7 +14,7 @@ st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ...)
 \item{...}{arguments passed on to \code{st_as_sfc}}
 }
 \value{
-object of class \code{stars} with x and y raster dimensions replace by sfc geometry list
+object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 }
 \description{
 replace x y raster dimensions with simple feature geometry list (points or polygons)

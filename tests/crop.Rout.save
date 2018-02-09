@@ -1,0 +1,80 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: dplyr
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: magrittr
+Loading required package: sf
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+Linking to GDAL 2.2.1
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = st_stars(tif)
+> xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 
++ 9111328.49619133)), .Names = c("x", "y"))
+> pts = st_as_sf(data.frame(do.call(cbind, xy)), coords = c("x", "y"), crs = st_crs(x))
+> image(x, axes = TRUE)
+> plot(st_as_sfc(st_bbox(pts)), col = NA, add = TRUE)
+> 
+> bb = st_bbox(pts)
+> (xx = x[bb])
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+ /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
+ Min.   :  3.00                                     
+ 1st Qu.: 56.00                                     
+ Median : 73.00                                     
+ Mean   : 70.87                                     
+ 3rd Qu.: 89.00                                     
+ Max.   :255.00                                     
+ NA's   :1194                                       
+dimension(s):
+     from  to  offset delta                       refsys point values
+x     157 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y     244 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6      NA    NA                           NA    NA   NULL
+> image(xx)
+> plot(st_as_sfc(bb), add = TRUE, col = NA)
+> st_contains(st_as_sfc(st_bbox(xx)), st_as_sfc(st_bbox(pts)))
+Sparse geometry binary predicate list of length 1, where the predicate was `contains'
+ 1: 1
+> 
+> image(x)
+> pt = st_point(c(x = 290462.103109179, y = 9114202.32594085))
+> buf = st_buffer(st_sfc(pt, crs = st_crs(x)), 1500)
+> plot(buf, add = TRUE)
+> 
+> buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
++ 	crs = st_crs(x))
+> image(x[buf])
+> plot(buf, add = TRUE, col = NA)
+> image(x[buf,crop=FALSE])
+> plot(buf, add = TRUE, col = NA)
+> 
+> proc.time()
+   user  system elapsed 
+  3.855   0.256   3.785 

@@ -117,6 +117,10 @@ xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
+colrow_from_xy = function(x, geotransform) {
+	xy_from_colrow(x, geotransform, inverse = TRUE)
+}
+
 has_rotate_or_shear = function(x) {
 	dimensions = st_dimensions(x)
 	has_raster(x) &&
@@ -181,7 +185,6 @@ aperm.stars = function(a, perm = NULL, ...) {
 		ns = names(attr(a, "dimensions"))
 		dn = lapply(as.list(dim(a)), seq_len)
 		names(dn) = ns
-		print(dn)
 		for (i in seq_along(a))
 			dimnames(a[[i]]) = dn
 	}
@@ -270,9 +273,12 @@ st_crs.stars = function(x, ...) {
 }
 
 #' @export
-"[.stars" = function(x, i = TRUE, ..., drop = FALSE) {
+"[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
   #st_stars(unclass(x)[i], dimensions = st_dimensions(x))
   missing.i = missing(i)
+  # special case:
+  if (! missing.i && inherits(i, c("sf", "sfc", "bbox")))
+  	return(st_crop(x, i, crop = crop))
   mc <- match.call(expand.dots = TRUE)
   # select list elements from x, based on i:
   d = attr(x, "dimensions")
@@ -302,4 +308,47 @@ st_crs.stars = function(x, ...) {
   	adrop(st_stars(x, dimensions = d))
   else
   	st_stars(x, dimensions = d)
+}
+
+st_downsample = function(x, n) {
+	stopifnot(all(n >= 0))
+	d = dim(x)
+	n = rep(n, length.out = length(d))
+	args = rep(list(rlang::missing_arg()), length(d)+1)
+	for (i in seq_along(d))
+		if (n[i] > 1)
+			args[[i+1]] = seq(1, d[i], n[i])
+	eval(rlang::expr(x[!!!args]))
+}
+
+st_crop = function(x, obj, crop = TRUE) {
+	d = dim(x)
+	dm = st_dimensions(x)
+	args = rep(list(rlang::missing_arg()), length(d)+1)
+	if (crop) {
+		bb = if (!inherits(obj, "bbox"))
+				st_bbox(obj)
+			else
+				obj
+		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm$x$geotransform)
+		for (i in seq_along(d)) {
+			if (names(d[i]) == "x")
+				args[[i+1]] = seq(max(1, floor(cr[1, 1])), min(d["x"], ceiling(cr[2, 1])))
+			if (names(d[i]) == "y") {
+				if (dm$y$delta < 0)
+					cr[1:2, 2] = cr[2:1, 2]
+				args[[i+1]] = seq(max(1, floor(cr[1, 2])), min(d["y"], ceiling(cr[2, 2])))
+			}
+		}
+		x = eval(rlang::expr(x[!!!args]))
+	}
+	if (inherits(obj, "bbox"))
+		obj = st_as_sfc(obj)
+	xy_grd = st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[c("x", "y")]),
+		coords = c("x", "y"), crs = st_crs(x))
+	inside = st_intersects(obj, xy_grd)[[1]]
+	d = dim(x) # cropped x
+	raster = rep(NA_real_, prod(d[c("x", "y")]))
+	raster[inside] = 1
+	x * array(raster, d) # replicates over secondary dims
 }

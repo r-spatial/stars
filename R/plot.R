@@ -30,7 +30,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	if (is.character(breaks)) { # compute breaks from values:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
-		values = as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))]
+		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
 		n.unq = length(unique(na.omit(values)))
 		breaks = if (! all(is.na(values)) && n.unq > 1) {
 			if (utils::packageVersion("classInt") > "0.2-1")
