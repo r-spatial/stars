@@ -1,3 +1,0 @@
-PKG_CPPFLAGS= -I/usr/include/gdal
-PKG_LIBS= -L/usr/lib -lgdal
-CXX_STD=CXX11

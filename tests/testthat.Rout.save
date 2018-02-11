@@ -47,10 +47,9 @@ The following objects are masked from 'package:testthat':
 
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-Linking to GDAL 2.2.1
 testthat results ================================================================
 OK: 6 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.762   0.236   0.668 
+  0.721   0.261   0.646 

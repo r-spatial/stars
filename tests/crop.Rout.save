@@ -31,7 +31,6 @@ The following objects are masked from 'package:base':
 Loading required package: magrittr
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-Linking to GDAL 2.2.1
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = st_stars(tif)
 > xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 
@@ -77,4 +76,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  3.855   0.256   3.785 
+  3.769   0.256   3.713 

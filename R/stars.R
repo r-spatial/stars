@@ -1,3 +1,10 @@
+split_strings = function(md, split = "=") {
+	splt = strsplit(md, split)
+	lst = lapply(splt, function(x) if (length(x) <= 1) NA_character_ else x[[2]])
+	structure(lst, names = sapply(splt, function(x) x[[1]]))
+	structure(lst, class = "gdal_metadata")
+}
+
 ## read raster/array dataset from file or connection
 
 #' read raster/array dataset from file or connection
@@ -25,7 +32,7 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
 	}
 
-	properties = CPL_read_gdal(x, options, driver, TRUE)
+	properties = gdal_read(x, options, driver)
 
 	if (properties$bands[2] == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list
@@ -108,7 +115,7 @@ xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 # Xp = geotransform[0] + P*geotransform[1] + L*geotransform[2];
 # Yp = geotransform[3] + P*geotransform[4] + L*geotransform[5];
 	if (inverse) {
-		geotransform = CPL_inv_geotransform(geotransform)
+		geotransform = gdal_inv_geotransform(geotransform)
 		if (any(is.na(geotransform)))
 			stop("geotransform not invertible")
 	}

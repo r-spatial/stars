@@ -31,7 +31,6 @@ The following objects are masked from 'package:base':
 Loading required package: magrittr
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-Linking to GDAL 2.2.1
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = st_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -194,4 +193,4 @@ range    1   2      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  3.012   0.296   2.988 
+  2.960   0.304   2.970 

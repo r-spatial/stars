@@ -31,7 +31,6 @@ The following objects are masked from 'package:base':
 Loading required package: magrittr
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-Linking to GDAL 2.2.1
 > library(sf)
 > jp2 = system.file("jp2/B01.jp2", package = "stars")
 > #(x = st_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
@@ -171,4 +170,4 @@ proj4string:    NA
 > 
 > proc.time()
    user  system elapsed 
-  1.357   0.224   1.281 
+  1.341   0.222   1.251 
