@@ -140,10 +140,12 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 			plot.new()
 			plot.window(xlim = xlim, ylim = ylim, asp = asp)
 		}
-		rasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE, ...)
+		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks) # absorbs breaks
+			rasterImage(x, xmin, ymin, xmax, ymax, interpolate, ...)
+		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE, ...)
 	} else { 
 		if (y_is_neg) {
-			ar = if (length(dim(x)) == 3)
+			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
 				ar[ , rev(seq_len(dim(ar)[2])), band]
 			else
 				ar[ , rev(seq_len(dim(ar)[2]))]
@@ -153,9 +155,10 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 	}
 	if (text_values)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
-	if (axes) { # FIXME: deal with long/lat axes the way sf does
+	if (axes) { # FIXME: deal with long/lat degree axes the way sf does
 		axis(1)
 		axis(2)
+		box()
 	}
 }
 
@@ -178,6 +181,7 @@ get_mfrow = function(bb, n, total_size = c(1,1)) {
 	structure(c(nrow, ncol), names = c("nrow", "ncol"))
 }
 
+# reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n) {
 	stopifnot(all(n >= 0))
 	d = dim(x)
@@ -189,6 +193,8 @@ st_downsample = function(x, n) {
 	eval(rlang::expr(x[!!!args]))
 }
 
+# compute the degree of downsampling allowed to still have more than 
+# one cell per screen/device pixel:
 get_downsample = function(dims, px = dev.size("px")) { 
 	floor(sqrt(prod(dims) / prod(px)))
 }
