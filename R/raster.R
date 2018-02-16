@@ -1,10 +1,3 @@
-#' convert objects into a stars object
-#' 
-#' convert objects into a stars object
-#' @export
-#' @param x object to convert
-#' @param ... ignored
-st_as_stars = function(x, ...) UseMethod("st_as_stars")
 
 #' @name st_as_stars
 #' @export

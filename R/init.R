@@ -6,19 +6,13 @@
 #' @importFrom abind abind adrop
 #' @importFrom classInt classIntervals
 #' @importFrom Rcpp evalCpp
-#' @import dplyr
 #' @importFrom magrittr %>%
 #' @import sf
 #' @import units
 NULL
 
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`
+
 setOldClass("stars")
-
-.onLoad = function(libname, pkgname) {
-}
-
-.onUnload = function(libname, pkgname) {
-}
-
-.onAttach = function(libname, pkgname) {
-}

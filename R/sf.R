@@ -1,18 +1,30 @@
 # sf conversion things
 
 #' @export
-st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point) {
+st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point,
+		which = seq_len(prod(dim(x)[1:2]))) {
 	st_as_sfc(structure(st_dimensions(x)[c("x", "y")], class = "dimensions"),
-		..., as_points = as_points)
+		..., as_points = as_points, which = which)
 }
 
-#' replace x y raster dimensions with simple feature geometry list (points or polygons)
+#' @export
+st_as_stars.sfc = function(x, ..., FUN = length, as_points = TRUE) {
+	st = st_stars(st_bbox(x), ...)
+	sfc = st_as_sfc(st, as_points = as_points)
+	i = st_intersects(sfc, x)
+	vals = sapply(i, FUN)
+	st[[1]] = array(vals, dim(st[[1]]))
+	st
+}
+
+#' replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
+#' @param na.rm logical; remove cells with all missing values?
 #' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 #' @export
-st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
+st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE) {
 
 	d = st_dimensions(x)
 	olddim = dim(x)
@@ -26,25 +38,45 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ...) {
 
 	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2))
 
-	sfc = st_as_sfc(x, as_points = as_points, ...)
+	# find which records are NA for all attributes:
+	a = do.call(abind, x)
+	keep = if (na.rm)
+			as.vector(apply(a, c(1,2), function(x) !all(is.na(x))))
+		else
+			rep(TRUE, prod(dim(x)[1:2]))
+
+	# flatten two dims x,y to one dim sfc (replacing "x")
+	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep))
 	# overwrite x:
 	d[["x"]] = create_dimension(from = 1, to = length(sfc), values = sfc)
-	# rename:
+	# rename x to sfc:
 	names(d)[names(d) == "x"] = "sfc"
 	# remove y:
 	d[["y"]] = NULL
+	# flatten arrays:
 	for (i in seq_along(x))
-		dim(x[[i]]) = c(length(sfc), olddim[-xy_pos])
+		dim(x[[i]]) = c(length(keep), olddim[-xy_pos]) 
+	# reduce arrays to non-NA cells:
+	if (na.rm) {
+		for (i in seq_along(x))
+			x[[i]] = switch(as.character(length(dim(x[[i]]))), 
+				"1" = x[[i]][which(keep)],
+				"2" = x[[i]][which(keep),],
+				"3" = x[[i]][which(keep),,],
+				"4" = x[[i]][which(keep),,,], # etc -- FIXME: use tidy eval here
+				)
+	}
+
 	structure(x, dimensions = d)
 }
 
 #' @export
-st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = FALSE) {
+st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE) {
 
 	if (has_raster(x))
 		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
 
-	if (!has_sfc(x))
+	if (! has_sfc(x))
 		stop("no feature geometry column found")
 
 	# FIXME: this probably only works for 2D arrays, now
@@ -58,11 +90,6 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = 
 		names(df) = apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ")
 	} else
 		names(df) = names(x)
-	if (na.rm) {
-		keep = apply(df, 1, function(x) any(!is.na(x)))
-		df = df[keep, ]
-		sfc = sfc[keep]
-	}
 	st_sf(df, geometry = sfc)
 }
 

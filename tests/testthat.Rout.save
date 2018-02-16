@@ -21,30 +21,6 @@ Type 'q()' to quit R.
 > ## test package
 > test_check("stars")
 Loading required package: stars
-Loading required package: dplyr
-
-Attaching package: 'dplyr'
-
-The following object is masked from 'package:testthat':
-
-    matches
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-Loading required package: magrittr
-
-Attaching package: 'magrittr'
-
-The following objects are masked from 'package:testthat':
-
-    equals, is_less_than, not
-
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 testthat results ================================================================
@@ -52,4 +28,4 @@ OK: 6 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.721   0.261   0.646 
+  0.732   0.246   0.625 

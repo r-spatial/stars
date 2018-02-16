@@ -83,6 +83,7 @@ For this particular dataset (and most other raster datasets), we see that offset
 
 The data structure `stars` is an extension of the `tbl_cube` found in `dplyr`; we can convert to that by
 ```{r}
+library(dplyr)
 as.tbl_cube(x)
 ```
 

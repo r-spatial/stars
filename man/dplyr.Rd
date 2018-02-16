@@ -13,22 +13,20 @@
 \alias{as.tbl_cube.stars}
 \title{dplyr verbs for stars objects}
 \usage{
-\method{filter}{stars}(.data, ..., .dots)
+filter.stars(.data, ...)
 
-\method{mutate}{stars}(.data, ..., .dots)
+mutate.stars(.data, ...)
 
-\method{select}{stars}(.data, ...)
+select.stars(.data, ...)
 
-\method{pull}{stars}(.data, var = -1)
+pull.stars(.data, var = -1)
 
-\method{as.tbl_cube}{stars}(x, ...)
+as.tbl_cube.stars(x, ...)
 }
 \arguments{
 \item{.data}{see \link[dplyr]{filter}}
 
 \item{...}{see \link[dplyr]{filter}}
-
-\item{.dots}{see \link[dplyr]{filter}}
 
 \item{var}{see \link[dplyr]{pull}}
 

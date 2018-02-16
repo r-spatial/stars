@@ -5,11 +5,12 @@
 #' @param y ignored
 #' @param join_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
-#' @param axes logical; should axes be added to the plot?
+#' @param axes logical; should axes and box be added to the plot?
 #' @param downsample logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.
 #' @param nbreaks number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.
 #' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells
+#' @param ... for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks)) {
@@ -97,8 +98,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 #' @param ylab character; y axis label
 #' @param xlim x axis limits
 #' @param ylim y axis limits
-#' @param ... passed on to \code{image.default}
 #' @param text_values logical; print values as text on image?
+#' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -107,7 +108,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
-		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE) {
+		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
+		interpolate = FALSE) {
 
 	dots = list(...)
 	stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
@@ -140,9 +142,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 			plot.new()
 			plot.window(xlim = xlim, ylim = ylim, asp = asp)
 		}
-		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks) # absorbs breaks
-			rasterImage(x, xmin, ymin, xmax, ymax, interpolate, ...)
-		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = FALSE, ...)
+		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
+			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
+		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else { 
 		if (y_is_neg) {
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?

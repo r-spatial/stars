@@ -13,20 +13,21 @@
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
   maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else names(dims)[1],
   ylab = if (!axes) "" else names(dims)[2], xlim = st_bbox(x)$xlim,
-  ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE)
+  ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
+  interpolate = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
 \item{y}{ignored}
 
-\item{...}{passed on to \code{image.default}}
+\item{...}{for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.}
 
 \item{join_zlim}{logical; if \code{TRUE}, compute a single zlim for all subplots from array range}
 
 \item{main}{character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles}
 
-\item{axes}{logical; should axes be added to the plot?}
+\item{axes}{logical; should axes and box be added to the plot?}
 
 \item{downsample}{logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.}
 
@@ -55,6 +56,8 @@
 \item{ylim}{y axis limits}
 
 \item{text_values}{logical; print values as text on image?}
+
+\item{interpolate}{logical; when using \link{rasterImage} (rgb), should pixels be interpolated?}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension

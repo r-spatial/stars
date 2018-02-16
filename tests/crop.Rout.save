@@ -16,19 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(stars)
-Loading required package: dplyr
-
-Attaching package: 'dplyr'
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-Loading required package: magrittr
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -76,4 +63,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  3.769   0.256   3.713 
+  3.159   0.232   3.070 

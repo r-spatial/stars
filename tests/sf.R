@@ -17,11 +17,11 @@ plot(sfc, add = TRUE)
 sf = st_as_sf(x, as_points = FALSE)
 plot(sf, border = NA)
 
-sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE)
+sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE, na.rm = FALSE)
 sfc2 <- st_as_sfc(x, as_points = TRUE, use_cpp = FALSE)
 identical(sfc1, sfc2)
 
-sfc1 <- st_as_sfc(x, as_points = FALSE, use_cpp = TRUE)
+sfc1 <- st_as_sfc(x, as_points = FALSE, use_cpp = TRUE, na.rm = FALSE)
 sfc2 <- st_as_sfc(x, as_points = FALSE, use_cpp = FALSE)
 identical(sfc1, sfc2)
 

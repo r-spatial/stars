@@ -16,19 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(stars)
-Loading required package: dplyr
-
-Attaching package: 'dplyr'
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-Loading required package: magrittr
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > library(sf)
@@ -87,12 +74,12 @@ POINT (290810.8 9120533)
 > sf = st_as_sf(x, as_points = FALSE)
 > plot(sf, border = NA)
 > 
-> sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE)
+> sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE, na.rm = FALSE)
 > sfc2 <- st_as_sfc(x, as_points = TRUE, use_cpp = FALSE)
 > identical(sfc1, sfc2)
 [1] TRUE
 > 
-> sfc1 <- st_as_sfc(x, as_points = FALSE, use_cpp = TRUE)
+> sfc1 <- st_as_sfc(x, as_points = FALSE, use_cpp = TRUE, na.rm = FALSE)
 > sfc2 <- st_as_sfc(x, as_points = FALSE, use_cpp = FALSE)
 > identical(sfc1, sfc2)
 [1] TRUE
@@ -170,4 +157,4 @@ proj4string:    NA
 > 
 > proc.time()
    user  system elapsed 
-  1.341   0.222   1.251 
+  1.343   0.219   1.242 

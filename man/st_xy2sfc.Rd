@@ -2,9 +2,9 @@
 % Please edit documentation in R/sf.R
 \name{st_xy2sfc}
 \alias{st_xy2sfc}
-\title{replace x y raster dimensions with simple feature geometry list (points or polygons)}
+\title{replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)}
 \usage{
-st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ...)
+st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -12,10 +12,12 @@ st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ...)
 \item{as_points}{logical; if \code{TRUE}, generate points at cell centers, else generate polygons}
 
 \item{...}{arguments passed on to \code{st_as_sfc}}
+
+\item{na.rm}{logical; remove cells with all missing values?}
 }
 \value{
 object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 }
 \description{
-replace x y raster dimensions with simple feature geometry list (points or polygons)
+replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
 }

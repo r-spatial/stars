@@ -7,13 +7,12 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.p
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
     R (>= 3.3.0),
-	dplyr (>= 0.7-0),
-	magrittr,
 	sf (>= 0.6-1)
 Imports:
 	methods,
     Rcpp, 
 	abind,
+	magrittr,
 	rlang,
 	units,
 	classInt
@@ -22,6 +21,7 @@ Suggests:
 	ggplot2,
 	ggthemes,
 	gstat,
+	dplyr (>= 0.7-0),
     knitr,
 	maps,
 	plm,

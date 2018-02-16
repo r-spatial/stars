@@ -21,18 +21,17 @@ get_dims = function(d_cube, d_stars) {
 #' dplyr verbs for stars objects
 #' @param .data see \link[dplyr]{filter}
 #' @param ... see \link[dplyr]{filter}
-#' @param .dots see \link[dplyr]{filter}
 #' @name dplyr
 #' @export
-filter.stars <- function(.data, ..., .dots) {
-	cb = as.tbl_cube(.data)
+filter.stars <- function(.data, ...) {
+	cb = dplyr::as.tbl_cube(.data)
 	cb = dplyr::filter(cb, ...)
 	st_stars(cb$mets, dimensions = get_dims(cb$dims, st_dimensions(.data)))
 }
 
 #' @name dplyr
 #' @export
-mutate.stars <- function(.data, ..., .dots) {
+mutate.stars <- function(.data, ...) {
 	d = st_dimensions(.data)
 	dim_orig = dim(.data)
 	ret = dplyr::mutate(to_df(.data), ...)
@@ -68,7 +67,7 @@ as.tbl_cube.stars = function(x, ...) {
 			y
 	}
 	dims = lapply(expand_dimensions(x), cleanup)
-	tbl_cube(dims, c(unclass(x)))
+	dplyr::tbl_cube(dims, c(unclass(x)))
 }
 
 # example from HW's advanced R:

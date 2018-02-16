@@ -96,6 +96,10 @@ st_stars.default = function(.x = NULL, ...) {
 			list(...)
 		else
 			append(list(.x), list(...))
+
+	if (length(args) == 0)
+		return(st_stars_empty())
+
 	isdim = sapply(args, inherits, what = "dimensions")
 	dimensions = if (!any(isdim))
 			do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
@@ -106,6 +110,24 @@ st_stars.default = function(.x = NULL, ...) {
 	if (is.null(names(args)))
 		names(args) = paste0("A", seq_along(args))
 	st_stars(args, dimensions = dimensions)
+}
+
+st_stars_empty = function() {
+	p = st_sfc(st_point(c(-180,-90)), st_point(c(180,90)), crs = st_crs(4326))
+	st_stars(st_bbox(p))
+}
+
+#' @export
+st_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
+	if (missing(crs))
+		crs = st_crs(.x)
+	dx = .x["xmax"] - .x["xmin"]
+	dy = .x["ymax"] - .x["ymin"]
+	gt = c(.x["xmin"], dx/nx, 0.0, .x["ymax"], 0.0, -dy/ny)
+	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta = dx/nx, refsys = crs, geotransform = gt)
+	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs, geotransform = gt)
+	st_stars(values = array(NA_real_, c(x = nx, y = ny)), 
+		dims = structure(list(x = x, y = y), class = "dimensions"))
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
@@ -359,3 +381,11 @@ st_crop = function(x, obj, crop = TRUE) {
 	raster[inside] = 1
 	x * array(raster, d) # replicates over secondary dims
 }
+
+#' convert objects into a stars object
+#' 
+#' convert objects into a stars object
+#' @export
+#' @param x object to convert
+#' @param ... ignored
+st_as_stars = function(x, ...) UseMethod("st_as_stars")
