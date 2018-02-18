@@ -5,8 +5,8 @@ r:
 #  - devel
 #  - oldrel
 
-#cache: packages
-r_github_packages: r-spatial/sf@stars
+cache: packages
+r_github_packages: r-spatial/sf
 
 sudo: required
 
