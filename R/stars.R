@@ -24,7 +24,8 @@ st_stars = function(.x, ...) UseMethod("st_stars")
 
 #' @name st_stars
 #' @export
-st_stars.character = function(.x, ..., options = character(0), driver = character(0), sub = TRUE, quiet = FALSE) {
+st_stars.character = function(.x, ..., options = character(0), driver = character(0), 
+		sub = TRUE, quiet = FALSE) {
 
 	x = .x
 	if (length(x) > 1) { # recurse:
@@ -32,7 +33,7 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
 	}
 
-	properties = gdal_read(x, options, driver)
+	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE)
 
 	if (properties$bands[2] == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list

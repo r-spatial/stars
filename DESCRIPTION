@@ -44,4 +44,5 @@ Collate:
 	tidyverse.R
 	transform.R
 	ops.R
+	write.R
 RoxygenNote: 6.0.1

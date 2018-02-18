@@ -2,6 +2,7 @@
 #' @importFrom grDevices dev.capabilities dev.size grey
 #' @importFrom utils tail
 #' @importFrom stats na.omit
+#' @importFrom tools file_ext
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop
 #' @importFrom classInt classIntervals
