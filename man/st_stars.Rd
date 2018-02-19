@@ -17,7 +17,7 @@
 st_stars(.x, ...)
 
 \method{st_stars}{character}(.x, ..., options = character(0),
-  driver = character(0), sub = TRUE, quiet = FALSE)
+  driver = character(0), sub = TRUE, quiet = FALSE, NA_value = NA_real_)
 
 \method{st_stars}{list}(.x, ..., dimensions = NULL)
 
@@ -37,6 +37,8 @@ st_stars(.x, ...)
 \item{sub}{integer or logical; sub-datasets to be read}
 
 \item{quiet}{logical; print progress output?}
+
+\item{NA_value}{numeric value to be used for conversion into NA values; by default this is read from the input file}
 
 \item{dimensions}{object of class dimensions}
 }

@@ -18,6 +18,7 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 		type = type, na_val = NA_value)
 }
 
+#nocov start
 detect.driver = function(filename) {
 	# from raster::.getFormat:
 	ext <- tolower(tools::file_ext(filename))
@@ -53,3 +54,4 @@ detect.driver = function(filename) {
 		}
 	}
 }
+#nocov end

@@ -1,0 +1,73 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: sf
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> 
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x = st_stars(tif))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6      NA    NA                           NA    NA   NULL
+> (r = as(x, "Raster"))
+class       : RasterBrick 
+dimensions  : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
+resolution  : 28.5, 28.5  (x, y)
+extent      : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+data source : in memory
+names       : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
+min values  :      47,      32,      21,       9,       1,       1 
+max values  :     255,     255,     255,     255,     255,     255 
+time        : NA, NA, NA, NA, NA, NA 
+
+> (y = st_as_stars(r))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+                 
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south...    NA   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south...    NA   NULL
+band    1   6      NA    NA                           NA    NA   NULL
+> 
+> library(abind)
+> x = adrop(x[,,,1]) # 1 band
+> r = as(x, "Raster")
+> y = st_as_stars(r)
+> 
+> proc.time()
+   user  system elapsed 
+  1.385   0.247   1.311 

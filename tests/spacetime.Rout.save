@@ -1,0 +1,315 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: sf
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> library(spacetime)
+> set.seed(1331)
+> example(STFDF)
+
+STFDF> sp = cbind(x = c(0,0,1), y = c(0,1,1))
+
+STFDF> row.names(sp) = paste("point", 1:nrow(sp), sep="")
+
+STFDF> library(sp)
+
+STFDF> sp = SpatialPoints(sp)
+
+STFDF> time = as.POSIXct("2010-08-05")+3600*(10:13)
+
+STFDF> m = c(10,20,30) # means for each of the 3 point locations
+
+STFDF> mydata = rnorm(length(sp)*length(time),mean=rep(m, 4))
+
+STFDF> IDs = paste("ID",1:length(mydata))
+
+STFDF> mydata = data.frame(values = signif(mydata,3), ID=IDs)
+
+STFDF> stfdf = STFDF(sp, time, mydata)
+
+STFDF> stfdf
+An object of class "STFDF"
+Slot "data":
+   values    ID
+1    9.38  ID 1
+2   21.10  ID 2
+3   29.80  ID 3
+4   11.50  ID 4
+5   19.80  ID 5
+6   31.20  ID 6
+7   10.40  ID 7
+8   20.50  ID 8
+9   29.80  ID 9
+10  10.30 ID 10
+11  21.40 ID 11
+12  29.40 ID 12
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+point3 1 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+2010-08-05 12:00:00         3
+2010-08-05 13:00:00         4
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+
+
+STFDF> stfdf[1:2,]
+An object of class "STFDF"
+Slot "data":
+  values    ID
+1   9.38  ID 1
+2  21.10  ID 2
+3  11.50  ID 4
+4  19.80  ID 5
+5  10.40  ID 7
+6  20.50  ID 8
+7  10.30 ID 10
+8  21.40 ID 11
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+2010-08-05 12:00:00         3
+2010-08-05 13:00:00         4
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+
+
+STFDF> stfdf[,1:2]
+An object of class "STFDF"
+Slot "data":
+  values   ID
+1   9.38 ID 1
+2  21.10 ID 2
+3  29.80 ID 3
+4  11.50 ID 4
+5  19.80 ID 5
+6  31.20 ID 6
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+point3 1 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+
+
+STFDF> stfdf[,,2]
+An object of class "STFDF"
+Slot "data":
+      ID
+1   ID 1
+2   ID 2
+3   ID 3
+4   ID 4
+5   ID 5
+6   ID 6
+7   ID 7
+8   ID 8
+9   ID 9
+10 ID 10
+11 ID 11
+12 ID 12
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+point3 1 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+2010-08-05 12:00:00         3
+2010-08-05 13:00:00         4
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+
+
+STFDF> stfdf[,,"values"]
+An object of class "STFDF"
+Slot "data":
+   values
+1    9.38
+2   21.10
+3   29.80
+4   11.50
+5   19.80
+6   31.20
+7   10.40
+8   20.50
+9   29.80
+10  10.30
+11  21.40
+12  29.40
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+point3 1 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+2010-08-05 12:00:00         3
+2010-08-05 13:00:00         4
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+
+
+STFDF> stfdf[1,]
+                    values  ID      timeIndex
+2010-08-05 10:00:00 " 9.38" "ID 1"  "1"      
+2010-08-05 11:00:00 "11.50" "ID 4"  "2"      
+2010-08-05 12:00:00 "10.40" "ID 7"  "3"      
+2010-08-05 13:00:00 "10.30" "ID 10" "4"      
+
+STFDF> stfdf[,2]
+  coordinates values   ID
+1      (0, 0)   11.5 ID 4
+2      (0, 1)   19.8 ID 5
+3      (1, 1)   31.2 ID 6
+
+STFDF> as(stfdf[,,1], "xts")
+                    point1 point2 point3
+2010-08-05 10:00:00   9.38   21.1   29.8
+2010-08-05 11:00:00  11.50   19.8   31.2
+2010-08-05 12:00:00  10.40   20.5   29.8
+2010-08-05 13:00:00  10.30   21.4   29.4
+
+STFDF> as(stfdf[,,2], "xts")
+                    point1  point2  point3 
+2010-08-05 10:00:00 "ID 1"  "ID 2"  "ID 3" 
+2010-08-05 11:00:00 "ID 4"  "ID 5"  "ID 6" 
+2010-08-05 12:00:00 "ID 7"  "ID 8"  "ID 9" 
+2010-08-05 13:00:00 "ID 10" "ID 11" "ID 12"
+
+STFDF> # examples for [[, [[<-, $ and $<- 
+STFDF> stfdf[[1]]
+ [1]  9.38 21.10 29.80 11.50 19.80 31.20 10.40 20.50 29.80 10.30 21.40 29.40
+
+STFDF> stfdf[["values"]]
+ [1]  9.38 21.10 29.80 11.50 19.80 31.20 10.40 20.50 29.80 10.30 21.40 29.40
+
+STFDF> stfdf[["newVal"]] <- rnorm(12)
+
+STFDF> stfdf$ID
+ [1] ID 1  ID 2  ID 3  ID 4  ID 5  ID 6  ID 7  ID 8  ID 9  ID 10 ID 11 ID 12
+Levels: ID 1 ID 10 ID 11 ID 12 ID 2 ID 3 ID 4 ID 5 ID 6 ID 7 ID 8 ID 9
+
+STFDF> stfdf$ID = paste("OldIDs", 1:12, sep="")
+
+STFDF> stfdf$NewID = paste("NewIDs", 12:1, sep="")
+
+STFDF> stfdf
+An object of class "STFDF"
+Slot "data":
+   values       ID     newVal    NewID
+1    9.38  OldIDs1 -0.3125824 NewIDs12
+2   21.10  OldIDs2 -1.0536246 NewIDs11
+3   29.80  OldIDs3 -0.7188880 NewIDs10
+4   11.50  OldIDs4 -1.0525404  NewIDs9
+5   19.80  OldIDs5 -0.8441413  NewIDs8
+6   31.20  OldIDs6  1.1420848  NewIDs7
+7   10.40  OldIDs7  1.9479070  NewIDs6
+8   20.50  OldIDs8 -0.4512836  NewIDs5
+9   29.80  OldIDs9  0.6695716  NewIDs4
+10  10.30 OldIDs10  0.1269003  NewIDs3
+11  21.40 OldIDs11 -0.7273297  NewIDs2
+12  29.40 OldIDs12 -0.8151803  NewIDs1
+
+Slot "sp":
+SpatialPoints:
+       x y
+point1 0 0
+point2 0 1
+point3 1 1
+Coordinate Reference System (CRS) arguments: NA 
+
+Slot "time":
+                    timeIndex
+2010-08-05 10:00:00         1
+2010-08-05 11:00:00         2
+2010-08-05 12:00:00         3
+2010-08-05 13:00:00         4
+
+Slot "endTime":
+[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+
+
+STFDF> x = stfdf[stfdf[1:2,],] 
+
+STFDF> all.equal(x, stfdf[1:2,]) 
+[1] TRUE
+
+STFDF> all.equal(stfdf, stfdf[stfdf,]) # converts character to factor...
+[1] "Attributes: < Component \"data\": Component \"ID\": Modes: character, numeric >"                         
+[2] "Attributes: < Component \"data\": Component \"ID\": Attributes: < target is NULL, current is list > >"   
+[3] "Attributes: < Component \"data\": Component \"ID\": target is character, current is factor >"            
+[4] "Attributes: < Component \"data\": Component \"NewID\": Modes: character, numeric >"                      
+[5] "Attributes: < Component \"data\": Component \"NewID\": Attributes: < target is NULL, current is list > >"
+[6] "Attributes: < Component \"data\": Component \"NewID\": target is character, current is factor >"         
+> 
+> x = st_as_stars(stfdf)
+> xx = as(x, "STFDF")
+> 
+> proc.time()
+   user  system elapsed 
+  1.120   0.235   1.032 

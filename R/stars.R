@@ -23,9 +23,10 @@ split_strings = function(md, split = "=") {
 st_stars = function(.x, ...) UseMethod("st_stars")
 
 #' @name st_stars
+#' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @export
 st_stars.character = function(.x, ..., options = character(0), driver = character(0), 
-		sub = TRUE, quiet = FALSE) {
+		sub = TRUE, quiet = FALSE, NA_value = NA_real_) {
 
 	x = .x
 	if (length(x) > 1) { # recurse:
@@ -33,7 +34,7 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
 	}
 
-	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE)
+	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value)
 
 	if (properties$bands[2] == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list
@@ -70,7 +71,7 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 				structure(data, dim = c(dim(data)[1:2], newdims))
 			else
 				structure(data, dim = dim(data))
-		structure(list(data), names = x,
+		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
 			dimensions = create_dimensions(dim(data), properties),
 			class = "stars")
 	}

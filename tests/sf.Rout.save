@@ -25,13 +25,13 @@ Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > (x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 12.00                                     
- 1st Qu.: 58.00                                     
- Median : 71.00                                     
- Mean   : 69.24                                     
- 3rd Qu.: 83.00                                     
- Max.   :137.00                                     
+  L7_ETMs.tif    
+ Min.   : 12.00  
+ 1st Qu.: 58.00  
+ Median : 71.00  
+ Mean   : 69.24  
+ 3rd Qu.: 83.00  
+ Max.   :137.00  
 dimension(s):
      from to  offset   delta                       refsys point values
 x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
@@ -157,4 +157,4 @@ proj4string:    NA
 > 
 > proc.time()
    user  system elapsed 
-  1.343   0.219   1.242 
+  1.202   0.230   1.114 

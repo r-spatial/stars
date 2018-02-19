@@ -22,13 +22,13 @@ Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > (x = st_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   :  1.00                                     
- 1st Qu.: 54.00                                     
- Median : 69.00                                     
- Mean   : 68.91                                     
- 3rd Qu.: 86.00                                     
- Max.   :255.00                                     
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -59,13 +59,13 @@ $gt_inv
 > x + x
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   :  2.0                                      
- 1st Qu.:108.0                                      
- Median :138.0                                      
- Mean   :137.8                                      
- 3rd Qu.:172.0                                      
- Max.   :510.0                                      
+  L7_ETMs.tif   
+ Min.   :  2.0  
+ 1st Qu.:108.0  
+ Median :138.0  
+ Mean   :137.8  
+ 3rd Qu.:172.0  
+ Max.   :510.0  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -74,13 +74,13 @@ band    1   6      NA    NA                           NA    NA   NULL
 > x * x
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   :    1                                      
- 1st Qu.: 2916                                      
- Median : 4761                                      
- Mean   : 5512                                      
- 3rd Qu.: 7396                                      
- Max.   :65025                                      
+  L7_ETMs.tif   
+ Min.   :    1  
+ 1st Qu.: 2916  
+ Median : 4761  
+ Mean   : 5512  
+ 3rd Qu.: 7396  
+ Max.   :65025  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -89,13 +89,13 @@ band    1   6      NA    NA                           NA    NA   NULL
 > x[,,,1:3]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 21.00                                     
- 1st Qu.: 58.00                                     
- Median : 70.00                                     
- Mean   : 70.36                                     
- 3rd Qu.: 83.00                                     
- Max.   :255.00                                     
+  L7_ETMs.tif    
+ Min.   : 21.00  
+ 1st Qu.: 58.00  
+ Median : 70.00  
+ Mean   : 70.36  
+ 3rd Qu.: 83.00  
+ Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -104,13 +104,13 @@ band    1   3      NA    NA                           NA    NA   NULL
 > x[,1:100,100:200,]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 13.00                                     
- 1st Qu.: 54.00                                     
- Median : 65.00                                     
- Mean   : 67.22                                     
- 3rd Qu.: 77.00                                     
- Max.   :252.00                                     
+  L7_ETMs.tif    
+ Min.   : 13.00  
+ 1st Qu.: 54.00  
+ Median : 65.00  
+ Mean   : 67.22  
+ 3rd Qu.: 77.00  
+ Max.   :252.00  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 100  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -119,13 +119,13 @@ band    1   6      NA    NA                           NA    NA   NULL
 > sqrt(x)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 1.000                                     
- 1st Qu.: 7.348                                     
- Median : 8.307                                     
- Mean   : 8.094                                     
- 3rd Qu.: 9.274                                     
- Max.   :15.969                                     
+  L7_ETMs.tif    
+ Min.   : 1.000  
+ 1st Qu.: 7.348  
+ Median : 8.307  
+ Mean   : 8.094  
+ 3rd Qu.: 9.274  
+ Max.   :15.969  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -134,26 +134,26 @@ band    1   6      NA    NA                           NA    NA   NULL
 > st_apply(x, 3, min)
 stars object with 1 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 1.00                                      
- 1st Qu.: 3.00                                      
- Median :15.00                                      
- Mean   :18.50                                      
- 3rd Qu.:29.25                                      
- Max.   :47.00                                      
+  L7_ETMs.tif   
+ Min.   : 1.00  
+ 1st Qu.: 3.00  
+ Median :15.00  
+ Mean   :18.50  
+ 3rd Qu.:29.25  
+ Max.   :47.00  
 dimension(s):
      from to offset delta refsys point values
 band    1  6     NA    NA     NA    NA   NULL
 > st_apply(x, 1:2, max)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   : 55.00                                     
- 1st Qu.: 85.00                                     
- Median : 96.00                                     
- Mean   : 99.36                                     
- 3rd Qu.:113.00                                     
- Max.   :255.00                                     
+  L7_ETMs.tif    
+ Min.   : 55.00  
+ 1st Qu.: 85.00  
+ Median : 96.00  
+ Mean   : 99.36  
+ 3rd Qu.:113.00  
+ Max.   :255.00  
 dimension(s):
   from  to  offset delta                       refsys point values
 x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -161,13 +161,13 @@ y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
 > st_apply(x, 1:2, range)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
- Min.   :  1.00                                     
- 1st Qu.: 50.00                                     
- Median : 71.00                                     
- Mean   : 72.44                                     
- 3rd Qu.: 96.00                                     
- Max.   :255.00                                     
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 50.00  
+ Median : 71.00  
+ Mean   : 72.44  
+ 3rd Qu.: 96.00  
+ Max.   :255.00  
 dimension(s):
       from  to  offset delta                       refsys point values
 x        1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -180,4 +180,4 @@ range    1   2      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.918   0.300   2.901 
+  2.943   0.248   2.870 

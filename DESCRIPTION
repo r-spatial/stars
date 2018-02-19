@@ -27,6 +27,9 @@ Suggests:
 	plm,
 	rmarkdown,
 	sp,
+	zoo,
+	xts,
+	spacetime,
 	raster,
     testthat,
 	viridis
@@ -39,10 +42,11 @@ Collate:
 	sf.R
 	dimensions.R
 	stars.R
-	raster.R
 	plot.R
 	tidyverse.R
 	transform.R
 	ops.R
 	write.R
+	raster.R
+	spacetime.R
 RoxygenNote: 6.0.1
