@@ -11,6 +11,26 @@ st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 #' @name st_dimensions
+st_dimensions.array = function(.x, ...) {
+	dn = dimnames(.x)
+	if (length(list(...)) > 0)
+		stop("only one argument expected")
+	ret = if (is.null(dn))
+		st_dimensions(list(.x)) # default
+	else # try to get dimension names and default values from dimnames(.x):
+		structure(lapply(dn, function(y) create_dimension(values = y)), class = "dimensions")
+
+	if (is.null(names(ret)) || any(names(ret) == ""))
+		names(ret) = make.names(seq_along(ret))
+
+	if (all(c("x", "y") %in% names(ret)) && all(is.na(ret[["x"]]$geotransform)))
+		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+
+	ret
+}
+
+#' @export
+#' @name st_dimensions
 st_dimensions.default = function(.x, ...) {
 	d = list(...)
 	if (! missing(.x))
@@ -23,6 +43,23 @@ st_dimensions.default = function(.x, ...) {
 		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
 
 	ret
+}
+
+#' @name st_dimensions
+#' @param which integer which dimension to change
+#' @param values values for this dimension (e.g. \code{sfc} list-column)
+#' @export
+st_set_dimensions = function(.x, which, values) {
+	d = st_dimensions(.x)
+	if (dim(.x)[which] != length(values))
+		stop("length of value does not match dimension")
+	d[[which]]$values = values
+	if (inherits(values, "sfc")) {
+		names(d)[which] = "sfc"
+		d[[which]]$refsys = st_crs(values)$proj4string
+	}
+	d[[which]]$offset = d[[which]]$delta = NA_real_
+	st_as_stars(unclass(.x), dimensions = d)
 }
 
 #' @export

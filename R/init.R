@@ -4,7 +4,7 @@
 #' @importFrom stats na.omit
 #' @importFrom tools file_ext
 #' @importFrom methods as slotNames new slot
-#' @importFrom abind abind adrop
+#' @importFrom abind abind adrop asub
 #' @importFrom classInt classIntervals
 #' @importFrom Rcpp evalCpp
 #' @importFrom magrittr %>%

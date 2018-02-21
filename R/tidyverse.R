@@ -50,8 +50,7 @@ select.stars <- function(.data, ...) {
 #' @param var see \link[dplyr]{pull}
 #' @name dplyr
 #' @export
-pull.stars = function (.data, var = -1) 
-{
+pull.stars = function (.data, var = -1) {
 	var = rlang::enquo(var)
 	dplyr::pull(to_df(.data), !!var)
 }

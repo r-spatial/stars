@@ -107,9 +107,12 @@ st_as_stars.default = function(.x = NULL, ...) {
 		return(stars_empty())
 
 	isdim = sapply(args, inherits, what = "dimensions")
-	dimensions = if (!any(isdim))
-			do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
-		else
+	dimensions = if (! any(isdim)) {
+			if (is.array(args[[1]]) && !is.null(dimnames(args[[1]])))
+				st_dimensions(args[[1]])
+			else
+				do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
+		} else
 			args[[ which(isdim)[1] ]]
 	if (any(isdim))
 		args = args[-which(isdim)]
@@ -387,4 +390,19 @@ st_crop = function(x, obj, crop = TRUE) {
 	raster = rep(NA_real_, prod(d[c("x", "y")]))
 	raster[inside] = 1
 	x * array(raster, d) # replicates over secondary dims
+}
+
+#' @export
+split.stars = function(x, f, drop = TRUE, ...) {
+	d = st_dimensions(x)
+	if (is.character(f))
+		f = which(names(d) == f)
+	ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
+	spl = st_as_stars(ret, dimensions = d[-f])
+	if (is.null(names(spl)))
+		names(spl) = if (!is.null(d[[f]]$values))
+				d[[f]]$values
+			else
+				make.names(seq_along(spl))
+	spl
 }

@@ -5,19 +5,31 @@
 \alias{st_dimensions}
 \alias{st_dimensions.stars}
 \alias{st_dimensions}
+\alias{st_dimensions.array}
+\alias{st_dimensions}
 \alias{st_dimensions.default}
+\alias{st_dimensions}
+\alias{st_set_dimensions}
 \title{get dimensions from stars object}
 \usage{
 st_dimensions(.x, ...)
 
 \method{st_dimensions}{stars}(.x, ...)
 
+\method{st_dimensions}{array}(.x, ...)
+
 \method{st_dimensions}{default}(.x, ...)
+
+st_set_dimensions(.x, which, values)
 }
 \arguments{
 \item{.x}{object to retrieve dimensions information from}
 
 \item{...}{further arguments}
+
+\item{which}{integer which dimension to change}
+
+\item{values}{values for this dimension (e.g. \code{sfc} list-column)}
 }
 \value{
 the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
