@@ -1,11 +1,11 @@
 #' @export
-st_as_stars.STFDF = function(x, ...) {
+st_as_stars.STFDF = function(.x, ...) {
 	d = st_dimensions(
-			sfc = st_as_sfc(x@sp), # FIXME: doesn't do pixels well!?
-			time = zoo::index(x@time)
+			sfc = st_as_sfc(.x@sp), # FIXME: doesn't do pixels well!?
+			time = zoo::index(.x@time)
 		)
-	vals = lapply(x@data, function(y) { dim(y) = dim(d); y })
-	st_stars(vals, dimensions = d)
+	vals = lapply(.x@data, function(y) { dim(y) = dim(d); y })
+	st_as_stars(vals, dimensions = d)
 }
 
 st_as_STFDF = function(x) {

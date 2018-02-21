@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> x = st_stars(tif)
+> x = read_stars(tif)
 > xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 
 + 9111328.49619133)), .Names = c("x", "y"))
 > pts = st_as_sf(data.frame(do.call(cbind, xy)), coords = c("x", "y"), crs = st_crs(x))
@@ -65,4 +65,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  3.192   0.285   3.156 
+  3.231   0.279   3.191 

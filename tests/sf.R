@@ -1,9 +1,9 @@
 library(stars)
 library(sf)
 jp2 = system.file("jp2/B01.jp2", package = "stars")
-#(x = st_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
+#(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-(x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
 # names(x) = "L7_ETM"
 
 # library(abind)
@@ -30,9 +30,12 @@ x = st_sfc(st_point(0:1), st_point(1:2), st_point(2:3))
 m = matrix(1:9,3)
 colnames(m) = c("a", "b", "c")
 foo = st_sf(m, geom = x)
-st_stars(foo)
-st_stars(foo, times = NULL)
-st = st_stars(foo, times = as.Date("2017-11-27") + 0:2)
-st
-st_as_sf(st)
-st_as_sf(st_stars(foo))
+x = st_as_stars(foo)
+c(x)
+c(x,x)
+c(x, dim_name = "new")
+y = c(x, dim_name = "time", values = as.Date("2017-11-27") + 0:2)
+st_as_sf(y)
+st_as_sf(st_as_stars(foo))
+
+c(x,x,along=1) # NEEDS FIXING!

@@ -21,7 +21,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		aux = setdiff(names(dims), c("x", "y"))
 		newdims = c(dims[c("x", "y")], prod(dims[aux]))
 		dim(x) = newdims
-		st_stars(list(x[,,i]), dimensions = d[c("x", "y")])
+		st_as_stars(list(x[,,i]), dimensions = d[c("x", "y")])
 	}
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
@@ -103,7 +103,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
-#' x = st_stars(tif)
+#' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = max(x[[attr]]),

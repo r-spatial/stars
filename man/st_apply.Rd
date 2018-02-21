@@ -23,7 +23,7 @@ st_apply apply a function to array dimensions: aggregate over space, time, or so
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
+x = read_stars(tif)
 st_apply(x, 1:2, mean) # mean band value for each pixel
 st_apply(x, 3, mean)   # mean of all pixels for each band
 st_apply(x, 1:2, range) # min and max band value for each pixel

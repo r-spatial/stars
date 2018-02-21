@@ -26,7 +26,7 @@ get_dims = function(d_cube, d_stars) {
 filter.stars <- function(.data, ...) {
 	cb = dplyr::as.tbl_cube(.data)
 	cb = dplyr::filter(cb, ...)
-	st_stars(cb$mets, dimensions = get_dims(cb$dims, st_dimensions(.data)))
+	st_as_stars(cb$mets, dimensions = get_dims(cb$dims, st_dimensions(.data)))
 }
 
 #' @name dplyr
@@ -35,7 +35,7 @@ mutate.stars <- function(.data, ...) {
 	d = st_dimensions(.data)
 	dim_orig = dim(.data)
 	ret = dplyr::mutate(to_df(.data), ...)
-	st_stars(set_dim(ret, dim_orig), dimensions = d)
+	st_as_stars(set_dim(ret, dim_orig), dimensions = d)
 }
 
 #' @name dplyr
@@ -44,7 +44,7 @@ select.stars <- function(.data, ...) {
 	d = st_dimensions(.data)
 	dim_orig = dim(.data)
     ret <- dplyr::select(to_df(.data), ...)
-	st_stars(set_dim(ret, dim_orig), dimensions = d)
+	st_as_stars(set_dim(ret, dim_orig), dimensions = d)
 }
 
 #' @param var see \link[dplyr]{pull}

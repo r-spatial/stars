@@ -5,32 +5,28 @@ split_strings = function(md, split = "=") {
 	structure(lst, class = "gdal_metadata")
 }
 
-## read raster/array dataset from file or connection
-
+#' read raster/array dataset from file or connection
+#'
 #' read raster/array dataset from file or connection
 #' @param .x if character, name of file(s) to read; if list: list with arrays
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
+#' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param ... arrays to be compiled into a stars object
 #' @return object of class \code{stars}
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
-#' x = st_stars(tif)
-#' # x1 = st_stars(nv, options = "OVERVIEW_LEVEL=1")
-st_stars = function(.x, ...) UseMethod("st_stars")
-
-#' @name st_stars
-#' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
-#' @export
-st_stars.character = function(.x, ..., options = character(0), driver = character(0), 
+#' x = read_stars(tif)
+#' # x1 = read_stars(nv, options = "OVERVIEW_LEVEL=1")
+read_stars = function(.x, ..., options = character(0), driver = character(0), 
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_) {
 
 	x = .x
 	if (length(x) > 1) { # recurse:
-		ret = lapply(x, st_stars, options = options, driver = driver, sub = sub, quiet = quiet)
+		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet)
 		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
 	}
 
@@ -47,12 +43,12 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 		sub_datasets = sub_datasets[sub]
 		nms = names(sub_datasets)
 
-		read_stars = function(x, options, driver, keep_meta, quiet) {
+		.read_stars = function(x, options, driver, keep_meta, quiet) {
 			if (! quiet)
 				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
-			st_stars(x, options = options, driver = driver)
+			read_stars(x, options = options, driver = driver)
 		}
-		ret = lapply(sub_datasets, read_stars, options = options, 
+		ret = lapply(sub_datasets, .read_stars, options = options, 
 			driver = properties$driver[1], quiet = quiet)
 		if (! quiet)
 			cat("\n")
@@ -77,10 +73,18 @@ st_stars.character = function(.x, ..., options = character(0), driver = characte
 	}
 }
 
-#' @name st_stars
+#' convert objects into a stars object
+#' 
+#' convert objects into a stars object
+#' @export
+#' @param .x object to convert
+#' @param ... ignored
+st_as_stars = function(.x, ...) UseMethod("st_as_stars")
+
+#' @name st_as_stars
 #' @param dimensions object of class dimensions
 #' @export
-st_stars.list = function(.x, ..., dimensions = NULL) {
+st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	if (length(.x) > 1) {
 		for (i in seq_along(.x)[-1])
 			if (!identical(dim(.x[[1]]), dim(.x[[i]])))
@@ -91,16 +95,16 @@ st_stars.list = function(.x, ..., dimensions = NULL) {
 	structure(.x, dimensions = dimensions, class = "stars")
 }
 
-#' @name st_stars
+#' @name st_as_stars
 #' @export
-st_stars.default = function(.x = NULL, ...) {
+st_as_stars.default = function(.x = NULL, ...) {
 	args = if (is.null(.x))
 			list(...)
 		else
 			append(list(.x), list(...))
 
 	if (length(args) == 0)
-		return(st_stars_empty())
+		return(stars_empty())
 
 	isdim = sapply(args, inherits, what = "dimensions")
 	dimensions = if (!any(isdim))
@@ -111,16 +115,16 @@ st_stars.default = function(.x = NULL, ...) {
 		args = args[-which(isdim)]
 	if (is.null(names(args)))
 		names(args) = paste0("A", seq_along(args))
-	st_stars(args, dimensions = dimensions)
+	st_as_stars.list(args, dimensions = dimensions)
 }
 
-st_stars_empty = function() {
+stars_empty = function() {
 	p = st_sfc(st_point(c(-180,-90)), st_point(c(180,90)), crs = st_crs(4326))
-	st_stars(st_bbox(p))
+	st_as_stars(st_bbox(p))
 }
 
 #' @export
-st_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	if (missing(crs))
 		crs = st_crs(.x)
 	dx = .x["xmax"] - .x["xmin"]
@@ -128,7 +132,7 @@ st_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	gt = c(.x["xmin"], dx/nx, 0.0, .x["ymax"], 0.0, -dy/ny)
 	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta = dx/nx, refsys = crs, geotransform = gt)
 	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs, geotransform = gt)
-	st_stars(values = array(NA_real_, c(x = nx, y = ny)), 
+	st_as_stars(values = array(NA_real_, c(x = nx, y = ny)), 
 		dims = structure(list(x = x, y = y), class = "dimensions"))
 }
 
@@ -178,7 +182,7 @@ st_coordinates.stars = function(x, ...) {
 }
 
 st_coordinates.dimensions = function(x, ...) {
-	st_coordinates(st_stars(list(), dimensions = x))
+	st_coordinates(st_as_stars(list(), dimensions = x))
 }
 
 #' @export
@@ -243,30 +247,32 @@ propagate_units = function(new, old) {
 }
 
 #' @export
-c.stars = function(..., along = NA_integer_) {
+c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])) {
 	dots = list(...)
-	if (is.na(along)) { # merge attributes
+	if (is.na(along) && length(dots) > 1) { # merge attributes of several objects, retaining dim
 		check_equal_dimensions(dots)
-		st_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
+		st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
 	} else {
-		if (length(dots) == 1 && is.na(along)) # attributes to array dimension:
-			along = length(dim(dots[[1]]) + 1)
-		ret = if (length(dots) == 1 && along == length(dim(dots[[1]])) + 1) { # collapse:
-			dn = names(dots[[1]])
-			do.call(abind, c(dots, along = along))
+		if (length(dots) == 1 && (is.na(along) || along == length(dim(dots[[1]])) + 1)) { 
+			# collapse attributes into new array dimension:
+			along = length(dim(dots[[1]])) + 1
+			new_dim = create_dimension(values = values)
+			dims = structure(c(st_dimensions(dots[[1]]), new_dim = list(new_dim)), class = "dimensions")
+			if (! missing(dim_name))
+				names(dims)[names(dims) == "new_dim"]= dim_name
+			st_as_stars(attr = do.call(abind, c(dots, along = along)), dimensions = dims)
 		} else { # loop over attributes:
-			propagate_units(mapply(abind, ..., along = along, SIMPLIFY = FALSE), dots[[1]])
+			ret = propagate_units(mapply(abind, ..., along = along, SIMPLIFY = FALSE), dots[[1]])
+			dims = combine_dimensions(dots, along)
+			st_as_stars(ret, dimensions = dims)
 		}
-		dims = combine_dimensions(dots, along)
-		structure(ret, dimensions = dims, class = "stars")
 	}
 }
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
-	structure(lapply(x, adrop, drop = drop, ...), dimensions = dims, class = "stars")
-	# TODO: deal with dimensions table
+	st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = dims)
 }
 
 #' @export
@@ -305,7 +311,6 @@ st_crs.stars = function(x, ...) {
 
 #' @export
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
-  #st_stars(unclass(x)[i], dimensions = st_dimensions(x))
   missing.i = missing(i)
   # special case:
   if (! missing.i && inherits(i, c("sf", "sfc", "bbox")))
@@ -336,9 +341,9 @@ st_crs.stars = function(x, ...) {
 	}
   }
   if (drop)
-  	adrop(st_stars(x, dimensions = d))
+  	adrop(st_as_stars(x, dimensions = d))
   else
-  	st_stars(x, dimensions = d)
+  	st_as_stars(x, dimensions = d)
 }
 
 st_downsample = function(x, n) {
@@ -383,11 +388,3 @@ st_crop = function(x, obj, crop = TRUE) {
 	raster[inside] = 1
 	x * array(raster, d) # replicates over secondary dims
 }
-
-#' convert objects into a stars object
-#' 
-#' convert objects into a stars object
-#' @export
-#' @param x object to convert
-#' @param ... ignored
-st_as_stars = function(x, ...) UseMethod("st_as_stars")

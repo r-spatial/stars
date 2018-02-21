@@ -23,7 +23,7 @@ library(stars)
 ### Landsat image: GeoTIFF
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
+x = read_stars(tif)
 str(x)
 x
 ```
@@ -37,11 +37,11 @@ gdaladdo -r average L7_ETMs.tif  2 4 8 16
 which adds course resolution versions by averaging blocks of pixels.
 
 ```{r}
-(x = st_stars(tif, options = c("OVERVIEW_LEVEL=1")))
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=1")))
 image(x)
-(x = st_stars(tif, options = c("OVERVIEW_LEVEL=2")))
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=2")))
 image(x)
-(x = st_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
 image(x)
 ```
 
@@ -78,7 +78,7 @@ The AVHRR Sea surface temperature file was downloaded from ftp://eclipse.ncdc.no
 
 ```{r}
 nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-(x = st_stars(nc))
+(x = read_stars(nc))
 image(x)
 library(units)
 sapply(x[1:3], function(u) as.character(units(u)))
@@ -93,7 +93,7 @@ the following:
 
 ```{r}
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
-x = st_stars(geomatrix)
+x = read_stars(geomatrix)
 st_dimensions(x)
 library(sf)
 s = st_as_sf(x, as_points = FALSE)

@@ -51,7 +51,7 @@ Note that _everything_  in the `stars` api may still be subject to change in the
 We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x <- tif %>% st_stars 
+x <- tif %>% read_stars 
 par(mar = rep(0,4))
 image(x, col = grey((4:10)/10))
 ```
@@ -79,7 +79,7 @@ Dimension `band` is a simple sequence from 1 to 6. Although bands refer to color
 
 For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cells are ordered from top to bottom, opposite the direction of the $y$ axis.
 
-`st_stars` reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
+`read_stars` reads all bands from a raster dataset, or a set of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.
 
 The data structure `stars` is an extension of the `tbl_cube` found in `dplyr`; we can convert to that by
 ```{r}
@@ -94,13 +94,13 @@ The GDAL model can deal also with spatial rasters that are regular but not align
 ```{r}
 par(cex.axis = .7) # font size axis tic labels 
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
-geomatrix %>% st_stars %>% st_as_sf(as_points = FALSE) %>%
+geomatrix %>% read_stars %>% st_as_sf(as_points = FALSE) %>%
   plot(axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
 Looking at the dimensions
 ```{r}
-geomatrix %>% st_stars %>% st_dimensions
+geomatrix %>% read_stars %>% st_dimensions
 ```
 
 further reveals that we now have a `geotransform` field shown in the dimension table; this is only displayed when the affine parameters are non-zero. The geotransform field has six parameters, $gt_1,...,gt_6$ 
@@ -117,7 +117,7 @@ When $gt_3$ and $gt_5$ are zero, the $x$ and $y$ are parallel to $i$ and $j$, wh
 
 Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
 ```{r eval=ev}
-prec = st_stars("data/full_data_daily_2013.nc")
+prec = read_stars("data/full_data_daily_2013.nc")
 ```
 (Note that this 380 Mb file is not included; data are described [here](ftp://ftp.dwd.de/pub/data/gpcc/html/fulldata-daily_v1_doi_download.html), and were downloaded from [here](ftp://ftp.dwd.de/pub/data/gpcc/full_data_daily_V1/full_data_daily_2013.nc.gz)).
 
@@ -136,7 +136,7 @@ For this dataset we can see that
 
 Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 
-We read the data by giving `st_stars` a vector with character names:
+We read the data by giving `read_stars` a vector with character names:
 ```{r eval=ev}
 x = c(
 "avhrr/avhrr-only-v2.19810901.nc",
@@ -150,7 +150,7 @@ x = c(
 "avhrr/avhrr-only-v2.19810909.nc"
 )
 
-(y = st_stars(x, quiet = TRUE))
+(y = read_stars(x, quiet = TRUE))
 ```
 
 Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
@@ -195,7 +195,7 @@ hour = set_units(0:23, h) # hour of day
 dims = st_dimensions(origin = from, destination = to, mode = mode, day = day, hour = hour)
 (n = dim(dims))
 traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
-(st = st_stars(list(traffic = traffic),  dimensions = dims))
+(st = st_as_stars(list(traffic = traffic),  dimensions = dims))
 ```
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:

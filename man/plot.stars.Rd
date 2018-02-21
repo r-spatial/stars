@@ -64,7 +64,7 @@ plot stars object, with subplots for each level of first non-spatial dimension
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
+x = read_stars(tif)
 image(x, col = grey((3:9)/10))
 image(x, rgb = c(1,3,5)) # rgb composite
 }

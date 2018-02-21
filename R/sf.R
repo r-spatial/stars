@@ -8,10 +8,10 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point,
 }
 
 #' @export
-st_as_stars.sfc = function(x, ..., FUN = length, as_points = TRUE) {
-	st = st_stars(st_bbox(x), ...)
+st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
+	st = st_as_stars(st_bbox(.x), ...)
 	sfc = st_as_sfc(st, as_points = as_points)
-	i = st_intersects(sfc, x)
+	i = st_intersects(sfc, .x)
 	vals = sapply(i, FUN)
 	st[[1]] = array(vals, dim(st[[1]]))
 	st
@@ -93,22 +93,15 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = 
 	st_sf(df, geometry = sfc)
 }
 
-#' @name st_stars
-#' @param times time instances
+#' @name st_as_stars
 #' @export
-st_stars.sf = function(.x, ..., times = colnames(data[[1]])) {
+st_as_stars.sf = function(.x, ...) {
 	geom = st_geometry(.x)
-	dots = list(...)
-	data = if (length(dots)) {
-			if (length(dots) == 1 && is.list(dots[[1]]))
-				dots[[1]]
-			else
-				dots
-		} else
-			structure(list(as.matrix(st_set_geometry(.x, NULL))), names = deparse(substitute(.x)))
-	dimensions = list(
-		sfc = create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom),
-		time = create_dimension(from = 1, to = ncol(data[[1]]), values = times))
-	class(dimensions) = "dimensions"
-	st_stars(data, dimensions = dimensions)
+	if (length(list(...)))
+		stop("secondary arguments ignored")
+	dimensions = structure(list(sfc = 
+			create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom)), 
+		class = "dimensions")
+	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
+	st_as_stars(lst, dimensions = dimensions)
 }

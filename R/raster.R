@@ -1,27 +1,27 @@
 
 #' @name st_as_stars
 #' @export
-st_as_stars.Raster = function(x, ...) {
+st_as_stars.Raster = function(.x, ...) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first")
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first")
 	#0 360 -90  90
-	e = as.vector(raster::extent(x)) # xmin xmax ymin ymax
-	v = raster::values(x)
-	dim(v) = dim(x)[c(2,1,3)]
+	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
+	v = raster::values(.x)
+	dim(v) = dim(.x)[c(2,1,3)]
 	gt = c(e[1], (e[2]-e[1])/dim(v)[1], 0, e[4], 0, (e[3]-e[4])/dim(v)[2])
 	dimensions = list()
 	dimensions$x = create_dimension(from = 1, to = dim(v)[1], offset = e[1], 
-		delta = (e[2]-e[1])/dim(v)[1], geotransform = gt, refsys = sp::proj4string(x))
+		delta = (e[2]-e[1])/dim(v)[1], geotransform = gt, refsys = sp::proj4string(.x))
 	dimensions$y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
-		delta = (e[3]-e[4])/dim(v)[2], geotransform = gt, refsys = sp::proj4string(x))
-	z = raster::getZ(x)
+		delta = (e[3]-e[4])/dim(v)[2], geotransform = gt, refsys = sp::proj4string(.x))
+	z = raster::getZ(.x)
 	dimensions$band = if (is.null(z))
-			create_dimension(values = names(x))
+			create_dimension(values = names(.x))
 		else
 			create_dimension(values = z)
-	st_stars(list(v), dimensions = structure(dimensions, class = "dimensions"))
+	st_as_stars(list(v), dimensions = structure(dimensions, class = "dimensions"))
 }
 
 st_as_raster = function(x, ...) {

@@ -16,7 +16,7 @@ Mathematical operations for stars objects
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
+x = read_stars(tif)
 a = sqrt(x)
 b = log(x, base = 10)
 }

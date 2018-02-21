@@ -19,7 +19,7 @@ Ops functions for stars objects, including comparison, product and divide, add, 
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = st_stars(tif)
+x = read_stars(tif)
 x * x
 x / x
 x + x

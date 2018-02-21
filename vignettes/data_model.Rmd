@@ -28,7 +28,7 @@ With a very simple file created from a $4 \times 5$ matrix
 suppressPackageStartupMessages(library(stars))
 m = matrix(1:20, nrow = 5, ncol = 4)
 dim(m) = c(x = 5, y = 4) # named dim
-(s = st_stars(m))
+(s = st_as_stars(m))
 ```
 we see that
 
@@ -59,7 +59,7 @@ image(s, text_values = TRUE, axes = TRUE)
 An example is the GeoTIFF carried in the package, which has a negative `delta` for the `y`-coordinate:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-st_dimensions(st_stars(tif))["y"]
+st_dimensions(read_stars(tif))["y"]
 ```
 
 ### Regular grids: rotated
@@ -105,7 +105,7 @@ atan2(c(0.1, 0.2), 1) * 180 / pi
 ```{r}
 x = c(0,0.5,1,2,4,5)
 y = c(0.3,0.5,1,2,2.2)
-r = st_stars(list(m = m), dimensions = st_dimensions(x = x, y = y))
+r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y))
 r
 #plot(st_as_sf(r, as_points = FALSE), axes = TRUE, nbreaks = 20)
 image(x, y, m, col = sf.colors(21))

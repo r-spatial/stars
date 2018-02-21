@@ -19,10 +19,10 @@ Type 'q()' to quit R.
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> x = st_stars(tif)
+> x = read_stars(tif)
 > xx = x[,c(1:347,349),c(1:350,352),] # rectilinear: one-but-last row & col missing
 > image(xx) # chooses useRaster itself
 > 
 > proc.time()
    user  system elapsed 
-  0.725   0.263   0.667 
+  0.744   0.260   0.681 

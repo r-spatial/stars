@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> (x = st_stars(tif))
+> (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
   L7_ETMs.tif    
@@ -36,7 +36,7 @@ y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
 band    1   6      NA    NA                           NA    NA   NULL
 > 
 > #nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-> #(x = st_stars(nc))
+> #(x = read_stars(nc))
 > image(x)
 > gdal_crs(tif)
 $nbands
@@ -175,9 +175,9 @@ y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
 range    1   2      NA    NA                           NA    NA   NULL
 > 
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
-> x = st_stars(geomatrix)
+> x = read_stars(geomatrix)
 > y = st_transform(x, st_crs(4326))
 > 
 > proc.time()
    user  system elapsed 
-  2.943   0.248   2.870 
+  2.941   0.304   2.924 
