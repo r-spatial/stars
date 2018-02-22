@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>get dimensions from stars object — st_dimensions • stars</title>
+<title>write stars object to gdal dataset (typically: to file) — st_write.stars • stars</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -101,50 +101,54 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>get dimensions from stars object</h1>
+    <h1>write stars object to gdal dataset (typically: to file)</h1>
     </div>
 
     
-    <p>get dimensions from stars object</p>
+    <p>write stars object to gdal dataset (typically: to file)</p>
     
 
-    <pre class="usage"><span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for stars</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for array</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='fu'>st_set_dimensions</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='no'>values</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for stars</span>
+<span class='fu'>st_write</span>(<span class='no'>obj</span>, <span class='no'>dsn</span>, <span class='kw'>layer</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>...</span>,
+  <span class='kw'>driver</span> <span class='kw'>=</span> <span class='fu'>detect.driver</span>(<span class='no'>dsn</span>), <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"Float32"</span>,
+  <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.x</th>
-      <td><p>object to retrieve dimensions information from</p></td>
+      <th>obj</th>
+      <td><p>object of class <code>stars</code></p></td>
+    </tr>
+    <tr>
+      <th>dsn</th>
+      <td><p>gdal dataset (file) name</p></td>
+    </tr>
+    <tr>
+      <th>layer</th>
+      <td><p>attribute name; if missing, the first attribute is written</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments</p></td>
+      <td><p>passed on to <a href='http://www.rdocumentation.org/packages/sf/topics/gdal'>gdal_write</a></p></td>
     </tr>
     <tr>
-      <th>which</th>
-      <td><p>integer which dimension to change</p></td>
+      <th>driver</th>
+      <td><p>driver driver name; see <a href='http://www.rdocumentation.org/packages/sf/topics/st_drivers'>st_drivers</a></p></td>
     </tr>
     <tr>
-      <th>values</th>
-      <td><p>values for this dimension (e.g. <code>sfc</code> list-column)</p></td>
+      <th>options</th>
+      <td><p>character vector with options</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>character; output binary type, one of: <code>Byte</code> for eight bit unsigned integer, <code>UInt16</code> for sixteen bit unsigned integer, <code>Int16</code> for sixteen bit signed integer, <code>UInt32</code> for thirty two bit unsigned integer, <code>Int32</code> for thirty two bit signed integer, <code>Float32</code> for thirty two bit floating point, <code>Float64</code> for sixty four bit floating point.</p></td>
+    </tr>
+    <tr>
+      <th>NA_value</th>
+      <td><p>non-NA value that should represent R's <code>NA</code> value in the target raster file; if set to <code>NA</code>, it will be ignored.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>the <code>dimensions</code> attribute of <code>x</code>, of class <code>dimensions</code></p>
     
 
   </div>
@@ -152,9 +156,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>

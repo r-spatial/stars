@@ -61,7 +61,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -87,28 +87,17 @@
     
 <div class="contents">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stars)
-## Loading required package: dplyr
-## 
-## Attaching package: 'dplyr'
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-## Loading required package: magrittr
 ## Loading required package: sf
 ## Loading required package: methods
-## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-## Linking to GDAL 2.2.1</code></pre></div>
+## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3</code></pre></div>
 <div id="landsat-image-geotiff" class="section level3">
 <h3 class="hasAnchor">
 <a href="#landsat-image-geotiff" class="anchor"></a>Landsat image: GeoTIFF</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tif =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-x =<span class="st"> </span><span class="kw">st_stars</span>(tif)
+x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif)
 <span class="kw">str</span>(x)
 ## List of 1
-##  $ /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif: num [1:349, 1:352, 1:6] 69 69 63 60 61 61 62 60 64 63 ...
+##  $ L7_ETMs.tif: num [1:349, 1:352, 1:6] 69 69 63 60 61 61 62 60 64 63 ...
 ##  - attr(*, "dimensions")=List of 3
 ##   ..$ x   :List of 8
 ##   .. ..$ from        : num 1
@@ -146,13 +135,13 @@ x =<span class="st"> </span><span class="kw">st_stars</span>(tif)
 x
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
-##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   :  1.00                                                      
-##  1st Qu.: 54.00                                                      
-##  Median : 69.00                                                      
-##  Mean   : 68.91                                                      
-##  3rd Qu.: 86.00                                                      
-##  Max.   :255.00                                                      
+##   L7_ETMs.tif    
+##  Min.   :  1.00  
+##  1st Qu.: 54.00  
+##  Median : 69.00  
+##  Mean   : 68.91  
+##  3rd Qu.: 86.00  
+##  Max.   :255.00  
 ## dimension(s):
 ##      from  to  offset delta                       refsys point values
 ## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -165,16 +154,16 @@ x
 <p>We can read rasters at a lower resolution when they contain so-called overviews. For this GeoTIFF file, the were created with the <code>gdaladdo</code> utility, in particular</p>
 <pre><code>gdaladdo -r average L7_ETMs.tif  2 4 8 16</code></pre>
 <p>which adds course resolution versions by averaging blocks of pixels.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw">st_stars</span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=1"</span>)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=1"</span>)))
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
-##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   : 11                                                         
-##  1st Qu.: 57                                                         
-##  Median : 70                                                         
-##  Mean   : 69                                                         
-##  3rd Qu.: 84                                                         
-##  Max.   :209                                                         
+##   L7_ETMs.tif 
+##  Min.   : 11  
+##  1st Qu.: 57  
+##  Median : 70  
+##  Mean   : 69  
+##  3rd Qu.: 84  
+##  Max.   :209  
 ## dimension(s):
 ##      from to  offset   delta                       refsys point values
 ## x       1 88  288776 113.028 +proj=utm +zone=25 +south... FALSE   NULL
@@ -182,16 +171,16 @@ x
 ## band    1  6      NA      NA                           NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw">st_stars</span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=2"</span>)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=2"</span>)))
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
-##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   : 11.00                                                      
-##  1st Qu.: 58.00                                                      
-##  Median : 71.00                                                      
-##  Mean   : 69.12                                                      
-##  3rd Qu.: 84.00                                                      
-##  Max.   :152.00                                                      
+##   L7_ETMs.tif    
+##  Min.   : 11.00  
+##  1st Qu.: 58.00  
+##  Median : 71.00  
+##  Mean   : 69.12  
+##  3rd Qu.: 84.00  
+##  Max.   :152.00  
 ## dimension(s):
 ##      from to  offset   delta                       refsys point values
 ## x       1 44  288776 226.057 +proj=utm +zone=25 +south... FALSE   NULL
@@ -199,16 +188,16 @@ x
 ## band    1  6      NA      NA                           NA    NA   NULL
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-3-2.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw">st_stars</span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=3"</span>)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw">c</span>(<span class="st">"OVERVIEW_LEVEL=3"</span>)))
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
-##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   : 12.00                                                      
-##  1st Qu.: 58.00                                                      
-##  Median : 71.00                                                      
-##  Mean   : 69.24                                                      
-##  3rd Qu.: 83.00                                                      
-##  Max.   :137.00                                                      
+##   L7_ETMs.tif    
+##  Min.   : 12.00  
+##  1st Qu.: 58.00  
+##  Median : 71.00  
+##  Mean   : 69.24  
+##  3rd Qu.: 83.00  
+##  Max.   :137.00  
 ## dimension(s):
 ##      from to  offset   delta                       refsys point values
 ## x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
@@ -264,14 +253,6 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 ## band    1  6      NA      NA                           NA    NA   NULL
 ## y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL
 <span class="kw">aperm</span>(x, <span class="kw">c</span>(<span class="st">"band"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>))
-## $x
-##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22
-## 
-## $y
-##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22
-## 
-## $band
-## [1] 1 2 3 4 5 6
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
 ##      value       
@@ -292,7 +273,7 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 <a href="#single-netcdf" class="anchor"></a>single NetCDF</h3>
 <p>The AVHRR Sea surface temperature file was downloaded from <a href="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF-uncompress/1981/AVHRR/avhrr-only-v2.19810901.nc" class="uri">ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF-uncompress/1981/AVHRR/avhrr-only-v2.19810901.nc</a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"nc/avhrr-only-v2.19810901.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-(<span class="dt">x =</span> <span class="kw">st_stars</span>(nc))
+(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(nc))
 ## sst, anom, err, ice,
 ## Warning: ignoring unrecognized unit: percentage
 ## stars object with 4 dimensions and 4 attributes
@@ -314,6 +295,7 @@ df =<span class="st"> </span><span class="kw">as.data.frame</span>(x)
 <span class="kw">image</span>(x)</code></pre></div>
 <p><img src="first_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(units)
+## udunits system database from /usr/share/xml/udunits
 ## 
 ## Attaching package: 'units'
 ## The following object is masked from 'package:base':
@@ -332,7 +314,7 @@ sst =<span class="st"> </span>x[[<span class="dv">1</span>]]
 </h3>
 <p>An example of a raster with rows and columns that are not aligned with E-W and N-S is the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geomatrix =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/geomatrix.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-x =<span class="st"> </span><span class="kw">st_stars</span>(geomatrix)
+x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(geomatrix)
 <span class="kw">st_dimensions</span>(x)
 ##   from to  offset delta                        geotransform
 ## x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5

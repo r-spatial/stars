@@ -85,7 +85,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -137,18 +137,22 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>For simple feature dimensions, <a href='http://www.rdocumentation.org/packages/sf/topics/st_transform'>st_transform</a> is called, leading to lossless transformation. For gridded spatial data (dimensions <code>x</code> and <code>y</code>), see figure; the existing grid is transformed into a regular grid in the new coordinate reference system, using the same procedure as <a href='http://www.rdocumentation.org/packages/raster/topics/projectRaster'>projectRaster</a> (currently only with <code>method='ngb'</code>). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in the new crs, touching the transformed envelope on its East and North side, (if cellsize is not given) with a cellsize similar to the origin cell size, with an extent that at least covers <code>x</code>; (iii) for each cell center of this new grid, the matching grid cell of <code>x</code> is used; if there is no match, an <code>NA</code> value is used.</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>geomatrix</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"tif/geomatrix.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-(<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>st_stars</span>(<span class='no'>geomatrix</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+(<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='no'>geomatrix</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  /home/edzer/git/stars/inst/tif/geomatrix.tif 
-#&gt;  Min.   : 74.0                                
-#&gt;  1st Qu.:107.0                                
-#&gt;  Median :123.0                                
-#&gt;  Mean   :126.8                                
-#&gt;  3rd Qu.:132.0                                
-#&gt;  Max.   :255.0                                
+#&gt;  geomatrix.tif  
+#&gt;  Min.   : 74.0  
+#&gt;  1st Qu.:107.0  
+#&gt;  Median :123.0  
+#&gt;  Mean   :126.8  
+#&gt;  3rd Qu.:132.0  
+#&gt;  Max.   :255.0  
 #&gt; dimension(s):
 #&gt;   from to  offset delta                        geotransform
 #&gt; x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
@@ -163,7 +167,9 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-            
+      
+      <li><a href="#details">Details</a></li>
+      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

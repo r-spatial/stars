@@ -61,7 +61,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -103,28 +103,18 @@
 <p>The package is loaded by</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># devtools::install_github("r-spatial/stars")</span>
 <span class="kw">library</span>(stars)
-## Loading required package: dplyr
-## 
-## Attaching package: 'dplyr'
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-## Loading required package: magrittr
 ## Loading required package: sf
 ## Loading required package: methods
-## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
-## Linking to GDAL 2.2.1</code></pre></div>
+## Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3</code></pre></div>
 <p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">methods</span>(<span class="dt">class =</span> <span class="st">"stars"</span>)
-##  [1] [              aperm          as.data.frame  as.tbl_cube   
-##  [5] c              coerce         dim            filter        
-##  [9] image          initialize     mutate         plot          
-## [13] print          pull           select         show          
-## [17] slotsFromS3    st_as_sf       st_as_sfc      st_bbox       
+##  [1] [              aperm          as.data.frame  c             
+##  [5] coerce         dim            dimnames       dimnames&lt;-    
+##  [9] image          initialize     Math           Ops           
+## [13] plot           print          show           slotsFromS3   
+## [17] split          st_as_sf       st_as_sfc      st_bbox       
 ## [21] st_coordinates st_crs         st_dimensions  st_transform  
+## [25] st_write      
 ## see '?methods' for accessing help and source code</code></pre></div>
 <p>Note that <em>everything</em> in the <code>stars</code> api may still be subject to change in the next few months.</p>
 <div id="reading-a-satellite-image" class="section level1">
@@ -132,7 +122,7 @@
 <a href="#reading-a-satellite-image" class="anchor"></a>Reading a satellite image</h1>
 <p>We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tif =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="st"> </span>st_stars 
+x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="st"> </span>read_stars 
 <span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>))
 <span class="kw">image</span>(x, <span class="dt">col =</span> <span class="kw">grey</span>((<span class="dv">4</span><span class="op">:</span><span class="dv">10</span>)<span class="op">/</span><span class="dv">10</span>))</code></pre></div>
 <p><img src="blog1_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
@@ -140,13 +130,13 @@ x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
-##  /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif 
-##  Min.   :  1.00                                                      
-##  1st Qu.: 54.00                                                      
-##  Median : 69.00                                                      
-##  Mean   : 68.91                                                      
-##  3rd Qu.: 86.00                                                      
-##  Max.   :255.00                                                      
+##   L7_ETMs.tif    
+##  Min.   :  1.00  
+##  1st Qu.: 54.00  
+##  Median : 69.00  
+##  Mean   : 68.91  
+##  3rd Qu.: 86.00  
+##  Max.   :255.00  
 ## dimension(s):
 ##      from  to  offset delta                       refsys point values
 ## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
@@ -192,14 +182,23 @@ x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="s
 <p>This means that for an index i (starting at <span class="math inline">\(i=1\)</span>) along a certain dimension, the corresponding dimension value (coordinate, time) is <span class="math inline">\(\mbox{offset} + (i-1) \times \mbox{delta}\)</span>. This value then refers to the start (edge) of the cell or interval; in order to get the interval middle or cell centre, one needs to add half an offset.</p>
 <p>Dimension <code>band</code> is a simple sequence from 1 to 6. Although bands refer to colors, their wavelength values (or b in the <code>values</code> field.</p>
 <p>For this particular dataset (and most other raster datasets), we see that offset for dimension <code>y</code> is negative: this means that consecutive array values have decreasing <span class="math inline">\(y\)</span> values: cells are ordered from top to bottom, opposite the direction of the <span class="math inline">\(y\)</span> axis.</p>
-<p><code>st_stars</code> reads all bands from a raster dataset, or a set of raster datasets, into a single <code>stars</code> array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.</p>
+<p><code>read_stars</code> reads all bands from a raster dataset, or a set of raster datasets, into a single <code>stars</code> array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed.</p>
 <p>The data structure <code>stars</code> is an extension of the <code>tbl_cube</code> found in <code>dplyr</code>; we can convert to that by</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as.tbl_cube</span>(x)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+## 
+## Attaching package: 'dplyr'
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+<span class="kw"><a href="http://dplyr.tidyverse.org/reference/as.tbl_cube.html">as.tbl_cube</a></span>(x)
 ## Source: local array [737,088 x 3]
 ## D: x [dbl, 349]
 ## D: y [dbl, 352]
 ## D: band [int, 6]
-## M: /home/edzer/R/x86_64-pc-linux-gnu-library/3.4/stars/tif/L7_ETMs.tif [dbl]</code></pre></div>
+## M: L7_ETMs.tif [dbl]</code></pre></div>
 </div>
 <div id="affine-grids" class="section level1">
 <h1 class="hasAnchor">
@@ -207,11 +206,11 @@ x &lt;-<span class="st"> </span>tif <span class="op">%&gt;%</span><span class="s
 <p>The GDAL model can deal also with spatial rasters that are regular but not aligned with <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>: affine grids. An example is given here:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">cex.axis =</span> <span class="fl">.7</span>) <span class="co"># font size axis tic labels </span>
 geomatrix =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/geomatrix.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>(<span class="dt">as_points =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
+geomatrix <span class="op">%&gt;%</span><span class="st"> </span>read_stars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_as_sf</span>(<span class="dt">as_points =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">plot</span>(<span class="dt">axes =</span><span class="ot">TRUE</span>, <span class="dt">main =</span> <span class="st">"geomatrix.tif"</span>, <span class="dt">graticule =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="blog1_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <p>Looking at the dimensions</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span class="op">%&gt;%</span><span class="st"> </span>st_dimensions
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">geomatrix <span class="op">%&gt;%</span><span class="st"> </span>read_stars <span class="op">%&gt;%</span><span class="st"> </span>st_dimensions
 ##   from to  offset delta                        geotransform
 ## x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
 ## y    1 20 1144003  -1.5 1841000, 1.5, -5, 1144000, -5, -1.5
@@ -227,7 +226,7 @@ geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span 
 <h1 class="hasAnchor">
 <a href="#reading-a-raster-time-series-netcdf" class="anchor"></a>Reading a raster time series: netcdf</h1>
 <p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prec =<span class="st"> </span><span class="kw">st_stars</span>(<span class="st">"data/full_data_daily_2013.nc"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prec =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="st">"data/full_data_daily_2013.nc"</span>)</code></pre></div>
 <p>(Note that this 380 Mb file is not included; data are described <a href="ftp://ftp.dwd.de/pub/data/gpcc/html/fulldata-daily_v1_doi_download.html">here</a>, and were downloaded from <a href="ftp://ftp.dwd.de/pub/data/gpcc/full_data_daily_V1/full_data_daily_2013.nc.gz">here</a>).</p>
 <p>We see that</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prec</code></pre></div>
@@ -241,7 +240,7 @@ geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span 
 <h2 class="hasAnchor">
 <a href="#reading-datasets-from-multiple-files" class="anchor"></a>Reading datasets from multiple files</h2>
 <p>Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found <a href="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/">here</a>; a subset of the 1981 data was downloaded from <a href="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/">here</a>.</p>
-<p>We read the data by giving <code>st_stars</code> a vector with character names:</p>
+<p>We read the data by giving <code>read_stars</code> a vector with character names:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">c</span>(
 <span class="st">"avhrr/avhrr-only-v2.19810901.nc"</span>,
 <span class="st">"avhrr/avhrr-only-v2.19810902.nc"</span>,
@@ -254,10 +253,10 @@ geomatrix <span class="op">%&gt;%</span><span class="st"> </span>st_stars <span 
 <span class="st">"avhrr/avhrr-only-v2.19810909.nc"</span>
 )
 
-(<span class="dt">y =</span> <span class="kw">st_stars</span>(x, <span class="dt">quiet =</span> <span class="ot">TRUE</span>))</code></pre></div>
+(<span class="dt">y =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(x, <span class="dt">quiet =</span> <span class="ot">TRUE</span>))</code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(abind)
-z &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(sst) <span class="op">%&gt;%</span><span class="st"> </span>adrop</code></pre></div>
+z &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(sst) <span class="op">%&gt;%</span><span class="st"> </span>adrop</code></pre></div>
 <p>We can now graph the sea surface temperature (SST) using <code>ggplot</code>, which needs data in a long table form, and without units:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw">as.data.frame</span>(z)
 df<span class="op">$</span>sst =<span class="st"> </span><span class="kw">unclass</span>(df<span class="op">$</span>sst)
@@ -294,26 +293,28 @@ to =<span class="st"> </span>from =<span class="st"> </span><span class="kw">st_
 mode =<span class="st"> </span><span class="kw">c</span>(<span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span>) <span class="co"># travel mode</span>
 day =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># arbitrary</span>
 <span class="kw">library</span>(units)
+## udunits system database from /usr/share/xml/udunits
 ## 
 ## Attaching package: 'units'
 ## The following object is masked from 'package:base':
 ## 
 ##     %*%
 <span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/units">units</a></span>(day) =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/deprecated">make_unit</a></span>(<span class="st">"days since 2015-01-01"</span>)
+## Warning: make_unit() is deprecated. Please use as_units()
 hour =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/units/topics/set_units">set_units</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">23</span>, h) <span class="co"># hour of day</span>
 dims =<span class="st"> </span><span class="kw">st_dimensions</span>(<span class="dt">origin =</span> from, <span class="dt">destination =</span> to, <span class="dt">mode =</span> mode, <span class="dt">day =</span> day, <span class="dt">hour =</span> hour)
 (<span class="dt">n =</span> <span class="kw">dim</span>(dims))
 ##      origin destination        mode         day        hour 
 ##         100         100           3         100          24
 traffic =<span class="st"> </span><span class="kw">array</span>(<span class="kw">rpois</span>(<span class="kw">prod</span>(n), <span class="dv">10</span>), <span class="dt">dim =</span> n) <span class="co"># simulated traffic counts</span>
-(<span class="dt">st =</span> <span class="kw">st_stars</span>(<span class="kw">list</span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))
+(<span class="dt">st =</span> <span class="kw">st_as_stars</span>(<span class="kw">list</span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))
 ## stars object with 5 dimensions and 1 attribute
 ## attribute(s), of first 1e+05 cells:
 ##     traffic      
 ##  Min.   : 0.000  
 ##  1st Qu.: 8.000  
 ##  Median :10.000  
-##  Mean   : 9.991  
+##  Mean   : 9.995  
 ##  3rd Qu.:12.000  
 ##  Max.   :25.000  
 ## dimension(s):
@@ -346,9 +347,9 @@ traffic =<span class="st"> </span><span class="kw">array</span>(<span class="kw"
 ## M: traffic [int]</code></pre></div>
 <p>The following demonstrates how <code>dplyr</code> can filter bike travel, and compute mean bike traffic by hour of day:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span>st <span class="op">%&gt;%</span><span class="st"> </span>as.tbl_cube <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(mode <span class="op">==</span><span class="st"> "bike"</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(hour) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">traffic =</span> <span class="kw">mean</span>(traffic)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(mode <span class="op">==</span><span class="st"> "bike"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(hour) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="dt">traffic =</span> <span class="kw">mean</span>(traffic)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">as.data.frame</span>()
 <span class="kw">require</span>(ggforce)
 <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st">  </span>

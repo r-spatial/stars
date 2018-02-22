@@ -61,7 +61,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -98,7 +98,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(stars))
 m =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">ncol =</span> <span class="dv">4</span>)
 <span class="kw">dim</span>(m) =<span class="st"> </span><span class="kw">c</span>(<span class="dt">x =</span> <span class="dv">5</span>, <span class="dt">y =</span> <span class="dv">4</span>) <span class="co"># named dim</span>
-(<span class="dt">s =</span> <span class="kw">st_stars</span>(m))
+(<span class="dt">s =</span> <span class="kw">st_as_stars</span>(m))
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):
 ##       A1        
@@ -136,7 +136,7 @@ m =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</s
 <p><img src="data_model_files/figure-html/unnamed-chunk-4-1.png" width="432"></p>
 <p>An example is the GeoTIFF carried in the package, which has a negative <code>delta</code> for the <code>y</code>-coordinate:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tif =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)
-<span class="kw">st_dimensions</span>(<span class="kw">st_stars</span>(tif))[<span class="st">"y"</span>]
+<span class="kw">st_dimensions</span>(<span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif))[<span class="st">"y"</span>]
 ##   from  to  offset delta                       refsys point values
 ## y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL</code></pre></div>
 </div>
@@ -180,7 +180,7 @@ m =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</s
 <p><a href="https://en.wikipedia.org/wiki/Regular_grid">Rectilinear grids</a> have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>)
 y =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.3</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="fl">2.2</span>)
-r =<span class="st"> </span><span class="kw">st_stars</span>(<span class="kw">list</span>(<span class="dt">m =</span> m), <span class="dt">dimensions =</span> <span class="kw">st_dimensions</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y))
+r =<span class="st"> </span><span class="kw">st_as_stars</span>(<span class="kw">list</span>(<span class="dt">m =</span> m), <span class="dt">dimensions =</span> <span class="kw">st_dimensions</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y))
 r
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):

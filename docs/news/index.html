@@ -85,7 +85,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -110,6 +110,11 @@
 <h1 class="hasAnchor">
 <a href="#version-0-1-0" class="anchor"></a>version 0.1-0</h1>
 <ul>
+<li><p>handle <code>logical</code> arrays in plot</p></li>
+<li><p>add <code>st_apply</code>, analogous to <code>apply</code></p></li>
+<li><p>add cropping/masking when used as x[buf] with buf an <code>sf</code>, <code>sfc</code> or <code>bbox</code> object; masking when <code>x[buf, crop = FALSE]</code></p></li>
+<li><p>add Ops (+,-,/ etc) and Math (sqrt, pow, sin etc) methods</p></li>
+<li><p>add <code>dimnames</code> and <code>dimnames&lt;-</code> methods for stars objects</p></li>
 <li><p>downsample large grids to only plot pixels actually shown</p></li>
 <li><p>can plot rectilinear grids (but will plot rgb images as regular grids)</p></li>
 <li><p><code>rbg</code> argument to <code>image</code> works</p></li>
@@ -120,7 +125,7 @@
 <h1 class="hasAnchor">
 <a href="#version-0-0" class="anchor"></a>version 0.0</h1>
 <ul>
-<li>interface the 9 C++ gdal utils through <code><a href="../reference/gdal_utils.html">gdal_utils()</a></code>
+<li>interface the 9 C++ gdal utils through <code>gdal_utils()</code>
 </li>
 </ul>
 </div>

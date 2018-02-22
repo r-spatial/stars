@@ -85,7 +85,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -117,7 +117,8 @@
 <span class='fu'>image</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>asp</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>maxColorValue</span> <span class='kw'>=</span> <span class='fu'>max</span>(<span class='no'>x</span><span class='kw'>[[</span><span class='no'>attr</span>]]), <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'>names</span>(<span class='no'>dims</span>)[<span class='fl'>1</span>],
   <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'>names</span>(<span class='no'>dims</span>)[<span class='fl'>2</span>], <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>xlim</span>,
-  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -132,7 +133,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed on to <code>image.default</code></p></td>
+      <td><p>for <code>plot</code>, passed on to <code>image.stars</code>; for <code>image</code>, passed on to <code>image.default</code> or <code>rasterImage</code>.</p></td>
     </tr>
     <tr>
       <th>join_zlim</th>
@@ -144,7 +145,7 @@
     </tr>
     <tr>
       <th>axes</th>
-      <td><p>logical; should axes be added to the plot?</p></td>
+      <td><p>logical; should axes and box be added to the plot?</p></td>
     </tr>
     <tr>
       <th>downsample</th>
@@ -202,12 +203,16 @@
       <th>text_values</th>
       <td><p>logical; print values as text on image?</p></td>
     </tr>
+    <tr>
+      <th>interpolate</th>
+      <td><p>logical; when using rasterImage (rgb), should pixels be interpolated?</p></td>
+    </tr>
     </table>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>tif</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>st_stars</span>(<span class='no'>tif</span>)
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='no'>tif</span>)
 <span class='fu'>image</span>(<span class='no'>x</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>grey</span>((<span class='fl'>3</span>:<span class='fl'>9</span>)/<span class='fl'>10</span>))</div><div class='img'><img src='plot.stars-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>image</span>(<span class='no'>x</span>, <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>)) <span class='co'># rgb composite</span></div><div class='img'><img src='plot.stars-2.png' alt='' width='700' height='432.632880098887' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>replace x y raster dimensions with simple feature geometry list (points or polygons) — st_xy2sfc • stars</title>
+<title>replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize) — st_xy2sfc • stars</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -85,7 +85,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -101,14 +101,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>replace x y raster dimensions with simple feature geometry list (points or polygons)</h1>
+    <h1>replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)</h1>
     </div>
 
     
-    <p>replace x y raster dimensions with simple feature geometry list (points or polygons)</p>
+    <p>replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)</p>
     
 
-    <pre class="usage"><span class='fu'>st_xy2sfc</span>(<span class='no'>x</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'>st_dimensions</span>(<span class='no'>x</span>)$<span class='no'>x</span>$<span class='no'>point</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>st_xy2sfc</span>(<span class='no'>x</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'>st_dimensions</span>(<span class='no'>x</span>)$<span class='no'>x</span>$<span class='no'>point</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -125,11 +125,15 @@
       <th>...</th>
       <td><p>arguments passed on to <code>st_as_sfc</code></p></td>
     </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>logical; remove cells with all missing values?</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <code>stars</code> with x and y raster dimensions replace by sfc geometry list</p>
+    <p>object of class <code>stars</code> with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons</p>
     
 
   </div>

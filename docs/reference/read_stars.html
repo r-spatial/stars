@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>get dimensions from stars object — st_dimensions • stars</title>
+<title>read raster/array dataset from file or connection — read_stars • stars</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -101,52 +101,58 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>get dimensions from stars object</h1>
+    <h1>read raster/array dataset from file or connection</h1>
     </div>
 
     
-    <p>get dimensions from stars object</p>
+    <p>read raster/array dataset from file or connection</p>
     
 
-    <pre class="usage"><span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for stars</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for array</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
-
-<span class='fu'>st_set_dimensions</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='no'>values</span>)</pre>
+    <pre class="usage"><span class='fu'>read_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>), <span class='kw'>driver</span> <span class='kw'>=</span> <span class='fu'>character</span>(<span class='fl'>0</span>),
+  <span class='kw'>sub</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.x</th>
-      <td><p>object to retrieve dimensions information from</p></td>
+      <td><p>if character, name of file(s) to read; if list: list with arrays</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments</p></td>
+      <td><p>arrays to be compiled into a stars object</p></td>
     </tr>
     <tr>
-      <th>which</th>
-      <td><p>integer which dimension to change</p></td>
+      <th>options</th>
+      <td><p>character; opening options</p></td>
     </tr>
     <tr>
-      <th>values</th>
-      <td><p>values for this dimension (e.g. <code>sfc</code> list-column)</p></td>
+      <th>driver</th>
+      <td><p>character; driver to use for opening file</p></td>
+    </tr>
+    <tr>
+      <th>sub</th>
+      <td><p>integer or logical; sub-datasets to be read</p></td>
+    </tr>
+    <tr>
+      <th>quiet</th>
+      <td><p>logical; print progress output?</p></td>
+    </tr>
+    <tr>
+      <th>NA_value</th>
+      <td><p>numeric value to be used for conversion into NA values; by default this is read from the input file</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the <code>dimensions</code> attribute of <code>x</code>, of class <code>dimensions</code></p>
+    <p>object of class <code>stars</code></p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>tif</span> <span class='kw'>=</span> <span class='fu'>system.file</span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
+<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='no'>tif</span>)
+<span class='co'># x1 = read_stars(nv, options = "OVERVIEW_LEVEL=1")</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -154,7 +160,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

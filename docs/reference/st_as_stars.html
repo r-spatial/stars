@@ -85,7 +85,7 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/edzer/stars/">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -108,21 +108,34 @@
     <p>convert objects into a stars object</p>
     
 
-    <pre class="usage"><span class='fu'>st_as_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for list</span>
+<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>dimensions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for sf</span>
+<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for Raster</span>
-<span class='fu'>st_as_stars</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
+      <th>.x</th>
       <td><p>object to convert</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>ignored</p></td>
+    </tr>
+    <tr>
+      <th>dimensions</th>
+      <td><p>object of class dimensions</p></td>
     </tr>
     </table>
     
