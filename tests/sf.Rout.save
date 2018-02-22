@@ -15,9 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(stars))
 > library(sf)
 > jp2 = system.file("jp2/B01.jp2", package = "stars")
 > #(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
@@ -175,14 +173,6 @@ attribute(s):
 dimension(s):
     from to offset delta refsys point                        values
 sfc    1  2     NA    NA     NA  TRUE POINT (0 1), ..., POINT (2 3)
-> plot(st_as_sf(y))
-Warning messages:
-1: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
-  n same as number of different finite values\neach different finite value is a separate class
-2: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
-  n same as number of different finite values\neach different finite value is a separate class
-3: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
-  n same as number of different finite values\neach different finite value is a separate class
 > # st_as_stars.sfc
 > st_as_stars(st_geometry(st_as_sf(y)), nx = 10, ny = 10, as_points = FALSE)
 stars object with 2 dimensions and 1 attribute
@@ -201,4 +191,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.404   0.251   1.344 
+  1.290   0.271   1.236 

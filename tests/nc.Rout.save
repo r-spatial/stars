@@ -15,8 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(sf)
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(sf))
 > nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
 Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.4/sf/gpkg/nc.gpkg' using driver `GPKG'
 Simple feature collection with 100 features and 14 fields
@@ -29,7 +28,7 @@ proj4string:    +proj=longlat +datum=NAD27 +no_defs
 > n = as.matrix(m[c("BIR74", "SID74", "NWBIR74", "BIR79", "SID79", "NWBIR79")])
 > dim(n) = c(county = 100, var = 3, year = 2)
 > dimnames(n) = list(county = nc$NAME, var = c("BIR", "SID", "NWBIR"), year = c(1974, 1979))
-> library(stars)
+> suppressPackageStartupMessages(library(stars))
 > (st = st_as_stars(pop = n))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -163,7 +162,8 @@ var                                                     BIR, ..., NWBIR
 Coordinate Reference System:
   EPSG: 4267 
   proj4string: "+proj=longlat +datum=NAD27 +no_defs"
+> plot(foo)
 > 
 > proc.time()
    user  system elapsed 
-  0.587   0.241   0.514 
+  0.883   0.263   0.824 

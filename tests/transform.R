@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 (x = read_stars(geomatrix))
 new = st_crs(4326)

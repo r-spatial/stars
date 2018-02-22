@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 library(spacetime)
 set.seed(1331)
 example(STFDF)

@@ -15,9 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(stars))
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > (x = read_stars(geomatrix))
 stars object with 2 dimensions and 1 attribute
@@ -46,4 +44,4 @@ y +proj=utm +zone=11 +datum...  TRUE   NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.826   0.202   0.743 
+  0.854   0.235   0.764 

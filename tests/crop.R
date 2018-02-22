@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 

@@ -15,9 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(stars))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)
 > xx = x[,c(1:347,349),c(1:350,352),] # rectilinear: one-but-last row & col missing
@@ -25,4 +23,4 @@ Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 > 
 > proc.time()
    user  system elapsed 
-  0.744   0.260   0.681 
+  0.736   0.264   0.676 

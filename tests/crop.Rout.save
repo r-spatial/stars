@@ -15,9 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(stars))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)
 > xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 
@@ -65,4 +63,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  3.231   0.279   3.191 
+  3.240   0.268   3.183 

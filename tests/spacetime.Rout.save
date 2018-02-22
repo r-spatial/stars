@@ -15,9 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> suppressPackageStartupMessages(library(stars))
 > library(spacetime)
 > set.seed(1331)
 > example(STFDF)
@@ -312,4 +310,4 @@ STFDF> all.equal(stfdf, stfdf[stfdf,]) # converts character to factor...
 > 
 > proc.time()
    user  system elapsed 
-  1.113   0.255   1.053 
+  1.064   0.285   1.025 
