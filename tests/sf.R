@@ -39,3 +39,6 @@ st_as_sf(y)
 st_as_sf(st_as_stars(foo))
 
 c(x,x,along=1) # NEEDS FIXING!
+plot(st_as_sf(y))
+# st_as_stars.sfc
+st_as_stars(st_geometry(st_as_sf(y)), nx = 10, ny = 10, as_points = FALSE)

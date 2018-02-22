@@ -17,3 +17,5 @@ aperm(st_apply(foo, c(1,3), frac2), c(2,3,1))
 
 split(foo, 2)
 split(foo, 3)
+
+st_crs(foo)

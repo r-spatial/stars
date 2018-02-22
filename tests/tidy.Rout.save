@@ -66,7 +66,24 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
 band    1   6      NA    NA                           NA    NA   NULL
+> (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
+stars object with 3 dimensions and 2 attributes
+attribute(s):
+  L7_ETMs.tif          foo       
+ Min.   :  1.00   Min.   :  2.0  
+ 1st Qu.: 54.00   1st Qu.:108.0  
+ Median : 69.00   Median :138.0  
+ Mean   : 68.91   Mean   :137.8  
+ 3rd Qu.: 86.00   3rd Qu.:172.0  
+ Max.   :255.00   Max.   :510.0  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6      NA    NA                           NA    NA   NULL
+> x %>% pull(L7_ETMs.tif) %>% head
+[1] 69 69 63 60 61 61
 > 
 > proc.time()
    user  system elapsed 
-  0.836   0.243   0.762 
+  1.046   0.306   1.028 

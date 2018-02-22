@@ -175,7 +175,30 @@ attribute(s):
 dimension(s):
     from to offset delta refsys point                        values
 sfc    1  2     NA    NA     NA  TRUE POINT (0 1), ..., POINT (2 3)
+> plot(st_as_sf(y))
+Warning messages:
+1: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
+  n same as number of different finite values\neach different finite value is a separate class
+2: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
+  n same as number of different finite values\neach different finite value is a separate class
+3: In classInt::classIntervals(na.omit(values), min(nbreaks, n.unq),  :
+  n same as number of different finite values\neach different finite value is a separate class
+> # st_as_stars.sfc
+> st_as_stars(st_geometry(st_as_sf(y)), nx = 10, ny = 10, as_points = FALSE)
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    values     
+ Min.   :0.00  
+ 1st Qu.:0.00  
+ Median :0.00  
+ Mean   :0.06  
+ 3rd Qu.:0.00  
+ Max.   :1.00  
+dimension(s):
+  from to offset delta refsys point values
+x    1 10      0   0.2 NA, NA    NA   NULL
+y    1 10      3  -0.2 NA, NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.281   0.280   1.234 
+  1.404   0.251   1.344 

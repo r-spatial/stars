@@ -1,0 +1,49 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: sf
+Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+> geomatrix = system.file("tif/geomatrix.tif", package = "stars")
+> (x = read_stars(geomatrix))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+ geomatrix.tif  
+ Min.   : 74.0  
+ 1st Qu.:107.0  
+ Median :123.0  
+ Mean   :126.8  
+ 3rd Qu.:132.0  
+ Max.   :255.0  
+dimension(s):
+  from to  offset delta                        geotransform
+x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
+y    1 20 1144003  -1.5 1841000, 1.5, -5, 1144000, -5, -1.5
+                        refsys point values
+x +proj=utm +zone=11 +datum...  TRUE   NULL
+y +proj=utm +zone=11 +datum...  TRUE   NULL
+> new = st_crs(4326)
+> y = st_transform(x, new)
+> plot(st_transform(st_as_sfc(st_bbox(x)), new), col = NA, border = 'red')
+> plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add = TRUE)
+> image(y, add = TRUE)
+> plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
+> plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
+> 
+> proc.time()
+   user  system elapsed 
+  0.826   0.202   0.743 

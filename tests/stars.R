@@ -20,3 +20,14 @@ st_apply(x, 1:2, range)
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
+
+nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+(x = read_stars(nc))
+st_as_stars(st_bbox(x))
+df = as.data.frame(x)
+
+st_as_stars()
+
+dimnames(x)
+dimnames(x) <- letters[1:4]
+dimnames(x)

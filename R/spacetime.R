@@ -21,12 +21,12 @@ st_as_STFDF = function(x) {
 
 setAs("stars", "STFDF", function(from) { 
     if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first")
+        stop("package sp required, please install it first") #nocov
     if (!requireNamespace("zoo", quietly = TRUE))
-        stop("package zoo required, please install it first")
+        stop("package zoo required, please install it first") #nocov
     if (!requireNamespace("xts", quietly = TRUE))
-        stop("package xts required, please install it first")
+        stop("package xts required, please install it first") #nocov
     if (!requireNamespace("spacetime", quietly = TRUE))
-        stop("package spacetime required, please install it first")
+        stop("package spacetime required, please install it first") #nocov
 	st_as_STFDF(from)
 })
