@@ -7,16 +7,16 @@ Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.p
 	person("Etienne", "Racine", role = "ctb"))
 Depends:
     R (>= 3.3.0),
+	abind,
 	sf (>= 0.6-1)
 Imports:
 	methods,
     Rcpp, 
-	abind,
-	magrittr,
 	rlang,
 	units,
 	classInt
 Suggests: 
+	lwgeom,
     covr,
 	ggplot2,
 	ggthemes,

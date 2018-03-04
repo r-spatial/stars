@@ -3,7 +3,7 @@
 #' @name plot.stars
 #' @param x object of class \code{stars}
 #' @param y ignored
-#' @param join_zlim logical; if \code{TRUE}, compute a single zlim for all subplots from array range
+#' @param join_zlim logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @param axes logical; should axes and box be added to the plot?
 #' @param downsample logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.
@@ -11,10 +11,15 @@
 #' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells
 #' @param ... for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.
+#' @param key.pos integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.
+#' @param key.size amount of space reserved for the key (labels)
+#' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, 
-		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks)) {
-	flatten = function(x, i) { # collapse all non-x/y dims into one
+		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
+		key.pos = get_key_pos(x, ...), key.size = lcm(1.8), reset = TRUE) {
+
+	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
 		dims = dim(x)
 		x = x[[1]]
@@ -23,24 +28,14 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		dim(x) = newdims
 		st_as_stars(list(x[,,i]), dimensions = d[c("x", "y")])
 	}
+	key.pos.missing = missing(key.pos)
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
-
+	opar = par()
 	dots = list(...)
 
-	if (is.character(breaks)) { # compute breaks from values:
-		pdx = prod(dim(x[[1]]))
-		# take a regular sample from x[[1]]:
-		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
-		n.unq = length(unique(na.omit(values)))
-		breaks = if (! all(is.na(values)) && n.unq > 1) {
-			if (utils::packageVersion("classInt") > "0.2-1")
-				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
-			else
-				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks)$brks
-		} else
-			range(values, na.rm = TRUE) # lowest and highest!
-	}
+	if (join_zlim)
+		breaks = get_breaks(x, breaks, nbreaks)
 
 	if (!missing(y))
 		stop("y argument should be missing")
@@ -55,37 +50,97 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			n[c("x", "y")] = get_downsample(dims)
 			x = st_downsample(x, n)
 		}
-		if (length(dims) == 2 || !is.null(dots$rgb)) {
+		if (length(dims) == 2 || !is.null(dots$rgb)) { ## ONE IMAGE:
+			# set up key region
+			values = as.vector(x[[1]])
+			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
+					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
+					length(col) > 1 && is.null(dots$rgb)) { # plot key?
+				switch(key.pos,
+					layout(matrix(c(2,1), nrow = 2, ncol = 1), widths = 1, heights = c(1, key.size)),  # 1 bottom
+					layout(matrix(c(1,2), nrow = 1, ncol = 2), widths = c(key.size, 1), heights = 1),  # 2 left
+					layout(matrix(c(1,2), nrow = 2, ncol = 1), widths = 1, heights = c(key.size, 1)),  # 3 top
+					layout(matrix(c(2,1), nrow = 1, ncol = 2), widths = c(1, key.size), heights = 1)   # 4 right
+				)
+				if (is.factor(values)) {
+					.image_scale_factor(levels(values), col, key.pos = key.pos,
+						axes = isTRUE(dots$axes), key.size = key.size)
+				} else
+					.image_scale(values, col, breaks = breaks, key.pos = key.pos, axes = isTRUE(dots$axes))
+			}
+
+			# second pane:
+			mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0)
+			par(mar = mar)
+
+			# plot the map:
 			image(x, ..., axes = axes, breaks = breaks, col = col)
 			if (!is.null(main))
 				title(main)
-		} else { # simply loop over dimensions 3:
-			mfrow = get_mfrow(st_bbox(x), dims[3], par("din"))
+
+		} else { ## MULTIPLE IMAGES -- now loop over dimensions 3:
+			draw.key = !is.null(key.pos) && join_zlim
+			if (! draw.key)
+				key.pos = NULL
+			lt = .get_layout(st_bbox(x), dims[3], par("din"), 
+				if (join_zlim && key.pos.missing) -1 else key.pos, key.size)
 			title_size = if (is.null(main)) 
 					0
 				else
 					1.1
-			opar = par(mfrow = mfrow, mar = c(axes * 2.1, axes * 2.1, title_size, 0))
-			on.exit(par(opar))
+			layout(lt$m, widths = lt$widths, heights = lt$heights, respect = FALSE)
+			par(mar = c(axes * 2.1, axes * 2.1, title_size, 0))
 			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
+				im = flatten(x, i)
 				if (join_zlim)
-					image(flatten(x, i), xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = breaks, col = col, ...)
+					image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = breaks, col = col, ...)
 				else
-					image(flatten(x, i), xlab = "", ylab = "", axes = axes, breaks = breaks, col = col, ...)
+					image(flatten(x, i), xlab = "", ylab = "", axes = axes, 
+						breaks = get_breaks(im, breaks, nbreaks), col = col, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
 					else
 						title(paste(main, format(labels[i])))
 				}
-				box()
+				box(col = grey(.8))
+			}
+			if (draw.key) {
+				values = as.vector(x[[1]])
+				if (is.factor(values))
+					.image_scale_factor(levels(values), col, key.pos = lt$key.pos,
+						axes = isTRUE(dots$axes), key.size = key.size)
+				else
+					.image_scale(values, col, breaks = breaks, key.pos = lt$key.pos, axes = isTRUE(dots$axes))
 			}
 		}
 	} else if (has_sfc(x)) {
 		plot(st_as_sf(x), ..., axes = axes)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
+	if (reset) {
+		layout(matrix(1)) # reset
+		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page"))
+		par(opar[-desel])
+	}
+}
+
+get_breaks = function(x, breaks, nbreaks) {
+	if (is.character(breaks)) { # compute breaks from values in x:
+		pdx = prod(dim(x[[1]]))
+		# take a regular sample from x[[1]]:
+		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
+		n.unq = length(unique(na.omit(values)))
+		if (! all(is.na(values)) && n.unq > 1) {
+			if (utils::packageVersion("classInt") > "0.2-1")
+				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
+			else
+				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks)$brks
+		} else
+			range(values, na.rm = TRUE) # lowest and highest!
+	} else # breaks was given:
+		breaks
 }
 
 #' @name plot.stars
@@ -153,35 +208,22 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 				ar[ , rev(seq_len(dim(ar)[2]))]
 		}
 		image.default(dims[[1]], dims[[2]], unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
-			xlim = xlim, ylim = ylim, axes = axes,...)
+			xlim = xlim, ylim = ylim, axes = FALSE,...)
 	}
 	if (text_values)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
-	if (axes) { # FIXME: deal with long/lat degree axes the way sf does
-		axis(1)
-		axis(2)
-		box()
+	if (axes) {
+        if (isTRUE(st_is_longlat(x))) {
+            .degAxis(1)
+            .degAxis(2)
+        } else {
+            axis(1)
+            axis(2)
+		}
 	}
 }
 
-#### copied from sf/R/plot.R -- remove on merge
-get_mfrow = function(bb, n, total_size = c(1,1)) {
-	asp = diff(bb[c(1,3)])/diff(bb[c(2,4)])
-	size = function(nrow, n, asp) {
-		ncol = ceiling(n / nrow)
-		xsize = total_size[1] / ncol
-		ysize = xsize  / asp
-		if (xsize * ysize * n > prod(total_size)) {
-			ysize = total_size[2] / nrow
-			xsize = ysize * asp
-		}
-		xsize * ysize
-	}
-	sz = vapply(1:n, function(x) size(x, n, asp), 0.0)
-	nrow = which.max(sz)
-	ncol = ceiling(n / nrow)
-	structure(c(nrow, ncol), names = c("nrow", "ncol"))
-}
+
 
 # reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n) {

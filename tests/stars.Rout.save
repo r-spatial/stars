@@ -16,6 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
+> set.seed(13521) # runif
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -200,14 +201,13 @@ ignoring unrecognized unit: percentage
 > st_as_stars(st_bbox(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    values      
- Min.   : NA    
- 1st Qu.: NA    
- Median : NA    
- Mean   :NaN    
- 3rd Qu.: NA    
- Max.   : NA    
- NA's   :64800  
+    values          
+ Min.   :0.0000071  
+ 1st Qu.:0.2466048  
+ Median :0.4993274  
+ Mean   :0.4990418  
+ 3rd Qu.:0.7497925  
+ Max.   :0.9999894  
 dimension(s):
   from  to offset delta refsys point values
 x    1 360      0     1 NA, NA    NA   NULL
@@ -217,14 +217,13 @@ y    1 180     90    -1 NA, NA    NA   NULL
 > st_as_stars()
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    values      
- Min.   : NA    
- 1st Qu.: NA    
- Median : NA    
- Mean   :NaN    
- 3rd Qu.: NA    
- Max.   : NA    
- NA's   :64800  
+    values          
+ Min.   :0.0000587  
+ 1st Qu.:0.2511721  
+ Median :0.5005643  
+ Mean   :0.5008040  
+ 3rd Qu.:0.7511063  
+ Max.   :0.9999920  
 dimension(s):
   from  to offset delta                                    refsys point values
 x    1 360   -180     1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
@@ -238,4 +237,4 @@ y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  3.481   0.303   3.465 
+  3.522   0.300   3.505 

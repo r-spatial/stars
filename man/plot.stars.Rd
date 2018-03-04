@@ -8,7 +8,8 @@
 \usage{
 \method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
   axes = FALSE, downsample = TRUE, nbreaks = 11, breaks = "quantile",
-  col = grey(1:(nbreaks - 1)/nbreaks))
+  col = grey(1:(nbreaks - 1)/nbreaks), key.pos = get_key_pos(x, ...),
+  key.size = lcm(1.8), reset = TRUE)
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
   maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else names(dims)[1],
@@ -23,7 +24,7 @@
 
 \item{...}{for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.}
 
-\item{join_zlim}{logical; if \code{TRUE}, compute a single zlim for all subplots from array range}
+\item{join_zlim}{logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}}
 
 \item{main}{character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles}
 
@@ -36,6 +37,12 @@
 \item{breaks}{actual color breaks, or a method name used for \link[classInt]{classIntervals}.}
 
 \item{col}{colors to use for grid cells}
+
+\item{key.pos}{integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.}
+
+\item{key.size}{amount of space reserved for the key (labels)}
+
+\item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.}
 
 \item{band}{integer; which band (dimension) to plot}
 

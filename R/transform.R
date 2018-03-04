@@ -45,6 +45,11 @@ transform_grid_grid = function(x, target) {
 	#new_pts = st_as_sfc(target, as_points = TRUE)
 	new_pts = st_coordinates(target)
 	pts = sf_project(target$x$refsys, st_crs(x)$proj4string, new_pts)
+	#if (! requireNamespace("lwgeom", quietly = TRUE))
+	#	stop("package lwgeom required, please install it first")
+	#pts = lwgeom::st_transform_proj(new_pts, c(target$x$refsys, st_crs(x)$proj4string))
+	#pts = st_coordinates(pts)
+
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
 	d = st_dimensions(x)

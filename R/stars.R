@@ -104,7 +104,7 @@ st_as_stars.default = function(.x = NULL, ...) {
 			append(list(.x), list(...))
 
 	if (length(args) == 0)
-		return(stars_empty())
+		return(st_as_stars(st_bbox()))
 
 	isdim = sapply(args, inherits, what = "dimensions")
 	dimensions = if (! any(isdim)) {
@@ -121,11 +121,6 @@ st_as_stars.default = function(.x = NULL, ...) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-stars_empty = function() {
-	p = st_sfc(st_point(c(-180,-90)), st_point(c(180,90)), crs = st_crs(4326))
-	st_as_stars(st_bbox(p))
-}
-
 #' @export
 st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	if (missing(crs))
@@ -135,7 +130,7 @@ st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	gt = c(.x["xmin"], dx/nx, 0.0, .x["ymax"], 0.0, -dy/ny)
 	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta = dx/nx, refsys = crs, geotransform = gt)
 	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs, geotransform = gt)
-	st_as_stars(values = array(NA_real_, c(x = nx, y = ny)), 
+	st_as_stars(values = array(runif(nx * ny), c(x = nx, y = ny)), 
 		dims = structure(list(x = x, y = y), class = "dimensions"))
 }
 
@@ -276,6 +271,12 @@ c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
 	st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = dims)
+}
+
+#' @export
+st_bbox.default = function(obj, ...) {
+	obj = st_sfc(st_point(c(-180,-90)), st_point(c(180, 90)), crs = 4326)
+	st_bbox(obj)
 }
 
 #' @export
