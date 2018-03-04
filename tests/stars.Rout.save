@@ -33,9 +33,6 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
 band    1   6      NA    NA                           NA    NA   NULL
-> 
-> #nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-> #(x = read_stars(nc))
 > image(x)
 > gdal_crs(tif)
 $nbands
@@ -177,27 +174,23 @@ range    1   2      NA    NA                           NA    NA   NULL
 > x = read_stars(geomatrix)
 > y = st_transform(x, st_crs(4326))
 > 
-> nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+> nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 > (x = read_stars(nc))
-sst, anom, err, ice, 
-stars object with 4 dimensions and 4 attributes
-attribute(s), of first 1e+05 cells:
-   sst [C*°]       anom [C*°]      err [C*°]          ice       
- Min.   :-1.80   Min.   :-4.69   Min.   :0.110   Min.   :0.010  
- 1st Qu.:-1.19   1st Qu.:-0.06   1st Qu.:0.300   1st Qu.:0.730  
- Median :-1.05   Median : 0.52   Median :0.300   Median :0.830  
- Mean   :-0.32   Mean   : 0.23   Mean   :0.295   Mean   :0.766  
- 3rd Qu.:-0.20   3rd Qu.: 0.71   3rd Qu.:0.300   3rd Qu.:0.870  
- Max.   : 9.36   Max.   : 3.70   Max.   :0.480   Max.   :1.000  
- NA's   :13360   NA's   :13360   NA's   :13360   NA's   :27377  
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+ tos_O1_2001-2002.nc 
+ Min.   :271.2       
+ 1st Qu.:275.1       
+ Median :285.5       
+ Mean   :286.7       
+ 3rd Qu.:299.1       
+ Max.   :305.5       
+ NA's   :228240      
 dimension(s):
-     from   to     offset delta  refsys point values
-x       1 1440          0  0.25      NA    NA   NULL
-y       1  720         90 -0.25      NA    NA   NULL
-time    1    1 1981-09-01    NA POSIXct    NA   NULL
-zlev    1    1        0 m    NA      NA    NA   NULL
-Warning message:
-ignoring unrecognized unit: percentage 
+     from  to     offset   delta  refsys point values
+x       1 180          0       2      NA    NA   NULL
+y       1 170         90      -1      NA    NA   NULL
+time    1  24 2001-01-16 30 days POSIXct    NA   NULL
 > st_as_stars(st_bbox(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -209,9 +202,9 @@ attribute(s):
  3rd Qu.:0.7497925  
  Max.   :0.9999894  
 dimension(s):
-  from  to offset delta refsys point values
-x    1 360      0     1 NA, NA    NA   NULL
-y    1 180     90    -1 NA, NA    NA   NULL
+  from  to offset     delta refsys point values
+x    1 360      0         1 NA, NA    NA   NULL
+y    1 180     90 -0.944444 NA, NA    NA   NULL
 > df = as.data.frame(x)
 > 
 > st_as_stars()
@@ -230,11 +223,11 @@ x    1 360   -180     1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 > 
 > dimnames(x)
-[1] "x"    "y"    "time" "zlev"
-> dimnames(x) <- letters[1:4]
+[1] "x"    "y"    "time"
+> dimnames(x) <- letters[1:3]
 > dimnames(x)
-[1] "a" "b" "c" "d"
+[1] "a" "b" "c"
 > 
 > proc.time()
    user  system elapsed 
-  3.522   0.300   3.505 
+  3.034   0.329   3.033 

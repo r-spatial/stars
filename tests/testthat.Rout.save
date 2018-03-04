@@ -21,11 +21,12 @@ Type 'q()' to quit R.
 > ## test package
 > test_check("stars")
 Loading required package: stars
+Loading required package: abind
 Loading required package: sf
 Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
 testthat results ================================================================
-OK: 6 SKIPPED: 0 FAILED: 0
+OK: 9 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.732   0.246   0.625 
+  0.640   0.274   0.563 

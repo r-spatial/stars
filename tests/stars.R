@@ -2,9 +2,6 @@ suppressPackageStartupMessages(library(stars))
 set.seed(13521) # runif
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))
-
-#nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
-#(x = read_stars(nc))
 image(x)
 gdal_crs(tif)
 plot(x)
@@ -22,7 +19,7 @@ geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
 
-nc = system.file("nc/avhrr-only-v2.19810901.nc", package = "stars")
+nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
 st_as_stars(st_bbox(x))
 df = as.data.frame(x)
@@ -30,5 +27,5 @@ df = as.data.frame(x)
 st_as_stars()
 
 dimnames(x)
-dimnames(x) <- letters[1:4]
+dimnames(x) <- letters[1:3]
 dimnames(x)
