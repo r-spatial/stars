@@ -420,3 +420,20 @@ split.stars = function(x, f, drop = TRUE, ...) {
 				make.names(seq_along(spl))
 	spl
 }
+
+#' @export
+merge.stars = function(x, y, ...) {
+	dots = list(...)
+	if (!missing(y))
+		stop("argument y needs to be missing: merging attributes of x")
+	d = st_dimensions(x)
+	out = do.call(abind, c(x, along = length(dim(x[[1]]))+1))
+	new_dim = if (length(dots))
+			create_dimension(values = dots[[1]])
+		else
+			create_dimension(values = names(x))
+	d = structure(c(d, list(new_dim)), class = "dimensions")
+	if (!is.null(names(dots)))
+		names(d)[length(d)] = names(dots)
+	st_as_stars(out, dimensions = d)
+}

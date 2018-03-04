@@ -16,8 +16,7 @@ locs = st_as_sf(wind.loc, coords = c("x", "y"), crs = st_crs(4326))
 data = as.data.frame(t(wind[,-c(1:3)]))
 data$geom = st_geometry(locs[match(names(wind)[-c(1:3)], locs$Code),])
 wind_ = st_sf(data)
-wind.st = st_stars(wind_, times = ISOdate(wind$year+1900, wind$month, wind$day, 0))
-#wind.st = st_stars(st_sf(data), times = ISOdate(wind$year+1900, wind$month, wind$day, 0))
+wind.st = merge(st_as_stars(wind_), times = ISOdate(wind$year+1900, wind$month, wind$day, 0))
 plot(wind.st)
 
 # Produc:
@@ -29,9 +28,9 @@ yrs = 1970:1986
 #time = as.POSIXct(paste(yrs, "-01-01", sep=""), tz = "GMT")
 
 Pr = lapply(Produc[order(Produc[2], Produc[1]),-(1:3)], matrix, nrow = nrow(states))
-(Produc.st = st_stars(states[-8], times = yrs, Pr))
+(Produc.st = st_as_stars(Pr, 
+	dimensions = st_dimensions(sfc = st_geometry(states[-8]), times = yrs)))
 
-Produc.st
 plot(Produc.st[1], max.plot = 17)
 plot(Produc.st[2], max.plot = 17)
 
@@ -42,3 +41,6 @@ library(stars)
 s = st_as_stars(DE_kriged)
 stplot(DE_kriged,scales=list(draw=T))
 plot(s, axes = TRUE)
+f = as(s, "STFDF")
+# roundtrip:
+summary(f@data - DE_kriged@data)

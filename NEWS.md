@@ -1,5 +1,11 @@
 # version 0.1-0
 
+* add `merge` (merge attributes into array dimension) and `split` (split dimension over attributes)
+
+* interface to sf, raster and spacetime
+
+* improve plotting
+
 * handle `logical` arrays in plot
 
 * add `st_apply`, analogous to `apply`
@@ -20,4 +26,4 @@
 
 # version 0.0
 
-* interface the 9 C++ gdal utils through `gdal_utils()`
+* interface the 9 C++ gdal utils through `gdal_utils()` (now part of `sf`)

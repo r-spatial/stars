@@ -72,7 +72,10 @@ st_apply = function(X, MARGIN, FUN, ...) {
 	else { # FUN returned multiple values:
 		orig = st_dimensions(X)[MARGIN]
 		dims = c(structure(list(list()), names = fname), orig)
-		dims[[1]] = create_dimension(to = dim_ret[1])
+		dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
+				create_dimension(values = dimnames(ret[[1]])[[1]])
+			else
+				create_dimension(to = dim_ret[1])
 		ret = st_as_stars(ret, dimensions = structure(dims, class = "dimensions")) # FIXME: better to use constructor?
 		if (all(c("x", "y") %in% names(dims)))
 			ret = aperm(ret, c("x", "y", setdiff(names(dims), c("x", "y"))))

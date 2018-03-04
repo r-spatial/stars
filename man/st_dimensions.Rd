@@ -16,7 +16,7 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{stars}(.x, ...)
 
-\method{st_dimensions}{array}(.x, ..., geotransform)
+\method{st_dimensions}{array}(.x, ...)
 
 \method{st_dimensions}{default}(.x, ..., geotransform = rep(NA_real_, 6))
 
@@ -26,6 +26,8 @@ st_set_dimensions(.x, which, values)
 \item{.x}{object to retrieve dimensions information from}
 
 \item{...}{further arguments}
+
+\item{geotransform}{(if not missing): geotransform for x and y dimensions}
 
 \item{which}{integer which dimension to change}
 

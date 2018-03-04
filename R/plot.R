@@ -69,9 +69,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					.image_scale(values, col, breaks = breaks, key.pos = key.pos, axes = isTRUE(dots$axes))
 			}
 
-			# second pane:
-			mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0)
-			par(mar = mar)
+			# map panel:
+			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
 			image(x, ..., axes = axes, breaks = breaks, col = col)

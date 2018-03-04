@@ -144,10 +144,10 @@ dimension:      XY
 bbox:           xmin: 0 ymin: 1 xmax: 2 ymax: 3
 epsg (SRID):    NA
 proj4string:    NA
-  attr.2017.11.27 attr.2017.11.28 attr.2017.11.29    geometry
-1               1               4               7 POINT (0 1)
-2               2               5               8 POINT (1 2)
-3               3               6               9 POINT (2 3)
+  attr.a attr.b attr.c    geometry
+1      1      4      7 POINT (0 1)
+2      2      5      8 POINT (1 2)
+3      3      6      9 POINT (2 3)
 > st_as_sf(st_as_stars(foo))
 Simple feature collection with 3 features and 3 fields
 geometry type:  POINT
@@ -191,4 +191,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.290   0.271   1.236 
+  1.333   0.253   1.256 
