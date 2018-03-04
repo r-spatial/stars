@@ -11,11 +11,11 @@
   col = grey(1:(nbreaks - 1)/nbreaks), key.pos = get_key_pos(x, ...),
   key.size = lcm(1.8), reset = TRUE)
 
-\method{image}{stars}(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL,
-  maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else names(dims)[1],
-  ylab = if (!axes) "" else names(dims)[2], xlim = st_bbox(x)$xlim,
-  ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-  interpolate = FALSE)
+\method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
+  rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else
+  names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
+  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE,
+  axes = FALSE, interpolate = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
