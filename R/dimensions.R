@@ -11,7 +11,7 @@ st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 #' @name st_dimensions
-st_dimensions.array = function(.x, ...) {
+st_dimensions.array = function(.x, ..., geotransform) {
 	dn = dimnames(.x)
 	if (length(list(...)) > 0)
 		stop("only one argument expected")
@@ -31,14 +31,16 @@ st_dimensions.array = function(.x, ...) {
 
 #' @export
 #' @name st_dimensions
-st_dimensions.default = function(.x, ...) {
+st_dimensions.default = function(.x, ..., geotransform = rep(NA_real_, 6)) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	ret = structure(lapply(d, function(y) create_dimension(values = y)), class = "dimensions")
+	ret = structure(lapply(d, function(y) create_dimension(values = y, geotransform = geotransform)),
+		class = "dimensions")
 	if (is.null(names(ret)) || any(names(ret) == ""))
 		names(ret) = make.names(seq_along(ret))
 
+	# xxx
 	if (all(c("x", "y") %in% names(ret)) && all(is.na(ret[["x"]]$geotransform)))
 		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
 

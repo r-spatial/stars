@@ -106,6 +106,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 				}
 				box(col = grey(.8))
 			}
+			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:
+				plot.new()
 			if (draw.key) {
 				values = as.vector(x[[1]])
 				if (is.factor(values))
@@ -161,7 +163,7 @@ get_breaks = function(x, breaks, nbreaks) {
 #' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
-image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColorValue = max(x[[attr]]),
+image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE) {
@@ -179,6 +181,11 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = 1, rgb = NULL, maxColor
 	y_is_neg = all(diff(dims$y) < 0)
 	if (y_is_neg)
 		dims[[2]] = rev(dims[[2]])
+
+	if (is.null(asp)) {
+		bb = st_bbox(x)
+		asp <- ifelse(isTRUE(st_is_longlat(x)), 1/cos((mean(bb[c(2,4)]) * pi)/180), 1.0)
+	}
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 	if (!is.null(rgb)) {

@@ -81,7 +81,7 @@ https://www.unidata.ucar.edu/software/netcdf/examples/files.html
 ```{r}
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
-plot(x)
+plot(x, main = "")
 ```
 
 ### Raster with axes not aligned to N/E; conversion to `sf`

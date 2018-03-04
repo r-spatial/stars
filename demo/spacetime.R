@@ -34,3 +34,11 @@ Pr = lapply(Produc[order(Produc[2], Produc[1]),-(1:3)], matrix, nrow = nrow(stat
 Produc.st
 plot(Produc.st[1], max.plot = 17)
 plot(Produc.st[2], max.plot = 17)
+
+# gridded example:
+library(gstat)
+example(krigeST)
+library(stars)
+s = st_as_stars(DE_kriged)
+stplot(DE_kriged,scales=list(draw=T))
+plot(s, axes = TRUE)

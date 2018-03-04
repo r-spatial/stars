@@ -314,6 +314,19 @@ st_crs.stars = function(x, ...) {
 }
 
 #' @export
+`st_crs<-.stars` = function(x, value) {
+	crs = st_crs(value)
+	d = st_dimensions(x)
+	if ("x" %in% names(d))
+		d$x$refsys = crs$proj4string
+	if ("y" %in% names(d))
+		d$y$refsys = crs$proj4string
+	if ("sfc" %in% names(d))
+		d$sfc$refsys = crs$proj4string
+	st_as_stars(unclass(x), dimensions = d)
+}
+
+#' @export
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
   missing.i = missing(i)
   # special case:
