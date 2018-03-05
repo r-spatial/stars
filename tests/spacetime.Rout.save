@@ -308,6 +308,24 @@ STFDF> all.equal(stfdf, stfdf[stfdf,]) # converts character to factor...
 > x = st_as_stars(stfdf)
 > xx = as(x, "STFDF")
 > 
+> library(sp)
+> pts = SpatialPoints(rbind(c(0,0), c(0,1), c(1,0), c(1,1)))
+> gridded(pts) = TRUE
+> 
+> library(xts)
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+> tm = xts(1:10, as.Date("2010-01-01")+0:9)
+> stfdf = STFDF(pts, tm, data.frame(foo = seq_len(length(pts) * length(tm))))
+> x = st_as_stars(stfdf)
+> xx = as(x, "STFDF")
+> 
 > proc.time()
    user  system elapsed 
-  1.064   0.285   1.025 
+  1.247   0.251   1.180 

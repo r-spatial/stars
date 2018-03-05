@@ -1,3 +1,7 @@
+# version 0.1-1
+
+* add meta data reader to `read_stars`
+
 # version 0.1-0
 
 * add `merge` (merge attributes into array dimension) and `split` (split dimension over attributes)

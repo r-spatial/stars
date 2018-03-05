@@ -8,7 +8,7 @@ st_as_stars.STFDF = function(.x, ...) {
 			gp = sp::gridparameters(.x@sp)
 			# offs_x dx 0 offs_y 0 dy
 			gt = c(gp[1,1] - gp[1,2]/2, gp[1,2], 0.0, gp[2,1] + (gp[2,3] - 0.5) * gp[2,2], 0.0, -gp[2,2])
-			vals = apply(gp, 1, function(x) seq(x[1], by = x[2], length.out = x[3]))
+			vals = lapply(seq_len(nrow(gp)), function(i) seq(gp[i,1], by = gp[i,2], length.out = gp[i,3]))
 			st_dimensions(
 				x = vals[[1]] - gp[1,2]/2,
 				y = rev(vals[[2]]) + gp[2,2]/2,
@@ -31,8 +31,8 @@ st_as_STFDF = function(x) {
 	rst = has_raster(x)
 	vals = x
 	if (rst) {
+		vals = lapply(x, function(y) { y[ , dim(y)[2]:1, ] })
 		x = st_xy2sfc(x, as_points = TRUE)
-		vals = lapply(x, function(y) { y[,(dim(y)[2]):1,] })
 	} 
 	d = st_dimensions(x)
 	e = expand_dimensions(d)

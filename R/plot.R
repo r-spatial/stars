@@ -229,8 +229,6 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 	}
 }
 
-
-
 # reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n) {
 	stopifnot(all(n >= 0))

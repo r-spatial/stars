@@ -1,5 +1,5 @@
 Package: stars
-Version: 0.1-0
+Version: 0.1-1
 Title: Scalable, Spatiotemporal Tidy Arrays for R
 Description: Support for Scalable, Spatiotemporal Arrays in R, using GDAL bindings.
 Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de", comment = c(ORCID = "0000-0001-8049-7069")),
@@ -40,6 +40,7 @@ BugReports: https://github.com/r-spatial/stars/issues/
 Collate:
 	init.R
 	stars.R
+	meta.R
 	sf.R
 	dimensions.R
 	plot.R

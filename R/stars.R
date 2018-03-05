@@ -14,7 +14,7 @@ split_strings = function(md, split = "=") {
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
-#' @param ... arrays to be compiled into a stars object
+#' @param ... ignored
 #' @return object of class \code{stars}
 #' @export
 #' @examples
@@ -27,7 +27,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	x = .x
 	if (length(x) > 1) { # recurse:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet)
-		return(do.call(c, c(ret, along = 3))) # FIXME: along = 3? or the highest?
+		do.call(c, c(ret, along = 3))
 	}
 
 	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value)
@@ -43,7 +43,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub_datasets = sub_datasets[sub]
 		nms = names(sub_datasets)
 
-		.read_stars = function(x, options, driver, keep_meta, quiet) {
+		.read_stars = function(x, options, driver, quiet) {
 			if (! quiet)
 				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
 			read_stars(x, options = options, driver = driver)
@@ -52,6 +52,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			driver = properties$driver[1], quiet = quiet)
 		if (! quiet)
 			cat("\n")
+		# return:
 		structure(do.call(c, ret), names = nms)
 	} else  { # we have one single array:
 		data = attr(properties, "data")
@@ -59,14 +60,16 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
-		if (! is.null(properties$units) && ! is.na(properties$units))
+		if (!is.null(properties$units) && !is.na(properties$units))
 			units(data) = try_as_units(properties$units)
 
 		newdims = lengths(properties$dim_extra)
+
 		data = if (length(newdims))
 				structure(data, dim = c(dim(data)[1:2], newdims))
 			else
 				structure(data, dim = dim(data))
+		# return:
 		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
 			dimensions = create_dimensions(dim(data), properties),
 			class = "stars")
@@ -198,7 +201,7 @@ print.stars = function(x, ..., n = 1e5) {
 		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
 	cat("attribute(s)")
 	df = if (prod(dim(x)) > 10 * n) {
-		cat(paste0(", of first ", n, " cells:\n"))
+		cat(paste0(", summary of first ", n, " cells:\n"))
 		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE)
 	} else {
 		cat(":\n")
@@ -280,23 +283,33 @@ st_bbox.default = function(obj, ...) {
 }
 
 #' @export
-st_bbox.stars = function(obj, ...) {
-	d = st_dimensions(obj)
-	stopifnot(all(c("x", "y") %in% names(d)))
-	gt = attr(obj, "dimensions")$x$geotransform
-	stopifnot(length(gt) == 6 && !any(is.na(gt)))
-
-	bb = if (is.null(d$x$values) && is.null(d$y$values)) {
-		bb = rbind(c(d$x$from-1,d$y$from-1), c(d$x$to, d$y$from-1), c(d$x$to, d$y$to), c(d$x$from-1, d$y$to))
-		xy = xy_from_colrow(bb, gt)
-		c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+st_bbox.dimensions = function(obj, ...) {
+	d = obj
+	if (all(c("x", "y") %in% names(obj))) {
+		gt = obj$x$geotransform
+		stopifnot(length(gt) == 6 && !any(is.na(gt)))
+	
+		bb = if (is.null(obj$x$values) && is.null(obj$y$values)) {
+			bb = rbind(c(obj$x$from-1,obj$y$from-1), c(obj$x$to, obj$y$from-1), c(obj$x$to, obj$y$to), c(obj$x$from-1, obj$y$to))
+			xy = xy_from_colrow(bb, gt)
+			c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+		} else {
+			e = expand_dimensions(obj)
+			rx = range(e$x)
+			ry = range(e$y)
+			c(xmin = min(e$x), ymin = min(e$y), xmax = max(e$x), ymax = max(e$y))
+		}
+		structure(bb, crs = st_crs(d$x$refsys), class = "bbox")
 	} else {
-		e = expand_dimensions(d)
-		rx = range(e$x)
-		ry = range(e$y)
-		c(xmin = min(e$x), ymin = min(e$y), xmax = max(e$x), ymax = max(e$y))
+		if (!("sfc" %in% names(obj)))
+			stop("dimensions table does not have x & y, nor an sfc dimension")
+		st_bbox(obj$sfc$values)
 	}
-	structure(bb, crs = st_crs(obj), class = "bbox")
+}
+
+#' @export
+st_bbox.stars = function(obj, ...) {
+	st_bbox(st_dimensions(obj), ...)
 }
 
 #' @export
@@ -361,17 +374,6 @@ st_crs.stars = function(x, ...) {
   	adrop(st_as_stars(x, dimensions = d))
   else
   	st_as_stars(x, dimensions = d)
-}
-
-st_downsample = function(x, n) {
-	stopifnot(all(n >= 0))
-	d = dim(x)
-	n = rep(n, length.out = length(d))
-	args = rep(list(rlang::missing_arg()), length(d)+1)
-	for (i in seq_along(d))
-		if (n[i] > 1)
-			args[[i+1]] = seq(1, d[i], n[i])
-	eval(rlang::expr(x[!!!args]))
 }
 
 st_crop = function(x, obj, crop = TRUE) {
