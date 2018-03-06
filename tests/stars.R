@@ -30,7 +30,7 @@ dimnames(x)
 dimnames(x) <- letters[1:3]
 dimnames(x)
 
-# multiple sub-datasets: the file seems wrong, but demonstrates
+# multiple sub-datasets:
 nc_red = system.file("nc/reduced.nc", package = "stars")
 (red = read_stars(nc_red))
 plot(red)
