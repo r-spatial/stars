@@ -228,6 +228,30 @@ y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 > dimnames(x)
 [1] "a" "b" "c"
 > 
+> # multiple sub-datasets: the file seems wrong, but demonstrates
+> nc_red = system.file("nc/reduced.nc", package = "stars")
+> (red = read_stars(nc_red))
+sst, anom, err, ice, 
+stars object with 4 dimensions and 4 attributes
+attribute(s):
+   sst [C*°]       anom [C*°]        err [C*°]          ice       
+ Min.   :-1.80   Min.   :-10.160   Min.   :0.110   Min.   :0.010  
+ 1st Qu.:-0.03   1st Qu.: -0.580   1st Qu.:0.160   1st Qu.:0.470  
+ Median :13.65   Median : -0.080   Median :0.270   Median :0.920  
+ Mean   :12.99   Mean   : -0.186   Mean   :0.263   Mean   :0.718  
+ 3rd Qu.:24.81   3rd Qu.:  0.210   3rd Qu.:0.320   3rd Qu.:0.960  
+ Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
+ NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
+dimension(s):
+     from  to     offset delta  refsys point values
+x       1 180         -1     2      NA    NA   NULL
+y       1  90         90    -2      NA    NA   NULL
+time    1   1 1981-12-31    NA POSIXct    NA   NULL
+zlev    1   1        0 m    NA      NA    NA   NULL
+Warning message:
+ignoring unrecognized unit: percentage 
+> plot(red)
+> 
 > proc.time()
    user  system elapsed 
-  3.034   0.329   3.033 
+  4.100   0.328   4.115 
