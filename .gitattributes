@@ -1,0 +1,5 @@
+* text=auto
+data/* binary
+inst/nc/* binary
+inst/tif/* binary
+R/* text=lf
