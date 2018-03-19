@@ -20,5 +20,6 @@ get_data <- function(expr = NULL) {
 
 #* @put /data
 put_data <- function(req, name, value) {
-	data[[name]] <<- unserialize(base64_dec(value))
+	data[[name]] <<- unserialize(base64_dec(fromJSON(value)))
+	NULL
 }

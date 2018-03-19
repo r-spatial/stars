@@ -14,8 +14,7 @@ get_data = function(url, expr = NULL) {
 }
 
 put_data = function(url, name, value) {
-	print(url)
-	value = base64_enc(serialize(value, NULL))
+	value = toJSON(base64_enc(serialize(value, NULL)))
 	PUT(url, body = list(name = name, value = value), encode = "json")
 }
 
@@ -38,3 +37,16 @@ get_data(url)
 get_data(url, "foo")
 put_data(url, "z3", "3 * z")
 get_data(url, "z3")
+
+#put_data(url, "tif", x)
+#get_data(url)
+
+put_data(url, "xx", matrix(1:4,2))
+get_data(url)
+get_data(url, "xx")
+
+library(sf)
+pt = st_sf(a = 1, geom = st_sfc(st_point(3:4)))
+put_data(url, "xx", pt)
+get_data(url)
+get_data(url, "xx")
