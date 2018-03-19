@@ -5,12 +5,12 @@ library(stars)
 url = "http://localhost:8000/data"
 
 get_data = function(url, expr = NULL) {
-  if (is.null(expr))
-    fromJSON( content(GET(url), "text", encoding = "UTF-8"))
-  else {
-    url = paste0(url, "?expr=", expr)
-    unserialize(base64_dec(fromJSON( content(GET(url), "text", encoding = "UTF-8"))))
-  }
+	if (is.null(expr))
+		fromJSON( content(GET(url), "text", encoding = "UTF-8"))
+	else {
+		url = paste0(url, "?expr=", expr)
+		unserialize(base64_dec(fromJSON( content(GET(url), "text", encoding = "UTF-8"))))
+	}
 }
 
 put_data = function(url, name, value) {

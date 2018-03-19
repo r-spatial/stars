@@ -4,18 +4,18 @@ library(jsonlite) # base64_enc
 # load stars
 library(stars)
 
-# load data
-tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = read_stars(tif)
+# load some imagery data
+x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
 
+# global database
 data = list(x = x, y = "foo", z = 0:10)
 
 #* @get /data
 get_data <- function(expr = NULL) {
-  if (is.null(expr))
-  	names(data)
-  else 
-    base64_enc(serialize( eval(parse(text = expr), data), NULL)) # to char
+	if (is.null(expr))
+		names(data)
+	else 
+		base64_enc(serialize( eval(parse(text = expr), data), NULL)) # to char
 }
 
 #* @put /data
