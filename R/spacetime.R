@@ -30,10 +30,8 @@ st_as_stars.STFDF = function(.x, ...) {
 st_as_STFDF = function(x) {
 	rst = has_raster(x)
 	vals = x
-	if (rst) {
-		vals = lapply(x, function(y) { y[ , dim(y)[2]:1, ] })
-		x = st_xy2sfc(x, as_points = TRUE)
-	} 
+	if (rst)
+		x = st_xy2sfc(x, as_points = TRUE, na.rm = FALSE)
 	d = st_dimensions(x)
 	e = expand_dimensions(d)
 	if (length(d) > 2)
