@@ -9,7 +9,7 @@
 \method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
   axes = FALSE, downsample = TRUE, nbreaks = 11, breaks = "quantile",
   col = grey(1:(nbreaks - 1)/nbreaks), key.pos = get_key_pos(x, ...),
-  key.size = lcm(1.8), reset = TRUE)
+  key.size = lcm(1.8), reset = TRUE, box_col = grey(0.8))
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
   rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else
@@ -43,6 +43,8 @@
 \item{key.size}{amount of space reserved for the key (labels)}
 
 \item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.}
+
+\item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
 
 \item{band}{integer; which band (dimension) to plot}
 
