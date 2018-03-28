@@ -53,7 +53,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (! quiet)
 			cat("\n")
 		# return:
-		structure(do.call(c, ret), names = nms)
+		if (length(ret) == 1)
+			ret[[1]]
+		else
+			structure(do.call(c, ret), names = nms)
 	} else  { # we have one single array:
 		data = attr(properties, "data")
 		properties = structure(properties, data = NULL) # remove data from properties
