@@ -228,7 +228,7 @@ y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 > dimnames(x)
 [1] "a" "b" "c"
 > 
-> # multiple sub-datasets: the file seems wrong, but demonstrates
+> # multiple sub-datasets:
 > nc_red = system.file("nc/reduced.nc", package = "stars")
 > (red = read_stars(nc_red))
 sst, anom, err, ice, 
@@ -254,4 +254,4 @@ ignoring unrecognized unit: percentage
 > 
 > proc.time()
    user  system elapsed 
-  4.100   0.328   4.115 
+  3.842   0.312   3.841 

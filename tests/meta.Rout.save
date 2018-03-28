@@ -23,6 +23,12 @@ Type 'q()' to quit R.
 > nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 > x = read_stars_meta(nc)
 > 
+> # multiple sub-datasets:
+> nc_red = system.file("nc/reduced.nc", package = "stars")
+> red = read_stars_meta(nc_red)
+Warning message:
+ignoring unrecognized unit: percentage 
+> 
 > proc.time()
    user  system elapsed 
-  0.542   0.230   0.444 
+  0.594   0.271   0.545 
