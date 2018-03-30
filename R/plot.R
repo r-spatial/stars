@@ -51,7 +51,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			n[c("x", "y")] = get_downsample(dims)
 			x = st_downsample(x, n)
 		}
-		if (length(dims) == 2 || !is.null(dots$rgb)) { ## ONE IMAGE:
+		if (length(dims) == 2 || dims[3] == 1 || !is.null(dots$rgb)) { ## ONE IMAGE:
 			# set up key region
 			values = as.vector(x[[1]])
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
