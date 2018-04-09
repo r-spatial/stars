@@ -27,7 +27,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	x = .x
 	if (length(x) > 1) { # recurse:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet)
-		do.call(c, c(ret, along = 3))
+		return(do.call(c, c(ret, along = 3)))
 	}
 
 	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value)
