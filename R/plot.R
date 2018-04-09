@@ -123,7 +123,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {
 		layout(matrix(1)) # reset
-		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page"))
+		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page", "pin"))
 		par(opar[-desel])
 	}
 }
