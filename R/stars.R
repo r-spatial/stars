@@ -281,6 +281,8 @@ adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 
 #' @export
 st_bbox.default = function(obj, ...) {
+	if (!missing(obj))
+		stop(paste("no st_bbox method available for object of class", class(obj)))
 	obj = st_sfc(st_point(c(-180,-90)), st_point(c(180, 90)), crs = 4326)
 	st_bbox(obj)
 }
