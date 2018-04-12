@@ -383,6 +383,8 @@ st_crop = function(x, obj, crop = TRUE) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
+	if (st_crs(x) != st_crs(obj))
+		stop("for cropping, the CRS of both objects has to be identical")
 	if (crop) {
 		bb = if (!inherits(obj, "bbox"))
 				st_bbox(obj)
