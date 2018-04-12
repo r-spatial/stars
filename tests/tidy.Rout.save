@@ -63,7 +63,7 @@ dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+band    1   4       3     1                           NA    NA   NULL
 > (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
 stars object with 3 dimensions and 2 attributes
 attribute(s):
@@ -84,4 +84,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.965   0.278   0.918 
+  1.124   0.231   1.061 

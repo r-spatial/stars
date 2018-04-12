@@ -70,25 +70,46 @@ st_set_dimensions = function(.x, which, values) {
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
-		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL) {
+		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL, what = "") {
 	if (! is.null(values)) {
-		from = 1
-		to = length(values)
-		if (is.character(values) || is.factor(values))
-			values = as.character(values)
-		else if (is.atomic(values) && length(ud <- unique(diff(values))) == 1) {
-			offset = values[1]
-			delta = values[2] - values[1]
+		if (what %in% c("x", "y")) {
+			if (any(geotransform[c(3,5)] != 0))
+				stop("filter can't work with affine grids")
+			if (what == "x") {
+				ix = colrow_from_xy(cbind(values, 0), geotransform)[,1]
+				offset = geotransform[1]
+				delta = geotransform[2]
+			} else {
+				ix = colrow_from_xy(cbind(0, values), geotransform)[,2]
+				offset = geotransform[4]
+				delta = geotransform[6]
+			}
 			values = NULL
-			if (inherits(offset, "POSIXct"))
-				refsys = "POSIXct"
-			if (inherits(offset, "Date"))
-				refsys = "Date"
+			stopifnot(all.equal(ix, seq(min(ix), max(ix))))
+			from = min(ix) + .5
+			to = max(ix) + .5
+		} else {
+			from = 1
+			to = length(values)
+			if (is.character(values) || is.factor(values))
+				values = as.character(values)
+			else if (is.atomic(values)) { 
+				ud <- unique(diff(values))
+				if (diff(range(ud)) / mean(ud) < 1e-10) {
+					offset = values[1]
+					delta = values[2] - values[1]
+					values = NULL
+					if (inherits(offset, "POSIXct"))
+						refsys = "POSIXct"
+					if (inherits(offset, "Date"))
+						refsys = "Date"
+				}
+			}
+			if (inherits(values, "sfc_POINT"))
+				point = TRUE
+			if (inherits(values, "sfc") && !is.na(st_crs(values)) && is.na(refsys))
+				refsys = st_crs(values)$proj4string
 		}
-		if (inherits(values, "sfc_POINT"))
-			point = TRUE
-		if (inherits(values, "sfc") && !is.na(st_crs(values)) && is.na(refsys))
-			refsys = st_crs(values)$proj4string
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
 		geotransform = geotransform, refsys = refsys, point = point, values = values),

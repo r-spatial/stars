@@ -43,7 +43,6 @@ data source : in memory
 names       : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
 min values  :      47,      32,      21,       9,       1,       1 
 max values  :     255,     255,     255,     255,     255,     255 
-time        : NA, NA, NA, NA, NA, NA 
 
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
@@ -56,10 +55,14 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south...    NA   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south...    NA   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point
+x       1 349  288776  28.5 +proj=utm +zone=25 +south...    NA
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south...    NA
+band    1   6      NA    NA                           NA    NA
+                    values
+x                     NULL
+y                     NULL
+band layer.1, ..., layer.6
 > 
 > library(abind)
 > x = adrop(x[,,,1]) # 1 band
@@ -68,4 +71,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.344   0.295   1.319 
+  1.405   0.268   1.377 

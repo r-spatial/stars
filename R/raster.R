@@ -40,7 +40,10 @@ st_as_raster = function(x, ...) {
 			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], nl = dim(x)[third],
             crs = st_crs(x)$proj4string)
 		raster::values(b) = as.vector(x[[1]])
-		raster::setZ(b, seq(d[[third]]))
+		z = seq(d[[third]])
+		if (all(!is.na(z)))
+			raster::setZ(b, z)
+		b
 	}
 }
 
