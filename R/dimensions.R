@@ -70,9 +70,14 @@ st_set_dimensions = function(.x, which, values) {
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
-		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL, what = "") {
-	if (! is.null(values)) {
+		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL, 
+		what = "") {
+
+	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		if (what %in% c("x", "y")) {
+			# for x and y, we want to keep geotransform, so have to match the values to a 
+			# range of new indexes; they need to be regular and dense; also, we can't do 
+			# this for affine/sheared grids:
 			if (any(geotransform[c(3,5)] != 0))
 				stop("filter can't work with affine grids")
 			if (what == "x") {
@@ -84,10 +89,10 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				offset = geotransform[4]
 				delta = geotransform[6]
 			}
-			values = NULL
-			stopifnot(all.equal(ix, seq(min(ix), max(ix))))
-			from = min(ix) + .5
-			to = max(ix) + .5
+			values = NULL # can be ignored now
+			stopifnot(all.equal(ix, seq(min(ix), max(ix)))) # allows numeric fuzz
+			from = round(min(ix) + .5)
+			to = round(max(ix) + .5)
 		} else {
 			from = 1
 			to = length(values)

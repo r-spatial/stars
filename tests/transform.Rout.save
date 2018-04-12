@@ -42,6 +42,34 @@ y +proj=utm +zone=11 +datum...  TRUE   NULL
 > plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 > plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 > 
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = read_stars(tif)[,1:10,1:10,1:3]
+> x_ = st_transform(x, 4326)
+> 
+> x__ = st_transform(x, x_)
+> 
+> all.equal(x_, x__)
+[1] TRUE
+> 
+> x = st_xy2sfc(x)
+> (x_ = st_transform(x, 4326))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:43.00  
+ Median :51.00  
+ Mean   :50.72  
+ 3rd Qu.:60.00  
+ Max.   :74.00  
+dimension(s):
+     from  to offset delta                                    refsys point
+sfc     1 100     NA    NA 4326, +proj=longlat +datum=WGS84 +no_defs    NA
+band    1   3     NA    NA                                        NA    NA
+                                                                  values
+sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...
+band                                                                NULL
+> 
 > proc.time()
    user  system elapsed 
-  0.854   0.235   0.764 
+  1.160   0.244   1.108 

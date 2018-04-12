@@ -43,8 +43,8 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 # transform grid x to dimensions target
 transform_grid_grid = function(x, target) {
 	#new_pts = st_as_sfc(target, as_points = TRUE)
-	new_pts = st_coordinates(target)
-	pts = sf_project(target$x$refsys, st_crs(x)$proj4string, new_pts)
+	new_pts = st_coordinates(target[1:2])
+	pts = sf_project(from = target$x$refsys, to = st_crs(x)$proj4string, pts = new_pts)
 	#if (! requireNamespace("lwgeom", quietly = TRUE))
 	#	stop("package lwgeom required, please install it first")
 	#pts = lwgeom::st_transform_proj(new_pts, c(target$x$refsys, st_crs(x)$proj4string))
@@ -74,27 +74,29 @@ transform_grid_grid = function(x, target) {
 			dim(x[[i]]) = dim(target)
 		}
 	}
-	d[c("x", "y")] = target
+	d[c("x", "y")] = target[1:2]
 	structure(x, dimensions = d)
 }
 
 transform_raster = function(x, crs, ..., cellsize = NA_real_, segments = NA) {
 	# the hard part
-	if (inherits(crs, "crs")) {
-		if (st_crs(x) == crs)
-			return(x) # do nothing!
-		target = create_target_grid(x, crs, cellsize = cellsize, segments = segments)
-	} else if (inherits(crs, "stars")) {
-		stopifnot(has_raster(crs))
-		target = crs
-	} else
-		stop("crs needs to be of class crs or have the target grid, of class stars")
+	target = if (inherits(crs, "crs")) {
+			if (st_crs(x) == crs)
+				return(x) # do nothing!
+			create_target_grid(x, crs, cellsize = cellsize, segments = segments)
+		} else if (inherits(crs, "stars")) {
+			stopifnot(has_raster(crs))
+			st_dimensions(crs)
+		} else
+			stop("crs needs to be of class crs or have the target grid, of class stars")
 	transform_grid_grid(x, target)
 }
 
 transform_sfc = function(x, crs, ...) {
+	crs = st_crs(crs)
 	d = st_dimensions(x)
 	d$sfc$values = st_transform(d$sfc$values, crs, ...)
+	d$sfc$refsys = crs
 	structure(x, dimensions = d)
 }
 
@@ -126,10 +128,11 @@ st_transform.stars =  function(x, crs, ..., cellsize = NA_real_, segments = NA_i
 	d = st_dimensions(x)
 
 	if (has_raster(x)) # raster:
-		x = transform_raster(x, crs, ..., cellsize = cellsize, segments = segments)
-
-	if (has_sfc(x))
-		x = transform_sfc(x, crs, ...)
-
-	x
+		transform_raster(x, crs, ..., cellsize = cellsize, segments = segments)
+	else if (has_sfc(x))
+		transform_sfc(x, crs, ...)
+	else {
+		warning("no coordinates: st_transform does nothing")
+		x
+	}
 }
