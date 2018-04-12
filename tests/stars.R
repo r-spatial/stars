@@ -1,6 +1,7 @@
 suppressPackageStartupMessages(library(stars))
 set.seed(13521) # runif
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
+(x_ = read_stars(c(tif,tif))) # FIXME: not what you'd expect
 (x = read_stars(tif))
 image(x)
 gdal_crs(tif)
@@ -34,3 +35,8 @@ dimnames(x)
 nc_red = system.file("nc/reduced.nc", package = "stars")
 (red = read_stars(nc_red))
 plot(red)
+
+x = st_xy2sfc(read_stars(tif)[,1:10,1:10,])
+st_bbox(x)
+x = read_stars(tif)
+merge(split(x, "band"))

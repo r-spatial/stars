@@ -70,6 +70,25 @@ band    1   3     NA    NA                                        NA    NA
 sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...
 band                                                                NULL
 > 
+> # nothing to transform:
+> st_transform(st_as_stars(list(matrix(1,10,10))), 4326)
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+            
+ Min.   :1  
+ 1st Qu.:1  
+ Median :1  
+ Mean   :1  
+ 3rd Qu.:1  
+ Max.   :1  
+dimension(s):
+  from to offset delta refsys point values
+1    1 10     NA    NA     NA    NA   NULL
+2    1 10     NA    NA     NA    NA   NULL
+Warning message:
+In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
+  no coordinates: st_transform does nothing
+> 
 > proc.time()
    user  system elapsed 
-  1.160   0.244   1.108 
+  1.151   0.257   1.105 

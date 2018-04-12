@@ -19,3 +19,6 @@ all.equal(x_, x__)
 
 x = st_xy2sfc(x)
 (x_ = st_transform(x, 4326))
+
+# nothing to transform:
+st_transform(st_as_stars(list(matrix(1,10,10))), 4326)

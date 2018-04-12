@@ -204,8 +204,8 @@ print.stars = function(x, ..., n = 1e5) {
 		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
 	cat("attribute(s)")
 	df = if (prod(dim(x)) > 10 * n) {
-		cat(paste0(", summary of first ", n, " cells:\n"))
-		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE)
+		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
+		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE) # nocov
 	} else {
 		cat(":\n")
 		as.data.frame(lapply(x, as.vector), optional = TRUE)
@@ -307,7 +307,7 @@ st_bbox.dimensions = function(obj, ...) {
 		structure(bb, crs = st_crs(d$x$refsys), class = "bbox")
 	} else {
 		if (!("sfc" %in% names(obj)))
-			stop("dimensions table does not have x & y, nor an sfc dimension")
+			stop("dimensions table does not have x & y, nor an sfc dimension") # nocov
 		st_bbox(obj$sfc$values)
 	}
 }

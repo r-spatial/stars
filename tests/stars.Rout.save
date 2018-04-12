@@ -18,6 +18,21 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages(library(stars))
 > set.seed(13521) # runif
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x_ = read_stars(c(tif,tif))) # FIXME: not what you'd expect
+stars object with 3 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+  L7_ETMs.tif    
+ Min.   : 47.00  
+ 1st Qu.: 65.00  
+ Median : 76.00  
+ Mean   : 77.34  
+ 3rd Qu.: 87.00  
+ Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   2      NA    NA                           NA    NA   NULL
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -252,6 +267,27 @@ Warning message:
 ignoring unrecognized unit: percentage 
 > plot(red)
 > 
+> x = st_xy2sfc(read_stars(tif)[,1:10,1:10,])
+> st_bbox(x)
+     xmin      ymin      xmax      ymax 
+ 288776.3 9120475.8  289061.3 9120760.8 
+> x = read_stars(tif)
+> merge(split(x, "band"))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+                 
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+  from  to  offset delta                       refsys point      values
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL
+     1   6      NA    NA                           NA    NA X1, ..., X6
+> 
 > proc.time()
    user  system elapsed 
-  3.842   0.312   3.841 
+  4.435   0.312   4.451 
