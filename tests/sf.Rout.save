@@ -105,14 +105,14 @@ new_dim    1  3     NA    NA     NA    NA                     a, ..., c
 > c(x,x)
 stars object with 1 dimensions and 6 attributes
 attribute(s):
-       a             b             c             a             b      
+       a             b             c            a.1           b.1     
  Min.   :1.0   Min.   :4.0   Min.   :7.0   Min.   :1.0   Min.   :4.0  
  1st Qu.:1.5   1st Qu.:4.5   1st Qu.:7.5   1st Qu.:1.5   1st Qu.:4.5  
  Median :2.0   Median :5.0   Median :8.0   Median :2.0   Median :5.0  
  Mean   :2.0   Mean   :5.0   Mean   :8.0   Mean   :2.0   Mean   :5.0  
  3rd Qu.:2.5   3rd Qu.:5.5   3rd Qu.:8.5   3rd Qu.:2.5   3rd Qu.:5.5  
  Max.   :3.0   Max.   :6.0   Max.   :9.0   Max.   :3.0   Max.   :6.0  
-       c      
+      c.1     
  Min.   :7.0  
  1st Qu.:7.5  
  Median :8.0  
@@ -172,7 +172,7 @@ attribute(s):
  Max.   :3.00   Max.   :6.00   Max.   :9.00  
 dimension(s):
     from to offset delta refsys point                        values
-sfc    1  2     NA    NA     NA  TRUE POINT (0 1), ..., POINT (2 3)
+sfc    1  6     NA    NA     NA  TRUE POINT (0 1), ..., POINT (2 3)
 > # st_as_stars.sfc
 > st_as_stars(st_geometry(st_as_sf(y)), nx = 10, ny = 10, as_points = FALSE)
 stars object with 2 dimensions and 1 attribute
@@ -191,4 +191,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.333   0.253   1.256 
+  1.458   0.220   1.418 

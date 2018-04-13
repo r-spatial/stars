@@ -293,28 +293,37 @@ print.dimensions = function(x, ..., digits = 6) {
 	print(ret)
 }
 
-check_equal_dimensions = function(lst) {
+equal_dimensions = function(lst) {
 	if (length(lst) > 1) {
 		for (i in 2:length(lst))
 			if (!identical(attr(lst[[1]], "dimensions"), attr(lst[[i]], "dimensions")))
-				stop(paste("object 1 and", i, "have different dimensions"))
+				return(FALSE)
 	}
 	TRUE
 }
 
 combine_dimensions = function(dots, along) {
 	dims = attr(dots[[1]], "dimensions")
-	offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
-	offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
-	if (length(unique(diff(offset))) == 1) { # regular & sorted
-		dims[[along]]$offset = min(offset)
-		dims[[along]]$delta = diff(offset)[1]
+	if (along > length(dims)) {
+		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
-		dims[[along]]$values = offset
-		dims[[along]]$delta = NA_real_
+		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
+		if (any(is.na(offset))) {
+			dims[[along]]$from = 1
+			dims[[along]]$to = length(dots) * dims[[along]]$to
+		} else {
+			offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
+			if (length(unique(diff(offset))) == 1) { # regular & sorted
+				dims[[along]]$offset = min(offset)
+				dims[[along]]$delta = diff(offset)[1]
+			} else {
+				dims[[along]]$values = offset
+				dims[[along]]$delta = NA_real_
+			}
+			dims[[along]]$from = 1
+			dims[[along]]$to = length(offset)
+		}
 	}
-	dims[[along]]$from = 1
-	dims[[along]]$to = length(offset)
 	dims
 }
 

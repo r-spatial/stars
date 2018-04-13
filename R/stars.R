@@ -14,20 +14,25 @@ split_strings = function(md, split = "=") {
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
+#' @param along character or integer; in case \code{.x} contains multiple files, along which dimension should objects be merged? \code{NA} will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if time stamps differ. A positive value (or name) will merge along that dimension, or create a new dimension.
 #' @param ... ignored
 #' @return object of class \code{stars}
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
-#' x = read_stars(tif)
-#' # x1 = read_stars(nv, options = "OVERVIEW_LEVEL=1")
+#' (x1 = read_stars(tif))
+#' (x2 = read_stars(c(tif, tif)))
+#' (x3 = read_stars(c(tif, tif), along = "band"))
+#' (x4 = read_stars(c(tif, tif), along = "new_dimensions")) # create 4-dimensional array
+#' x1o = read_stars(tif, options = "OVERVIEW_LEVEL=1")
 read_stars = function(.x, ..., options = character(0), driver = character(0), 
-		sub = TRUE, quiet = FALSE, NA_value = NA_real_) {
+		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA) {
 
 	x = .x
-	if (length(x) > 1) { # recurse:
+	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet)
-		return(do.call(c, c(ret, along = 3)))
+		dims = length(dim(ret[[1]][[1]]))
+		return(do.call(c, c(ret, along = along)))
 	}
 
 	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value)
@@ -57,7 +62,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			ret[[1]]
 		else
 			structure(do.call(c, ret), names = nms)
-	} else  { # we have one single array:
+	} else { # we have one single array:
 		data = attr(properties, "data")
 		properties = structure(properties, data = NULL) # remove data from properties
 		if (properties$driver[1] == "netCDF")
@@ -95,6 +100,8 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		for (i in seq_along(.x)[-1])
 			if (!identical(dim(.x[[1]]), dim(.x[[i]])))
 				stop("dim attributes not identical")
+		if (!is.null(names(.x)))
+			names(.x) = make.names(names(.x), unique = TRUE)
 	}
 	if (is.null(dimensions))
 		dimensions = create_dimensions(dim(.x[[1]]))
@@ -254,8 +261,14 @@ propagate_units = function(new, old) {
 c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])) {
 	dots = list(...)
 	if (is.na(along) && length(dots) > 1) { # merge attributes of several objects, retaining dim
-		check_equal_dimensions(dots)
-		st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
+		if (equal_dimensions(dots))
+			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
+		else {
+			along = sort_out_along(dots)
+			if (is.na(along))
+				stop("don't know how to merge arrays: please specify parameter along")
+			do.call(c, c(dots, along = along))
+		}
 	} else {
 		if (length(dots) == 1 && (is.na(along) || along == length(dim(dots[[1]])) + 1)) { 
 			# collapse attributes into new array dimension:
@@ -266,8 +279,20 @@ c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])
 				names(dims)[names(dims) == "new_dim"]= dim_name
 			st_as_stars(attr = do.call(abind, c(dots, along = along)), dimensions = dims)
 		} else { # loop over attributes:
-			ret = propagate_units(mapply(abind, ..., along = along, SIMPLIFY = FALSE), dots[[1]])
-			dims = combine_dimensions(dots, along)
+			# along_dim: the number of the dimension along which we merge arrays
+			d = st_dimensions(dots[[1]])
+			along_dim = if (is.character(along)) {
+				along_dim = which(along == names(d))
+				if (length(along_dim) == 0)
+					length(d) + 1
+				else
+					along_dim
+			} else
+				along
+			ret = propagate_units(mapply(abind, ..., along = along_dim, SIMPLIFY = FALSE), dots[[1]])
+			dims = combine_dimensions(dots, along_dim)
+			if (along_dim == length(d) + 1)
+				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
 			st_as_stars(ret, dimensions = dims)
 		}
 	}
@@ -445,4 +470,13 @@ merge.stars = function(x, y, ...) {
 	if (!is.null(names(dots)))
 		names(d)[length(d)] = names(dots)
 	st_as_stars(out, dimensions = d)
+}
+
+sort_out_along = function(ret) { 
+	d1 = st_dimensions(ret[[1]])
+	d2 = st_dimensions(ret[[2]])
+	if ("time" %in% names(d1) && d1$time$offset != d2$time$offset)
+		"time"
+	else
+		NA_integer_
 }

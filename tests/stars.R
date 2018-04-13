@@ -40,3 +40,9 @@ x = st_xy2sfc(read_stars(tif)[,1:10,1:10,])
 st_bbox(x)
 x = read_stars(tif)
 merge(split(x, "band"))
+
+read_stars(c(tif,tif)) # merges as attributes
+read_stars(c(tif,tif), along = "sensor")
+read_stars(c(tif,tif), along = 4)
+read_stars(c(tif,tif), along = "band")
+read_stars(c(tif,tif), along = 3)

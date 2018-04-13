@@ -19,20 +19,20 @@ Type 'q()' to quit R.
 > set.seed(13521) # runif
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x_ = read_stars(c(tif,tif))) # FIXME: not what you'd expect
-stars object with 3 dimensions and 1 attribute
-attribute(s), summary of first 1e+05 cells:
-  L7_ETMs.tif    
- Min.   : 47.00  
- 1st Qu.: 65.00  
- Median : 76.00  
- Mean   : 77.34  
- 3rd Qu.: 87.00  
- Max.   :255.00  
+stars object with 3 dimensions and 2 attributes
+attribute(s):
+  L7_ETMs.tif     L7_ETMs.tif.1   
+ Min.   :  1.00   Min.   :  1.00  
+ 1st Qu.: 54.00   1st Qu.: 54.00  
+ Median : 69.00   Median : 69.00  
+ Mean   : 68.91   Mean   : 68.91  
+ 3rd Qu.: 86.00   3rd Qu.: 86.00  
+ Max.   :255.00   Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   2      NA    NA                           NA    NA   NULL
+band    1   6      NA    NA                           NA    NA   NULL
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -288,6 +288,84 @@ x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL
 y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL
      1   6      NA    NA                           NA    NA X1, ..., X6
 > 
+> read_stars(c(tif,tif)) # merges as attributes
+stars object with 3 dimensions and 2 attributes
+attribute(s):
+  L7_ETMs.tif     L7_ETMs.tif.1   
+ Min.   :  1.00   Min.   :  1.00  
+ 1st Qu.: 54.00   1st Qu.: 54.00  
+ Median : 69.00   Median : 69.00  
+ Mean   : 68.91   Mean   : 68.91  
+ 3rd Qu.: 86.00   3rd Qu.: 86.00  
+ Max.   :255.00   Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6      NA    NA                           NA    NA   NULL
+> read_stars(c(tif,tif), along = "sensor")
+stars object with 4 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+  L7_ETMs.tif    
+ Min.   : 47.00  
+ 1st Qu.: 65.00  
+ Median : 76.00  
+ Mean   : 77.34  
+ 3rd Qu.: 87.00  
+ Max.   :255.00  
+dimension(s):
+       from  to  offset delta                       refsys point values
+x         1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y         1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band      1   6      NA    NA                           NA    NA   NULL
+sensor    1   2      NA    NA                           NA    NA   NULL
+> read_stars(c(tif,tif), along = 4)
+stars object with 4 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+  L7_ETMs.tif    
+ Min.   : 47.00  
+ 1st Qu.: 65.00  
+ Median : 76.00  
+ Mean   : 77.34  
+ 3rd Qu.: 87.00  
+ Max.   :255.00  
+dimension(s):
+        from  to  offset delta                       refsys point values
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band       1   6      NA    NA                           NA    NA   NULL
+new_dim    1   2      NA    NA                           NA    NA   NULL
+> read_stars(c(tif,tif), along = "band")
+stars object with 3 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+  L7_ETMs.tif    
+ Min.   : 47.00  
+ 1st Qu.: 65.00  
+ Median : 76.00  
+ Mean   : 77.34  
+ 3rd Qu.: 87.00  
+ Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1  12      NA    NA                           NA    NA   NULL
+> read_stars(c(tif,tif), along = 3)
+stars object with 3 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+  L7_ETMs.tif    
+ Min.   : 47.00  
+ 1st Qu.: 65.00  
+ Median : 76.00  
+ Mean   : 77.34  
+ 3rd Qu.: 87.00  
+ Max.   :255.00  
+dimension(s):
+     from  to  offset delta                       refsys point values
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+band    1  12      NA    NA                           NA    NA   NULL
+> 
 > proc.time()
    user  system elapsed 
-  4.435   0.312   4.451 
+  4.999   0.388   5.105 

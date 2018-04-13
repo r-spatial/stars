@@ -5,7 +5,7 @@
 \title{read raster/array dataset from file or connection}
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, quiet = FALSE, NA_value = NA_real_)
+  sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA)
 }
 \arguments{
 \item{.x}{if character, name of file(s) to read; if list: list with arrays}
@@ -21,6 +21,8 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 \item{quiet}{logical; print progress output?}
 
 \item{NA_value}{numeric value to be used for conversion into NA values; by default this is read from the input file}
+
+\item{along}{character or integer; in case \code{.x} contains multiple files, along which dimension should objects be merged? \code{NA} will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if time stamps differ. A positive value (or name) will merge along that dimension, or create a new dimension.}
 }
 \value{
 object of class \code{stars}
@@ -30,6 +32,9 @@ read raster/array dataset from file or connection
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = read_stars(tif)
-# x1 = read_stars(nv, options = "OVERVIEW_LEVEL=1")
+(x1 = read_stars(tif))
+(x2 = read_stars(c(tif, tif)))
+(x3 = read_stars(c(tif, tif), along = "band"))
+(x4 = read_stars(c(tif, tif), along = "new_dimensions")) # create 4-dimensional array
+x1o = read_stars(tif, options = "OVERVIEW_LEVEL=1")
 }
