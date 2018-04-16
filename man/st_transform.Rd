@@ -6,7 +6,7 @@
 \title{transform features, or warp/resample grids in stars objects to a new coordinate reference system}
 \usage{
 \method{st_transform}{stars}(x, crs, ..., cellsize = NA_real_,
-  segments = NA_integer_)
+  segments = 100)
 }
 \arguments{
 \item{x}{object of class \code{stars}, with either raster or simple feature geometries}
