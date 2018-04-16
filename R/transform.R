@@ -4,7 +4,7 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	bb_x = st_bbox(x)
 	envelope = st_as_sfc(bb_x)
 	if (! is.na(segments))
-		envelope = st_segmentize(envelope, st_length(envelope)/segments)
+		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
 	if (is.na(cellsize)) {
@@ -120,7 +120,7 @@ transform_sfc = function(x, crs, ...) {
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 #' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid in the new coordinate reference system, using the same procedure as \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in the new crs, touching the transformed envelope on its East and North side, (if cellsize is not given) with a cellsize similar to the origin cell size, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
-st_transform.stars =  function(x, crs, ..., cellsize = NA_real_, segments = NA_integer_) {
+st_transform.stars =  function(x, crs, ..., cellsize = NA_real_, segments = 100) {
 
 	if (!inherits(crs, "crs") && !inherits(crs, "stars"))
 		crs = st_crs(crs)
