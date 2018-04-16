@@ -30,7 +30,9 @@ storage in such workflows.
 
 ## Progress
 
-* blog post: [first](http://r-spatial.org/r/2017/11/23/stars1.html)
+* blog posts: [first](http://r-spatial.org/r/2017/11/23/stars1.html),
+[second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
+[third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
 
 ## Proposal
 
