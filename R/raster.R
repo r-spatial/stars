@@ -21,7 +21,7 @@ st_as_stars.Raster = function(.x, ...) {
 			create_dimension(values = names(.x))
 		else
 			create_dimension(values = z)
-	st_as_stars(list(v), dimensions = structure(dimensions, class = "dimensions"))
+	st_as_stars(list(raster = v), dimensions = structure(dimensions, class = "dimensions"))
 }
 
 st_as_raster = function(x, ...) {

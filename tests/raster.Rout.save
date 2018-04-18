@@ -47,7 +47,7 @@ max values  :     255,     255,     255,     255,     255,     255
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                 
+    raster       
  Min.   :  1.00  
  1st Qu.: 54.00  
  Median : 69.00  
@@ -71,4 +71,4 @@ band layer.1, ..., layer.6
 > 
 > proc.time()
    user  system elapsed 
-  1.405   0.268   1.377 
+  1.616   0.256   1.570 
