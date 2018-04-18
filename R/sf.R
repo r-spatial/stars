@@ -55,15 +55,15 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 	d[["y"]] = NULL
 	# flatten arrays:
 	for (i in seq_along(x))
-		dim(x[[i]]) = c(length(keep), olddim[-xy_pos]) 
+		dim(x[[i]]) = c(sfc = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
 	if (na.rm) {
 		for (i in seq_along(x))
 			x[[i]] = switch(as.character(length(dim(x[[i]]))), 
-				"1" = x[[i]][which(keep)],
-				"2" = x[[i]][which(keep),],
-				"3" = x[[i]][which(keep),,],
-				"4" = x[[i]][which(keep),,,], # etc -- FIXME: use tidy eval here
+				"1" = x[[i]][which(keep),drop=FALSE],
+				"2" = x[[i]][which(keep),,drop=FALSE],
+				"3" = x[[i]][which(keep),,,drop=FALSE],
+				"4" = x[[i]][which(keep),,,,drop=FALSE], # etc -- FIXME: use tidy eval here
 				)
 	}
 
