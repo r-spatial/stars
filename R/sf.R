@@ -88,7 +88,10 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = 
 	if (length(dim(x)) > 1) {
 		if (length(unique(names(df))) == 1) {
 			labels = format(expand_dimensions(st_dimensions(x))[[2]])
-			names(df) = apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ")
+			names(df) = if (length(labels) == ncol(df))
+					labels
+				else
+					apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ")
 		}
 	} else
 		names(df) = names(x)
