@@ -99,17 +99,19 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			if (is.character(values) || is.factor(values))
 				values = as.character(values)
 			else if (is.atomic(values)) { 
-				if (!all(is.finite(values)))
-					stop("dimension value(s) non-finite")
-				ud <- unique(diff(values))
-				if (diff(range(ud)) / mean(ud) < 1e-10) {
-					offset = values[1]
-					delta = values[2] - values[1]
-					values = NULL
-					if (inherits(offset, "POSIXct"))
-						refsys = "POSIXct"
-					if (inherits(offset, "Date"))
-						refsys = "Date"
+				if (! all(is.finite(values)))
+					warning("dimension value(s) non-finite")
+				else {
+					ud <- unique(diff(values))
+					if (diff(range(ud)) / mean(ud) < 1e-10) {
+						offset = values[1]
+						delta = values[2] - values[1]
+						values = NULL
+						if (inherits(offset, "POSIXct"))
+							refsys = "POSIXct"
+						if (inherits(offset, "Date"))
+							refsys = "Date"
+					}
 				}
 			}
 			if (inherits(values, "sfc_POINT"))
