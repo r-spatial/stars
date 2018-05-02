@@ -24,7 +24,7 @@ addons:
       - libgdal-dev
 
 before_install:
-  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); tic::prepare_all_stages()'
+  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); tic::prepare_all_stages(); devtools::install_github("r-spatial/sf")'
 
 after_success:
   - R -q -e 'covr::codecov(quiet = FALSE)'
