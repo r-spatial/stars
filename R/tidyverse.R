@@ -27,7 +27,6 @@ get_dims = function(d_cube, d_stars) {
 #' @param .data see \link[dplyr]{filter}
 #' @param ... see \link[dplyr]{filter}
 #' @name dplyr
-#' @export
 filter.stars <- function(.data, ...) {
 	cb = dplyr::as.tbl_cube(.data)
 	cb = dplyr::filter(cb, ...)
@@ -35,7 +34,6 @@ filter.stars <- function(.data, ...) {
 }
 
 #' @name dplyr
-#' @export
 mutate.stars <- function(.data, ...) {
 	d = st_dimensions(.data)
 	dim_orig = dim(.data)
@@ -44,7 +42,6 @@ mutate.stars <- function(.data, ...) {
 }
 
 #' @name dplyr
-#' @export
 select.stars <- function(.data, ...) {
 	d = st_dimensions(.data)
 	dim_orig = dim(.data)
@@ -54,7 +51,6 @@ select.stars <- function(.data, ...) {
 
 #' @param var see \link[dplyr]{pull}
 #' @name dplyr
-#' @export
 pull.stars = function (.data, var = -1) {
 	var = rlang::enquo(var)
 	dplyr::pull(to_df(.data), !!var)
@@ -62,7 +58,6 @@ pull.stars = function (.data, var = -1) {
 
 #' @name dplyr
 #' @param x object of class \code{stars}
-#' @export
 as.tbl_cube.stars = function(x, ...) {
 	cleanup = function(y) {
 		if (is.list(y))
@@ -86,3 +81,39 @@ as.tbl_cube.stars = function(x, ...) {
 #}
 #
 #eval(slice(x, 1, 1:3))
+
+register_all_s3_methods = function() {
+	register_s3_method("dplyr", "filter", "stars")
+	register_s3_method("dplyr", "select", "stars")
+	register_s3_method("dplyr", "mutate", "stars")
+	register_s3_method("dplyr", "pull", "stars")
+	register_s3_method("dplyr", "as.tbl_cube", "stars")
+}
+
+# from: https://github.com/tidyverse/hms/blob/master/R/zzz.R
+# Thu Apr 19 10:53:24 CEST 2018
+#nocov start
+register_s3_method <- function(pkg, generic, class, fun = NULL) {
+  stopifnot(is.character(pkg), length(pkg) == 1)
+  stopifnot(is.character(generic), length(generic) == 1)
+  stopifnot(is.character(class), length(class) == 1)
+
+  if (is.null(fun)) {
+    fun <- get(paste0(generic, ".", class), envir = parent.frame())
+  } else {
+    stopifnot(is.function(fun))
+  }
+
+  if (pkg %in% loadedNamespaces()) {
+    registerS3method(generic, class, fun, envir = asNamespace(pkg))
+  }
+
+  # Always register hook in case package is later unloaded & reloaded
+  setHook(
+    packageEvent(pkg, "onLoad"),
+    function(...) {
+      registerS3method(generic, class, fun, envir = asNamespace(pkg))
+    }
+  )
+}
+# nocov end
