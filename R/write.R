@@ -11,7 +11,7 @@
 #' @export
 st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_) {
-	if (missing(layer))
+	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
 	sf::gdal_write(obj[layer], ..., file = dsn, driver = driver, options = options, 
 		type = type, na_val = NA_value)
