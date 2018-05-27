@@ -55,12 +55,9 @@ st_set_dimensions = function(.x, which, values) {
 	d = st_dimensions(.x)
 	if (dim(.x)[which] != length(values))
 		stop("length of value does not match dimension")
-	d[[which]]$values = values
-	if (inherits(values, "sfc")) {
+	d[[which]] = create_dimension(values = values)
+	if (inherits(values, "sfc"))
 		names(d)[which] = "sfc"
-		d[[which]]$refsys = st_crs(values)$proj4string
-	}
-	d[[which]]$offset = d[[which]]$delta = NA_real_
 	st_as_stars(unclass(.x), dimensions = d)
 }
 
