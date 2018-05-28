@@ -72,11 +72,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			units(data) = try_as_units(properties$units)
 
 		newdims = lengths(properties$dim_extra)
+		if (length(newdims))
+			dim(data) = c(dim(data)[1:2], newdims)
 
-		data = if (length(newdims))
-				structure(data, dim = c(dim(data)[1:2], newdims))
-			else
-				structure(data, dim = dim(data))
 		# return:
 		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
 			dimensions = create_dimensions(dim(data), properties),

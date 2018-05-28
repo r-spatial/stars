@@ -203,6 +203,7 @@ parse_netcdf_meta = function(pr, name) {
 						pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
 				}
 			}
+			pr$dim_extra = rev(pr$dim_extra)
 		}
 	}
 	pr
