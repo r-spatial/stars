@@ -37,8 +37,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	opar = par()
 	dots = list(...)
 
-	if (join_zlim)
+	if (join_zlim) {
 		breaks = get_breaks(x, breaks, nbreaks)
+		nbreaks = length(breaks) # might be shorter than originally intended!
+	}
 
 	if (!missing(y))
 		stop("y argument should be missing")
@@ -96,11 +98,12 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			labels = expand_dimensions(st_dimensions(x))[[3]]
 			for (i in seq_len(dims[3])) {
 				im = flatten(x, i)
-				if (join_zlim)
-					image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = breaks, col = col, ...)
-				else
-					image(flatten(x, i), xlab = "", ylab = "", axes = axes, 
-						breaks = get_breaks(im, breaks, nbreaks), col = col, ...)
+				if (! join_zlim) {
+					zlim = range(im[[1]], na.rm = TRUE)
+					br = get_breaks(im, breaks, nbreaks)
+				} else
+					br = breaks
+				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
@@ -138,12 +141,9 @@ get_breaks = function(x, breaks, nbreaks) {
 		# take a regular sample from x[[1]]:
 		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
 		n.unq = length(unique(na.omit(values)))
-		if (! all(is.na(values)) && n.unq > 1) {
-			if (utils::packageVersion("classInt") > "0.2-1")
-				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
-			else
-				classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks)$brks
-		} else
+		if (! all(is.na(values)) && n.unq > 1)
+			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
+		else
 			range(values, na.rm = TRUE) # lowest and highest!
 	} else # breaks was given:
 		breaks

@@ -16,7 +16,7 @@ Imports:
     Rcpp, 
 	rlang,
 	units,
-	classInt
+	classInt (>= 0.2-2)
 Suggests: 
 	lwgeom,
     covr,
