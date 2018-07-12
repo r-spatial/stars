@@ -1,8 +1,7 @@
 split_strings = function(md, split = "=") {
 	splt = strsplit(md, split)
 	lst = lapply(splt, function(x) if (length(x) <= 1) NA_character_ else x[[2]])
-	structure(lst, names = sapply(splt, function(x) x[[1]]))
-	structure(lst, class = "gdal_metadata")
+	structure(lst, names = sapply(splt, function(x) x[[1]]), class = "gdal_metadata")
 }
 
 #' read raster/array dataset from file or connection
