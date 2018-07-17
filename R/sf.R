@@ -1,10 +1,20 @@
+sfc_from_longlat = function(x, as_points, crs = 4326) {
+	stopifnot(as_points == TRUE) # FIXME:
+	if (!inherits(x, "stars") || !length(x) == 2)
+		stop("longlat should be a lenght-2 stars object")
+	pts = cbind(as.vector(x[[1]]), as.vector(x[[2]]))
+	st_sfc(lapply(seq_len(nrow(pts)), function(i) st_point(pts[i,])), crs = crs)
+}
+
 # sf conversion things
 
 #' @export
 st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point,
-		which = seq_len(prod(dim(x)[1:2]))) {
-	st_as_sfc(structure(st_dimensions(x)[c("x", "y")], class = "dimensions"),
-		..., as_points = as_points, which = which)
+		which = seq_len(prod(dim(x)[1:2])), longlat = NULL) {
+	if (is.null(longlat))
+		st_as_sfc(st_dimensions(x)[c("x", "y")], ..., as_points = as_points, which = which)
+	else
+		sfc_from_longlat(longlat, as_points = as_points, ...)[which]
 }
 
 #' @export
@@ -22,9 +32,10 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
 #' @param na.rm logical; remove cells with all missing values?
+#' @param longlat optionally a stars object with two 2-D arrays with longitude and latitude coordinates for each pixel; if this is defined, x and y dimension definitionss are further ignored.
 #' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 #' @export
-st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE) {
+st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE, longlat = NULL) {
 
 	d = st_dimensions(x)
 	olddim = dim(x)
@@ -46,7 +57,7 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 			rep(TRUE, prod(dim(x)[1:2]))
 
 	# flatten two dims x,y to one dim sfc (replacing "x")
-	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep))
+	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep), longlat = longlat)
 	# overwrite x:
 	d[["x"]] = create_dimension(from = 1, to = length(sfc), values = sfc)
 	# rename x to sfc:
@@ -71,10 +82,11 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 }
 
 #' @export
-st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE) {
+st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE, 
+		longlat = NULL) {
 
 	if (has_raster(x))
-		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
+		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm, longlat = longlat)
 
 	if (! has_sfc(x))
 		stop("no feature geometry column found")
