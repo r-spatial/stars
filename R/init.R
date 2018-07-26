@@ -6,7 +6,6 @@
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop asub
 #' @importFrom classInt classIntervals
-#' @importFrom Rcpp evalCpp
 #' @import sf
 #' @import units
 NULL
