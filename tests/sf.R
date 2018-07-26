@@ -1,6 +1,6 @@
 suppressPackageStartupMessages(library(stars))
 library(sf)
-jp2 = system.file("jp2/B01.jp2", package = "stars")
+#jp2 = system.file("jp2/B01.jp2", package = "stars")
 #(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))

@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,7 +17,7 @@ Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
 > library(sf)
-> jp2 = system.file("jp2/B01.jp2", package = "stars")
+> #jp2 = system.file("jp2/B01.jp2", package = "stars")
 > #(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > (x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
@@ -191,4 +191,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.458   0.220   1.418 
+  0.687   0.287   0.648 

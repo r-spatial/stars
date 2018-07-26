@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,10 +23,10 @@ Type 'q()' to quit R.
 Loading required package: stars
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.5.1, GDAL 2.2.1, proj.4 4.9.3
+Linking to GEOS 3.6.2, GDAL 2.2.3, proj.4 4.9.3
 ══ testthat results  ═══════════════════════════════════════════════════════════
 OK: 9 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.735   0.253   0.641 
+  0.699   0.271   0.640 
