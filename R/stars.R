@@ -385,7 +385,7 @@ st_crs.stars = function(x, ...) {
 	mc[["drop"]] = FALSE
 	for (i in names(x)) {
 		mc[[2]] = as.name(i)
-		x[[i]] = eval(mc, x)
+		x[[i]] = eval(mc, x, parent.frame())
 	}
 	mc0 = mc[1:3] # "[", x, first dim
 	j = 3 # first dim
@@ -393,7 +393,7 @@ st_crs.stars = function(x, ...) {
 		mc0[[2]] = as.name(i)
 		mc0[[3]] = mc[[j]]
 		mc0[["values"]] = ed[[i]]
-		d[[i]] = eval(mc0, d)
+		d[[i]] = eval(mc0, d, parent.frame())
 		j = j + 1
 	}
   }
