@@ -295,7 +295,7 @@ print.dimensions = function(x, ..., digits = 6) {
 	print(ret)
 }
 
-equal_dimensions = function(lst) {
+identical_dimensions = function(lst) {
 	if (length(lst) > 1) {
 		for (i in 2:length(lst))
 			if (!identical(attr(lst[[1]], "dimensions"), attr(lst[[i]], "dimensions")))

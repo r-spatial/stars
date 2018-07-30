@@ -31,7 +31,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet)
 		dims = length(dim(ret[[1]][[1]]))
-		return(do.call(c, c(ret, along = along)))
+		return(do.call(c, append(ret, list(along = along))))
 	}
 
 	properties = gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value)
@@ -256,26 +256,44 @@ propagate_units = function(new, old) {
 
 #' @export
 c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])) {
+	values.missing = missing(values)
 	dots = list(...)
-	if (is.na(along) && length(dots) > 1) { # merge attributes of several objects, retaining dim
-		if (equal_dimensions(dots))
+	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
+	# dim does not change:
+	if (is.na(along) && length(dots) > 1) { 
+		if (identical_dimensions(dots))
 			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
 		else {
+			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
 			if (is.na(along))
 				stop("don't know how to merge arrays: please specify parameter along")
 			do.call(c, c(dots, along = along))
 		}
 	} else {
+		# Case 2: single stars object, collapse attributes into new array dimension:
 		if (length(dots) == 1 && (is.na(along) || along == length(dim(dots[[1]])) + 1)) { 
-			# collapse attributes into new array dimension:
 			along = length(dim(dots[[1]])) + 1
 			new_dim = create_dimension(values = values)
 			dims = structure(c(st_dimensions(dots[[1]]), new_dim = list(new_dim)), class = "dimensions")
 			if (! missing(dim_name))
 				names(dims)[names(dims) == "new_dim"]= dim_name
 			st_as_stars(attr = do.call(abind, c(dots, along = along)), dimensions = dims)
-		} else { # loop over attributes:
+		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
+			if (prod(lengths(along)) != length(dots))
+				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
+			# abind all:
+			d = st_dimensions(dots[[1]])
+			ret = mapply(abind, ..., along = length(d) + 1, SIMPLIFY = FALSE)
+			# make dims:
+			newdim = c(dim(dots[[1]]), lengths(along))
+			ret = lapply(ret, function(x) { dim(x) = newdim; x })
+			ret = propagate_units(ret, dots[[1]])
+			# make dimensions:
+			for (i in seq_along(along))
+				d[[ names(along)[i] ]] = create_dimension(values = along[[i]])
+			st_as_stars(ret, dimensions = d)
+		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
 			d = st_dimensions(dots[[1]])
 			along_dim = if (is.character(along)) {

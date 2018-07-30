@@ -24,7 +24,7 @@
 
 * can plot rectilinear grids (but will plot rgb images as regular grids)
 
-* `rbg` argument to `image` works 
+* `rgb` argument to `image` works 
 
 * `[` array-like subsetting works; first index is attribute selector
 
