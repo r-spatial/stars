@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,6 +18,7 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages(library(stars))
 > library(spacetime)
 > set.seed(1331)
+> Sys.setenv(TZ="UTC")
 > example(STFDF)
 
 STFDF> sp = cbind(x = c(0,0,1), y = c(0,1,1))
@@ -73,8 +74,8 @@ Slot "time":
 2010-08-05 13:00:00         4
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
-[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
+[3] "2010-08-05 13:00:00 UTC" "2010-08-05 14:00:00 UTC"
 
 
 STFDF> stfdf[1:2,]
@@ -105,8 +106,8 @@ Slot "time":
 2010-08-05 13:00:00         4
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
-[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
+[3] "2010-08-05 13:00:00 UTC" "2010-08-05 14:00:00 UTC"
 
 
 STFDF> stfdf[,1:2]
@@ -134,7 +135,7 @@ Slot "time":
 2010-08-05 11:00:00         2
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
 
 
 STFDF> stfdf[,,2]
@@ -170,8 +171,8 @@ Slot "time":
 2010-08-05 13:00:00         4
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
-[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
+[3] "2010-08-05 13:00:00 UTC" "2010-08-05 14:00:00 UTC"
 
 
 STFDF> stfdf[,,"values"]
@@ -207,8 +208,8 @@ Slot "time":
 2010-08-05 13:00:00         4
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
-[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
+[3] "2010-08-05 13:00:00 UTC" "2010-08-05 14:00:00 UTC"
 
 
 STFDF> stfdf[1,]
@@ -288,8 +289,8 @@ Slot "time":
 2010-08-05 13:00:00         4
 
 Slot "endTime":
-[1] "2010-08-05 11:00:00 CEST" "2010-08-05 12:00:00 CEST"
-[3] "2010-08-05 13:00:00 CEST" "2010-08-05 14:00:00 CEST"
+[1] "2010-08-05 11:00:00 UTC" "2010-08-05 12:00:00 UTC"
+[3] "2010-08-05 13:00:00 UTC" "2010-08-05 14:00:00 UTC"
 
 
 STFDF> x = stfdf[stfdf[1:2,],] 
@@ -328,4 +329,4 @@ The following objects are masked from 'package:base':
 > 
 > proc.time()
    user  system elapsed 
-  1.247   0.251   1.180 
+  0.886   0.202   0.778 

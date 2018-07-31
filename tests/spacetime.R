@@ -1,6 +1,7 @@
 suppressPackageStartupMessages(library(stars))
 library(spacetime)
 set.seed(1331)
+Sys.setenv(TZ="UTC")
 example(STFDF)
 
 x = st_as_stars(stfdf)
