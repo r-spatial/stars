@@ -2,13 +2,17 @@
 % Please edit documentation in R/stars.R
 \name{read_stars}
 \alias{read_stars}
+\alias{read_stars}
+\alias{c.stars}
 \title{read raster/array dataset from file or connection}
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA)
+  sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_)
+
+\method{c}{stars}(..., along = NA_integer_)
 }
 \arguments{
-\item{.x}{if character, name of file(s) to read; if list: list with arrays}
+\item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
 
 \item{...}{ignored}
 
@@ -22,13 +26,16 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 
 \item{NA_value}{numeric value to be used for conversion into NA values; by default this is read from the input file}
 
-\item{along}{character or integer; in case \code{.x} contains multiple files, along which dimension should objects be merged? \code{NA} will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if time stamps differ. A positive value (or name) will merge along that dimension, or create a new dimension.}
+\item{along}{length-one character or integer, or list; determines how several arrays are combined, see Details.}
 }
 \value{
 object of class \code{stars}
 }
 \description{
 read raster/array dataset from file or connection
+}
+\details{
+In case \code{.x} contains multiple files, they will all be read and combined with \code{c}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -37,4 +44,7 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x3 = read_stars(c(tif, tif), along = "band"))
 (x4 = read_stars(c(tif, tif), along = "new_dimensions")) # create 4-dimensional array
 x1o = read_stars(tif, options = "OVERVIEW_LEVEL=1")
+t1 = as.Date("2018-07-31")
+# along is a named list indicating two dimensions:
+read_stars(c(tif, tif, tif, tif), along = list(foo = c("bar1", "bar2"), time = c(t1, t1+2)))
 }

@@ -7,15 +7,16 @@ split_strings = function(md, split = "=") {
 #' read raster/array dataset from file or connection
 #'
 #' read raster/array dataset from file or connection
-#' @param .x if character, name of file(s) to read; if list: list with arrays
+#' @param .x character vector with name(s) of file(s) or data source(s) to be read
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
-#' @param along character or integer; in case \code{.x} contains multiple files, along which dimension should objects be merged? \code{NA} will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if time stamps differ. A positive value (or name) will merge along that dimension, or create a new dimension.
+#' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
 #' @param ... ignored
 #' @return object of class \code{stars}
+#' @details In case \code{.x} contains multiple files, they will all be read and combined with \code{c}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -24,8 +25,11 @@ split_strings = function(md, split = "=") {
 #' (x3 = read_stars(c(tif, tif), along = "band"))
 #' (x4 = read_stars(c(tif, tif), along = "new_dimensions")) # create 4-dimensional array
 #' x1o = read_stars(tif, options = "OVERVIEW_LEVEL=1")
+#' t1 = as.Date("2018-07-31")
+#' # along is a named list indicating two dimensions:
+#' read_stars(c(tif, tif, tif, tif), along = list(foo = c("bar1", "bar2"), time = c(t1, t1+2)))
 read_stars = function(.x, ..., options = character(0), driver = character(0), 
-		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA) {
+		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_) {
 
 	x = .x
 	if (length(x) > 1) { # loop over data sources:
@@ -254,9 +258,9 @@ propagate_units = function(new, old) {
 	new
 }
 
+#' @name read_stars
 #' @export
-c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])) {
-	values.missing = missing(values)
+c.stars = function(..., along = NA_integer_) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
@@ -272,13 +276,18 @@ c.stars = function(..., along = NA_integer_, dim_name, values = names(dots[[1]])
 		}
 	} else {
 		# Case 2: single stars object, collapse attributes into new array dimension:
-		if (length(dots) == 1 && (is.na(along) || along == length(dim(dots[[1]])) + 1)) { 
-			along = length(dim(dots[[1]])) + 1
+		if (length(dots) == 1) {
+			if (is.list(along)) {
+				values = along[[1]]
+				dim_name = names(along)[1]
+			} else {
+				values = names(dots[[1]])
+				dim_name = "new_dim"
+			}
 			new_dim = create_dimension(values = values)
 			dims = structure(c(st_dimensions(dots[[1]]), new_dim = list(new_dim)), class = "dimensions")
-			if (! missing(dim_name))
-				names(dims)[names(dims) == "new_dim"]= dim_name
-			st_as_stars(attr = do.call(abind, c(dots, along = along)), dimensions = dims)
+			names(dims)[names(dims) == "new_dim"] = dim_name
+			st_as_stars(attr = do.call(abind, c(dots, along = length(dim(dots[[1]])) + 1)), dimensions = dims)
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			if (prod(lengths(along)) != length(dots))
 				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
