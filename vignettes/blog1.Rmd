@@ -6,7 +6,7 @@ output:
     toc: true
     theme: united
 vignette: >
-  %\VignetteIndexEntry{Spatiotemporal tidy arrays for R; first steps}
+  %\VignetteIndexEntry{Spatiotemporal arrays for R; stars blog one}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
