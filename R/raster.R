@@ -26,7 +26,10 @@ st_as_stars.Raster = function(.x, ...) {
 
 st_as_raster = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
-	stopifnot(length(dim(x)) %in% c(2, 3))
+	if (length(dim(x)) > 3) {
+		warning("folding all higher dimensions into the third dimension")
+		x = st_apply(x, 1:2, c)
+	}
 	d = st_dimensions(x)
 	stopifnot(all(c("x", "y") %in% names(d)))
 	bb = st_bbox(x)

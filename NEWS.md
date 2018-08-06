@@ -1,3 +1,7 @@
+# version 0.1-2
+
+* fold all higher dimensions into the third dimension before coercing to `Raster`; #40
+
 # version 0.1-1
 
 * add meta data reader to `read_stars`
