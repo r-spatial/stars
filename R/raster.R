@@ -28,7 +28,7 @@ st_as_raster = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
 	if (length(dim(x)) > 3) {
 		warning("folding all higher dimensions into the third dimension")
-		x = st_apply(x, 1:2, c)
+		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect")
 	}
 	d = st_dimensions(x)
 	stopifnot(all(c("x", "y") %in% names(d)))
