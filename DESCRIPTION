@@ -38,17 +38,5 @@ VignetteBuilder: knitr
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Collate:
-	init.R
-	stars.R
-	meta.R
-	sf.R
-	dimensions.R
-	plot.R
-	tidyverse.R
-	transform.R
-	ops.R
-	write.R
-	raster.R
-	spacetime.R
-RoxygenNote: 6.0.1
+Collate: init.R stars.R meta.R sf.R dimensions.R plot.R tidyverse.R transform.R ops.R write.R raster.R spacetime.R
+RoxygenNote: 6.1.0

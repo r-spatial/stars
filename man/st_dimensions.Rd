@@ -2,13 +2,9 @@
 % Please edit documentation in R/dimensions.R
 \name{st_dimensions}
 \alias{st_dimensions}
-\alias{st_dimensions}
 \alias{st_dimensions.stars}
-\alias{st_dimensions}
 \alias{st_dimensions.array}
-\alias{st_dimensions}
 \alias{st_dimensions.default}
-\alias{st_dimensions}
 \alias{st_set_dimensions}
 \title{get dimensions from stars object}
 \usage{

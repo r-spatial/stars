@@ -5,8 +5,8 @@
 \title{write stars object to gdal dataset (typically: to file)}
 \usage{
 \method{st_write}{stars}(obj, dsn, layer = 1, ...,
-  driver = detect.driver(dsn), options = character(0), type = "Float32",
-  NA_value = NA_real_)
+  driver = detect.driver(dsn), options = character(0),
+  type = "Float32", NA_value = NA_real_)
 }
 \arguments{
 \item{obj}{object of class \code{stars}}

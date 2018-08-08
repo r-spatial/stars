@@ -3,13 +3,9 @@
 \name{dplyr}
 \alias{dplyr}
 \alias{filter.stars}
-\alias{dplyr}
 \alias{mutate.stars}
-\alias{dplyr}
 \alias{select.stars}
-\alias{dplyr}
 \alias{pull.stars}
-\alias{dplyr}
 \alias{as.tbl_cube.stars}
 \title{dplyr verbs for stars objects}
 \usage{

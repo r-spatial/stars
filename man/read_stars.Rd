@@ -2,14 +2,11 @@
 % Please edit documentation in R/stars.R
 \name{read_stars}
 \alias{read_stars}
-\alias{read_stars}
-\alias{c.stars}
 \title{read raster/array dataset from file or connection}
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_)
-
-\method{c}{stars}(..., along = NA_integer_)
+  sub = TRUE, quiet = FALSE, NA_value = NA_real_,
+  along = NA_integer_)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
@@ -35,7 +32,7 @@ object of class \code{stars}
 read raster/array dataset from file or connection
 }
 \details{
-In case \code{.x} contains multiple files, they will all be read and combined with \code{c}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
+In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

@@ -16,7 +16,7 @@ split_strings = function(md, split = "=") {
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
 #' @param ... ignored
 #' @return object of class \code{stars}
-#' @details In case \code{.x} contains multiple files, they will all be read and combined with \code{c}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
+#' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -258,7 +258,11 @@ propagate_units = function(new, old) {
 	new
 }
 
-#' @name read_stars
+#' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
+#' 
+#' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
+#' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute
+#' @param along integer; see \link{read_stars}
 #' @export
 c.stars = function(..., along = NA_integer_) {
 	dots = list(...)
@@ -393,7 +397,45 @@ st_crs.stars = function(x, ...) {
 	st_as_stars(unclass(x), dimensions = d)
 }
 
+#' subset stars objects
+#' 
+#' subset stars objects
+#' @name stars_subset
+#' @param x object of class \code{stars}
+#' @param i first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf} or \code{sfc} used as spatial selector; see details
+#' @param drop 
+#' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
+#' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
+#' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}.
+#' @details if \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}.
 #' @export
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' x[,,,1:3] # select bands
+#' x[,1:100,100:200,] # select x and y by range
+#' x["L7_ETMs.tif"] # select attribute
+#' xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462,
+#' 9111328.49619133)), .Names = c("x", "y"))
+#' pts = st_as_sf(data.frame(do.call(cbind, xy)), coords = c("x", "y"), crs = st_crs(x))
+#' image(x, axes = TRUE)
+#' plot(st_as_sfc(st_bbox(pts)), col = NA, add = TRUE)
+#' bb = st_bbox(pts)
+#' (xx = x[bb])
+#' image(xx)
+#' plot(st_as_sfc(bb), add = TRUE, col = NA)
+#' image(x)
+#' pt = st_point(c(x = 290462.103109179, y = 9114202.32594085))
+#' buf = st_buffer(st_sfc(pt, crs = st_crs(x)), 1500)
+#' plot(buf, add = TRUE)
+#' 
+#' buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
+#'    crs = st_crs(x))
+#' image(x[buf])
+#' plot(buf, add = TRUE, col = NA)
+#' image(x[buf,crop=FALSE])
+#' plot(buf, add = TRUE, col = NA)
+#' plot(x, rgb = 1:3)
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
   missing.i = missing(i)
   # special case:
@@ -430,6 +472,12 @@ st_crs.stars = function(x, ...) {
   	st_as_stars(x, dimensions = d)
 }
 
+#' crop a stars object
+#' 
+#' crop a stars object
+#' @param x object of class \code{stars}
+#' @param obj object of class \code{sf}, \code{sfc} or \code{bbox}
+#' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}
 st_crop = function(x, obj, crop = TRUE) {
 	d = dim(x)
 	dm = st_dimensions(x)

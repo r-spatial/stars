@@ -2,21 +2,20 @@
 % Please edit documentation in R/plot.R
 \name{plot.stars}
 \alias{plot.stars}
-\alias{plot.stars}
 \alias{image.stars}
 \title{plot stars object, with subplots for each level of first non-spatial dimension}
 \usage{
 \method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
-  axes = FALSE, downsample = TRUE, nbreaks = 11, breaks = "quantile",
-  col = grey(1:(nbreaks - 1)/nbreaks), key.pos = get_key_pos(x, ...),
-  key.width = lcm(1.8), key.length = 0.618, reset = TRUE,
-  box_col = grey(0.8))
+  axes = FALSE, downsample = TRUE, nbreaks = 11,
+  breaks = "quantile", col = grey(1:(nbreaks - 1)/nbreaks),
+  key.pos = get_key_pos(x, ...), key.width = lcm(1.8),
+  key.length = 0.618, reset = TRUE, box_col = grey(0.8))
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
-  rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) "" else
-  names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
-  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE,
-  axes = FALSE, interpolate = FALSE)
+  rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) ""
+  else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
+  xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
+  text_values = FALSE, axes = FALSE, interpolate = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}

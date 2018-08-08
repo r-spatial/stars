@@ -2,13 +2,9 @@
 % Please edit documentation in R/stars.R, R/sf.R, R/raster.R
 \name{st_as_stars}
 \alias{st_as_stars}
-\alias{st_as_stars}
 \alias{st_as_stars.list}
-\alias{st_as_stars}
 \alias{st_as_stars.default}
-\alias{st_as_stars}
 \alias{st_as_stars.sf}
-\alias{st_as_stars}
 \alias{st_as_stars.Raster}
 \title{convert objects into a stars object}
 \usage{
