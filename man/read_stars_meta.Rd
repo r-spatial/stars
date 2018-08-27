@@ -5,7 +5,7 @@
 \title{read raster/array metadata from file(s) or connection}
 \usage{
 read_stars_meta(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, NA_value = NA_real_)
+  sub = TRUE, NA_value = NA_real_, RasterIO = list())
 }
 \arguments{
 \item{.x}{if character, name of file(s) to read; if list: list with arrays}
@@ -19,6 +19,8 @@ read_stars_meta(.x, ..., options = character(0), driver = character(0),
 \item{sub}{integer or logical; sub-datasets to be read}
 
 \item{NA_value}{numeric value to be used for conversion into NA values; by default this is read from the input file}
+
+\item{RasterIO}{list with GDAL's RasterIO parameters; see \link{read_stars}}
 }
 \value{
 if \code{.x} has length 1 and no subdatasets, object of class \code{stars_meta}, otherwise a list of \code{stars_meta} objects, or a list of lists of those (with first level nesting: elements of \code{.x}, second level: subdatasets)
@@ -28,6 +30,5 @@ read raster/array metadata from file(s) or connection
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = read_stars(tif)
-# x1 = read_stars(nv, options = "OVERVIEW_LEVEL=1")
+x = read_stars_meta(tif)
 }

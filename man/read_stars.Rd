@@ -6,7 +6,7 @@
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
   sub = TRUE, quiet = FALSE, NA_value = NA_real_,
-  along = NA_integer_)
+  along = NA_integer_, RasterIO = list())
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
@@ -24,6 +24,8 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 \item{NA_value}{numeric value to be used for conversion into NA values; by default this is read from the input file}
 
 \item{along}{length-one character or integer, or list; determines how several arrays are combined, see Details.}
+
+\item{RasterIO}{list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.}
 }
 \value{
 object of class \code{stars}
@@ -33,6 +35,14 @@ read raster/array dataset from file or connection
 }
 \details{
 In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
+
+\code{RasterIO} is a list with zero or more of the following named arguments: 
+\code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1), 
+\code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}.
+see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
+\code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
+Note that of \code{nBufXSize} or \code{nBufYSize} is specified, the resulting, adjusted geotransform 
+may not be correct.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
