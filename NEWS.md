@@ -1,5 +1,9 @@
 # version 0.1-2
 
+* allow reading sections of a raster, raster at a lower resolution, selected bands; #48
+
+* allow reading vectors (arrays) with more than 2^31 elements; #48
+
 * fold all higher dimensions into the third dimension before coercing to `Raster`; #40
 
 # version 0.1-1
