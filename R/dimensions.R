@@ -50,14 +50,22 @@ st_dimensions.default = function(.x, ..., geotransform = rep(NA_real_, 6)) {
 #' @name st_dimensions
 #' @param which integer which dimension to change
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
+#' @param names character; new names vector for dimensions
 #' @export
-st_set_dimensions = function(.x, which, values) {
+st_set_dimensions = function(.x, which, values, names) {
 	d = st_dimensions(.x)
-	if (dim(.x)[which] != length(values))
-		stop("length of value does not match dimension")
-	d[[which]] = create_dimension(values = values)
-	if (inherits(values, "sfc"))
-		names(d)[which] = "sfc"
+	if (! missing(values)) {
+		if (dim(.x)[which] != length(values))
+			stop("length of value does not match dimension")
+		d[[which]] = create_dimension(values = values)
+		if (inherits(values, "sfc"))
+			base::names(d)[which] = "sfc"
+	}
+	if (! missing(names)) {
+		if (length(d) != length(names))
+			stop("length of names should match number of dimension")
+		base::names(d) = names
+	}
 	st_as_stars(unclass(.x), dimensions = d)
 }
 
@@ -312,7 +320,7 @@ combine_dimensions = function(dots, along) {
 		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
 		if (any(is.na(offset))) {
 			dims[[along]]$from = 1
-			dims[[along]]$to = length(dots) * dims[[along]]$to
+			dims[[along]]$to = sum(sapply(dots, function(x) { d = st_dimensions(x)[[along]]; d$to - d$from + 1} ))
 		} else {
 			offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
 			if (length(unique(diff(offset))) == 1) { # regular & sorted
