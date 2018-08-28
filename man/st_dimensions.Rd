@@ -16,7 +16,7 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{default}(.x, ..., geotransform = rep(NA_real_, 6))
 
-st_set_dimensions(.x, which, values)
+st_set_dimensions(.x, which, values, names)
 }
 \arguments{
 \item{.x}{object to retrieve dimensions information from}
@@ -28,6 +28,8 @@ st_set_dimensions(.x, which, values)
 \item{which}{integer which dimension to change}
 
 \item{values}{values for this dimension (e.g. \code{sfc} list-column)}
+
+\item{names}{character; new names vector for dimensions}
 }
 \value{
 the \code{dimensions} attribute of \code{x}, of class \code{dimensions}

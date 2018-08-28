@@ -50,14 +50,22 @@ st_dimensions.default = function(.x, ..., geotransform = rep(NA_real_, 6)) {
 #' @name st_dimensions
 #' @param which integer which dimension to change
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
+#' @param names character; new names vector for dimensions
 #' @export
-st_set_dimensions = function(.x, which, values) {
+st_set_dimensions = function(.x, which, values, names) {
 	d = st_dimensions(.x)
-	if (dim(.x)[which] != length(values))
-		stop("length of value does not match dimension")
-	d[[which]] = create_dimension(values = values)
-	if (inherits(values, "sfc"))
-		names(d)[which] = "sfc"
+	if (! missing(values)) {
+		if (dim(.x)[which] != length(values))
+			stop("length of value does not match dimension")
+		d[[which]] = create_dimension(values = values)
+		if (inherits(values, "sfc"))
+			base::names(d)[which] = "sfc"
+	}
+	if (! missing(names)) {
+		if (length(d) != length(names))
+			stop("length of names should match number of dimension")
+		base::names(d) = names
+	}
 	st_as_stars(unclass(.x), dimensions = d)
 }
 
