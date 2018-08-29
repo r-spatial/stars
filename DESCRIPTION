@@ -1,46 +1,74 @@
 Package: stars
-Version: 0.1-1
 Title: Scalable, Spatiotemporal Tidy Arrays
-Description: Reading, manipulating, writing and plotting spatiotemporal Arrays (including raster data) in R, using GDAL bindings provided by package sf.
-Authors@R: c(person("Edzer", "Pebesma", role = c("aut", "cre"), email = "edzer.pebesma@uni-muenster.de", comment = c(ORCID = "0000-0001-8049-7069")),
-	person("Michael", "Sumner", role = "ctb"),
-	person("Etienne", "Racine", role = "ctb"),
-	person("Adriano", "Fantini", role = "ctb")
-	)
-Depends:
-    R (>= 3.3.0),
-	abind,
-	sf (>= 0.6-3)
-Imports:
-	methods,
-	rlang,
-	units,
-	classInt (>= 0.2-2),
-	ncmeta,
-	ncdf4
-Suggests: 
-	lwgeom,
-    covr,
-	ggplot2,
-	ggthemes,
-	gstat,
-	dplyr (>= 0.7-0),
-    knitr,
-	maps,
-	plm,
-	rmarkdown,
-	sp,
-	zoo,
-	xts,
-	spacetime,
-	raster,
-    testthat,
-	viridis
-VignetteBuilder: knitr
+Version: 0.1-1
+Authors@R: 
+    c(person(given = "Edzer",
+             family = "Pebesma",
+             role = c("aut", "cre"),
+             email = "edzer.pebesma@uni-muenster.de",
+             comment = c(ORCID = "0000-0001-8049-7069")),
+      person(given = "Michael",
+             family = "Sumner",
+             role = "ctb"),
+      person(given = "Etienne",
+             family = "Racine",
+             role = "ctb"),
+      person(given = "Adriano",
+             family = "Fantini",
+             role = "ctb"))
+Description: Reading, manipulating, writing and plotting
+    spatiotemporal Arrays (including raster data) in R, using GDAL
+    bindings provided by package sf.
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Collate: init.R stars.R meta.R sf.R dimensions.R plot.R tidyverse.R transform.R ops.R write.R raster.R spacetime.R ncdf.R proxy.R
+Depends:
+    abind,
+    R (>= 3.3.0),
+    sf (>= 0.6-3)
+Imports:
+    classInt (>= 0.2-2),
+    methods,
+    ncdf4,
+    ncmeta,
+    rlang,
+    units
+Suggests: 
+    covr,
+    dplyr (>= 0.7-0),
+    ggplot2,
+    ggthemes,
+    gstat,
+    knitr,
+    lwgeom,
+    maps,
+    plm,
+    raster,
+    rmarkdown,
+    sp,
+    spacetime,
+    testthat,
+    viridis,
+    xts,
+    zoo
+VignetteBuilder: 
+    knitr
+Remotes: 
+    r-spatial/sf
 Encoding: UTF-8
 RoxygenNote: 6.1.0
-Remotes: r-spatial/sf
+Collate: 
+    'init.R'
+    'stars.R'
+    'meta.R'
+    'sf.R'
+    'dimensions.R'
+    'plot.R'
+    'tidyverse.R'
+    'transform.R'
+    'ops.R'
+    'write.R'
+    'raster.R'
+    'spacetime.R'
+    'ncdf.R'
+    'proxy.R'
