@@ -28,7 +28,7 @@ addons:
       - netcdf-bin
 
 before_install:
-  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); install.packages(c("abind", "ncdf4")); tic::prepare_all_stages()'
+  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); install.packages(c("abind", "ncdf4", "ncmeta")); tic::prepare_all_stages()'
 
 after_success:
   - R -q -e 'covr::codecov(quiet = FALSE)'
