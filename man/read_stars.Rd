@@ -6,7 +6,7 @@
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
   sub = TRUE, quiet = FALSE, NA_value = NA_real_,
-  along = NA_integer_, RasterIO = list())
+  along = NA_integer_, RasterIO = list(), proxy = FALSE)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
@@ -26,6 +26,8 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 \item{along}{length-one character or integer, or list; determines how several arrays are combined, see Details.}
 
 \item{RasterIO}{list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.}
+
+\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.}
 }
 \value{
 object of class \code{stars}

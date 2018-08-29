@@ -237,13 +237,16 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 # reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n) {
 	stopifnot(all(n >= 0))
-	d = dim(x)
-	n = rep(n, length.out = length(d))
-	args = rep(list(rlang::missing_arg()), length(d)+1)
-	for (i in seq_along(d))
-		if (n[i] > 1)
-			args[[i+1]] = seq(1, d[i], n[i])
-	eval(rlang::expr(x[!!!args]))
+	if (! all(n == 0)) {
+		d = dim(x)
+		n = rep(n, length.out = length(d))
+		args = rep(list(rlang::missing_arg()), length(d)+1)
+		for (i in seq_along(d))
+			if (n[i] > 1)
+				args[[i+1]] = seq(1, d[i], n[i])
+		eval(rlang::expr(x[!!!args]))
+	} else
+		x
 }
 
 # compute the degree of downsampling allowed to still have more than 

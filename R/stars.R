@@ -15,6 +15,7 @@ split_strings = function(md, split = "=") {
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
 #' @param RasterIO list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.
 #' @param ... ignored
 #' @return object of class \code{stars}
 #' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
@@ -39,18 +40,18 @@ split_strings = function(md, split = "=") {
 #' read_stars(c(tif, tif, tif, tif), along = list(foo = c("bar1", "bar2"), time = c(t1, t1+2)))
 read_stars = function(.x, ..., options = character(0), driver = character(0), 
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list()) {
+		RasterIO = list(), proxy = FALSE) {
 
 	x = .x
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
-			RasterIO = as.list(RasterIO))
+			RasterIO = as.list(RasterIO), proxy = proxy)
 		dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
-	properties = sf::gdal_read(x, options = options, driver = driver, read_data = TRUE, NA_value = NA_value,
-		RasterIO_parameters = as.list(RasterIO))
+	properties = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy, 
+		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 
 	if (length(properties$bands) == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(properties$sub) # get named list
@@ -78,22 +79,41 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		else
 			structure(do.call(c, ret), names = nms)
 	} else { # we have one single array:
-		data = attr(properties, "data")
-		properties = structure(properties, data = NULL) # remove data from properties
+		if (! proxy) {
+			data = attr(properties, "data")
+			properties = structure(properties, data = NULL) # remove data from properties
+		}
 		if (properties$driver[1] == "netCDF")
 			properties = parse_netcdf_meta(properties, x)
 		properties = parse_meta(properties)
-		if (!is.null(properties$units) && !is.na(properties$units))
+		if (!proxy && !is.null(properties$units) && !is.na(properties$units))
 			units(data) = try_as_units(properties$units)
 
 		newdims = lengths(properties$dim_extra)
-		if (length(newdims))
+		if (length(newdims) && !proxy)
 			dim(data) = c(dim(data)[1:2], newdims)
+		dims = if (proxy) {
+				if (length(properties$bands) > 1) 
+					c(x = properties$cols[2], 
+					y = properties$rows[2], 
+					bands = length(properties$bands),
+					lengths(properties$dim_extra))
+				else
+					c(x = properties$cols[2], 
+					y = properties$rows[2], 
+					lengths(properties$dim_extra))
+			} else 
+				NULL
 
 		# return:
-		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
-			dimensions = create_dimensions(dim(data), properties),
-			class = "stars")
+		if (proxy)
+			structure(list(.x), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
+				dimensions = create_dimensions(dims, properties),
+				class = c("stars_proxy", "stars"))
+		else
+			structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
+				dimensions = create_dimensions(dim(data), properties),
+				class = "stars")
 	}
 }
 
@@ -192,7 +212,8 @@ has_raster = function(x)
 
 is_rectilinear = function(x) {
 	d = st_dimensions(x)
-	has_raster(x) && (is.na(d$x$delta) || is.na(d$y$delta))
+	has_raster(x) && (is.na(d$x$delta) || is.na(d$y$delta)) &&
+		(length(unique(diff(d$x$values))) > 1 || length(unique(diff(d$y$values))) > 1)
 }
 
 has_sfc = function(x)
@@ -445,7 +466,7 @@ st_crs.stars = function(x, ...) {
 #'    crs = st_crs(x))
 #' image(x[buf])
 #' plot(buf, add = TRUE, col = NA)
-#' image(x[buf,crop=FALSE])
+#' image(x[buf, crop=FALSE])
 #' plot(buf, add = TRUE, col = NA)
 #' plot(x, rgb = 1:3)
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
@@ -487,20 +508,24 @@ st_crs.stars = function(x, ...) {
 #' crop a stars object
 #' 
 #' crop a stars object
+#' @name st_crop
+#' @export
 #' @param x object of class \code{stars}
-#' @param obj object of class \code{sf}, \code{sfc} or \code{bbox}
+#' @param y object of class \code{sf}, \code{sfc} or \code{bbox}
+#' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}
-st_crop = function(x, obj, crop = TRUE) {
+st_crop.stars = function(x, y, ..., crop = TRUE) {
+	obj = y
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
-	if (st_crs(x) != st_crs(obj))
+	if (st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects has to be identical")
 	if (crop) {
-		bb = if (!inherits(obj, "bbox"))
-				st_bbox(obj)
+		bb = if (!inherits(y, "bbox"))
+				st_bbox(y)
 			else
-				obj
+				y
 		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm$x$geotransform)
 		for (i in seq_along(d)) {
 			if (names(d[i]) == "x")
@@ -513,11 +538,11 @@ st_crop = function(x, obj, crop = TRUE) {
 		}
 		x = eval(rlang::expr(x[!!!args]))
 	}
-	if (inherits(obj, "bbox"))
-		obj = st_as_sfc(obj)
+	if (inherits(y, "bbox"))
+		y = st_as_sfc(y)
 	xy_grd = st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[c("x", "y")]),
 		coords = c("x", "y"), crs = st_crs(x))
-	inside = st_intersects(obj, xy_grd)[[1]]
+	inside = st_intersects(y, xy_grd)[[1]]
 	d = dim(x) # cropped x
 	raster = rep(NA_real_, prod(d[c("x", "y")]))
 	raster[inside] = 1

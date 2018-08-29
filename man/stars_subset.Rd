@@ -50,7 +50,7 @@ buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])
    crs = st_crs(x))
 image(x[buf])
 plot(buf, add = TRUE, col = NA)
-image(x[buf,crop=FALSE])
+image(x[buf, crop=FALSE])
 plot(buf, add = TRUE, col = NA)
 plot(x, rgb = 1:3)
 }
