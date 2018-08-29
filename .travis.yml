@@ -8,8 +8,8 @@ r:
 sudo: required
 dist: trusty
 cache:
-  # - packages
-  # - ccache
+  - packages
+  - ccache
 latex: false
 
 r_github_packages:
