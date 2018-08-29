@@ -12,6 +12,9 @@ cache:
   - ccache
 latex: false
 
+r_github_packages:
+  - r-spatial/sf
+
 addons:
   apt:
     sources:
@@ -25,7 +28,7 @@ addons:
       - netcdf-bin
 
 before_install:
-  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); tic::prepare_all_stages(); devtools::install_github("r-spatial/sf")'
+  - R -q -e 'install.packages("devtools"); devtools::install_github("ropenscilabs/tic"); tic::prepare_all_stages()'
 
 after_success:
   - R -q -e 'covr::codecov(quiet = FALSE)'
