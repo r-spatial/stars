@@ -21,6 +21,7 @@ addons:
       - libgeos-dev
       - libgdal-dev
       - netcdf-bin
+      - postgresql-server-dev-9.6 # required for postgis installation
 
 before_install:
   - R -q -e 'install.packages("remotes"); remotes::install_github("pat-s/tic@rcmdcheck-build-args"); tic::prepare_all_stages(); tic::before_install()'
