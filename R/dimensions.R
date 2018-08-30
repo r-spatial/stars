@@ -205,9 +205,9 @@ parse_netcdf_meta = function(pr, name) {
 				}
 				u = get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					# print(c("[", u, "]"))
 					units(pr$dim_extra[[v]]) = try_as_units(u)
-					if (v == "time")
+					if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
+							"try-error"))
 						pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
 				}
 			}
