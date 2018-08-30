@@ -43,8 +43,8 @@ In case \code{.x} contains multiple files, they will all be read and combined wi
 \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}.
 see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
 \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
-Note that of \code{nBufXSize} or \code{nBufYSize} is specified, the resulting, adjusted geotransform 
-may not be correct.
+Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image, 
+the resulting, adjusted geotransform may be approximate (this is not clear, right now).
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

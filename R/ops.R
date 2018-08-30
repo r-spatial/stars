@@ -44,7 +44,7 @@ Math.stars = function(x, ...) {
 #' 
 #' st_apply apply a function to array dimensions: aggregate over space, time, or something else
 #' @param X object of class \code{stars}
-#' @param MARGIN see \link[base]{apply}
+#' @param MARGIN see \link[base]{apply}; if \code{MARGIN} is a character vector, 
 #' @param FUN see \link[base]{apply}
 #' @param ... arguments passed on to \code{FUN}
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
@@ -57,6 +57,8 @@ Math.stars = function(x, ...) {
 #' @export
 st_apply = function(X, MARGIN, FUN, ...) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
+	if (is.character(MARGIN))
+		MARGIN = match(MARGIN, names(dim(X)))
 	dX = dim(X)[MARGIN]
 	fn = function(y, ...) {
 		ret = apply(y, MARGIN, FUN, ...)
@@ -82,4 +84,3 @@ st_apply = function(X, MARGIN, FUN, ...) {
 		ret
 	}
 }
-
