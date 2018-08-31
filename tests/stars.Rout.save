@@ -29,10 +29,10 @@ attribute(s):
  3rd Qu.: 86.00   3rd Qu.: 86.00  
  Max.   :255.00   Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -44,10 +44,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > image(x)
 > gdal_crs(tif)
 $nbands
@@ -78,10 +78,10 @@ attribute(s):
  3rd Qu.:172.0  
  Max.   :510.0  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > x * x
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -93,10 +93,10 @@ attribute(s):
  3rd Qu.: 7396  
  Max.   :65025  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > x[,,,1:3]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -108,10 +108,10 @@ attribute(s):
  3rd Qu.: 83.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   3      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   3      NA    NA                           NA    NA   NULL    
 > x[,1:100,100:200,]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -123,10 +123,10 @@ attribute(s):
  3rd Qu.: 77.00  
  Max.   :252.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 100  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y     100 200 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 100  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y     100 200 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > sqrt(x)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -138,10 +138,10 @@ attribute(s):
  3rd Qu.: 9.274  
  Max.   :15.969  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > st_apply(x, 3, min)
 stars object with 1 dimensions and 1 attribute
 attribute(s):
@@ -153,8 +153,9 @@ attribute(s):
  3rd Qu.:29.25  
  Max.   :47.00  
 dimension(s):
-     from to offset delta refsys point values
-band    1  6     NA    NA     NA    NA   NULL
+     from to offset delta refsys point values 
+band    1  6     NA    NA     NA    NA   NULL 
+NULL
 > st_apply(x, 1:2, max)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -166,9 +167,9 @@ attribute(s):
  3rd Qu.:113.00  
  Max.   :255.00  
 dimension(s):
-  from  to  offset delta                       refsys point values
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+  from  to  offset delta                       refsys point values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 > st_apply(x, 1:2, range)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -180,10 +181,11 @@ attribute(s):
  3rd Qu.: 96.00  
  Max.   :255.00  
 dimension(s):
-      from  to  offset delta                       refsys point values
-x        1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-range    1   2      NA    NA                           NA    NA   NULL
+      from  to  offset delta                       refsys point values 
+x        1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL 
+y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL 
+range    1   2      NA    NA                           NA    NA   NULL 
+NULL
 > 
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = read_stars(geomatrix)
@@ -202,10 +204,10 @@ attribute(s):
  Max.   :305.5       
  NA's   :228240      
 dimension(s):
-     from  to     offset   delta  refsys point values
-x       1 180          0       2      NA    NA   NULL
-y       1 170         90      -1      NA    NA   NULL
-time    1  24 2001-01-16 30 days POSIXct    NA   NULL
+     from  to     offset   delta  refsys point values    
+x       1 180          0       2      NA    NA   NULL [x]
+y       1 170         90      -1      NA    NA   NULL [y]
+time    1  24 2001-01-16 30 days POSIXct    NA   NULL    
 > st_as_stars(st_bbox(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -217,9 +219,9 @@ attribute(s):
  3rd Qu.:0.7497925  
  Max.   :0.9999894  
 dimension(s):
-  from  to offset     delta refsys point values
-x    1 360      0         1 NA, NA    NA   NULL
-y    1 180     90 -0.944444 NA, NA    NA   NULL
+  from  to offset     delta refsys point values    
+x    1 360      0         1 NA, NA    NA   NULL [x]
+y    1 180     90 -0.944444 NA, NA    NA   NULL [y]
 > df = as.data.frame(x)
 > 
 > st_as_stars()
@@ -236,6 +238,9 @@ dimension(s):
   from  to offset delta                                    refsys point values
 x    1 360   -180     1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
 y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
+     
+x [x]
+y [y]
 > 
 > dimnames(x)
 [1] "x"    "y"    "time"
@@ -258,11 +263,11 @@ attribute(s):
  Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
  NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
 dimension(s):
-     from  to     offset delta  refsys point values
-x       1 180         -1     2      NA    NA   NULL
-y       1  90         90    -2      NA    NA   NULL
-zlev    1   1      0 [m]    NA      NA    NA   NULL
-time    1   1 1981-12-31    NA POSIXct    NA   NULL
+     from  to     offset delta  refsys point values    
+x       1 180         -1     2      NA    NA   NULL [x]
+y       1  90         90    -2      NA    NA   NULL [y]
+zlev    1   1        0 m    NA      NA    NA   NULL    
+time    1   1 1981-12-31    NA POSIXct    NA   NULL    
 Warning message:
 ignoring unrecognized unit: percentage 
 > plot(red)
@@ -283,10 +288,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-  from  to  offset delta                       refsys point      values
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL
-     1   6      NA    NA                           NA    NA X1, ..., X6
+  from  to  offset delta                       refsys point      values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL [y]
+     1   6      NA    NA                           NA    NA X1, ..., X6    
 > 
 > read_stars(c(tif,tif)) # merges as attributes
 stars object with 3 dimensions and 2 attributes
@@ -299,10 +304,10 @@ attribute(s):
  3rd Qu.: 86.00   3rd Qu.: 86.00  
  Max.   :255.00   Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = "sensor")
 stars object with 4 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
@@ -314,11 +319,11 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-       from  to  offset delta                       refsys point values
-x         1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y         1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band      1   6      NA    NA                           NA    NA   NULL
-sensor    1   2      NA    NA                           NA    NA   NULL
+       from  to  offset delta                       refsys point values    
+x         1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y         1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band      1   6      NA    NA                           NA    NA   NULL    
+sensor    1   2      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = 4)
 stars object with 4 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
@@ -330,11 +335,11 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-        from  to  offset delta                       refsys point values
-x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band       1   6      NA    NA                           NA    NA   NULL
-new_dim    1   2      NA    NA                           NA    NA   NULL
+        from  to  offset delta                       refsys point values    
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band       1   6      NA    NA                           NA    NA   NULL    
+new_dim    1   2      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = "band")
 stars object with 3 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
@@ -346,10 +351,10 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1  12      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1  12      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = 3)
 stars object with 3 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
@@ -361,11 +366,11 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1  12      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1  12      NA    NA                           NA    NA   NULL    
 > 
 > proc.time()
    user  system elapsed 
-  3.921   0.371   4.004 
+  4.509   0.120   4.621 

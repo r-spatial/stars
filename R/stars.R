@@ -50,11 +50,11 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
-	properties = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy, 
+	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy, 
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 
-	if (length(properties$bands) == 0) { # read sub-datasets: different attributes
-		sub_names = split_strings(properties$sub) # get named list
+	if (length(data$bands) == 0) { # read sub-datasets: different attributes
+		sub_names = split_strings(data$sub) # get named list
 		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
 		# sub_datasets = gdal_subdatasets(x, options)[sub] # -> would open x twice
 
@@ -70,7 +70,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			read_stars(x, options = options, driver = driver)
 		}
 		ret = lapply(sub_datasets, .read_stars, options = options, 
-			driver = properties$driver[1], quiet = quiet)
+			driver = data$driver[1], quiet = quiet)
 		if (! quiet)
 			cat("\n")
 		# return:
@@ -79,41 +79,38 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		else
 			structure(do.call(c, ret), names = nms)
 	} else { # we have one single array:
-		if (! proxy) {
-			data = attr(properties, "data")
-			properties = structure(properties, data = NULL) # remove data from properties
-		}
-		if (properties$driver[1] == "netCDF")
-			properties = parse_netcdf_meta(properties, x)
-		properties = parse_meta(properties)
-		if (!proxy && !is.null(properties$units) && !is.na(properties$units))
-			units(data) = try_as_units(properties$units)
+		meta_data = structure(data, data = NULL) # take meta_data only
+		data = if (proxy)
+				.x # names only
+			else
+				attr(data, "data") # extract data arrays
+		if (meta_data$driver[1] == "netCDF")
+			meta_data = parse_netcdf_meta(meta_data, x)
+		meta_data = parse_gdal_meta(meta_data)
+		if (! proxy && !is.null(meta_data$units) && !is.na(meta_data$units)) # set units
+			units(data) = try_as_units(meta_data$units)
 
-		newdims = lengths(properties$dim_extra)
+		newdims = lengths(meta_data$dim_extra)
 		if (length(newdims) && !proxy)
 			dim(data) = c(dim(data)[1:2], newdims)
+
 		dims = if (proxy) {
-				if (length(properties$bands) > 1) 
-					c(x = properties$cols[2], 
-					y = properties$rows[2], 
-					bands = length(properties$bands),
-					lengths(properties$dim_extra))
+				if (length(meta_data$bands) > 1) 
+					c(x = meta_data$cols[2], 
+					  y = meta_data$rows[2], 
+					  band = length(meta_data$bands),
+					  lengths(meta_data$dim_extra))
 				else
-					c(x = properties$cols[2], 
-					y = properties$rows[2], 
-					lengths(properties$dim_extra))
+					c(x = meta_data$cols[2], 
+					  y = meta_data$rows[2], 
+					  lengths(meta_data$dim_extra))
 			} else 
 				NULL
 
 		# return:
-		if (proxy)
-			structure(list(.x), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
-				dimensions = create_dimensions(dims, properties),
-				class = c("stars_proxy", "stars"))
-		else
-			structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
-				dimensions = create_dimensions(dim(data), properties),
-				class = "stars")
+		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
+			dimensions = create_dimensions_from_gdal_meta(dim(data), meta_data),
+			class = if (proxy) c("stars_proxy", "stars") else "stars")
 	}
 }
 
@@ -143,7 +140,8 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 
 #' @name st_as_stars
 #' @export
-st_as_stars.default = function(.x = NULL, ...) {
+#' @param raster character; the names of the dimensions that denote raster dimensions
+st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	args = if (is.null(.x))
 			list(...)
 		else
@@ -160,6 +158,11 @@ st_as_stars.default = function(.x = NULL, ...) {
 				do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
 		} else
 			args[[ which(isdim)[1] ]]
+	if (missing(raster) && !has_sfc(dimensions)) {
+		w = which(sapply(dimensions, function(x) is.null(x$values)))
+		raster = get_raster(dimensions = names(dimensions)[w[1:2]])
+	}
+	dimensions = create_dimensions(dimensions, raster)
 	if (any(isdim))
 		args = args[-which(isdim)]
 	if (is.null(names(args)))
@@ -174,10 +177,10 @@ st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	dx = .x["xmax"] - .x["xmin"]
 	dy = .x["ymax"] - .x["ymin"]
 	gt = c(.x["xmin"], dx/nx, 0.0, .x["ymax"], 0.0, -dy/ny)
-	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta = dx/nx, refsys = crs, geotransform = gt)
-	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs, geotransform = gt)
-	st_as_stars(values = array(runif(nx * ny), c(x = nx, y = ny)), 
-		dims = structure(list(x = x, y = y), class = "dimensions"))
+	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta =  dx/nx, refsys = crs)
+	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs)
+	st_as_stars(values = array(runif(nx * ny), c(x = nx, y = ny)),
+		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
@@ -202,13 +205,14 @@ colrow_from_xy = function(x, geotransform) {
 
 has_rotate_or_shear = function(x) {
 	dimensions = st_dimensions(x)
-	has_raster(x) &&
-		any(sapply(dimensions, function(x) 
-		! all(is.na(x$geotransform)) && any(x$geotransform[c(3, 5)] != 0)))
+	has_raster(x) && any(attr(dimensions, "raster")$affine != 0.0)
 }
 
-has_raster = function(x)
-	all(c("x", "y") %in% names(st_dimensions(x)))
+has_raster = function(x) {
+	if (inherits(x, "stars"))
+		x = st_dimensions(x)
+	!is.null(r <- attr(x, "raster")) && all(r$dimensions %in% names(x))
+}
 
 is_rectilinear = function(x) {
 	d = st_dimensions(x)
@@ -216,8 +220,12 @@ is_rectilinear = function(x) {
 		(length(unique(diff(d$x$values))) > 1 || length(unique(diff(d$y$values))) > 1)
 }
 
-has_sfc = function(x)
-	all(c("sfc") %in% names(st_dimensions(x)))
+has_sfc = function(x) {
+	if (inherits(x, "stars"))
+		x = st_dimensions(x)
+	any(sapply(x, function(i) inherits(i$values, "sfc")))
+}
+
 
 #' @export
 st_coordinates.stars = function(x, ...) {
@@ -375,26 +383,28 @@ st_bbox.default = function(obj, ...) {
 
 #' @export
 st_bbox.dimensions = function(obj, ...) {
-	d = obj
-	if (all(c("x", "y") %in% names(obj))) {
-		gt = obj$x$geotransform
-		stopifnot(length(gt) == 6 && !any(is.na(gt)))
-	
-		bb = if (is.null(obj$x$values) && is.null(obj$y$values)) {
-			bb = rbind(c(obj$x$from-1,obj$y$from-1), c(obj$x$to, obj$y$from-1), c(obj$x$to, obj$y$to), c(obj$x$from-1, obj$y$to))
+	if (has_raster(obj)) { # raster
+		r = attr(obj, "raster")
+		x = obj[[ r$dimensions[1] ]]
+		y = obj[[ r$dimensions[2] ]]
+		bb = if (is.null(x$values) && is.null(y$values)) {
+			gt = get_geotransform(obj)
+			stopifnot(length(gt) == 6 && !any(is.na(gt)))
+			bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
 			xy = xy_from_colrow(bb, gt)
 			c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
 		} else {
 			e = expand_dimensions(obj)
 			rx = range(e$x)
 			ry = range(e$y)
-			c(xmin = min(e$x), ymin = min(e$y), xmax = max(e$x), ymax = max(e$y))
+			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = rx[2])
 		}
-		structure(bb, crs = st_crs(d$x$refsys), class = "bbox")
+		structure(bb, crs = st_crs(x$refsys), class = "bbox")
 	} else {
-		if (!("sfc" %in% names(obj)))
+		if (! has_sfc(obj))
 			stop("dimensions table does not have x & y, nor an sfc dimension") # nocov
-		st_bbox(obj$sfc$values)
+		ix = which(sapply(obj, function(i) inherits(i$values, "sfc")))
+		st_bbox(obj[[ ix[1] ]]$values) # FIXME: what if there is more than one, e.g. O.D.?
 	}
 }
 
@@ -526,7 +536,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE) {
 				st_bbox(y)
 			else
 				y
-		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm$x$geotransform)
+		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm))
 		for (i in seq_along(d)) {
 			if (names(d[i]) == "x")
 				args[[i+1]] = seq(max(1, floor(cr[1, 1])), min(d["x"], ceiling(cr[2, 1])))

@@ -9,17 +9,15 @@ st_as_stars.STFDF = function(.x, ...) {
 			# offs_x dx 0 offs_y 0 dy
 			gt = c(gp[1,1] - gp[1,2]/2, gp[1,2], 0.0, gp[2,1] + (gp[2,3] - 0.5) * gp[2,2], 0.0, -gp[2,2])
 			vals = lapply(seq_len(nrow(gp)), function(i) seq(gp[i,1], by = gp[i,2], length.out = gp[i,3]))
-			st_dimensions(
-				x = vals[[1]] - gp[1,2]/2,
-				y = rev(vals[[2]]) + gp[2,2]/2,
-				time = zoo::index(.x@time),
-				geotransform = gt # FIXME: somewhere we should check that gt, x and y are compatible!
-			)
+			create_dimensions(list(
+				x = create_dimension(values = vals[[1]] - gp[1,2]/2),
+				y = create_dimension(values = rev(vals[[2]]) + gp[2,2]/2),
+				time = create_dimension(values = zoo::index(.x@time))),
+				raster = get_raster())
 		} else
-			st_dimensions(
-				sfc = st_as_sfc(.x@sp), # FIXME: doesn't do SpatialPixels -> x/y
-				time = zoo::index(.x@time)
-			)
+			create_dimensions(list(
+				sfc = create_dimension(values = st_as_sfc(.x@sp)), # FIXME: doesn't do SpatialPixels -> x/y
+				time = create_dimension(values = zoo::index(.x@time))))
 	vals = if (sp::gridded(.x@sp)) # flip y:
 			lapply(.x@data, function(y) { dim(y) = dim(d); y[,(dim(y)[2]):1,] })
 		else

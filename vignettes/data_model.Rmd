@@ -50,9 +50,7 @@ Where it becomes clear that $(0,0)$ is the origin of the grid (grid corner), and
 
 Most grid data comes with y coordinates (grid rows) going from North to South (top to bottom); this is established using a negative `delta`. We see that the grid origing $(0,0)$ did not change:
 ```{r fig.width=4.5, fig.height=4}
-attr(s, "dimensions")$y$delta = -1
-attr(s, "dimensions")$x$geotransform[6] = -1
-attr(s, "dimensions")$y$geotransform[6] = -1
+attr(s, "dimensions")[[2]]$delta = -1
 image(s, text_values = TRUE, axes = TRUE)
 ```
 
@@ -72,8 +70,7 @@ $$y = gt_4 + (i-1) gt_5 + (j-1) gt_6$$
 We can rotate grids by setting $gt_3$ and $gt_5$ to a constant, non-zero value:
 
 ```{r}
-attr(s, "dimensions")$x$geotransform[c(3,5)] = 0.1
-attr(s, "dimensions")$y$geotransform[c(3,5)] = 0.1
+attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.1)
 # FIXME: use image()
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 ```
@@ -88,8 +85,7 @@ atan2(0.1, 1) * 180 / pi
 
 Sheared grids are obtained when the two rotation coefficients, $gt_3$ and $gt_5$, are unequal:
 ```{r}
-attr(s, "dimensions")$x$geotransform[c(3,5)] = c(0.1, 0.2)
-attr(s, "dimensions")$y$geotransform[c(3,5)] = c(0.1, 0.2)
+attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.2)
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 ```
 

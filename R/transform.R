@@ -14,7 +14,7 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				st_area(envelope_new)
 		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
-				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), d$x$geotransform)
+				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), get_geotransform(d))
 				cellarea = sum((xy[1,] - xy[2,])^2) / 2 # lenght is cell diagonal
 				unclass(st_area(envelope)) / (prod(dim(x)[c("x","y")]) * cellarea) # > 1
 			} else
@@ -23,21 +23,12 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 		# TODO: divide by st_area(evelope_new)/st_area(envelope) ?
 	}
 	cellsize = rep(abs(cellsize), length.out = 2)
-	gt = c(
-		bb["xmin"],
-		cellsize[1],
-		0,
-		bb["ymax"],
-		0,
-		-cellsize[2])
 	p4s = crs$proj4string
 	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
-	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], 
-		delta = cellsize[1], geotransform = gt, refsys = p4s)
-	y = create_dimension(from = 1, to = ny, offset = bb["ymax"],
-		delta = -cellsize[2], geotransform = gt, refsys = p4s)
-	structure(list(x = x, y = y), class = "dimensions")
+	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = p4s)
+	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = p4s)
+	create_dimensions(list(x = x, y = y), get_raster())
 }
 
 # transform grid x to dimensions target
@@ -54,7 +45,7 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = ceiling(xy_from_colrow(pts, d$x$geotransform, inverse = TRUE)) 
+	xy = ceiling(xy_from_colrow(pts, get_geotransform(x), inverse = TRUE)) 
 	xy[ xy[,1] < 1 | xy[,1] > d$x$to | xy[,2] < 1 | xy[,2] > d$y$to, ] = NA
 
 	from = x[[1]] #[,,1]
@@ -75,7 +66,7 @@ transform_grid_grid = function(x, target) {
 		}
 	}
 	d[c("x", "y")] = target[1:2]
-	structure(x, dimensions = d)
+	structure(x, dimensions = create_dimensions(d, attr(target, "raster")))
 }
 
 transform_raster = function(x, crs, ..., cellsize = NA_real_, segments = NA) {

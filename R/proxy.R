@@ -93,16 +93,17 @@ plot.stars_proxy = function(x, y, ...) {
 }
 
 fetch = function(x, downsample = 0) {
+	stopifnot(inherits(x, "stars_proxy"))
 	d = st_dimensions(x)
 	dx = d[["x"]]
-	dy = d[["x"]]
+	dy = d[["y"]]
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
 	if (any(downsample > 0)) {
 		nBufXSize = nBufXSize / (downsample + 1)
 		nBufYSize = nBufYSize / (downsample + 1)
 	}
-	bands = d[["bands"]]
+	bands = d[["band"]]
 	bands = if (!is.null(bands$values))
 			bands$values
 		else

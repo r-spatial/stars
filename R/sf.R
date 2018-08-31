@@ -11,11 +11,14 @@ sfc_from_longlat = function(x, as_points, crs = 4326) {
 #' @export
 st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point,
 		which = seq_len(prod(dim(x)[1:2])), longlat = NULL) {
-	if (is.null(longlat))
-		st_as_sfc(st_dimensions(x)[c("x", "y")], ..., as_points = as_points, which = which)
-	else
+	if (is.null(longlat)) {
+		r = attr(st_dimensions(x), "raster")
+		gt = get_geotransform(x)
+		st_as_sfc(st_dimensions(x)[r$dimensions], ..., as_points = as_points, which = which, geotransform = gt)
+	} else
 		sfc_from_longlat(longlat, as_points = as_points, ...)[which]
 }
+
 
 #' @export
 st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {

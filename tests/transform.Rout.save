@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,12 +28,10 @@ attribute(s):
  3rd Qu.:132.0  
  Max.   :255.0  
 dimension(s):
-  from to  offset delta                        geotransform
-x    1 20 1841002   1.5 1841000, 1.5, -5, 1144000, -5, -1.5
-y    1 20 1144003  -1.5 1841000, 1.5, -5, 1144000, -5, -1.5
-                        refsys point values
-x +proj=utm +zone=11 +datum...  TRUE   NULL
-y +proj=utm +zone=11 +datum...  TRUE   NULL
+  from to  offset delta                       refsys point values    
+x    1 20 1841002   1.5 +proj=utm +zone=11 +datum...  TRUE   NULL [x]
+y    1 20 1144003  -1.5 +proj=utm +zone=11 +datum...  TRUE   NULL [y]
+sheared raster with parameters: -5 -5 
 > new = st_crs(4326)
 > y = st_transform(x, new)
 > plot(st_transform(st_as_sfc(st_bbox(x)), new), col = NA, border = 'red')
@@ -63,12 +61,16 @@ attribute(s):
  3rd Qu.:60.00  
  Max.   :74.00  
 dimension(s):
-     from  to offset delta                                    refsys point
-sfc     1 100     NA    NA 4326, +proj=longlat +datum=WGS84 +no_defs    NA
-band    1   3     NA    NA                                        NA    NA
-                                                                  values
-sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...
-band                                                                NULL
+     from   to offset delta                                    refsys point
+sfc     1  100     NA    NA 4326, +proj=longlat +datum=WGS84 +no_defs FALSE
+band    1    3     NA    NA                                        NA    NA
+x    NULL NULL   NULL  NULL                                      NULL  NULL
+y    NULL NULL   NULL  NULL                                      NULL  NULL
+                                                                  values    
+sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...    
+band                                                                NULL    
+x                                                                   NULL [x]
+y                                                                   NULL [y]
 > 
 > # nothing to transform:
 > st_transform(st_as_stars(list(matrix(1,10,10))), 4326)
@@ -83,12 +85,12 @@ attribute(s):
  Max.   :1  
 dimension(s):
   from to offset delta refsys point values
-1    1 10     NA    NA     NA    NA   NULL
-2    1 10     NA    NA     NA    NA   NULL
+1    1 NA     NA    NA     NA    NA   NULL
+2    1 NA     NA    NA     NA    NA   NULL
 Warning message:
 In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
   no coordinates: st_transform does nothing
 > 
 > proc.time()
    user  system elapsed 
-  1.151   0.257   1.105 
+  0.745   0.027   0.764 

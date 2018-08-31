@@ -16,7 +16,7 @@ get_dims = function(d_cube, d_stars) {
 			else
 				d_cube[[i]]
 		d_stars[[i]] = create_dimension(values = d_stars[[i]]$values, point = d_stars[[i]]$point, 
-			refsys = d_stars[[i]]$refsys, geotransform = d_stars[[i]]$geotransform, what = names(d_stars)[i])
+			refsys = d_stars[[i]]$refsys)
 	}
 	d_stars
 }
