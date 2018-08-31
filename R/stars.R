@@ -397,7 +397,7 @@ st_bbox.dimensions = function(obj, ...) {
 			e = expand_dimensions(obj)
 			rx = range(e$x)
 			ry = range(e$y)
-			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = rx[2])
+			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
 		}
 		structure(bb, crs = st_crs(x$refsys), class = "bbox")
 	} else {
