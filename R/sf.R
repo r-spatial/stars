@@ -119,9 +119,8 @@ st_as_stars.sf = function(.x, ...) {
 	geom = st_geometry(.x)
 	if (length(list(...)))
 		stop("secondary arguments ignored")
-	dimensions = structure(list(sfc = 
-			create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom)), 
-		class = "dimensions")
+	dimensions = create_dimensions(list(sfc = 
+			create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom)))
 	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
 	st_as_stars(lst, dimensions = dimensions)
 }

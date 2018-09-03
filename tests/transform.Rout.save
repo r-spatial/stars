@@ -84,13 +84,13 @@ attribute(s):
  3rd Qu.:1  
  Max.   :1  
 dimension(s):
-  from to offset delta refsys point values
-1    1 NA     NA    NA     NA    NA   NULL
-2    1 NA     NA    NA     NA    NA   NULL
+   from to offset delta refsys point values
+X1    1 NA     NA    NA     NA    NA   NULL
+X2    1 NA     NA    NA     NA    NA   NULL
 Warning message:
 In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
   no coordinates: st_transform does nothing
 > 
 > proc.time()
    user  system elapsed 
-  0.745   0.027   0.764 
+  0.650   0.024   0.672 

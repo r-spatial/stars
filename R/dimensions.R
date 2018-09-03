@@ -18,7 +18,7 @@ st_dimensions.array = function(.x, ...) {
 	ret = if (is.null(dn))
 		st_dimensions(list(.x)) # default
 	else # try to get dimension names and default values from dimnames(.x):
-		structure(lapply(dn, function(y) create_dimension(values = y)), class = "dimensions")
+		create_dimensions(lapply(dn, function(y) create_dimension(values = y)))
 
 	if (is.null(names(ret)) || any(names(ret) == ""))
 		names(ret) = make.names(seq_along(ret))
@@ -35,11 +35,7 @@ st_dimensions.default = function(.x, ...) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	ret = structure(lapply(d, function(y) create_dimension(values = y)),
-		class = "dimensions")
-	if (is.null(names(ret)) || any(names(ret) == ""))
-		names(ret) = make.names(seq_along(ret))
-	ret
+	create_dimensions(lapply(d, function(y) create_dimension(values = y)))
 }
 
 #' @name st_dimensions
@@ -67,11 +63,11 @@ st_set_dimensions = function(.x, which, values, names) {
 #' @export
 "[.dimensions" = function(x, i, j,..., drop = FALSE) {
 	raster = attr(x, "raster")
-	ret = structure(unclass(x)[i], class = "dimensions")
+	ret = unclass(x)[i]
 	if (isTRUE(all(raster$dimensions %in% names(ret))))
-		structure(ret, raster = raster)
+		create_dimensions(ret, raster)
 	else
-		ret # drops raster
+		create_dimensions(ret) # drop raster
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
@@ -111,6 +107,12 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 create_dimensions = function(lst, raster = NULL) {
 	if (is.numeric(lst)) # when called with a dim(array) argument:
 		lst = lapply(lst, function(i) create_dimension(from = 1, to = lst[i]))
+	if (is.null(names(lst)))
+		names(lst) = make.names(seq_along(lst))
+	if (any(names(lst) == "")) {
+		sel = which(names(lst) == "")
+		names(lst)[sel] = make.names(seq_along(sel))
+	}
 	if (is.null(raster))
 		raster = get_raster(dimensions = c(NA_character_, NA_character_))
 	structure(lst, raster = raster, class = "dimensions")
@@ -303,7 +305,6 @@ print.dimensions = function(x, ..., digits = 6) {
 			y
 		}
 	)
-	# xxx
 	lst = lapply(lst, function(x) lapply(x, format, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")

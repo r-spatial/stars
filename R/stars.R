@@ -276,9 +276,8 @@ aperm.stars = function(a, perm = NULL, ...) {
 		for (i in seq_along(a))
 			dimnames(a[[i]]) = dn
 	}
-	dimensions = structure(attr(a, "dimensions")[perm], class = "dimensions")
 	structure(lapply(a, aperm, perm = perm, ...), 
-		dimensions = dimensions, class = "stars")
+		dimensions = st_dimensions(a)[perm], class = "stars")
 }
 
 #' @export
@@ -329,8 +328,9 @@ c.stars = function(..., along = NA_integer_) {
 				values = names(dots[[1]])
 				dim_name = "new_dim"
 			}
+			old_dim = st_dimensions(dots[[1]])
 			new_dim = create_dimension(values = values)
-			dims = structure(c(st_dimensions(dots[[1]]), new_dim = list(new_dim)), class = "dimensions")
+			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
 			names(dims)[names(dims) == "new_dim"] = dim_name
 			st_as_stars(attr = do.call(abind, c(dots, along = length(dim(dots[[1]])) + 1)), dimensions = dims)
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
@@ -369,8 +369,7 @@ c.stars = function(..., along = NA_integer_) {
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
-	dims = structure(attr(x, "dimensions")[-drop], class = "dimensions")
-	st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = dims)
+	st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = st_dimensions(x)[-drop])
 }
 
 #' @export
@@ -579,13 +578,13 @@ merge.stars = function(x, y, ...) {
 	dots = list(...)
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
-	d = st_dimensions(x)
+	old_dim = st_dimensions(x)
 	out = do.call(abind, c(x, along = length(dim(x[[1]]))+1))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
 			create_dimension(values = names(x))
-	d = structure(c(d, list(new_dim)), class = "dimensions")
+	d = create_dimensions(c(old_dim, list(new_dim)), raster = attr(old_dim, "raster"))
 	if (!is.null(names(dots)))
 		names(d)[length(d)] = names(dots)
 	st_as_stars(out, dimensions = d)
