@@ -37,6 +37,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	opar = par()
 	dots = list(...)
 
+	#if (any(dim(x) == 1))
+	#	x = adrop(x)
+
 	if (join_zlim) {
 		breaks = get_breaks(x, breaks, nbreaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
@@ -45,6 +48,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	if (!missing(y))
 		stop("y argument should be missing")
 	if (has_raster(x)) {
+		xy = attr(st_dimensions(x), "raster")$dimensions
+		loop = setdiff(names(dim(x)), xy) # dimension (name) over which we loop, if any
+		x = aperm(x, c(xy, loop))
 		zlim = if (join_zlim)
 				range(unclass(x[[1]]), na.rm = TRUE)
 			else
@@ -182,9 +188,15 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 	force(ylim)
 	dims = expand_dimensions(x)
 
-	y_is_neg = all(diff(dims$y) < 0)
+	dimxy = attr(st_dimensions(x), "raster")$dimensions
+	dimx =  dimxy[1]
+	dimy =  dimxy[2]
+	dimxn = which(dimx == names(dims))
+	dimyn = which(dimy == names(dims))
+
+	y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 	if (y_is_neg)
-		dims[[2]] = rev(dims[[2]])
+		dims[[ dimy ]] = rev(dims[[ dimy ]])
 
 	if (is.null(asp)) {
 		bb = st_bbox(x)
@@ -192,7 +204,15 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 	}
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
-	if (!is.null(rgb)) {
+
+	# rearrange ar:
+	third = setdiff(1:3, c(dimxn, dimyn))[1]
+	ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
+			aperm(ar, c(dimxn, dimyn, third))
+		else
+			aperm(ar, c(dimxn, dimyn))
+
+	if (! is.null(rgb)) {
 		if (is_rectilinear(x))
 			warning("rectilinear rgb grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
@@ -212,14 +232,14 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else { 
-		if (y_is_neg) {
+		if (y_is_neg) { # flip y?
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
 				ar[ , rev(seq_len(dim(ar)[2])), band]
 			else
 				ar[ , rev(seq_len(dim(ar)[2]))]
 		}
-		image.default(dims[[1]], dims[[2]], unclass(ar), asp = asp, xlab = xlab, ylab = ylab, 
-			xlim = xlim, ylim = ylim, axes = FALSE,...)
+		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
+			xlim = xlim, ylim = ylim, axes = FALSE, ...)
 	}
 	if (text_values)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx

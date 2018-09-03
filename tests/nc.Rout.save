@@ -99,11 +99,10 @@ dimension(s):
 frac2    1   2     NA    NA                           NA    NA
 sfc      1 100     NA    NA +proj=longlat +datum=NAD2... FALSE
 year     1   2     NA    NA                           NA    NA
-                                                                   values 
-frac2                                              sidsr.SID , nwbr.NWBIR 
-sfc   MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3... 
-year                                                           1974, 1979 
-NULL
+                                                                   values
+frac2                                              sidsr.SID , nwbr.NWBIR
+sfc   MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3...
+year                                                           1974, 1979
 > st_apply(foo, c(1,3), frac2an)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -119,11 +118,10 @@ dimension(s):
 frac2an    1   2     NA    NA                           NA    NA
 sfc        1 100     NA    NA +proj=longlat +datum=NAD2... FALSE
 year       1   2     NA    NA                           NA    NA
-                                                                     values 
-frac2an                                                        SID  , NWBIR 
-sfc     MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3... 
-year                                                             1974, 1979 
-NULL
+                                                                     values
+frac2an                                                        SID  , NWBIR
+sfc     MULTIPOLYGON (((-81.47276 3..., ..., MULTIPOLYGON (((-78.65572 3...
+year                                                             1974, 1979
 > library(abind)
 > aperm(st_apply(foo, c(1,3), frac2), c(2,3,1))
 stars object with 3 dimensions and 1 attribute
@@ -188,4 +186,4 @@ Coordinate Reference System:
 > 
 > proc.time()
    user  system elapsed 
-  0.617   0.051   0.660 
+  0.684   0.033   0.708 

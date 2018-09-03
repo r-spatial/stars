@@ -108,9 +108,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				NULL
 
 		# return:
-		structure(list(data), names = tail(strsplit(x, .Platform$file.sep)[[1]], 1),
-			dimensions = create_dimensions_from_gdal_meta(dim(data), meta_data),
-			class = if (proxy) c("stars_proxy", "stars") else "stars")
+		ret = st_stars(setNames(list(data), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
+			create_dimensions_from_gdal_meta(dim(data), meta_data))
+
+		if (proxy)
+			structure(ret, class = c("stars_proxy", "stars"))
+		else
+			ret
 	}
 }
 
@@ -135,8 +139,17 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	}
 	if (is.null(dimensions))
 		dimensions = create_dimensions(dim(.x[[1]]))
-	structure(.x, dimensions = dimensions, class = "stars")
+	st_stars(.x, dimensions)
 }
+
+st_stars = function(x, dimensions) {
+	# sanity checks:
+	stopifnot(is.list(x))
+	stopifnot(inherits(dimensions, "dimensions"))
+	stopifnot(!is.null(attr(dimensions, "raster")))
+	structure(x, dimensions = dimensions, class = "stars")
+}
+
 
 #' @name st_as_stars
 #' @export
@@ -276,8 +289,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 		for (i in seq_along(a))
 			dimnames(a[[i]]) = dn
 	}
-	structure(lapply(a, aperm, perm = perm, ...), 
-		dimensions = st_dimensions(a)[perm], class = "stars")
+	st_stars(lapply(a, aperm, perm = perm, ...), st_dimensions(a)[perm])
 }
 
 #' @export

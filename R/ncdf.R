@@ -60,6 +60,5 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
     ## NaN for singleton dims, but that seems ok unless we have explicit interval?
     dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  ## not rectilinear yet
   }
-  structure(out, dimensions = dimensions, names = names(out), class = "stars")
-  
+  st_stars(out, dimensions)
 }

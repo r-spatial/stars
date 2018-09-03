@@ -70,17 +70,15 @@ st_apply = function(X, MARGIN, FUN, ...) {
 	ret = lapply(X, fn, ...) 
 	dim_ret = dim(ret[[1]])
 	if (length(dim_ret) == length(MARGIN)) # FUN returned a single value
-		st_as_stars(ret, dimensions = st_dimensions(X)[MARGIN])
+		st_stars(ret, st_dimensions(X)[MARGIN])
 	else { # FUN returned multiple values:
 		orig = st_dimensions(X)[MARGIN]
+		r = attr(orig, "raster")
 		dims = c(structure(list(list()), names = fname), orig)
 		dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
 				create_dimension(values = dimnames(ret[[1]])[[1]])
 			else
 				create_dimension(to = dim_ret[1])
-		ret = st_as_stars(ret, dimensions = structure(dims, class = "dimensions")) # FIXME: better to use constructor?
-		if (all(c("x", "y") %in% names(dims)))
-			ret = aperm(ret, c("x", "y", setdiff(names(dims), c("x", "y"))))
-		ret
+		st_stars(ret, dimensions = create_dimensions(dims, r))
 	}
 }
