@@ -5,6 +5,10 @@ print.stars_proxy = function(x, ..., n = 1e5) {
 	print(structure(unclass(x), dimensions = NULL))
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
+	if (!is.null(attr(x, "call_list"))) {
+		cat("call list:\n")
+		print(unlist(attr(x, "call_list")))
+	}
 }
 
 #' @export
@@ -186,4 +190,20 @@ fetch = function(x, downsample = 0, ...) {
 	setNames(do.call(c, lapply(x, read_stars, RasterIO = rasterio, ...)), names(x))
 }
 
+collect = function(x, call) {
+	call_list = attr(x, "call_list")
+	if (is.null(call_list))
+		call_list = list()
+	structure(x, call_list = c(call_list, call))
+}
 
+
+#' @export
+adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
+	collect(x, match.call())
+}
+
+#' @export
+"[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
+	collect(x, match.call())
+}
