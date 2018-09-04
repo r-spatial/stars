@@ -45,7 +45,7 @@ dim.stars_proxy = function(x) {
 		j = j + 1
 	}
   }
-  structure(x, dimensions = d, class = c("stars_proxy", "stars"))
+  st_stars_proxy(x, d)
 }
 
 #' @name st_crop
@@ -92,7 +92,78 @@ plot.stars_proxy = function(x, y, ...) {
 	NextMethod()
 }
 
-fetch = function(x, downsample = 0) {
+st_stars_proxy = function(x, dimensions)
+	structure(x, dimensions = dimensions, class = c("stars_proxy", "stars"))
+
+c.stars_proxy = function(..., along = NA_integer_) {
+	dots = list(...)
+	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
+	# dim does not change:
+	if (is.na(along) && length(dots) > 1) { 
+		if (identical_dimensions(dots))
+			st_stars_proxy(do.call(c, lapply(dots, unclass)), attr(dots[[1]], "dimensions"))
+		else {
+			# currently catches only the special case of ... being a broken up time series:
+			along = sort_out_along(dots)
+			if (is.na(along))
+				stop("don't know how to merge arrays: please specify parameter along")
+			do.call(c, c(dots, along = along))
+		}
+	} else {
+		# Case 2: single stars object, collapse attributes into new array dimension:
+		if (length(dots) == 1) {
+			if (is.list(along)) {
+				values = along[[1]]
+				dim_name = names(along)[1]
+			} else {
+				values = names(dots[[1]])
+				dim_name = "new_dim"
+			}
+			old_dim = st_dimensions(dots[[1]])
+			new_dim = create_dimension(values = values)
+			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
+			names(dims)[names(dims) == "new_dim"] = dim_name
+			# FIXME: to be tested:
+			st_stars_proxy(unlist(do.call(c, c(dots, along = length(dim(dots[[1]])) + 1))), dimensions = dims) 
+		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
+			stop("not implemented yet")
+			# FIXME: t.b.d.
+			if (prod(lengths(along)) != length(dots))
+				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
+			# abind all:
+			d = st_dimensions(dots[[1]])
+			ret = mapply(abind, ..., along = length(d) + 1, SIMPLIFY = FALSE)
+			# make dims:
+			newdim = c(dim(dots[[1]]), lengths(along))
+			ret = lapply(ret, function(x) { dim(x) = newdim; x })
+			ret = propagate_units(ret, dots[[1]])
+			# make dimensions:
+			for (i in seq_along(along))
+				d[[ names(along)[i] ]] = create_dimension(values = along[[i]])
+			st_as_stars(ret, dimensions = d)
+		} else { # loop over attributes, abind them:
+			# along_dim: the number of the dimension along which we merge arrays
+			d = st_dimensions(dots[[1]])
+			along_dim = if (is.character(along)) {
+				along_dim = which(along == names(d))
+				if (length(along_dim) == 0)
+					length(d) + 1
+				else
+					along_dim
+			} else
+				along
+			# ret = propagate_units(mapply(abind, ..., along = along_dim, SIMPLIFY = FALSE), dots[[1]])
+			m = mapply(c, lapply(dots, unclass)) # simplifies to list matrix
+			ret = setNames(lapply(seq_len(nrow(m)), function(i) unlist(m[i,])), names(dots[[1]]))
+			dims = combine_dimensions(dots, along_dim)
+			if (along_dim == length(d) + 1)
+				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
+			st_stars_proxy(ret, dimensions = dims)
+		}
+	}
+}
+
+fetch = function(x, downsample = 0, ...) {
 	stopifnot(inherits(x, "stars_proxy"))
 	d = st_dimensions(x)
 	dx = d[["x"]]
@@ -104,13 +175,15 @@ fetch = function(x, downsample = 0) {
 		nBufYSize = nBufYSize / (downsample + 1)
 	}
 	bands = d[["band"]]
+	if (is.null(bands))
+		bands = list(values = 1)
 	bands = if (!is.null(bands$values))
 			bands$values
 		else
 			bands$from:bands$to
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize, bands = bands)
-	read_stars(unlist(x), RasterIO = rasterio)
+	setNames(do.call(c, lapply(x, read_stars, RasterIO = rasterio, ...)), names(x))
 }
 
 

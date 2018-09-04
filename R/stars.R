@@ -45,7 +45,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	x = .x
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
-			RasterIO = as.list(RasterIO), proxy = proxy)
+			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy)
 		dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
@@ -62,15 +62,17 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
 		names(sub_datasets) = nms
 		sub_datasets = sub_datasets[sub]
+
 		nms = names(sub_datasets)
 
-		.read_stars = function(x, options, driver, quiet) {
+		.read_stars = function(x, options, driver, quiet, proxy) {
 			if (! quiet)
 				cat(paste0(tail(strsplit(x, ":")[[1]], 1), ", "))
-			read_stars(x, options = options, driver = driver)
+			read_stars(x, options = options, driver = driver, NA_value = NA_value, 
+				RasterIO = as.list(RasterIO), proxy = proxy)
 		}
 		ret = lapply(sub_datasets, .read_stars, options = options, 
-			driver = data$driver[1], quiet = quiet)
+			driver = data$driver[1], quiet = quiet, proxy = proxy)
 		if (! quiet)
 			cat("\n")
 		# return:
@@ -109,9 +111,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 		# return:
 		if (proxy) # no data present, subclass of "stars":
-			structure(st_stars(setNames(list(.x), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
-				create_dimensions_from_gdal_meta(dims, meta_data)),
-				class = c("stars_proxy", "stars"))
+			st_stars_proxy(setNames(list(.x), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
+				create_dimensions_from_gdal_meta(dims, meta_data))
 		else
 			st_stars(setNames(list(data), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
 				create_dimensions_from_gdal_meta(dim(data), meta_data))
