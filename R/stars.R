@@ -108,13 +108,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				NULL
 
 		# return:
-		ret = st_stars(setNames(list(data), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
-			create_dimensions_from_gdal_meta(dim(data), meta_data))
-
-		if (proxy)
-			structure(ret, class = c("stars_proxy", "stars"))
+		if (proxy) # no data present, subclass of "stars":
+			structure(st_stars(setNames(list(.x), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
+				create_dimensions_from_gdal_meta(dims, meta_data)),
+				class = c("stars_proxy", "stars"))
 		else
-			ret
+			st_stars(setNames(list(data), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
+				create_dimensions_from_gdal_meta(dim(data), meta_data))
 	}
 }
 
@@ -282,6 +282,8 @@ print.stars = function(x, ..., n = 1e5) {
 aperm.stars = function(a, perm = NULL, ...) {
 	if (is.null(perm))
 		perm = rev(seq_along(dim(a)))
+	if (all(perm == seq_along(dim(a))) || all(match(perm, names(dim(a))) == seq_along(dim(a))))
+		return(a)
 	if (is.character(perm) && is.null(dimnames(a[[1]]))) {
 		ns = names(attr(a, "dimensions"))
 		dn = lapply(as.list(dim(a)), seq_len)
