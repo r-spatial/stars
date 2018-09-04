@@ -282,7 +282,7 @@ print.stars = function(x, ..., n = 1e5) {
 aperm.stars = function(a, perm = NULL, ...) {
 	if (is.null(perm))
 		perm = rev(seq_along(dim(a)))
-	if (all(perm == seq_along(dim(a))) || all(match(perm, names(dim(a))) == seq_along(dim(a))))
+	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
 	if (is.character(perm) && is.null(dimnames(a[[1]]))) {
 		ns = names(attr(a, "dimensions"))
