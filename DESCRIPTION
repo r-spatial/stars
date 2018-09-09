@@ -36,6 +36,7 @@ Imports:
 Suggests: 
     covr,
     dplyr (>= 0.7-0),
+    ggforce,
     ggplot2,
     ggthemes,
     gstat,
