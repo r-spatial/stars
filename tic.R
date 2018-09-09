@@ -1,8 +1,7 @@
 add_package_checks()
 
 get_stage("install") %>%
-  add_step(step_install_cran("lwgeom", configure.args="--without-liblwgeom", lib = "/home/travis/R/Library/tic-lib")) %>%  # install tic into custom R library used for R CMD check only
-  add_step(remotes::install_deps(dependencies = TRUE))
+  add_step(step_install_cran("lwgeom", configure.args="--without-liblwgeom"))
 
 ###
 # deploy pkgdowm site
