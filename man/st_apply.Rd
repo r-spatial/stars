@@ -9,7 +9,7 @@ st_apply(X, MARGIN, FUN, ...)
 \arguments{
 \item{X}{object of class \code{stars}}
 
-\item{MARGIN}{see \link[base]{apply}}
+\item{MARGIN}{see \link[base]{apply}; if \code{MARGIN} is a character vector,}
 
 \item{FUN}{see \link[base]{apply}}
 

@@ -96,8 +96,8 @@ fetch = function(x, downsample = 0) {
 	d = st_dimensions(x)
 	dx = d[["x"]]
 	dy = d[["x"]]
-	nBufXSize = dx$to - dx$from + 1
-	nBufYSize = dy$to - dy$from + 1
+	nBufXSize = nXSize = dx$to - dx$from + 1
+	nBufYSize = nYSize = dy$to - dy$from + 1
 	if (any(downsample > 0)) {
 		nBufXSize = nBufXSize / (downsample + 1)
 		nBufYSize = nBufYSize / (downsample + 1)
@@ -107,8 +107,9 @@ fetch = function(x, downsample = 0) {
 			bands$values
 		else
 			bands$from:bands$to
-	rasterio = list(nXOff = dx$from, nYOff = dy$from, 
-		nXSize = dx$to - dx$from + 1, nYSize = dy$to - dy$from + 1,
+	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize, bands = bands)
 	read_stars(unlist(x), RasterIO = rasterio)
 }
+
+
