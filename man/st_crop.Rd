@@ -6,9 +6,9 @@
 \alias{st_crop.stars_proxy}
 \title{crop a stars object}
 \usage{
-\method{st_crop}{stars}(x, y, ..., crop = TRUE)
+\method{st_crop}{stars}(x, y, ..., crop = TRUE, epsilon = 1e-08)
 
-\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE)
+\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 1e-08)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -17,7 +17,9 @@
 
 \item{...}{ignored}
 
-\item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}}
+\item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.}
+
+\item{epsilon}{numeric; shrink the bounding box of \code{y} to its center with this factor.}
 }
 \description{
 crop a stars object

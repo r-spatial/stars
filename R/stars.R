@@ -463,7 +463,7 @@ st_crs.stars = function(x, ...) {
 #' @param drop 
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
-#' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}.
+#' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{sti_crop}.
 #' @details if \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}.
 #' @export
 #' @examples
@@ -519,7 +519,7 @@ st_crs.stars = function(x, ...) {
 		mc0[[2]] = as.name(i)
 		mc0[[3]] = mc[[j]]
 		mc0[["values"]] = ed[[i]]
-		d[[i]] = eval(mc0, d, parent.frame())
+		d[[i]] = eval(mc0, d, parent.frame()) # this is where the arrays are subsetted
 		j = j + 1
 	}
   }
@@ -536,28 +536,32 @@ st_crs.stars = function(x, ...) {
 #' @export
 #' @param x object of class \code{stars}
 #' @param y object of class \code{sf}, \code{sfc} or \code{bbox}
+#' @param epsilon numeric; shrink the bounding box of \code{y} to its center with this factor.
 #' @param ... ignored
-#' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}
-st_crop.stars = function(x, y, ..., crop = TRUE) {
-	obj = y
+#' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
+st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects has to be identical")
-	if (crop) {
+	if (crop && has_raster(x)) {
+		rastxy = attr(dm, "raster")$dimensions
+		xd = rastxy[1]
+		yd = rastxy[2]
 		bb = if (!inherits(y, "bbox"))
 				st_bbox(y)
 			else
 				y
-		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm))
+		bb = bb_shrink(bb, epsilon)
+		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
 		for (i in seq_along(d)) {
-			if (names(d[i]) == "x")
-				args[[i+1]] = seq(max(1, floor(cr[1, 1])), min(d["x"], ceiling(cr[2, 1])))
-			if (names(d[i]) == "y") {
-				if (dm$y$delta < 0)
+			if (names(d[i]) == xd)
+				args[[i+1]] = seq(max(1, cr[1, 1]), min(d[xd], cr[2, 1]))
+			if (names(d[i]) == yd) {
+				if (dm[[ yd ]]$delta < 0)
 					cr[1:2, 2] = cr[2:1, 2]
-				args[[i+1]] = seq(max(1, floor(cr[1, 2])), min(d["y"], ceiling(cr[2, 2])))
+				args[[i+1]] = seq(max(1, cr[1, 2]), min(d[yd], cr[2, 2]))
 			}
 		}
 		x = eval(rlang::expr(x[!!!args]))
@@ -568,9 +572,9 @@ st_crop.stars = function(x, y, ..., crop = TRUE) {
 		coords = c("x", "y"), crs = st_crs(x))
 	inside = st_intersects(y, xy_grd)[[1]]
 	d = dim(x) # cropped x
-	raster = rep(NA_real_, prod(d[c("x", "y")]))
-	raster[inside] = 1
-	x * array(raster, d) # replicates over secondary dims
+	mask = rep(NA_real_, prod(d[c("x", "y")]))
+	mask[inside] = 1
+	x * array(mask, d) # replicates over secondary dims
 }
 
 #' @export

@@ -40,9 +40,13 @@ Math.stars = function(x, ...) {
 	st_as_stars(ret, dimensions = st_dimensions(x))
 }
 
+#' @export
+st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
+
 #' st_apply apply a function to one or more array dimensions
 #' 
 #' st_apply apply a function to array dimensions: aggregate over space, time, or something else
+#' @name st_apply
 #' @param X object of class \code{stars}
 #' @param MARGIN see \link[base]{apply}; if \code{MARGIN} is a character vector, 
 #' @param FUN see \link[base]{apply}
@@ -55,7 +59,7 @@ Math.stars = function(x, ...) {
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
-st_apply = function(X, MARGIN, FUN, ...) {
+st_apply.stars = function(X, MARGIN, FUN, ...) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))

@@ -2,9 +2,10 @@
 % Please edit documentation in R/ops.R
 \name{st_apply}
 \alias{st_apply}
+\alias{st_apply.stars}
 \title{st_apply apply a function to one or more array dimensions}
 \usage{
-st_apply(X, MARGIN, FUN, ...)
+\method{st_apply}{stars}(X, MARGIN, FUN, ...)
 }
 \arguments{
 \item{X}{object of class \code{stars}}

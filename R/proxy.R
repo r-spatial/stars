@@ -2,7 +2,7 @@
 print.stars_proxy = function(x, ..., n = 1e5) {
 	cat("stars_proxy object with", length(x), 
 		if (length(x) > 1) "attributes in files:\n" else "attribute in file:\n")
-	print(structure(unclass(x), dimensions = NULL))
+	print(structure(unclass(x), dimensions = NULL, call_list = NULL))
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
 	if (!is.null(attr(x, "call_list"))) {
@@ -52,47 +52,9 @@ dim.stars_proxy = function(x) {
   st_stars_proxy(x, d)
 }
 
-#' @name st_crop
 #' @export
-st_crop.stars_proxy = function(x, y, ..., crop = TRUE) {
-	d = dim(x)
-	dm = st_dimensions(x)
-	args = rep(list(rlang::missing_arg()), length(d)+1)
-	if (st_crs(x) != st_crs(y))
-		stop("for cropping, the CRS of both objects has to be identical")
-	if (crop) {
-		bb = if (!inherits(y, "bbox"))
-				st_bbox(y)
-			else
-				y
-		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm$x$geotransform)
-		for (i in seq_along(d)) {
-			if (names(d[i]) == "x")
-				args[[i+1]] = seq(max(1, floor(cr[1, 1])), min(d["x"], ceiling(cr[2, 1])))
-			if (names(d[i]) == "y") {
-				if (dm$y$delta < 0)
-					cr[1:2, 2] = cr[2:1, 2]
-				args[[i+1]] = seq(max(1, floor(cr[1, 2])), min(d["y"], ceiling(cr[2, 2])))
-			}
-		}
-		x = eval(rlang::expr(x[!!!args]))
-	}
-# what to do with a shaped crop / mask?
-#	if (inherits(obj, "bbox"))
-#		obj = st_as_sfc(obj)
-#	xy_grd = st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[c("x", "y")]),
-#		coords = c("x", "y"), crs = st_crs(x))
-#	inside = st_intersects(obj, xy_grd)[[1]]
-#	d = dim(x) # cropped x
-#	raster = rep(NA_real_, prod(d[c("x", "y")]))
-#	raster[inside] = 1
-#	x * array(raster, d) # replicates over secondary dims
-	x
-}
-
-#' @export
-plot.stars_proxy = function(x, y, ...) {
-	x = fetch(x, downsample = get_downsample(dim(x)))
+plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
+	x = st_as_stars(x, downsample = downsample)
 	NextMethod()
 }
 
@@ -170,8 +132,9 @@ c.stars_proxy = function(..., along = NA_integer_) {
 fetch = function(x, downsample = 0, ...) {
 	stopifnot(inherits(x, "stars_proxy"))
 	d = st_dimensions(x)
-	dx = d[["x"]]
-	dy = d[["y"]]
+	xy = attr(d, "raster")$dimensions
+	dx = d[[ xy[1] ]]
+	dy = d[[ xy[2] ]]
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
 	if (any(downsample > 0)) {
@@ -190,20 +153,117 @@ fetch = function(x, downsample = 0, ...) {
 	setNames(do.call(c, lapply(x, read_stars, RasterIO = rasterio, ...)), names(x))
 }
 
-collect = function(x, call) {
+
+#' @export
+st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
+	cl = attr(.x, "call_list")
+	# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
+	# there are cases where this is not right. Hence:
+	if (downsample != 0 && length(attr(.x, "call_list")) > 0) 
+		warning("deferred processes applied to downsampled image(s)")
+	process_call_list(fetch(.x, ..., downsample = downsample), cl)
+}
+
+# execute the call list on a stars object
+process_call_list = function(x, cl) {
+	pf = parent.frame()
+	for (i in seq_along(cl)) {
+		lst = as.list(cl[[i]]) 
+		pf [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
+		x = eval(cl[[i]], envir = pf)
+	}
+	x
+}
+
+# add a call to the call list, possibly replacing function name (fn) and first arg name
+collect = function(x, call, fn, first_arg = "x") {
 	call_list = attr(x, "call_list")
 	if (is.null(call_list))
 		call_list = list()
+	lst = as.list(call)
+	if (!missing(fn))
+		lst[[1]] = as.name(fn)
+	lst[[2]] = as.name(first_arg)
+	names(lst)[[2]] = first_arg
+	call = as.call(lst)
+	# append:
 	structure(x, call_list = c(call_list, call))
 }
 
 
 #' @export
 adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
-	collect(x, match.call())
+	collect(x, match.call(), "adrop")
 }
 
 #' @export
-"[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
-	collect(x, match.call())
+"[.stars_proxy" = function(x, ..., drop = FALSE, crop = TRUE) {
+	mc = match.call()
+	lst = as.list(mc)
+	if (length(lst) < 3)
+		return(x) # 
+	if (as.character(lst[[3]]) != "" && crop) { # i present: do attr selection or bbox now:
+		x = if (is.character(lst[[3]]))
+			st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
+		else {
+			i = as.character(lst[[3]])
+			if (inherits(get(i), c("sf", "sfc", "stars", "bbox")))
+				st_crop(x, get(i))
+			else
+				stop(paste("unrecognized selector:", i))
+		}
+		if (length(lst) == 3 && crop) # we're done
+			return(x)
+		lst[[3]] = TRUE # this one has been handled
+	}
+	collect(x, as.call(lst), "[") # postpone every aruments > 3 to after reading cells
+}
+
+# shrink bbox with e * width in each direction
+bb_shrink = function(bb, e) {
+	dx = diff(bb[c("xmin", "xmax")])
+	dy = diff(bb[c("ymin", "ymax")])
+	st_bbox(setNames(c(bb["xmin"] + e * dx, 
+		bb["ymin"] + e * dy, 
+		bb["xmax"] - e * dx, 
+		bb["ymax"] - e * dy), c("xmin", "ymin", "xmax", "ymax")))
+}
+
+#' @name st_crop
+#' @export
+st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
+	d = dim(x)
+	dm = st_dimensions(x)
+	if (st_crs(x) != st_crs(y))
+		stop("for cropping, the CRS of both objects has to be identical")
+	if (crop && has_raster(x)) {
+		rast = attr(dm, "raster")$dimensions
+		xd = rast[1]
+		yd = rast[2]
+		bb = if (!inherits(y, "bbox"))
+				st_bbox(y)
+			else
+				y
+		bb = bb_shrink(bb, epsilon)
+		# FIXME: document how EXACTLY cropping works; https://github.com/hypertidy/tidync/issues/73
+		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
+		for (i in seq_along(dm)) {
+			if (names(d[i]) == xd) {
+				dm[[ xd ]]$from = max(1, cr[1, 1])
+				dm[[ xd ]]$to = min(d[xd], cr[2, 1])
+			}
+			if (names(d[i]) == yd) {
+				if (dm[[ yd ]]$delta < 0)
+					cr[1:2, 2] = cr[2:1, 2]
+				dm[[ yd ]]$from = max(1, cr[1, 2])
+				dm[[ yd ]]$to = min(d[yd], cr[2, 2])
+			}
+		}
+	}
+	st_stars_proxy(x, dm)
+}
+
+#' @export
+st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
+	collect(X, match.call(), "st_apply", "X")
 }
