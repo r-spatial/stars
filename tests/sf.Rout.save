@@ -31,10 +31,10 @@ attribute(s):
  3rd Qu.: 83.00  
  Max.   :137.00  
 dimension(s):
-     from to  offset   delta                       refsys point values
-x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL
-band    1  6      NA      NA                           NA    NA   NULL
+     from to  offset   delta                       refsys point values    
+x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1  6      NA      NA                           NA    NA   NULL    
 > # names(x) = "L7_ETM"
 > 
 > # library(abind)
@@ -184,10 +184,10 @@ attribute(s):
  3rd Qu.:0.00  
  Max.   :1.00  
 dimension(s):
-  from to offset delta refsys point values
-x    1 10      0   0.2 NA, NA    NA   NULL
-y    1 10      3  -0.2 NA, NA    NA   NULL
+  from to offset delta refsys point values    
+x    1 10      0   0.2 NA, NA    NA   NULL [x]
+y    1 10      3  -0.2 NA, NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.777   0.231   0.710 
+  0.764   0.036   0.793 

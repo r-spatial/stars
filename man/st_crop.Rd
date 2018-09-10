@@ -6,19 +6,74 @@
 \alias{st_crop.stars_proxy}
 \title{crop a stars object}
 \usage{
-\method{st_crop}{stars}(x, y, ..., crop = TRUE)
+\method{st_crop}{stars}(x, y, ..., crop = TRUE, epsilon = 0)
 
-\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE)
+\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 0)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{y}{object of class \code{sf}, \code{sfc} or \code{bbox}}
+\item{y}{object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.}
 
 \item{...}{ignored}
 
-\item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}}
+\item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.}
+
+\item{epsilon}{numeric; shrink the bounding box of \code{y} to its center with this factor.}
 }
 \description{
 crop a stars object
+}
+\details{
+for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box.
+}
+\examples{
+l7 = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+d = st_dimensions(l7)
+
+# area around cells 3:10 (x) and 4:11 (y):
+offset = c(d[["x"]]$offset, d[["y"]]$offset)
+res = c(d[["x"]]$delta, d[["y"]]$delta)
+bb = st_bbox(c(xmin = offset[1] + 2 * res[1],
+	ymin = offset[2] + 11 * res[2],
+	xmax = offset[1] + 10 * res[1],
+	ymax = offset[2] +  3 * res[2]), crs = st_crs(l7))
+l7[bb]
+
+plot(l7[,1:13,1:13,1], reset = FALSE)
+image(l7[bb,,,1], add = TRUE, col = sf.colors())
+plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+
+# slightly smaller bbox:
+bb = st_bbox(c(xmin = offset[1] + 2.1 * res[1],
+	ymin = offset[2] + 10.9 * res[2],
+	xmax = offset[1] +  9.9 * res[1],
+	ymax = offset[2] +  3.1 * res[2]), crs = st_crs(l7))
+l7[bb]
+
+plot(l7[,1:13,1:13,1], reset = FALSE)
+image(l7[bb,,,1], add = TRUE, col = sf.colors())
+plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+
+# slightly larger bbox:
+bb = st_bbox(c(xmin = offset[1] + 1.9 * res[1],
+	ymin = offset[2] + 11.1 * res[2],
+	xmax = offset[1] + 10.1 * res[1],
+	ymax = offset[2] +  2.9 * res[2]), crs = st_crs(l7))
+l7[bb]
+
+plot(l7[,1:13,1:13,1], reset = FALSE)
+image(l7[bb,,,1], add = TRUE, col = sf.colors())
+plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+
+# half a cell size larger bbox:
+bb = st_bbox(c(xmin = offset[1] + 1.49 * res[1],
+	ymin = offset[2] + 11.51 * res[2],
+	xmax = offset[1] + 10.51 * res[1],
+	ymax = offset[2] +  2.49 * res[2]), crs = st_crs(l7))
+l7[bb]
+
+plot(l7[,1:13,1:13,1], reset = FALSE)
+image(l7[bb,,,1], add = TRUE, col = sf.colors())
+plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
 }

@@ -14,7 +14,7 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
 	sf::gdal_write(obj[layer], ..., file = dsn, driver = driver, options = options, 
-		type = type, na_val = NA_value)
+		type = type, na_val = NA_value, geotransform = get_geotransform(obj))
 }
 
 #nocov start

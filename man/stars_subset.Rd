@@ -16,7 +16,7 @@
 
 \item{drop}{}
 
-\item{crop}{logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}.}
+\item{crop}{logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{sti_crop}.}
 
 \item{drop}{logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped}
 }

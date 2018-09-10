@@ -12,7 +12,7 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{list}(.x, ..., dimensions = NULL)
 
-\method{st_as_stars}{default}(.x = NULL, ...)
+\method{st_as_stars}{default}(.x = NULL, ..., raster = NULL)
 
 \method{st_as_stars}{sf}(.x, ...)
 
@@ -24,6 +24,8 @@ st_as_stars(.x, ...)
 \item{...}{ignored}
 
 \item{dimensions}{object of class dimensions}
+
+\item{raster}{character; the names of the dimensions that denote raster dimensions}
 }
 \description{
 convert objects into a stars object

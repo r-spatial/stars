@@ -18,7 +18,7 @@ st_dimensions.array = function(.x, ...) {
 	ret = if (is.null(dn))
 		st_dimensions(list(.x)) # default
 	else # try to get dimension names and default values from dimnames(.x):
-		structure(lapply(dn, function(y) create_dimension(values = y)), class = "dimensions")
+		create_dimensions(lapply(dn, function(y) create_dimension(values = y)))
 
 	if (is.null(names(ret)) || any(names(ret) == ""))
 		names(ret) = make.names(seq_along(ret))
@@ -30,21 +30,12 @@ st_dimensions.array = function(.x, ...) {
 }
 
 #' @export
-#' @param geotransform (if not missing): geotransform for x and y dimensions
 #' @name st_dimensions
-st_dimensions.default = function(.x, ..., geotransform = rep(NA_real_, 6)) {
+st_dimensions.default = function(.x, ...) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	ret = structure(lapply(d, function(y) create_dimension(values = y, geotransform = geotransform)),
-		class = "dimensions")
-	if (is.null(names(ret)) || any(names(ret) == ""))
-		names(ret) = make.names(seq_along(ret))
-
-	if (all(c("x", "y") %in% names(ret)) && all(is.na(ret[["x"]]$geotransform)))
-		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
-
-	ret
+	create_dimensions(lapply(d, function(y) create_dimension(values = y)))
 }
 
 #' @name st_dimensions
@@ -71,93 +62,83 @@ st_set_dimensions = function(.x, which, values, names) {
 
 #' @export
 "[.dimensions" = function(x, i, j,..., drop = FALSE) {
-	structure(unclass(x)[i], class = "dimensions")
+	raster = attr(x, "raster")
+	ret = unclass(x)[i]
+	if (isTRUE(all(raster$dimensions %in% names(ret))))
+		create_dimensions(ret, raster)
+	else
+		create_dimensions(ret) # drop raster
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
-		geotransform = rep(NA_real_, 6), refsys = NA_character_, point = NA, values = NULL, 
-		what = "") {
+		refsys = NA_character_, point = NA, values = NULL)  {
 
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
-		if (what %in% c("x", "y")) {
-			# for x and y, we want to keep geotransform, so have to match the values to a 
-			# range of new indexes; they need to be regular and dense; also, we can't do 
-			# this for affine/sheared grids:
-			if (any(geotransform[c(3,5)] != 0))
-				stop("filter can't work with affine grids")
-			if (what == "x") {
-				ix = colrow_from_xy(cbind(values, 0), geotransform)[,1]
-				offset = geotransform[1]
-				delta = geotransform[2]
-			} else {
-				ix = colrow_from_xy(cbind(0, values), geotransform)[,2]
-				offset = geotransform[4]
-				delta = geotransform[6]
-			}
-			values = NULL # can be ignored now
-			stopifnot(all.equal(ix, seq(min(ix), max(ix)))) # allows numeric fuzz
-			from = round(min(ix) + .5)
-			to = round(max(ix) + .5)
-		} else {
-			from = 1
-			to = length(values)
-			if (is.character(values) || is.factor(values))
-				values = as.character(values)
-			else if (is.atomic(values)) { 
-				if (! all(is.finite(values)))
-					warning("dimension value(s) non-finite")
-				else {
-					ud <- unique(diff(values))
-					if (diff(range(ud)) / mean(ud) < 1e-10) {
-						offset = values[1]
-						delta = values[2] - values[1]
-						values = NULL
-						if (inherits(offset, "POSIXct"))
-							refsys = "POSIXct"
-						if (inherits(offset, "Date"))
-							refsys = "Date"
-					}
+		from = 1
+		to = length(values)
+		if (is.character(values) || is.factor(values))
+			values = as.character(values)
+		else if (is.atomic(values)) { 
+			if (! all(is.finite(values)))
+				warning("dimension value(s) non-finite")
+			else {
+				ud <- unique(diff(values))
+				if (diff(range(ud)) / mean(ud) < 1e-10) {
+					offset = values[1]
+					delta = values[2] - values[1]
+					values = NULL
+					if (inherits(offset, "POSIXct"))
+						refsys = "POSIXct"
+					if (inherits(offset, "Date"))
+						refsys = "Date"
 				}
 			}
-			if (inherits(values, "sfc_POINT"))
-				point = TRUE
-			if (inherits(values, "sfc") && !is.na(st_crs(values)) && is.na(refsys))
+		}
+		if (inherits(values, "sfc")) {
+			point = inherits(values, "sfc_POINT")
+			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
 				refsys = st_crs(values)$proj4string
 		}
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
-		geotransform = geotransform, refsys = refsys, point = point, values = values),
-		class = "dimension")
+		refsys = refsys, point = point, values = values), class = "dimension")
 }
 
-create_dimensions = function(dims, pr = NULL) {
-	if (!is.null(pr) && !is.null(pr$properties)) # messy!
-		pr = pr$properties
+create_dimensions = function(lst, raster = NULL) {
+	if (is.numeric(lst)) # when called with a dim(array) argument:
+		lst = lapply(lst, function(i) create_dimension(from = 1, to = lst[i]))
+	if (is.null(names(lst)))
+		names(lst) = make.names(seq_along(lst))
+	if (any(names(lst) == "")) {
+		sel = which(names(lst) == "")
+		names(lst)[sel] = make.names(seq_along(sel))
+	}
+	if (is.null(raster))
+		raster = get_raster(dimensions = c(NA_character_, NA_character_))
+	structure(lst, raster = raster, class = "dimensions")
+}
+
+create_dimensions_from_gdal_meta = function(dims, pr) {
 	lst = vector("list", length(dims))
 	names(lst) = names(dims)
-	if (! is.null(pr)) {
-		for (i in names(lst)) {
-			lst[[i]] = switch(i,
-				x = create_dimension(from = pr$cols[1], to = pr$cols[2], 
-					offset = pr$geotransform[1], 
-					delta = pr$geotransform[2], geotransform = pr$geotransform, 
-					point = pr$point,
-					refsys = if (is.null(pr$proj4string)) NA_character_ 
-						else pr$proj4string),
-				y = create_dimension(from = pr$rows[1], to = pr$rows[2], 
-					offset = pr$geotransform[4],
-					delta = pr$geotransform[6], geotransform = pr$geotransform, 
-					point = pr$point,
-					refsys = if (is.null(pr$proj4string)) NA_character_ 
-						else pr$proj4string),
-				create_dimension(from = 1, to = dims[i]) # time? depth+units?
-			)
-		}
-	} else {
-		for (i in seq_along(lst))
-			lst[[i]] = create_dimension(from = 1, to = dims[i])
+	for (i in names(lst)) {
+		lst[[i]] = switch(i,
+			x = create_dimension(from = pr$cols[1], to = pr$cols[2], 
+				offset = pr$geotransform[1], 
+				delta = pr$geotransform[2],
+				point = pr$point,
+				refsys = if (is.null(pr$proj4string)) NA_character_ 
+					else pr$proj4string),
+			y = create_dimension(from = pr$rows[1], to = pr$rows[2], 
+				offset = pr$geotransform[4],
+				delta = pr$geotransform[6],
+				point = pr$point,
+				refsys = if (is.null(pr$proj4string)) NA_character_ 
+					else pr$proj4string),
+			create_dimension(from = 1, to = dims[i]) # time? depth+units? To be filled in later...
+		)
 	}
-	if (! is.null(pr$dim_extra)) {
+	if (! is.null(pr$dim_extra)) { # netcdf...
 		for (d in names(pr$dim_extra)) {
 			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) "POSIXct" else NA_character_
 			de = pr$dim_extra[[d]]
@@ -170,7 +151,36 @@ create_dimensions = function(dims, pr = NULL) {
 		}
 		lst[["band"]] = NULL
 	}
-	structure(lst, class = "dimensions")
+	# set up raster:
+	raster = get_raster(affine = pr$geotransform[c(3,5)], dimensions = c("x", "y"), curvilinear = FALSE)
+	create_dimensions(lst, raster)
+}
+
+get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE)
+	structure(list(affine = affine, dimensions = dimensions, curvilinear = curvilinear), class = "stars_raster")
+
+get_geotransform = function(x) {
+	if (inherits(x, "stars"))
+		x = st_dimensions(x)
+	stopifnot(inherits(x, "dimensions"))
+	r = attr(x, "raster")
+	if (is.null(r))
+		rep(NA_real_, 6)
+	else {
+		xd = x[[ r$dimensions[1] ]]
+		yd = x[[ r$dimensions[2] ]]
+		c(xd$offset, xd$delta, r$affine[1], yd$offset, r$affine[2], yd$delta)
+	}
+}
+
+
+#' @export
+print.stars_raster = function(x, ...) {
+	# print(unclass(x), ...)
+	if (any(x$affine != 0.0))
+		cat(paste("sheared raster with parameters:", x$affine[1], x$affine[2], "\n"))
+	if (x$curvilinear)
+		cat("curvilinear grid\n")
 }
 
 get_val = function(pattern, meta) {
@@ -226,7 +236,7 @@ try_as_units = function(u) {
 		un
 }
 
-parse_meta = function(properties) {
+parse_gdal_meta = function(properties) {
 	point = get_val("AREA_OR_POINT", properties$meta)
 	properties$point = switch(point,
 	  Area=FALSE,
@@ -243,30 +253,32 @@ expand_dimensions.stars = function(x) {
 
 expand_dimensions.dimensions = function(x) {
 	dimensions = x
+	r = attr(x, "raster")
+	gt = get_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
-	if ("x" %in% names(lst)) {
-		x = dimensions[["x"]]
-		gt = x$geotransform
-		if (! all(is.na(gt))) {
-			lst[["x"]] = if (!is.null(x$values))
-					x$values
-				else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-		} else
-			stop("cannot determine x and y coordinates without geotransform")
+	if (!is.null(r)) {
+		if (r$dimensions[1] %in% names(lst)) { # x
+			x = dimensions[[ r$dimensions[1] ]]
+			if (! all(is.na(gt))) {
+				lst[[ r$dimensions[1] ]] = if (!is.null(x$values))
+						x$values
+					else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
+			} else
+				stop("cannot determine x and y coordinates without geotransform")
+		}
+		if (r$dimensions[2] %in% names(lst)) { # y
+			y = dimensions[[ r$dimensions[2] ]]
+			if (! all(is.na(gt))) {
+				lst[[ r$dimensions[2] ]] = if (!is.null(y$values))
+						y$values
+					else
+						xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
+			} else
+				stop("cannot determine x and y coordinates without geotransform")
+		}
 	}
-	if ("y" %in% names(lst)) {
-		y = dimensions[["y"]]
-		gt = y$geotransform
-		if (! all(is.na(gt))) {
-			lst[["y"]] = if (!is.null(y$values))
-					y$values
-				else
-					xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-		} else
-			stop("cannot determine x and y coordinates without geotransform")
-	}
-	for (nm in setdiff(names(lst), c("x", "y"))) {
+	for (nm in setdiff(names(lst), r$dimensions)) {
 		dm = dimensions[[nm]]
 		lst[[nm]] = if (!is.null(dm$values))
 				dm$values 
@@ -282,13 +294,9 @@ expand_dimensions.dimensions = function(x) {
 dim.dimensions = function(x) lengths(expand_dimensions(x))
 
 #' @export
+
 print.dimensions = function(x, ..., digits = 6) {
 	lst = lapply(x, function(y) {
-			aff = y$geotransform[c(3,5)]
-			y$geotransform = if (any(!is.na(aff)) && any(aff != 0))
-				paste(signif(y$geotransform, digits = digits), collapse = ", ")
-			else
-				NULL
 			if (length(y$values) > 2)
 				y$values = paste0(format(y$values[1]), ", ..., ", 
 					format(tail(y$values, 1)))
@@ -299,8 +307,15 @@ print.dimensions = function(x, ..., digits = 6) {
 	)
 	lst = lapply(lst, function(x) lapply(x, format, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
-	names(ret) = names(lst[[1]])
+	r = attr(x, "raster")
+	if (!any(is.na(r$dimensions))) {
+		ret$raster = rep("", nrow(ret))
+		ret[r$dimensions[1], "raster"] = "[x]"
+		ret[r$dimensions[2], "raster"] = "[y]"
+		names(ret) = c(names(lst[[1]]), "")
+	}
 	print(ret)
+	print(attr(x, "raster"))
 }
 
 identical_dimensions = function(lst) {

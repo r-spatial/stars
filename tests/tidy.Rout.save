@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,10 +29,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > 
 > (y <- x %>% select(L7_ETMs.tif))
 stars object with 3 dimensions and 1 attribute
@@ -45,10 +45,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > (y <- x %>% filter(band > 2))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -60,10 +60,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   4       3     1                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288791  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120747 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   4       3     1                           NA    NA   NULL    
 > (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
 stars object with 3 dimensions and 2 attributes
 attribute(s):
@@ -75,13 +75,13 @@ attribute(s):
  3rd Qu.: 86.00   3rd Qu.:172.0  
  Max.   :255.00   Max.   :510.0  
 dimension(s):
-     from  to  offset delta                       refsys point values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > x %>% pull(L7_ETMs.tif) %>% head
 [1] 69 69 63 60 61 61
 > 
 > proc.time()
    user  system elapsed 
-  1.124   0.231   1.061 
+  0.793   0.065   0.848 

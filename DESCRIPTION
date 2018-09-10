@@ -35,11 +35,12 @@ Suggests:
 	spacetime,
 	raster,
     testthat,
-	viridis
+	viridis,
+	starsdata
 VignetteBuilder: knitr
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Collate: init.R stars.R meta.R sf.R dimensions.R plot.R tidyverse.R transform.R ops.R write.R raster.R spacetime.R ncdf.R proxy.R
+Collate: init.R stars.R sf.R dimensions.R plot.R tidyverse.R transform.R ops.R write.R raster.R spacetime.R ncdf.R proxy.R
 Encoding: UTF-8
 RoxygenNote: 6.1.0

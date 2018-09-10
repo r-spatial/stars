@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -37,10 +37,10 @@ attribute(s):
  Max.   :255.00  
  NA's   :1194    
 dimension(s):
-     from  to  offset delta                       refsys point values
-x     157 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL
-y     244 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL
-band    1   6      NA    NA                           NA    NA   NULL
+     from  to  offset delta                       refsys point values    
+x     157 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y     244 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
 > image(xx)
 > plot(st_as_sfc(bb), add = TRUE, col = NA)
 > st_contains(st_as_sfc(st_bbox(xx)), st_as_sfc(st_bbox(pts)))
@@ -63,4 +63,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  3.240   0.268   3.183 
+  2.019   0.043   2.054 

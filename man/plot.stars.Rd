@@ -22,7 +22,7 @@
 
 \item{y}{ignored}
 
-\item{...}{for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.}
+\item{...}{further arguments: for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.}
 
 \item{join_zlim}{logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}}
 
