@@ -231,7 +231,7 @@ bb_shrink = function(bb, e) {
 
 #' @name st_crop
 #' @export
-st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
+st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	if (st_crs(x) != st_crs(y))
@@ -244,7 +244,8 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
 				st_bbox(y)
 			else
 				y
-		bb = bb_shrink(bb, epsilon)
+		if (epsilon != 0)
+			bb = bb_shrink(bb, epsilon)
 		# FIXME: document how EXACTLY cropping works; https://github.com/hypertidy/tidync/issues/73
 		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
 		for (i in seq_along(dm)) {

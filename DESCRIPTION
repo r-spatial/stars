@@ -35,7 +35,8 @@ Suggests:
 	spacetime,
 	raster,
     testthat,
-	viridis
+	viridis,
+	starsdata
 VignetteBuilder: knitr
 License: Apache License
 URL: https://github.com/r-spatial/stars/

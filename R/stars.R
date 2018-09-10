@@ -214,7 +214,7 @@ xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 }
 
 colrow_from_xy = function(x, geotransform) {
-	xy_from_colrow(x, geotransform, inverse = TRUE)
+	xy_from_colrow(x, geotransform, inverse = TRUE) # will return floating point col/row numbers!!
 }
 
 has_rotate_or_shear = function(x) {
@@ -535,11 +535,61 @@ st_crs.stars = function(x, ...) {
 #' @name st_crop
 #' @export
 #' @param x object of class \code{stars}
-#' @param y object of class \code{sf}, \code{sfc} or \code{bbox}
+#' @param y object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.
 #' @param epsilon numeric; shrink the bounding box of \code{y} to its center with this factor.
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
-st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
+#' @details for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
+#' @examples
+#' l7 = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+#' d = st_dimensions(l7)
+#' 
+#' # area around cells 3:10 (x) and 4:11 (y):
+#' offset = c(d[["x"]]$offset, d[["y"]]$offset)
+#' res = c(d[["x"]]$delta, d[["y"]]$delta)
+#' bb = st_bbox(c(xmin = offset[1] + 2 * res[1],
+#' 	ymin = offset[2] + 11 * res[2],
+#' 	xmax = offset[1] + 10 * res[1],
+#' 	ymax = offset[2] +  3 * res[2]), crs = st_crs(l7))
+#' l7[bb]
+#' 
+#' plot(l7[,1:13,1:13,1], reset = FALSE)
+#' image(l7[bb,,,1], add = TRUE, col = sf.colors())
+#' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+#' 
+#' # slightly smaller bbox:
+#' bb = st_bbox(c(xmin = offset[1] + 2.1 * res[1],
+#' 	ymin = offset[2] + 10.9 * res[2],
+#' 	xmax = offset[1] +  9.9 * res[1],
+#' 	ymax = offset[2] +  3.1 * res[2]), crs = st_crs(l7))
+#' l7[bb]
+#' 
+#' plot(l7[,1:13,1:13,1], reset = FALSE)
+#' image(l7[bb,,,1], add = TRUE, col = sf.colors())
+#' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+#' 
+#' # slightly larger bbox:
+#' bb = st_bbox(c(xmin = offset[1] + 1.9 * res[1],
+#' 	ymin = offset[2] + 11.1 * res[2],
+#' 	xmax = offset[1] + 10.1 * res[1],
+#' 	ymax = offset[2] +  2.9 * res[2]), crs = st_crs(l7))
+#' l7[bb]
+#' 
+#' plot(l7[,1:13,1:13,1], reset = FALSE)
+#' image(l7[bb,,,1], add = TRUE, col = sf.colors())
+#' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+#' 
+#' # half a cell size larger bbox:
+#' bb = st_bbox(c(xmin = offset[1] + 1.49 * res[1],
+#' 	ymin = offset[2] + 11.51 * res[2],
+#' 	xmax = offset[1] + 10.51 * res[1],
+#' 	ymax = offset[2] +  2.49 * res[2]), crs = st_crs(l7))
+#' l7[bb]
+#' 
+#' plot(l7[,1:13,1:13,1], reset = FALSE)
+#' image(l7[bb,,,1], add = TRUE, col = sf.colors())
+#' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
+st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
@@ -553,7 +603,8 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 1e-8) {
 				st_bbox(y)
 			else
 				y
-		bb = bb_shrink(bb, epsilon)
+		if (epsilon != 0)
+			bb = bb_shrink(bb, epsilon)
 		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
 		for (i in seq_along(d)) {
 			if (names(d[i]) == xd)

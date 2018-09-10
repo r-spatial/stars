@@ -27,7 +27,14 @@ the files in which they come, read on about your options.
 First we will discuss the low-level interface for this, then
 the higher level, using stars proxy objects that delay all reading.
 
-# Reading chunks, at a different resolution, or selected bands
+# Preamble: the starsdata package
+
+To run all of the examples in in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the `stars` package. They are in a [drat repo](https://github.com/eddelbuettel/drat), installation is done by
+```{r eval=FALSE}
+install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+```
+
+# Reading chunks, change resolution, select bands
 
 `read_stars` has an argument called `RasterIO` which controls how
 a GDAL dataset is being read. By default, all pixels and all bands
@@ -116,6 +123,7 @@ All these methods are implemented in GDAL; for what these methods exactly do, we
 
 # Stars proxy objects
 
+
 Stars proxy objects take another approach: upon creation they contain no data at all, but only pointers to where the data can be read. Data is only read when it is needed, and only as much as is needed: if we plot a proxy objects, the data are read at the resolution of pixels on the screen, rather than at the native resolution, so that if we have e.g. a 10000 x 10000 Sentinel 2 (level 1C) image, we can open it by
 ```{r, eval=EVAL}
 granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", package = "starsdata")
@@ -171,7 +179,7 @@ plot(ysub, reset = FALSE) # plot reads the data, at resolution that is relevant
 plot(st_as_sfc(bb), add = TRUE, lwd = .5, border = 'red')
 ```
 
-## Lazy evaluation, optimizing evaluation order (proof of concept)
+## Lazy evaluation, changing evaluation order
 
 Some other actions can be carried out on `stars_proxy` objects, but their effect is delayed until the data are actually needed (plot, write).  For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called `call_list`:
 
