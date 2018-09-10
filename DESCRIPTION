@@ -25,7 +25,7 @@ BugReports: https://github.com/r-spatial/stars/issues/
 Depends:
     abind,
     R (>= 3.3.0),
-    sf (>= 0.6-3)
+    sf (>= 0.7-0)
 Imports:
     classInt (>= 0.2-2),
     methods,
