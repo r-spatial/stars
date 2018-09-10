@@ -25,7 +25,7 @@
 crop a stars object
 }
 \details{
-for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box.
+for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
 }
 \examples{
 l7 = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))

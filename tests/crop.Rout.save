@@ -35,11 +35,10 @@ attribute(s):
  Mean   : 70.87  
  3rd Qu.: 89.00  
  Max.   :255.00  
- NA's   :1194    
 dimension(s):
      from  to  offset delta                       refsys point values    
-x     157 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y     244 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x     158 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y     245 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > image(xx)
 > plot(st_as_sfc(bb), add = TRUE, col = NA)
@@ -63,4 +62,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  2.019   0.043   2.054 
+  2.031   0.057   2.079 
