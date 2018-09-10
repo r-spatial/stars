@@ -29,6 +29,8 @@ before_install:
   - wget http://download.osgeo.org/postgis/source/postgis-2.4.4.tar.gz
   - (mv postgis* /tmp; cd /tmp; tar xzf postgis-2.4.4.tar.gz)
   - (cd /tmp/postgis-2.4.4 ; ./configure; make; sudo make install)
+  - export _R_CHECK_FORCE_SUGGESTS_=false
+
 after_success: R -q -e 'tic::after_success()'
 install: R -q -e 'tic::install()'
 script: R -q -e 'tic::script()'
