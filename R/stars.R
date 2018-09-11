@@ -26,7 +26,7 @@ split_strings = function(md, split = "=") {
 #' see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
 #' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
 #' Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image, 
-#' the resulting, adjusted geotransform may be approximate (this is not clear, right now).
+#' resulting in an adjusted geotransform.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -38,6 +38,21 @@ split_strings = function(md, split = "=") {
 #' t1 = as.Date("2018-07-31")
 #' # along is a named list indicating two dimensions:
 #' read_stars(c(tif, tif, tif, tif), along = list(foo = c("bar1", "bar2"), time = c(t1, t1+2)))
+#' 
+#' library(raster)
+#' library(stars)
+#' library(sf)
+#' r <- raster(extent(0, 10, 0, 10), nrows = 10, ncols = 10)
+#' r[] <- seq_len(ncell(r))
+#' tmp = tempfile(fileext = ".tif")
+#' writeRaster(r, tmp)
+#' (st <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 10, nBufXSize = 2, nBufYSize = 2)))
+#' st[[1]] # cell values of subsample grid:
+#' plot(st_as_stars(r), reset = FALSE, axes = TRUE, ylim = c(-.1,10.1), xlim = c(-.1,10.1), main = "nBufXSize & nBufYSize demo")
+#' plot(st_as_sfc(st, as_points = TRUE), add = TRUE, col = 'red', pch = 16)
+#' plot(st_as_sfc(st_as_stars(r), as_points = FALSE), add = TRUE, border = 'grey')
+#' plot(st_as_sfc(st, as_points = FALSE), add = TRUE, border = 'green', lwd = 2)
+#' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0), 
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
 		RasterIO = list(), proxy = FALSE) {

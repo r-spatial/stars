@@ -31,7 +31,7 @@ before_install:
   - (cd /tmp/postgis-2.4.4 ; ./configure; make; sudo make install)
   - export _R_CHECK_FORCE_SUGGESTS_=false
 
-after_success: R -q -e 'tic::after_success()'
+# after_success: R -q -e 'tic::after_success()'
 install: R -q -e 'tic::install()'
 script: R -q -e 'tic::script()'
 
