@@ -1,6 +1,6 @@
 Package: stars
 Title: Scalable, Spatiotemporal Tidy Arrays
-Version: 0.1-1
+Version: 0.2-0
 Authors@R: 
     c(person(given = "Edzer",
              family = "Pebesma",

@@ -1,4 +1,8 @@
-# version 0.1-2
+# version 0.2-0
+
+* add vignette about how `stars_proxy` objects work
+
+* `stars_proxy` objects defer processing of `st_apply` jobs until after subsampling; #50
 
 * allow reading sections of a raster, raster at a lower resolution, selected bands; #48
 
