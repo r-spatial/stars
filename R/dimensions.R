@@ -119,6 +119,8 @@ create_dimensions = function(lst, raster = NULL) {
 }
 
 create_dimensions_from_gdal_meta = function(dims, pr) {
+	#if (all(is.na(pr$geotransform)))
+	#	pr$geotransform = c(0.0,  1.0,  0.0,  0.0,  0.0, -1.0) # some GTiffs...
 	lst = vector("list", length(dims))
 	names(lst) = names(dims)
 	for (i in names(lst)) {

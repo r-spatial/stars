@@ -60,6 +60,7 @@ RoxygenNote: 6.1.0
 Collate: 
     'init.R'
     'stars.R'
+    'read.R'
     'sf.R'
     'dimensions.R'
     'plot.R'
