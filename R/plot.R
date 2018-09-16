@@ -174,11 +174,12 @@ get_breaks = function(x, breaks, nbreaks) {
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxColorValue = max(x[[attr]]),
-		xlab = if (!axes) "" else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
+		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE) {
 
 	dots = list(...)
+
 	stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
@@ -186,17 +187,21 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 
 	force(xlim)
 	force(ylim)
-	dims = expand_dimensions(x)
 
-	dimxy = attr(st_dimensions(x), "raster")$dimensions
+	d = st_dimensions(x)
+
+	dimxy = attr(d, "raster")$dimensions
 	dimx =  dimxy[1]
 	dimy =  dimxy[2]
-	dimxn = which(dimx == names(dims))
-	dimyn = which(dimy == names(dims))
+	dimxn = which(dimx == names(d))
+	dimyn = which(dimy == names(d))
 
-	y_is_neg = all(diff(dims[[ dimy ]]) < 0)
-	if (y_is_neg)
-		dims[[ dimy ]] = rev(dims[[ dimy ]])
+	if (!is_curvilinear(x)) {
+		dims = expand_dimensions(x)
+		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
+		if (y_is_neg)
+			dims[[ dimy ]] = rev(dims[[ dimy ]])
+	}
 
 	if (is.null(asp)) {
 		bb = st_bbox(x)
@@ -214,7 +219,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 
 	if (! is.null(rgb)) {
 		if (is_rectilinear(x))
-			warning("rectilinear rgb grid is plotted as regular grid")
+			warning("when using rgb, rectilinear grid is plotted as regular grid")
+		if (is_curvilinear(x))
+			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
 		ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
 		nas = apply(ar, 1, function(x) any(is.na(x)))
@@ -231,8 +238,12 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
-	} else { 
-		if (y_is_neg) { # flip y?
+	} else if (is_curvilinear(x)) { 
+		x = st_as_sf(x[1], as_points = TRUE)
+		mplot = function(x, col, ...) plot(x, pal = col, ...) # need to swap arg names: FIXME:?
+		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, ...)
+	} else { # regular grid, no RGB:
+		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
 				ar[ , rev(seq_len(dim(ar)[2])), band]
 			else

@@ -70,6 +70,21 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 }
 
 #' @export
+st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
+	if (is.null(curvilinear))
+		.x
+	else {
+		dimensions = st_dimensions(.x)
+		xy = names(curvilinear)
+		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
+		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		raster = get_raster(dimensions = names(curvilinear), curvilinear = TRUE)
+		st_stars(.x, create_dimensions(dimensions, raster))
+	}
+}
+
+
+#' @export
 st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
 	if (missing(crs))
 		crs = st_crs(.x)
@@ -104,7 +119,11 @@ colrow_from_xy = function(x, geotransform) {
 
 has_rotate_or_shear = function(x) {
 	dimensions = st_dimensions(x)
-	has_raster(x) && any(attr(dimensions, "raster")$affine != 0.0)
+	if (has_raster(x)) {
+		r = attr(dimensions, "raster")
+		!any(is.na(r$affine)) && r$affine != 0.0
+	} else
+		FALSE
 }
 
 has_raster = function(x) {
@@ -117,6 +136,11 @@ is_rectilinear = function(x) {
 	d = st_dimensions(x)
 	has_raster(x) && (is.na(d$x$delta) || is.na(d$y$delta)) &&
 		(length(unique(diff(d$x$values))) > 1 || length(unique(diff(d$y$values))) > 1)
+}
+
+is_curvilinear = function(x) {
+	d = st_dimensions(x)
+	has_raster(x) && attr(d, "raster")$curvilinear
 }
 
 has_sfc = function(x) {
@@ -232,7 +256,7 @@ c.stars = function(..., along = NA_integer_) {
 			new_dim = create_dimension(values = values)
 			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
 			names(dims)[names(dims) == "new_dim"] = dim_name
-			st_as_stars(attr = do.call(abind, c(dots, along = length(dim(dots[[1]])) + 1)), dimensions = dims)
+			st_stars(list(attr = do.call(abind, c(dots, along = length(dim(dots[[1]])) + 1))), dimensions = dims)
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			if (prod(lengths(along)) != length(dots))
 				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)

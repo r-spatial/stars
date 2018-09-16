@@ -179,7 +179,9 @@ get_geotransform = function(x) {
 #' @export
 print.stars_raster = function(x, ...) {
 	# print(unclass(x), ...)
-	if (any(x$affine != 0.0))
+	if (any(is.na(x$affine)))
+		cat(paste("affine parameters:", x$affine[1], x$affine[2], "\n"))
+	else if (any(x$affine != 0.0))
 		cat(paste("sheared raster with parameters:", x$affine[1], x$affine[2], "\n"))
 	if (x$curvilinear)
 		cat("curvilinear grid\n")
@@ -299,9 +301,15 @@ dim.dimensions = function(x) lengths(expand_dimensions(x))
 
 print.dimensions = function(x, ..., digits = 6) {
 	lst = lapply(x, function(y) {
-			if (length(y$values) > 2)
-				y$values = paste0(format(y$values[1]), ", ..., ", 
-					format(tail(y$values, 1)))
+			if (length(y$values) > 2) {
+				y$values = if (is.array(y$values))
+						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
+							format(min(y$values), digits = digits), ", ..., ", 
+							format(max(y$values), digits = digits))
+					else
+						paste0(format(y$values[1]), ", ..., ", 
+							format(tail(y$values, 1)))
+			}
 			if (!is.na(y$refsys) && nchar(y$refsys) > 28)
 				y$refsys = paste0(substr(y$refsys, 1L, 25),"...")
 			y

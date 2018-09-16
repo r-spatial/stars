@@ -4,8 +4,7 @@
 \alias{st_xy2sfc}
 \title{replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)}
 \usage{
-st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE,
-  longlat = NULL)
+st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -15,8 +14,6 @@ st_xy2sfc(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE,
 \item{...}{arguments passed on to \code{st_as_sfc}}
 
 \item{na.rm}{logical; remove cells with all missing values?}
-
-\item{longlat}{optionally a stars object with two 2-D arrays with longitude and latitude coordinates for each pixel; if this is defined, x and y dimension definitionss are further ignored.}
 }
 \value{
 object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons

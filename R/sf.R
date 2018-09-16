@@ -1,22 +1,20 @@
-sfc_from_longlat = function(x, as_points, crs = 4326) {
-	stopifnot(as_points == TRUE) # FIXME:
-	if (!inherits(x, "stars") || !length(x) == 2)
-		stop("longlat should be a lenght-2 stars object")
-	pts = cbind(as.vector(x[[1]]), as.vector(x[[2]]))
-	st_sfc(lapply(seq_len(nrow(pts)), function(i) st_point(pts[i,])), crs = crs)
-}
-
 # sf conversion things
 
 #' @export
-st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point,
-		which = seq_len(prod(dim(x)[1:2])), longlat = NULL) {
-	if (is.null(longlat)) {
+st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME: hard-coded x
+		which = seq_len(prod(dim(x)[1:2]))) {
+
+	if (is_curvilinear(x)) {
+		stopifnot(isTRUE(as_points)) # FIXME:
+		d = st_dimensions(x)
+		xy = attr(d, "raster")$dimensions
+		pts = cbind(as.vector( d[[ xy[1] ]]$values), as.vector( d[[ xy[2] ]]$values))
+		st_sfc(lapply(seq_len(nrow(pts)), function(i) st_point(pts[i,])), crs = st_crs(x))[which] # FIXME: more efficient via data.frame?
+	} else {
 		r = attr(st_dimensions(x), "raster")
 		gt = get_geotransform(x)
 		st_as_sfc(st_dimensions(x)[r$dimensions], ..., as_points = as_points, which = which, geotransform = gt)
-	} else
-		sfc_from_longlat(longlat, as_points = as_points, ...)[which]
+	}
 }
 
 
@@ -35,10 +33,9 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
 #' @param na.rm logical; remove cells with all missing values?
-#' @param longlat optionally a stars object with two 2-D arrays with longitude and latitude coordinates for each pixel; if this is defined, x and y dimension definitionss are further ignored.
 #' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 #' @export
-st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE, longlat = NULL) {
+st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE) { # FIXME: hard-coded x
 
 	d = st_dimensions(x)
 	olddim = dim(x)
@@ -46,21 +43,21 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE,
 	if (! has_raster(x))
 		stop("x and/or y not among dimensions")
 
-	xy_pos = match(c("x", "y"), names(d))
+	xy_pos = match(c("x", "y"), names(d)) # FIXME: hard coded raster dims
 	if (! all(xy_pos == 1:2))
 		stop("x and y need to be first and second dimension")
 
-	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2))
+	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2)) # FIXME: hard coded raster dims
 
 	# find which records are NA for all attributes:
-	a = do.call(abind, x)
+	a = abind(x, along = length(dim(x)) + 1)
 	keep = if (na.rm)
 			as.vector(apply(a, c(1,2), function(x) !all(is.na(x))))
 		else
 			rep(TRUE, prod(dim(x)[1:2]))
 
 	# flatten two dims x,y to one dim sfc (replacing "x")
-	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep), longlat = longlat)
+	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep))
 	# overwrite x:
 	d[["x"]] = create_dimension(from = 1, to = length(sfc), values = sfc)
 	# rename x to sfc:
@@ -85,11 +82,10 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE,
 }
 
 #' @export
-st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE, 
-		longlat = NULL) {
+st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE) { # FIXME: hard-coded x
 
 	if (has_raster(x))
-		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm, longlat = longlat)
+		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
 
 	if (! has_sfc(x))
 		stop("no feature geometry column found")

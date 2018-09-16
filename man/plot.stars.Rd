@@ -13,7 +13,7 @@
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
   rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) ""
-  else names(dims)[1], ylab = if (!axes) "" else names(dims)[2],
+  else names(d)[1], ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
   text_values = FALSE, axes = FALSE, interpolate = FALSE)
 }
