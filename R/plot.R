@@ -66,7 +66,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			values = as.vector(x[[1]])
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
 					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
-					length(col) > 1 && is.null(dots$rgb)) { # plot key?
+					length(col) > 1 && is.null(dots$rgb) && !is_curvilinear(x)) { # plot key?
 				switch(key.pos,
 					layout(matrix(c(2,1), nrow = 2, ncol = 1), widths = 1, heights = c(1, key.width)),  # 1 bottom
 					layout(matrix(c(1,2), nrow = 1, ncol = 2), widths = c(key.width, 1), heights = 1),  # 2 left
@@ -85,7 +85,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
-			image(x, ..., axes = axes, breaks = breaks, col = col)
+			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos)
 			if (!is.null(main))
 				title(main)
 
@@ -109,7 +109,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					br = get_breaks(im, breaks, nbreaks)
 				} else
 					br = breaks
-				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, ...)
+				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
@@ -177,7 +177,7 @@ get_breaks = function(x, breaks, nbreaks) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE, as_points = FALSE) {
+		interpolate = FALSE, as_points = FALSE, key.pos) {
 
 	dots = list(...)
 
@@ -242,7 +242,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 	} else if (is_curvilinear(x)) { 
 		x = st_as_sf(x[1], as_points = as_points)
 		mplot = function(x, col, ...) plot(x, pal = col, ...) # need to swap arg names: FIXME:?
-		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, ...)
+		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, key.pos = key.pos, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?

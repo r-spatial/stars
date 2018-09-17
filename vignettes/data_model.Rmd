@@ -109,3 +109,60 @@ x1 = c(0.25,0.75,1.5,3,4.5)
 y1 = c(0.4,0.75,1.5,2.1)
 image(x1, y1, m, col = sf.colors(21))
 ```
+
+## Curvilinear grids
+
+Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or netcdf) files in which they are found have two raster layers, one with the latitudes and one with the longitudes for every grid cell. Using the GDAL interface, we need to compose a `stars` object from the array and a long and lat matrix. The matrices with longitude and latitude values are stored in the `values` field of their respective dimensions.
+
+As an example, we will use a Sentinel 5P dataset available from package `starsdata`; this package can be installed with
+```{r eval=FALSE}
+install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+```
+
+The dataset is found here:
+```{r}
+(s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
+```
+
+```{r echo=FALSE}
+EVAL = s5p != ""
+```
+We can construct the curvilinear `stars` raster by calling `st_as_stars` on three arrays, with data, longitude and latitudes:
+```{r eval=EVAL}
+lat_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/latitude")
+lon_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/longitude")
+nit_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column")
+lat = read_stars(lat_ds)
+lon = read_stars(lon_ds)
+nit = read_stars(nit_ds)
+nit[[1]][nit[[1]] > 9e+36] = NA
+
+ll = setNames(c(lon, lat), c("x", "y"))
+nit.c = st_as_stars(nit, curvilinear = ll)
+st_crs(nit.c) = 4326
+nit.c
+```
+
+```{r eval=EVAL}
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16, key.pos = NULL)
+library(rnaturalearth)
+plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+```
+
+```{r eval=EVAL}
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
+plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+```
+
+We can downsample the data by
+```{r eval=EVAL}
+(nit.c = stars:::st_downsample(nit.c, 8))
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
+plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+```
+
+which doesn't look nice, but plotting the cells as polygons looks better:
+```{r eval=EVAL}
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
+plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+```
