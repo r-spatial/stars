@@ -409,7 +409,7 @@ st_crs.stars = function(x, ...) {
   	return(st_crop(x, i, crop = crop))
   mc <- match.call(expand.dots = TRUE)
   # select list elements from x, based on i:
-  d = attr(x, "dimensions")
+  d = st_dimensions(x)
   ed = expand_dimensions(d)
   x = unclass(x)[i]
   # selects also on dimensions:
@@ -420,15 +420,24 @@ st_crs.stars = function(x, ...) {
 	mc[["drop"]] = FALSE
 	for (i in names(x)) {
 		mc[[2]] = as.name(i)
-		x[[i]] = eval(mc, x, parent.frame())
+		x[[i]] = eval(mc, x, parent.frame()) # subset array
 	}
+	xy = attr(d, "raster")$dimensions
+	if (is_curvilinear(d)) { # subset curvilinear lat/lon matrices/rasters: can't do one-at-a-time!
+		mc[[2]] = as.name("values")
+		d[[ xy[1] ]]$values = eval(mc, d[[ xy[1] ]], parent.frame())
+		d[[ xy[2] ]]$values = eval(mc, d[[ xy[2] ]], parent.frame())
+	}
+	d_backup = d
+	# dimensions:
 	mc0 = mc[1:3] # "[", x, first dim
 	j = 3 # first dim
-	for (i in names(d)) {
+	for (i in names(d)) { # one-at-a-time:
 		mc0[[2]] = as.name(i)
 		mc0[[3]] = mc[[j]]
-		mc0[["values"]] = ed[[i]]
-		d[[i]] = eval(mc0, d, parent.frame()) # this is where the arrays are subsetted
+		if (! (is_curvilinear(d) && i %in% xy))
+			mc0[["values"]] = ed[[i]]
+		d[[i]] = eval(mc0, d, parent.frame()) # subset dimension
 		j = j + 1
 	}
   }

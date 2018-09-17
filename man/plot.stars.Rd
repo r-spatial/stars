@@ -15,7 +15,8 @@
   rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) ""
   else names(d)[1], ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
-  text_values = FALSE, axes = FALSE, interpolate = FALSE)
+  text_values = FALSE, axes = FALSE, interpolate = FALSE,
+  as_points = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -69,6 +70,8 @@
 \item{text_values}{logical; print values as text on image?}
 
 \item{interpolate}{logical; when using \link{rasterImage} (rgb), should pixels be interpolated?}
+
+\item{as_points}{logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension

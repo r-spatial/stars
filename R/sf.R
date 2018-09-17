@@ -4,17 +4,23 @@
 st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME: hard-coded x
 		which = seq_len(prod(dim(x)[1:2]))) {
 
+	if (FALSE) {
 	if (is_curvilinear(x)) {
 		stopifnot(isTRUE(as_points)) # FIXME:
 		d = st_dimensions(x)
 		xy = attr(d, "raster")$dimensions
 		pts = cbind(as.vector( d[[ xy[1] ]]$values), as.vector( d[[ xy[2] ]]$values))
-		st_sfc(lapply(seq_len(nrow(pts)), function(i) st_point(pts[i,])), crs = st_crs(x))[which] # FIXME: more efficient via data.frame?
+		# st_sfc(lapply(seq_len(nrow(pts)), function(i) st_point(pts[i,])), crs = st_crs(x))[which]
+		st_geometry(st_as_sf(as.data.frame(pts), coords = 1:2, crs = st_crs(x)))[which]
 	} else {
 		r = attr(st_dimensions(x), "raster")
 		gt = get_geotransform(x)
 		st_as_sfc(st_dimensions(x)[r$dimensions], ..., as_points = as_points, which = which, geotransform = gt)
 	}
+	}
+	r = attr(st_dimensions(x), "raster")
+	gt = get_geotransform(x)
+	st_as_sfc(st_dimensions(x)[r$dimensions], ..., as_points = as_points, which = which, geotransform = gt)
 }
 
 

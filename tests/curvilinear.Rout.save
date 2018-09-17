@@ -1,0 +1,108 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+> 
+> s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
+> if (s5p != "") {
++ 
++ lat_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/latitude")
++ lon_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/longitude")
++ nit_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column")
++ lat = read_stars(lat_ds)
++ lon = read_stars(lon_ds)
++ nit = read_stars(nit_ds)
++ nit[[1]][nit[[1]] > 9e+36] = NA
++ 
++ ll = setNames(c(lon, lat), c("x", "y"))
++ nit.c = st_as_stars(nit, curvilinear = ll)
++ st_crs(nit.c) = 4326
++ print(nit.c)
++ 
++ png("nit1.png", 800, 800)
++ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
++ library(rnaturalearth)
++ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ dev.off()
++ 
++ png("nit2.png", 800, 800)
++ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
++ library(rnaturalearth)
++ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ dev.off()
++ 
++ nit.c = stars:::st_downsample(nit.c, 8)
++ print(nit.c)
++ 
++ png("nit3.png", 800, 800)
++ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
++ library(rnaturalearth)
++ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ dev.off()
++ 
++ png("nit4.png", 800, 800)
++ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
++ library(rnaturalearth)
++ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ dev.off()
++ 
++ }
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+ nitrogendioxide_summed_total_column 
+ Min.   :0e+00                       
+ 1st Qu.:1e-04                       
+ Median :1e-04                       
+ Mean   :1e-04                       
+ 3rd Qu.:1e-04                       
+ Max.   :5e-04                       
+ NA's   :330                         
+dimension(s):
+  from  to offset delta                       refsys point
+x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
+y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
+                            values    
+x [450x278] -5.81066, ..., 30.9468 [x]
+y  [450x278] 28.3605, ..., 51.4686 [y]
+curvilinear grid
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+ nitrogendioxide_summed_total_column 
+ Min.   :0.00005                     
+ 1st Qu.:0.00007                     
+ Median :0.00008                     
+ Mean   :0.00009                     
+ 3rd Qu.:0.00009                     
+ Max.   :0.00023                     
+ NA's   :36                          
+dimension(s):
+  from to offset delta                       refsys point
+x    1 57     NA    NA +proj=longlat +datum=WGS8...    NA
+y    1 35     NA    NA +proj=longlat +datum=WGS8...    NA
+                          values    
+x [57x35] -5.59621, ..., 30.8488 [x]
+y  [57x35] 28.3605, ..., 51.1544 [y]
+curvilinear grid
+null device 
+          1 
+> 
+> proc.time()
+   user  system elapsed 
+  8.704   0.092   8.791 

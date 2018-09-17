@@ -167,6 +167,7 @@ get_breaks = function(x, breaks, nbreaks) {
 #' @param ylim y axis limits
 #' @param text_values logical; print values as text on image?
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
+#' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -176,7 +177,7 @@ get_breaks = function(x, breaks, nbreaks) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE) {
+		interpolate = FALSE, as_points = FALSE) {
 
 	dots = list(...)
 
@@ -239,7 +240,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else if (is_curvilinear(x)) { 
-		x = st_as_sf(x[1], as_points = TRUE)
+		x = st_as_sf(x[1], as_points = as_points)
 		mplot = function(x, col, ...) plot(x, pal = col, ...) # need to swap arg names: FIXME:?
 		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, ...)
 	} else { # regular grid, no RGB:

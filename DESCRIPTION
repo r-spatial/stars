@@ -51,6 +51,7 @@ Suggests:
 	viridis,
 	zoo,
 	xts,
+	rnaturalearth,
 	starsdata
 VignetteBuilder: knitr
 Remotes: 

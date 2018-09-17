@@ -10,6 +10,10 @@ st_dimensions = function(.x, ...) UseMethod("st_dimensions")
 st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
+st_dimensions.dimensions = function(.x, ...) .x
+
+
+#' @export
 #' @name st_dimensions
 st_dimensions.array = function(.x, ...) {
 	dn = dimnames(.x)
@@ -295,10 +299,14 @@ expand_dimensions.dimensions = function(x) {
 }
 
 #' @export
-dim.dimensions = function(x) lengths(expand_dimensions(x))
+dim.dimensions = function(x) {
+	if (is_curvilinear(x))
+		sapply(x, function(x) { x$to - x$from + 1 } )
+	else
+		lengths(expand_dimensions(x))
+}
 
 #' @export
-
 print.dimensions = function(x, ..., digits = 6) {
 	lst = lapply(x, function(y) {
 			if (length(y$values) > 2) {
@@ -374,20 +382,24 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 `[.dimension` = function(x, i, ..., values = NULL) {
 	if (!missing(i)) {
 		if (!is.na(x$from)) {
-			rang = x$from:x$to
+			rang = x$from:x$to # valid range
 			if (all(diff(i) == 1)) {
 				if (min(i) < 1 || max(i) > length(rang))
 					stop("invalid range selected")
 				sel = rang[i]
 				x$from = min(sel)
 				x$to = max(sel)
-			} else { # invalidates delta
-				x$from = x$to = x$delta = x$offset = NA
-				x$values = values[i]
+			} else { # invalidate offset & delta
+				x$delta = x$offset = NA
+				x$from = 1
+				x$to = length(i)
+				if (!is.matrix(x$values))
+					x$values = values[i]
 			}
 		} else {
 			stopifnot(!is.null(x$values))
-			x$values = x$values[i]
+			if (!is.matrix(x$values))
+				x$values = x$values[i]
 		}
 	}
 	x
