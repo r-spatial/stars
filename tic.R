@@ -1,7 +1,8 @@
 add_package_checks()
 
 get_stage("install") %>%
-  add_step(step_install_cran("lwgeom", configure.args="--without-liblwgeom"))
+  add_step(step_install_cran("lwgeom", configure.args="--without-liblwgeom")) %>%
+  add_step(step_install_cran("rnaturalearthdata"))
 
 ###
 # deploy pkgdowm site
