@@ -167,5 +167,5 @@ st_as_stars.sf = function(.x, ...) {
 st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_), 
 		file = tempfile(), driver = "GTiff", options = character(0)) {
 	gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
-	read_stars(file, driver = driver)
+	setNames(read_stars(file, driver = driver), names(sf)[1])
 }
