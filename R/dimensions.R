@@ -87,15 +87,15 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				warning("dimension value(s) non-finite")
 			else {
 				ud <- unique(diff(values))
-				if (diff(range(ud)) / mean(ud) < 1e-10) {
+				if (length(ud) && diff(range(ud)) / mean(ud) < 1e-10) { # regular?
 					offset = values[1]
 					delta = values[2] - values[1]
 					values = NULL
-					if (inherits(offset, "POSIXct"))
-						refsys = "POSIXct"
-					if (inherits(offset, "Date"))
-						refsys = "Date"
 				}
+				if (inherits(offset, "POSIXct"))
+					refsys = "POSIXct"
+				if (inherits(offset, "Date"))
+					refsys = "Date"
 			}
 		}
 		if (inherits(values, "sfc")) {
