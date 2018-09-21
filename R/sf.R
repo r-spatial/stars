@@ -2,8 +2,7 @@
 
 #' @export
 #' @name st_as_sf
-st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME: hard-coded x
-		which = seq_len(prod(dim(x)[1:2]))) {
+st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))) {
 
 	r = attr(st_dimensions(x), "raster")
 	gt = get_geotransform(x)
@@ -18,7 +17,7 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME
 #' @param na.rm logical; remove cells with all missing values?
 #' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
 #' @export
-st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE) { # FIXME: hard-coded x
+st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
 	d = st_dimensions(x)
 	olddim = dim(x)
@@ -29,8 +28,6 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 	xy_pos = match(c("x", "y"), names(d)) # FIXME: hard coded raster dims
 	if (! all(xy_pos == 1:2))
 		stop("x and y need to be first and second dimension")
-
-	stopifnot(identical(which(names(d) %in% c("x", "y")), 1:2)) # FIXME: hard coded raster dims
 
 	# find which records are NA for all attributes:
 	a = abind(x, along = length(dim(x)) + 1)
@@ -73,8 +70,8 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 #' @param which linear index of cells to keep (this argument is not recommended to be used)
 #' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
 #' @param merge logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details
-#' @param use_integer only relevant if \code{merge} is \code{TRUE}; if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values, otherwise they are converted to 32-bit floating point values.
-#' @param ... currently ignored
+#' @param use_integer (relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).
+#' @param ... ignored
 #' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons.
 #' @export
 #' @examples
@@ -89,7 +86,8 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 #' (p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
 #' plot(p, axes = TRUE)
 st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE, 
-		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), use_integer = TRUE) { 
+		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), 
+		use_integer = is.logical(x[[1]]) || is.integer(x[[1]])) { 
 
 	if (merge) {
 		if (as_points)

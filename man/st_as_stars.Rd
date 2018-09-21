@@ -46,6 +46,9 @@ convert objects into a stars object
 }
 \examples{
 demo(nc, echo = FALSE, ask = FALSE)
-(x = stars:::st_rasterize(nc))
+(x = stars:::st_rasterize(nc)) # default grid:
+plot(x, axes = TRUE)
+# a bit more customized grid:
+(x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
 plot(x, axes = TRUE)
 }

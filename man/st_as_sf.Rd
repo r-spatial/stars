@@ -6,17 +6,17 @@
 \alias{st_as_sf.stars}
 \title{Convert stars object into an sf object}
 \usage{
-\method{st_as_sfc}{stars}(x, ..., as_points = st_dimensions(x)$x$point,
+\method{st_as_sfc}{stars}(x, ..., as_points,
   which = seq_len(prod(dim(x)[1:2])))
 
 \method{st_as_sf}{stars}(x, ..., as_points = !merge, na.rm = TRUE,
   merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)),
-  use_integer = TRUE)
+  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]))
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{...}{currently ignored}
+\item{...}{ignored}
 
 \item{as_points}{logical; should cells be converted to points or to polygons? See details.}
 
@@ -26,7 +26,7 @@
 
 \item{merge}{logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details}
 
-\item{use_integer}{only relevant if \code{merge} is \code{TRUE}; if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values, otherwise they are converted to 32-bit floating point values.}
+\item{use_integer}{(relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).}
 }
 \description{
 Convert stars object into an sf object

@@ -17,7 +17,7 @@ x__ = st_transform(x, x_)
 
 all.equal(x_, x__)
 
-x = st_xy2sfc(x)
+x = st_xy2sfc(x, as_points = FALSE)
 (x_ = st_transform(x, 4326))
 
 # nothing to transform:
