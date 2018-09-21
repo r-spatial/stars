@@ -151,3 +151,23 @@ st_as_stars.sf = function(.x, ...) {
 	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
 	st_as_stars(lst, dimensions = dimensions)
 }
+
+#' @name st_as_stars
+#' @export
+#' @param sf object of class \code{sf}
+#' @param template stars object with desired target geometry 
+#' @param file temporary file name
+#' @param driver driver for temporary file
+#' @param options character; options vector for \code{GDALRasterize}
+#' @examples
+#' demo(nc, echo = FALSE, ask = FALSE)
+#' (x = stars:::st_rasterize(nc)) # default grid:
+#' plot(x, axes = TRUE)
+#' # a bit more customized grid:
+#' (x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
+#' plot(x, axes = TRUE)
+st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_), 
+		file = tempfile(), driver = "GTiff", options = character(0)) {
+	gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
+	read_stars(file, driver = driver)
+}

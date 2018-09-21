@@ -5,6 +5,7 @@
 \alias{st_as_stars.list}
 \alias{st_as_stars.default}
 \alias{st_as_stars.sf}
+\alias{st_rasterize}
 \alias{st_as_stars.Raster}
 \title{convert objects into a stars object}
 \usage{
@@ -16,6 +17,9 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{sf}(.x, ...)
 
+st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
+  file = tempfile(), driver = "GTiff", options = character(0))
+
 \method{st_as_stars}{Raster}(.x, ...)
 }
 \arguments{
@@ -26,7 +30,22 @@ st_as_stars(.x, ...)
 \item{dimensions}{object of class dimensions}
 
 \item{raster}{character; the names of the dimensions that denote raster dimensions}
+
+\item{sf}{object of class \code{sf}}
+
+\item{template}{stars object with desired target geometry}
+
+\item{file}{temporary file name}
+
+\item{driver}{driver for temporary file}
+
+\item{options}{character; options vector for \code{GDALRasterize}}
 }
 \description{
 convert objects into a stars object
+}
+\examples{
+demo(nc, echo = FALSE, ask = FALSE)
+(x = stars:::st_rasterize(nc))
+plot(x, axes = TRUE)
 }

@@ -1,5 +1,7 @@
 # version 0.2-0
 
+* add `st_rasterize`, which uses `GDALRasterize` to rasterize an sf object; #13
+
 * `st_as_sf.stars` now uses `GDAL(F)Polygonize` when give a regular or sheared grid; #13
 
 * add vignette about how `stars_proxy` objects work
