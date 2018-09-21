@@ -1,6 +1,7 @@
 # sf conversion things
 
 #' @export
+#' @name st_as_sf
 st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME: hard-coded x
 		which = seq_len(prod(dim(x)[1:2]))) {
 
@@ -9,16 +10,6 @@ st_as_sfc.stars = function(x, ..., as_points = st_dimensions(x)$x$point, # FIXME
 	st_as_sfc(st_dimensions(x)[r$dimensions], ..., as_points = as_points, which = which, geotransform = gt)
 }
 
-
-#' @export
-st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
-	st = st_as_stars(st_bbox(.x), ...)
-	sfc = st_as_sfc(st, as_points = as_points)
-	i = st_intersects(sfc, .x)
-	vals = sapply(i, FUN)
-	st[[1]] = array(vals, dim(st[[1]]))
-	st
-}
 
 #' replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
 #' @param x object of class \code{stars}
@@ -73,8 +64,44 @@ st_xy2sfc = function(x, as_points = st_dimensions(x)$x$point, ..., na.rm = TRUE)
 	structure(x, dimensions = d)
 }
 
+#' Convert stars object into an sf object
+#' 
+#' Convert stars object into an sf object
+#' @name st_as_sf
+#' @param x object of class \code{stars}
+#' @param as_points logical; should cells be converted to points or to polygons? See details.
+#' @param which linear index of cells to keep (this argument is not recommended to be used)
+#' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
+#' @param merge logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details
+#' @param use_integer only relevant if \code{merge} is \code{TRUE}; if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values, otherwise they are converted to 32-bit floating point values.
+#' @param ... currently ignored
+#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons.
 #' @export
-st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = TRUE) { # FIXME: hard-coded x
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' x = x[,,,6] # a band with lower values in it
+#' x[[1]][x[[1]] < 30] = NA # set lower values to NA
+#' x[[1]] = x[[1]] < 100 # make the rest binary
+#' x
+#' (p = st_as_sf(x)) # removes NA areas
+#' plot(p, axes = TRUE)
+#' (p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
+#' plot(p, axes = TRUE)
+st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE, 
+		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), use_integer = TRUE) { 
+
+	if (merge) {
+		if (as_points)
+			stop("for polygonizing using GDAL_Polygonize, you need to set as_points = FALSE")
+		mask = if(na.rm) {
+				mask = x[1]
+				mask[[1]] = !is.na(mask[[1]])
+				mask
+			} else
+				NULL
+		return(gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x)))
+	}
 
 	if (has_raster(x))
 		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
@@ -100,6 +127,18 @@ st_as_sf.stars = function(x, ..., as_points = st_dimensions(x)$x$point, na.rm = 
 		names(df) = names(x)
 	st_sf(df, geometry = sfc)
 }
+
+
+#' @export
+st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
+	st = st_as_stars(st_bbox(.x), ...)
+	sfc = st_as_sfc(st, as_points = as_points)
+	i = st_intersects(sfc, .x)
+	vals = sapply(i, FUN)
+	st[[1]] = array(vals, dim(st[[1]]))
+	st
+}
+
 
 #' @name st_as_stars
 #' @export

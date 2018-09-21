@@ -83,16 +83,11 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 	}
 }
 
-
 #' @export
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs) {
-	if (missing(crs))
-		crs = st_crs(.x)
-	dx = .x["xmax"] - .x["xmin"]
-	dy = .x["ymax"] - .x["ymin"]
-	gt = c(.x["xmin"], dx/nx, 0.0, .x["ymax"], 0.0, -dy/ny)
-	x = create_dimension(from = 1, to = nx, offset = .x["xmin"], delta =  dx/nx, refsys = crs)
-	y = create_dimension(from = 1, to = ny, offset = .x["ymax"], delta = -dy/ny, refsys = crs)
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs = st_crs(.x), 
+		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")]) {
+	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, refsys = crs)
+	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, refsys = crs)
 	st_as_stars(values = array(runif(nx * ny), c(x = nx, y = ny)),
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
