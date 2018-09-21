@@ -145,24 +145,23 @@ nit.c
 
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16, key.pos = NULL)
-# library(rnaturalearth)
-# plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 ```
 
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-# plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 ```
 
 We can downsample the data by
 ```{r eval=EVAL}
 (nit.c = stars:::st_downsample(nit.c, 8))
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-# plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 ```
 
 which doesn't look nice, but plotting the cells as polygons looks better:
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-# plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 ```
