@@ -49,7 +49,7 @@ sheared raster with parameters: -5 -5
 > all.equal(x_, x__)
 [1] TRUE
 > 
-> x = st_xy2sfc(x)
+> x = st_xy2sfc(x, as_points = FALSE)
 > (x_ = st_transform(x, 4326))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -93,4 +93,4 @@ In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
 > 
 > proc.time()
    user  system elapsed 
-  0.650   0.024   0.672 
+  0.761   0.041   0.795 

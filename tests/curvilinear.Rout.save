@@ -38,14 +38,12 @@ Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 + 
 + png("nit1.png", 800, 800)
 + plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-+ library(rnaturalearth)
-+ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ maps::map('world', add = TRUE, col = 'red')
 + dev.off()
 + 
 + png("nit2.png", 800, 800)
 + plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-+ library(rnaturalearth)
-+ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ maps::map('world', add = TRUE, col = 'red')
 + dev.off()
 + 
 + nit.c = stars:::st_downsample(nit.c, 8)
@@ -53,14 +51,12 @@ Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 + 
 + png("nit3.png", 800, 800)
 + plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-+ library(rnaturalearth)
-+ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ maps::map('world', add = TRUE, col = 'red')
 + dev.off()
 + 
 + png("nit4.png", 800, 800)
 + plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-+ library(rnaturalearth)
-+ plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
++ maps::map('world', add = TRUE, col = 'red')
 + dev.off()
 + 
 + }
@@ -105,4 +101,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  8.704   0.092   8.791 
+  7.799   0.149   7.944 

@@ -23,10 +23,10 @@ Type 'q()' to quit R.
 Loading required package: stars
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.6.2, GDAL 2.2.3, proj.4 4.9.3
+Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 ══ testthat results  ═══════════════════════════════════════════════════════════
 OK: 9 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.699   0.271   0.640 
+  0.857   0.076   0.913 

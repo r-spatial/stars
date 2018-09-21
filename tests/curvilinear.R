@@ -18,14 +18,12 @@ print(nit.c)
 
 png("nit1.png", 800, 800)
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-#library(rnaturalearth)
-#plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 dev.off()
 
 png("nit2.png", 800, 800)
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-#library(rnaturalearth)
-#plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 dev.off()
 
 nit.c = stars:::st_downsample(nit.c, 8)
@@ -33,14 +31,12 @@ print(nit.c)
 
 png("nit3.png", 800, 800)
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-#library(rnaturalearth)
-#plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 dev.off()
 
 png("nit4.png", 800, 800)
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-#library(rnaturalearth)
-#plot(st_geometry(ne_countries(scale = "medium", returnclass="sf")), add = TRUE, border = 'grey')
+maps::map('world', add = TRUE, col = 'red')
 dev.off()
 
 }
