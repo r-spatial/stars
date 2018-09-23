@@ -174,7 +174,7 @@ st_as_stars.sf = function(.x, ...) {
 #' plot(ls, add = TRUE, col = 'red')
 #' # add lines to existing 0 values, summing values in case of multiple lines:
 #' (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = 0))
-#' r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
+#' r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE")) # seens to require GDAL >= 2.2.3 for useful results
 #' plot(r, axes=TRUE, reset = FALSE)
 #' plot(ls, add = TRUE, col = 'red')
 st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_), 
