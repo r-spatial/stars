@@ -69,7 +69,9 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices
 #' @export
+#' @name st_as_stars
 st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 	if (is.null(curvilinear))
 		.x
@@ -83,7 +85,14 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 	}
 }
 
+#' @param nx integer; number of cells in x direction
+#' @param ny integer; number of cells in y direction
+#' @param crs object of class \code{crs} holding the coordinate reference system
+#' @param xlim length 2 numeric vector with extent in x direction
+#' @param ylim length 2 numeric vector with extent in y direction
+#' @param values value(s) to populate the raster values with
 #' @export
+#' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs = st_crs(.x), 
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = runif(nx * ny)) {
 	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, refsys = crs)

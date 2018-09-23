@@ -4,6 +4,8 @@
 \alias{st_as_stars}
 \alias{st_as_stars.list}
 \alias{st_as_stars.default}
+\alias{st_as_stars.stars}
+\alias{st_as_stars.bbox}
 \alias{st_as_stars.sf}
 \alias{st_rasterize}
 \alias{st_as_stars.Raster}
@@ -14,6 +16,12 @@ st_as_stars(.x, ...)
 \method{st_as_stars}{list}(.x, ..., dimensions = NULL)
 
 \method{st_as_stars}{default}(.x = NULL, ..., raster = NULL)
+
+\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL)
+
+\method{st_as_stars}{bbox}(.x, ..., nx = 360, ny = 180,
+  crs = st_crs(.x), xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin",
+  "ymax")], values = runif(nx * ny))
 
 \method{st_as_stars}{sf}(.x, ...)
 
@@ -30,6 +38,20 @@ st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
 \item{dimensions}{object of class dimensions}
 
 \item{raster}{character; the names of the dimensions that denote raster dimensions}
+
+\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices}
+
+\item{nx}{integer; number of cells in x direction}
+
+\item{ny}{integer; number of cells in y direction}
+
+\item{crs}{object of class \code{crs} holding the coordinate reference system}
+
+\item{xlim}{length 2 numeric vector with extent in x direction}
+
+\item{ylim}{length 2 numeric vector with extent in y direction}
+
+\item{values}{value(s) to populate the raster values with}
 
 \item{sf}{object of class \code{sf}}
 
@@ -51,4 +73,17 @@ plot(x, axes = TRUE)
 # a bit more customized grid:
 (x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
 plot(x, axes = TRUE)
+(ls = st_sf(a = 1, st_sfc(st_linestring(rbind(c(0,0), c(1,1))))))
+(grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = NA_real_))
+# the following two plots suggests a half-gridcell-shift problem:
+sf_extSoftVersion()["GDAL"]
+plot(st_rasterize(ls, grd), axes=TRUE, reset = FALSE) # ALL_TOUCHED=FALSE; 
+plot(ls, add = TRUE, col = 'red')
+plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes=TRUE, reset = FALSE)
+plot(ls, add = TRUE, col = 'red')
+# add lines to existing 0 values, summing values in case of multiple lines:
+(grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = 0))
+r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
+plot(r, axes=TRUE, reset = FALSE)
+plot(ls, add = TRUE, col = 'red')
 }
