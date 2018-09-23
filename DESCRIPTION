@@ -72,3 +72,4 @@ Collate:
     'spacetime.R'
     'ncdf.R'
     'proxy.R'
+    'factors.R'

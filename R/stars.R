@@ -170,6 +170,15 @@ as.data.frame.stars = function(x, ...) {
 	data.frame(st_coordinates(x), lapply(x, c))
 }
 
+as.vector_stars = function(x) {
+	l = attr(x, "levels")
+	if (!is.null(l))
+		structure(as.vector(x), class = "factor", levels = l)
+	else
+		as.vector(x)
+}
+
+
 #' @export
 print.stars = function(x, ..., n = 1e5) {
 	add_units = function(x) {
@@ -181,10 +190,10 @@ print.stars = function(x, ..., n = 1e5) {
 	cat("attribute(s)")
 	df = if (prod(dim(x)) > 10 * n) {
 		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
-		as.data.frame(lapply(x, function(y) as.vector(y)[1:n]), optional = TRUE) # nocov
+		as.data.frame(lapply(x, function(y) as.vector_stars(y)[1:n]), optional = TRUE) # nocov
 	} else {
 		cat(":\n")
-		as.data.frame(lapply(x, as.vector), optional = TRUE)
+		as.data.frame(lapply(x, as.vector_stars), optional = TRUE)
 	}
 	names(df) = add_units(x)
 	print(summary(df))
@@ -424,7 +433,8 @@ st_crs.stars = function(x, ...) {
 	mc[["drop"]] = FALSE
 	for (i in names(x)) {
 		mc[[2]] = as.name(i)
-		x[[i]] = eval(mc, x, parent.frame()) # subset array
+		lev = attr(x[[i]], "levels")
+		x[[i]] = structure(eval(mc, x, parent.frame()), levels = lev) # subset array
 	}
 	xy = attr(d, "raster")$dimensions
 	if (is_curvilinear(d)) { # subset curvilinear lat/lon matrices/rasters: can't do one-at-a-time!

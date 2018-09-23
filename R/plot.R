@@ -63,7 +63,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		}
 		if (length(dims) == 2 || dims[3] == 1 || !is.null(dots$rgb)) { ## ONE IMAGE:
 			# set up key region
-			values = as.vector(x[[1]])
+			values = as.vector_stars(x[[1]])
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
 					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
 					length(col) > 1 && is.null(dots$rgb) && !is_curvilinear(x)) { # plot key?
@@ -121,7 +121,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:
 				plot.new()
 			if (draw.key) {
-				values = as.vector(x[[1]])
+				values = as.vector_stars(x[[1]])
 				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = lt$key.pos,
 						key.width = key.width, key.length = key.length, axes = axes,...)
@@ -269,7 +269,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 # reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n) {
 	stopifnot(all(n >= 0))
-	if (! all(n == 0)) {
+	if (! all(n <= 1)) {
 		d = dim(x)
 		n = rep(n, length.out = length(d))
 		args = rep(list(rlang::missing_arg()), length(d)+1)
