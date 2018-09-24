@@ -16,7 +16,8 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				d = st_dimensions(x)
 				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), get_geotransform(d))
 				cellarea = sum((xy[1,] - xy[2,])^2) / 2 # lenght is cell diagonal
-				unclass(st_area(envelope)) / (prod(dim(x)[c("x","y")]) * cellarea) # > 1
+				xy_dims = attr(d, "raster")$dimensions
+				unclass(st_area(envelope)) / (prod(dim(x)[xy_dims]) * cellarea) # > 1
 			} else
 				1.0
 		cellsize = sqrt(unclass(area)/prod(dim(x)[c("x", "y")])/ratio)
@@ -123,7 +124,7 @@ st_transform.stars =  function(x, crs, ..., cellsize = NA_real_, segments = 100)
 	else if (has_sfc(x))
 		transform_sfc(x, crs, ...)
 	else {
-		warning("no coordinates: st_transform does nothing")
+		warning("no spatial coordinates present: st_transform does nothing")
 		x
 	}
 }

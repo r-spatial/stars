@@ -69,18 +69,35 @@ as.tbl_cube.stars = function(x, ...) {
 	dplyr::tbl_cube(dims, c(unclass(x)))
 }
 
-# example from HW's advanced R:
-#slice <- function(x, along, index) {
-#  #stopifnot(length(index) == 1)
-#    
-#  nd <- length(dim(x))
-#  indices <- rep(list(missing_arg()), nd)
-#  indices[[along]] <- index
-#  
-#  expr(x[!!!indices])
-#}
-#
-#eval(slice(x, 1, 1:3))
+#' slice a stars object
+#' 
+#' slice a stars object
+#' @param .data an object of class \code{stars}
+#' @param along name or index of dimension to which the slice should be applied
+#' @param index integer value(s) for this index
+#' @param ... ignored
+#' @param drop logical; drop dimensions that only have a single index?
+#' @export
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x1 = read_stars(tif)
+#' library(dplyr)
+#' x1 %>% slice("band", 2:3)
+#' x1 %>% slice("x", 50:100)
+slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
+  #stopifnot(length(index) == 1)
+  if (!requireNamespace("rlang", quietly = TRUE))
+      stop("package rlang required, please install it first")
+    
+  nd <- length(dim(.data))
+  indices <- rep(list(rlang::missing_arg()), nd + 1)
+  if (is.character(along))
+  	along = which(along == names(st_dimensions(.data)))
+  indices[[along + 1]] <- index
+  indices[["drop"]] <- drop
+  
+  eval(rlang::expr(.data[!!!indices]))
+}
 
 register_all_s3_methods = function() {
 	register_s3_method("dplyr", "filter", "stars")
@@ -88,6 +105,7 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "mutate", "stars")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
+	register_s3_method("dplyr", "slice", "stars")
 }
 
 # from: https://github.com/tidyverse/hms/blob/master/R/zzz.R

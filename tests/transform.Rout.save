@@ -89,8 +89,8 @@ X1    1 NA     NA    NA     NA    NA   NULL
 X2    1 NA     NA    NA     NA    NA   NULL
 Warning message:
 In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
-  no coordinates: st_transform does nothing
+  no spatial coordinates present: st_transform does nothing
 > 
 > proc.time()
    user  system elapsed 
-  0.761   0.041   0.795 
+  0.776   0.033   0.800 
