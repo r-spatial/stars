@@ -34,6 +34,7 @@ before_install:
   - export _R_CHECK_FORCE_SUGGESTS_=false
 
 # after_success: R -q -e 'tic::after_success()'
+after_success: R -q -e 'covr::codecov(quiet = FALSE)'
 install: R -q -e 'tic::install()'
 script: R -q -e 'tic::script()'
 

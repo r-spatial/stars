@@ -24,7 +24,7 @@ get_dims = function(d_cube, d_stars) {
 #' dplyr verbs for stars objects
 #' 
 #' dplyr verbs for stars objects
-#' @param .data see \link[dplyr]{filter}
+#' @param .data object of class \code{stars}
 #' @param ... see \link[dplyr]{filter}
 #' @name dplyr
 filter.stars <- function(.data, ...) {
@@ -69,13 +69,9 @@ as.tbl_cube.stars = function(x, ...) {
 	dplyr::tbl_cube(dims, c(unclass(x)))
 }
 
-#' slice a stars object
-#' 
-#' slice a stars object
-#' @param .data an object of class \code{stars}
+#' @name dplyr
 #' @param along name or index of dimension to which the slice should be applied
 #' @param index integer value(s) for this index
-#' @param ... ignored
 #' @param drop logical; drop dimensions that only have a single index?
 #' @export
 #' @examples
@@ -100,12 +96,12 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 }
 
 register_all_s3_methods = function() {
-	register_s3_method("dplyr", "filter", "stars")
+	register_s3_method("dplyr", "filter", "stars") # nocov start
 	register_s3_method("dplyr", "select", "stars")
 	register_s3_method("dplyr", "mutate", "stars")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
-	register_s3_method("dplyr", "slice", "stars")
+	register_s3_method("dplyr", "slice", "stars") # nocov end
 }
 
 # from: https://github.com/tidyverse/hms/blob/master/R/zzz.R

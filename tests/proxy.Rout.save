@@ -1,0 +1,93 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(sf))
+> suppressPackageStartupMessages(library(stars))
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x = read_stars(tif, proxy = TRUE))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> plot(x)
+> dim(x)
+   x    y band 
+ 349  352    6 
+> x[,,,2:3]
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+x[, , , 2:3]
+
+> plot(x)
+> # c(x,x)
+> st_as_stars(x)
+stars object with 4 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+        from  to  offset delta                       refsys point      values
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL
+band       1   6      NA    NA                           NA    NA        NULL
+new_dim    1   1      NA    NA                           NA    NA L7_ETMs.tif
+           
+x       [x]
+y       [y]
+band       
+new_dim    
+> (y = st_apply(x, 1:2, max))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+st_apply(X = X, MARGIN = 1:2, FUN = max)
+
+> plot(y)
+Warning message:
+In st_as_stars.stars_proxy(x, downsample = downsample) :
+  deferred processes applied to downsampled image(s)
+> 
+> proc.time()
+   user  system elapsed 
+  1.637   0.045   1.675 

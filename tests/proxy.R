@@ -1,0 +1,12 @@
+suppressPackageStartupMessages(library(sf))
+suppressPackageStartupMessages(library(stars))
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+(x = read_stars(tif, proxy = TRUE))
+plot(x)
+dim(x)
+x[,,,2:3]
+plot(x)
+# c(x,x)
+st_as_stars(x)
+(y = st_apply(x, 1:2, max))
+plot(y)

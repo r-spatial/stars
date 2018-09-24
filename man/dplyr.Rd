@@ -7,6 +7,7 @@
 \alias{select.stars}
 \alias{pull.stars}
 \alias{as.tbl_cube.stars}
+\alias{slice.stars}
 \title{dplyr verbs for stars objects}
 \usage{
 filter.stars(.data, ...)
@@ -18,16 +19,31 @@ select.stars(.data, ...)
 pull.stars(.data, var = -1)
 
 as.tbl_cube.stars(x, ...)
+
+slice.stars(.data, along, index, ..., drop = length(index) == 1)
 }
 \arguments{
-\item{.data}{see \link[dplyr]{filter}}
+\item{.data}{object of class \code{stars}}
 
 \item{...}{see \link[dplyr]{filter}}
 
 \item{var}{see \link[dplyr]{pull}}
 
 \item{x}{object of class \code{stars}}
+
+\item{along}{name or index of dimension to which the slice should be applied}
+
+\item{index}{integer value(s) for this index}
+
+\item{drop}{logical; drop dimensions that only have a single index?}
 }
 \description{
 dplyr verbs for stars objects
+}
+\examples{
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x1 = read_stars(tif)
+library(dplyr)
+x1 \%>\% slice("band", 2:3)
+x1 \%>\% slice("x", 50:100)
 }
