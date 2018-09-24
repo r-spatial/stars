@@ -258,6 +258,8 @@ c.stars = function(..., along = NA_integer_) {
 	} else {
 		# Case 2: single stars object, collapse attributes into new array dimension:
 		if (length(dots) == 1) {
+			if (length(dots[[1]]) == 1) # only one attribute: do nothing
+				return(dots[[1]])
 			if (is.list(along)) {
 				values = along[[1]]
 				dim_name = names(along)[1]
@@ -306,7 +308,10 @@ c.stars = function(..., along = NA_integer_) {
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
-	st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = st_dimensions(x)[-drop])
+	if (length(drop) > 0)
+		st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = st_dimensions(x)[-drop])
+	else 
+		x
 }
 
 #' @export

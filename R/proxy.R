@@ -61,6 +61,7 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 st_stars_proxy = function(x, dimensions)
 	structure(x, dimensions = dimensions, class = c("stars_proxy", "stars"))
 
+#' @export
 c.stars_proxy = function(..., along = NA_integer_) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
@@ -90,7 +91,8 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
 			names(dims)[names(dims) == "new_dim"] = dim_name
 			# FIXME: to be tested:
-			st_stars_proxy(unlist(do.call(c, c(dots, along = length(dim(dots[[1]])) + 1))), dimensions = dims) 
+			st_stars_proxy(unlist(do.call(c, c(lapply(dots, unclass), along = length(dim(dots[[1]])) + 1))),
+				dimensions = dims) 
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			stop("not implemented yet")
 			# FIXME: t.b.d.
@@ -166,11 +168,13 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
 
 # execute the call list on a stars object
 process_call_list = function(x, cl) {
-	pf = parent.frame()
+	pf_copy <- as.environment(as.list(parent.frame(), all.names=TRUE))
+	pf_copy = parent.frame()
+	#pf_copy$x = NULL # just in case
 	for (i in seq_along(cl)) {
 		lst = as.list(cl[[i]]) 
-		pf [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
-		x = eval(cl[[i]], envir = pf)
+		pf_copy [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
+		x = eval(cl[[i]], envir = pf_copy)
 	}
 	x
 }

@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages(library(sf))
 > suppressPackageStartupMessages(library(stars))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> (x = read_stars(tif, proxy = TRUE))
+> (r = read_stars(tif, proxy = TRUE))
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
 [1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
@@ -28,11 +28,11 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-> plot(x)
-> dim(x)
+> plot(r)
+> dim(r)
    x    y band 
  349  352    6 
-> x[,,,2:3]
+> r[,,,2:3]
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
 [1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
@@ -46,10 +46,41 @@ call list:
 [[1]]
 x[, , , 2:3]
 
-> plot(x)
-> # c(x,x)
-> st_as_stars(x)
-stars object with 4 dimensions and 1 attribute
+> plot(r)
+> (xx = c(r,r))
+stars_proxy object with 2 attributes in files:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> c(xx)
+stars_proxy object with 3 attributes in files:
+                                         L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                         L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                               along 
+                                                 "4" 
+dimension(s):
+        from  to  offset delta                       refsys point
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+band       1   6      NA    NA                           NA    NA
+new_dim    1   2      NA    NA                           NA    NA
+                          values    
+x                           NULL [x]
+y                           NULL [y]
+band                        NULL    
+new_dim L7_ETMs.tif, L7_ETMs.tif    
+> st_as_stars(r)
+stars object with 3 dimensions and 1 attribute
 attribute(s):
   L7_ETMs.tif    
  Min.   :  1.00  
@@ -59,17 +90,11 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-        from  to  offset delta                       refsys point      values
-x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL
-y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL
-band       1   6      NA    NA                           NA    NA        NULL
-new_dim    1   1      NA    NA                           NA    NA L7_ETMs.tif
-           
-x       [x]
-y       [y]
-band       
-new_dim    
-> (y = st_apply(x, 1:2, max))
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> (y = st_apply(r, 1:2, max))
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
 [1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
@@ -83,11 +108,83 @@ call list:
 [[1]]
 st_apply(X = X, MARGIN = 1:2, FUN = max)
 
-> plot(y)
-Warning message:
-In st_as_stars.stars_proxy(x, downsample = downsample) :
-  deferred processes applied to downsampled image(s)
+> (yy = st_as_stars(y))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   : 55.00  
+ 1st Qu.: 85.00  
+ Median : 96.00  
+ Mean   : 99.36  
+ 3rd Qu.:113.00  
+ Max.   :255.00  
+dimension(s):
+  from  to  offset delta                       refsys point values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+> (y = adrop(st_apply(r, 1:2, max)))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+st_apply(X = X, MARGIN = 1:2, FUN = max)
+
+[[2]]
+adrop(x = x)
+
+> (yy = st_as_stars(y))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   : 55.00  
+ 1st Qu.: 85.00  
+ Median : 96.00  
+ Mean   : 99.36  
+ 3rd Qu.:113.00  
+ Max.   :255.00  
+dimension(s):
+  from  to  offset delta                       refsys point values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+> plot(yy)
+> 
+> (xx = c(r,r))
+stars_proxy object with 2 attributes in files:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> names(xx) = c("a", "b")
+> xx["a"]
+stars_proxy object with 1 attribute in file:
+$a
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> pt = st_point(c(x = 290462.103109179, y = 9114202.32594085))
+> buf = st_buffer(st_sfc(pt, crs = st_crs(r)), 1500)
+> buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
++   crs = st_crs(r))
+> r = r[buf] # crops
 > 
 > proc.time()
    user  system elapsed 
-  1.637   0.045   1.675 
+  2.100   0.069   2.160 
