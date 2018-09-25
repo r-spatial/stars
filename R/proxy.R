@@ -134,13 +134,11 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
 
 # execute the call list on a stars object
 process_call_list = function(x, cl) {
-	pf_copy <- as.environment(as.list(parent.frame(), all.names=TRUE))
-	pf_copy = parent.frame()
-	#pf_copy$x = NULL # just in case
+	pf = parent.frame()
 	for (i in seq_along(cl)) {
 		lst = as.list(cl[[i]]) 
-		pf_copy [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
-		x = eval(cl[[i]], envir = pf_copy)
+		pf [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
+		x = eval(cl[[i]], envir = pf)
 	}
 	x
 }
