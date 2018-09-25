@@ -31,6 +31,11 @@ R's \code{factor} only works for vectors, not for arrays or matrices. This is a 
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = read_stars(tif)
+cut(x, c(0, 50, 100, 255))
+cut(x[,,,1], c(0, 50, 100, 255))
+plot(cut(x[,,,1], c(0, 50, 100, 255)))
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x1 = read_stars(tif)
 (x1_cut = cut(x1, breaks = c(0, 50, 100, Inf)))  # shows factor in summary
 plot(x1_cut[,,,c(3,6)]) # propagates through [ and plot

@@ -23,3 +23,4 @@ buf = st_buffer(st_sfc(pt, crs = st_crs(r)), 1500)
 buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
   crs = st_crs(r))
 r = r[buf] # crops
+r = r[buf, epsilon = 1e-5] # crops with shrinked bounding box

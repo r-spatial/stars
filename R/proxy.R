@@ -23,7 +23,7 @@ dim.stars_proxy = function(x) {
   missing.i = missing(i)
   # special case:
   if (! missing.i && inherits(i, c("sf", "sfc", "bbox")))
-  	return(st_crop(x, i, crop = crop))
+  	return(st_crop(x, i, crop = crop, ...))
   mc <- match.call(expand.dots = TRUE)
   # select list elements from x, based on i:
   d = st_dimensions(x)
