@@ -51,6 +51,6 @@ read_stars(c(tif,tif), along = 3)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 cut(x, c(0, 50, 100, 255))
-cut(x[,,,1], c(0, 50, 100, 255))
-plot(cut(x[,,,1], c(0, 50, 100, 255)))
+cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255))
+plot(cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255)))
 

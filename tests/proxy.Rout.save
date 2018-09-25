@@ -184,7 +184,8 @@ band    1   6      NA    NA                           NA    NA   NULL
 > buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
 +   crs = st_crs(r))
 > r = r[buf] # crops
+> r = r[buf, epsilon = 1e-5] # crops with shrinked bounding box
 > 
 > proc.time()
    user  system elapsed 
-  2.100   0.069   2.160 
+  2.078   0.064   2.134 

@@ -16,41 +16,7 @@ dim.stars_proxy = function(x) {
 	dim(st_dimensions(x))
 }
 
-#' @export
-"[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
-  if (drop)
-    stop("cannot drop dimensions of stars_proxy objects")
-  missing.i = missing(i)
-  # special case:
-  if (! missing.i && inherits(i, c("sf", "sfc", "bbox")))
-  	return(st_crop(x, i, crop = crop, ...))
-  mc <- match.call(expand.dots = TRUE)
-  # select list elements from x, based on i:
-  d = st_dimensions(x)
-  ed = expand_dimensions(d)
-  x = unclass(x)[i]
-  # selects also on dimensions:
-  if (length(mc) > 3) {
-    mc[[1]] <- `[`
-    if (! missing(i))
-		mc[[3]] <- NULL # remove i
-	mc[["drop"]] = FALSE
-#	for (i in names(x)) {
-#		mc[[2]] = as.name(i)
-#		x[[i]] = eval(mc, x, parent.frame())
-#	}
-	mc0 = mc[1:3] # "[", x, first dim
-	j = 3 # first dim
-	for (i in names(d)) {
-		mc0[[2]] = as.name(i)
-		mc0[[3]] = mc[[j]]
-		mc0[["values"]] = ed[[i]]
-		d[[i]] = eval(mc0, d, parent.frame())
-		j = j + 1
-	}
-  }
-  st_stars_proxy(x, d)
-}
+
 
 #' @export
 plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
@@ -212,7 +178,7 @@ adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
 		else {
 			i = as.character(lst[[3]])
 			if (inherits(get(i), c("sf", "sfc", "stars", "bbox")))
-				st_crop(x, get(i))
+				st_crop(x, get(i), ...)
 			else
 				stop(paste("unrecognized selector:", i))
 		}

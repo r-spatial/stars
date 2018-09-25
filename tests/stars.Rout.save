@@ -369,6 +369,35 @@ x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1  12      NA    NA                           NA    NA   NULL    
 > 
+> # cut:
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = read_stars(tif)
+> cut(x, c(0, 50, 100, 255))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+    L7_ETMs.tif    
+ (0,50]   :156060  
+ (50,100] :503764  
+ (100,255]: 77264  
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    L7_ETMs.tif    
+ (0,50]   :     1  
+ (50,100] :117134  
+ (100,255]:  5713  
+dimension(s):
+  from  to  offset delta                       refsys point values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+> plot(cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255)))
+> 
+> 
 > proc.time()
    user  system elapsed 
-  4.543   0.168   4.706 
+  4.393   0.140   4.527 
