@@ -34,7 +34,9 @@ st_as_STFDF = function(x) {
 	e = expand_dimensions(d)
 	if (length(d) > 2)
 		stop("STIDF only supports spatial+temporal dimensions")
-	sp = as(d$sfc$values, "Spatial")
+
+	ix = which(sapply(d, function(i) inherits(i$values, "sfc")))
+	sp = as(d[[ ix[1] ]]$values, "Spatial")
 	if (rst)
 		sp::gridded(sp) = TRUE
 	spacetime::STFDF(sp, xts::xts(1:dim(d)[2], e$time), data.frame(lapply(vals, as.vector)))

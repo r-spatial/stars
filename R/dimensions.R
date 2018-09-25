@@ -74,6 +74,11 @@ st_set_dimensions = function(.x, which, values, names) {
 		create_dimensions(ret) # drop raster
 }
 
+regular_intervals = function(x, epsilon = 1e-10) {
+	ud <- unique(diff(x))
+	length(ud) && diff(range(ud)) / mean(ud) < epsilon
+}
+
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		refsys = NA_character_, point = NA, values = NULL)  {
 
@@ -86,8 +91,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			if (! all(is.finite(values)))
 				warning("dimension value(s) non-finite")
 			else {
-				ud <- unique(diff(values))
-				if (length(ud) && diff(range(ud)) / mean(ud) < 1e-10) { # regular?
+				if (regular_intervals(values)) {
 					offset = values[1]
 					delta = values[2] - values[1]
 					values = NULL

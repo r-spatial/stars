@@ -138,8 +138,13 @@ has_raster = function(x) {
 
 is_rectilinear = function(x) {
 	d = st_dimensions(x)
-	has_raster(x) && (is.na(d$x$delta) || is.na(d$y$delta)) &&
-		(length(unique(diff(d$x$values))) > 1 || length(unique(diff(d$y$values))) > 1)
+	if (has_raster(x) && !is_curvilinear(x)) {
+		xy = attr(d, "raster")$dimensions
+		dimx = d[[ xy[1] ]]
+		dimy = d[[ xy[2] ]]
+		(is.na(dimx$delta) || is.na(dimy$delta)) && (!regular_intervals(dimx$values) || !regular_intervals(dimy$values))
+	} else
+		FALSE 
 }
 
 is_curvilinear = function(x) {
@@ -336,8 +341,8 @@ st_bbox.dimensions = function(obj, ...) {
 			c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
 		} else {
 			e = expand_dimensions(obj)
-			rx = range(e$x)
-			ry = range(e$y)
+			rx = range(e[[ r$dimensions[1] ]])
+			ry = range(e[[ r$dimensions[2] ]])
 			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
 		}
 		structure(bb, crs = st_crs(x$refsys), class = "bbox")
@@ -357,8 +362,9 @@ st_bbox.stars = function(obj, ...) {
 #' @export
 st_crs.stars = function(x, ...) {
 	d = st_dimensions(x)
-	if ("x" %in% names(d))
-		st_crs(d$x$refsys)
+	xy = attr(d, "raster")$dimensions
+	if (!all(is.na(xy)))
+		st_crs(d[[ xy[1] ]]$refsys)
 	else { # search for simple features:
 		i = sapply(d, function(y) inherits(y$values, "sfc"))
 		if (any(i))
@@ -372,12 +378,15 @@ st_crs.stars = function(x, ...) {
 `st_crs<-.stars` = function(x, value) {
 	crs = st_crs(value)
 	d = st_dimensions(x)
-	if ("x" %in% names(d))
-		d$x$refsys = crs$proj4string
-	if ("y" %in% names(d))
-		d$y$refsys = crs$proj4string
-	if ("sfc" %in% names(d))
-		d$sfc$refsys = crs$proj4string
+	xy = attr(d, "raster")$dimensions
+	if (!all(is.na(xy))) {
+		d[[ xy[1] ]]$refsys = crs$proj4string
+		d[[ xy[2] ]]$refsys = crs$proj4string
+	}
+	# sfc's:
+	i = sapply(d, function(y) inherits(y$values, "sfc"))
+	for (j in which(i))
+		d[[ j ]]$refsys = crs$proj4string
 	st_as_stars(unclass(x), dimensions = d)
 }
 
@@ -556,11 +565,11 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	}
 	if (inherits(y, "bbox"))
 		y = st_as_sfc(y)
-	xy_grd = st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[c("x", "y")]),
-		coords = c("x", "y"), crs = st_crs(x))
+	dxy = attr(dm, "raster")$dimensions
+	xy_grd = st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 	inside = st_intersects(y, xy_grd)[[1]]
 	d = dim(x) # cropped x
-	mask = rep(NA_real_, prod(d[c("x", "y")]))
+	mask = rep(NA_real_, prod(d[dxy]))
 	mask[inside] = 1
 	x * array(mask, d) # replicates over secondary dims
 }

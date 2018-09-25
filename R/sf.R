@@ -25,9 +25,10 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	if (! has_raster(x))
 		stop("x and/or y not among dimensions")
 
-	xy_pos = match(c("x", "y"), names(d)) # FIXME: hard coded raster dims
+	dxy = attr(d, "raster")$dimensions
+	xy_pos = match(dxy, names(d))
 	if (! all(xy_pos == 1:2))
-		stop("x and y need to be first and second dimension")
+		stop("raster dimensions need to be first and second dimension")
 
 	# find which records are NA for all attributes:
 	a = abind(x, along = length(dim(x)) + 1)
@@ -108,7 +109,8 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		stop("no feature geometry column found")
 
 	# FIXME: this probably only works for 2D arrays, now
-	sfc = st_dimensions(x)$sfc$values
+	ix = which(sapply(st_dimensions(x), function(i) inherits(i$values, "sfc")))
+	sfc = st_dimensions(x)[[ ix[1] ]]$values # picks first: FIXME:?
 	# may choose units method -> is broken; drop units TODO: if fixed:
 	dfs = lapply(x, function(y) as.data.frame(y))
 	nc = sapply(dfs, ncol)

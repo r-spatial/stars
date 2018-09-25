@@ -20,7 +20,8 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				unclass(st_area(envelope)) / (prod(dim(x)[xy_dims]) * cellarea) # > 1
 			} else
 				1.0
-		cellsize = sqrt(unclass(area)/prod(dim(x)[c("x", "y")])/ratio)
+		dxy = attr(st_dimensions(x), "raster")$dimensions
+		cellsize = sqrt(unclass(area)/prod(dim(x)[dxy])/ratio)
 		# TODO: divide by st_area(evelope_new)/st_area(envelope) ?
 	}
 	cellsize = rep(abs(cellsize), length.out = 2)
@@ -33,10 +34,12 @@ create_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 }
 
 # transform grid x to dimensions target
+# x is a stars object, target is a dimensions object
 transform_grid_grid = function(x, target) {
 	#new_pts = st_as_sfc(target, as_points = TRUE)
 	new_pts = st_coordinates(target[1:2])
-	pts = sf_project(from = target$x$refsys, to = st_crs(x)$proj4string, pts = new_pts)
+	dxy = attr(target, "raster")$dimensions
+	pts = sf_project(from = target[[ dxy[1] ]]$refsys, to = st_crs(x)$proj4string, pts = new_pts)
 	#if (! requireNamespace("lwgeom", quietly = TRUE))
 	#	stop("package lwgeom required, please install it first")
 	#pts = lwgeom::st_transform_proj(new_pts, c(target$x$refsys, st_crs(x)$proj4string))
@@ -47,18 +50,18 @@ transform_grid_grid = function(x, target) {
 	d = st_dimensions(x)
 	# get col/row from x/y:
 	xy = ceiling(xy_from_colrow(pts, get_geotransform(x), inverse = TRUE)) 
-	xy[ xy[,1] < 1 | xy[,1] > d$x$to | xy[,2] < 1 | xy[,2] > d$y$to, ] = NA
+	xy[ xy[,1] < 1 | xy[,1] > d[[ dxy[1] ]]$to | xy[,2] < 1 | xy[,2] > d[[ dxy[2] ]]$to, ] = NA
 
 	from = x[[1]] #[,,1]
 	dims = dim(x)
-	index = matrix(1:prod(dims[c("x","y")]), dims["x"], dims["y"])[xy]
+	index = matrix(1:prod(dims[dxy]), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	if (length(dims) > 2) {
-		remaining_dims = dims[setdiff(names(dims), c("x", "y"))]
-		newdim = c(prod(dims[c("x", "y")]), prod(remaining_dims))
+		remaining_dims = dims[setdiff(names(dims), dxy)]
+		newdim = c(prod(dims[dxy]), prod(remaining_dims))
 		for (i in seq_along(x)) {
 			dim(x[[i]]) = newdim
 			x[[i]] = x[[i]][index,]
-			dim(x[[i]]) = c(dim(target)[c("x", "y")], remaining_dims)
+			dim(x[[i]]) = c(dim(target)[dxy], remaining_dims)
 		}
 	} else {
 		for (i in seq_along(x)) {
@@ -66,7 +69,7 @@ transform_grid_grid = function(x, target) {
 			dim(x[[i]]) = dim(target)
 		}
 	}
-	d[c("x", "y")] = target[1:2]
+	d[dxy] = target[1:2]
 	structure(x, dimensions = create_dimensions(d, attr(target, "raster")))
 }
 
@@ -87,8 +90,11 @@ transform_raster = function(x, crs, ..., cellsize = NA_real_, segments = NA) {
 transform_sfc = function(x, crs, ...) {
 	crs = st_crs(crs)
 	d = st_dimensions(x)
-	d$sfc$values = st_transform(d$sfc$values, crs, ...)
-	d$sfc$refsys = crs
+	ix = which(sapply(d, function(i) inherits(i$values, "sfc")))
+	for (j in ix) {
+		d[[j]]$values = st_transform(d[[j]]$values, crs, ...)
+		d[[j]]$refsys = crs
+	}
 	structure(x, dimensions = d)
 }
 

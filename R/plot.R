@@ -24,12 +24,13 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 
 	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
+		dxy = attr(d, "raster")$dimensions
 		dims = dim(x)
 		x = x[[1]]
-		aux = setdiff(names(dims), c("x", "y"))
-		newdims = c(dims[c("x", "y")], prod(dims[aux]))
+		aux = setdiff(names(dims), dxy)
+		newdims = c(dims[dxy], prod(dims[aux]))
 		dim(x) = newdims
-		st_as_stars(list(x[,,i]), dimensions = d[c("x", "y")])
+		st_as_stars(list(x[,,i]), dimensions = d[dxy])
 	}
 	key.pos.missing = missing(key.pos)
 	if (missing(nbreaks) && !missing(col))
@@ -48,9 +49,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	if (!missing(y))
 		stop("y argument should be missing")
 	if (has_raster(x)) {
-		xy = attr(st_dimensions(x), "raster")$dimensions
-		loop = setdiff(names(dim(x)), xy) # dimension (name) over which we loop, if any
-		x = aperm(x, c(xy, loop))
+		dxy = attr(st_dimensions(x), "raster")$dimensions
+		loop = setdiff(names(dim(x)), dxy) # dimension (name) over which we loop, if any
+		x = aperm(x, c(dxy, loop))
 		zlim = if (join_zlim)
 				range(unclass(x[[1]]), na.rm = TRUE)
 			else
@@ -58,7 +59,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		dims = dim(x)
 		if (downsample) {
 			n = dims * 0 + 1 # keep names
-			n[c("x", "y")] = get_downsample(dims)
+			n[dxy] = get_downsample(dims)
 			x = st_downsample(x, n)
 		}
 		if (length(dims) == 2 || dims[3] == 1 || !is.null(dots$rgb)) { ## ONE IMAGE:
