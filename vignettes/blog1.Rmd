@@ -190,7 +190,7 @@ to = from = st_geometry(nc) # 100 polygons: O and D regions
 mode = c("car", "bike", "foot") # travel mode
 day = 1:100 # arbitrary
 library(units)
-units(day) = make_unit("days since 2015-01-01")
+units(day) = as_units("days since 2015-01-01")
 hour = set_units(0:23, h) # hour of day
 dims = st_dimensions(origin = from, destination = to, mode = mode, day = day, hour = hour)
 (n = dim(dims))

@@ -27,7 +27,7 @@ st_set_dimensions(.x, which, values, names)
 
 \item{values}{values for this dimension (e.g. \code{sfc} list-column)}
 
-\item{names}{character; new names vector for dimensions}
+\item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
 }
 \value{
 the \code{dimensions} attribute of \code{x}, of class \code{dimensions}

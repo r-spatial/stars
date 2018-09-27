@@ -7,6 +7,7 @@ dimnames(n) = list(county = nc$NAME, var = c("BIR", "SID", "NWBIR"), year = c(19
 suppressPackageStartupMessages(library(stars))
 (st = st_as_stars(pop = n))
 foo <- st %>% st_set_dimensions(1, st_geometry(nc)) # %>% st_set_dimensions(3, c(1974, 1979))
+st %>% st_set_dimensions(1, st_geometry(nc)) %>% st_set_dimensions(names = c("geometries", "var", "year"))
 foo
 frac = function(x) x[2] / x[1]
 frac2 = function(x) c(sidsr = x[2] / x[1], nwbr = x[3] / x[1])

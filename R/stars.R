@@ -172,7 +172,7 @@ st_coordinates.dimensions = function(x, ...) {
 
 #' @export
 as.data.frame.stars = function(x, ...) {
-	data.frame(st_coordinates(x), lapply(x, c))
+	data.frame(st_coordinates(x), lapply(x, as.vector_stars))
 }
 
 as.vector_stars = function(x) {

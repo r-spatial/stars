@@ -42,24 +42,29 @@ st_dimensions.default = function(.x, ...) {
 	create_dimensions(lapply(d, function(y) create_dimension(values = y)))
 }
 
+
 #' @name st_dimensions
 #' @param which integer which dimension to change
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
-#' @param names character; new names vector for dimensions
+#' @param names character; new names vector for (all) dimensions, ignoring \code{which}
 #' @export
 st_set_dimensions = function(.x, which, values, names) {
 	d = st_dimensions(.x)
 	if (! missing(values)) {
+		stopifnot(!missing(which))
 		if (dim(.x)[which] != length(values))
-			stop("length of value does not match dimension")
+			stop(paste("length of values does not match dimension", which))
 		d[[which]] = create_dimension(values = values)
-		if (inherits(values, "sfc"))
+		if (! missing(names) && length(names) == 1)
+			base::names(d)[which] = names
+		else if (inherits(values, "sfc"))
 			base::names(d)[which] = "sfc"
-	}
-	if (! missing(names)) {
-		if (length(d) != length(names))
-			stop("length of names should match number of dimension")
-		base::names(d) = names
+	} else { # set all names
+		if (! missing(names)) {
+			if (length(d) != length(names))
+				stop("length of names should match number of dimension")
+			base::names(d) = names
+		}
 	}
 	st_as_stars(unclass(.x), dimensions = d)
 }
