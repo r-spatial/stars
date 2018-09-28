@@ -51,12 +51,12 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	# reduce arrays to non-NA cells:
 	if (na.rm) {
 		for (i in seq_along(x))
-			x[[i]] = switch(as.character(length(dim(x[[i]]))), 
+			x[[i]] = as.vector_stars(switch(as.character(length(dim(x[[i]]))), 
 				"1" = x[[i]][which(keep),drop=FALSE],
 				"2" = x[[i]][which(keep),,drop=FALSE],
 				"3" = x[[i]][which(keep),,,drop=FALSE],
 				"4" = x[[i]][which(keep),,,,drop=FALSE], # etc -- FIXME: use tidy eval here
-				)
+				))
 	}
 
 	structure(x, dimensions = d)
@@ -91,15 +91,18 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]])) { 
 
 	if (merge) {
-		if (as_points)
-			stop("for polygonizing using GDAL_Polygonize, you need to set as_points = FALSE")
 		mask = if(na.rm) {
 				mask = x[1]
 				mask[[1]] = !is.na(mask[[1]])
 				mask
 			} else
 				NULL
-		return(gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x)))
+		ret = gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
+				use_contours = as_points, ...)
+		# factor levels?
+		if (!is.null(lev <- attr(x[[1]], "levels")))
+			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
+		return(ret)
 	}
 
 	if (has_raster(x))

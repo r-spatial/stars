@@ -1,7 +1,7 @@
 ---
 title: 'stars: data model'
 author: "Edzer Pebesma"
-date: "December 10, 2017"
+date: "September 28, 2018"
 output:
   html_document:
     toc: true
@@ -18,9 +18,9 @@ knitr::opts_chunk$set(collapse = TRUE)
 set.seed(13579)
 ```
 
-This vignette explains the data model of `stars` objects, with illustrations.
+This vignette explains the data model of `stars` objects, illustrated using artificial and real datasets.
 
-## Grid types
+## Grid type
 
 ### Regular grids
 With a very simple file created from a $4 \times 5$ matrix
@@ -34,44 +34,60 @@ we see that
 
 * the rows (5) are mapped to the first dimension, the x-coordinate
 * the columns (4) are mapped to the second dimension, the y-coordinate
-* the `from` and `to` fields of the dimensions are redundant, as they also are present in the array dimension:
+* the `from` and `to` fields of each dimension define a range that corresponds to the array dimension:
 
 ```{r}
 dim(s[[1]])
 ```
-* offset and delta specify how increasing row/column index maps to x and y coordinate values
+* offset and delta specify how increasing row and column index maps to x and y coordinate values respectively.
 
-When we plot this object, using the `image` method for `stars` objects, we see
+When we plot this object, using the `image` method for `stars` objects, 
 ```{r fig.width=4.5, fig.height=4}
 image(s, text_values = TRUE, axes = TRUE)
 ```
 
-Where it becomes clear that $(0,0)$ is the origin of the grid (grid corner), and $1$ the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are **regular**: grid cell size is constant everywhere.
+we see that $(0,0)$ is the origin of the grid (grid corner), and $1$ the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are **regular**: grid cell size is constant everywhere.
 
-Most grid data comes with y coordinates (grid rows) going from North to South (top to bottom); this is established using a negative `delta`. We see that the grid origing $(0,0)$ did not change:
+Many actual grid datasets have y coordinates (grid rows) going from North to South (top to bottom); this is realised with a negative value for `delta`. We see that the grid origing $(0,0)$ did not change:
 ```{r fig.width=4.5, fig.height=4}
 attr(s, "dimensions")[[2]]$delta = -1
 image(s, text_values = TRUE, axes = TRUE)
 ```
 
-An example is the GeoTIFF carried in the package, which has a negative `delta` for the `y`-coordinate:
+An example is the GeoTIFF carried in the package, which, as probably all data sources read through GDAL, has a negative `delta` for the `y`-coordinate:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 st_dimensions(read_stars(tif))["y"]
 ```
 
-### Regular grids: rotated
+### Raster attributes, rotated and sheared grids
 
-`x` and `y` coordinate grids carry a `geotransform` field, used to compute $x$ and $y$ coordinates from grid index $i$ and $j$:
+Dimension tables of `stars` objects carry a `raster` attribute:
+```{r}
+str(attr(st_dimensions(s), "raster"))
+```
 
-$$x = gt_1 + (i-1) gt_2 + (j-1) gt_3$$
+which is a list that holds
+
+* `dimensions`: character, the names of raster dimensions (if any), as opposed to e.g. spectral, temporal or other dimensions
+* `affine`: numeric, the affine parameters
+* `curvilinear`: a logical indicating whether the raster is curvilinear
+
+These fields are needed at this level, because they describe properties of the array at a higher level than individual dimensions do: a pair of dimensions forms a raster, both `affine` and `curvilinear` describe how x and y _as a pair_ are derived from grid indexes (see below) when this cannot be done on a per-dimension basis.
+
+With two affine parameters $a_1$ and $a_2$, $x$ and $y$ coordinates are derived from (1-based) grid indexes $i$ and $j$, grid offset values $o_x$ and $o_y$, and grid cell sizes $d_x$ and $d_y$ by
+
+$$x = o_x + (i-1) d_x + (j-1) a_1$$
     
-$$y = gt_4 + (i-1) gt_5 + (j-1) gt_6$$
-We can rotate grids by setting $gt_3$ and $gt_5$ to a constant, non-zero value:
+$$y = o_y + (i-1) a_2 + (j-1) d_y$$
+Clearly, when $a_1=a_2=0$, $x$ and $y$ are entirely derived from their respective index, offset and cellsize.
+
+Note that for integer indexes, the coordinates are that of the starting edge of a grid cell; to get the grid cell center of the top left grid cell (in case of a negative $d_y$), use $i=1.5$ and $j=1.5$.
+
+We can rotate grids by setting $a_1$ and $a_2$ to a non-zero value:
 
 ```{r}
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.1)
-# FIXME: use image()
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 ```
 
@@ -83,7 +99,7 @@ atan2(0.1, 1) * 180 / pi
 
 ### Regular grids: sheared, sheared and rotated
 
-Sheared grids are obtained when the two rotation coefficients, $gt_3$ and $gt_5$, are unequal:
+Sheared grids are obtained when the two rotation coefficients, $a_1$ and $a_2$, are unequal:
 ```{r}
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.2)
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)

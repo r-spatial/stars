@@ -195,8 +195,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 	dimxy = attr(d, "raster")$dimensions
 	dimx =  dimxy[1]
 	dimy =  dimxy[2]
-	dimxn = which(dimx == names(d))
-	dimyn = which(dimy == names(d))
+	dimxn = match(dimx, names(d))
+	dimyn = match(dimy, names(d))
 
 	if (!is_curvilinear(x)) {
 		dims = expand_dimensions(x)
