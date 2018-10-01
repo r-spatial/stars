@@ -3,9 +3,12 @@
 \name{stars_subset}
 \alias{stars_subset}
 \alias{[.stars}
+\alias{[<-.stars}
 \title{subset stars objects}
 \usage{
 \method{[}{stars}(x, i = TRUE, ..., drop = FALSE, crop = TRUE)
+
+\method{[}{stars}(x, i) <- value
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -18,6 +21,8 @@
 
 \item{crop}{logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{sti_crop}.}
 
+\item{value}{array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array}
+
 \item{drop}{logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped}
 }
 \description{
@@ -25,6 +30,8 @@ subset stars objects
 }
 \details{
 if \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}.
+
+in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

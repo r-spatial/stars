@@ -39,24 +39,26 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
 	# flatten two dims x,y to one dim sfc (replacing "x")
 	sfc = st_as_sfc(x, as_points = as_points, ..., which = which(keep))
-	# overwrite x:
-	d[["x"]] = create_dimension(from = 1, to = length(sfc), values = sfc)
-	# rename x to sfc:
-	names(d)[names(d) == "x"] = "sfc"
+	# overwrite raster-x with sfc:
+	d[[ dxy[1] ]] = create_dimension(from = 1, to = length(sfc), values = sfc)
+	# rename raster-x to sfc:
+	names(d)[names(d) == dxy[1] ] = "sfc"
 	# remove y:
-	d[["y"]] = NULL
+	d[[ dxy[2] ]] = NULL
+	attr(d, "raster") = get_raster(dimensions = rep(NA_character_, 2))
 	# flatten arrays:
 	for (i in seq_along(x))
 		dim(x[[i]]) = c(sfc = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
 	if (na.rm) {
-		for (i in seq_along(x))
-			x[[i]] = as.vector_stars(switch(as.character(length(dim(x[[i]]))), 
+		for (i in seq_along(x)) {
+			x[[i]] = structure(switch(as.character(length(dim(x[[i]]))), 
 				"1" = x[[i]][which(keep),drop=FALSE],
 				"2" = x[[i]][which(keep),,drop=FALSE],
 				"3" = x[[i]][which(keep),,,drop=FALSE],
-				"4" = x[[i]][which(keep),,,,drop=FALSE], # etc -- FIXME: use tidy eval here
-				))
+				"4" = x[[i]][which(keep),,,,drop=FALSE] # etc -- FIXME: use tidy eval here
+				), levels = attr(x[[i]], "levels"))
+		}
 	}
 
 	structure(x, dimensions = d)

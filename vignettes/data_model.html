@@ -11,7 +11,7 @@
 
 <meta name="author" content="Edzer Pebesma" />
 
-<meta name="date" content="2017-12-10" />
+<meta name="date" content="2018-09-28" />
 
 <title>stars: data model</title>
 
@@ -124,7 +124,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">stars: data model</h1>
 <h4 class="author"><em>Edzer Pebesma</em></h4>
-<h4 class="date"><em>December 10, 2017</em></h4>
+<h4 class="date"><em>September 28, 2018</em></h4>
 
 </div>
 
@@ -208,6 +208,7 @@ st_dimensions(read_stars(tif))[&quot;y&quot;]
 <p>With two affine parameters <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates are derived from (1-based) grid indexes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, grid offset values <span class="math inline">\(o_x\)</span> and <span class="math inline">\(o_y\)</span>, and grid cell sizes <span class="math inline">\(d_x\)</span> and <span class="math inline">\(d_y\)</span> by</p>
 <p><span class="math display">\[x = o_x + (i-1) d_x + (j-1) a_1\]</span></p>
 <p><span class="math display">\[y = o_y + (i-1) a_2 + (j-1) d_y\]</span> Clearly, when <span class="math inline">\(a_1=a_2=0\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are entirely derived from their respective index, offset and cellsize.</p>
+<p>Note that for integer indexes, the coordinates are that of the starting edge of a grid cell; to get the grid cell center of the top left grid cell (in case of a negative <span class="math inline">\(d_y\)</span>), use <span class="math inline">\(i=1.5\)</span> and <span class="math inline">\(j=1.5\)</span>.</p>
 <p>We can rotate grids by setting <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span> to a non-zero value:</p>
 <pre class="r"><code>attr(attr(s, &quot;dimensions&quot;), &quot;raster&quot;)$affine = c(0.1, 0.1)
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)</code></pre>

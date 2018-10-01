@@ -475,6 +475,20 @@ st_crs.stars = function(x, ...) {
   	st_as_stars(x, dimensions = d)
 }
 
+#' @name stars_subset
+#' @param value array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array
+#' @export
+#' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
+"[<-.stars" = function(x, i, value) {
+  if (!inherits(i, "stars"))
+  	stop("selector should be a stars object")
+  if (!identical_dimensions(list(x, i)))
+  	stop("dimensions should be identical")
+  fun = function(x, y, value) { x[y] = value; x }
+  st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
+}
+
+
 #' crop a stars object
 #' 
 #' crop a stars object
@@ -613,4 +627,9 @@ sort_out_along = function(ret) {
 		"time"
 	else
 		NA_integer_
+}
+
+#' @export
+is.na.stars = function(x, ...) {
+	st_as_stars(lapply(x, is.na), dimensions = st_dimensions(x))
 }

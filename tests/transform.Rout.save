@@ -61,16 +61,12 @@ attribute(s):
  3rd Qu.:60.00  
  Max.   :74.00  
 dimension(s):
-     from   to offset delta                                    refsys point
-sfc     1  100     NA    NA 4326, +proj=longlat +datum=WGS84 +no_defs FALSE
-band    1    3     NA    NA                                        NA    NA
-x    NULL NULL   NULL  NULL                                      NULL  NULL
-y    NULL NULL   NULL  NULL                                      NULL  NULL
-                                                                  values    
-sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...    
-band                                                                NULL    
-x                                                                   NULL [x]
-y                                                                   NULL [y]
+     from  to offset delta                                    refsys point
+sfc     1 100     NA    NA 4326, +proj=longlat +datum=WGS84 +no_defs FALSE
+band    1   3     NA    NA                                        NA    NA
+                                                                  values
+sfc  POLYGON ((-34.91617 -7.9498..., ..., POLYGON ((-34.91385 -7.9521...
+band                                                                NULL
 > 
 > # nothing to transform:
 > st_transform(st_as_stars(list(matrix(1,10,10))), 4326)
@@ -93,4 +89,4 @@ In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), 4326) :
 > 
 > proc.time()
    user  system elapsed 
-  0.776   0.033   0.800 
+  0.673   0.044   0.707 
