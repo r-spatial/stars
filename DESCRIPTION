@@ -54,7 +54,7 @@ Suggests:
 	starsdata
 VignetteBuilder: knitr
 Remotes: 
-    r-spatial/sf@polygonize
+    r-spatial/sf
 Encoding: UTF-8
 RoxygenNote: 6.1.0
 Collate: 
