@@ -14,3 +14,10 @@
 \description{
 combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 }
+\examples{
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = read_stars(tif)
+(new = c(x, x))
+c(new) # collapses two arrays into one with an additional dimension
+c(x, x, along = 3)
+}

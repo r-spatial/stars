@@ -122,6 +122,8 @@ fetch = function(x, downsample = 0, ...) {
 }
 
 
+#' @name st_as_stars
+#' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)
 #' @export
 st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
 	cl = attr(.x, "call_list")
@@ -184,7 +186,7 @@ adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
 			return(x)
 		lst[[3]] = TRUE # this one has been handled
 	}
-	collect(x, as.call(lst), "[") # postpone every aruments > 3 to after reading cells
+	collect(x, as.call(lst), "[") # postpone every arguments > 3 to after reading cells
 }
 
 # shrink bbox with e * width in each direction

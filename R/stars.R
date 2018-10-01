@@ -246,6 +246,12 @@ propagate_units = function(new, old) {
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute
 #' @param along integer; see \link{read_stars}
 #' @export
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' (new = c(x, x))
+#' c(new) # collapses two arrays into one with an additional dimension
+#' c(x, x, along = 3)
 c.stars = function(..., along = NA_integer_) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
