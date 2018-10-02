@@ -51,6 +51,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param MARGIN see \link[base]{apply}; if \code{MARGIN} is a character vector, 
 #' @param FUN see \link[base]{apply}
 #' @param ... arguments passed on to \code{FUN}
+#' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -59,13 +60,16 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
-st_apply.stars = function(X, MARGIN, FUN, ...) {
+st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = parallel::getDefaultCluster()) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))
 	dX = dim(X)[MARGIN]
 	fn = function(y, ...) {
-		ret = apply(y, MARGIN, FUN, ...)
+		ret = if (is.null(CLUSTER))
+				apply(y, MARGIN, FUN, ...)
+			else
+				parallel::parApply(CLUSTER, y, MARGIN, FUN, ...)
 		if (is.array(ret))
 			ret
 		else

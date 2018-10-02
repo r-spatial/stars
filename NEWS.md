@@ -1,10 +1,14 @@
 # version 0.2-0
 
-* add elementary support for `cut` methods and factor arrays (plot, subset); #56
+* support `[<-.stars` e.g. to mask out values; support `is.na.stars` to replace NA masks
+
+* support `cut` methods and factor arrays (plot, subset); #56
 
 * add `st_rasterize`, which uses `GDALRasterize` to rasterize an sf object; #13
 
-* `st_as_sf.stars` now uses `GDAL(F)Polygonize` when give a regular or sheared grid; #13
+* `st_as_sf.stars` now uses `GDAL(F)Polygonize` when give a regular or sheared grid grid cells are not points, and returns contour bands using `GDALContourGenerateEx` (requiring GDAL 2.4.0) in case cells are points; #13
+
+* support curvilinear grids; see #54 and the `data_model` vignette
 
 * add vignette about how `stars_proxy` objects work
 

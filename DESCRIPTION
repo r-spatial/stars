@@ -27,8 +27,9 @@ Depends:
     R (>= 3.3.0),
     sf (>= 0.7-0)
 Imports:
-    classInt (>= 0.2-2),
     methods,
+	parallel,
+    classInt (>= 0.2-2),
     ncdf4,
     ncmeta,
     rlang,
