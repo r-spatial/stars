@@ -60,7 +60,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
-st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = parallel::getDefaultCluster()) {
+st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))

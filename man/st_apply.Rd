@@ -5,8 +5,7 @@
 \alias{st_apply.stars}
 \title{st_apply apply a function to one or more array dimensions}
 \usage{
-\method{st_apply}{stars}(X, MARGIN, FUN, ...,
-  CLUSTER = parallel::getDefaultCluster())
+\method{st_apply}{stars}(X, MARGIN, FUN, ..., CLUSTER = NULL)
 }
 \arguments{
 \item{X}{object of class \code{stars}}

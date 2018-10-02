@@ -6,7 +6,7 @@
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop asub
 #' @importFrom classInt classIntervals
-#' @importFrom parallel getDefaultCluster
+#' @importFrom parallel parApply
 #' @import sf
 #' @import units
 NULL
