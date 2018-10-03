@@ -14,7 +14,7 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{array}(.x, ...)
 
-\method{st_dimensions}{default}(.x, ...)
+\method{st_dimensions}{default}(.x, ..., .raster = rep(NA_character_, 2))
 
 st_set_dimensions(.x, which, values, names)
 }
@@ -22,6 +22,8 @@ st_set_dimensions(.x, which, values, names)
 \item{.x}{object to retrieve dimensions information from}
 
 \item{...}{further arguments}
+
+\item{.raster}{length 2 character array with names (if any) of the raster dimensions}
 
 \item{which}{integer which dimension to change}
 

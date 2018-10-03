@@ -35,11 +35,13 @@ st_dimensions.array = function(.x, ...) {
 
 #' @export
 #' @name st_dimensions
-st_dimensions.default = function(.x, ...) {
+#' @param .raster length 2 character array with names (if any) of the raster dimensions
+st_dimensions.default = function(.x, ..., .raster = rep(NA_character_,2)) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	create_dimensions(lapply(d, function(y) create_dimension(values = y)))
+	create_dimensions(lapply(d, function(y) create_dimension(values = y)),
+		raster = get_raster(dimensions = .raster))
 }
 
 
