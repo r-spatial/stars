@@ -20,7 +20,7 @@ st_as_stars.Raster = function(.x, ...) {
 			create_dimension(values = names(.x))
 		else
 			create_dimension(values = z)
-	st_as_stars(list(raster = v), dimensions = create_dimensions(dimensions, get_raster()))
+	adrop(st_as_stars(setNames(list(v), names(.x)[1]), dimensions = create_dimensions(dimensions, get_raster())))
 }
 
 st_as_raster = function(x, ...) {
