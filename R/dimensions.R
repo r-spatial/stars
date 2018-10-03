@@ -119,7 +119,8 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 
 create_dimensions = function(lst, raster = NULL) {
 	if (is.numeric(lst)) # when called with a dim(array) argument:
-		lst = lapply(lst, function(i) create_dimension(from = 1, to = lst[i]))
+		lst = setNames(lapply(seq_along(lst), function(i) create_dimension(from = 1, to = lst[i])), 
+		               names(lst))
 	if (is.null(names(lst)))
 		names(lst) = make.names(seq_along(lst))
 	if (any(names(lst) == "")) {

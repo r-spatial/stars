@@ -53,12 +53,23 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
                                                   collapse_degen = FALSE))
   out = setNames(out, var)
   dimensions = create_dimensions(dim(out[[1]]))
-  ## assume we have coord dims for now
-  coords = lapply(dims$name, function(.n) ncdf4::ncvar_get(nc, varid = .n))
+  ## cannot assume we have coord dims
+  ## - so create them as 1:length if needed
+  coords = vector("list", length(dims$name))
+  for (ic in seq_along(coords)) {
+    ## create_dimvar means we can var_get it
+    if (nc$dim[[dims$name[ic]]]$create_dimvar) {
+      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])
+     
+    } else {
+      coords[[ic]] <- seq_len(dims$length[ic])
+    }
+  }
   for (i in seq_along(coords)) {
     dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
     ## NaN for singleton dims, but that seems ok unless we have explicit interval?
     dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  ## not rectilinear yet
   }
+  
   st_stars(out, dimensions)
 }
