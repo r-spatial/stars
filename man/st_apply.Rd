@@ -5,7 +5,8 @@
 \alias{st_apply.stars}
 \title{st_apply apply a function to one or more array dimensions}
 \usage{
-\method{st_apply}{stars}(X, MARGIN, FUN, ..., CLUSTER = NULL)
+\method{st_apply}{stars}(X, MARGIN, FUN, ..., CLUSTER = NULL,
+  PROGRESS = FALSE)
 }
 \arguments{
 \item{X}{object of class \code{stars}}
@@ -17,6 +18,8 @@
 \item{...}{arguments passed on to \code{FUN}}
 
 \item{CLUSTER}{cluster to use for parallel apply; see \link[parallel]{makeCluster}}
+
+\item{PROGRESS}{logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.

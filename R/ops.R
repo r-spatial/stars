@@ -52,6 +52,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param FUN see \link[base]{apply}
 #' @param ... arguments passed on to \code{FUN}
 #' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
+#' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -60,16 +61,24 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
-st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL) {
+st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))
 	dX = dim(X)[MARGIN]
+
+	if (PROGRESS && !requireNamespace("pbapply", quietly = TRUE))
+		stop("package pbapply required, please install it first")
+
 	fn = function(y, ...) {
-		ret = if (is.null(CLUSTER))
-				apply(y, MARGIN, FUN, ...)
-			else
-				parallel::parApply(CLUSTER, y, MARGIN, FUN, ...)
+		ret = if (PROGRESS)
+				pbapply::pbapply(y, MARGIN, FUN, ..., cl = CLUSTER)
+			else {
+				if (is.null(CLUSTER))
+					apply(y, MARGIN, FUN, ...)
+				else
+					parallel::parApply(CLUSTER, y, MARGIN, FUN, ...)
+			}
 		if (is.array(ret))
 			ret
 		else
