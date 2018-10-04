@@ -86,7 +86,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
-			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos)
+			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, main = NULL)
 			if (!is.null(main))
 				title(main)
 
@@ -110,7 +110,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					br = get_breaks(im, breaks, nbreaks)
 				} else
 					br = breaks
-				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, ...)
+				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, main = NULL, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
