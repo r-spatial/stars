@@ -63,6 +63,12 @@ st_set_dimensions = function(.x, which, values, names) {
 			base::names(d)[which] = "sfc"
 	} else { # set all names
 		if (! missing(names)) {
+			# handle names in raster attribute, #46
+			r = attr(d, "raster")
+			if (any(!is.na(r$dimensions))) {
+				r$dimensions = names[match(r$dimensions, names(d))]
+				attr(d, "raster") = r
+			}
 			if (length(d) != length(names))
 				stop("length of names should match number of dimension")
 			base::names(d) = names
