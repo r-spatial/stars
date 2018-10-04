@@ -80,6 +80,8 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 		xy = names(curvilinear)
 		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
 		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
+		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
 		raster = get_raster(dimensions = names(curvilinear), curvilinear = TRUE)
 		st_stars(.x, create_dimensions(dimensions, raster))
 	}

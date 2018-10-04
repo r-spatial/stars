@@ -154,6 +154,7 @@ nit = read_stars(nit_ds)
 nit[[1]][nit[[1]] > 9e+36] = NA
 
 ll = setNames(c(lon, lat), c("x", "y"))
+# ll = c(lon = lon, lat = lat)
 nit.c = st_as_stars(nit, curvilinear = ll)
 st_crs(nit.c) = 4326
 nit.c
