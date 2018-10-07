@@ -75,3 +75,4 @@ Collate:
     'ncdf.R'
     'proxy.R'
     'factors.R'
+    'rasterize.R'

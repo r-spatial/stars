@@ -6,7 +6,7 @@
 \title{transform features, or warp/resample grids in stars objects to a new coordinate reference system}
 \usage{
 \method{st_transform}{stars}(x, crs, ..., cellsize = NA_real_,
-  segments = 100)
+  segments = 100, make_regular = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}, with either raster or simple feature geometries}
@@ -17,7 +17,9 @@
 
 \item{cellsize}{cellsize in target coordinate reference system}
 
-\item{segments}{number of (total) segments to segmentize the bounding box before transforming to new crs}
+\item{segments}{(total) number of segments for segmentizing the bounding box before transforming to the new crs}
+
+\item{make_regular}{logical;}
 }
 \description{
 transform features, or warp/resample grids in stars objects to a new coordinate reference system

@@ -7,7 +7,6 @@
 \alias{st_as_stars.stars}
 \alias{st_as_stars.bbox}
 \alias{st_as_stars.sf}
-\alias{st_rasterize}
 \alias{st_as_stars.Raster}
 \alias{st_as_stars.stars_proxy}
 \title{convert objects into a stars object}
@@ -18,16 +17,14 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{default}(.x = NULL, ..., raster = NULL)
 
-\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL)
+\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL,
+  crs = st_crs(4326))
 
 \method{st_as_stars}{bbox}(.x, ..., nx = 360, ny = 180,
-  crs = st_crs(.x), xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin",
-  "ymax")], values = runif(nx * ny))
+  xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")],
+  values = runif(nx * ny))
 
 \method{st_as_stars}{sf}(.x, ...)
-
-st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
-  file = tempfile(), driver = "GTiff", options = character(0))
 
 \method{st_as_stars}{Raster}(.x, ...)
 
@@ -42,13 +39,13 @@ st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
 
 \item{raster}{character; the names of the dimensions that denote raster dimensions}
 
-\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices}
+\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced}
+
+\item{crs}{object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details}
 
 \item{nx}{integer; number of cells in x direction}
 
 \item{ny}{integer; number of cells in y direction}
-
-\item{crs}{object of class \code{crs} holding the coordinate reference system}
 
 \item{xlim}{length 2 numeric vector with extent in x direction}
 
@@ -56,39 +53,11 @@ st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
 
 \item{values}{value(s) to populate the raster values with}
 
-\item{sf}{object of class \code{sf}}
-
-\item{template}{stars object with desired target geometry}
-
-\item{file}{temporary file name}
-
-\item{driver}{driver for temporary file}
-
-\item{options}{character; options vector for \code{GDALRasterize}}
-
 \item{downsample}{integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)}
 }
 \description{
 convert objects into a stars object
 }
-\examples{
-demo(nc, echo = FALSE, ask = FALSE)
-(x = stars:::st_rasterize(nc)) # default grid:
-plot(x, axes = TRUE)
-# a bit more customized grid:
-(x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
-plot(x, axes = TRUE)
-(ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1,0), c(1.1,1))), st_linestring(rbind(c(0, 0.05),c(1, 0.05))))))
-(grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = NA_real_))
-# the following two plots suggests a half-gridcell-shift problem:
-sf_extSoftVersion()["GDAL"]
-plot(st_rasterize(ls, grd), axes=TRUE, reset = FALSE) # ALL_TOUCHED=FALSE; 
-plot(ls, add = TRUE, col = 'red')
-plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes=TRUE, reset = FALSE)
-plot(ls, add = TRUE, col = 'red')
-# add lines to existing 0 values, summing values in case of multiple lines:
-(grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = 0))
-r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
-plot(r, axes=TRUE, reset = FALSE)
-plot(ls, add = TRUE, col = 'red')
+\details{
+if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 }

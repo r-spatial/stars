@@ -69,10 +69,12 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced
+#' @param crs object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details
+#' @details if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 #' @export
 #' @name st_as_stars
-st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
+st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	if (is.null(curvilinear))
 		.x
 	else {
@@ -80,25 +82,27 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 		xy = names(curvilinear)
 		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
 		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		# erase regular grid coefficients $offset and $delta:
 		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
 		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
 		raster = get_raster(dimensions = names(curvilinear), curvilinear = TRUE)
-		st_stars(.x, create_dimensions(dimensions, raster))
+		st_set_crs(st_stars(.x, create_dimensions(dimensions, raster)), crs)
 	}
 }
 
 #' @param nx integer; number of cells in x direction
 #' @param ny integer; number of cells in y direction
-#' @param crs object of class \code{crs} holding the coordinate reference system
 #' @param xlim length 2 numeric vector with extent in x direction
 #' @param ylim length 2 numeric vector with extent in y direction
 #' @param values value(s) to populate the raster values with
 #' @export
 #' @name st_as_stars
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs = st_crs(.x), 
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = runif(nx * ny)) {
-	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, refsys = crs)
-	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, refsys = crs)
+	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, 
+		refsys = st_crs(.x))
+	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, 
+		refsys = st_crs(.x))
 	st_as_stars(values = array(values, c(x = nx, y = ny)),
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
@@ -490,8 +494,6 @@ st_crs.stars = function(x, ...) {
 "[<-.stars" = function(x, i, value) {
   if (!inherits(i, "stars"))
   	stop("selector should be a stars object")
-  if (!identical_dimensions(list(x, i)))
-  	stop("dimensions should be identical")
   fun = function(x, y, value) { x[y] = value; x }
   st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
 }
