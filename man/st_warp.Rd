@@ -5,7 +5,8 @@
 \title{Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system}
 \usage{
 st_warp(src, dest, ..., crs, cellsize = NA_real_, segments = 100,
-  use_gdal = FALSE, options = character(0))
+  use_gdal = FALSE, options = character(0), no_data_value = -9999,
+  debug = FALSE)
 }
 \arguments{
 \item{src}{object of class \code{stars} with source raster}
@@ -23,6 +24,10 @@ st_warp(src, dest, ..., crs, cellsize = NA_real_, segments = 100,
 \item{use_gdal}{logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}}
 
 \item{options}{character vector with options, passed on to gdalwarp}
+
+\item{no_data_value}{value used by gdalwarp for no_data (NA) when writing to temporaray file}
+
+\item{debug}{logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name}
 }
 \description{
 Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system

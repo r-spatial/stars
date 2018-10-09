@@ -80,6 +80,8 @@ transform_grid_grid = function(x, target) {
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
+#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporaray file
+#' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
 #' @param ... ignored
 #' @examples
 #' geomatrix = system.file("tif/geomatrix.tif", package = "stars")
@@ -93,20 +95,27 @@ transform_grid_grid = function(x, target) {
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
-st_warp =  function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use_gdal = FALSE, 
-		options = character(0)) {
+st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use_gdal = FALSE, 
+		options = character(0), no_data_value = -9999, debug = FALSE) {
 	if (use_gdal) {
+		options = c(options, "-dstnodata", no_data_value)
 		src = st_as_stars_proxy(src)
 		on.exit(unlink(src[[1]]))
 		if (missing(dest) && missing(crs)) {
 			dest = tempfile(fileext = ".tif")
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
-			on.exit(unlink(dest))
+			if (!debug)
+				on.exit(unlink(dest))
+			else	
+				cat("Writing to: ", dest, "\n")
 			read_stars(dest)
 		} else {
 			dest = st_as_stars_proxy(dest)
-			on.exit(unlink(dest[[1]]))
-			sf::gdal_utils("warp", src[[1]], dest[[1]], options = c("-t_srs", dest[[1]]))
+			if (!debug)
+				on.exit(unlink(dest[[1]]))
+			else
+				cat("Writing to: ", dest[[1]], "\n")
+			sf::gdal_utils("warp", src[[1]], dest[[1]], options = options)
 			st_as_stars(dest)
 		}
 	} else {
