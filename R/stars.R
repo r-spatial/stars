@@ -395,20 +395,20 @@ st_crs.stars = function(x, ...) {
 #' @export
 `st_crs<-.stars` = function(x, value) {
 	if (is.numeric(value))
-		crs = st_crs(value)
-	if (inherits(crs, "crs"))
-		crs = crs$proj4string
-	stopifnot(is.character(crs))
+		value = st_crs(value)
+	if (inherits(value, "crs"))
+		value = value$proj4string
+	stopifnot(is.character(value))
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	if (!all(is.na(xy))) {
-		d[[ xy[1] ]]$refsys = crs
-		d[[ xy[2] ]]$refsys = crs
+		d[[ xy[1] ]]$refsys = value
+		d[[ xy[2] ]]$refsys = value
 	}
 	# sfc's:
 	i = sapply(d, function(y) inherits(y$values, "sfc"))
 	for (j in which(i))
-		d[[ j ]]$refsys = crs
+		d[[ j ]]$refsys = value
 	st_as_stars(unclass(x), dimensions = d)
 }
 
