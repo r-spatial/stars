@@ -179,8 +179,13 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	create_dimensions(lst, raster)
 }
 
-get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE)
+get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE) {
+	if (any(is.na(affine))) {
+		warning("setting NA affine values to zero")
+		affine = c(0, 0)
+	}
 	structure(list(affine = affine, dimensions = dimensions, curvilinear = curvilinear), class = "stars_raster")
+}
 
 get_geotransform = function(x) {
 	if (inherits(x, "stars"))
