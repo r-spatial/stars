@@ -167,9 +167,15 @@ has_sfc = function(x) {
 
 #' @export
 st_coordinates.stars = function(x, ...) {
-	if (has_rotate_or_shear(x))
-		stop("affine transformation needed") 
-	do.call(expand.grid, expand_dimensions(x))
+	if (has_rotate_or_shear(x)) {
+		d = dim(x)
+		xy = attr(st_dimensions(x), "raster")$dimensions
+		nx = d[ xy[1] ]
+		ny = d[ xy[2] ]
+		as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
+			get_geotransform(x)))
+	} else
+		do.call(expand.grid, expand_dimensions(x))
 }
 
 st_coordinates.dimensions = function(x, ...) {
@@ -232,7 +238,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
-		integer(0)
+		lengths(expand_dimensions(d))
 	else {
 		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))

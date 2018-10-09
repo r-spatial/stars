@@ -134,6 +134,16 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
 	process_call_list(fetch(.x, ..., downsample = downsample), cl)
 }
 
+st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE) {
+	stopifnot(inherits(x, "stars"))
+	if (inherits(x, "stars_proxy"))
+		return(x)
+	st_write(x, fname)
+	if (!quiet)
+		cat(paste("writing to", fname, "\n"))
+	st_stars_proxy(list(fname), st_dimensions(x))
+}
+
 # execute the call list on a stars object
 process_call_list = function(x, cl) {
 	pf = parent.frame()
