@@ -2,12 +2,24 @@ library(stars)
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 # can stars reproduce what gdal does, by default?
-x2 = st_warp(x, use_gdal = TRUE) #, options = c("-dstnodata", "-9999"))
+x2 = st_warp(x, use_gdal = TRUE)
 y = st_warp(x, x2)
 plot(x2, breaks = "equal", axes=TRUE)
 plot(y, breaks = "equal", axes=TRUE)
 names(x2) = names(y)
 all.equal(x2, y) # yes
+
+# does gdal reproduce with stars template object?
+(x2 = st_warp(x, y, use_gdal = TRUE))
+
+# does gdal reproduce what stars does, default cell size?
+(x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
+(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
+
+# try with multiple bands:
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+(x1 = read_stars(tif))
+(x1a = st_warp(x1, crs = st_crs(4326)))
 
 # does gdal reproduce what stars does? Smaller grid:
 (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
@@ -15,7 +27,7 @@ all.equal(x2, y) # yes
 plot(x2, breaks = "equal", axes=TRUE, reset = FALSE)
 plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red')
 ### doesn't work: FIXME: check with more recent GDAL:
-#(y = st_warp(x, x2, use_gdal = TRUE, debug = TRUE))
+#(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
 #plot(y, breaks = "equal")
 #names(x2) = names(y)
 #all.equal(x2, y) 
