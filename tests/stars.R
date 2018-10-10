@@ -7,6 +7,7 @@ image(x)
 gdal_crs(tif)
 plot(x)
 plot(x, join_zlim = FALSE)
+x %>% st_set_dimensions(names = c('a', 'b', 'c'))
 
 x + x
 x * x

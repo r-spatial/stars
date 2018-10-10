@@ -122,11 +122,11 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 	df = do.call(cbind, dfs)
 	if (length(dim(x)) > 1) {
 		if (length(unique(names(df))) == 1) {
-			labels = format(expand_dimensions(st_dimensions(x))[[2]])
-			names(df) = if (length(labels) == ncol(df))
-					labels
-				else
-					apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ")
+#			labels = format(expand_dimensions(st_dimensions(x))[[2]]) # nocov start
+#			names(df) = if (length(labels) == ncol(df))
+#					labels
+#				else
+#					apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ") # nocov end
 		}
 	} else
 		names(df) = names(x)

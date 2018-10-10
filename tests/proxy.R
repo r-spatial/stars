@@ -53,4 +53,6 @@ if (f != "") {
   #print(ret)
   ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
   print(ret)
+  ret <- c(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
+  print(ret)
 }

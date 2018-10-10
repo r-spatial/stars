@@ -67,6 +67,21 @@ $gt_inv
 
 > plot(x)
 > plot(x, join_zlim = FALSE)
+> x %>% st_set_dimensions(names = c('a', 'b', 'c'))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+  from  to  offset delta                       refsys point values    
+a    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+b    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+c    1   6      NA    NA                           NA    NA   NULL    
 > 
 > x + x
 stars object with 3 dimensions and 1 attribute
@@ -504,4 +519,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.832   0.520   7.345 
+  7.179   0.583   7.760 
