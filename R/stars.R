@@ -353,17 +353,19 @@ st_bbox.dimensions = function(obj, ...) {
 		x = obj[[ r$dimensions[1] ]]
 		y = obj[[ r$dimensions[2] ]]
 		bb = if (is.null(x$values) && is.null(y$values)) {
-			gt = get_geotransform(obj)
-			stopifnot(length(gt) == 6 && !any(is.na(gt)))
-			bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
-			xy = xy_from_colrow(bb, gt)
-			c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
-		} else {
-			e = expand_dimensions(obj)
-			rx = range(e[[ r$dimensions[1] ]])
-			ry = range(e[[ r$dimensions[2] ]])
-			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
-		}
+				gt = get_geotransform(obj)
+				if (length(gt) == 6 && !any(is.na(gt))) {
+					bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
+					xy = xy_from_colrow(bb, gt)
+					c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+				} else
+					c(xmin = x$from - 0.5, ymin = y$from - 0.5, xmax = x$to + 0.5, ymax = y$to + 0.5)
+			} else {
+				e = expand_dimensions(obj)
+				rx = range(e[[ r$dimensions[1] ]])
+				ry = range(e[[ r$dimensions[2] ]])
+				c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
+			}
 		structure(bb, crs = st_crs(x$refsys), class = "bbox")
 	} else {
 		if (! has_sfc(obj))

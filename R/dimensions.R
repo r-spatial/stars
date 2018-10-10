@@ -290,22 +290,22 @@ expand_dimensions.dimensions = function(x) {
 	if (!is.null(r)) {
 		if (r$dimensions[1] %in% names(lst)) { # x
 			x = dimensions[[ r$dimensions[1] ]]
-			if (! all(is.na(gt))) {
-				lst[[ r$dimensions[1] ]] = if (!is.null(x$values))
+			lst[[ r$dimensions[1] ]] = if (! any(is.na(gt))) {
+					if (!is.null(x$values))
 						x$values
 					else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-			} else
-				stop("cannot determine x and y coordinates without geotransform")
+				} else
+					seq(x$from, x$to)
 		}
 		if (r$dimensions[2] %in% names(lst)) { # y
 			y = dimensions[[ r$dimensions[2] ]]
-			if (! all(is.na(gt))) {
-				lst[[ r$dimensions[2] ]] = if (!is.null(y$values))
+			lst[[ r$dimensions[2] ]] = if (! any(is.na(gt))) {
+					if (!is.null(y$values))
 						y$values
 					else
 						xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-			} else
-				stop("cannot determine x and y coordinates without geotransform")
+				} else
+					seq(y$to, y$from)
 		}
 	}
 	for (nm in setdiff(names(lst), r$dimensions)) {
