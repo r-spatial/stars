@@ -1,3 +1,4 @@
+# examples with the sf::nc feature dataset
 suppressPackageStartupMessages(library(sf))
 nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
 m = st_set_geometry(nc, NULL)
@@ -10,6 +11,7 @@ foo <- st %>% st_set_dimensions(1, st_geometry(nc)) # %>% st_set_dimensions(3, c
 st %>% st_set_dimensions(1, st_geometry(nc)) %>% st_set_dimensions(names = c("geometries", "var", "year"))
 foo
 st_bbox(foo)
+(x = st_as_sf(foo))
 frac = function(x) x[2] / x[1]
 frac2 = function(x) c(sidsr = x[2] / x[1], nwbr = x[3] / x[1])
 frac2an = function(x) c(x[2] / x[1], x[3] / x[1])

@@ -15,6 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> # examples with the sf::nc feature dataset
 > suppressPackageStartupMessages(library(sf))
 > nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
 Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/sf/gpkg/nc.gpkg' using driver `GPKG'
@@ -86,6 +87,36 @@ year                                                          1974, 1979
 > st_bbox(foo)
      xmin      ymin      xmax      ymax 
 -84.32385  33.88199 -75.45698  36.58965 
+> (x = st_as_sf(foo))
+Simple feature collection with 100 features and 6 fields
+geometry type:  MULTIPOLYGON
+dimension:      XY
+bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+epsg (SRID):    4267
+proj4string:    +proj=longlat +datum=NAD27 +no_defs
+First 10 features:
+   pop.BIR.1974 pop.SID.1974 pop.NWBIR.1974 pop.BIR.1979 pop.SID.1979
+1          1091            1             10         1364            0
+2           487            0             10          542            3
+3          3188            5            208         3616            6
+4           508            1            123          830            2
+5          1421            9           1066         1606            3
+6          1452            7            954         1838            5
+7           286            0            115          350            2
+8           420            0            254          594            2
+9           968            4            748         1190            2
+10         1612            1            160         2038            5
+   pop.NWBIR.1979                       geometry
+1              19 MULTIPOLYGON (((-81.47276 3...
+2              12 MULTIPOLYGON (((-81.23989 3...
+3             260 MULTIPOLYGON (((-80.45634 3...
+4             145 MULTIPOLYGON (((-76.00897 3...
+5            1197 MULTIPOLYGON (((-77.21767 3...
+6            1237 MULTIPOLYGON (((-76.74506 3...
+7             139 MULTIPOLYGON (((-76.00897 3...
+8             371 MULTIPOLYGON (((-76.56251 3...
+9             844 MULTIPOLYGON (((-78.30876 3...
+10            176 MULTIPOLYGON (((-80.02567 3...
 > frac = function(x) x[2] / x[1]
 > frac2 = function(x) c(sidsr = x[2] / x[1], nwbr = x[3] / x[1])
 > frac2an = function(x) c(x[2] / x[1], x[3] / x[1])
@@ -265,4 +296,4 @@ X4    1 10   1460   NaN     NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.797   0.036   0.826 
+  0.752   0.048   0.792 

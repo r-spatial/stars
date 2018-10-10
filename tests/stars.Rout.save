@@ -66,6 +66,7 @@ $gt_inv
 [6] -3.508772e-02
 
 > plot(x)
+> plot(x, join_zlim = FALSE)
 > 
 > x + x
 stars object with 3 dimensions and 1 attribute
@@ -498,4 +499,4 @@ times    1    3     NA    NA     NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  5.433   0.539   5.964 
+  6.795   0.543   7.336 

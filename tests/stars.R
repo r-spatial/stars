@@ -6,6 +6,7 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 image(x)
 gdal_crs(tif)
 plot(x)
+plot(x, join_zlim = FALSE)
 
 x + x
 x * x
