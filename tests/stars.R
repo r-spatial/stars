@@ -85,3 +85,4 @@ if (f != "") {
   print(ret)
 }
 
+st_dimensions(list(matrix(1, 4,4))) # st_dimensions.default

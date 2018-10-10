@@ -41,8 +41,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
     rownames(ncsub) = dims$name
   } else {
     ## needs more attention
-    if (nrow(dims) != nrow(ncsub)) stop("input ncsub doesn't match available dims")
-    if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds") 
+    if (nrow(dims) != nrow(ncsub)) stop("input ncsub doesn't match available dims") # nocov
+    if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
   }
   nc = ncdf4::nc_open(.x, suppress_dimvals = TRUE)
   on.exit(ncdf4::nc_close(nc), add = TRUE)
