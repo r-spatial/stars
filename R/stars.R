@@ -224,12 +224,13 @@ aperm.stars = function(a, perm = NULL, ...) {
 		perm = rev(seq_along(dim(a)))
 	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
-	if (is.character(perm) && is.null(dimnames(a[[1]]))) {
-		ns = names(attr(a, "dimensions"))
-		dn = lapply(as.list(dim(a)), seq_len)
-		names(dn) = ns
-		for (i in seq_along(a))
-			dimnames(a[[i]]) = dn
+	if (is.character(perm)) {
+		ns = names(st_dimensions(a))
+		for (i in seq_along(a)) { # every array 
+			if (is.null(dimnames(a[[i]])))
+				dimnames(a[[i]]) = lapply(as.list(dim(a)), seq_len)
+			dimnames(a[[i]]) = setNames(dimnames(a[[i]]), ns)
+		}
 	}
 	st_stars(lapply(a, aperm, perm = perm, ...), st_dimensions(a)[perm])
 }

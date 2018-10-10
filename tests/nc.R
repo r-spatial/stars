@@ -9,6 +9,7 @@ suppressPackageStartupMessages(library(stars))
 foo <- st %>% st_set_dimensions(1, st_geometry(nc)) # %>% st_set_dimensions(3, c(1974, 1979))
 st %>% st_set_dimensions(1, st_geometry(nc)) %>% st_set_dimensions(names = c("geometries", "var", "year"))
 foo
+st_bbox(foo)
 frac = function(x) x[2] / x[1]
 frac2 = function(x) c(sidsr = x[2] / x[1], nwbr = x[3] / x[1])
 frac2an = function(x) c(x[2] / x[1], x[3] / x[1])
@@ -16,7 +17,9 @@ st_apply(foo, c(1,3), frac)
 st_apply(foo, c(1,3), frac2)
 st_apply(foo, c(1,3), frac2an)
 library(abind)
-aperm(st_apply(foo, c(1,3), frac2), c(2,3,1))
+(x = aperm(st_apply(foo, c(1,3), frac2), c(2,3,1)))
+y = aperm(st_apply(foo, c(1,3), frac2), c("sfc","year","frac2"))
+all.equal(st_dimensions(x), st_dimensions(y))
 
 split(foo, 2)
 split(foo, 3)
