@@ -69,10 +69,12 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced
+#' @param crs object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details
+#' @details if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 #' @export
 #' @name st_as_stars
-st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
+st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	if (is.null(curvilinear))
 		.x
 	else {
@@ -80,25 +82,27 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL) {
 		xy = names(curvilinear)
 		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
 		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		# erase regular grid coefficients $offset and $delta:
 		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
 		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
 		raster = get_raster(dimensions = names(curvilinear), curvilinear = TRUE)
-		st_stars(.x, create_dimensions(dimensions, raster))
+		st_set_crs(st_stars(.x, create_dimensions(dimensions, raster)), crs)
 	}
 }
 
 #' @param nx integer; number of cells in x direction
 #' @param ny integer; number of cells in y direction
-#' @param crs object of class \code{crs} holding the coordinate reference system
 #' @param xlim length 2 numeric vector with extent in x direction
 #' @param ylim length 2 numeric vector with extent in y direction
 #' @param values value(s) to populate the raster values with
 #' @export
 #' @name st_as_stars
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, crs = st_crs(.x), 
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = runif(nx * ny)) {
-	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, refsys = crs)
-	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, refsys = crs)
+	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, 
+		refsys = st_crs(.x))
+	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, 
+		refsys = st_crs(.x))
 	st_as_stars(values = array(values, c(x = nx, y = ny)),
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
@@ -163,9 +167,15 @@ has_sfc = function(x) {
 
 #' @export
 st_coordinates.stars = function(x, ...) {
-	if (has_rotate_or_shear(x))
-		stop("affine transformation needed") 
-	do.call(expand.grid, expand_dimensions(x))
+	if (has_rotate_or_shear(x)) {
+		d = dim(x)
+		xy = attr(st_dimensions(x), "raster")$dimensions
+		nx = d[ xy[1] ]
+		ny = d[ xy[2] ]
+		as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
+			get_geotransform(x)))
+	} else
+		do.call(expand.grid, expand_dimensions(x))
 }
 
 st_coordinates.dimensions = function(x, ...) {
@@ -214,12 +224,13 @@ aperm.stars = function(a, perm = NULL, ...) {
 		perm = rev(seq_along(dim(a)))
 	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
-	if (is.character(perm) && is.null(dimnames(a[[1]]))) {
-		ns = names(attr(a, "dimensions"))
-		dn = lapply(as.list(dim(a)), seq_len)
-		names(dn) = ns
-		for (i in seq_along(a))
-			dimnames(a[[i]]) = dn
+	if (is.character(perm)) {
+		ns = names(st_dimensions(a))
+		for (i in seq_along(a)) { # every array 
+			if (is.null(dimnames(a[[i]])))
+				dimnames(a[[i]]) = lapply(as.list(dim(a)), seq_len)
+			dimnames(a[[i]]) = setNames(dimnames(a[[i]]), ns)
+		}
 	}
 	st_stars(lapply(a, aperm, perm = perm, ...), st_dimensions(a)[perm])
 }
@@ -228,7 +239,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
-		integer(0)
+		lengths(expand_dimensions(d))
 	else {
 		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))
@@ -342,17 +353,19 @@ st_bbox.dimensions = function(obj, ...) {
 		x = obj[[ r$dimensions[1] ]]
 		y = obj[[ r$dimensions[2] ]]
 		bb = if (is.null(x$values) && is.null(y$values)) {
-			gt = get_geotransform(obj)
-			stopifnot(length(gt) == 6 && !any(is.na(gt)))
-			bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
-			xy = xy_from_colrow(bb, gt)
-			c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
-		} else {
-			e = expand_dimensions(obj)
-			rx = range(e[[ r$dimensions[1] ]])
-			ry = range(e[[ r$dimensions[2] ]])
-			c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
-		}
+				gt = get_geotransform(obj)
+				if (length(gt) == 6 && !any(is.na(gt))) {
+					bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
+					xy = xy_from_colrow(bb, gt)
+					c(xmin = min(xy[,1]), ymin = min(xy[,2]), xmax = max(xy[,1]), ymax = max(xy[,2]))
+				} else
+					c(xmin = x$from - 0.5, ymin = y$from - 0.5, xmax = x$to + 0.5, ymax = y$to + 0.5)
+			} else {
+				e = expand_dimensions(obj)
+				rx = range(e[[ r$dimensions[1] ]])
+				ry = range(e[[ r$dimensions[2] ]])
+				c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
+			}
 		structure(bb, crs = st_crs(x$refsys), class = "bbox")
 	} else {
 		if (! has_sfc(obj))
@@ -384,17 +397,21 @@ st_crs.stars = function(x, ...) {
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
-	crs = st_crs(value)
+	if (is.numeric(value))
+		value = st_crs(value)
+	if (inherits(value, "crs"))
+		value = value$proj4string
+	stopifnot(is.character(value))
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	if (!all(is.na(xy))) {
-		d[[ xy[1] ]]$refsys = crs$proj4string
-		d[[ xy[2] ]]$refsys = crs$proj4string
+		d[[ xy[1] ]]$refsys = value
+		d[[ xy[2] ]]$refsys = value
 	}
 	# sfc's:
 	i = sapply(d, function(y) inherits(y$values, "sfc"))
 	for (j in which(i))
-		d[[ j ]]$refsys = crs$proj4string
+		d[[ j ]]$refsys = value
 	st_as_stars(unclass(x), dimensions = d)
 }
 
@@ -436,7 +453,6 @@ st_crs.stars = function(x, ...) {
 #' plot(buf, add = TRUE, col = NA)
 #' image(x[buf, crop=FALSE])
 #' plot(buf, add = TRUE, col = NA)
-#' plot(x, rgb = 1:3)
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
   missing.i = missing(i)
   # special case:
@@ -490,8 +506,6 @@ st_crs.stars = function(x, ...) {
 "[<-.stars" = function(x, i, value) {
   if (!inherits(i, "stars"))
   	stop("selector should be a stars object")
-  if (!identical_dimensions(list(x, i)))
-  	stop("dimensions should be identical")
   fun = function(x, y, value) { x[y] = value; x }
   st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
 }

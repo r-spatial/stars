@@ -1,0 +1,122 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+> demo(nc, echo = FALSE, ask = FALSE)
+Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/sf/gpkg/nc.gpkg' using driver `GPKG'
+Simple feature collection with 100 features and 14 fields
+Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
+geometry type:  MULTIPOLYGON
+dimension:      XY
+bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+epsg (SRID):    4267
+proj4string:    +proj=longlat +datum=NAD27 +no_defs
+> (x = stars:::st_rasterize(nc)) # default grid:
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     AREA       
+ Min.   :0.042  
+ 1st Qu.:0.108  
+ Median :0.142  
+ Mean   :0.145  
+ 3rd Qu.:0.181  
+ Max.   :0.241  
+ NA's   :30726  
+dimension(s):
+  from  to   offset      delta                       refsys point values    
+x    1 360 -84.3239  0.0246302 +proj=longlat +datum=NAD2... FALSE   NULL [x]
+y    1 180  36.5896 -0.0150425 +proj=longlat +datum=NAD2... FALSE   NULL [y]
+> plot(x, axes = TRUE)
+> # a bit more customized grid:
+> (x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     AREA        
+ Min.   :0.0420  
+ 1st Qu.:0.1080  
+ Median :0.1420  
+ Mean   :0.1455  
+ 3rd Qu.:0.1810  
+ Max.   :0.2410  
+ NA's   :2373    
+dimension(s):
+  from  to   offset      delta                       refsys point values    
+x    1 100 -84.3239  0.0886687 +proj=longlat +datum=NAD2... FALSE   NULL [x]
+y    1  50  36.5896 -0.0541531 +proj=longlat +datum=NAD2... FALSE   NULL [y]
+> plot(x, axes = TRUE)
+> (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1,0), c(1.1,1))), st_linestring(rbind(c(0, 0.05),c(1, 0.05))))))
+Simple feature collection with 2 features and 1 field
+geometry type:  LINESTRING
+dimension:      XY
+bbox:           xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
+epsg (SRID):    NA
+proj4string:    NA
+  a
+1 1
+2 2
+  c..st_sfc.st_linestring.rbind.c.0.1..0...c.1.1..1.....st_linestring.rbind.c.0..........0.05...c.1..0.05......
+1                                                                                     LINESTRING (0.1 0, 1.1 1)
+2                                                                                   LINESTRING (0 0.05, 1 0.05)
+> (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = NA_real_))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    values    
+ Min.   : NA  
+ 1st Qu.: NA  
+ Median : NA  
+ Mean   :NaN  
+ 3rd Qu.: NA  
+ Max.   : NA  
+ NA's   :100  
+dimension(s):
+  from to offset delta refsys point values    
+x    1 10      0   0.1 NA, NA    NA   NULL [x]
+y    1 10      1  -0.1 NA, NA    NA   NULL [y]
+> # the following two plots suggests a half-gridcell-shift problem:
+> sf_extSoftVersion()["GDAL"]
+   GDAL 
+"2.2.3" 
+> plot(st_rasterize(ls, grd), axes=TRUE, reset = FALSE) # ALL_TOUCHED=FALSE; 
+> plot(ls, add = TRUE, col = 'red')
+> plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes=TRUE, reset = FALSE)
+> plot(ls, add = TRUE, col = 'red')
+> # add lines to existing 0 values, summing values in case of multiple lines:
+> (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = 0))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    values  
+ Min.   :0  
+ 1st Qu.:0  
+ Median :0  
+ Mean   :0  
+ 3rd Qu.:0  
+ Max.   :0  
+dimension(s):
+  from to offset delta refsys point values    
+x    1 10      0   0.1 NA, NA    NA   NULL [x]
+y    1 10      1  -0.1 NA, NA    NA   NULL [y]
+> r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
+> plot(r, axes=TRUE, reset = FALSE)
+> plot(ls, add = TRUE, col = 'red')
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.753   0.052   0.796 

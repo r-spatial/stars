@@ -86,7 +86,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
-			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos)
+			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, main = NULL)
 			if (!is.null(main))
 				title(main)
 
@@ -110,7 +110,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					br = get_breaks(im, breaks, nbreaks)
 				} else
 					br = breaks
-				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, ...)
+				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, main = NULL, ...)
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
@@ -175,14 +175,15 @@ get_breaks = function(x, breaks, nbreaks) {
 #' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
-image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxColorValue = max(x[[attr]]),
+image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
+		maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE, as_points = FALSE, key.pos) {
+		interpolate = FALSE, as_points = FALSE, key.pos = NULL) {
 
 	dots = list(...)
 
-	stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
+	#stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
 		x = adrop(x)
@@ -240,10 +241,16 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, maxCo
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
-	} else if (is_curvilinear(x)) { 
+	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) { 
 		x = st_as_sf(x[1], as_points = as_points)
-		mplot = function(x, col, ...) plot(x, pal = col, ...) # need to swap arg names: FIXME:?
-		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, key.pos = key.pos, ...)
+		mplot = function(x, col, ...) {
+			if (missing(col))
+				plot(x, ...)
+			else
+				plot(x, pal = col, ...) # need to swap arg names: FIXME:?
+		}
+		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, 
+			key.pos = key.pos, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?

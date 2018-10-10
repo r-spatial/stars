@@ -59,5 +59,4 @@ image(x[buf])
 plot(buf, add = TRUE, col = NA)
 image(x[buf, crop=FALSE])
 plot(buf, add = TRUE, col = NA)
-plot(x, rgb = 1:3)
 }

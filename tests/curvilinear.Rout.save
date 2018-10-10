@@ -98,7 +98,14 @@ y  [57x35] 28.3605, ..., 51.1544 [y]
 curvilinear grid
 null device 
           1 
+Warning messages:
+1: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
+  setting NA affine values to zero
+2: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
+  setting NA affine values to zero
+3: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
+  setting NA affine values to zero
 > 
 > proc.time()
    user  system elapsed 
-  7.799   0.149   7.944 
+  8.305   0.159   8.456 

@@ -5,25 +5,20 @@
 \alias{st_transform.stars}
 \title{transform features, or warp/resample grids in stars objects to a new coordinate reference system}
 \usage{
-\method{st_transform}{stars}(x, crs, ..., cellsize = NA_real_,
-  segments = 100)
+\method{st_transform}{stars}(x, crs, ...)
 }
 \arguments{
 \item{x}{object of class \code{stars}, with either raster or simple feature geometries}
 
-\item{crs}{object of class \code{crs} with target crs, or object of class \code{stars} with target grid}
+\item{crs}{object of class \code{crs} with target crs}
 
-\item{...}{passed on}
-
-\item{cellsize}{cellsize in target coordinate reference system}
-
-\item{segments}{number of (total) segments to segmentize the bounding box before transforming to new crs}
+\item{...}{ignored}
 }
 \description{
 transform features, or warp/resample grids in stars objects to a new coordinate reference system
 }
 \details{
-For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid in the new coordinate reference system, using the same procedure as \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in the new crs, touching the transformed envelope on its East and North side, (if cellsize is not given) with a cellsize similar to the origin cell size, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
+For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
 }
 \examples{
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
@@ -32,7 +27,10 @@ new = st_crs(4326)
 y = st_transform(x, new)
 plot(st_transform(st_as_sfc(st_bbox(x)), new), col = NA, border = 'red')
 plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add = TRUE)
-image(y, add = TRUE)
+image(y, col = heat.colors(12), add = TRUE)
 plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
+}
+\seealso{
+\link{st_warp}
 }

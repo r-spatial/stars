@@ -63,6 +63,12 @@ st_set_dimensions = function(.x, which, values, names) {
 			base::names(d)[which] = "sfc"
 	} else { # set all names
 		if (! missing(names)) {
+			# handle names in raster attribute, #46
+			r = attr(d, "raster")
+			if (any(!is.na(r$dimensions))) {
+				r$dimensions = names[match(r$dimensions, names(d))]
+				attr(d, "raster") = r
+			}
 			if (length(d) != length(names))
 				stop("length of names should match number of dimension")
 			base::names(d) = names
@@ -174,8 +180,13 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	create_dimensions(lst, raster)
 }
 
-get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE)
+get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE) {
+	if (any(is.na(affine))) {
+		warning("setting NA affine values to zero")
+		affine = c(0, 0)
+	}
 	structure(list(affine = affine, dimensions = dimensions, curvilinear = curvilinear), class = "stars_raster")
+}
 
 get_geotransform = function(x) {
 	if (inherits(x, "stars"))
@@ -280,22 +291,22 @@ expand_dimensions.dimensions = function(x) {
 	if (!is.null(r)) {
 		if (r$dimensions[1] %in% names(lst)) { # x
 			x = dimensions[[ r$dimensions[1] ]]
-			if (! all(is.na(gt))) {
-				lst[[ r$dimensions[1] ]] = if (!is.null(x$values))
+			lst[[ r$dimensions[1] ]] = if (! any(is.na(gt))) {
+					if (!is.null(x$values))
 						x$values
 					else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-			} else
-				stop("cannot determine x and y coordinates without geotransform")
+				} else
+					seq(x$from, x$to)
 		}
 		if (r$dimensions[2] %in% names(lst)) { # y
 			y = dimensions[[ r$dimensions[2] ]]
-			if (! all(is.na(gt))) {
-				lst[[ r$dimensions[2] ]] = if (!is.null(y$values))
+			lst[[ r$dimensions[2] ]] = if (! any(is.na(gt))) {
+					if (!is.null(y$values))
 						y$values
 					else
 						xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-			} else
-				stop("cannot determine x and y coordinates without geotransform")
+				} else
+					seq(y$to, y$from)
 		}
 	}
 	for (nm in setdiff(names(lst), r$dimensions)) {

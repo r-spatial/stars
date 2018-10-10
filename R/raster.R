@@ -3,9 +3,9 @@
 #' @export
 st_as_stars.Raster = function(.x, ...) {
     if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first")
+        stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
-        stop("package raster required, please install it first")
+        stop("package raster required, please install it first") # nocov
 	#0 360 -90  90
 	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
 	v = raster::values(.x)
@@ -30,8 +30,8 @@ st_as_stars.Raster = function(.x, ...) {
 st_as_raster = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
 	if (length(dim(x)) > 3) {
-		warning("folding all higher dimensions into the third dimension")
-		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect")
+		warning("folding all higher dimensions into the third dimension") # nocov
+		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect") # nocov
 	}
 	d = st_dimensions(x)
 	dxy = attr(d, "raster")$dimensions
@@ -63,8 +63,8 @@ st_as_raster = function(x, ...) {
 #' @aliases coerce,stars,Raster-method
 setAs("stars", "Raster", function(from) { 
     if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first")
+        stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
-        stop("package raster required, please install it first")
+        stop("package raster required, please install it first") # nocov
 	st_as_raster(from)
 })

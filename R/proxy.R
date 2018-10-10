@@ -60,21 +60,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			st_stars_proxy(unlist(do.call(c, c(lapply(dots, unclass), along = length(dim(dots[[1]])) + 1))),
 				dimensions = dims) 
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
-			stop("not implemented yet")
-			# FIXME: t.b.d.
-			if (prod(lengths(along)) != length(dots))
-				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
-			# abind all:
-			d = st_dimensions(dots[[1]])
-			ret = mapply(abind, ..., along = length(d) + 1, SIMPLIFY = FALSE)
-			# make dims:
-			newdim = c(dim(dots[[1]]), lengths(along))
-			ret = lapply(ret, function(x) { dim(x) = newdim; x })
-			ret = propagate_units(ret, dots[[1]])
-			# make dimensions:
-			for (i in seq_along(along))
-				d[[ names(along)[i] ]] = create_dimension(values = along[[i]])
-			st_as_stars(ret, dimensions = d)
+			stop("for proxy ojbects, along argument is not implemented")
 		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
 			d = st_dimensions(dots[[1]])
@@ -132,6 +118,16 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
 	if (downsample != 0 && length(attr(.x, "call_list")) > 0) 
 		warning("deferred processes applied to downsampled image(s)")
 	process_call_list(fetch(.x, ..., downsample = downsample), cl)
+}
+
+st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE) {
+	stopifnot(inherits(x, "stars"))
+	if (inherits(x, "stars_proxy"))
+		return(x)
+	st_write(x, fname)
+	if (!quiet)
+		cat(paste("writing to", fname, "\n"))
+	st_stars_proxy(list(fname), st_dimensions(x))
 }
 
 # execute the call list on a stars object

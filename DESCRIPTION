@@ -43,6 +43,7 @@ Suggests:
     knitr,
     lwgeom,
     maps,
+	pbapply,
     plm,
     raster,
     rmarkdown,
@@ -74,3 +75,5 @@ Collate:
     'ncdf.R'
     'proxy.R'
     'factors.R'
+    'rasterize.R'
+    'warp.R'
