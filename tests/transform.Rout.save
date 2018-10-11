@@ -79,12 +79,12 @@ attribute(s):
  Max.   :1  
 dimension(s):
    from to offset delta refsys point values
-X1    1 NA     NA    NA     NA    NA   NULL
-X2    1 NA     NA    NA     NA    NA   NULL
+X1    1 10     NA    NA     NA    NA   NULL
+X2    1 10     NA    NA     NA    NA   NULL
 Warning message:
 In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), st_crs(4326)) :
   no spatial coordinates present: st_transform does nothing
 > 
 > proc.time()
    user  system elapsed 
-  0.694   0.053   0.738 
+  0.758   0.024   0.796 
