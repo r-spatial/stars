@@ -100,6 +100,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
       dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  
     } else {
       dimensions[[i]]$values = coords[[i]]
+      ## offset/delta for fall-back index (and for NA test )
+      ## https://github.com/r-spatial/stars/blob/master/R/dimensions.R#L294-L303
+      dimensions[[i]]$offset[1L] = 0
+      dimensions[[i]]$delta[1L] = 1  
     }
   }
   
