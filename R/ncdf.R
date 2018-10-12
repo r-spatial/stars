@@ -3,9 +3,25 @@
 #' @importFrom stats setNames
 NULL
 
+
+.vec_is_regular <- function(x) {
+  ## no fuzz for now
+  length(unique(diff(x))) == 1
+}
+.is_regular <- function(coords_list) {
+  unlist(lapply(coords_list, function(x) .vec_is_regular(x)))
+}
+
+
 #' read ncdf file into stars object
 #' 
-#' read ncdf file into stars object
+#' Read data from a file using the NetCDF library directly. 
+#' 
+#' The following logic is applied to coordinate axes. If any coordinate axes have 
+#' regularly spaced coordinates they are reduced to the
+#' offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
+#' are stored.   If the data has two or more dimensions and the first two are regular
+#' they are nominated as the 'raster' for plotting. 
 #' @examples 
 #' f <- system.file("nc/reduced.nc", package = "stars")
 #' read_ncdf(f)
@@ -52,10 +68,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
                                                    count = ncsub[, "count", drop = TRUE], 
                                                   collapse_degen = FALSE))
   out = setNames(out, var)
-  dimensions = create_dimensions(dim(out[[1]]))
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
-  coords = vector("list", length(dims$name))
+  coords = setNames(vector("list", length(dims$name)), dims$name)
   for (ic in seq_along(coords)) {
     ## create_dimvar means we can var_get it
     if (nc$dim[[dims$name[ic]]]$create_dimvar) {
@@ -65,10 +80,27 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
       coords[[ic]] <- seq_len(dims$length[ic])
     }
   }
+
+  ## can we create a raster?
+  raster = NULL
+  ## which coords are regular
+  regular = .is_regular(coords)
+  if (length(coords) > 1) {
+    if (all(regular[1:2])) {
+    raster = get_raster(affine = c(0, 0), 
+                      dimensions = names(coords)[1:2], curvilinear = FALSE)
+    }
+    
+  }
+  dimensions = create_dimensions(dim(out[[1]]), raster)
   for (i in seq_along(coords)) {
-    dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
-    ## NaN for singleton dims, but that seems ok unless we have explicit interval?
-    dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  ## not rectilinear yet
+    if (regular[i]) {
+      dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
+      ## NaN for singleton dims, but that seems ok unless we have explicit interval?
+      dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  
+    } else {
+      dimensions[[i]]$values = coords[[i]]
+    }
   }
   
   st_stars(out, dimensions)
