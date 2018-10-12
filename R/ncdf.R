@@ -83,13 +83,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
   ## which coords are regular
   regular = .is_regular(coords)
   if (length(coords) > 1) {
-    if (all(regular[1:2])) {
+   # if (all(regular[1:2])) {
     raster = get_raster(affine = c(0, 0), 
                       dimensions = names(coords)[1:2], curvilinear = FALSE)
-    }
+    #}
     
   }
   dimensions = create_dimensions(dim(out[[1]]), raster)
+  
+  ## if either x, y rectilinear assume both are
+  if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
   for (i in seq_along(coords)) {
     if (regular[i]) {
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
@@ -99,6 +102,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
       dimensions[[i]]$values = coords[[i]]
     }
   }
+  
   
   st_stars(out, dimensions)
 }
