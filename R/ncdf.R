@@ -4,12 +4,9 @@
 NULL
 
 
-.vec_is_regular <- function(x) {
-  ## no fuzz for now
-  length(unique(diff(x))) == 1
-}
+
 .is_regular <- function(coords_list) {
-  unlist(lapply(coords_list, function(x) .vec_is_regular(x)))
+  unlist(lapply(coords_list, function(x) regular_intervals(x)))
 }
 
 
