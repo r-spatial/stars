@@ -92,7 +92,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
   dimensions = create_dimensions(dim(out[[1]]), raster)
   
   ## if either x, y rectilinear assume both are
-  if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
+  #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
   for (i in seq_along(coords)) {
     if (regular[i]) {
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
