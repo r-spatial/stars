@@ -69,12 +69,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
   for (ic in seq_along(coords)) {
+    if (!is.null(ncsub)) {
+      subidx <- seq(ncsub[ic, "start"], length = ncsub[ic, "count"])
+    } else {
+      subidx <- seq_len(length(coords[[ic]]))
+    }
     ## create_dimvar means we can var_get it
     if (nc$dim[[dims$name[ic]]]$create_dimvar) {
-      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])
+      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])[subidx]
      
     } else {
-      coords[[ic]] <- seq_len(dims$length[ic])
+      coords[[ic]] <- subidx##seq_len(dims$length[ic])
     }
   }
 
@@ -89,7 +94,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
     #}
     
   }
-  dimensions = create_dimensions(dim(out[[1]]), raster)
+  dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
   
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
@@ -102,8 +107,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
       dimensions[[i]]$values = coords[[i]]
       ## offset/delta for fall-back index (and for NA test )
       ## https://github.com/r-spatial/stars/blob/master/R/dimensions.R#L294-L303
-      dimensions[[i]]$offset[1L] = 0
-      dimensions[[i]]$delta[1L] = 1  
+      dimensions[[i]]$offset[1L] = NA
+      dimensions[[i]]$delta[1L] = NA  
     }
   }
   
