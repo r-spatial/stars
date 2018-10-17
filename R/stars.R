@@ -361,10 +361,14 @@ st_bbox.dimensions = function(obj, ...) {
 				} else
 					c(xmin = x$from - 0.5, ymin = y$from - 0.5, xmax = x$to + 0.5, ymax = y$to + 0.5)
 			} else {
-				e = expand_dimensions(obj)
-				rx = range(e[[ r$dimensions[1] ]])
-				ry = range(e[[ r$dimensions[2] ]])
-				c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
+				if (is_curvilinear(obj))
+					c(xmin = min(x$values), ymin = min(y$values), xmax = max(x$values), ymax = max(y$values))
+				else {
+					e = expand_dimensions(obj)
+					rx = range(e[[ r$dimensions[1] ]])
+					ry = range(e[[ r$dimensions[2] ]])
+					c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
+				}
 			}
 		structure(bb, crs = st_crs(x$refsys), class = "bbox")
 	} else {
@@ -397,6 +401,8 @@ st_crs.stars = function(x, ...) {
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
+	if (is.na(value))
+		value = NA_crs_
 	if (is.numeric(value))
 		value = st_crs(value)
 	if (inherits(value, "crs"))
