@@ -6,12 +6,13 @@
 \usage{
 read_stars(.x, ..., options = character(0), driver = character(0),
   sub = TRUE, quiet = FALSE, NA_value = NA_real_,
-  along = NA_integer_, RasterIO = list(), proxy = FALSE)
+  along = NA_integer_, RasterIO = list(), proxy = FALSE,
+  curvilinear = character(0))
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
 
-\item{...}{ignored}
+\item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set}
 
 \item{options}{character; opening options}
 
@@ -28,6 +29,8 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 \item{RasterIO}{list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.}
 
 \item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.}
+
+\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 }
 \value{
 object of class \code{stars}
