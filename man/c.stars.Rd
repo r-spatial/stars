@@ -7,7 +7,7 @@
 \method{c}{stars}(..., along = NA_integer_)
 }
 \arguments{
-\item{...}{object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute}
+\item{...}{object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.}
 
 \item{along}{integer; see \link{read_stars}}
 }
