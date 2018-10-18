@@ -16,9 +16,16 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL)
 \item{ncsub}{matrix of start, count columns}
 }
 \description{
-read ncdf file into stars object
+Read data from a file using the NetCDF library directly.
 }
 \details{
+The following logic is applied to coordinate axes. If any coordinate axes have 
+regularly spaced coordinates they are reduced to the
+offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
+are stored.   If the data has two or more dimensions and the first two are regular
+they are nominated as the 'raster' for plotting.
+
+
 If `var` is not set the first set of variables on a shared grid is used.
 It's supposed to be the grid with the most dimensions, but there's no control
 yet (see `ncmeta::nc_grids(.x)` for the current assumption). 

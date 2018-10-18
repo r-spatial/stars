@@ -3,9 +3,22 @@
 #' @importFrom stats setNames
 NULL
 
+
+
+.is_regular <- function(coords_list) {
+  unlist(lapply(coords_list, function(x) regular_intervals(x)))
+}
+
+
 #' read ncdf file into stars object
 #' 
-#' read ncdf file into stars object
+#' Read data from a file using the NetCDF library directly. 
+#' 
+#' The following logic is applied to coordinate axes. If any coordinate axes have 
+#' regularly spaced coordinates they are reduced to the
+#' offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
+#' are stored.   If the data has two or more dimensions and the first two are regular
+#' they are nominated as the 'raster' for plotting. 
 #' @examples 
 #' f <- system.file("nc/reduced.nc", package = "stars")
 #' read_ncdf(f)
@@ -52,24 +65,53 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
                                                    count = ncsub[, "count", drop = TRUE], 
                                                   collapse_degen = FALSE))
   out = setNames(out, var)
-  dimensions = create_dimensions(dim(out[[1]]))
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
-  coords = vector("list", length(dims$name))
+  coords = setNames(vector("list", length(dims$name)), dims$name)
   for (ic in seq_along(coords)) {
+    if (!is.null(ncsub)) {
+      subidx <- seq(ncsub[ic, "start"], length = ncsub[ic, "count"])
+    } else {
+      subidx <- seq_len(length(coords[[ic]]))
+    }
     ## create_dimvar means we can var_get it
     if (nc$dim[[dims$name[ic]]]$create_dimvar) {
-      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])
+      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])[subidx]
      
     } else {
-      coords[[ic]] <- seq_len(dims$length[ic])
+      coords[[ic]] <- subidx##seq_len(dims$length[ic])
     }
   }
-  for (i in seq_along(coords)) {
-    dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
-    ## NaN for singleton dims, but that seems ok unless we have explicit interval?
-    dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  ## not rectilinear yet
+
+  ## can we create a raster?
+  raster = NULL
+  ## which coords are regular
+  regular = .is_regular(coords)
+  if (length(coords) > 1) {
+   # if (all(regular[1:2])) {
+    raster = get_raster(affine = c(0, 0), 
+                      dimensions = names(coords)[1:2], curvilinear = FALSE)
+    #}
+    
   }
+  dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
+  
+  ## if either x, y rectilinear assume both are
+  #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
+  for (i in seq_along(coords)) {
+    if (regular[i]) {
+      dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]]
+      ## NaN for singleton dims, but that seems ok unless we have explicit interval?
+      dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))  
+    } else {
+      dimensions[[i]]$values = coords[[i]]
+      ## offset/delta for fall-back index (and for NA test )
+      ## https://github.com/r-spatial/stars/blob/master/R/dimensions.R#L294-L303
+      dimensions[[i]]$offset[1L] = NA
+      dimensions[[i]]$delta[1L] = NA  
+    }
+  }
+  
   
   st_stars(out, dimensions)
 }
