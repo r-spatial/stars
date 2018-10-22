@@ -30,7 +30,7 @@ NULL
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns 
-#' 
+#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @details
 #' If `var` is not set the first set of variables on a shared grid is used.
 #' It's supposed to be the grid with the most dimensions, but there's no control
@@ -39,7 +39,7 @@ NULL
 #' \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
 #' and be valid index using `ncdf4::ncvar_get` convention (start is 1-based). 
 #' @export
-read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
+read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
   meta = ncmeta::nc_meta(.x)
   if (is.null(var)) {
     var = meta$grid$variable[meta$grid$grid[1] == meta$grid$grid]
@@ -113,5 +113,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL) {
   }
   
   
-  st_stars(out, dimensions)
+  ret = st_stars(out, dimensions)
+  if (length(curvilinear) == 2) {
+    curvi_coords = lapply(curvilinear, function(.v) ncdf4::ncvar_get(nc, 
+                                                    varid = .v,
+                                                    ## note there subtle subsetting into x,y
+                                                    start = ncsub[1:2, "start", drop = TRUE], 
+                                                    count = ncsub[1:2, "count", drop = TRUE], 
+                                                    collapse_degen = FALSE))
+    names(curvi_coords) <- c("x", "y")
+    ret = st_as_stars(ret, curvilinear = curvi_coords)
+  }
+  ret
 }
