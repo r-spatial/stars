@@ -22,6 +22,7 @@ Description: Reading, manipulating, writing and plotting
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
+Additional_repositories: http://pebesma.staff.ifgi.de
 Depends:
     abind,
     R (>= 3.3.0),
@@ -55,8 +56,6 @@ Suggests:
 	xts,
 	starsdata
 VignetteBuilder: knitr
-Remotes: 
-    r-spatial/sf
 Encoding: UTF-8
 RoxygenNote: 6.1.0
 Collate: 

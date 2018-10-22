@@ -46,10 +46,13 @@
 #' tmp = tempfile(fileext = ".tif")
 #' st_write(st, tmp)
 #' (red <- read_stars(tmp))
-#' read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, nBufXSize = 2, nBufYSize = 2))[[1]]
-#' (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, nBufXSize = 2, nBufYSize = 2)))
+#' read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, 
+#'    nBufXSize = 2, nBufYSize = 2))[[1]]
+#' (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
+#'    nBufXSize = 2, nBufYSize = 2)))
 #' red[[1]] # cell values of subsample grid:
-#' plot(st, reset = FALSE, axes = TRUE, ylim = c(-.1,12.1), xlim = c(-.1,10.1), main = "nBufXSize & nBufYSize demo", text_values = TRUE)
+#' plot(st, reset = FALSE, axes = TRUE, ylim = c(-.1,12.1), xlim = c(-.1,10.1),
+#'   main = "nBufXSize & nBufYSize demo", text_values = TRUE)
 #' plot(st_as_sfc(red, as_points = TRUE), add = TRUE, col = 'red', pch = 16)
 #' plot(st_as_sfc(st_as_stars(st), as_points = FALSE), add = TRUE, border = 'grey')
 #' plot(st_as_sfc(red, as_points = FALSE), add = TRUE, border = 'green', lwd = 2)
