@@ -255,8 +255,8 @@ attribute(s):
  NA's   :4448      NA's   :4448    NA's   :13266   NA's   :4448   
 dimension(s):
      from  to offset delta refsys point values    
-lon     1 180      0     2     NA    NA   NULL [x]
-lat     1  90    -89     2     NA    NA   NULL [y]
+lon     1 180     -1     2     NA    NA   NULL [x]
+lat     1  90    -90     2     NA    NA   NULL [y]
 zlev    1   1     NA    NA     NA    NA      0    
 time    1   1     NA    NA     NA    NA   1460    
 > read_ncdf(f, var = c("anom"))
@@ -272,8 +272,8 @@ attribute(s):
  NA's   :4448     
 dimension(s):
      from  to offset delta refsys point values    
-lon     1 180      0     2     NA    NA   NULL [x]
-lat     1  90    -89     2     NA    NA   NULL [y]
+lon     1 180     -1     2     NA    NA   NULL [x]
+lat     1  90    -90     2     NA    NA   NULL [y]
 zlev    1   1     NA    NA     NA    NA      0    
 time    1   1     NA    NA     NA    NA   1460    
 > read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
@@ -289,11 +289,11 @@ attribute(s):
  NA's   :90         NA's   :90      NA's   :104      NA's   :90      
 dimension(s):
      from to offset delta refsys point values    
-lon     1 10      0     2     NA    NA   NULL [x]
-lat     1 12    -89     2     NA    NA   NULL [y]
+lon     1 10     -1     2     NA    NA   NULL [x]
+lat     1 12    -90     2     NA    NA   NULL [y]
 zlev    1  1     NA    NA     NA    NA      0    
 time    1  1     NA    NA     NA    NA   1460    
 > 
 > proc.time()
    user  system elapsed 
-  0.840   0.067   0.899 
+  0.775   0.033   0.799 

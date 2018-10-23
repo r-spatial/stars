@@ -141,8 +141,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (length(curvilinear) == 2) {
 			lon = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[1])
 			lat = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[2])
-			ret = st_as_stars(ret, curvilinear = list(x = read_stars(lon, RasterIO = RasterIO)[[1]], y = read_stars(lat, RasterIO = RasterIO)[[1]]), ...)
-		}
-		ret
+			st_as_stars(ret, curvilinear = list(x = read_stars(lon, RasterIO = RasterIO)[[1]], 
+				y = read_stars(lat, RasterIO = RasterIO)[[1]]), ...)
+		} else
+			ret
 	}
 }
