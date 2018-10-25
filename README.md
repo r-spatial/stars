@@ -26,7 +26,7 @@ This project will not only deal with these cases, but also extend the
 in cloud storage, which is a more feasible option e.g. for satellite
 data collected Today. We will implement pipe-based workflows that
 are developed and tested on samples before they are evaluated for
-complete datasets, and discuss the challenges of visualiasation and
+complete datasets, and discuss the challenges of visualisation and
 storage in such workflows. 
 
 ## Progress
