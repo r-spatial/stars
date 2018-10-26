@@ -13,8 +13,8 @@ install:
 # Adapt as necessary starting from here
 
 build_script:
-  - Rscript -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source")'
   - travis-tool.sh install_deps
+  - Rscript -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source")'
 
 test_script:
   - travis-tool.sh run_tests
