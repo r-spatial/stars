@@ -254,11 +254,11 @@ attribute(s):
  Max.   :  2.990   Max.   :0.840   Max.   :1.000   Max.   :32.97  
  NA's   :4448      NA's   :4448    NA's   :13266   NA's   :4448   
 dimension(s):
-     from  to offset delta refsys point values
-lon     1 180      0     2     NA    NA   NULL
-lat     1  90    -89     2     NA    NA   NULL
-zlev    1   1      0   NaN     NA    NA   NULL
-time    1   1   1460   NaN     NA    NA   NULL
+     from  to offset delta refsys point values    
+lon     1 180     -1     2     NA    NA   NULL [x]
+lat     1  90    -90     2     NA    NA   NULL [y]
+zlev    1   1     NA    NA     NA    NA      0    
+time    1   1     NA    NA     NA    NA   1460    
 > read_ncdf(f, var = c("anom"))
 stars object with 4 dimensions and 1 attribute
 attribute(s):
@@ -271,11 +271,11 @@ attribute(s):
  Max.   :  2.990  
  NA's   :4448     
 dimension(s):
-     from  to offset delta refsys point values
-lon     1 180      0     2     NA    NA   NULL
-lat     1  90    -89     2     NA    NA   NULL
-zlev    1   1      0   NaN     NA    NA   NULL
-time    1   1   1460   NaN     NA    NA   NULL
+     from  to offset delta refsys point values    
+lon     1 180     -1     2     NA    NA   NULL [x]
+lat     1  90    -90     2     NA    NA   NULL [y]
+zlev    1   1     NA    NA     NA    NA      0    
+time    1   1     NA    NA     NA    NA   1460    
 > read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 stars object with 4 dimensions and 4 attributes
 attribute(s):
@@ -288,12 +288,12 @@ attribute(s):
  Max.   : 0.92000   Max.   :0.320   Max.   :0.5200   Max.   : 0.030  
  NA's   :90         NA's   :90      NA's   :104      NA's   :90      
 dimension(s):
-   from to offset delta refsys point values
-X1    1 10      0     2     NA    NA   NULL
-X2    1 12    -89     2     NA    NA   NULL
-X3    1  1      0   NaN     NA    NA   NULL
-X4    1  1   1460   NaN     NA    NA   NULL
+     from to offset delta refsys point values    
+lon     1 10     -1     2     NA    NA   NULL [x]
+lat     1 12    -90     2     NA    NA   NULL [y]
+zlev    1  1     NA    NA     NA    NA      0    
+time    1  1     NA    NA     NA    NA   1460    
 > 
 > proc.time()
    user  system elapsed 
-  0.867   0.043   0.920 
+  0.775   0.033   0.799 

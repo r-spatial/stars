@@ -93,7 +93,7 @@ geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 st_dimensions(x)
 library(sf)
-s = st_as_sf(x, as_points = FALSE)
+s = st_as_sf(x, as_points = FALSE, merge = FALSE)
 par(cex.axis = .7) # font size axis tic labels 
 plot(s, axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```

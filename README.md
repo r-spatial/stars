@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars)
 [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
+[![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](http://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](http://www.r-pkg.org/pkg/stars)
 
 Spatiotemporal data often comes in the form of dense arrays,
@@ -26,7 +27,7 @@ This project will not only deal with these cases, but also extend the
 in cloud storage, which is a more feasible option e.g. for satellite
 data collected Today. We will implement pipe-based workflows that
 are developed and tested on samples before they are evaluated for
-complete datasets, and discuss the challenges of visualiasation and
+complete datasets, and discuss the challenges of visualisation and
 storage in such workflows. 
 
 ## Progress

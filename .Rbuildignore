@@ -7,7 +7,6 @@ appveyor.yml
 codecov.yml
 cov
 ^docs$
-subset
 call
 jamie
 tic.R

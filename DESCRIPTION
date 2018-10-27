@@ -1,6 +1,6 @@
 Package: stars
 Title: Scalable, Spatiotemporal Tidy Arrays
-Version: 0.2-0
+Version: 0.2-1
 Authors@R: 
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -23,6 +23,7 @@ Description: Reading, manipulating, writing and plotting
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
+Additional_repositories: http://pebesma.staff.ifgi.de
 Depends:
     abind,
     R (>= 3.3.0),
@@ -56,8 +57,6 @@ Suggests:
 	xts,
 	starsdata
 VignetteBuilder: knitr
-Remotes: 
-    r-spatial/sf
 Encoding: UTF-8
 RoxygenNote: 6.1.0
 Collate: 
@@ -77,4 +76,5 @@ Collate:
     'proxy.R'
     'factors.R'
     'rasterize.R'
+    'subset.R'
     'warp.R'

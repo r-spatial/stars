@@ -324,7 +324,7 @@ expand_dimensions.dimensions = function(x) {
 #' @export
 dim.dimensions = function(x) {
 	if (is_curvilinear(x))
-		sapply(x, function(x) { x$to - x$from + 1 } )
+		setNames(sapply(x, function(x) { x$to - x$from + 1 } ), names(x))
 	else
 		lengths(expand_dimensions(x))
 }

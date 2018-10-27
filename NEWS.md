@@ -1,5 +1,7 @@
 # version 0.2-0
 
+* vignettes now use an external package, `starsdata`, for larger dataset examples
+
 * support `[<-.stars` e.g. to mask out values; support `is.na.stars` to replace NA masks
 
 * support `cut` methods and factor arrays (plot, subset); #56
