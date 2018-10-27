@@ -75,4 +75,5 @@ Collate:
     'proxy.R'
     'factors.R'
     'rasterize.R'
+    'subset.R'
     'warp.R'
