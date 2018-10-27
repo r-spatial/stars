@@ -221,8 +221,6 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			aperm(ar, c(dimxn, dimyn))
 
 	if (! is.null(rgb)) {
-		if (is_rectilinear(x))
-			warning("when using rgb, rectilinear grid is plotted as regular grid")
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
