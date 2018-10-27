@@ -4,7 +4,8 @@
 \alias{read_ncdf}
 \title{read ncdf file into stars object}
 \usage{
-read_ncdf(.x, ..., var = NULL, ncsub = NULL)
+read_ncdf(.x, ..., var = NULL, ncsub = NULL,
+  curvilinear = character(0))
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -14,6 +15,8 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL)
 \item{var}{variable name or names (they must be on matching grids)}
 
 \item{ncsub}{matrix of start, count columns}
+
+\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 }
 \description{
 Read data from a file using the NetCDF library directly.
