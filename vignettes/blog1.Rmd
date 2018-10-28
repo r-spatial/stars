@@ -94,7 +94,7 @@ The GDAL model can deal also with spatial rasters that are regular but not align
 ```{r}
 par(cex.axis = .7) # font size axis tic labels 
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
-geomatrix %>% read_stars %>% st_as_sf(as_points = FALSE) %>%
+geomatrix %>% read_stars %>% st_as_sf(as_points = FALSE, merge = FALSE) %>%
   plot(axes =TRUE, main = "geomatrix.tif", graticule = TRUE)
 ```
 
