@@ -9,7 +9,8 @@ Authors@R:
              comment = c(ORCID = "0000-0001-8049-7069")),
       person(given = "Michael",
              family = "Sumner",
-             role = "ctb"),
+             role = "ctb", 
+             comment=c(ORCID = "0000-0002-2471-7511")),
       person(given = "Etienne",
              family = "Racine",
              role = "ctb"),
@@ -32,7 +33,7 @@ Imports:
 	parallel,
     classInt (>= 0.2-2),
     ncdf4,
-    ncmeta,
+    ncmeta (>= 0.0.3),
     rlang,
     units
 Suggests: 
