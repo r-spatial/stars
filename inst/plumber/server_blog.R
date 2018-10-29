@@ -10,11 +10,11 @@ s2_expand_zip = function(s) {
 	paste0("/vsizip/", s, "/", sub(".zip", ".SAFE", s), "/MTD_MSIL1C.xml")
 }
 lst = list.files(pattern = "*.zip")
-l = lapply(s2_expand_zip(lst), read_stars_meta, sub = 1)
+lst = lst[c(grep("S2A_MSIL1C", lst), grep("S2B_MSIL1C", lst))]
+l = lapply(s2_expand_zip(lst), read_stars, sub = 1, proxy = TRUE)
 bb <- do.call(c, lapply(l, function(x) st_as_sfc(st_bbox(st_dimensions(x)))))
-fn = sapply(l, function(x) attr(x, "file_names"))
 library(tibble)
-md = st_sf(tibble(file = fn, geom = bb))
+md = st_sf(tibble(file = unlist(l), geom = bb))
 
 # global database
 data = list(md = md)

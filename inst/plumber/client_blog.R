@@ -38,7 +38,7 @@ plot(st_geometry(nl), axes = TRUE)
 s = sapply(file, function(x) {
 	expr = paste0("read_stars(\"", x, "\", options = \"OVERVIEW_LEVEL=3\", NA_value = 0)")
 	r = get_data(url, expr)
-	image(r, add = TRUE, rgb = 1:3, maxColorValue = 15000)
+	image(r, add = TRUE, rgb = 1:3, maxColorValue = 30000)
 })
 plot(st_geometry(md), border = 'yellow', add = TRUE, lwd = .8)
 plot(st_geometry(nl), add=TRUE, border = 'orange', lwd = 2)
