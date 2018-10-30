@@ -122,7 +122,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		put_data_url(url, tempnam, .x)
 		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", env = data)") # evaluate in "data" first
 		ret = get_data_url(url, expr)
-		get_data_url(url, paste0("rm(", tempnam, ")")) # clean up
+		put_data_url(url, tempnam, NULL) # remove
 		ret
 	} else {
 		cl = attr(.x, "call_list")

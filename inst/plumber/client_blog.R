@@ -36,7 +36,7 @@ proxy = md[nl,]$proxy
 
 plot(st_geometry(nl), axes = TRUE)
 s = sapply(proxy, function(x) {
-	r = st_as_stars(x, downsample = 50, url = url)
+	r = st_as_stars(x, downsample = 100, url = url)
 	image(r, add = TRUE, rgb = 1:3, maxColorValue = 30000)
 })
 plot(st_geometry(md), border = 'yellow', add = TRUE, lwd = .8)
@@ -51,11 +51,9 @@ x = st_apply(proxy[[10]], 1:2, ndvi)
 xs = st_as_stars(x, url = url, downsample = 50)
 image(xs, add = TRUE)
 
-#s = sapply(proxy, function(x) {
-#	x = st_apply(x, 1:2, ndvi)
-#	#expr = paste0("st_apply(read_stars(\"", x, "\", options = \"OVERVIEW_LEVEL=3\", NA_value = 0),1:2, ndvi)")
-#	#r = get_data(url, expr)
-#	r = st_as_stars(x, url = url, downsample = 50)
-#	print(range(r[[1]], na.rm = TRUE))
-#	image(r, add = TRUE, zlim = c(-1,1), col = colorRampPalette(c(grey(.1), grey(.5), 'green'))(10))
-#})
+s = sapply(proxy, function(x) {
+	x = st_apply(x, 1:2, ndvi)
+	r = st_as_stars(x, url = url, downsample = 100)
+	image(r, add = TRUE, zlim = c(-1,1), col = colorRampPalette(c(grey(.1), grey(.5), 'green'))(10))
+})
+plot(st_geometry(nl), add = TRUE, border = 'red')
