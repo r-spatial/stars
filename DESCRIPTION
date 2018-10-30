@@ -42,6 +42,8 @@ Suggests:
     ggplot2,
     ggthemes,
     gstat,
+    httr,
+    jsonlite,
     knitr,
     lwgeom,
     maps,

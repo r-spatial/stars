@@ -11,17 +11,20 @@ s2_expand_zip = function(s) {
 }
 lst = list.files(pattern = "*.zip")
 lst = lst[c(grep("S2A_MSIL1C", lst), grep("S2B_MSIL1C", lst))]
+time = strptime(substr(lst, 12, 26), "%Y%m%dT%H%M%S")
 l = lapply(s2_expand_zip(lst), read_stars, sub = 1, proxy = TRUE)
-bb <- do.call(c, lapply(l, function(x) st_as_sfc(st_bbox(st_dimensions(x)))))
+bb = do.call(c, lapply(l, function(x) st_as_sfc(st_bbox(st_dimensions(x)))))
+epsg = sapply(l, function(x) st_crs(x)$epsg)
 library(tibble)
-md = st_sf(tibble(file = unlist(l), geom = bb))
+md = st_sf(tibble(proxy = l, time = as.POSIXct(time), epsg = epsg, geom = bb))
 
-# global database
+# create global database
 data = list(md = md)
+rm(md)
 
 #* Log some information about the incoming request
 #* @filter logger
-function(req){
+function(req) {
   cat(as.character(Sys.time()), "-", 
     req$REQUEST_METHOD, req$PATH_INFO, "-", 
     req$HTTP_USER_AGENT, "@", req$REMOTE_ADDR, ":", req$postBody, "\n")

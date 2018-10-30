@@ -20,7 +20,7 @@ dim.stars_proxy = function(x) {
 
 #' @export
 plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
-	x = st_as_stars(x, downsample = downsample)
+	x = st_as_stars(x, downsample = downsample, ...)
 	NextMethod()
 }
 
@@ -110,14 +110,28 @@ fetch = function(x, downsample = 0, ...) {
 
 #' @name st_as_stars
 #' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)
+#' @param url character; URL of the stars endpoint where the data reside 
+#' @param env environment at the data endpoint to resolve objects in
 #' @export
-st_as_stars.stars_proxy = function(.x, ..., downsample = 0) {
-	cl = attr(.x, "call_list")
-	# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
-	# there are cases where this is not right. Hence:
-	if (downsample != 0 && length(attr(.x, "call_list")) > 0) 
-		warning("deferred processes applied to downsampled image(s)")
-	process_call_list(fetch(.x, ..., downsample = downsample), cl)
+st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), env = parent.frame()) {
+	if (! is.null(url)) { # execute/get remotely:
+		# if existing, convert call_list to character:
+		attr(.x, "call_list") = lapply(attr(.x, "call_list"), deparse)
+		# push the object to url, then st_as_stars() it there:
+		tempnam = substr(tempfile(pattern = "Z", tmpdir = "", fileext = ""), 2, 15)
+		put_data_url(url, tempnam, .x)
+		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", env = data)") # evaluate in "data" first
+		ret = get_data_url(url, expr)
+		get_data_url(url, paste0("rm(", tempnam, ")")) # clean up
+		ret
+	} else {
+		cl = attr(.x, "call_list")
+		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
+		# there are cases where this is not right. Hence:
+		if (downsample != 0 && length(attr(.x, "call_list")) > 0) 
+			warning("deferred processes applied to downsampled image(s)")
+		process_call_list(fetch(.x, ..., downsample = downsample), cl, env = env)
+	}
 }
 
 st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE) {
@@ -131,12 +145,14 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE
 }
 
 # execute the call list on a stars object
-process_call_list = function(x, cl) {
-	pf = parent.frame()
+process_call_list = function(x, cl, env = parent.frame()) {
 	for (i in seq_along(cl)) {
+		if (is.character(cl[[i]]))
+			cl[[i]] = parse(text = cl[[i]])[[1]]
+		stopifnot(is.call(cl[[i]]))
 		lst = as.list(cl[[i]]) 
-		pf [[ names(lst)[[2]] ]] = x # FIXME: side effects because we trash parent.frame()?
-		x = eval(cl[[i]], envir = pf)
+		env [[ names(lst)[[2]] ]] = x # FIXME: side effects in case we trash parent.frame()?
+		x = eval(cl[[i]], envir = env)
 	}
 	x
 }
@@ -233,4 +249,32 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 #' @export
 st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
 	collect(X, match.call(), "st_apply", "X")
+}
+
+get_data_url = function(url, expr = NULL) {
+	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
+		stop("package httr required, please install it first") # nocov
+	if (!requireNamespace("jsonlite", quietly = TRUE)) # base64_dec, base64_enc, toJSON, fromJSON
+		stop("package jsonlite required, please install it first") # nocov
+
+    if (is.null(expr))
+        jsonlite::fromJSON( httr::content(httr::GET(url), "text", encoding = "UTF-8"))
+    else {
+        js = jsonlite::fromJSON(
+            httr::content(httr::POST(url, body = list(expr = expr), encode = "json"),
+                "text", encoding = "UTF-8"))
+		if (is.list(js) && !is.null(js$error))
+			stop(paste(js$error, ":", js$message))
+        unserialize(jsonlite::base64_dec(js))
+	}
+}
+
+put_data_url = function(url, name, value) {
+	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
+		stop("package httr required, please install it first") # nocov
+	if (!requireNamespace("jsonlite", quietly = TRUE)) # base64_dec, base64_enc, toJSON, fromJSON
+		stop("package jsonlite required, please install it first") # nocov
+
+    value = jsonlite::toJSON(jsonlite::base64_enc(serialize(value, NULL)))
+    httr::PUT(url, body = list(name = name, value = value), encode = "json")
 }
