@@ -61,7 +61,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
 		RasterIO = list(), proxy = FALSE, curvilinear = character(0)) {
 
-	x = .x
+	x = enc2utf8(normalizePath(.x))
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
