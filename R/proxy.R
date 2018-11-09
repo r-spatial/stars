@@ -56,9 +56,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			new_dim = create_dimension(values = values)
 			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
 			names(dims)[names(dims) == "new_dim"] = dim_name
-			# FIXME: to be tested:
-			st_stars_proxy(unlist(do.call(c, c(lapply(dots, unclass), along = length(dim(dots[[1]])) + 1))),
-				dimensions = dims) 
+			st_stars_proxy(unlist(do.call(c, lapply(dots, unclass))), dimensions = dims)
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			stop("for proxy ojbects, along argument is not implemented")
 		} else { # loop over attributes, abind them:
@@ -73,8 +71,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			} else
 				along
 			# ret = propagate_units(mapply(abind, ..., along = along_dim, SIMPLIFY = FALSE), dots[[1]])
-			m = mapply(c, lapply(dots, unclass)) # simplifies to list matrix
-			ret = setNames(lapply(seq_len(nrow(m)), function(i) unlist(m[i,])), names(dots[[1]]))
+			ret = unlist(do.call(c, lapply(dots, unclass)))
 			dims = combine_dimensions(dots, along_dim)
 			if (along_dim == length(d) + 1)
 				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
@@ -277,4 +274,9 @@ put_data_url = function(url, name, value) {
 
     value = jsonlite::toJSON(jsonlite::base64_enc(serialize(value, NULL)))
     httr::PUT(url, body = list(name = name, value = value), encode = "json")
+}
+
+#' @export
+aperm.stars_proxy = function(a, perm = NULL, ...) {
+	stop("you can't aperm stars_proxy objects")
 }
