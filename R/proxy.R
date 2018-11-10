@@ -1,7 +1,9 @@
 #' @export
 print.stars_proxy = function(x, ..., n = 1e5) {
 	cat("stars_proxy object with", length(x), 
-		if (length(x) > 1) "attributes in files:\n" else "attribute in file:\n")
+		if (length(x) > 1) "attributes" else "attribute",
+		"in",
+		if (sum(lengths(x)) > 1) "files:\n" else "file:\n")
 	print(structure(unclass(x), dimensions = NULL, call_list = NULL))
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
@@ -71,7 +73,13 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			} else
 				along
 			# ret = propagate_units(mapply(abind, ..., along = along_dim, SIMPLIFY = FALSE), dots[[1]])
-			ret = unlist(do.call(c, lapply(dots, unclass)))
+			ret = if (length(dots[[1]]) == 1)
+					list(attr = unlist(do.call(c, lapply(dots, unclass))))
+				else {
+					m = mapply(c, lapply(dots, unclass)) # simplifies to list matrix
+					setNames(lapply(seq_len(nrow(m)), function(i) unlist(m[i,])), names(dots[[1]]))
+				}
+
 			dims = combine_dimensions(dots, along_dim)
 			if (along_dim == length(d) + 1)
 				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
@@ -101,7 +109,13 @@ fetch = function(x, downsample = 0, ...) {
 			bands$from:bands$to
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize, bands = bands)
-	setNames(do.call(c, lapply(x, read_stars, RasterIO = rasterio, ...)), names(x))
+	read_stars_multiple = function(Names, RasterIO, ...) {
+		if (length(Names) > 1 && length(RasterIO$bands > 1)) # read band stack from multiple files:
+			RasterIO$bands = 1:(length(RasterIO$bands)/length(Names))
+		read_stars(Names, RasterIO = RasterIO, ...)
+	}
+	ret = lapply(x, read_stars_multiple, RasterIO = rasterio, ...)
+	setNames(do.call(c, ret), names(x))
 }
 
 
