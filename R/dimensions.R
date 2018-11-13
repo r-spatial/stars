@@ -93,7 +93,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
-		refsys = NA_character_, point = NA, values = NULL)  {
+		refsys = NA_character_, point = NA, values = NULL, is_raster = FALSE)  {
 
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
@@ -107,6 +107,9 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				if (regular_intervals(values)) {
 					offset = values[1]
 					delta = values[2] - values[1]
+					# shift half grid cell size if x or y!
+					if (is_raster)
+						offset = offset - 0.5 * delta
 					values = NULL
 				}
 				if (inherits(offset, "POSIXct"))
