@@ -170,6 +170,8 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
 		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
+		cr[1,] = cr[1,] - dm[[xd]]$from + 1
+		cr[2,] = cr[2,] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {
 			if (names(d[i]) == xd)
 				args[[i+1]] = seq(max(1, cr[1, 1]), min(d[xd], cr[2, 1]))
