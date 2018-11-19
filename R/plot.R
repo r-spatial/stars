@@ -42,9 +42,12 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	#	x = adrop(x)
 
 	if (join_zlim) {
-		breaks = get_breaks(x, breaks, nbreaks)
+		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
 		nbreaks = length(breaks) # might be shorter than originally intended!
 	}
+
+	if (isTRUE(dots$logz) && !((has_raster(x) && (is_curvilinear(x) || has_rotate_or_shear(x))) || has_sfc(x)))
+		x = log10(x) # otherwise, defer log-transforming to sf::plot.sf
 
 	if (!missing(y))
 		stop("y argument should be missing")
@@ -107,7 +110,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 				im = flatten(x, i)
 				if (! join_zlim) {
 					zlim = range(im[[1]], na.rm = TRUE)
-					br = get_breaks(im, breaks, nbreaks)
+					br = get_breaks(im, breaks, nbreaks, dots$logz)
 				} else
 					br = breaks
 				image(im, xlab = "", ylab = "", axes = axes, zlim = zlim, breaks = br, col = col, key.pos = NULL, main = NULL, ...)
@@ -142,11 +145,13 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	}
 }
 
-get_breaks = function(x, breaks, nbreaks) {
+get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
 		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
+		if (isTRUE(logz))
+			values = log10(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
 			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
@@ -169,6 +174,7 @@ get_breaks = function(x, breaks, nbreaks) {
 #' @param text_values logical; print values as text on image?
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
+#' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -179,7 +185,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		maxColorValue = max(x[[attr]]),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE, as_points = FALSE, key.pos = NULL) {
+		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE) {
 
 	dots = list(...)
 
@@ -239,7 +245,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
-	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) { 
+	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) {
 		x = st_as_sf(x[1], as_points = as_points)
 		mplot = function(x, col, ...) {
 			if (missing(col))
@@ -248,7 +254,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 				plot(x, pal = col, ...) # need to swap arg names: FIXME:?
 		}
 		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, 
-			key.pos = key.pos, ...)
+			key.pos = key.pos, logz = logz, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
@@ -261,7 +267,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 	if (text_values)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
-	if (axes) {
+	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
             .degAxis(1)
             .degAxis(2)

@@ -160,24 +160,28 @@ nit.c
 ```
 
 ```{r eval=EVAL}
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16, key.pos = NULL)
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
+		 pch = 16,  logz = TRUE)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 ```{r eval=EVAL}
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
+		 border = NA, logz = TRUE)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 We can downsample the data by
 ```{r eval=EVAL}
 (nit.c = stars:::st_downsample(nit.c, 8))
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
+		 pch = 16, logz = TRUE)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 which doesn't look nice, but plotting the cells as polygons looks better:
 ```{r eval=EVAL}
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
+plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
+		 border = NA, logz = TRUE)
 maps::map('world', add = TRUE, col = 'red')
 ```

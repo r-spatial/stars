@@ -16,7 +16,7 @@
   else names(d)[1], ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
   text_values = FALSE, axes = FALSE, interpolate = FALSE,
-  as_points = FALSE, key.pos = NULL)
+  as_points = FALSE, key.pos = NULL, logz = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -72,6 +72,8 @@
 \item{interpolate}{logical; when using \link{rasterImage} (rgb), should pixels be interpolated?}
 
 \item{as_points}{logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)}
+
+\item{logz}{logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension
