@@ -1,5 +1,9 @@
 # version 0.2-0
 
+* depend on sf 0.7-2
+
+* add logz support for log-scale keys to `plot` and `image`
+
 * vignettes now use an external package, `starsdata`, for larger dataset examples
 
 * support `[<-.stars` e.g. to mask out values; support `is.na.stars` to replace NA masks
