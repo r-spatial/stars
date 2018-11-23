@@ -6,6 +6,7 @@
 #' @param e2 object of class \code{stars}
 #'
 #' @return object of class \code{stars}
+#' @name ops_stars
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
@@ -13,13 +14,14 @@
 #' x / x
 #' x + x
 #' x + 10
+#' all.equal(x * 10, 10 * x)
 #' @export
 Ops.stars <- function(e1, e2) {
-	ret = if (inherits(e2, "stars"))
-		mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
-  	else
-  		lapply(e1, .Generic, e2 = e2)
-	st_as_stars(ret, dimensions = st_dimensions(e1))
+	ret = mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+	if (! inherits(e1, "stars"))
+		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
+	else
+		st_as_stars(ret, dimensions = st_dimensions(e1))
 }
 
 #' Mathematical operations for stars objects
@@ -28,6 +30,7 @@ Ops.stars <- function(e1, e2) {
 #' @param ... parameters passed on to the Math functions
 #' 
 #' @export
+#' @name ops_stars
 #' 
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -39,6 +42,21 @@ Math.stars = function(x, ...) {
 	ret = lapply(x, .Generic, ...)
 	st_as_stars(ret, dimensions = st_dimensions(x))
 }
+
+#' @name ops_stars
+#' @export
+Ops.stars_proxy <- function(e1, e2) {
+	if (!inherits(e1, "stars_proxy"))
+		stop("first argument in expression needs to be the stars_proxy object") # FIXME: needed??
+	collect(e1, match.call(), .Generic, "e1")
+}
+
+#' @name ops_stars
+#' @export
+Math.stars_proxy = function(x, ...) {
+	collect(x, match.call(), .Generic)
+}
+
 
 #' @export
 st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")

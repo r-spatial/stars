@@ -8,6 +8,7 @@
 #' @param options character vector with options
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
+#' @name st_write_stars
 #' @export
 st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_) {
@@ -15,6 +16,47 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 		warning("all but first attribute are ignored")
 	sf::gdal_write(obj[layer], ..., file = dsn, driver = driver, options = options, 
 		type = type, na_val = NA_value, geotransform = get_geotransform(obj))
+	invisible(obj)
+}
+
+#' @name st_write_stars
+#' @param block_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
+#' @details the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{block_size}.
+#' @export
+st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
+		options = character(0), type = "Float32", NA_value = NA_real_, 
+		block_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
+
+	if (length(obj) > 1 && missing(layer))
+		warning("all but first attribute are ignored")
+	if (progress) {
+		pb = txtProgressBar()
+		setTxtProgressBar(pb, 0)
+	}
+	# create:
+	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
+		type = type, na_val = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+	# write portions:
+	d = dim(obj)
+	di = st_dimensions(obj)
+
+	ncol = ceiling(d[1] / block_size[1])
+	nrow = ceiling(d[2] / block_size[2])
+	for (col in 1:ncol) { 
+		di[[1]]$from = 1 + (col - 1) * block_size[1]
+		di[[1]]$to   = min(col * block_size[1], d[1])
+		for (row in 1:nrow) {
+			di[[2]]$from = 1 + (row - 1) * block_size[2]
+			di[[2]]$to   = min(row * block_size[2], d[2])
+			st_write(st_as_stars(structure(obj, dimensions = di)), dsn = dsn, layer = layer, driver = driver,
+				options = options, type = type, update = TRUE)
+			if (progress)
+				setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))
+		}
+	}
+	if (progress)
+		close(pb)
+	invisible(obj)
 }
 
 #nocov start

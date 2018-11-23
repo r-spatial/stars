@@ -118,6 +118,20 @@ fetch = function(x, downsample = 0, ...) {
 	setNames(do.call(c, ret), names(x))
 }
 
+check_xy_warn = function(call, dimensions) {
+	if (as.character(as.list(call)[[1]]) == "st_apply") {
+		# check dims
+		MARGIN = as.list(call)$MARGIN
+		xy = attr(dimensions, "raster")$dimensions
+		ok = if (is.numeric(MARGIN))
+				all(which(names(d) %in% xy) %in% MARGIN)
+			else
+				all(xy %in% MARGIN)
+		if (!ok)
+			warning("st_apply on x/y dimensions applied to downsampled image(s)")
+	}
+}
+
 
 #' @name st_as_stars
 #' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)
@@ -133,14 +147,15 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		put_data_url(url, tempnam, .x)
 		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", env = data)") # evaluate in "data" first
 		ret = get_data_url(url, expr)
-		put_data_url(url, tempnam, NULL) # remove
+		put_data_url(url, tempnam, NULL) # remove the temporary object
 		ret
 	} else {
 		cl = attr(.x, "call_list")
 		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
 		# there are cases where this is not right. Hence:
-		if (downsample != 0 && length(attr(.x, "call_list")) > 0) 
-			warning("deferred processes applied to downsampled image(s)")
+		# TODO: only warn when there is a reason to warn.
+		if (downsample != 0)
+			lapply(attr(.x, "call_list"), check_xy_warn, dimensions = st_dimensions(.x))
 		process_call_list(fetch(.x, ..., downsample = downsample), cl, env = env)
 	}
 }
@@ -183,10 +198,14 @@ collect = function(x, call, fn, first_arg = "x") {
 	structure(x, call_list = c(call_list, call))
 }
 
-
 #' @export
 adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
 	collect(x, match.call(), "adrop")
+}
+
+#' @export
+aperm.stars_proxy = function(a, perm = NULL, ...) {
+	collect(a, match.call(), "aperm", "a")
 }
 
 #' @export
@@ -288,9 +307,4 @@ put_data_url = function(url, name, value) {
 
     value = jsonlite::toJSON(jsonlite::base64_enc(serialize(value, NULL)))
     httr::PUT(url, body = list(name = name, value = value), encode = "json")
-}
-
-#' @export
-aperm.stars_proxy = function(a, perm = NULL, ...) {
-	stop("you can't aperm stars_proxy objects")
 }
