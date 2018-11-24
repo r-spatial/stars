@@ -3,16 +3,16 @@
 \name{ops_stars}
 \alias{ops_stars}
 \alias{Ops.stars}
-\alias{Ops.stars_proxy}
 \alias{Math.stars}
+\alias{Ops.stars_proxy}
 \alias{Math.stars_proxy}
 \title{S3 Ops Group Generic Functions for stars objects}
 \usage{
 \method{Ops}{stars}(e1, e2)
 
-\method{Ops}{stars_proxy}(e1, e2)
-
 \method{Math}{stars}(x, ...)
+
+\method{Ops}{stars_proxy}(e1, e2)
 
 \method{Math}{stars_proxy}(x, ...)
 }

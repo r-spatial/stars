@@ -17,7 +17,10 @@
 #' all.equal(x * 10, 10 * x)
 #' @export
 Ops.stars <- function(e1, e2) {
-	ret = mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+	ret = if (is.array(e2))
+			lapply(e1, .Generic, e2 = e2)
+		else
+			mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
 	if (! inherits(e1, "stars"))
 		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
 	else

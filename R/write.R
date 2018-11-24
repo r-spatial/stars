@@ -21,6 +21,7 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 
 #' @name st_write_stars
 #' @param block_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
+#' @param progress logical; if \code{TRUE}, a progress bar is shown
 #' @details the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{block_size}.
 #' @export
 st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
@@ -36,7 +37,8 @@ st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver
 	# create:
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, na_val = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
-	# write portions:
+
+	# write chunks:
 	d = dim(obj)
 	di = st_dimensions(obj)
 

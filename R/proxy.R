@@ -122,9 +122,11 @@ check_xy_warn = function(call, dimensions) {
 	if (as.character(as.list(call)[[1]]) == "st_apply") {
 		# check dims
 		MARGIN = as.list(call)$MARGIN
+		if (inherits(MARGIN, "call"))
+			MARGIN = eval(MARGIN)
 		xy = attr(dimensions, "raster")$dimensions
 		ok = if (is.numeric(MARGIN))
-				all(which(names(d) %in% xy) %in% MARGIN)
+				all(which(names(dimensions) %in% xy) %in% MARGIN)
 			else
 				all(xy %in% MARGIN)
 		if (!ok)
