@@ -12,7 +12,7 @@
 
 \method{st_write}{stars_proxy}(obj, dsn, layer = 1, ...,
   driver = detect.driver(dsn), options = character(0),
-  type = "Float32", NA_value = NA_real_, block_size = c(dim(obj)[1],
+  type = "Float32", NA_value = NA_real_, chunk_size = c(dim(obj)[1],
   floor(2.5e+07/dim(obj)[1])), progress = TRUE)
 }
 \arguments{
@@ -32,7 +32,7 @@
 
 \item{NA_value}{non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.}
 
-\item{block_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
+\item{chunk_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
 
 \item{progress}{logical; if \code{TRUE}, a progress bar is shown}
 }
@@ -40,5 +40,5 @@
 write stars object to gdal dataset (typically: to file)
 }
 \details{
-the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{block_size}.
+the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
 }

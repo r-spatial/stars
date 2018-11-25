@@ -20,13 +20,13 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 }
 
 #' @name st_write_stars
-#' @param block_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
+#' @param chunk_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
 #' @param progress logical; if \code{TRUE}, a progress bar is shown
-#' @details the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{block_size}.
+#' @details the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
 #' @export
 st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_, 
-		block_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
+		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
@@ -42,14 +42,14 @@ st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver
 	d = dim(obj)
 	di = st_dimensions(obj)
 
-	ncol = ceiling(d[1] / block_size[1])
-	nrow = ceiling(d[2] / block_size[2])
+	ncol = ceiling(d[1] / chunk_size[1])
+	nrow = ceiling(d[2] / chunk_size[2])
 	for (col in 1:ncol) { 
-		di[[1]]$from = 1 + (col - 1) * block_size[1]
-		di[[1]]$to   = min(col * block_size[1], d[1])
+		di[[1]]$from = 1 + (col - 1) * chunk_size[1]
+		di[[1]]$to   = min(col * chunk_size[1], d[1])
 		for (row in 1:nrow) {
-			di[[2]]$from = 1 + (row - 1) * block_size[2]
-			di[[2]]$to   = min(row * block_size[2], d[2])
+			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
+			di[[2]]$to   = min(row * chunk_size[2], d[2])
 			st_write(st_as_stars(structure(obj, dimensions = di)), dsn = dsn, layer = layer, driver = driver,
 				options = options, type = type, update = TRUE)
 			if (progress)

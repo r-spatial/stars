@@ -134,7 +134,6 @@ check_xy_warn = function(call, dimensions) {
 	}
 }
 
-
 #' @name st_as_stars
 #' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)
 #' @param url character; URL of the stars endpoint where the data reside 
