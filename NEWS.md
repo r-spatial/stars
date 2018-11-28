@@ -1,8 +1,12 @@
-# version 0.2-0
+# version 0.2-1
+
+* add conversion to and from `Spatial*` classes, including the gridded ones, taking care of `factor` variables
 
 * depend on sf 0.7-2
 
 * add logz support for log-scale keys to `plot` and `image`
+
+# version 0.2-0
 
 * vignettes now use an external package, `starsdata`, for larger dataset examples
 

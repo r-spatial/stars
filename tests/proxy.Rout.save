@@ -61,13 +61,11 @@ x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > c(xx)
-stars_proxy object with 3 attributes in files:
+stars_proxy object with 2 attributes in files:
                                          L7_ETMs.tif 
 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
                                          L7_ETMs.tif 
 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                               along 
-                                                 "4" 
 dimension(s):
         from  to  offset delta                       refsys point
 x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
@@ -342,13 +340,11 @@ adrop(x = x)
 [[2]]
 adrop(x = x)
 
-stars_proxy object with 3 attributes in files:
+stars_proxy object with 2 attributes in files:
                                                                                                        sst 
  "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
                                                                                                       anom 
 "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom" 
-                                                                                                     along 
-                                                                                                       "5" 
 dimension(s):
       from   to     offset  delta  refsys point values    
 x        1 1440          0   0.25      NA    NA   NULL [x]
@@ -359,4 +355,4 @@ times    1    2 1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  3.323   0.573   3.887 
+  3.208   0.518   3.726 

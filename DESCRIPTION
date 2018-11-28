@@ -74,6 +74,7 @@ Collate:
     'ops.R'
     'write.R'
     'raster.R'
+    'sp.R'
     'spacetime.R'
     'ncdf.R'
     'proxy.R'

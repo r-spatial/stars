@@ -66,5 +66,7 @@ setAs("stars", "Raster", function(from) {
         stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
+	if (!is_regular(from))
+		stop("only regular rasters can be converted to Raster* objects")
 	st_as_raster(from)
 })

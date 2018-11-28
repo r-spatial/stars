@@ -142,6 +142,10 @@ has_raster = function(x) {
 	!is.null(r <- attr(x, "raster")) && all(r$dimensions %in% names(x))
 }
 
+is_regular = function(x) {
+	has_raster(x) && !(has_rotate_or_shear(x) || is_rectilinear(x) || is_curvilinear(x))
+}
+
 is_rectilinear = function(x) {
 	d = st_dimensions(x)
 	if (has_raster(x) && !is_curvilinear(x)) {
@@ -189,9 +193,12 @@ as.data.frame.stars = function(x, ...) {
 
 as.vector_stars = function(x) {
 	l = attr(x, "levels")
-	if (!is.null(l))
-		structure(as.vector(x), class = "factor", levels = l)
-	else
+	if (!is.null(l)) {
+		if (is.factor(x))
+			x
+		else
+			structure(as.vector(x), class = "factor", levels = l)
+	} else
 		as.vector(x)
 }
 
