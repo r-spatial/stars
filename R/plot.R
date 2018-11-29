@@ -97,7 +97,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			draw.key = !is.null(key.pos) && join_zlim
 			if (! draw.key)
 				key.pos = NULL
-			lt = .get_layout(st_bbox(x), dims[3], par("din"), 
+			lt = .get_layout(st_bbox(x), dims[3], par("din"),
 				if (join_zlim && key.pos.missing) -1 else key.pos, key.width)
 			title_size = if (is.null(main)) 
 					0
@@ -135,7 +135,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			}
 		}
 	} else if (has_sfc(x)) {
-		plot(st_as_sf(x), ..., axes = axes)
+		if (key.pos.missing)
+			key.pos = -1
+		plot(st_as_sf(x), ..., key.pos = key.pos, axes = axes)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {
