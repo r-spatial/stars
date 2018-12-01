@@ -17,7 +17,8 @@
 #' all.equal(x * 10, 10 * x)
 #' @export
 Ops.stars <- function(e1, e2) {
-	ret = if (is.array(e2))
+	#ret = if (is.array(e2))
+	ret = if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
 		else
 			mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
