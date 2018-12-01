@@ -26,8 +26,8 @@ URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: http://pebesma.staff.ifgi.de
 Depends:
-    abind,
     R (>= 3.3.0),
+    abind,
     sf (>= 0.7-2)
 Imports:
     methods,
@@ -82,3 +82,4 @@ Collate:
     'rasterize.R'
     'subset.R'
     'warp.R'
+    'aggregate.R'
