@@ -36,49 +36,66 @@
 #' image(x[buf, crop=FALSE])
 #' plot(buf, add = TRUE, col = NA)
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x)) {
-  missing.i = missing(i)
-  # special case:
-  if (! missing.i && inherits(i, c("sf", "sfc", "bbox")))
-  	return(st_crop(x, i, crop = crop, ...))
-  mc <- match.call(expand.dots = TRUE)
-  # select list elements from x, based on i:
-  d = st_dimensions(x)
-  ed = expand_dimensions(d)
-  x = unclass(x)[i]
-  # selects also on dimensions:
-  if (length(mc) > 3) {
-    mc[[1]] <- `[`
-    if (! missing(i))
-		mc[[3]] <- NULL # remove i
-	mc[["drop"]] = FALSE
-	for (i in names(x)) {
-		mc[[2]] = as.name(i)
-		lev = attr(x[[i]], "levels")
-		x[[i]] = structure(eval(mc, x, parent.frame()), levels = lev) # subset array
+	missing.i = missing(i)
+	# special case:
+	if (! missing.i && inherits(i, c("sf", "sfc", "bbox"))) {
+		if (has_raster(x))
+			return(st_crop(x, i, crop = crop, ...))
+		else {
+			ix = which_sfc(x)
+			if (ix != 1) # put first
+				x = aperm(x, c(ix, setdiff(seq_len(dim(x)), ix)))
+			sfc = st_geometry(x)
+			sel = which(lengths(st_intersects(sfc, i)) > 0)
+			x[, sel]
+		}
 	}
-	xy = attr(d, "raster")$dimensions
-	if (is_curvilinear(d)) { # subset curvilinear lat/lon matrices/rasters: can't do one-at-a-time!
-		mc[[2]] = as.name("values")
-		d[[ xy[1] ]]$values = eval(mc, d[[ xy[1] ]], parent.frame())
-		d[[ xy[2] ]]$values = eval(mc, d[[ xy[2] ]], parent.frame())
+
+	#return(st_stars(ret, d))
+
+	d = st_dimensions(x)
+	args = rep(list(rlang::missing_arg()), length(dim(x)))
+	x = unclass(x)[i]
+	mc = match.call(expand.dots = TRUE)
+	# remove [, x, i from mc:
+	mc = if (missing.i)
+			mc[-(1:2)]
+		else
+			mc[-(1:3)]
+	do_select = FALSE
+	for (i in seq_along(mc)) { 
+		if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+			args[[i]] = mc[[i]]
+			do_select = TRUE
+		}
 	}
-	d_backup = d
-	# dimensions:
-	mc0 = mc[1:3] # "[", x, first dim
-	j = 3 # first dim
-	for (i in names(d)) { # one-at-a-time:
-		mc0[[2]] = as.name(i)
-		mc0[[3]] = mc[[j]]
-		if (! (is_curvilinear(d) && i %in% xy))
-			mc0[["values"]] = ed[[i]]
-		d[[i]] = eval(mc0, d, parent.frame()) # subset dimension
-		j = j + 1
+	args[["drop"]] = FALSE
+	for (i in names(x))
+		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
+
+	# now do dimensions:
+	if (do_select) {
+		ed = expand_dimensions(d)
+		xy = attr(d, "raster")$dimensions
+		if (is_curvilinear(d)) { # subset curvilinear lat/lon matrices/rasters: can't do one-at-a-time!
+			d[[ xy[1] ]]$values = eval(rlang::expr(d[[ xy[1] ]]$values[!!!args]))
+			d[[ xy[2] ]]$values = eval(rlang::expr(d[[ xy[2] ]]$values[!!!args]))
+		}
+		
+		# dimensions:
+		#mc0 = mc[1:3] # "[", x, first dim
+		for (i in seq_along(d)) { # one-at-a-time:
+			name_i = names(d)[i]
+			argi = args[i]
+			if (! (is_curvilinear(d) && name_i %in% xy))
+				argi = c(argi, values = ed[[i]])
+			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
+		}
 	}
-  }
-  if (drop)
-  	adrop(st_as_stars(x, dimensions = d))
-  else
-  	st_as_stars(x, dimensions = d)
+	if (drop)
+		adrop(st_as_stars(x, dimensions = d))
+	else
+		st_as_stars(x, dimensions = d)
 }
 
 #' @name stars_subset
@@ -86,10 +103,10 @@
 #' @export
 #' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
 "[<-.stars" = function(x, i, value) {
-  if (!inherits(i, "stars"))
-  	stop("selector should be a stars object")
-  fun = function(x, y, value) { x[y] = value; x }
-  st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
+	if (!inherits(i, "stars"))
+		stop("selector should be a stars object")
+	fun = function(x, y, value) { x[y] = value; x }
+	st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
 }
 
 
