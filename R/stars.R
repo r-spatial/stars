@@ -162,10 +162,14 @@ is_curvilinear = function(x) {
 	has_raster(x) && attr(d, "raster")$curvilinear
 }
 
-has_sfc = function(x) {
+which_sfc = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
-	any(sapply(x, function(i) inherits(i$values, "sfc")))
+	which(sapply(x, function(i) inherits(i$values, "sfc")))
+}
+
+has_sfc = function(x) {
+	length(which_sfc(x)) > 0
 }
 
 
@@ -398,9 +402,10 @@ st_crs.stars = function(x, ...) {
 	if (!all(is.na(xy)))
 		st_crs(d[[ xy[1] ]]$refsys)
 	else { # search for simple features:
-		i = sapply(d, function(y) inherits(y$values, "sfc"))
-		if (any(i))
-			st_crs(d[[i[1]]]$values)
+		i = which(sapply(d, function(y) inherits(y$values, "sfc")))
+		if (length(i))
+			# st_crs(d[[ i[1] ]]$refsys)
+			st_crs(d[[ i[1] ]]$values)
 		else
 			st_crs(NA)
 	}
@@ -427,6 +432,15 @@ st_crs.stars = function(x, ...) {
 		d[[ j ]]$refsys = value
 	st_as_stars(unclass(x), dimensions = d)
 }
+
+#' @export
+st_geometry.stars = function(obj,...) {
+	if (!has_sfc(obj))
+		stop("stars object does not have a simple feature dimension")
+	d = st_dimensions(obj)
+	d[[ which_sfc(obj) ]]$values
+}
+
 
 #' @export
 split.stars = function(x, f, drop = TRUE, ...) {

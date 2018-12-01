@@ -121,12 +121,12 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
 	if (length(dim(x)) > 1) {
-		if (length(unique(names(df))) == 1) {
-#			labels = format(expand_dimensions(st_dimensions(x))[[2]]) # nocov start
-#			names(df) = if (length(labels) == ncol(df))
-#					labels
-#				else
-#					apply(expand.grid(labels, names(x))[,2:1], 1, paste0, collapse = " ") # nocov end
+		labels = expand_dimensions(st_dimensions(x))[[2]] # nocov start
+		if (length(labels) == ncol(df)) {
+			if (inherits(labels, "POSIXt") || inherits(labels, "Date"))
+				labels = as.character(labels)
+			if (is.character(labels))
+				names(df) = labels
 		}
 	} else
 		names(df) = names(x)

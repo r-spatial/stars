@@ -83,8 +83,6 @@ as.tbl_cube.stars = function(x, ...) {
 #' x1 %>% slice("x", 50:100)
 slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   #stopifnot(length(index) == 1)
-  if (!requireNamespace("rlang", quietly = TRUE))
-      stop("package rlang required, please install it first") # nocov
     
   nd <- length(dim(.data))
   indices <- rep(list(rlang::missing_arg()), nd + 1)

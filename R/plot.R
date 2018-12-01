@@ -207,6 +207,14 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	dimxn = match(dimx, names(d))
 	dimyn = match(dimy, names(d))
 
+	if (has_sfc(x) && length(dim(x)) == 2) { # time series of features:
+		ed = lapply(expand_dimensions(x), function(x) if (inherits(x, "sfc")) seq_along(x) else x)
+		names(ed) = c("x", "y")
+		ed$z = x[[attr]]
+		axes = TRUE
+		return(image(ed, ..., xlab = xlab, ylab = ylab))
+	}
+
 	if (!is_curvilinear(x)) {
 		dims = expand_dimensions(x)
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
