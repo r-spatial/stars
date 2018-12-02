@@ -20,7 +20,7 @@ setAs("stars", "Spatial", function(from) {
 		cellcentre.offset = c(offset[1] + 0.5 * delta[1],
 			offset[2] + (cells.dim[2] - 0.5) * delta[2])
 		gt = sp::GridTopology(cellcentre.offset, abs(delta), cells.dim)
-		sp::SpatialGrid(gt, d[[ 1 ]]$refsys)
+		sp::SpatialGrid(gt, sp::CRS(d[[ 1 ]]$refsys))
 	} else {
 		if (!has_sfc(from))
 			stop("no feature dimension in stars object")
@@ -42,10 +42,10 @@ st_as_stars.Spatial = function(.x, ...) {
 		# UL corner:
 		x = create_dimension(1, gt$cells.dim[1], 
 			offset = gt$cellcentre.offset[1] - 0.5 * gt$cellsize[1], delta = gt$cellsize[1],
-			refsys = sp::proj4string(.x))
+			refsys = st_crs(sp::proj4string(.x))$proj4string)
 		y = create_dimension(1, gt$cells.dim[2], 
 			offset = gt$cellcentre.offset[2] + (gt$cells.dim[2] - 0.5) * gt$cellsize[1], 
-			delta = -gt$cellsize[2], refsys = sp::proj4string(.x))
+			delta = -gt$cellsize[2], refsys = st_crs(sp::proj4string(.x))$proj4string)
 		d = create_dimensions(list(x = x, y = y), raster = get_raster(dimensions = c("x", "y")))
 		array_stars = function(x, dim) { 
 			if (is.factor(x))

@@ -1,5 +1,11 @@
 # version 0.2-1
 
+* `st_as_sf` uses date/time column names when appropriate
+
+* allow missing trailing comma's when subsetting: `a[1,,]` and `a[1,]` now do the same.
+
+* move `rlang` to Imports: ; rewrite subset using rlang.
+
 * add conversion to and from `Spatial*` classes, including the gridded ones, taking care of `factor` variables
 
 * depend on sf 0.7-2

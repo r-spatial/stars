@@ -401,14 +401,11 @@ st_crs.stars = function(x, ...) {
 	xy = attr(d, "raster")$dimensions
 	if (!all(is.na(xy)))
 		st_crs(d[[ xy[1] ]]$refsys)
-	else { # search for simple features:
-		i = which(sapply(d, function(y) inherits(y$values, "sfc")))
-		if (length(i))
-			# st_crs(d[[ i[1] ]]$refsys)
-			st_crs(d[[ i[1] ]]$values)
-		else
-			st_crs(NA)
-	}
+	else if (has_sfc(d)) # search for simple features:
+		#st_crs(d[[ which_sfc(d)[1] ]]$refsys) # -> would (re)interpret proj4string
+		st_crs(d[[ which_sfc(d)[1] ]]$values)
+	else
+		st_crs(NA)
 }
 
 #' @export

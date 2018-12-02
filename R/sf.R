@@ -51,14 +51,10 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 		dim(x[[i]]) = c(sfc = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
 	if (na.rm) {
-		for (i in seq_along(x)) {
-			x[[i]] = structure(switch(as.character(length(dim(x[[i]]))), 
-				"1" = x[[i]][which(keep),drop=FALSE],
-				"2" = x[[i]][which(keep),,drop=FALSE],
-				"3" = x[[i]][which(keep),,,drop=FALSE],
-				"4" = x[[i]][which(keep),,,,drop=FALSE] # etc -- FIXME: use tidy eval here
-				), levels = attr(x[[i]], "levels"))
-		}
+		args = rep(list(rlang::missing_arg()), length(dim(x[[1]])))
+		args[[1]] = which(keep)
+		for (i in seq_along(x))
+			x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
 	}
 
 	structure(x, dimensions = d)

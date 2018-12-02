@@ -51,8 +51,6 @@
 		}
 	}
 
-	#return(st_stars(ret, d))
-
 	d = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(dim(x)))
 	x = unclass(x)[i]
