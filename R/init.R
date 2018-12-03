@@ -7,6 +7,7 @@
 #' @importFrom abind abind adrop asub
 #' @importFrom classInt classIntervals
 #' @importFrom parallel parApply
+#' @importFrom rlang %||%
 #' @import sf
 #' @import units
 NULL

@@ -26,8 +26,10 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	NextMethod()
 }
 
-st_stars_proxy = function(x, dimensions)
-	structure(x, dimensions = dimensions, class = c("stars_proxy", "stars"))
+st_stars_proxy = function(x, dimensions, NA_value = NA_real_)
+	structure(x, dimensions = dimensions, NA_value = NA_value,
+		class = c("stars_proxy", "stars"))
+
 
 #' @export
 c.stars_proxy = function(..., along = NA_integer_) {
@@ -114,7 +116,8 @@ fetch = function(x, downsample = 0, ...) {
 			RasterIO$bands = 1:(length(RasterIO$bands)/length(Names))
 		read_stars(Names, RasterIO = RasterIO, ...)
 	}
-	ret = lapply(x, read_stars_multiple, RasterIO = rasterio, ...)
+	ret = lapply(x, read_stars_multiple, RasterIO = rasterio, 
+		NA_value = attr(x, "NA_value") %||% NA_real_, ...)
 	setNames(do.call(c, ret), names(x))
 }
 
