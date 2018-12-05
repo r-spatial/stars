@@ -4,7 +4,9 @@ print.stars_proxy = function(x, ..., n = 1e5) {
 		if (length(x) > 1) "attributes" else "attribute",
 		"in",
 		if (sum(lengths(x)) > 1) "files:\n" else "file:\n")
-	print(structure(unclass(x), dimensions = NULL, call_list = NULL))
+	print(structure(unclass(x), dimensions = NULL, call_list = NULL, NA_value = NULL))
+	if (!is.null(attr(x, "NA_value")) && !is.na(attr(x, "NA_value")))
+		cat("NA_value: ", attr(x, "NA_value"), "\n")
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
 	if (!is.null(attr(x, "call_list"))) {

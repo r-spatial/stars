@@ -15,7 +15,7 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
 	sf::gdal_write(obj[layer], ..., file = dsn, driver = driver, options = options, 
-		type = type, na_val = NA_value, geotransform = get_geotransform(obj))
+		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
 	invisible(obj)
 }
 
@@ -36,7 +36,7 @@ st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver
 	}
 	# create:
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
-		type = type, na_val = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+		type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
 
 	# write chunks:
 	d = dim(obj)
