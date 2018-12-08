@@ -41,8 +41,16 @@ NULL
 #' @export
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
   meta = ncmeta::nc_meta(.x)
+  nas <- is.na(meta$axis$dimension)
+  if (any(nas)) meta$axis$dimension[nas] <- -1
   if (is.null(var)) {
-    var = meta$grid$variable[meta$grid$grid[1] == meta$grid$grid]
+    ix <- 1
+    if (meta$grid$grid[ix] == "S") {
+      ix <- which(!meta$grid$grid == "S")[1L]
+      
+      if (length(ix) < 1)  stop("only scalar variables found, not yet supported")
+    }
+    var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
   }
   ## 
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
@@ -57,6 +65,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     if (nrow(dims) != nrow(ncsub)) stop("input ncsub doesn't match available dims") # nocov
     if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
   }
+  
   nc = ncdf4::nc_open(.x, suppress_dimvals = TRUE)
   on.exit(ncdf4::nc_close(nc), add = TRUE)
   out = lapply(var, function(.v) ncdf4::ncvar_get(nc, 
