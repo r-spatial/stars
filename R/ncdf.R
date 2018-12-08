@@ -41,6 +41,8 @@ NULL
 #' @export
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
   meta = ncmeta::nc_meta(.x)
+  # Don't want scalar
+  # todo handle choice of grid
   nas <- is.na(meta$axis$dimension)
   if (any(nas)) meta$axis$dimension[nas] <- -1
   if (is.null(var)) {
