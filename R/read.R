@@ -61,11 +61,17 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
 		RasterIO = list(), proxy = FALSE, curvilinear = character(0)) {
 
-	x = enc2utf8(normalizePath(.x, mustWork = FALSE))
+	x = if (is.list(.x)) {
+			f = function(y) enc2utf8(normalizePath(y, mustWork = FALSE))
+			rapply(.x, f, classes = "character", how = "replace")
+		} else
+			enc2utf8(normalizePath(.x, mustWork = FALSE))
+
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
-			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
-		dims = length(dim(ret[[1]][[1]]))
+			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
+			along = if (length(along) > 1) along[-1] else NA_integer_)
+		# dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
 

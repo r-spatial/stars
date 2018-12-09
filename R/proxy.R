@@ -28,9 +28,12 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	NextMethod()
 }
 
-st_stars_proxy = function(x, dimensions, NA_value = NA_real_)
+st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
+	if (!is.list(x))
+		x = setNames(list(x), names(x)[1])
 	structure(x, dimensions = dimensions, NA_value = NA_value,
 		class = c("stars_proxy", "stars"))
+}
 
 
 #' @export
