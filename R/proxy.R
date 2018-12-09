@@ -64,7 +64,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			names(dims)[names(dims) == "new_dim"] = dim_name
 			st_stars_proxy(unlist(do.call(c, lapply(dots, unclass))), dimensions = dims)
 		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
-			stop("for proxy ojbects, along argument is not implemented")
+			stop("for proxy objects, along argument is not implemented")
 		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
 			d = st_dimensions(dots[[1]])
