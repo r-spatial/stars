@@ -278,11 +278,15 @@ propagate_units = function(new, old) {
 #' c(x, x, along = 3)
 c.stars = function(..., along = NA_integer_) {
 	dots = list(...)
-	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
-	# dim does not change:
-	if (is.na(along) && length(dots) > 1) { 
+	if (length(dots) == 1) {
+		if (!missing(along))
+			warning("along argument ignored; maybe you wanted to use st_redimension?")
+		dots[[1]]
+	} else if (identical(along, NA_integer_)) { 
+		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
+		# dim does not change:
 		if (identical_dimensions(dots))
-			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = attr(dots[[1]], "dimensions"))
+			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
@@ -291,23 +295,7 @@ c.stars = function(..., along = NA_integer_) {
 			do.call(c, c(dots, along = along))
 		}
 	} else {
-		# Case 2: single stars object, collapse attributes into new array dimension:
-		if (length(dots) == 1) {
-			if (length(dots[[1]]) == 1) # only one attribute: do nothing
-				return(dots[[1]])
-			if (is.list(along)) {
-				values = along[[1]]
-				dim_name = names(along)[1]
-			} else {
-				values = names(dots[[1]])
-				dim_name = "new_dim"
-			}
-			old_dim = st_dimensions(dots[[1]])
-			new_dim = create_dimension(values = values)
-			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
-			names(dims)[names(dims) == "new_dim"] = dim_name
-			st_stars(list(attr = do.call(abind, c(dots, along = length(dim(dots[[1]])) + 1))), dimensions = dims)
-		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
+		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			if (prod(lengths(along)) != length(dots))
 				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
 			# abind all:
@@ -460,7 +448,7 @@ merge.stars = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = do.call(abind, c(x, along = length(dim(x[[1]]))+1))
+	out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -483,4 +471,39 @@ sort_out_along = function(ret) {
 #' @export
 is.na.stars = function(x, ...) {
 	st_as_stars(lapply(x, is.na), dimensions = st_dimensions(x))
+}
+
+#' redimension array, or collapse attributes into a new dimension
+#' 
+#' redimension array, or collapse attributes into a new dimension
+#' @name redimension
+#' @export
+st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
+
+#' @export
+#' @name redimension
+#' @param x object of class \code{stars}
+#' @param new_dims target dimensions
+#' @param along named list with new dimension name and values
+#' @param ... ignored
+st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
+	d = st_dimensions(x)
+	if (! identical(new_dims, d)) {
+		if (prod(dim(d)) != prod(dim(new_dims)))
+			stop("product of dim(new_dim) does not match that of x")
+		for (i in seq_along(x))
+			dim(x[[i]]) = dim(new_dims)
+		st_stars(x, dimensions = new_dims)
+	} else { # collapse attributes into dimension
+		if (length(x) == 1) # only one attribute: do nothing
+			x
+		else {
+			new_dim = create_dimension(values = along[[1]])
+			dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
+			if (length(names(along)) == 1)
+				names(dims)[names(dims) == "new_dim"] = names(along)
+			ret = list(attr = do.call(abind, c(unclass(x), along = length(dim(x)) + 1)))
+			st_stars(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
+		}
+	}
 }

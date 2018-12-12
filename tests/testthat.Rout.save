@@ -25,8 +25,8 @@ Loading required package: abind
 Loading required package: sf
 Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 ══ testthat results  ═══════════════════════════════════════════════════════════
-OK: 9 SKIPPED: 0 FAILED: 0
+OK: 6 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.857   0.076   0.913 
+  0.847   0.061   0.871 

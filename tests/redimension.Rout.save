@@ -1,0 +1,149 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> r = read_stars(list(a = c(tif,tif), b = c(tif, tif)), proxy = TRUE)
+> (xx = st_redimension(r, along = list(foo = 1:4)))
+stars_proxy object with 1 attribute in files:
+$a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+foo     1   4       1     1                           NA    NA   NULL    
+> (rr = c(xx, xx))
+stars_proxy object with 2 attributes in files:
+$a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+
+$a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       a.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+                                       b.L7_ETMs.tif 
+"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+foo     1   4       1     1                           NA    NA   NULL    
+> st_as_stars(rr)
+stars object with 4 dimensions and 2 attributes
+attribute(s), summary of first 1e+05 cells:
+ a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3 
+ Min.   : 47.00                                                                                                
+ 1st Qu.: 65.00                                                                                                
+ Median : 76.00                                                                                                
+ Mean   : 77.34                                                                                                
+ 3rd Qu.: 87.00                                                                                                
+ Max.   :255.00                                                                                                
+ a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3.1 
+ Min.   : 47.00                                                                                                  
+ 1st Qu.: 65.00                                                                                                  
+ Median : 76.00                                                                                                  
+ Mean   : 77.34                                                                                                  
+ 3rd Qu.: 87.00                                                                                                  
+ Max.   :255.00                                                                                                  
+dimension(s):
+        from  to  offset delta                       refsys point
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+band       1   6      NA    NA                           NA    NA
+new_dim    1   4      NA    NA                           NA    NA
+                                 values    
+x                                  NULL [x]
+y                                  NULL [y]
+band                               NULL    
+new_dim L7_ETMs.tif, ..., L7_ETMs.tif.3    
+> (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
+stars_proxy object with 1 attribute in files:
+$a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+
+dimension(s):
+     from  to     offset    delta                       refsys point values    
+x       1 349     288776     28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352    9120761    -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6         NA       NA                           NA    NA   NULL    
+foo     1   4          1        1                           NA    NA   NULL    
+bar     1   2 2001-01-01 365 days                         Date    NA   NULL    
+> st_as_stars(rrr)
+stars object with 4 dimensions and 1 attribute
+attribute(s), summary of first 1e+05 cells:
+ L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3.L7_ETMs.tif.4.L7_ETMs.tif.5.L7_ETMs.tif.6.L7_ETMs.tif.7 
+ Min.   : 47.00                                                                                                
+ 1st Qu.: 65.00                                                                                                
+ Median : 76.00                                                                                                
+ Mean   : 77.34                                                                                                
+ 3rd Qu.: 87.00                                                                                                
+ Max.   :255.00                                                                                                
+dimension(s):
+        from  to  offset delta                       refsys point
+x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
+y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+band       1   6      NA    NA                           NA    NA
+new_dim    1   8      NA    NA                           NA    NA
+                                 values    
+x                                  NULL [x]
+y                                  NULL [y]
+band                               NULL    
+new_dim L7_ETMs.tif, ..., L7_ETMs.tif.7    
+> 
+> proc.time()
+   user  system elapsed 
+  2.765   0.155   2.915 

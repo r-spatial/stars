@@ -7,7 +7,7 @@ dim(r)
 r[,,,2:3]
 plot(r)
 (xx = c(r,r))
-c(xx)
+st_redimension(xx)
 st_as_stars(r)
 (y = st_apply(r, 1:2, max))
 (yy = st_as_stars(y))
@@ -47,12 +47,12 @@ if (f != "") {
   all = system.file(paste0("netcdf/", files), package = "starsdata")
   ret = read_stars(all, sub = c("sst", "anom"))
   print(ret)
-  print(c(ret))
+  print(st_redimension(ret)) # collapse the two attributes into new dimension
 
   try(ret <- c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
   #print(ret)
   ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
   print(ret)
-  ret <- c(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
+  ret <- st_redimension(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
   print(ret)
 }

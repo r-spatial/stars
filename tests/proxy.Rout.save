@@ -60,9 +60,9 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-> c(xx)
+> st_redimension(xx)
 stars_proxy object with 1 attribute in files:
-$L7_ETMs.tif
+$L7_ETMs.tif.L7_ETMs.tif
                                          L7_ETMs.tif 
 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
                                          L7_ETMs.tif 
@@ -208,13 +208,13 @@ band    1   6      NA    NA                           NA    NA   NULL
 +   all = system.file(paste0("netcdf/", files), package = "starsdata")
 +   ret = read_stars(all, sub = c("sst", "anom"))
 +   print(ret)
-+   print(c(ret))
++   print(st_redimension(ret)) # collapse the two attributes into new dimension
 + 
 +   try(ret <- c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
 +   #print(ret)
 +   ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
 +   print(ret)
-+   ret <- c(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
++   ret <- st_redimension(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
 +   print(ret)
 + }
 sst, anom, 
@@ -300,7 +300,7 @@ zlev    1    1      0 [m]     NA      NA    NA   NULL
 time    1    9 1981-09-01 1 days POSIXct    NA   NULL    
 stars object with 5 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
-     attr       
+   sst.anom     
  Min.   :-1.80  
  1st Qu.:-1.19  
  Median :-1.05  
@@ -343,7 +343,7 @@ adrop(x = x)
 adrop(x = x)
 
 stars_proxy object with 1 attribute in files:
-$sst
+$sst.anom
                                                                                                        sst 
  "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
                                                                                                       anom 
@@ -359,4 +359,4 @@ times    1    2 1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.124   0.642   4.765 
+  4.414   0.596   5.005 

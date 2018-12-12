@@ -29,8 +29,8 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 }
 
 st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
-	if (!is.list(x))
-		x = setNames(list(x), names(x)[1])
+	stopifnot(is.list(x))
+	stopifnot(inherits(dimensions, "dimensions"))
 	structure(x, dimensions = dimensions, NA_value = NA_value,
 		class = c("stars_proxy", "stars"))
 }
@@ -41,9 +41,11 @@ c.stars_proxy = function(..., along = NA_integer_) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
-	if (is.na(along) && length(dots) > 1) { 
+	if (length(dots) == 1) # do nothing
+		dots[[1]]
+	else if (identical(along, NA_integer_)) { 
 		if (identical_dimensions(dots))
-			st_stars_proxy(do.call(c, lapply(dots, unclass)), attr(dots[[1]], "dimensions"))
+			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
@@ -52,21 +54,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 			do.call(c, c(dots, along = along))
 		}
 	} else {
-		# Case 2: single stars object, collapse attributes into new array dimension:
-		if (length(dots) == 1) {
-			if (is.list(along)) {
-				values = along[[1]]
-				dim_name = names(along)[1]
-			} else {
-				values = names(dots[[1]])
-				dim_name = "new_dim"
-			}
-			old_dim = st_dimensions(dots[[1]])
-			new_dim = create_dimension(values = values)
-			dims = create_dimensions(c(old_dim, new_dim = list(new_dim)), attr(old_dim, "raster"))
-			names(dims)[names(dims) == "new_dim"] = dim_name
-			st_stars_proxy(unlist(do.call(c, lapply(dots, unclass))), dimensions = dims)
-		} else if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
+		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			stop("for proxy objects, along argument is not implemented")
 		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
@@ -95,6 +83,18 @@ c.stars_proxy = function(..., along = NA_integer_) {
 	}
 }
 
+#' @export
+#' @name redimension
+st_redimension.stars_proxy = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
+
+	d = st_dimensions(x)
+	new_dim = create_dimension(values = along[[1]])
+	dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
+	names(dims)[names(dims) == "new_dim"] = names(along)
+	ret = list(unlist(do.call(c, lapply(x, unclass))))
+	st_stars_proxy(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
+}
+
 fetch = function(x, downsample = 0, ...) {
 	stopifnot(inherits(x, "stars_proxy"))
 	d = st_dimensions(x)
@@ -103,27 +103,24 @@ fetch = function(x, downsample = 0, ...) {
 	dy = d[[ xy[2] ]]
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
+	downsample = rep(downsample, length.out = 2)
 	if (any(downsample > 0)) {
-		nBufXSize = nBufXSize / (downsample + 1)
-		nBufYSize = nBufYSize / (downsample + 1)
+		nBufXSize = nBufXSize / (downsample[1] + 1)
+		nBufYSize = nBufYSize / (downsample[2] + 1)
 	}
-	bands = d[["band"]]
-	if (is.null(bands))
-		bands = list(values = 1)
-	bands = if (!is.null(bands$values))
-			bands$values
-		else
-			bands$from:bands$to
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
-		nBufXSize = nBufXSize, nBufYSize = nBufYSize, bands = bands)
-	read_stars_multiple = function(Names, RasterIO, ...) {
-		if (length(Names) > 1 && length(RasterIO$bands > 1)) # read band stack from multiple files:
-			RasterIO$bands = 1:(length(RasterIO$bands)/length(Names))
-		read_stars(Names, RasterIO = RasterIO, ...)
-	}
-	ret = lapply(x, read_stars_multiple, RasterIO = rasterio, 
+		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
+	if (!is.null(bands <- d[["band"]])) # we may want to select here
+		rasterio$bands = bands$values %||% bands$from:bands$to
+
+	# do it:
+	ret = lapply(x, read_stars, RasterIO = rasterio, 
 		NA_value = attr(x, "NA_value") %||% NA_real_, ...)
-	setNames(do.call(c, ret), names(x))
+
+	if (length(ret) == 1)
+		st_redimension(ret[[1]])
+	else
+		do.call(c, lapply(ret, st_redimension))
 }
 
 check_xy_warn = function(call, dimensions) {
@@ -143,7 +140,7 @@ check_xy_warn = function(call, dimensions) {
 }
 
 #' @name st_as_stars
-#' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column)
+#' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.
 #' @param url character; URL of the stars endpoint where the data reside 
 #' @param env environment at the data endpoint to resolve objects in
 #' @export
