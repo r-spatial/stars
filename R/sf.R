@@ -117,7 +117,7 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 	nc = sapply(dfs, ncol)
 	df = do.call(cbind, dfs)
 	if (length(dim(x)) > 1) {
-		labels = expand_dimensions(st_dimensions(x))[[2]] # nocov start
+		labels = expand_dimensions(st_dimensions(x))[[2]]
 		if (length(labels) == ncol(df)) {
 			if (inherits(labels, "POSIXt") || inherits(labels, "Date"))
 				labels = as.character(labels)
