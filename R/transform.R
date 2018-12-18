@@ -31,7 +31,9 @@ transform_curvilinear = function(x, crs, ...) {
 	if(is.numeric(crs)){
 	  crs = st_crs(crs)  	
 	}
-	crs = crs$proj4string
+	if(inherits(crs, "crs")){
+	  crs = crs$proj4string	
+	}
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
