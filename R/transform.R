@@ -28,7 +28,9 @@ to_curvilinear = function(x) {
 }
 
 transform_curvilinear = function(x, crs, ...) {
-	crs = st_crs(crs)
+	if(is.numeric(crs)){
+	  crs = st_crs(crs)  	
+	}
 	crs = crs$proj4string
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
