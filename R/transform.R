@@ -28,8 +28,8 @@ to_curvilinear = function(x) {
 }
 
 transform_curvilinear = function(x, crs, ...) {
-	if (inherits(crs, "crs"))
-		crs = crs$proj4string
+	crs = st_crs(crs)
+	crs = crs$proj4string
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
