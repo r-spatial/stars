@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > 
 > s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
 > if (s5p != "") {
@@ -108,4 +108,4 @@ Warning messages:
 > 
 > proc.time()
    user  system elapsed 
-  8.305   0.159   8.456 
+  7.280   0.107   7.379 

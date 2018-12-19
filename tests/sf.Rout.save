@@ -203,4 +203,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.666   0.052   0.709 
+  0.743   0.043   0.779 

@@ -39,8 +39,8 @@
 	missing.i = missing(i)
 	# special case:
 	if (! missing.i && inherits(i, c("sf", "sfc", "bbox"))) {
-		if (has_raster(x))
-			return(st_crop(x, i, crop = crop, ...))
+		x = if (has_raster(x))
+			st_crop(x, i, crop = crop, ...)
 		else {
 			ix = which_sfc(x)
 			if (ix != 1) # put first
@@ -49,6 +49,7 @@
 			sel = which(lengths(st_intersects(sfc, i)) > 0)
 			x[, sel]
 		}
+		return(x)
 	}
 
 	d = st_dimensions(x)
@@ -67,6 +68,8 @@
 			do_select = TRUE
 		}
 	}
+
+	# subset arrays:
 	args[["drop"]] = FALSE
 	for (i in names(x))
 		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
@@ -85,8 +88,9 @@
 		for (i in seq_along(d)) { # one-at-a-time:
 			name_i = names(d)[i]
 			argi = args[i]
-			if (! (is_curvilinear(d) && name_i %in% xy))
-				argi = c(argi, values = ed[[i]])
+			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
+					length(argi) > 0 && is.numeric(argi[[1]]) && ! all(diff(eval(argi[[1]])) == 1))
+				d[[i]]$values = ed[[i]]
 			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
 		}
 	}

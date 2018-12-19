@@ -294,21 +294,22 @@ expand_dimensions.dimensions = function(x) {
 	if (!is.null(r)) {
 		if (r$dimensions[1] %in% names(lst)) { # x
 			x = dimensions[[ r$dimensions[1] ]]
-			lst[[ r$dimensions[1] ]] = if (! any(is.na(gt))) {
-					if (!is.null(x$values))
-						x$values
-					else xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-				} else
+			lst[[ r$dimensions[1] ]] = 
+				if (!is.null(x$values))
+					x$values
+				else if (! any(is.na(gt)))
+					xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
+				else
 					seq(x$from, x$to)
 		}
 		if (r$dimensions[2] %in% names(lst)) { # y
 			y = dimensions[[ r$dimensions[2] ]]
-			lst[[ r$dimensions[2] ]] = if (! any(is.na(gt))) {
-					if (!is.null(y$values))
-						y$values
-					else
-						xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-				} else
+			lst[[ r$dimensions[2] ]] = 
+				if (!is.null(y$values))
+					y$values
+				else if (! any(is.na(gt)))
+					xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
+				else
 					seq(y$to, y$from)
 		}
 	}
@@ -406,7 +407,11 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 
 #' @export
 `[.dimension` = function(x, i, ..., values = NULL) {
+	if (!missing(values))
+		stop("values argument no longer supported")
 	if (!missing(i)) {
+		if (!is.null(x$values) && !is.matrix(x$values))
+			x$values = x$values[i]
 		if (!is.na(x$from)) {
 			rang = x$from:x$to # valid range
 			if (all(diff(i) == 1)) {
@@ -419,14 +424,8 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 				x$delta = x$offset = NA
 				x$from = 1
 				x$to = length(i)
-				if (!is.matrix(x$values))
-					x$values = values[i]
 			}
-		} else {
-			stopifnot(!is.null(x$values))
-			if (!is.matrix(x$values))
-				x$values = x$values[i]
-		}
+		} 
 	}
 	x
 }

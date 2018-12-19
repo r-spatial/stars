@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = read_stars(geomatrix)
 > # can stars reproduce what gdal does, by default?
@@ -34,7 +34,7 @@ Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
 > (x2 = st_warp(x, y, use_gdal = TRUE))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
- file1afc58bafbd.tif 
+ file70924bc4fef.tif 
  Min.   : 74.0       
  1st Qu.:115.0       
  Median :123.0       
@@ -66,7 +66,7 @@ y    1 25 1144003 -5.22015 +proj=utm +zone=11 +datum...    NA   NULL [y]
 > (y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
- file1afc2bb83268.tif 
+ file70921abc588f.tif 
  Min.   : 74.0        
  1st Qu.:115.0        
  Median :123.0        
@@ -145,4 +145,4 @@ y    1 44 1144003    -3 +proj=utm +zone=11 +datum...    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.122   0.059   1.177 
+  0.853   0.073   0.918 

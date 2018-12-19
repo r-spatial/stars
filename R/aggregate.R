@@ -9,7 +9,8 @@
 #' @param dim integer; geometry dimension that will be aggregated
 #' @param join join function to find matches of x to by
 #' @export
-aggregate.stars = function(x, by, FUN, ..., drop = FALSE, dim = which_sfc(x)[1], join = st_intersects) {
+aggregate.stars = function(x, by, FUN, ..., drop = FALSE, 
+		dim = which_sfc(x)[1], join = st_intersects) {
 
 	dots = list(...)
 	if (!(inherits(by, "sf") || inherits(by, "sfc"))) 

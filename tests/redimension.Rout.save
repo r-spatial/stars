@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.6.2, GDAL 2.2.3, PROJ 4.9.3
+Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > r = read_stars(list(a = c(tif,tif), b = c(tif, tif)), proxy = TRUE)
 > (xx = st_redimension(r, along = list(foo = 1:4)))
@@ -146,4 +146,4 @@ new_dim L7_ETMs.tif, ..., L7_ETMs.tif.7
 > 
 > proc.time()
    user  system elapsed 
-  2.765   0.155   2.915 
+  2.417   0.143   2.553 
