@@ -20,7 +20,7 @@ setAs("stars", "Spatial", function(from) {
 		cellcentre.offset = c(offset[1] + 0.5 * delta[1],
 			offset[2] + (cells.dim[2] - 0.5) * delta[2])
 		gt = sp::GridTopology(cellcentre.offset, abs(delta), cells.dim)
-		sp::SpatialGrid(gt, sp::CRS(d[[ 1 ]]$refsys))
+		sp::SpatialGrid(gt, sp::CRS(st_crs(d[[ 1 ]]$refsys)$proj4string))
 	} else {
 		if (!has_sfc(from))
 			stop("no feature dimension in stars object")
