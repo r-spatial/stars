@@ -1,5 +1,5 @@
 Package: stars
-Title: Scalable, Spatiotemporal Tidy Arrays
+Title: Scalable, Spatiotemporal Tidy Arrays; Raster and Vector Datacubes
 Version: 0.2-1
 Date: 2018-11-24
 Authors@R: 

@@ -5,6 +5,9 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 plot(r)
 dim(r)
 r[,,,2:3]
+r+r
+st_as_stars(sin(r), downsample = 2)
+aperm(r, c(3,2,1))
 plot(r)
 (xx = c(r,r))
 st_redimension(xx)

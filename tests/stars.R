@@ -87,3 +87,22 @@ if (f != "") {
 }
 
 st_dimensions(list(matrix(1, 4,4))) # st_dimensions.default
+
+if (require("starsdata")) {
+  # curvilinear:
+  s5p = system.file(
+      "sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc",
+      package = "starsdata")
+  print(s5p)
+  lat_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/latitude")
+  lon_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/longitude")
+  nit_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column")
+  lat = read_stars(lat_ds)
+  lon = read_stars(lon_ds)
+  nit = read_stars(nit_ds)
+  nit[[1]][nit[[1]] > 9e+36] = NA
+  
+  ll = setNames(c(lon, lat), c("x", "y"))
+  nit.c = st_as_stars(nit, curvilinear = ll)
+  print(nit.c)
+}

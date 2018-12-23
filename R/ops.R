@@ -51,7 +51,7 @@ Math.stars = function(x, ...) {
 #' @export
 Ops.stars_proxy <- function(e1, e2) {
 	if (!inherits(e1, "stars_proxy"))
-		stop("first argument in expression needs to be the stars_proxy object") # FIXME: needed??
+		stop("first argument in expression needs to be the stars_proxy object") # FIXME: needed?? #nocov
 	collect(e1, match.call(), .Generic, "e1")
 }
 

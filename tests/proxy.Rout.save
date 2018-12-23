@@ -46,6 +46,49 @@ call list:
 [[1]]
 x[, , , 2:3]
 
+> r+r
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+e1 + r
+
+> st_as_stars(sin(r), downsample = 2)
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif      
+ Min.   :-0.99999  
+ 1st Qu.:-0.67677  
+ Median : 0.03540  
+ Mean   : 0.01865  
+ 3rd Qu.: 0.68326  
+ Max.   : 0.99991  
+dimension(s):
+     from  to  offset    delta                       refsys point values    
+x       1 116  288776  85.7457 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 117 9120761 -85.7436 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA       NA                           NA    NA   NULL    
+> aperm(r, c(3,2,1))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+aperm(a = a, perm = c(3, 2, 1))
+
 > plot(r)
 > (xx = c(r,r))
 stars_proxy object with 2 attributes in files:
@@ -359,4 +402,4 @@ times    1    2 1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.414   0.596   5.005 
+  4.192   0.727   4.913 

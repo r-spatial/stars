@@ -145,7 +145,7 @@ check_xy_warn = function(call, dimensions) {
 #' @param env environment at the data endpoint to resolve objects in
 #' @export
 st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), env = parent.frame()) {
-	if (! is.null(url)) { # execute/get remotely:
+	if (! is.null(url)) { # execute/get remotely: # nocov start
 		# if existing, convert call_list to character:
 		attr(.x, "call_list") = lapply(attr(.x, "call_list"), deparse)
 		# push the object to url, then st_as_stars() it there:
@@ -154,7 +154,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", env = data)") # evaluate in "data" first
 		ret = get_data_url(url, expr)
 		put_data_url(url, tempnam, NULL) # remove the temporary object
-		ret
+		ret # nocov end
 	} else {
 		cl = attr(.x, "call_list")
 		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
@@ -287,6 +287,7 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
 	collect(X, match.call(), "st_apply", "X")
 }
 
+#nocov start
 get_data_url = function(url, expr = NULL) {
 	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
 		stop("package httr required, please install it first") # nocov
@@ -314,3 +315,4 @@ put_data_url = function(url, name, value) {
     value = jsonlite::toJSON(jsonlite::base64_enc(serialize(value, NULL)))
     httr::PUT(url, body = list(name = name, value = value), encode = "json")
 }
+#nocov end

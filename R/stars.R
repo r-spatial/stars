@@ -210,7 +210,7 @@ as.vector_stars = function(x) {
 #' @export
 print.stars = function(x, ..., n = 1e5) {
 	add_units = function(x) {
-		f = function(obj) if (inherits(obj, "units")) paste0("[", as.character(units(obj)), "]") else ""
+		f = function(obj) if (inherits(obj, "units")) paste0("[", enc2utf8(as.character(units(obj))), "]") else ""
 		paste(names(x), sapply(x, f))
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
