@@ -151,21 +151,21 @@ call list:
 [[1]]
 st_apply(X = X, MARGIN = 1:2, FUN = max)
 
-> (yy = st_as_stars(y))
+> (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   : 55.00  
- 1st Qu.: 85.00  
- Median : 96.00  
- Mean   : 99.36  
- 3rd Qu.:113.00  
- Max.   :255.00  
+  L7_ETMs.tif   
+ Min.   : 56.0  
+ 1st Qu.: 85.0  
+ Median : 96.0  
+ Mean   : 98.5  
+ 3rd Qu.:111.0  
+ Max.   :255.0  
 dimension(s):
-  from  to  offset delta                       refsys point values    
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
-> (y = adrop(st_apply(r, 1:2, max)))
+  from  to  offset   delta                       refsys point values    
+x    1 174  288776 57.1638 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 176 9120761     -57 +proj=utm +zone=25 +south... FALSE   NULL [y]
+> (y = adrop(st_apply(r, c("x", "y"), max)))
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
 [1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
@@ -177,26 +177,61 @@ y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 call list:
 [[1]]
-st_apply(X = X, MARGIN = 1:2, FUN = max)
+st_apply(X = X, MARGIN = c("x", "y"), FUN = max)
 
 [[2]]
 adrop(x = x)
 
-> (yy = st_as_stars(y))
+> (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   : 55.00  
- 1st Qu.: 85.00  
- Median : 96.00  
- Mean   : 99.36  
- 3rd Qu.:113.00  
- Max.   :255.00  
+  L7_ETMs.tif   
+ Min.   : 56.0  
+ 1st Qu.: 85.0  
+ Median : 96.0  
+ Mean   : 98.5  
+ 3rd Qu.:111.0  
+ Max.   :255.0  
 dimension(s):
-  from  to  offset delta                       refsys point values    
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+  from  to  offset   delta                       refsys point values    
+x    1 174  288776 57.1638 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 176 9120761     -57 +proj=utm +zone=25 +south... FALSE   NULL [y]
 > plot(yy)
+> (y = adrop(st_apply(r, c("x", "band"), max)))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call list:
+[[1]]
+st_apply(X = X, MARGIN = c("x", "band"), FUN = max)
+
+[[2]]
+adrop(x = x)
+
+> (yy = st_as_stars(y, downsample = 1))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   : 71.0  
+ 1st Qu.:102.8  
+ Median :119.0  
+ Mean   :123.2  
+ 3rd Qu.:139.0  
+ Max.   :255.0  
+dimension(s):
+     from  to offset   delta                       refsys point values
+x       1 174 288776 57.1638 +proj=utm +zone=25 +south... FALSE   NULL
+band    1   6     NA      NA                           NA    NA   NULL
+Warning message:
+In FUN(X[[i]], ...) :
+  st_apply on x/y dimensions applied to downsampled image(s)
+> rm(yy)
 > 
 > (xx = c(r,r))
 stars_proxy object with 2 attributes in files:
@@ -402,4 +437,4 @@ times    1    2 1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.192   0.727   4.913 
+  3.473   0.531   4.002 
