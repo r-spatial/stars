@@ -23,9 +23,7 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		if (!is.null(names(.x)))
 			names(.x) = make.names(names(.x), unique = TRUE)
 	}
-	if (is.null(dimensions))
-		dimensions = create_dimensions(dim(.x[[1]]))
-	st_stars(.x, dimensions)
+	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
 }
 
 st_stars = function(x, dimensions) {
