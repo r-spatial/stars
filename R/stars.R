@@ -27,10 +27,11 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		if (!is.null(dimensions)) {
 			dx = dim(.x[[1]])
 			dd = dim(dimensions)
-			if (any(dx < dd)) {
-				for (i in seq_along(dim(dimensions)))
-					if (is.null(dimensions[[i]]$values) && dx[i] < dd[i])
-						dimensions[[i]]$to = dimensions[[i]]$to - 1
+			for (i in seq_along(dim(dimensions))) {
+				# create_dimension was called with $values one longer than corresponding array dim,
+				# AND regularly spaced, meaning offset/delta have replaced $values:
+				if (is.null(dimensions[[i]]$values) && dx[i] < dd[i])
+					dimensions[[i]]$to = dimensions[[i]]$to - 1
 			}
 		}
 	}
@@ -116,7 +117,7 @@ st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
 
-## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's center; 
+## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 
 xy_from_colrow = function(x, geotransform, inverse = FALSE) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
 # 0-based indices:

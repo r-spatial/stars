@@ -14,7 +14,8 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{array}(.x, ...)
 
-\method{st_dimensions}{default}(.x, ..., .raster = rep(NA_character_, 2))
+\method{st_dimensions}{default}(.x, ..., .raster = rep(NA_character_, 2),
+  cell_midpoints = FALSE)
 
 st_set_dimensions(.x, which, values, names)
 }
@@ -24,6 +25,8 @@ st_set_dimensions(.x, which, values, names)
 \item{...}{further arguments}
 
 \item{.raster}{length 2 character array with names (if any) of the raster dimensions}
+
+\item{cell_midpoints}{logical; if \code{TRUE} AND the dimension values are strictly regular, the values are interpreted as the cell midpoint values rather than the cell offset values when calculating offset (i.e., the half-cell-size correction is applied); can have a value for each dimension, or else is recycled}
 
 \item{which}{integer which dimension to change}
 

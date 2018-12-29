@@ -36,11 +36,12 @@ st_dimensions.array = function(.x, ...) {
 #' @export
 #' @name st_dimensions
 #' @param .raster length 2 character array with names (if any) of the raster dimensions
-st_dimensions.default = function(.x, ..., .raster = rep(NA_character_,2)) {
+#' @param cell_midpoints logical; if \code{TRUE} AND the dimension values are strictly regular, the values are interpreted as the cell midpoint values rather than the cell offset values when calculating offset (i.e., the half-cell-size correction is applied); can have a value for each dimension, or else is recycled
+st_dimensions.default = function(.x, ..., .raster = rep(NA_character_,2), cell_midpoints = FALSE) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	create_dimensions(lapply(d, function(y) create_dimension(values = y)),
+	create_dimensions(mapply(create_dimension, values = d, is_raster = cell_midpoints, SIMPLIFY = FALSE),
 		raster = get_raster(dimensions = .raster))
 }
 
