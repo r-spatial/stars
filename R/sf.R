@@ -90,6 +90,7 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), 
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]])) { 
 
+	crs = st_crs(x)
 	if (merge) {
 		mask = if(na.rm) {
 				mask = x[1]
@@ -102,7 +103,7 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels")))
 			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
-		return(ret)
+		return(st_set_crs(ret, crs))
 	}
 
 	if (has_raster(x))
@@ -128,7 +129,7 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		}
 	} else
 		names(df) = names(x)
-	st_sf(df, geometry = sfc)
+	st_sf(df, geometry = sfc, crs = crs)
 }
 
 

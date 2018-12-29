@@ -16,12 +16,23 @@ st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 #' @param dimensions object of class dimensions
 #' @export
 st_as_stars.list = function(.x, ..., dimensions = NULL) {
-	if (length(.x) > 1) {
+	if (length(.x)) {
 		for (i in seq_along(.x)[-1])
 			if (!identical(dim(.x[[1]]), dim(.x[[i]])))
 				stop("dim attributes not identical")
 		if (!is.null(names(.x)))
 			names(.x) = make.names(names(.x), unique = TRUE)
+
+		# check dimensions, if set:
+		if (!is.null(dimensions)) {
+			dx = dim(.x[[1]])
+			dd = dim(dimensions)
+			if (any(dx < dd)) {
+				for (i in seq_along(dim(dimensions)))
+					if (is.null(dimensions[[i]]$values) && dx[i] < dd[i])
+						dimensions[[i]]$to = dimensions[[i]]$to - 1
+			}
+		}
 	}
 	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
 }
