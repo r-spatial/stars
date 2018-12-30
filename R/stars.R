@@ -517,3 +517,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 		}
 	}
 }
+
+#' @export
+"$<-.stars" = function(x, i, value) {
+	if (is.null(dim(value)))
+		dim(value) = dim(x)
+	NextMethod()
+}
