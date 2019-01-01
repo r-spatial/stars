@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -306,7 +306,7 @@ ignoring unrecognized unit: percentage
 > merge(split(x, "band"))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                 
+       X         
  Min.   :  1.00  
  1st Qu.: 54.00  
  Median : 69.00  
@@ -517,7 +517,7 @@ X1    1  1     NA    NA     NA    NA
                                            values
 X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
-> if (require("starsdata")) {
+> if (FALSE && require("starsdata")) {
 +   # curvilinear:
 +   s5p = system.file(
 +       "sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc",
@@ -534,35 +534,16 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 +   ll = setNames(c(lon, lat), c("x", "y"))
 +   nit.c = st_as_stars(nit, curvilinear = ll)
 +   print(nit.c)
++ 
++   s5p = system.file(
++       "sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc",
++       package = "starsdata")
++   nit.c2 = read_stars(s5p, 
++   	sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
++     curvilinear = c("//PRODUCT/latitude", "//PRODUCT/longitude"))
++   print(all.equal(nit.c, nit.c2))
 + }
-Loading required package: starsdata
-[1] "/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
-stars object with 2 dimensions and 1 attribute
-attribute(s):
- nitrogendioxide_summed_total_column 
- Min.   :0e+00                       
- 1st Qu.:1e-04                       
- Median :1e-04                       
- Mean   :1e-04                       
- 3rd Qu.:1e-04                       
- Max.   :5e-04                       
- NA's   :330                         
-dimension(s):
-  from  to offset delta                       refsys point
-x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
-                            values    
-x [450x278] -5.81066, ..., 30.9468 [x]
-y  [450x278] 28.3605, ..., 51.4686 [y]
-curvilinear grid
-Warning messages:
-1: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
-2: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
-3: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
 > 
 > proc.time()
    user  system elapsed 
-  9.222   0.607   9.835 
+  8.985   0.629   9.607 
