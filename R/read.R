@@ -145,8 +145,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				create_dimensions_from_gdal_meta(dim(data), meta_data))
 		
 		if (length(curvilinear) == 2) {
-			lon = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[1])
-			lat = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[2])
+			lon = paste0(meta_data$driver[1], ":", x, ":", curvilinear[1])
+			lat = paste0(meta_data$driver[1], ":", x, ":", curvilinear[2])
 			st_as_stars(ret, curvilinear = list(x = read_stars(lon, RasterIO = RasterIO)[[1]], 
 				y = read_stars(lat, RasterIO = RasterIO)[[1]]), ...)
 		} else

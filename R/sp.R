@@ -26,7 +26,7 @@ setAs("stars", "Spatial", function(from) {
 			stop("no feature dimension in stars object")
 		as(st_dimensions(from)[[1]]$values, "Spatial")
 	}
-	sp::addAttrToGeom(geom, as.data.frame(lapply(from, as.vector_stars)), match.ID = FALSE)
+	sp::addAttrToGeom(geom, as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
 })
 
 #' @export
@@ -34,8 +34,6 @@ st_as_stars.Spatial = function(.x, ...) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") # nocov
 	if (sp::gridded(.x)) {
-    	if (!requireNamespace("raster", quietly = TRUE))
-        	stop("package raster required, please install it first") # nocov
 		sp::fullgrid(.x) = TRUE
 		gt = sp::gridparameters(.x)
 		# st_as_stars(raster::stack(.x)) --- we can do better
@@ -47,13 +45,7 @@ st_as_stars.Spatial = function(.x, ...) {
 			offset = gt$cellcentre.offset[2] + (gt$cells.dim[2] - 0.5) * gt$cellsize[1], 
 			delta = -gt$cellsize[2], refsys = st_crs(sp::proj4string(.x))$proj4string)
 		d = create_dimensions(list(x = x, y = y), raster = get_raster(dimensions = c("x", "y")))
-		array_stars = function(x, dim) { 
-			if (is.factor(x))
-				structure(array(as.numeric(x), dim), levels = attr(x, "levels")) 
-			else
-				array(x, dim)
-		}
-		lst = lapply(.x@data, array_stars, gt$cells.dim)
+		lst = lapply(.x@data, function(x, dims) structure(x, dim = dims), dims = dim(d))
 		st_stars(lst, d)
 	} else
 		st_as_stars(st_as_sf(.x))

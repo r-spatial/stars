@@ -35,7 +35,7 @@ st_as_stars.STFDF = function(.x, ...) {
 			create_dimensions(list(
 				sfc = create_dimension(values = st_as_sfc(.x@sp)), # FIXME: doesn't do SpatialPixels -> x/y
 				time = create_dimension(values = zoo::index(.x@time))))
-	vals = lapply(.x@data, function(y) { dim(y) = dim(d); y })  # FIXME: should take care of factors
+	vals = lapply(.x@data, function(y) { dim(y) = dim(d); y })
 	st_set_crs(st_as_stars(vals, dimensions = d), sp::proj4string(.x@sp))
 }
 
@@ -62,7 +62,7 @@ st_as_STFDF = function(x) {
 
 	st = suppressWarnings(spacetime::STF(geom, tm)) # would warn for SpatialGrid -> SpatialPixels
 
-	sp::addAttrToGeom(st, as.data.frame(lapply(x, as.vector_stars)), match.ID = FALSE)
+	sp::addAttrToGeom(st, as.data.frame(lapply(x, function(y) structure(y, dim = NULL))), match.ID = FALSE)
 }
 
 setAs("stars", "STFDF", function(from) { 

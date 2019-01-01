@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -177,35 +177,15 @@ Data attributes:
 [1] TRUE
 > 
 > all.equal(meuse, m2)
- [1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"                   
- [2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Modes: character, NULL > >"              
- [3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Lengths: 155, 0 > >"                     
- [4] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: target is character, current is NULL > >"
- [5] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"                 
- [6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
- [7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
- [8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
- [9] "Attributes: < Component \"data\": Component \"ffreq\": Attributes: < Names: 1 string mismatch > >"                              
-[10] "Attributes: < Component \"data\": Component \"ffreq\": Attributes: < Length mismatch: comparison on first 2 components > >"     
-[11] "Attributes: < Component \"data\": Component \"ffreq\": Attributes: < Component 2: Modes: character, numeric > >"                
-[12] "Attributes: < Component \"data\": Component \"ffreq\": Attributes: < Component 2: Lengths: 3, 1 > >"                            
-[13] "Attributes: < Component \"data\": Component \"ffreq\": Attributes: < Component 2: target is character, current is numeric > >"  
-[14] "Attributes: < Component \"data\": Component \"soil\": Attributes: < Names: 1 string mismatch > >"                               
-[15] "Attributes: < Component \"data\": Component \"soil\": Attributes: < Length mismatch: comparison on first 2 components > >"      
-[16] "Attributes: < Component \"data\": Component \"soil\": Attributes: < Component 2: Modes: character, numeric > >"                 
-[17] "Attributes: < Component \"data\": Component \"soil\": Attributes: < Component 2: Lengths: 3, 1 > >"                             
-[18] "Attributes: < Component \"data\": Component \"soil\": Attributes: < Component 2: target is character, current is numeric > >"   
-[19] "Attributes: < Component \"data\": Component \"lime\": Attributes: < Names: 1 string mismatch > >"                               
-[20] "Attributes: < Component \"data\": Component \"lime\": Attributes: < Length mismatch: comparison on first 2 components > >"      
-[21] "Attributes: < Component \"data\": Component \"lime\": Attributes: < Component 2: Modes: character, numeric > >"                 
-[22] "Attributes: < Component \"data\": Component \"lime\": Attributes: < Component 2: Lengths: 2, 1 > >"                             
-[23] "Attributes: < Component \"data\": Component \"lime\": Attributes: < Component 2: target is character, current is numeric > >"   
-[24] "Attributes: < Component \"data\": Component \"landuse\": Attributes: < Names: 1 string mismatch > >"                            
-[25] "Attributes: < Component \"data\": Component \"landuse\": Attributes: < Length mismatch: comparison on first 2 components > >"   
-[26] "Attributes: < Component \"data\": Component \"landuse\": Attributes: < Component 2: Modes: character, numeric > >"              
-[27] "Attributes: < Component \"data\": Component \"landuse\": Attributes: < Component 2: Lengths: 15, 1 > >"                         
-[28] "Attributes: < Component \"data\": Component \"landuse\": Attributes: < Component 2: target is character, current is numeric > >"
-[29] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
+[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"                   
+[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Modes: character, NULL > >"              
+[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Lengths: 155, 0 > >"                     
+[4] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: target is character, current is NULL > >"
+[5] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"                 
+[6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
+[7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
+[8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
+[9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
 > all.equal(meuse.grid, gr2)
 [1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 1 string mismatch > >"       
 [2] "Attributes: < Component \"grid\": Attributes: < Component \"cellcentre.offset\": Names: 1 string mismatch > >"    
@@ -215,4 +195,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  1.347   0.089   1.427 
+  1.316   0.071   1.377 

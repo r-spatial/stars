@@ -67,7 +67,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 		}
 		if (length(dims) == 2 || dims[3] == 1 || !is.null(dots$rgb)) { ## ONE IMAGE:
 			# set up key region
-			values = as.vector_stars(x[[1]])
+			values = structure(x[[1]], dim = NULL) # array -> vector
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
 					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
 					length(col) > 1 && is.null(dots$rgb) && !is_curvilinear(x)) { # plot key?
@@ -125,7 +125,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:
 				plot.new()
 			if (draw.key) {
-				values = as.vector_stars(x[[1]])
+				values = structure(x[[1]], dim = NULL)
 				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = lt$key.pos,
 						key.width = key.width, key.length = key.length, axes = axes,...)
@@ -151,7 +151,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
-		values = as.numeric(as.vector(x[[1]])[seq(1, pdx, length.out = min(pdx, 10000))])
+		values = as.numeric(structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))])
 		if (isTRUE(logz))
 			values = log10(values)
 		n.unq = length(unique(na.omit(values)))

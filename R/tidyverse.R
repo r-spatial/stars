@@ -1,11 +1,10 @@
 # convert arrays to data.frame, in long form
 to_df = function(x) {
-	as.data.frame(lapply(x, c))
+	as.data.frame(lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 set_dim = function(x, d) {
-	f = function(y, d) { dim(y) = d; y }
-	lapply(x, f, d = d)
+	lapply(x, function(y, dims) structure(y, dim = dims), dims = d)
 }
 
 get_dims = function(d_cube, d_stars) {
@@ -36,18 +35,14 @@ filter.stars <- function(.data, ...) {
 
 #' @name dplyr
 mutate.stars <- function(.data, ...) {
-	d = st_dimensions(.data)
-	dim_orig = dim(.data)
 	ret = dplyr::mutate(to_df(.data), ...)
-	st_as_stars(set_dim(ret, dim_orig), dimensions = d)
+	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
 }
 
 #' @name dplyr
 select.stars <- function(.data, ...) {
-	d = st_dimensions(.data)
-	dim_orig = dim(.data)
     ret <- dplyr::select(to_df(.data), ...)
-	st_as_stars(set_dim(ret, dim_orig), dimensions = d)
+	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
 }
 
 #' @param var see \link[dplyr]{pull}
