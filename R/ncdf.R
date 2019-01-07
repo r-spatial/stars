@@ -1,4 +1,4 @@
-#' @importFrom ncdf4 nc_open ncvar_get
+#' @importFrom RNetCDF open.nc var.get.nc close.nc
 #' @importFrom ncmeta nc_meta
 #' @importFrom stats setNames
 NULL
@@ -12,13 +12,19 @@ NULL
 
 #' read ncdf file into stars object
 #' 
-#' Read data from a file using the NetCDF library directly. 
+#' Read data from a file using the RNetCDF library directly. 
 #' 
-#' The following logic is applied to coordinate axes. If any coordinate axes have 
-#' regularly spaced coordinates they are reduced to the
+#' The following logic is applied to coordinate variables. If any dimensions have 
+#' regularly spaced coordinate variables they are reduced to the
 #' offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
-#' are stored.   If the data has two or more dimensions and the first two are regular
+#' are stored and used to define an irregular rectilinear grid. 
+#' 
+#' If the data has two or more dimensions and the first two are regular
 #' they are nominated as the 'raster' for plotting. 
+#' 
+#' If a grid_mapping is found in the NetCDF file, an attempt to convert it to a
+#' projection is made. If no grid_mapping is found, WGS84 lat/lon is assumped.
+#' 
 #' @examples 
 #' f <- system.file("nc/reduced.nc", package = "stars")
 #' read_ncdf(f)
@@ -37,7 +43,7 @@ NULL
 #' yet (see `ncmeta::nc_grids(.x)` for the current assumption). 
 #' 
 #' \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-#' and be valid index using `ncdf4::ncvar_get` convention (start is 1-based). 
+#' and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). 
 #' @export
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
   meta = ncmeta::nc_meta(.x)
@@ -68,29 +74,35 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
   }
   
-  nc = ncdf4::nc_open(.x, suppress_dimvals = TRUE)
-  on.exit(ncdf4::nc_close(nc), add = TRUE)
-  out = lapply(var, function(.v) ncdf4::ncvar_get(nc, 
-                                                   varid = .v,
-                                                   start = ncsub[, "start", drop = TRUE], 
-                                                   count = ncsub[, "count", drop = TRUE], 
-                                                  collapse_degen = FALSE))
+  nc = RNetCDF::open.nc(.x)
+  on.exit(RNetCDF::close.nc(nc), add = TRUE)
+  out = lapply(var, function(.v) RNetCDF::var.get.nc(nc, 
+                                                     variable = .v,
+                                                     start = ncsub[, "start", drop = TRUE], 
+                                                     count = ncsub[, "count", drop = TRUE], 
+                                                     collapse = FALSE, 
+                                                     unpack = TRUE))
   out = setNames(out, var)
+  
+  coord_vars <- ncmeta::nc_coord_var(.x)
+  coord_vars <- coord_vars[coord_vars$variable %in% var, ]
+  
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
+  
   for (ic in seq_along(coords)) {
     if (!is.null(ncsub)) {
       subidx <- seq(ncsub[ic, "start"], length = ncsub[ic, "count"])
     } else {
       subidx <- seq_len(length(coords[[ic]]))
     }
-    ## create_dimvar means we can var_get it
-    if (nc$dim[[dims$name[ic]]]$create_dimvar) {
-      coords[[ic]] <- ncdf4::ncvar_get(nc, varid = dims$name[ic])[subidx]
-     
+    ## if there is a coordinate variable that matches the dimension name
+    if (dims$name[ic] %in% c(coord_vars$X, coord_vars$Y, coord_vars$Z, coord_vars$T)) {
+      coords[[ic]] <- RNetCDF::var.get.nc(nc, variable = dims$name[ic])[subidx] # could use start/count here too?
+      # otherwise coordinate variables are bound to variables and need to be handled differently.
     } else {
-      coords[[ic]] <- subidx##seq_len(dims$length[ic])
+      coords[[ic]] <- subidx
     }
   }
 
@@ -127,14 +139,30 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   ret = st_stars(out, dimensions)
   if (length(curvilinear) == 2) {
-    curvi_coords = lapply(curvilinear, function(.v) ncdf4::ncvar_get(nc, 
-                                                    varid = .v,
+    curvi_coords = lapply(curvilinear, function(.v) RNetCDF::var.get.nc(nc, 
+                                                    variable = .v,
                                                     ## note there subtle subsetting into x,y
                                                     start = ncsub[1:2, "start", drop = TRUE], 
                                                     count = ncsub[1:2, "count", drop = TRUE], 
-                                                    collapse_degen = FALSE))
+                                                    collapse = FALSE, unpack = TRUE))
     names(curvi_coords) <- c("x", "y")
     ret = st_as_stars(ret, curvilinear = curvi_coords)
   }
+  
+  try({
+    gm_atts <- ncmeta::nc_grid_mapping_atts(.x)
+    
+    if(length(unique(gm_atts$name[gm_atts$name == "grid_mapping_name"])) > 1) {
+      warning("Multiple grid mappings found for this NetCDF source. Not setting CRS.")
+    }
+    
+    if("data_variable" %in% names(gm_atts)) {
+      gm_atts <- gm_atts[gm_atts$data_variable == gm_atts$data_variable[1], 
+                         c("name", "value")]
+    }
+    
+    sf::st_crs(ret) <- sf::st_crs(ncmeta::nc_gm_to_prj(gm_atts))
+  })
+  
   ret
 }

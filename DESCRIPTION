@@ -33,7 +33,7 @@ Imports:
     methods,
 	parallel,
     classInt (>= 0.2-2),
-    ncdf4,
+    RNetCDF,
     ncmeta (>= 0.0.3),
     rlang,
     units

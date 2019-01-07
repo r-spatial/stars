@@ -19,14 +19,19 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 }
 \description{
-Read data from a file using the NetCDF library directly.
+Read data from a file using the RNetCDF library directly.
 }
 \details{
-The following logic is applied to coordinate axes. If any coordinate axes have 
-regularly spaced coordinates they are reduced to the
+The following logic is applied to coordinate variables. If any dimensions have 
+regularly spaced coordinate variables they are reduced to the
 offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
-are stored.   If the data has two or more dimensions and the first two are regular
+are stored and used to define an irregular rectilinear grid.
+
+If the data has two or more dimensions and the first two are regular
 they are nominated as the 'raster' for plotting.
+
+If a grid_mapping is found in the NetCDF file, an attempt to convert it to a
+projection is made. If no grid_mapping is found, WGS84 lat/lon is assumped.
 
 
 If `var` is not set the first set of variables on a shared grid is used.
@@ -34,7 +39,7 @@ It's supposed to be the grid with the most dimensions, but there's no control
 yet (see `ncmeta::nc_grids(.x)` for the current assumption). 
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-and be valid index using `ncdf4::ncvar_get` convention (start is 1-based).
+and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based).
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
