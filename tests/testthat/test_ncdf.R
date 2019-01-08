@@ -38,3 +38,15 @@ test_that("crs from grid_mapping", {
   
   expect_equal(sf::st_crs(nc), sf::st_crs("+proj=lcc +lat_1=25 +lat_2=60 +lat_0=42.5 +lon_0=-100 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"))
 })
+
+test_that("normal bcsd", {
+  expect_warning(nc <- read_ncdf(system.file("nc/bcsd_obs_1999.nc", package = "stars")),
+                 paste("No variables with a grid mapping found.\n",
+                       "Defaulting to WGS84 Lon/Lat"))
+})
+
+test_that("broken bcsd", {
+  expect_warning(nc <- read_ncdf(system.file("nc/bcsd_obs_1999_borked.nc", package = "stars")),
+                 "Found non-canonical axis order in NetCDF unexpected bahavior may result.")
+})
+

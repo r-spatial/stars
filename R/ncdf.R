@@ -67,8 +67,24 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dims_index <- unique(lapply(var, function(.v) meta$axis$dimension[meta$axis$variable == .v]))
   if(length(dims_index) > 1) stop("Variables with different axis orders found, select one to continue.") #nocov
   
-  dims_index <- dims_index[[1]]
+  dims_index <- dims_index[[1]] # dims_index is in the axis order used by all data variables
   dims = meta$dimension[match(dims_index, meta$dimension$id), ]
+  
+  coord_vars <- ncmeta::nc_coord_var(.x) # coord_vars as determined by metadata/attributes
+  cds <- coord_vars[!coord_vars$variable %in% var, ] # only coordinate variables
+  coord_vars <- coord_vars[coord_vars$variable %in% var, ] # only data variables
+  
+  XYZT_dim <- suppressWarnings(sapply(c("X", "Y", "Z", "T"), 
+                                      function(axis) 
+                                        meta$axis[meta$axis$variable == 
+                                                    cds[[axis]][!is.na(cds[[axis]])], ]$dimension))
+  XYZT_dim <- XYZT_dim[lengths(XYZT_dim) > 0]
+  
+  reorder_var <- c()
+  if(all(!dims$id == as.numeric(XYZT_dim))) {
+    warning("Found non-canonical axis order in NetCDF unexpected bahavior may result.")
+    reorder_var <- match(dims$id, as.numeric(XYZT_dim))
+  }
   
   ## need to validate existing ncsub here
   if (is.null(ncsub)) {
@@ -90,11 +106,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                                      unpack = TRUE))
   out = setNames(out, var)
   
-  coord_vars <- ncmeta::nc_coord_var(.x)
-  coord_vars <- coord_vars[coord_vars$variable %in% var, ]
-  
-  ## cannot assume we have coord dims
-  ## - so create them as 1:length if needed
+  ## cannot assume we have 1d coord variables
+  ## - so create them as 1:length(dim) if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
   
   for (ic in seq_along(coords)) {
