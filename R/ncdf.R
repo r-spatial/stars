@@ -53,15 +53,21 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (any(nas)) meta$axis$dimension[nas] <- -1
   if (is.null(var)) {
     ix <- 1
-    if (meta$grid$grid[ix] == "S") {
+    if (meta$grid$grid[ix] == "S") { # this is good
       ix <- which(!meta$grid$grid == "S")[1L]
       
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported")
     }
+    # This is sketchy. Should use coordinate variable exclusion.
+    # Could create a "get_data_vars() function.
     var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
   }
-  ## 
-  dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
+  
+  # This ensures that dims and ncsub are valid for all variables we are looking at.
+  dims_index <- unique(lapply(var, function(.v) meta$axis$dimension[meta$axis$variable == .v]))
+  if(length(dims_index) > 1) stop("Variables with different axis orders found, select one to continue.") #nocov
+  
+  dims_index <- dims_index[[1]]
   dims = meta$dimension[match(dims_index, meta$dimension$id), ]
   
   ## need to validate existing ncsub here
