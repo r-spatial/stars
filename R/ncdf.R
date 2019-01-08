@@ -49,35 +49,35 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   meta = ncmeta::nc_meta(.x)
   # Don't want scalar
   # todo handle choice of grid
+  
+  coord_vars <- ncmeta::nc_coord_var(.x) # coord_vars as determined by metadata/attributes
+  cds <- unique(as.vector(unlist(coord_vars[, c("X", "Y", "Z", "T")])))
+  cds <- cds[!is.na(cds)]
+  
+  if (is.null(var)) {
+    var <- meta$variable$name[!meta$variable$name %in% cds]
+    if(any(meta$grid$grid == "S")) var <- var[var != meta$grid$variable[meta$grid$grid == "S"]]
+  }
+  
   nas <- is.na(meta$axis$dimension)
   if (any(nas)) meta$axis$dimension[nas] <- -1
-  if (is.null(var)) {
-    ix <- 1
-    if (meta$grid$grid[ix] == "S") { # this is good
-      ix <- which(!meta$grid$grid == "S")[1L]
-      
-      if (length(ix) < 1)  stop("only scalar variables found, not yet supported")
-    }
-    # This is sketchy. Should use coordinate variable exclusion.
-    # Could create a "get_data_vars() function.
-    var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
-  }
   
   # This ensures that dims and ncsub are valid for all variables we are looking at.
   dims_index <- unique(lapply(var, function(.v) meta$axis$dimension[meta$axis$variable == .v]))
+  dims_index <- dims_index[sapply(dims_index, function(x) all(x != -1))]
+  
   if(length(dims_index) > 1) stop("Variables with different axis orders found, select one to continue.") #nocov
   
   dims_index <- dims_index[[1]] # dims_index is in the axis order used by all data variables
   dims = meta$dimension[match(dims_index, meta$dimension$id), ]
   
-  coord_vars <- ncmeta::nc_coord_var(.x) # coord_vars as determined by metadata/attributes
-  cds <- coord_vars[!coord_vars$variable %in% var, ] # only coordinate variables
+  coord_var_axis <- coord_vars[!coord_vars$variable %in% var, ]
   coord_vars <- coord_vars[coord_vars$variable %in% var, ] # only data variables
   
   XYZT_dim <- suppressWarnings(sapply(c("X", "Y", "Z", "T"), 
                                       function(axis) 
                                         meta$axis[meta$axis$variable == 
-                                                    cds[[axis]][!is.na(cds[[axis]])], ]$dimension))
+                                                    coord_var_axis[[axis]][!is.na(coord_var_axis[[axis]])], ]$dimension))
   XYZT_dim <- XYZT_dim[lengths(XYZT_dim) > 0]
   
   reorder_var <- c()
