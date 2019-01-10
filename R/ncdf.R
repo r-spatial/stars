@@ -55,7 +55,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   cds <- cds[!is.na(cds)]
   
   if (is.null(var)) {
-    var <- meta$variable$name[!meta$variable$name %in% cds]
+    var <- meta$variable$name[!meta$variable$name %in% cds & 
+                                !meta$variable$name %in% coord_vars$bounds]
     if(any(meta$grid$grid == "S")) var <- var[var != meta$grid$variable[meta$grid$grid == "S"]]
   }
   
@@ -90,10 +91,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (is.null(ncsub)) {
     ncsub = cbind(start = 1, count = dims$length)
     rownames(ncsub) = dims$name
+    if(prod(ncsub[, "count"]) * length(var) > 1e+08) stop("very large data requested, are you sure?")
   } else {
     ## needs more attention
     if (nrow(dims) != nrow(ncsub)) stop("input ncsub doesn't match available dims") # nocov
-    if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
+    not_na <- !is.na(ncsub[, "count"])
+    if (any(ncsub[, "start"] < 1) || 
+        any((ncsub[, "count"][not_na] - 
+             ncsub[, "start"][not_na] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
   }
   
   nc = RNetCDF::open.nc(.x)
