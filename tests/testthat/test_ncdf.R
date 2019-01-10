@@ -24,12 +24,21 @@ test_that("variable subsetting", {
 })
 
 test_that("domain subsetting", {
-  expect_warning(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1))), 
+  expect_warning(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
+                                                  count = c(10, 12, 1, 1))), 
                    paste("No variables with a grid mapping found.\n",
                          "Defaulting to WGS84 Lon/Lat"))
   st_dim <- st_dimensions(nc)
   expect_equal(st_dim$lon$to - st_dim$lon$from, c("lon" = 9))
   expect_equal(st_dim$lat$to - st_dim$lat$from, c("lat" = 11))
+  
+  expect_warning(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
+                                                  count = c(NA, NA, 1, 1))), 
+                 paste("No variables with a grid mapping found.\n",
+                       "Defaulting to WGS84 Lon/Lat"))
+  st_dim <- st_dimensions(nc)
+  expect_equal(st_dim$lon$to - st_dim$lon$from, c("lon" = 179))
+  expect_equal(st_dim$lat$to - st_dim$lat$from, c("lat" = 89))
 })
 
 test_that("crs from grid_mapping", {

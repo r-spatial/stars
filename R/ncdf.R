@@ -10,9 +10,9 @@ NULL
 }
 
 
-#' read ncdf file into stars object
+#' Read NetCDF file into stars object
 #' 
-#' Read data from a file using the RNetCDF library directly. 
+#' Read data from a file or URL using the RNetCDF library directly. 
 #' 
 #' The following logic is applied to coordinate variables. If any dimensions have 
 #' regularly spaced coordinate variables they are reduced to the
@@ -35,12 +35,11 @@ NULL
 #' @param .x NetCDF file or source
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
-#' @param ncsub matrix of start, count columns 
+#' @param ncsub matrix of start, count columns. NA count gets all. Axis order must match that of the variable that will be requested.
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @details
-#' If `var` is not set the first set of variables on a shared grid is used.
-#' It's supposed to be the grid with the most dimensions, but there's no control
-#' yet (see `ncmeta::nc_grids(.x)` for the current assumption). 
+#' If `var` is not set, variables that are not coordinate variables are used.
+#' Data sources with non-coordinate variables that use different axes or axis orders are not supported.
 #' 
 #' \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
 #' and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). 
@@ -110,6 +109,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                                      collapse = FALSE, 
                                                      unpack = TRUE))
   out = setNames(out, var)
+  
+  # If any counts are NA to get all this sets them to true size.
+  # Given assumptions above, this must be true.
+  ncsub[, "count"] <- dim(out[[1]])
   
   ## cannot assume we have 1d coord variables
   ## - so create them as 1:length(dim) if needed

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ncdf.R
 \name{read_ncdf}
 \alias{read_ncdf}
-\title{read ncdf file into stars object}
+\title{Read NetCDF file into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
   curvilinear = character(0))
@@ -14,12 +14,12 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 
 \item{var}{variable name or names (they must be on matching grids)}
 
-\item{ncsub}{matrix of start, count columns}
+\item{ncsub}{matrix of start, count columns. NA count gets all. Axis order must match that of the variable that will be requested.}
 
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 }
 \description{
-Read data from a file using the RNetCDF library directly.
+Read data from a file or URL using the RNetCDF library directly.
 }
 \details{
 The following logic is applied to coordinate variables. If any dimensions have 
@@ -34,9 +34,8 @@ If a grid_mapping is found in the NetCDF file, an attempt to convert it to a
 projection is made. If no grid_mapping is found, WGS84 lat/lon is assumped.
 
 
-If `var` is not set the first set of variables on a shared grid is used.
-It's supposed to be the grid with the most dimensions, but there's no control
-yet (see `ncmeta::nc_grids(.x)` for the current assumption). 
+If `var` is not set, variables that are not coordinate variables are used.
+Data sources with non-coordinate variables that use different axes or axis orders are not supported.
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
 and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based).
