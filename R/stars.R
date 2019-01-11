@@ -202,18 +202,7 @@ st_coordinates.dimensions = function(x, ...) {
 
 #' @export
 as.data.frame.stars = function(x, ...) {
-	data.frame(st_coordinates(x), lapply(x, as.vector_stars))
-}
-
-as.vector_stars = function(x) {
-	l = attr(x, "levels")
-	if (!is.null(l)) {
-		if (is.factor(x))
-			x
-		else
-			structure(as.vector(x), class = "factor", levels = l)
-	} else
-		as.vector(x)
+	data.frame(st_coordinates(x), lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 
@@ -228,10 +217,10 @@ print.stars = function(x, ..., n = 1e5) {
 	cat("attribute(s)")
 	df = if (prod(dim(x)) > 10 * n) {
 		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
-		as.data.frame(lapply(x, function(y) as.vector_stars(y)[1:n]), optional = TRUE) # nocov
+		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
 	} else {
 		cat(":\n")
-		as.data.frame(lapply(x, as.vector_stars), optional = TRUE)
+		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
 	}
 	names(df) = add_units(x)
 	print(summary(df))
@@ -516,4 +505,11 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 			st_stars(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
 		}
 	}
+}
+
+#' @export
+"$<-.stars" = function(x, i, value) {
+	if (is.null(dim(value)))
+		dim(value) = dim(x)
+	NextMethod()
 }

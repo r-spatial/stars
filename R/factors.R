@@ -15,9 +15,7 @@
 #' cut(x[,,,1], c(0, 50, 100, 255))
 #' plot(cut(x[,,,1], c(0, 50, 100, 255)))
 cut.array = function(x, breaks, ...) { 
-	d = dim(x)
-	x = cut(as.vector(x), breaks, ...)
-	structure(array(as.integer(x), dim = d), levels = levels(x))
+	structure(cut(as.vector(x), breaks, ...), dim = dim(x))
 }
 
 #' @name cut_stars
@@ -32,6 +30,5 @@ cut.matrix = cut.array
 #' (x1_cut = cut(x1, breaks = c(0, 50, 100, Inf)))  # shows factor in summary
 #' plot(x1_cut[,,,c(3,6)]) # propagates through [ and plot
 cut.stars = function(x, breaks, ...) {
-	ret = lapply(x, cut, breaks = breaks, ...)
-	st_stars(ret, st_dimensions(x))
+	st_stars(lapply(x, cut, breaks = breaks, ...), st_dimensions(x))
 }

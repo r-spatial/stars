@@ -112,12 +112,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		data = if (proxy)
 				.x # names only
 			else
-				attr(data, "data") # extract data arrays
+				get_data_units(attr(data, "data")) # extract data array; sets units if present
 		if (meta_data$driver[1] == "netCDF")
-			meta_data = parse_netcdf_meta(meta_data, x)
-		meta_data = parse_gdal_meta(meta_data)
-		if (! proxy && !is.null(meta_data$units) && !is.na(meta_data$units)) # set units
+			meta_data = parse_netcdf_meta(meta_data, x) # sets all kind of units
+		if (! proxy && !is.null(meta_data$units) && !is.na(meta_data$units) 
+				&& !inherits(data, "units")) # set units
 			units(data) = try_as_units(meta_data$units)
+		meta_data = parse_gdal_meta(meta_data)
 
 		newdims = lengths(meta_data$dim_extra)
 		if (length(newdims) && !proxy)
@@ -145,11 +146,21 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				create_dimensions_from_gdal_meta(dim(data), meta_data))
 		
 		if (length(curvilinear) == 2) {
-			lon = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[1])
-			lat = paste0(meta_data$driver[1], ":\"", x, "\":", curvilinear[2])
+			lon = paste0(meta_data$driver[1], ":", x, ":", curvilinear[1])
+			lat = paste0(meta_data$driver[1], ":", x, ":", curvilinear[2])
 			st_as_stars(ret, curvilinear = list(x = read_stars(lon, RasterIO = RasterIO)[[1]], 
 				y = read_stars(lat, RasterIO = RasterIO)[[1]]), ...)
 		} else
 			ret
 	}
+}
+
+get_data_units = function(data) {
+	units = attr(data, "units")
+	if (!is.null(units) && nzchar(units))
+		units = try(units::as_units(units), silent = TRUE)
+	if (inherits(units, "units"))
+		units::set_units(structure(data, units = NULL), units, mode = "standard")
+	else
+		structure(data, units = NULL)
 }

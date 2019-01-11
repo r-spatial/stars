@@ -108,7 +108,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				if (regular_intervals(values)) {
 					offset = values[1]
 					delta = values[2] - values[1]
-					# shift half grid cell size if x or y!
+					# shift half grid cell size if x or y raster dim cell midpoints:
 					if (is_raster)
 						offset = offset - 0.5 * delta
 					values = NULL
