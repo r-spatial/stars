@@ -59,3 +59,12 @@ test_that("broken bcsd", {
                  "Found non-canonical axis order in NetCDF unexpected bahavior may result.")
 })
 
+test_that("euro cordex extra dimvars", {
+  f <- system.file("nc/EURO-CORDEX_81_DOMAIN000.nc", package = "stars")
+  
+  suppressWarnings(out <- read_ncdf(f))
+  
+  expect_equal(names(out), c("topo", "xlat", "xlon"))
+  
+  expect(sf::st_crs(out) == sf::st_crs("+proj=lcc +lat_1=30 +lat_2=65 +lat_0=48 +lon_0=9.75 +x_0=-6000 +y_0=-6000 +a=6371229 +b=6371229 +units=m +no_defs"))
+})

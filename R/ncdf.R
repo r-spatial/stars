@@ -50,12 +50,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # todo handle choice of grid
   
   coord_vars <- ncmeta::nc_coord_var(.x) # coord_vars as determined by metadata/attributes
-  cds <- unique(as.vector(unlist(coord_vars[, c("X", "Y", "Z", "T")])))
-  cds <- cds[!is.na(cds)]
+  
+  cds <- check_cds(coord_vars, meta) # eliminates 2d coord vars when 1d vars exist.
+  
+  coord_vars <- dplyr::filter(coord_vars,
+                              apply(coord_vars[, c("X", "Y", "Z", "T")], 1, 
+                                    function(x) any(x %in% cds$variable)))
   
   if (is.null(var)) {
-    var <- meta$variable$name[!meta$variable$name %in% cds & 
-                                !meta$variable$name %in% coord_vars$bounds]
+    var <- meta$variable$name[!meta$variable$name %in% cds$variable & 
+                                !meta$variable$name %in% coord_vars$bounds &
+                                meta$variable$ndims > 1]
     if(any(meta$grid$grid == "S")) var <- var[var != meta$grid$variable[meta$grid$grid == "S"]]
   }
   
@@ -192,4 +197,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   })
   
   ret
+}
+
+check_cds <- function(coord_vars, meta) {
+  cds <- unique(as.vector(unlist(coord_vars[, c("X", "Y", "Z", "T")])))
+  cds <- cds[!is.na(cds)]
+  cds <- tibble::tibble(variable = cds) %>%
+    dplyr::left_join(coord_vars, by = c("variable"))
+  if(sum(!is.na(cds$X)) > 1 | sum(!is.na(cds$Y)) > 1 | sum(!is.na(cds$Z)) > 1 | sum(!is.na(cds$T)) > 1)
+    cds <- dplyr::filter(cds, variable %in% X | 
+                           variable %in% Y | 
+                           variable %in% Z | 
+                           variable %in% T)
+  return(cds)
 }
