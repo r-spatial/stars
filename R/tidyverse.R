@@ -95,7 +95,8 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "mutate", "stars")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
-	register_s3_method("dplyr", "slice", "stars") # nocov end
+	register_s3_method("dplyr", "slice", "stars")
+	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 
 # from: https://github.com/tidyverse/hms/blob/master/R/zzz.R
