@@ -89,6 +89,35 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   eval(rlang::expr(.data[!!!indices]))
 }
 
+#' ggplot geom for stars objects
+#' 
+#' ggplot geom for stars objects
+#' @param mapping see \link[ggplot2]{geom_raster}
+#' @param data see \link[ggplot2]{geom_raster}
+#' @param ... see \link[ggplot2]{geom_raster}
+#' @name geom_stars
+#' @export
+geom_stars = function(mapping = NULL, data = NULL, ...) {
+
+    if (!requireNamespace("ggplot2", quietly = TRUE))
+        stop("package ggplot2 required, please install it first") # nocov
+
+	d = st_dimensions(data)
+	if (has_raster(d)) {
+		xy = attr(d, "raster")$dimensions
+		if (is.null(mapping))
+			mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
+				fill = !!rlang::sym(names(data)[1]))
+		if (is_regular(d))
+			ggplot2::geom_raster(mapping = mapping, data = as.data.frame(data), ...)
+		else # but will this also work for rotate/shear/curvilinear?
+			ggplot2::geom_tile(mapping = mapping, data = as.data.frame(data), ...)
+	} else if (has_sfc(d))
+		ggplot2::geom_sf(data = st_as_sf(d), ...)
+	else
+		stop("geom_stars only works for objects with raster or vector geometries")
+}
+
 register_all_s3_methods = function() {
 	register_s3_method("dplyr", "filter", "stars") # nocov start
 	register_s3_method("dplyr", "select", "stars")
