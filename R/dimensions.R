@@ -282,11 +282,11 @@ parse_gdal_meta = function(properties) {
 
 expand_dimensions = function(x, ...) UseMethod("expand_dimensions")
 
-expand_dimensions.stars = function(x) {
-	expand_dimensions(st_dimensions(x))
+expand_dimensions.stars = function(x, ...) {
+	expand_dimensions(st_dimensions(x), ...)
 }
 
-expand_dimensions.dimensions = function(x) {
+expand_dimensions.dimensions = function(x, ..., .max = FALSE) {
 	dimensions = x
 	r = attr(x, "raster")
 	gt = get_geotransform(x)
@@ -300,6 +300,8 @@ expand_dimensions.dimensions = function(x) {
 					x$values
 				else if (! any(is.na(gt)))
 					xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
+				else if (all(!is.na(c(x$offset, x$delta))))
+					seq(from = x$offset + (x$from - 1)*x$delta, by = x$delta, length.out = x$to - x$from + 1)
 				else
 					seq(x$from, x$to)
 		}
@@ -310,8 +312,18 @@ expand_dimensions.dimensions = function(x) {
 					y$values
 				else if (! any(is.na(gt)))
 					xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
+				else if (all(!is.na(c(y$offset, y$delta))))
+					seq(from = y$offset + (y$from - 1)*y$delta, by = y$delta, length.out = y$to - y$from + 1)
 				else
 					seq(y$to, y$from)
+		}
+		if (.max) {
+			w = match(r$dimensions, names(lst))
+			names(lst)[w] = paste0(r$dimensions, "_max")
+			get_max = function(x) { dx = diff(tail(x, 2)); c(x[-1], tail(x,1)+dx) }
+			lst[[ w[1] ]] = get_max( lst[[ w[1] ]] )
+			lst[[ w[2] ]] = get_max( lst[[ w[2] ]] )
+			r$dimensions = names(lst)[w] # to jump over block below:
 		}
 	}
 	for (nm in setdiff(names(lst), r$dimensions)) {

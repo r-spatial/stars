@@ -65,8 +65,13 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 				st_dimensions(args[[1]])
 			else
 				do.call(st_dimensions, lapply(dim(args[[1]]), function(x) seq_len(x) - 1))
-		} else
-			args[[ which(isdim)[1] ]]
+		} else {
+			d = args[[ which(isdim)[1] ]]
+			if (is.null(raster))
+				raster = attr(d, "raster")
+			d
+		}
+
 	if (is.null(raster) && !has_sfc(dimensions)) {
 		w = which(sapply(dimensions, function(x) is.null(x$values)))
 		raster = get_raster(dimensions = names(dimensions)[w[1:2]])
@@ -182,27 +187,33 @@ has_sfc = function(x) {
 	length(which_sfc(x)) > 0
 }
 
-
 #' @export
-st_coordinates.stars = function(x, ...) {
+st_coordinates.stars = function(x, ..., .max = FALSE) {
 	if (has_rotate_or_shear(x)) {
 		d = dim(x)
 		xy = attr(st_dimensions(x), "raster")$dimensions
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
 		as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-			get_geotransform(x)))
-	} else
-		do.call(expand.grid, expand_dimensions(x))
+			get_geotransform(x))) # givesl cell centers
+	} else {
+		ret = do.call(expand.grid, expand_dimensions(x)) # cell offsets
+		if (.max) 
+			cbind(ret, do.call(expand.grid, expand_dimensions(x, .max = TRUE)))
+		else
+			ret
+	}
 }
 
+#' @export
 st_coordinates.dimensions = function(x, ...) {
 	st_coordinates(st_as_stars(list(), dimensions = x))
 }
 
+
 #' @export
-as.data.frame.stars = function(x, ...) {
-	data.frame(st_coordinates(x), lapply(x, function(y) structure(y, dim = NULL)))
+as.data.frame.stars = function(x, ..., .max = FALSE) {
+	data.frame(st_coordinates(x, .max = .max), lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 
@@ -414,7 +425,7 @@ st_crs.stars = function(x, ...) {
 	i = sapply(d, function(y) inherits(y$values, "sfc"))
 	for (j in which(i))
 		d[[ j ]]$refsys = value
-	st_as_stars(unclass(x), dimensions = d)
+	structure(x, dimensions = d)
 }
 
 #' @export
