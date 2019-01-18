@@ -1,9 +1,9 @@
 library(stars)
 demo(nc, echo = FALSE, ask = FALSE)
-(x = stars:::st_rasterize(nc)) # default grid:
+(x = st_rasterize(nc)) # default grid:
 plot(x, axes = TRUE)
 # a bit more customized grid:
-(x = stars:::st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
+(x = st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
 plot(x, axes = TRUE)
 (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1,0), c(1.1,1))), st_linestring(rbind(c(0, 0.05),c(1, 0.05))))))
 (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0,1.0), ylim = c(0,1), values = NA_real_))
