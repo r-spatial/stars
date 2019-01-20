@@ -224,7 +224,7 @@ print.stars = function(x, ..., n = 1e5) {
 		paste(names(x), sapply(x, f))
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
-		length(x), if (length(x) > 1) "attributes\n" else "attribute\n")
+		length(x), if (length(x) != 1) "attributes\n" else "attribute\n")
 	cat("attribute(s)")
 	df = if (prod(dim(x)) > 10 * n) {
 		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov

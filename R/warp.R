@@ -67,7 +67,7 @@ transform_grid_grid = function(x, target) {
 		}
 	}
 	d[dxy] = target[1:2]
-	structure(x, dimensions = create_dimensions(d, attr(target, "raster")))
+	st_stars(x, dimensions = create_dimensions(d, attr(target, "raster")))
 }
 
 
@@ -125,6 +125,6 @@ st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use
 			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
 		} else if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
 			stop("dest should be a stars object, or a dimensions object")
-		transform_grid_grid(src, st_dimensions(dest))
+		transform_grid_grid(st_as_stars(src), st_dimensions(dest))
 	}
 }

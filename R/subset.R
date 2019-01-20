@@ -54,7 +54,9 @@
 
 	d = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(dim(x)))
-	x = unclass(x)[i]
+	x = unclass(x)
+	if (length(x))
+		x = x[i]
 	mc = match.call(expand.dots = TRUE)
 	# remove [, x, i from mc:
 	mc = if (missing.i)
