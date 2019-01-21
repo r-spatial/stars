@@ -116,24 +116,17 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 	if (long)
 		st_as_sf(as.data.frame(x), crs = crs)
 	else {
-		# FIXME: this probably only works for 2D arrays, now
-		ix = which(sapply(st_dimensions(x), function(i) inherits(i$values, "sfc")))
-		sfc = st_dimensions(x)[[ ix[1] ]]$values # picks first: FIXME:?
-		# may choose units method -> is broken; drop units TODO: if fixed:
+		ix = which_sfc(x)
+		if (length(ix) > 1)	
+			warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
+		sfc = st_dimensions(x)[[ ix[1] ]]$values
 		dfs = lapply(x, function(y) as.data.frame(y))
 		nc = sapply(dfs, ncol)
 		df = do.call(cbind, dfs)
-		if (length(dim(x)) > 1) {
-			labels = expand_dimensions(st_dimensions(x))[[2]]
-			if (length(labels) == ncol(df)) {
-				if (inherits(labels, "POSIXt") || inherits(labels, "Date"))
-					labels = as.character(labels)
-				if (is.character(labels))
-					names(df) = labels
-			}
-			df
-		} else
-			setNames(df, names(x))
+
+		if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
+			names(df) = names(dfs)
+
 		st_sf(df, geometry = sfc, crs = crs)
 	}
 }
