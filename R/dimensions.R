@@ -16,48 +16,66 @@ st_dimensions.dimensions = function(.x, ...) .x
 #' @export
 #' @name st_dimensions
 st_dimensions.array = function(.x, ...) {
-	dn = dimnames(.x)
 	if (length(list(...)) > 0)
 		stop("only one argument expected")
+	dn = dimnames(.x)
+
+	# raster?
+	r = if (all(c("x", "y") %in% names(dn)))
+			get_raster(affine = c(0.0, 0.0), dimensions = c("x", "y"), curvilinear = FALSE)
+		else
+			get_raster(affine = c(0.0, 0.0), dimensions = rep(NA_character_, 2), curvilinear = FALSE)
+
 	ret = if (is.null(dn))
-		st_dimensions(list(.x)) # default
-	else # try to get dimension names and default values from dimnames(.x):
-		create_dimensions(lapply(dn, function(y) create_dimension(values = y)))
+			st_dimensions(list(.x)) # default
+		else # try to get dimension names and default values from dimnames(.x):
+			create_dimensions(lapply(dn, function(y) create_dimension(values = y)), r)
 
 	if (is.null(names(ret)) || any(names(ret) == ""))
 		names(ret) = make.names(seq_along(ret))
-
-	if (all(c("x", "y") %in% names(ret)) && all(is.na(ret[["x"]]$geotransform)))
-		ret[["x"]]$geotransform = ret[["y"]]$geotransform = c(0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
 
 	ret
 }
 
 #' @export
+st_dimensions.matrix = st_dimensions.array
+
+
+#' @export
 #' @name st_dimensions
 #' @param .raster length 2 character array with names (if any) of the raster dimensions
+#' @param affine numeric; specify parameters of the affine transformation
 #' @param cell_midpoints logical; if \code{TRUE} AND the dimension values are strictly regular, the values are interpreted as the cell midpoint values rather than the cell offset values when calculating offset (i.e., the half-cell-size correction is applied); can have a value for each dimension, or else is recycled
-st_dimensions.default = function(.x, ..., .raster = rep(NA_character_,2), cell_midpoints = FALSE) {
+#' @param point logical; does the pixel value (measure) refer to a point (location) value or to an pixel (area) summary value?
+#' @details dimensions can be specified in two ways. The simplest is to pass a vector with numeric values for a numeric dimension, or character values for a categorical dimension. Parameter \code{cell_midpoints} is used to specify whether numeric values refer to the offset (start) of a dimension interval (default), or to the center; the center case is only available for regular dimensions. For rectilinear numeric dimensions, one can specify either a vector with cell borders (start values), or a data.frame with two columns named "start" and "end", with the respective interval start and end values. In the first case, the end values are computed from the start values by assuming the last two intervals have equal width.
+#' 
+st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0), 
+		cell_midpoints = FALSE, point = FALSE) {
 	d = list(...)
 	if (! missing(.x))
 		d = append(list(.x), d)
-	create_dimensions(mapply(create_dimension, values = d, is_raster = cell_midpoints, SIMPLIFY = FALSE),
-		raster = get_raster(dimensions = .raster))
+	if (missing(.raster)) { 
+		.raster = if (all(c("x", "y") %in% names(d)) && is.numeric(d$x) && is.numeric(d$y))
+				c("x", "y") 
+			else 
+				rep(NA_character_, 2)
+	}
+	create_dimensions(mapply(create_dimension, values = d, is_raster = cell_midpoints, point = point, SIMPLIFY = FALSE),
+		raster = get_raster(dimensions = .raster, affine = affine))
 }
-
 
 #' @name st_dimensions
 #' @param which integer which dimension to change
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
 #' @export
-st_set_dimensions = function(.x, which, values, names) {
+st_set_dimensions = function(.x, which, values, names, ...) {
 	d = st_dimensions(.x)
 	if (! missing(values)) {
 		stopifnot(!missing(which))
 		if (dim(.x)[which] != length(values))
 			stop(paste("length of values does not match dimension", which))
-		d[[which]] = create_dimension(values = values)
+		d[[which]] = create_dimension(values = values, ...)
 		if (! missing(names) && length(names) == 1)
 			base::names(d)[which] = names
 		else if (inherits(values, "sfc"))
@@ -77,6 +95,7 @@ st_set_dimensions = function(.x, which, values, names) {
 	}
 	st_as_stars(unclass(.x), dimensions = d)
 }
+
 
 #' @export
 "[.dimensions" = function(x, i, j,..., drop = FALSE) {
@@ -98,7 +117,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
-		to = length(values)
+		to = ifelse(is.data.frame(values), nrow(values), length(values))
 		if (is.character(values) || is.factor(values))
 			values = as.character(values)
 		else if (is.atomic(values)) { 
@@ -123,6 +142,12 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			point = inherits(values, "sfc_POINT")
 			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
 				refsys = st_crs(values)$proj4string
+		}
+		if (is.numeric(values) && (is.na(point) || !point)) {
+			values = if (is_raster)
+					set_dimension_values(centers = values)
+				else
+					set_dimension_values(start = values)
 		}
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
@@ -286,76 +311,67 @@ expand_dimensions.stars = function(x, ...) {
 	expand_dimensions(st_dimensions(x), ...)
 }
 
-expand_dimensions.dimensions = function(x, ..., .max = FALSE) {
+# returns, in case of numeric dimensions:
+# 	center = TRUE: return center values for x and y coordinates, interval start values otherwise
+# 	center = FALSE: return start values
+#   center = NA: return centers for x/y raster, otherwise start values
+#   add_max = TRUE: add in addition to x and y start values an x_max and y_max end values
+expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
+
+	if (isTRUE(max) && isTRUE(center))
+		stop("only one of max and center can be TRUE, not both")
+
+	where = if (max) 
+			1.0
+		else if (isTRUE(center))
+			0.5
+		else
+			0.0
+
 	dimensions = x
-	r = attr(x, "raster")
+	xy = attr(x, "raster")$dimensions
 	gt = get_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
-	if (!is.null(r)) {
-		if (r$dimensions[1] %in% names(lst)) { # x
-			x = dimensions[[ r$dimensions[1] ]]
-			lst[[ r$dimensions[1] ]] = 
-				if (!is.null(x$values))
-					x$values
-				else if (! any(is.na(gt)))
-					xy_from_colrow(cbind(seq(x$from, x$to) - .5, 0), gt)[,1]
-				else if (all(!is.na(c(x$offset, x$delta))))
-					seq(from = x$offset + (x$from - 1)*x$delta, by = x$delta, length.out = x$to - x$from + 1)
-				else
-					seq(x$from, x$to)
-		}
-		if (r$dimensions[2] %in% names(lst)) { # y
-			y = dimensions[[ r$dimensions[2] ]]
-			lst[[ r$dimensions[2] ]] = 
-				if (!is.null(y$values))
-					y$values
-				else if (! any(is.na(gt)))
-					xy_from_colrow(cbind(0, seq(y$from, y$to) - .5), gt)[,2]
-				else if (all(!is.na(c(y$offset, y$delta))))
-					seq(from = y$offset + (y$from - 1)*y$delta, by = y$delta, length.out = y$to - y$from + 1)
-				else
-					seq(y$to, y$from)
-		}
-		if (.max) {
-			w = match(r$dimensions, names(lst))
-			names(lst)[w] = paste0(r$dimensions, "_max")
-			get_max = function(x) { dx = diff(tail(x, 2)); c(x[-1], tail(x,1)+dx) }
-			lst[[ w[1] ]] = get_max( lst[[ w[1] ]] )
-			lst[[ w[2] ]] = get_max( lst[[ w[2] ]] )
-			r$dimensions = names(lst)[w] # to jump over block below:
-		}
+	if (! is.null(xy) && all(!is.na(xy))) { # we have raster:
+		if (!max && (is.na(center) || center))
+			where = 0.5
+		if (xy[1] %in% names(lst)) # x
+			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where, gt, "x")
+		if (xy[2] %in% names(lst))  # y
+			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where, gt, "y")
 	}
-	for (nm in setdiff(names(lst), r$dimensions)) {
-		dm = dimensions[[nm]]
-		lst[[nm]] = if (!is.null(dm$values))
-				dm$values 
-			else if (is.na(dm$offset) || is.na(dm$delta))
-				seq(dm$from, dm$to)
-			else
-				seq(from = dm$offset + (dm$from - 1)*dm$delta, by = dm$delta, length.out = dm$to - dm$from + 1)
-	}
+	for (nm in setdiff(names(lst), xy)) # non-xy dimensions
+		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where, NA, NA)
+
 	lst
 }
+
 
 #' @export
 dim.dimensions = function(x) {
 	if (is_curvilinear(x))
 		setNames(sapply(x, function(x) { x$to - x$from + 1 } ), names(x))
 	else
-		lengths(expand_dimensions(x))
+		lengths(expand_dimensions(x)) # FIXME: optimise?
 }
+
 
 #' @export
 print.dimensions = function(x, ..., digits = 6) {
 	lst = lapply(x, function(y) {
-			if (length(y$values) > 2) {
+			if (length(y$values) > 2 || is.data.frame(y$values)) {
 				y$values = if (is.array(y$values))
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
-							format(min(y$values), digits = digits), ", ..., ", 
+							format(min(y$values), digits = digits), ",...,", 
 							format(max(y$values), digits = digits))
-					else
-						paste0(format(y$values[1]), ", ..., ", 
+					else if (is.data.frame(y$values)) {
+						df = y$values
+						first = paste0("[", paste(as.vector(df[1,]), collapse=","), ")")
+						last = paste0("[", paste(as.vector(df[nrow(df),]), collapse=","), ")")
+						paste0(first, ",...,", last)
+					} else
+						paste0(format(y$values[1]), ",...,", 
 							format(tail(y$values, 1)))
 			}
 			if (!is.na(y$refsys) && nchar(y$refsys) > 28)
@@ -412,11 +428,9 @@ combine_dimensions = function(dots, along) {
 
 #' @export
 seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensions also does, for single dimension
-	if (!is.null(from$values))
-		from$values
-	else
-		from$offset + (seq(from$from, from$to) - 1 + 0.5 * center) * from$delta
+	get_dimension_values(from, where = ifelse(center, 0.5, 0.0), NA, what = NA_character_)
 }
+
 
 #' @export
 `[.dimension` = function(x, i, ..., values = NULL) {

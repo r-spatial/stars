@@ -72,6 +72,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
 #' @param merge logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details
 #' @param use_integer (relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).
+#' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled
 #' @param ... ignored
 #' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons.
 #' @export
@@ -88,7 +89,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' plot(p, axes = TRUE)
 st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE, 
 		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), 
-		use_integer = is.logical(x[[1]]) || is.integer(x[[1]])) { 
+		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE) { 
 
 	crs = st_crs(x)
 	if (merge) {
@@ -112,24 +113,29 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 	if (! has_sfc(x))
 		stop("no feature geometry column found")
 
-	# FIXME: this probably only works for 2D arrays, now
-	ix = which(sapply(st_dimensions(x), function(i) inherits(i$values, "sfc")))
-	sfc = st_dimensions(x)[[ ix[1] ]]$values # picks first: FIXME:?
-	# may choose units method -> is broken; drop units TODO: if fixed:
-	dfs = lapply(x, function(y) as.data.frame(y))
-	nc = sapply(dfs, ncol)
-	df = do.call(cbind, dfs)
-	if (length(dim(x)) > 1) {
-		labels = expand_dimensions(st_dimensions(x))[[2]]
-		if (length(labels) == ncol(df)) {
-			if (inherits(labels, "POSIXt") || inherits(labels, "Date"))
-				labels = as.character(labels)
-			if (is.character(labels))
-				names(df) = labels
-		}
-	} else
-		names(df) = names(x)
-	st_sf(df, geometry = sfc, crs = crs)
+	if (long)
+		st_as_sf(as.data.frame(x), crs = crs)
+	else {
+		# FIXME: this probably only works for 2D arrays, now
+		ix = which(sapply(st_dimensions(x), function(i) inherits(i$values, "sfc")))
+		sfc = st_dimensions(x)[[ ix[1] ]]$values # picks first: FIXME:?
+		# may choose units method -> is broken; drop units TODO: if fixed:
+		dfs = lapply(x, function(y) as.data.frame(y))
+		nc = sapply(dfs, ncol)
+		df = do.call(cbind, dfs)
+		if (length(dim(x)) > 1) {
+			labels = expand_dimensions(st_dimensions(x))[[2]]
+			if (length(labels) == ncol(df)) {
+				if (inherits(labels, "POSIXt") || inherits(labels, "Date"))
+					labels = as.character(labels)
+				if (is.character(labels))
+					names(df) = labels
+			}
+			df
+		} else
+			setNames(df, names(x))
+		st_sf(df, geometry = sfc, crs = crs)
+	}
 }
 
 

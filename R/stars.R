@@ -187,21 +187,34 @@ has_sfc = function(x) {
 	length(which_sfc(x)) > 0
 }
 
+#' retrieve coordinates for raster or vector cube cells
+#'
+#' retrieve coordinates for raster or vector cube cells
+#' @param x object of class \code{stars}
+#' @param add_max logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value
+#' @name st_coordinates
+#' @param ... ignored
 #' @export
-st_coordinates.stars = function(x, ..., .max = FALSE) {
+st_coordinates.stars = function(x, ..., add_max = FALSE) {
+	dims = st_dimensions(x)
+	xy = attr(dims, "raster")$dimensions
 	if (has_rotate_or_shear(x)) {
+		if (add_max)
+			stop("add_max will not work for rotated/shared rasters")
 		d = dim(x)
-		xy = attr(st_dimensions(x), "raster")$dimensions
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
-		as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-			get_geotransform(x))) # givesl cell centers
+		setNames(as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
+			get_geotransform(x))), xy) # gives cell centers
 	} else {
-		ret = do.call(expand.grid, expand_dimensions(x)) # cell offsets
-		if (.max) 
-			cbind(ret, do.call(expand.grid, expand_dimensions(x, .max = TRUE)))
-		else
-			ret
+		if (add_max) {
+			cbind(
+				do.call(expand.grid, expand_dimensions(x, center = FALSE)), # cell offsets
+				setNames(do.call(expand.grid, expand_dimensions(dims[xy], max = TRUE)),
+					paste0(xy, "_max"))
+			)
+		} else
+			do.call(expand.grid, expand_dimensions(x)) # cell centers for x/y if raster
 	}
 }
 
@@ -210,10 +223,10 @@ st_coordinates.dimensions = function(x, ...) {
 	st_coordinates(st_as_stars(list(), dimensions = x))
 }
 
-
+#' @name st_coordinates
 #' @export
-as.data.frame.stars = function(x, ..., .max = FALSE) {
-	data.frame(st_coordinates(x, .max = .max), lapply(x, function(y) structure(y, dim = NULL)))
+as.data.frame.stars = function(x, ..., add_max = FALSE) {
+	data.frame(st_coordinates(x, add_max = add_max), lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 
@@ -373,9 +386,8 @@ st_bbox.dimensions = function(obj, ...) {
 				if (is_curvilinear(obj))
 					c(xmin = min(x$values), ymin = min(y$values), xmax = max(x$values), ymax = max(y$values))
 				else {
-					e = expand_dimensions(obj)
-					rx = range(e[[ r$dimensions[1] ]])
-					ry = range(e[[ r$dimensions[2] ]])
+					rx = range(x) # dispatches into range.dimension
+					ry = range(y)
 					c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
 				}
 			}
@@ -383,8 +395,10 @@ st_bbox.dimensions = function(obj, ...) {
 	} else {
 		if (! has_sfc(obj))
 			stop("dimensions table does not have x & y, nor an sfc dimension") # nocov
-		ix = which(sapply(obj, function(i) inherits(i$values, "sfc")))
-		st_bbox(obj[[ ix[1] ]]$values) # FIXME: what if there is more than one, e.g. O.D.?
+		ix = which_sfc(obj)
+		if (length(ix) > 1)
+			warning("returning the bounding box of the first geometry dimension")
+		st_bbox(obj[[ ix[1] ]]$values)
 	}
 }
 
@@ -458,7 +472,8 @@ merge.stars = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
+	#out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
+	out = do.call(abind, st_redimension(x))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else

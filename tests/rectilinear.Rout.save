@@ -1,6 +1,6 @@
 
-R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
-Copyright (C) 2017 The R Foundation for Statistical Computing
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,9 +18,27 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages(library(stars))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)
-> xx = x[,c(1:347,349),c(1:350,352),] # rectilinear: one-but-last row & col missing
+> (xx = x[,c(1:347,349),c(1:350,352),]) # rectilinear: one-but-last row & col missing
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.99  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+     from  to offset delta                       refsys point
+x       1 348     NA    NA +proj=utm +zone=25 +south... FALSE
+y       1 351     NA    NA +proj=utm +zone=25 +south... FALSE
+band    1   6     NA    NA                           NA    NA
+                    values    
+x    288790.5,...,298708.5 [x]
+y      9120747,...,9110743 [y]
+band                  NULL    
 > image(xx) # chooses useRaster itself
 > 
 > proc.time()
    user  system elapsed 
-  0.736   0.264   0.676 
+  0.749   0.028   0.772 

@@ -91,15 +91,17 @@
 			name_i = names(d)[i]
 			argi = args[i]
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
-					length(argi) > 0 && is.numeric(argi[[1]]) && ! all(diff(eval(argi[[1]])) == 1))
+					argi[[1]] != rlang::missing_arg() && 
+					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
 				d[[i]]$values = ed[[i]]
 			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
 		}
 	}
+	x = st_as_stars(x, dimensions = d)
 	if (drop)
-		adrop(st_as_stars(x, dimensions = d))
+		adrop(x)
 	else
-		st_as_stars(x, dimensions = d)
+		x
 }
 
 #' @name stars_subset

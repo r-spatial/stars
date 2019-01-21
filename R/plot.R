@@ -184,7 +184,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
-		maxColorValue = max(x[[attr]]),
+		maxColorValue = max(x[[attr]], na.rm = TRUE),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE) {
@@ -215,31 +215,32 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		return(image(ed, ..., xlab = xlab, ylab = ylab))
 	}
 
-	if (!is_curvilinear(x)) {
+	if (! is_curvilinear(x)) {
 		dims = expand_dimensions(x)
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 		if (y_is_neg)
 			dims[[ dimy ]] = rev(dims[[ dimy ]])
 	}
 
-	if (is.null(asp)) {
-		bb = st_bbox(x)
-		asp <- ifelse(isTRUE(st_is_longlat(x)), 1/cos((mean(bb[c(2,4)]) * pi)/180), 1.0)
-	}
+	if (is.null(asp))
+		asp = if (isTRUE(st_is_longlat(x))) {
+				bb = st_bbox(x)
+				1 / cos((mean(bb[c(2,4)]) * pi)/180)
+			} else
+				1.0
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
 	# rearrange ar:
-	third = setdiff(1:3, c(dimxn, dimyn))[1]
-	ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
-			aperm(ar, c(dimxn, dimyn, third))
-		else
-			aperm(ar, c(dimxn, dimyn))
+	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
+	ar = aperm(ar, c(dimxn, dimyn, others))
 
 	if (! is.null(rgb)) {
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
+		if (!y_is_neg) # need to flip y?
+			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
 		ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
 		nas = apply(ar, 1, function(x) any(is.na(x)))
 		ar = rgb(ar[!nas,], maxColorValue = maxColorValue)
@@ -267,10 +268,10 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			key.pos = key.pos, logz = logz, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
-			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
-				ar[ , rev(seq_len(dim(ar)[2])), band]
-			else
-				ar[ , rev(seq_len(dim(ar)[2]))]
+			ar = if (length(dim(ar)) == 2)
+					ar[ , rev(seq_len(dim(ar)[2]))]
+				else
+					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
 			xlim = xlim, ylim = ylim, axes = FALSE, ...)
