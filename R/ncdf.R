@@ -70,7 +70,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # This ensures that dims and ncsub are valid for all variables we are looking at.
   dims_index <- unique(lapply(var, function(.v) meta$axis$dimension[meta$axis$variable == .v]))
   dims_index <- dims_index[sapply(dims_index, function(x) all(x != -1))]
-  
+  #browser()
   if(length(dims_index) > 1) stop("Variables with different axis orders found, select one to continue.") #nocov
   
   dims_index <- dims_index[[1]] # dims_index is in the axis order used by all data variables

@@ -34,7 +34,7 @@ Imports:
 	parallel,
     classInt (>= 0.2-2),
     RNetCDF,
-    ncmeta (>= 0.0.3),
+    ncmeta (>= 0.0.3.9001),
     rlang,
     units
 Suggests: 
@@ -84,3 +84,4 @@ Collate:
     'warp.R'
     'aggregate.R'
     'xts.R'
+Remotes: hypertidy/ncmeta
