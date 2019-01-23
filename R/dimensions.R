@@ -136,6 +136,8 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 					refsys = "POSIXct"
 				if (inherits(offset, "Date"))
 					refsys = "Date"
+				if (inherits(offset, "PCICt"))
+					refsys = "PCICt"
 			}
 		}
 		if (inherits(values, "sfc")) {
@@ -193,7 +195,12 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	}
 	if (! is.null(pr$dim_extra)) { # netcdf...
 		for (d in names(pr$dim_extra)) {
-			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) "POSIXct" else NA_character_
+			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) 
+					"POSIXct" 
+				else if (inherits(pr$dim_extra[[d]], "PCICt"))
+					"PCICt"
+				else 
+					NA_character_
 			de = pr$dim_extra[[d]]
 			diff.de = diff(de)
 			lst[[d]] = if (length(unique(diff.de)) <= 1) {
@@ -273,12 +280,25 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
 					pr$dim_extra[[v]] = as.numeric(rhs)
 				}
-				u = get_val(paste0(v, "#units"), meta)
+
+				cal = get_val(paste0(v, "#calendar"), meta)
+				u =   get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					units(pr$dim_extra[[v]]) = try_as_units(u)
-					if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
-							"try-error"))
-						pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
+					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day")) {
+						origin = 0:1
+						units(origin) = try_as_units(u)
+						delta = as.numeric(set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard"))
+						origin_txt = as.character(as.POSIXct(origin[1]))
+    					if (!requireNamespace("PCICt", quietly = TRUE))
+        					stop("package PCICt required, please install it first") # nocov
+						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * delta, cal, origin_txt)
+					} else {
+						units(pr$dim_extra[[v]]) = try_as_units(u)
+						if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
+								"try-error")) {
+							pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
+						}
+					}
 				}
 			}
 			pr$dim_extra = rev(pr$dim_extra)
@@ -379,7 +399,8 @@ print.dimensions = function(x, ..., digits = 6) {
 			y
 		}
 	)
-	lst = lapply(lst, function(x) lapply(x, format, digits = digits))
+	#lst = lapply(lst, function(x) lapply(x, format, digits = digits)) # FIXME: format.PCICt doesn't like digits
+	lst = lapply(lst, function(x) lapply(x, format))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")
 	if (!any(is.na(r$dimensions))) {

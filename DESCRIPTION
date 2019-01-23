@@ -38,6 +38,7 @@ Imports:
     rlang,
     units
 Suggests: 
+    PCICt,
     covr,
     dplyr (>= 0.7-0),
     ggplot2,
