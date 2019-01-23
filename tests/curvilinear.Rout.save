@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -74,9 +74,9 @@ dimension(s):
   from  to offset delta                       refsys point
 x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
 y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
-                            values    
-x [450x278] -5.81066, ..., 30.9468 [x]
-y  [450x278] 28.3605, ..., 51.4686 [y]
+                          values    
+x [450x278] -5.81066,...,30.9468 [x]
+y  [450x278] 28.3605,...,51.4686 [y]
 curvilinear grid
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -92,20 +92,13 @@ dimension(s):
   from to offset delta                       refsys point
 x    1 57     NA    NA +proj=longlat +datum=WGS8...    NA
 y    1 35     NA    NA +proj=longlat +datum=WGS8...    NA
-                          values    
-x [57x35] -5.59621, ..., 30.8488 [x]
-y  [57x35] 28.3605, ..., 51.1544 [y]
+                        values    
+x [57x35] -5.59621,...,30.8488 [x]
+y  [57x35] 28.3605,...,51.1544 [y]
 curvilinear grid
 null device 
           1 
-Warning messages:
-1: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
-2: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
-3: In get_raster(affine = pr$geotransform[c(3, 5)], dimensions = c("x",  :
-  setting NA affine values to zero
 > 
 > proc.time()
    user  system elapsed 
-  7.280   0.107   7.379 
+  6.921   0.112   7.025 
