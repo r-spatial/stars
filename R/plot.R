@@ -258,7 +258,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) {
 		x = st_as_sf(x[1], as_points = as_points)
-		mplot = function(x, col, ...) {
+		mplot = function(x, col, ..., zlim) {
 			if (missing(col))
 				plot(x, ...)
 			else
