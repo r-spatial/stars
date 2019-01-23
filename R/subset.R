@@ -80,7 +80,7 @@
 				if (names(d)[i] == xy[1])
 					args_xy[[1]] = mc[[i]]
 				if (names(d)[i] == xy[2])
-					args_xy[[1]] = mc[[i]]
+					args_xy[[2]] = mc[[i]]
 			}
 		}
 	}
