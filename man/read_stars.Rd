@@ -16,7 +16,7 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 
 \item{options}{character; opening options}
 
-\item{driver}{character; driver to use for opening file}
+\item{driver}{character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.}
 
 \item{sub}{integer or logical; sub-datasets to be read}
 

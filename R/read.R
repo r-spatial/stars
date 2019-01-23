@@ -4,7 +4,7 @@
 #' read raster/array dataset from file or connection
 #' @param .x character vector with name(s) of file(s) or data source(s) to be read
 #' @param options character; opening options
-#' @param driver character; driver to use for opening file
+#' @param driver character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.
 #' @param sub integer or logical; sub-datasets to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
@@ -66,6 +66,14 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			rapply(.x, f, classes = "character", how = "replace")
 		} else
 			enc2utf8(normalizePath(.x, mustWork = FALSE))
+	
+	if (length(curvilinear) == 2 && is.character(curvilinear)) {
+		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...)
+		lat = read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...)
+		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
+	}
 
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
@@ -75,7 +83,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
-	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy, 
+	data = sf::gdal_read(x, options = options, driver = character(0), read_data = !proxy, 
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 
 	if (length(data$bands) == 0) { # read sub-datasets: different attributes
@@ -96,8 +104,14 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			read_stars(x, options = options, driver = driver, NA_value = NA_value, 
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
+
+		driver = if (is.null(driver)) # to override auto-detection:
+				character(0)
+			else
+				data$driver[1]
+
 		ret = lapply(sub_datasets, .read_stars, options = options, 
-			driver = data$driver[1], quiet = quiet, proxy = proxy, curvilinear = curvilinear)
+			driver = driver, quiet = quiet, proxy = proxy, curvilinear = curvilinear)
 		if (! quiet)
 			cat("\n")
 		# return:
@@ -145,12 +159,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			st_stars(setNames(list(data), tail(strsplit(x, .Platform$file.sep)[[1]], 1)),
 				create_dimensions_from_gdal_meta(dim(data), meta_data))
 		
-		if (length(curvilinear) == 2) {
-			lon = paste0(meta_data$driver[1], ":", x, ":", curvilinear[1])
-			lat = paste0(meta_data$driver[1], ":", x, ":", curvilinear[2])
-			st_as_stars(ret, curvilinear = list(x = read_stars(lon, RasterIO = RasterIO)[[1]], 
-				y = read_stars(lat, RasterIO = RasterIO)[[1]]), ...)
-		} else
+		if (is.list(curvilinear))
+			st_as_stars(ret, curvilinear = curvilinear, ...)
+		else
 			ret
 	}
 }

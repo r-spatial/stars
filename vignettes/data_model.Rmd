@@ -145,16 +145,9 @@ EVAL = s5p != ""
 ```
 We can construct the curvilinear `stars` raster by calling `st_as_stars` on three arrays, with data, longitude and latitudes:
 ```{r eval=EVAL}
-lat_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/latitude")
-lon_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/longitude")
-nit_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column")
-lat = read_stars(lat_ds)
-lon = read_stars(lon_ds)
-nit = read_stars(nit_ds)
-nit[[1]][nit[[1]] > 9e+36] = NA
-
-ll = setNames(c(lon, lat), c("x", "y"))
-nit.c = st_as_stars(nit, curvilinear = ll)
+nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
+	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
+nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 st_crs(nit.c) = 4326
 nit.c
 ```
