@@ -126,6 +126,11 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 
 		if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
 			names(df) = names(dfs)
+		else { # another exception... time as second dimension
+			e = expand_dimensions(x)
+			if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt")))
+				names(df) = as.character(e[-ix][[1]])
+		}
 
 		st_sf(df, geometry = sfc, crs = crs)
 	}

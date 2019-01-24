@@ -54,9 +54,12 @@ get_dimension_values = function(x, where = 0.0, geotransform, what = NA_characte
 				y = xy_from_colrow(cbind(0, seq(x$from, x$to) - 1 + where), geotransform)[,2],
 				stop("argument what needs to be x or y")
 			)
-		else if (!any(c(is.na(x$offset), is.na(x$delta))))
-			seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1)
-		else if (!is.na(x$offset) && x$from == 1 && x$to == 1)
+		else if (!any(c(is.na(x$offset), is.na(x$delta)))) {
+			if (inherits(x$offset, "PCICt") && inherits(x$delta, "difftime")) # FIXME: why does this generate a warning, where POSIXct & difftime doesn't?
+				suppressWarnings(seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1))
+			else
+				seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1)
+		} else if (!is.na(x$offset) && x$from == 1 && x$to == 1)
 			x$offset
 		else
 			seq(x$from, x$to)
@@ -83,9 +86,10 @@ set_dimension_values = function(..., start = NULL, end = NULL, centers = NULL) {
 		end = c(start[-1], centers[l] + 0.5 * d[l-1])
 	} else if (missing(end)) {
 		l = length(start)
-		if (l == 1)
-			stop("cannot infer end values from a single start value")
-		end = c(start[-1], start[l] + diff(c(start[l-1], start[l])))
+		end = if (l == 1)
+				NA_real_ #stop("cannot infer end values from a single start value")
+			else
+				c(start[-1], start[l] + diff(c(start[l-1], start[l])))
 	}
 	data.frame(start = start, end = end)
 }

@@ -109,7 +109,7 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 
 regular_intervals = function(x, epsilon = 1e-10) {
 	ud <- unique(diff(x))
-	length(ud) && diff(range(ud)) / mean(ud) < epsilon
+	length(ud) > 0 && diff(range(ud)) / mean(ud) < epsilon
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
@@ -126,10 +126,12 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			else {
 				if (regular_intervals(values)) {
 					offset = values[1]
-					delta = values[2] - values[1]
+					if (length(values) > 1) {
+						delta = values[2] - values[1]
 					# shift half grid cell size if x or y raster dim cell midpoints:
-					if (is_raster)
-						offset = offset - 0.5 * delta
+						if (is_raster)
+							offset = offset - 0.5 * delta
+					}
 					values = NULL
 				}
 				if (inherits(offset, "POSIXct"))
@@ -399,8 +401,13 @@ print.dimensions = function(x, ..., digits = 6) {
 			y
 		}
 	)
-	#lst = lapply(lst, function(x) lapply(x, format, digits = digits)) # FIXME: format.PCICt doesn't like digits
-	lst = lapply(lst, function(x) lapply(x, format))
+	mformat = function(x, ..., digits) {
+		if (inherits(x, "PCICt")) 
+			format(x, ...)
+		else
+			format(x, digits = digits, ...) 
+	}
+	lst = lapply(lst, function(x) lapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")
 	if (!any(is.na(r$dimensions))) {
