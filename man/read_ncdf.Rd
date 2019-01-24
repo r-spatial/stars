@@ -2,7 +2,7 @@
 % Please edit documentation in R/ncdf.R
 \name{read_ncdf}
 \alias{read_ncdf}
-\title{read ncdf file into stars object}
+\title{Read NetCDF into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
   curvilinear = character(0))
@@ -14,18 +14,20 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 
 \item{var}{variable name or names (they must be on matching grids)}
 
-\item{ncsub}{matrix of start, count columns}
+\item{ncsub}{matrix of start, count columns (see Details)}
 
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 }
 \description{
-Read data from a file using the NetCDF library directly.
+Read data from a file (or source) using the NetCDF library directly.
 }
 \details{
-The following logic is applied to coordinate axes. If any coordinate axes have 
-regularly spaced coordinates they are reduced to the
+The following logic is applied to coordinates. If any coordinate axes have 
+regularly spaced coordinate variables they are reduced to the
 offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
-are stored.   If the data has two or more dimensions and the first two are regular
+are stored and used to define a rectilinear grid.
+
+If the data has two or more dimensions and the first two are regular
 they are nominated as the 'raster' for plotting.
 
 
@@ -34,13 +36,14 @@ It's supposed to be the grid with the most dimensions, but there's no control
 yet (see `ncmeta::nc_grids(.x)` for the current assumption). 
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-and be valid index using `ncdf4::ncvar_get` convention (start is 1-based).
+and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). If the count value
+is `NA` then all steps are included. Axis order must match that of the variable/s being read.
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
 read_ncdf(f)
 read_ncdf(f, var = c("anom"))
 read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
-
+ 
 
 }
