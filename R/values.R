@@ -23,15 +23,16 @@ values_get_end = function(x) {
 }
 
 values_get_where = function(x, where) {
-	stopifnot(inherits(x, "dimension"))
-	v = x$values
-	stopifnot(inherits(v, "data.frame"))
 	if (where == 0.0)
-		v$start
+		values_get_start(x)
 	else if (where == 1.0)
-		v$end
-	else
+		values_get_end(x)
+	else {
+		stopifnot(inherits(x, "dimension"))
+		v = x$values
+		stopifnot(inherits(v, "data.frame"))
 		v$start + where * (v$end - v$start)
+	}
 }
 
 # x is an object of class dimension

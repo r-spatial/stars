@@ -1,10 +1,14 @@
-# version 0.2-1
+# version 0.3-0
+
+* use "native" R array-factor support
+
+* support for `PCICt` 360- and 365-day calendars; #29
 
 * `st_as_sf` uses date/time column names when appropriate
 
 * allow missing trailing comma's when subsetting: `a[1,,]` and `a[1,]` now do the same.
 
-* move `rlang` to Imports: ; rewrite subset using rlang.
+* move `rlang` to Imports: ; rewrite `[` subset using rlang.
 
 * add conversion to and from `Spatial*` classes, including the gridded ones, taking care of `factor` variables
 
