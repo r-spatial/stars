@@ -21,6 +21,11 @@ NULL
 #' 
 #' If the data has two or more dimensions and the first two are regular
 #' they are nominated as the 'raster' for plotting. 
+#' 
+#' If the \code{curvilinear} argument is used it specifies the 2D arrays
+#' containing coordinate values for the first two dimensions of the data read. It is currently
+#' assumed that the coordinates are 2D and that they relate to the first two dimensions in 
+#' that order. 
 #' @examples 
 #' f <- system.file("nc/reduced.nc", package = "stars")
 #' read_ncdf(f)
@@ -74,12 +79,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   nc = RNetCDF::open.nc(.x)
   on.exit(RNetCDF::close.nc(nc), add = TRUE)
   out = lapply(var, function(.v) RNetCDF::var.get.nc(nc, 
-                                                   variable = .v,
-                                                   start = ncsub[, "start", drop = TRUE], 
-                                                   count = ncsub[, "count", drop = TRUE], 
-                                                  collapse = FALSE, ## keep 1-dims
-                                                  unpack = TRUE,     ## offset and scale applied internally
-                                                  rawchar = FALSE))
+                                                     variable = .v,
+                                                     start = ncsub[, "start", drop = TRUE], 
+                                                     count = ncsub[, "count", drop = TRUE], 
+                                                     collapse = FALSE, ## keep 1-dims
+                                                     unpack = TRUE,     ## offset and scale applied internally
+                                                     rawchar = FALSE))
   
   vars = ncmeta::nc_vars(nc) 
   out = setNames(out, var)
@@ -97,20 +102,20 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     ## test checks if there's actuall a variable of the dim name
     if (dims$name[ic] %in% vars$name) {
       coords[[ic]] <- RNetCDF::var.get.nc(nc, variable = dims$name[ic])[subidx]
-     
+      
     } else {
       coords[[ic]] <- subidx##seq_len(dims$length[ic])
     }
   }
-
+  
   ## can we create a raster?
   raster = NULL
   ## which coords are regular
   regular = .is_regular(coords)
   if (length(coords) > 1) {
-   # if (all(regular[1:2])) {
+    # if (all(regular[1:2])) {
     raster = get_raster(affine = c(0, 0), 
-                      dimensions = names(coords)[1:2], curvilinear = FALSE)
+                        dimensions = names(coords)[1:2], curvilinear = FALSE)
     #}
     
   }
@@ -135,15 +140,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   
   ret = st_stars(out, dimensions)
+  
   if (length(curvilinear) == 2) {
     curvi_coords = lapply(curvilinear, function(.v) RNetCDF::var.get.nc(nc, 
-                                                    variable = .v,
-                                                    ## note there subtle subsetting into x,y
-                                                    start = ncsub[1:2, "start", drop = TRUE], 
-                                                    count = ncsub[1:2, "count", drop = TRUE], 
-                                                    collapse = FALSE, 
-                                                    unpack = TRUE))
-    names(curvi_coords) <- c("x", "y")
+                                                                        variable = .v,
+                                                                        ## note there subtle subsetting into x,y
+                                                                        start = ncsub[1:2, "start", drop = TRUE], 
+                                                                        count = ncsub[1:2, "count", drop = TRUE], 
+                                                                        collapse = FALSE, 
+                                                                        unpack = TRUE))
+    names(curvi_coords)[1:2] <- names(dimensions)[1:2]
     ret = st_as_stars(ret, curvilinear = curvi_coords)
   }
   ret

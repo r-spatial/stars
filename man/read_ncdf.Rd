@@ -30,6 +30,11 @@ are stored and used to define a rectilinear grid.
 If the data has two or more dimensions and the first two are regular
 they are nominated as the 'raster' for plotting.
 
+If the \code{curvilinear} argument is used it specifies the 2D arrays
+containing coordinate values for the first two dimensions of the data read. It is currently
+assumed that the coordinates are 2D and that they relate to the first two dimensions in 
+that order.
+
 
 If `var` is not set the first set of variables on a shared grid is used.
 It's supposed to be the grid with the most dimensions, but there's no control
