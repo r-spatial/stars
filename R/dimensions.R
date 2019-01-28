@@ -73,7 +73,11 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 	d = st_dimensions(.x)
 	if (! missing(values)) {
 		stopifnot(!missing(which))
-		if (dim(.x)[which] != length(values))
+		n_values = if(inherits(values, "data.frame"))
+				nrow(values)
+			else
+				length(values)
+		if (dim(.x)[which] != n_values)
 			stop(paste("length of values does not match dimension", which))
 		d[[which]] = create_dimension(values = values, ...)
 		if (! missing(names) && length(names) == 1)
@@ -108,7 +112,10 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 }
 
 regular_intervals = function(x, epsilon = 1e-10) {
-	ud <- unique(diff(x))
+	ud = if (is.atomic(x))
+			unique(diff(x))
+		else
+			x$end - x$start
 	length(ud) > 0 && diff(range(ud)) / mean(ud) < epsilon
 }
 
@@ -387,13 +394,8 @@ print.dimensions = function(x, ..., digits = 6) {
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 
 							format(max(y$values), digits = digits))
-					else if (is.data.frame(y$values)) {
-						df = y$values
-						first = paste0("[", paste(as.vector(df[1,]), collapse=","), ")")
-						last = paste0("[", paste(as.vector(df[nrow(df),]), collapse=","), ")")
-						paste0(first, ",...,", last)
-					} else
-						paste0(format(y$values[1]), ",...,", 
+					else
+						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
 			}
 			if (!is.na(y$refsys) && nchar(y$refsys) > 28)

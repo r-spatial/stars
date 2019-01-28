@@ -27,11 +27,19 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		if (!is.null(dimensions)) {
 			dx = dim(.x[[1]])
 			dd = dim(dimensions)
-			for (i in seq_along(dim(dimensions))) {
-				# create_dimension was called with $values one longer than corresponding array dim,
-				# AND regularly spaced, meaning offset/delta have replaced $values:
-				if (is.null(dimensions[[i]]$values) && dx[i] < dd[i])
-					dimensions[[i]]$to = dimensions[[i]]$to - 1
+			stopifnot(!is.null(dx), !is.null(dd))
+			for (i in seq_along(dimensions)) {
+				if (dx[i] < dd[i]) { # create_dimension was called with $values one longer than corresponding array dim,
+					v = dimensions[[i]]$values
+					if (is.null(v)) # regularly spaced, meaning offset/delta have replaced $values:
+						dimensions[[i]]$to = dimensions[[i]]$to - 1
+					else if (length(v) == dx[i] + 1) { # convert the one-too-long values into an intervals object:
+						dimensions[[i]]$values = head(v, -1)
+						dimensions[[i]]$to = dimensions[[i]]$to - 1
+					} else
+						stop(paste("incorrect length of dimensions values for dimension", i))
+					dimensions[[i]]$point = FALSE
+				}
 			}
 		}
 	}
@@ -355,7 +363,7 @@ c.stars = function(..., along = NA_integer_) {
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	if (length(drop) > 0)
-		st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = st_dimensions(x)[-drop])
+		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
 	else 
 		x
 }

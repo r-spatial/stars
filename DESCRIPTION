@@ -86,3 +86,4 @@ Collate:
     'warp.R'
     'aggregate.R'
     'xts.R'
+    'intervals.R'

@@ -38,7 +38,8 @@ as.data.frame(st, add_max=TRUE)[1:4,]
 st_bbox(st)
 
 # rectilinear with start/end given:
-xd = data.frame(start = c(1,2,4), end = c(2, 4, 8))
+#xd = stars:::make_intervals(start = c(1,2,4), end = c(2, 4, 8))
+xd = c(1, 2, 4, 8) # one more than dim of the data array
 d = st_dimensions(x = xd, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"))
 (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
 as.data.frame(st, add_max=FALSE)[1:4,]

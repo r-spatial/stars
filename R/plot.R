@@ -216,7 +216,13 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 
 	if (! is_curvilinear(x)) {
-		dims = expand_dimensions(x)
+		dims = expand_dimensions.stars(x, center = FALSE, max = FALSE)
+		d_max = expand_dimensions.stars(x, center = FALSE, max = TRUE)
+		if (inherits(d[[dimx]]$values, "intervals"))
+			dims[[ dimx ]] = c(dims[[dimx]], tail(d_max[[dimx]], 1))
+		if (inherits(d[[dimy]]$values, "intervals"))
+			dims[[ dimy ]] = c(dims[[dimy]], tail(d_max[[dimy]], 1))
+
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 		if (y_is_neg)
 			dims[[ dimy ]] = rev(dims[[ dimy ]])
@@ -276,8 +282,10 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
 			xlim = xlim, ylim = ylim, axes = FALSE, ...)
 	}
-	if (text_values)
+	if (text_values) {
+		dims = expand_dimensions.stars(x, center = TRUE)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
+	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
             .degAxis(1)

@@ -11,14 +11,14 @@
 values_get_start = function(x) {
 	stopifnot(inherits(x, "dimension"))
 	v = x$values
-	stopifnot(inherits(v, "data.frame") && !is.null(v$start))
+	stopifnot(inherits(v, "intervals") && !is.null(v$start))
 	v$start
 }
 
 values_get_end = function(x) {
 	stopifnot(inherits(x, "dimension"))
 	v = x$values
-	stopifnot(inherits(v, "data.frame") && !is.null(v$end))
+	stopifnot(inherits(v, "intervals") && !is.null(v$end))
 	v$end
 }
 
@@ -30,7 +30,7 @@ values_get_where = function(x, where) {
 	else {
 		stopifnot(inherits(x, "dimension"))
 		v = x$values
-		stopifnot(inherits(v, "data.frame"))
+		stopifnot(inherits(v, "intervals"))
 		v$start + where * (v$end - v$start)
 	}
 }
@@ -92,7 +92,7 @@ set_dimension_values = function(..., start = NULL, end = NULL, centers = NULL) {
 			else
 				c(start[-1], start[l] + diff(c(start[l-1], start[l])))
 	}
-	data.frame(start = start, end = end)
+	make_intervals(start = start, end = end)
 }
 
 range.dimension = function(..., na.rm = FALSE) {
