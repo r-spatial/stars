@@ -73,12 +73,12 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 	d = st_dimensions(.x)
 	if (! missing(values)) {
 		stopifnot(!missing(which))
-		n_values = if(inherits(values, "data.frame"))
-				nrow(values)
+		if (dim(.x)[which] != length(values)) {
+			if (dim(.x)[which] == length(values) - 1)
+				values = as_intervals(values)
 			else
-				length(values)
-		if (dim(.x)[which] != n_values)
-			stop(paste("length of values does not match dimension", which))
+				stop(paste("length of values does not match dimension", which))
+		}
 		d[[which]] = create_dimension(values = values, ...)
 		if (! missing(names) && length(names) == 1)
 			base::names(d)[which] = names
@@ -124,7 +124,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
-		to = ifelse(is.data.frame(values), nrow(values), length(values))
+		to = length(values)
 		if (is.character(values) || is.factor(values))
 			values = as.character(values)
 		else if (is.atomic(values)) { 
@@ -389,7 +389,7 @@ dim.dimensions = function(x) {
 #' @export
 print.dimensions = function(x, ..., digits = 6) {
 	lst = lapply(x, function(y) {
-			if (length(y$values) > 2 || is.data.frame(y$values)) {
+			if (length(y$values) > 2) {
 				y$values = if (is.array(y$values))
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 

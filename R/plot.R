@@ -218,9 +218,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	if (! is_curvilinear(x)) {
 		dims = expand_dimensions.stars(x, center = FALSE, max = FALSE)
 		d_max = expand_dimensions.stars(x, center = FALSE, max = TRUE)
-		if (inherits(d[[dimx]]$values, "intervals"))
+		if (tail(dims[[dimx]], 1) != tail(d_max[[dimx]], 1))
 			dims[[ dimx ]] = c(dims[[dimx]], tail(d_max[[dimx]], 1))
-		if (inherits(d[[dimy]]$values, "intervals"))
+		if (tail(dims[[dimy]], 1) != tail(d_max[[dimy]], 1))
 			dims[[ dimy ]] = c(dims[[dimy]], tail(d_max[[dimy]], 1))
 
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
