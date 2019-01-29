@@ -463,9 +463,7 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 
 
 #' @export
-`[.dimension` = function(x, i, ..., values = NULL) {
-	if (!missing(values))
-		stop("values argument no longer supported")
+`[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
 		if (!is.null(x$values) && !is.matrix(x$values))
 			x$values = x$values[i]
@@ -482,7 +480,7 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 				x$from = 1
 				x$to = length(i)
 			}
-		} 
+		}
 	}
 	x
 }

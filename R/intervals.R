@@ -16,8 +16,6 @@ head.intervals = function(x, n) make_intervals(head(x$start, n), head(x$end, n))
 
 tail.intervals = function(x, n) make_intervals(tail(x$start, n), tail(x$end, n))
 
-as.data.frame.intervals = function(x) data.frame(start = x$start, end = x$end)
-
 `[.intervals` = function(x, i, ...) {
 	make_intervals(x$start[i], x$end[i])
 }
