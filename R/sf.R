@@ -7,14 +7,9 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 	r = attr(st_dimensions(x), "raster")
 	gt = get_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
-	if (! as_points && is_rectilinear(x)) {
-		if (inherits(df <- d[[1]]$values, "intervals"))
-			d[[1]]$values = c(df$start, tail(df$end, 1))
-		if (inherits(df <- d[[2]]$values, "intervals"))
-			d[[2]]$values = c(df$start, tail(df$end, 1))
-	}
-	st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt, 
-		end_points = dim(d) > dim(x)[r$dimensions])
+	if (utils::packageVersion("sf") <= "0.7.2" && is_rectilinear(x))
+		stop("for converting rectangular grids to sf, upgrade sf to a version > 0.7-2")
+	st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt) 
 }
 
 

@@ -1,0 +1,69 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(stars))
+> 
+> library(spacetime)
+> data(air) # this loads several datasets in .GlobalEnv
+> dim(air)
+space  time 
+   70  4383 
+> d = st_dimensions(station = st_as_sfc(stations), time = dates)
+> (aq = st_as_stars(list(PM10 = air), dimensions = d))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     PM10        
+ Min.   :  0.00  
+ 1st Qu.:  9.92  
+ Median : 14.79  
+ Mean   : 17.70  
+ 3rd Qu.: 21.99  
+ Max.   :274.33  
+ NA's   :157659  
+dimension(s):
+        from   to     offset  delta                       refsys point
+station    1   70         NA     NA +proj=longlat +datum=WGS8...  TRUE
+time       1 4383 1998-01-01 1 days                         Date FALSE
+                                                         values
+station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
+time                                                       NULL
+> (a = aggregate(aq, st_as_sf(DE_NUTS1), mean, na.rm = TRUE))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     PM10         
+ Min.   :  1.075  
+ 1st Qu.: 10.886  
+ Median : 15.316  
+ Mean   : 17.888  
+ 3rd Qu.: 21.811  
+ Max.   :172.267  
+ NA's   :25679    
+dimension(s):
+     from   to     offset  delta                       refsys point
+aggr    1   16         NA     NA +proj=longlat +datum=WGS8...    NA
+time    1 4383 1998-01-01 1 days                         Date FALSE
+                                                                values
+aggr MULTIPOLYGON (((9.65046 49....,...,MULTIPOLYGON (((10.77189 51...
+time                                                              NULL
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  4.359   0.092   4.448 
