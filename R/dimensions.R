@@ -112,11 +112,19 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 }
 
 regular_intervals = function(x, epsilon = 1e-10) {
-	ud = if (is.atomic(x))
-			unique(diff(x))
-		else
-			x$end - x$start
-	length(ud) > 0 && diff(range(ud)) / mean(ud) < epsilon
+	if (length(x) <= 1)
+		FALSE
+	else {
+		ud = if (is.atomic(x))
+				unique(diff(x))
+			else {
+				if (identical(tail(x$end, -1), head(x$start, -1)))
+					x$end - x$start
+				else
+					return(FALSE)
+			}
+		diff(range(ud)) / mean(ud) < epsilon
+	}
 }
 
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 

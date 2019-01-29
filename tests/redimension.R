@@ -6,3 +6,6 @@ r = read_stars(list(a = c(tif,tif), b = c(tif, tif)), proxy = TRUE)
 st_as_stars(rr)
 (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
 st_as_stars(rrr)
+
+(r = read_stars(tif))
+(r_crazy = st_redimension(r, new_dim = st_dimensions(r)[c(2,1,3)])) # art!

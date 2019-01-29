@@ -32,7 +32,13 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 + nit[[1]][nit[[1]] > 9e+36] = NA
 + 
 + ll = setNames(c(lon, lat), c("x", "y"))
-+ nit.c = st_as_stars(nit, curvilinear = ll)
++ nit.c0 = st_as_stars(nit, curvilinear = ll)
++ 
++ # more direct method:
++ nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
++ 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
++ nit.c[[1]][nit.c[[1]] > 9e+36] = NA
++ all.equal(nit.c0, nit.c)
 + st_crs(nit.c) = 4326
 + print(nit.c)
 + 
@@ -60,6 +66,9 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 + dev.off()
 + 
 + }
+//PRODUCT/longitude, 
+//PRODUCT/latitude, 
+//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
 stars object with 2 dimensions and 1 attribute
 attribute(s):
  nitrogendioxide_summed_total_column 
@@ -101,4 +110,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  6.921   0.112   7.025 
+  8.472   0.117   8.581 

@@ -67,10 +67,10 @@ get_dimension_values = function(x, where = 0.0, geotransform, what = NA_characte
 	}
 }
 
-values_range = function(x) {
-	stopifnot(inherits(x, "dimension"))
-	range(as.vector(as.matrix(x$values)))
-}
+#values_range = function(x) {
+#	stopifnot(inherits(x, "dimension"))
+#	range(as.vector(as.matrix(x$values)))
+#}
 
 # sets the values (start, end) field of a dimension, from centers, from start, or from start & end.
 # if end is not given, the last two intervals are assumed to be equal sized
