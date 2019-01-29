@@ -81,10 +81,13 @@ x    1  4     NA    NA     NA    NA [1,2),...,[4,6) [x]
 y    1  4     NA    NA     NA    NA [2,3),...,[5,8) [y]
 > 
 > # st_as_sf:
-> plot(st_as_sf(st, as_points = FALSE), axes = TRUE)
+> 
+> if (utils::packageVersion("sf") > "0.7.2") {
++ 	plot(st_as_sf(st, as_points = FALSE), axes = TRUE)
++ }
 > 
 > image(st, text_values = TRUE, axes = TRUE)
 > 
 > proc.time()
    user  system elapsed 
-  0.902   0.039   0.933 
+  0.894   0.080   0.965 
