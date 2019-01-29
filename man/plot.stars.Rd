@@ -16,7 +16,8 @@
   (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
   text_values = FALSE, axes = FALSE, interpolate = FALSE,
-  as_points = FALSE, key.pos = NULL, logz = FALSE)
+  as_points = FALSE, key.pos = NULL, logz = FALSE,
+  key.width = lcm(1.8), key.length = 0.618)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
