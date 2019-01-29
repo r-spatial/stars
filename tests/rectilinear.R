@@ -17,4 +17,6 @@ st$foo = st$m * 2
 st
 
 # st_as_sf:
-st_as_sf(st)
+st_as_sf(st, as_points = FALSE)
+
+image(st, text_values = TRUE, axes = TRUE)

@@ -1,118 +1,22 @@
+suppressPackageStartupMessages(library(stars))
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = read_stars(tif)
+(xx = x[,c(1:347,349),c(1:350,352),]) # rectilinear: one-but-last row & col missing
+image(xx) # chooses useRaster itself
+  # see also tidy.R for a ggplot example, leaving out the row.
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+m = matrix(1:16, 4, 4)
+x = 1:4
+y = 2:5
+(st = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+st_set_dimensions(st, 2, values = c(2,3,4,5,8))
+try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
+# $<-.stars:
+st$foo = st$m * 2
+st
 
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
+# st_as_sf:
+st_as_sf(st, as_points = FALSE)
 
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> suppressPackageStartupMessages(library(stars))
-> tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> x = read_stars(tif)
-> (xx = x[,c(1:347,349),c(1:350,352),]) # rectilinear: one-but-last row & col missing
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.99  
- 3rd Qu.: 86.00  
- Max.   :255.00  
-dimension(s):
-     from  to offset delta                       refsys point
-x       1 348     NA    NA +proj=utm +zone=25 +south... FALSE
-y       1 351     NA    NA +proj=utm +zone=25 +south... FALSE
-band    1   6     NA    NA                           NA    NA
-                                      values    
-x    [288790.5,288819),...,[298708.5,298737) [x]
-y    [9120747,9120718),...,[9110743,9110715) [y]
-band                                    NULL    
-> image(xx) # chooses useRaster itself
->   # see also tidy.R for a ggplot example, leaving out the row.
-> 
-> m = matrix(1:16, 4, 4)
-> x = 1:4
-> y = 2:5
-> (st = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-       m        
- Min.   : 1.00  
- 1st Qu.: 4.75  
- Median : 8.50  
- Mean   : 8.50  
- 3rd Qu.:12.25  
- Max.   :16.00  
-dimension(s):
-  from to offset delta refsys point values    
-x    1  4      1     1     NA FALSE   NULL [x]
-y    1  4      2     1     NA FALSE   NULL [y]
-> st_set_dimensions(st, 2, values = c(2,3,4,5,8))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-       m        
- Min.   : 1.00  
- 1st Qu.: 4.75  
- Median : 8.50  
- Mean   : 8.50  
- 3rd Qu.:12.25  
- Max.   :16.00  
-dimension(s):
-  from to offset delta refsys point          values    
-x    1  4      1     1     NA FALSE            NULL [x]
-y    1  4     NA    NA     NA    NA [2,3),...,[5,8) [y]
-> try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
-Error in st_set_dimensions(st, 2, values = c(2, 3, 4, 5, 8, 20)) : 
-  length of values does not match dimension 2
-> 
-> # $<-.stars:
-> st$foo = st$m * 2
-> st
-stars object with 2 dimensions and 2 attributes
-attribute(s):
-       m              foo      
- Min.   : 1.00   Min.   : 2.0  
- 1st Qu.: 4.75   1st Qu.: 9.5  
- Median : 8.50   Median :17.0  
- Mean   : 8.50   Mean   :17.0  
- 3rd Qu.:12.25   3rd Qu.:24.5  
- Max.   :16.00   Max.   :32.0  
-dimension(s):
-  from to offset delta refsys point values    
-x    1  4      1     1     NA FALSE   NULL [x]
-y    1  4      2     1     NA FALSE   NULL [y]
-> 
-> # st_as_sf:
-> st_as_sf(st)
-Simple feature collection with 16 features and 1 field
-geometry type:  POLYGON
-dimension:      XY
-bbox:           xmin: 1 ymin: 2 xmax: 5 ymax: 6
-epsg (SRID):    NA
-proj4string:    NA
-First 10 features:
-    m                       geometry
-1   1 POLYGON ((1 2, 1 3, 2 3, 2 ...
-2   2 POLYGON ((2 2, 2 3, 3 3, 3 ...
-3   3 POLYGON ((3 2, 3 3, 4 3, 4 ...
-4   4 POLYGON ((4 2, 4 3, 5 3, 5 ...
-5   5 POLYGON ((1 3, 1 4, 2 4, 2 ...
-6   6 POLYGON ((2 3, 2 4, 3 4, 3 ...
-7   7 POLYGON ((3 3, 3 4, 4 4, 4 ...
-8   8 POLYGON ((4 3, 4 4, 5 4, 5 ...
-9   9 POLYGON ((1 4, 1 5, 2 5, 2 ...
-10 10 POLYGON ((2 4, 2 5, 3 5, 3 ...
-> 
-> proc.time()
-   user  system elapsed 
-  0.837   0.058   0.886 
+image(st, text_values = TRUE, axes = TRUE)
