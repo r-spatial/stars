@@ -77,10 +77,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					layout(matrix(c(1,2), nrow = 2, ncol = 1), widths = 1, heights = c(key.width, 1)),  # 3 top
 					layout(matrix(c(2,1), nrow = 1, ncol = 2), widths = c(1, key.width), heights = 1)   # 4 right
 				)
-				if (is.factor(values)) {
+				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes, ...)
-				} else
+				else
 					.image_scale(values, col, breaks = breaks, key.pos = key.pos, 
 						key.width = key.width, key.length = key.length, axes = axes, ...) 
 			}
@@ -89,7 +89,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
-			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, main = NULL)
+			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, 
+				key.width = key.width, key.length = key.length, main = NULL)
 			if (!is.null(main))
 				title(main)
 
@@ -137,7 +138,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	} else if (has_sfc(x)) {
 		if (key.pos.missing)
 			key.pos = -1
-		plot(st_as_sf(x), ..., key.pos = key.pos, axes = axes)
+		plot(st_as_sf(x), ..., key.pos = key.pos, key.length = key.length, key.width = key.width, reset = reset, axes = axes)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {
@@ -187,7 +188,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		maxColorValue = max(x[[attr]], na.rm = TRUE),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE) {
+		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
+		key.width = lcm(1.8), key.length = 0.618) {
 
 	dots = list(...)
 
@@ -271,7 +273,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 				plot(x, pal = col, ...) # need to swap arg names: FIXME:?
 		}
 		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, 
-			key.pos = key.pos, logz = logz, ...)
+			key.pos = key.pos, key.width = key.width, key.length = key.length, logz = logz, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(ar)) == 2)
