@@ -3,9 +3,12 @@
 \name{st_transform}
 \alias{st_transform}
 \alias{st_transform.stars}
+\alias{st_transform_proj.stars}
 \title{transform features, or warp/resample grids in stars objects to a new coordinate reference system}
 \usage{
 \method{st_transform}{stars}(x, crs, ...)
+
+st_transform_proj.stars(x, crs, ...)
 }
 \arguments{
 \item{x}{object of class \code{stars}, with either raster or simple feature geometries}

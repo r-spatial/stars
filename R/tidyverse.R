@@ -147,6 +147,7 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
+	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 

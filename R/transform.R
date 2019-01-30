@@ -1,14 +1,3 @@
-transform_sfc = function(x, crs, ...) {
-	crs = st_crs(crs)
-	d = st_dimensions(x)
-	ix = which(sapply(d, function(i) inherits(i$values, "sfc")))
-	for (j in ix) {
-		d[[j]]$values = st_transform(d[[j]]$values, crs, ...)
-		d[[j]]$refsys = crs
-	}
-	structure(x, dimensions = d)
-}
-
 to_curvilinear = function(x) {
 	if (! is_curvilinear(x)) {
 		xy = attr(st_dimensions(x), "raster")$dimensions
@@ -61,14 +50,44 @@ transform_curvilinear = function(x, crs, ...) {
 #' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
 #' @export
 st_transform.stars =  function(x, crs, ...) {
-
 	if (has_sfc(x)) {
 		if (!inherits(crs, "crs") && !inherits(crs, "stars"))
 			crs = st_crs(crs) # needed for GDAL's transform of features
-		transform_sfc(x, crs, ...)
+		d = st_dimensions(x)
+		ix = which_sfc(x)
+		for (j in ix) {
+			d[[j]]$values = st_transform(d[[j]]$values, crs, ...)
+			d[[j]]$refsys = crs$proj4string
+		}
+		structure(x, dimensions = d)
 	} else {
 		if (! has_raster(x)) {
 			warning("no spatial coordinates present: st_transform does nothing")
+			x
+		} else
+			transform_curvilinear(to_curvilinear(x), crs)
+	}
+}
+
+#' @name st_transform
+#' @export
+st_transform_proj.stars =  function(x, crs, ...) {
+
+	if (inherits(crs, "crs"))
+		crs = crs$proj4string
+	if (has_sfc(x)) {
+    	if (!requireNamespace("lwgeom", quietly = TRUE))
+        	stop("package lwgeom required, please install it first") # nocov
+		d = st_dimensions(x)
+		ix = which_sfc(x)
+		for (j in ix) {
+			d[[j]]$values = lwgeom::st_transform_proj(d[[j]]$values, crs, ...)
+			d[[j]]$refsys = crs
+		}
+		structure(x, dimensions = d)
+	} else {
+		if (! has_raster(x)) {
+			warning("no spatial coordinates present: st_transform_proj does nothing")
 			x
 		} else
 			transform_curvilinear(to_curvilinear(x), crs)
