@@ -24,5 +24,6 @@ x = st_xy2sfc(x, as_points = FALSE)
 (x__ = st_transform_proj(x, st_crs(4326)))
 all.equal(x_,x__,check.attributes = FALSE)
 
-# nothing to transform:
+# nothing to transform: warnings
 st_transform(st_as_stars(list(matrix(1,10,10))), st_crs(4326))
+st_transform_proj(st_as_stars(list(matrix(1,10,10))), st_crs(4326))

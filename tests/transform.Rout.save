@@ -90,7 +90,7 @@ band                                                              NULL
 > all.equal(x_,x__,check.attributes = FALSE)
 [1] TRUE
 > 
-> # nothing to transform:
+> # nothing to transform: warnings
 > st_transform(st_as_stars(list(matrix(1,10,10))), st_crs(4326))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -108,7 +108,24 @@ X2    1 10     NA    NA     NA    NA   NULL
 Warning message:
 In st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), st_crs(4326)) :
   no spatial coordinates present: st_transform does nothing
+> st_transform_proj(st_as_stars(list(matrix(1,10,10))), st_crs(4326))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+            
+ Min.   :1  
+ 1st Qu.:1  
+ Median :1  
+ Mean   :1  
+ 3rd Qu.:1  
+ Max.   :1  
+dimension(s):
+   from to offset delta refsys point values
+X1    1 10     NA    NA     NA    NA   NULL
+X2    1 10     NA    NA     NA    NA   NULL
+Warning message:
+In st_transform_proj.stars(st_as_stars(list(matrix(1, 10, 10))),  :
+  no spatial coordinates present: st_transform_proj does nothing
 > 
 > proc.time()
    user  system elapsed 
-  0.715   0.061   0.767 
+  0.693   0.028   0.712 
