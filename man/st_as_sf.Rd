@@ -11,7 +11,7 @@
 
 \method{st_as_sf}{stars}(x, ..., as_points = !merge, na.rm = TRUE,
   merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)),
-  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]))
+  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -27,6 +27,8 @@
 \item{merge}{logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details}
 
 \item{use_integer}{(relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).}
+
+\item{long}{logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled}
 }
 \description{
 Convert stars object into an sf object

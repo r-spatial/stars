@@ -12,11 +12,12 @@
   key.length = 0.618, reset = TRUE, box_col = grey(0.8))
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
-  rgb = NULL, maxColorValue = max(x[[attr]]), xlab = if (!axes) ""
-  else names(d)[1], ylab = if (!axes) "" else names(d)[2],
+  rgb = NULL, maxColorValue = max(x[[attr]], na.rm = TRUE), xlab = if
+  (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim,
   text_values = FALSE, axes = FALSE, interpolate = FALSE,
-  as_points = FALSE, key.pos = NULL, logz = FALSE)
+  as_points = FALSE, key.pos = NULL, logz = FALSE,
+  key.width = lcm(1.8), key.length = 0.618)
 }
 \arguments{
 \item{x}{object of class \code{stars}}

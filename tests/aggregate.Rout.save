@@ -1,0 +1,71 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(stars))
+> 
+> library(spacetime)
+> data(air) # this loads several datasets in .GlobalEnv
+> dim(air)
+space  time 
+   70  4383 
+> d = st_dimensions(station = st_as_sfc(stations), time = dates)
+> 
+> blocks = st_make_grid(st_as_sfc("POLYGON ((5.871619 47.26986, 15.03811 47.26986, 15.03811 55.05653, 5.871619 55.05653, 5.871619 47.26986))", crs = 4326),
++ 	n = c(3,3))
+> 
+> (aq = st_as_stars(list(PM10 = air), dimensions = d))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     PM10        
+ Min.   :  0.00  
+ 1st Qu.:  9.92  
+ Median : 14.79  
+ Mean   : 17.70  
+ 3rd Qu.: 21.99  
+ Max.   :274.33  
+ NA's   :157659  
+dimension(s):
+        from   to     offset  delta                       refsys point
+station    1   70         NA     NA +proj=longlat +datum=WGS8...  TRUE
+time       1 4383 1998-01-01 1 days                         Date FALSE
+                                                         values
+station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
+time                                                       NULL
+> (a = aggregate(aq, blocks, mean, na.rm = TRUE))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     PM10        
+ Min.   :  1.00  
+ 1st Qu.: 11.00  
+ Median : 15.57  
+ Mean   : 18.17  
+ 3rd Qu.: 22.17  
+ Max.   :183.27  
+ NA's   :8429    
+dimension(s):
+     from   to     offset  delta                       refsys point
+aggr    1    9         NA     NA +proj=longlat +datum=WGS8...    NA
+time    1 4383 1998-01-01 1 days                         Date FALSE
+                                                                values
+aggr POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
+time                                                              NULL
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  3.866   0.040   3.899 

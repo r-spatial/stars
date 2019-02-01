@@ -1,0 +1,399 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> 
+> # regular, but not spatial:
+> d = st_dimensions(a = 1:3, b = 1:3, band = c("foo", "bar"))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point   values
+a       1  3      1     1     NA FALSE     NULL
+b       1  3      1     1     NA FALSE     NULL
+band    1  2     NA    NA     NA FALSE foo, bar
+> as.data.frame(st, add_max=FALSE)[1:4,]
+  a b band X
+1 1 1  foo 1
+2 2 1  foo 2
+3 3 1  foo 3
+4 1 2  foo 4
+> try(x <- st_bbox(st)) # error
+Error in st_bbox.dimensions(st_dimensions(obj), ...) : 
+  dimensions table does not have x & y, nor an sfc dimension
+> 
+> # regular, geotransform:
+> d = st_dimensions(x = 1:3, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point   values    
+x       1  3      1     1     NA FALSE     NULL [x]
+y       1  3      1     1     NA FALSE     NULL [y]
+band    1  2     NA    NA     NA FALSE foo, bar    
+> as.data.frame(st, add_max=FALSE)[1:4,]
+    x   y band X
+1 1.5 1.5  foo 1
+2 2.5 1.5  foo 2
+3 3.5 1.5  foo 3
+4 1.5 2.5  foo 4
+> as.data.frame(st, add_max=TRUE)[1:4,]
+  x y band x_max y_max X
+1 1 1  foo     2     2 1
+2 2 1  foo     3     2 2
+3 3 1  foo     4     2 3
+4 1 2  foo     2     3 4
+> st_bbox(st)
+xmin ymin xmax ymax 
+   1    1    4    4 
+> 
+> # rectilinear with offset given:
+> xd = c(1, 2, 4)
+> d = st_dimensions(x = xd, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point          values    
+x       1  3     NA    NA     NA FALSE [1,2),...,[4,6) [x]
+y       1  3      1     1     NA FALSE            NULL [y]
+band    1  2     NA    NA     NA FALSE        foo, bar    
+> as.data.frame(st, add_max=FALSE)[1:4,]
+    x   y band X
+1 1.5 1.5  foo 1
+2 3.0 1.5  foo 2
+3 5.0 1.5  foo 3
+4 1.5 2.5  foo 4
+> as.data.frame(st, add_max=TRUE)[1:4,]
+  x y band x_max y_max X
+1 1 1  foo     2     2 1
+2 2 1  foo     4     2 2
+3 4 1  foo     6     2 3
+4 1 2  foo     2     3 4
+> st_bbox(st)
+xmin ymin xmax ymax 
+   1    1    6    4 
+> 
+> # rectilinear with midpoints given:
+> xd = c(1, 2, 4)
+> d = st_dimensions(x = xd, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"), cell_midpoints = TRUE)
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point              values    
+x       1  3     NA    NA     NA FALSE [0.5,1.5),...,[3,5) [x]
+y       1  3    0.5     1     NA FALSE                NULL [y]
+band    1  2     NA    NA     NA FALSE            foo, bar    
+> as.data.frame(st, add_max=FALSE)[1:4,]
+     x y band X
+1 1.00 1  foo 1
+2 2.25 1  foo 2
+3 4.00 1  foo 3
+4 1.00 2  foo 4
+> as.data.frame(st, add_max=TRUE)[1:4,]
+    x   y band x_max y_max X
+1 0.5 0.5  foo   1.5   1.5 1
+2 1.5 0.5  foo   3.0   1.5 2
+3 3.0 0.5  foo   5.0   1.5 3
+4 0.5 1.5  foo   1.5   2.5 4
+> st_bbox(st)
+xmin ymin xmax ymax 
+ 0.5  0.5  5.0  3.5 
+> 
+> # rectilinear with midpoints given, point support
+> xd = c(1, 2, 4)
+> d = st_dimensions(x = xd, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"), cell_midpoints = TRUE, point = TRUE)
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point   values    
+x       1  3     NA    NA     NA  TRUE  1,...,4 [x]
+y       1  3    0.5     1     NA  TRUE     NULL [y]
+band    1  2     NA    NA     NA  TRUE foo, bar    
+> as.data.frame(st, add_max=FALSE)[1:4,]
+  x y band X
+1 1 1  foo 1
+2 2 1  foo 2
+3 4 1  foo 3
+4 1 2  foo 4
+> as.data.frame(st, add_max=TRUE)[1:4,]
+  x   y band x_max y_max X
+1 1 0.5  foo     1   1.5 1
+2 2 0.5  foo     2   1.5 2
+3 4 0.5  foo     4   1.5 3
+4 1 1.5  foo     1   2.5 4
+> st_bbox(st)
+xmin ymin xmax ymax 
+ 1.0  0.5  4.0  3.5 
+> 
+> # rectilinear with start/end given:
+> #xd = stars:::make_intervals(start = c(1,2,4), end = c(2, 4, 8))
+> xd = c(1, 2, 4, 8) # one more than dim of the data array
+> d = st_dimensions(x = xd, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point          values    
+x       1  3     NA    NA     NA FALSE [1,2),...,[4,8) [x]
+y       1  3      1     1     NA FALSE            NULL [y]
+band    1  2     NA    NA     NA FALSE        foo, bar    
+> as.data.frame(st, add_max=FALSE)[1:4,]
+    x   y band X
+1 1.5 1.5  foo 1
+2 3.0 1.5  foo 2
+3 6.0 1.5  foo 3
+4 1.5 2.5  foo 4
+> as.data.frame(st, add_max=TRUE)[1:4,]
+  x y band x_max y_max X
+1 1 1  foo     2     2 1
+2 2 1  foo     4     2 2
+3 4 1  foo     8     2 3
+4 1 2  foo     2     3 4
+> st_bbox(st)
+xmin ymin xmax ymax 
+   1    1    8    4 
+> 
+> # with sfc:
+> sfc = st_sfc(st_point(0:1), st_point(2:1), st_point(4:3))
+> d = st_dimensions(x = sfc, y = 1:3, band = c("foo", "bar"))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point                      values
+x       1  3     NA    NA     NA  TRUE POINT (0 1),...,POINT (4 3)
+y       1  3      1     1     NA FALSE                        NULL
+band    1  2     NA    NA     NA FALSE                    foo, bar
+> as.data.frame(st, add_max=FALSE)[1:4,]
+            x y band X
+1 POINT (0 1) 1  foo 1
+2 POINT (2 1) 1  foo 2
+3 POINT (4 3) 1  foo 3
+4 POINT (0 1) 2  foo 4
+> st_as_sf(st, long = TRUE)[1:4,]
+Simple feature collection with 4 features and 3 fields
+geometry type:  POINT
+dimension:      XY
+bbox:           xmin: 0 ymin: 1 xmax: 4 ymax: 3
+epsg (SRID):    NA
+proj4string:    NA
+  y band X           x
+1 1  foo 1 POINT (0 1)
+2 1  foo 2 POINT (2 1)
+3 1  foo 3 POINT (4 3)
+4 2  foo 4 POINT (0 1)
+> st_bbox(st)
+xmin ymin xmax ymax 
+   0    1    4    3 
+> 
+> # rotated/sheared:
+> d = st_dimensions(x = 1:3, y = 1:3, band = c("foo", "bar"), .raster = c("x", "y"), affine = c(0.2, -0.2))
+> (st = st_as_stars(array(1:18, c(3,3,2)), dimension = d))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+       X        
+ Min.   : 1.00  
+ 1st Qu.: 5.25  
+ Median : 9.50  
+ Mean   : 9.50  
+ 3rd Qu.:13.75  
+ Max.   :18.00  
+dimension(s):
+     from to offset delta refsys point   values    
+x       1  3      1     1     NA FALSE     NULL [x]
+y       1  3      1     1     NA FALSE     NULL [y]
+band    1  2     NA    NA     NA FALSE foo, bar    
+sheared raster with parameters: 0.2 -0.2 
+> as.data.frame(st, add_max=FALSE)[1:4,]
+    x   y X
+1 1.6 1.4 1
+2 2.6 1.2 2
+3 3.6 1.0 3
+4 1.8 2.4 4
+> try(as.data.frame(st, add_max=TRUE)[1:4,]) # errors
+Error in st_coordinates.stars(x, add_max = add_max) : 
+  add_max will not work for rotated/shared rasters
+> st_bbox(st)
+xmin ymin xmax ymax 
+ 1.0  0.4  4.6  4.0 
+> 
+> # curvilinear:
+> set.seed(13531)
+> lon = st_as_stars(matrix(signif(runif(9), 2), 3, 3))
+> lat = st_as_stars(matrix(signif(runif(9), 2), 3, 3))
+> ll = setNames(c(lon, lat), c("lon", "lat"))
+> d = st_dimensions(lon = 1:3, lat = 1:3)
+> a = st_as_stars(list(X = array(1:9, c(3,3))), dimensions = d)
+> (st = st_as_stars(a, curvilinear = ll))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+       X    
+ Min.   :1  
+ 1st Qu.:3  
+ Median :5  
+ Mean   :5  
+ 3rd Qu.:7  
+ Max.   :9  
+dimension(s):
+    from to offset delta                       refsys point
+lon    1  3     NA    NA +proj=longlat +datum=WGS8... FALSE
+lat    1  3     NA    NA +proj=longlat +datum=WGS8... FALSE
+                  values    
+lon  [3x3] 0.03,...,0.89 [x]
+lat [3x3] 0.021,...,0.89 [y]
+curvilinear grid
+> as.data.frame(st)[1:11,]
+    lon  lat X
+1  0.89 0.25 1
+2  0.64 0.25 2
+3  0.30 0.25 3
+4  0.69 0.25 4
+5  0.47 0.25 5
+6  0.26 0.25 6
+7  0.57 0.25 7
+8  0.27 0.25 8
+9  0.03 0.25 9
+10 0.89 0.51 1
+11 0.64 0.51 2
+> st_bbox(st)
+ xmin  ymin  xmax  ymax 
+0.030 0.021 0.890 0.890 
+> 
+> # time regular:
+> t = as.Date("2019-01-20") + 0:3
+> d = st_dimensions(t, sfc)
+> (st = st_as_stars(list(a = matrix(1:12, 4, 3)), dimensions = d))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+       a        
+ Min.   : 1.00  
+ 1st Qu.: 3.75  
+ Median : 6.50  
+ Mean   : 6.50  
+ 3rd Qu.: 9.25  
+ Max.   :12.00  
+dimension(s):
+   from to     offset  delta refsys point                      values
+X1    1  4 2019-01-20 1 days   Date FALSE                        NULL
+X2    1  3         NA     NA     NA  TRUE POINT (0 1),...,POINT (4 3)
+> as.data.frame(st)
+           X1          X2  a
+1  2019-01-20 POINT (0 1)  1
+2  2019-01-21 POINT (0 1)  2
+3  2019-01-22 POINT (0 1)  3
+4  2019-01-23 POINT (0 1)  4
+5  2019-01-20 POINT (2 1)  5
+6  2019-01-21 POINT (2 1)  6
+7  2019-01-22 POINT (2 1)  7
+8  2019-01-23 POINT (2 1)  8
+9  2019-01-20 POINT (4 3)  9
+10 2019-01-21 POINT (4 3) 10
+11 2019-01-22 POINT (4 3) 11
+12 2019-01-23 POINT (4 3) 12
+> 
+> # time, rectilinear
+> t = as.Date("2019-01-20") + c(0, 2, 3, 10)
+> d = st_dimensions(t, sfc)
+> (st = st_as_stars(list(a = matrix(1:12, 4, 3)), dimensions = d))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+       a        
+ Min.   : 1.00  
+ 1st Qu.: 3.75  
+ Median : 6.50  
+ Mean   : 6.50  
+ 3rd Qu.: 9.25  
+ Max.   :12.00  
+dimension(s):
+   from to offset delta refsys point                      values
+X1    1  4     NA    NA     NA FALSE   2019-01-20,...,2019-01-30
+X2    1  3     NA    NA     NA  TRUE POINT (0 1),...,POINT (4 3)
+> as.data.frame(st)
+           X1          X2  a
+1  2019-01-20 POINT (0 1)  1
+2  2019-01-22 POINT (0 1)  2
+3  2019-01-23 POINT (0 1)  3
+4  2019-01-30 POINT (0 1)  4
+5  2019-01-20 POINT (2 1)  5
+6  2019-01-22 POINT (2 1)  6
+7  2019-01-23 POINT (2 1)  7
+8  2019-01-30 POINT (2 1)  8
+9  2019-01-20 POINT (4 3)  9
+10 2019-01-22 POINT (4 3) 10
+11 2019-01-23 POINT (4 3) 11
+12 2019-01-30 POINT (4 3) 12
+> 
+> proc.time()
+   user  system elapsed 
+  0.591   0.031   0.615 
