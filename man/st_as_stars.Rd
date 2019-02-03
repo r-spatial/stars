@@ -21,8 +21,9 @@ st_as_stars(.x, ...)
   crs = st_crs(4326))
 
 \method{st_as_stars}{bbox}(.x, ..., nx = 360, ny = 180,
+  deltax = diff(xlim)/nx, deltay = -diff(ylim)/ny,
   xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")],
-  values = runif(nx * ny))
+  values = 0)
 
 \method{st_as_stars}{sf}(.x, ...)
 
@@ -48,9 +49,13 @@ st_as_stars(.x, ...)
 
 \item{ny}{integer; number of cells in y direction}
 
-\item{xlim}{length 2 numeric vector with extent in x direction}
+\item{deltax}{numeric; cell size in x direction}
 
-\item{ylim}{length 2 numeric vector with extent in y direction}
+\item{deltay}{numeric; cell size in y direction (negative)}
+
+\item{xlim}{length 2 numeric vector with extent (min, max) in x direction}
+
+\item{ylim}{length 2 numeric vector with extent (min, max) in y direction}
 
 \item{values}{value(s) to populate the raster values with}
 

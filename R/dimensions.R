@@ -130,6 +130,9 @@ regular_intervals = function(x, epsilon = 1e-10) {
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		refsys = NA_character_, point = NA, values = NULL, is_raster = FALSE)  {
 
+	if (inherits(refsys, "crs"))
+		refsys = refsys$proj4string
+
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
 		to = length(values)

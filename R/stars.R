@@ -115,16 +115,26 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 
 #' @param nx integer; number of cells in x direction
 #' @param ny integer; number of cells in y direction
-#' @param xlim length 2 numeric vector with extent in x direction
-#' @param ylim length 2 numeric vector with extent in y direction
+#' @param deltax numeric; cell size in x direction
+#' @param deltay numeric; cell size in y direction (negative)
+#' @param xlim length 2 numeric vector with extent (min, max) in x direction
+#' @param ylim length 2 numeric vector with extent (min, max) in y direction
 #' @param values value(s) to populate the raster values with
 #' @export
 #' @name st_as_stars
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
-		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = runif(nx * ny)) {
-	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, 
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, 
+		deltax = diff(xlim)/nx, deltay = -diff(ylim)/ny,
+		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = 0.) {
+	if (missing(nx) && !missing(deltax))
+		nx = ceiling(diff(xlim) / deltax)
+	if (missing(ny) && !missing(deltay)) {
+		if (deltay > 0)
+			deltay = -deltay
+		ny = ceiling(-diff(ylim) / deltay)
+	}
+	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta = deltax, 
 		refsys = st_crs(.x))
-	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, 
+	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = deltay, 
 		refsys = st_crs(.x))
 	st_as_stars(values = array(values, c(x = nx, y = ny)),
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
