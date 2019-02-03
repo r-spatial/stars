@@ -6,6 +6,8 @@
 
 * support for `PCICt` 360- and 365-day calendars; #29
 
+* remove import of `ncdf4` in favour of `RNetCDF`, now in line with practice in `ncmeta` package. 
+
 * `st_as_sf` uses date/time column names when appropriate
 
 * allow missing trailing comma's when subsetting: `a[1,,]` and `a[1,]` now do the same.
