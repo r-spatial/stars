@@ -1,5 +1,7 @@
 # version 0.3-0
 
+* deprecate `st_write.stars` for `write_stars`; #96
+
 * use "native" R array-factor support
 
 * support for `PCICt` 360- and 365-day calendars; #29

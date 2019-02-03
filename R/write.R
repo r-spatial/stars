@@ -1,3 +1,11 @@
+st_write.stars = function(obj, dsn, layer, ...) {
+	.Deprecated("read_stars")
+}
+
+#' @name write_stars
+#' @export
+write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
+
 #' write stars object to gdal dataset (typically: to file)
 #' 
 #' @param obj object of class \code{stars}
@@ -8,9 +16,9 @@
 #' @param options character vector with options
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
-#' @name st_write_stars
+#' @name write_stars
 #' @export
-st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
+write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_) {
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
@@ -19,12 +27,12 @@ st_write.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn),
 	invisible(obj)
 }
 
-#' @name st_write_stars
+#' @name write_stars
 #' @param chunk_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
 #' @param progress logical; if \code{TRUE}, a progress bar is shown
-#' @details the \code{st_write} method for \code{stars_proxy} objects first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
+#' @details \code{write_stars} first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
 #' @export
-st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
+write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
@@ -50,7 +58,7 @@ st_write.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver
 		for (row in 1:nrow) {
 			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
 			di[[2]]$to   = min(row * chunk_size[2], d[2])
-			st_write(st_as_stars(structure(obj, dimensions = di)), dsn = dsn, layer = layer, driver = driver,
+			write_stars(st_as_stars(structure(obj, dimensions = di)), dsn = dsn, layer = layer, driver = driver,
 				options = options, type = type, update = TRUE)
 			if (progress)
 				setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))

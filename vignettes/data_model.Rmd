@@ -20,6 +20,50 @@ set.seed(13579)
 
 This vignette explains the data model of `stars` objects, illustrated using artificial and real datasets.
 
+## Stars objects
+
+`stars` objects consist of 
+
+* a (possibly empty) named list of arrays, each having named dimensions
+* an attribute called `dimensions` with a `dimensions` object carrying dimension metadata
+* a class name that includes `stars`
+
+A `dimensions` object is a named list of `dimension` elements, each
+describing the semantics a dimension of the data arrays (space,
+time, type etc). In addition to that, a `dimensions` object has an
+attribute called `raster` of class `stars_raster`, which is a named
+list with three elements:
+
+* `dimensions` length 2 character; the dimension names that constitute a spatial raster (or NA)
+* `affine` length 2 numeric; the two affine parameters of the geotransform (or NA)
+* `curvilinear` a boolean indicating whether a raster is a curvilinear raster (or NA)
+
+The `affine` and `curvilinear` values are only relevant in case of
+raster data, indicated by `dimensions` to have non-NA values.
+
+A `dimension` object describes a _single_ dimension; it is a list with
+named elements
+
+* `from`: (numeric length 1): the start index of the array
+* `to`: (numeric length 1): the end index of the array
+* `offset`: (numeric length 1): the start coordinate (or time) value of the first pixel (i.e., a pixel/cell boundary)
+* `delta`: (numeric length 1): the increment, or cell size
+* `refsys: (character length 1): string describing the reference system; e.g. the PROJ string or `POSIXct` 
+* `point: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)
+* `values: NULL, or a vector with coordinate values (numeric, POSIXct, `sfc`), or an object of class `intervals`
+
+An `intervals` object is a list with two vectors, `start` and `end`,
+with interval start- and end-values.
+
+Clearly, `offset` and `delta` only apply to _regularly_ discretized
+dimensions, and are `NA` if this is not the case. `from` and
+`to` will usually be 1 and the dimension size, but `from` may
+be larger than 1 in case a regular sub-grid got cut out or was
+cropped.  Irregular grids need grid values in `values`; this can be
+irregularly _spaced_ coordinate values, or coordinate _intervals_
+of irregular width, or even spatial geometries encoded in an `sfc`
+vector ("list-column").
+
 ## Grid type
 
 ### Regular grids
@@ -97,8 +141,6 @@ The rotation angle, in degrees, is
 atan2(0.1, 1) * 180 / pi
 ```
 
-### Regular grids: sheared, sheared and rotated
-
 Sheared grids are obtained when the two rotation coefficients, $a_1$ and $a_2$, are unequal:
 ```{r}
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.2)
@@ -115,10 +157,9 @@ atan2(c(0.1, 0.2), 1) * 180 / pi
 [Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.
 
 ```{r}
-x = c(0,0.5,1,2,4,5)
-y = c(0.3,0.5,1,2,2.2)
-r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y))
-r
+x = c(0, 0.5, 1, 2, 4, 5)
+y = c(0.3, 0.5, 1, 2, 2.2)
+(r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
 image(r, axes = TRUE, col = grey((1:20)/20))
 ```
 

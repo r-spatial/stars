@@ -44,7 +44,7 @@
 #' attr(st, "dimensions")$y$offset = 12
 #' st
 #' tmp = tempfile(fileext = ".tif")
-#' st_write(st, tmp)
+#' write_stars(st, tmp)
 #' (red <- read_stars(tmp))
 #' read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, 
 #'    nBufXSize = 2, nBufYSize = 2))[[1]]

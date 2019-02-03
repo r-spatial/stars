@@ -170,7 +170,7 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE
 	stopifnot(inherits(x, "stars"))
 	if (inherits(x, "stars_proxy"))
 		return(x)
-	st_write(x, fname)
+	write_stars(x, fname)
 	if (!quiet)
 		cat(paste("writing to", fname, "\n"))
 	st_stars_proxy(list(fname), st_dimensions(x))
