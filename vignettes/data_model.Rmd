@@ -48,21 +48,23 @@ named elements
 * `to`: (numeric length 1): the end index of the array
 * `offset`: (numeric length 1): the start coordinate (or time) value of the first pixel (i.e., a pixel/cell boundary)
 * `delta`: (numeric length 1): the increment, or cell size
-* `refsys: (character length 1): string describing the reference system; e.g. the PROJ string or `POSIXct` 
+* `refsys: (character length 1): string describing the reference system; e.g. the PROJ string, or `POSIXct` or `PCICt` (for 360 and 365 days/year calendars)
 * `point: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)
-* `values: NULL, or a vector with coordinate values (numeric, POSIXct, `sfc`), or an object of class `intervals`
-
-An `intervals` object is a list with two vectors, `start` and `end`,
-with interval start- and end-values.
+* `values`: one of 
+    * `NULL`, 
+    * a vector with coordinate values (numeric, `POSIXct`, `PCICt`, or `sfc`), 
+    * an object of class `intervals` (a list with two vectors, `start` and `end`, with interval start- and end-values), or
+    * a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)
 
 Clearly, `offset` and `delta` only apply to _regularly_ discretized
 dimensions, and are `NA` if this is not the case. `from` and
 `to` will usually be 1 and the dimension size, but `from` may
 be larger than 1 in case a regular sub-grid got cut out or was
-cropped.  Irregular grids need grid values in `values`; this can be
-irregularly _spaced_ coordinate values, or coordinate _intervals_
-of irregular width, or even spatial geometries encoded in an `sfc`
-vector ("list-column").
+cropped. Rectilinear and curvilinear grids need grid values in
+`values`; this can be irregularly _spaced_ coordinate values, or
+coordinate _intervals_ of irregular width, or spatial geometries
+encoded in an `sfc` vector ("list-column"), or a matrix with grid
+cell centre values (longitude or latitude) for curvilinear grids.
 
 ## Grid type
 
