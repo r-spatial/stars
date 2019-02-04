@@ -12,3 +12,5 @@ jamie
 tic.R
 TODO
 README.md
+^.*\.Rproj$
+^\.Rproj\.user$
