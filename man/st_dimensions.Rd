@@ -14,10 +14,10 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{array}(.x, ...)
 
-\method{st_dimensions}{default}(.x, ..., .raster = rep(NA_character_, 2),
-  cell_midpoints = FALSE)
+\method{st_dimensions}{default}(.x, ..., .raster, affine = c(0, 0),
+  cell_midpoints = FALSE, point = FALSE)
 
-st_set_dimensions(.x, which, values, names)
+st_set_dimensions(.x, which, values, names, ...)
 }
 \arguments{
 \item{.x}{object to retrieve dimensions information from}
@@ -26,7 +26,11 @@ st_set_dimensions(.x, which, values, names)
 
 \item{.raster}{length 2 character array with names (if any) of the raster dimensions}
 
+\item{affine}{numeric; specify parameters of the affine transformation}
+
 \item{cell_midpoints}{logical; if \code{TRUE} AND the dimension values are strictly regular, the values are interpreted as the cell midpoint values rather than the cell offset values when calculating offset (i.e., the half-cell-size correction is applied); can have a value for each dimension, or else is recycled}
+
+\item{point}{logical; does the pixel value (measure) refer to a point (location) value or to an pixel (area) summary value?}
 
 \item{which}{integer which dimension to change}
 
@@ -39,4 +43,7 @@ the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
 }
 \description{
 get dimensions from stars object
+}
+\details{
+dimensions can be specified in two ways. The simplest is to pass a vector with numeric values for a numeric dimension, or character values for a categorical dimension. Parameter \code{cell_midpoints} is used to specify whether numeric values refer to the offset (start) of a dimension interval (default), or to the center; the center case is only available for regular dimensions. For rectilinear numeric dimensions, one can specify either a vector with cell borders (start values), or a data.frame with two columns named "start" and "end", with the respective interval start and end values. In the first case, the end values are computed from the start values by assuming the last two intervals have equal width.
 }

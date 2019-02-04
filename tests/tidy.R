@@ -9,3 +9,8 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x %>% pull(L7_ETMs.tif) %>% head
 x %>% filter(x > 289900)
 x %>% slice("x", 50:100)
+
+suppressPackageStartupMessages(library(ggplot2))
+ggplot() + geom_stars(data = x) + coord_equal() + facet_wrap(~band)
+ggplot() + geom_stars(data = x[,c(1:50,52:100),c(1:45, 50:60)]) +
+	coord_equal()

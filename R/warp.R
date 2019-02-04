@@ -99,8 +99,10 @@ st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use
 		options = character(0), no_data_value = -9999, debug = FALSE) {
 	if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value)
-		src = st_as_stars_proxy(src)
-		on.exit(unlink(src[[1]]))
+		if (! inherits(src, "stars_proxy")) {
+			src = st_as_stars_proxy(src)
+			on.exit(unlink(src[[1]])) # a temp file
+		}
 		if (missing(dest) && missing(crs)) {
 			dest = tempfile(fileext = ".tif")
 			sf::gdal_utils("warp", src[[1]], dest, options = options)

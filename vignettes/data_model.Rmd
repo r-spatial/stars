@@ -20,6 +20,52 @@ set.seed(13579)
 
 This vignette explains the data model of `stars` objects, illustrated using artificial and real datasets.
 
+## Stars objects
+
+`stars` objects consist of 
+
+* a (possibly empty) named list of arrays, each having named dimensions
+* an attribute called `dimensions` with a `dimensions` object carrying dimension metadata
+* a class name that includes `stars`
+
+A `dimensions` object is a named list of `dimension` elements, each
+describing the semantics a dimension of the data arrays (space,
+time, type etc). In addition to that, a `dimensions` object has an
+attribute called `raster` of class `stars_raster`, which is a named
+list with three elements:
+
+* `dimensions` length 2 character; the dimension names that constitute a spatial raster (or NA)
+* `affine` length 2 numeric; the two affine parameters of the geotransform (or NA)
+* `curvilinear` a boolean indicating whether a raster is a curvilinear raster (or NA)
+
+The `affine` and `curvilinear` values are only relevant in case of
+raster data, indicated by `dimensions` to have non-NA values.
+
+A `dimension` object describes a _single_ dimension; it is a list with
+named elements
+
+* `from`: (numeric length 1): the start index of the array
+* `to`: (numeric length 1): the end index of the array
+* `offset`: (numeric length 1): the start coordinate (or time) value of the first pixel (i.e., a pixel/cell boundary)
+* `delta`: (numeric length 1): the increment, or cell size
+* `refsys: (character, or `crs`): object describing the reference system; e.g. the PROJ string, or string `POSIXct` or `PCICt` (for 360 and 365 days/year calendars), or object of class `crs` (containing both EPSG code and proj4string)
+* `point: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)
+* `values`: one of 
+    * `NULL`, 
+    * a vector with coordinate values (numeric, `POSIXct`, `PCICt`, or `sfc`), 
+    * an object of class `intervals` (a list with two vectors, `start` and `end`, with interval start- and end-values), or
+    * a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)
+
+Clearly, `offset` and `delta` only apply to _regularly_ discretized
+dimensions, and are `NA` if this is not the case. `from` and
+`to` will usually be 1 and the dimension size, but `from` may
+be larger than 1 in case a regular sub-grid got cut out or was
+cropped. Rectilinear and curvilinear grids need grid values in
+`values`; this can be irregularly _spaced_ coordinate values, or
+coordinate _intervals_ of irregular width, or spatial geometries
+encoded in an `sfc` vector ("list-column"), or a matrix with grid
+cell centre values (longitude or latitude) for curvilinear grids.
+
 ## Grid type
 
 ### Regular grids
@@ -97,8 +143,6 @@ The rotation angle, in degrees, is
 atan2(0.1, 1) * 180 / pi
 ```
 
-### Regular grids: sheared, sheared and rotated
-
 Sheared grids are obtained when the two rotation coefficients, $a_1$ and $a_2$, are unequal:
 ```{r}
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.2)
@@ -115,15 +159,10 @@ atan2(c(0.1, 0.2), 1) * 180 / pi
 [Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.
 
 ```{r}
-x = c(0,0.5,1,2,4,5)
-y = c(0.3,0.5,1,2,2.2)
-r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y))
-r
-#plot(st_as_sf(r, as_points = FALSE), axes = TRUE, nbreaks = 20)
-image(x, y, m, col = sf.colors(21))
-x1 = c(0.25,0.75,1.5,3,4.5)
-y1 = c(0.4,0.75,1.5,2.1)
-image(x1, y1, m, col = sf.colors(21))
+x = c(0, 0.5, 1, 2, 4, 5)
+y = c(0.3, 0.5, 1, 2, 2.2)
+(r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+image(r, axes = TRUE, col = grey((1:20)/20))
 ```
 
 ## Curvilinear grids
@@ -145,29 +184,22 @@ EVAL = s5p != ""
 ```
 We can construct the curvilinear `stars` raster by calling `st_as_stars` on three arrays, with data, longitude and latitudes:
 ```{r eval=EVAL}
-lat_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/latitude")
-lon_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/longitude")
-nit_ds = paste0("HDF5:\"", s5p, "\"://PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column")
-lat = read_stars(lat_ds)
-lon = read_stars(lon_ds)
-nit = read_stars(nit_ds)
-nit[[1]][nit[[1]] > 9e+36] = NA
-
-ll = setNames(c(lon, lat), c("x", "y"))
-nit.c = st_as_stars(nit, curvilinear = ll)
+nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
+	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
+nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 st_crs(nit.c) = 4326
 nit.c
 ```
 
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
-		 pch = 16,  logz = TRUE)
+		 pch = 16,  logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
-		 border = NA, logz = TRUE)
+		 border = NA, logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
@@ -175,13 +207,13 @@ We can downsample the data by
 ```{r eval=EVAL}
 (nit.c = stars:::st_downsample(nit.c, 8))
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
-		 pch = 16, logz = TRUE)
+		 pch = 16, logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 which doesn't look nice, but plotting the cells as polygons looks better:
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
-		 border = NA, logz = TRUE)
+		 border = NA, logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
 ```

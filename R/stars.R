@@ -27,11 +27,19 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		if (!is.null(dimensions)) {
 			dx = dim(.x[[1]])
 			dd = dim(dimensions)
-			for (i in seq_along(dim(dimensions))) {
-				# create_dimension was called with $values one longer than corresponding array dim,
-				# AND regularly spaced, meaning offset/delta have replaced $values:
-				if (is.null(dimensions[[i]]$values) && dx[i] < dd[i])
-					dimensions[[i]]$to = dimensions[[i]]$to - 1
+			stopifnot(!is.null(dx), !is.null(dd))
+			for (i in seq_along(dimensions)) {
+				if (dx[i] < dd[i]) { # create_dimension was called with $values one longer than corresponding array dim,
+					v = dimensions[[i]]$values
+					if (is.null(v)) # regularly spaced, meaning offset/delta have replaced $values:
+						dimensions[[i]]$to = dimensions[[i]]$to - 1
+					else if (length(v) == dx[i] + 1) { # convert the one-too-long values into an intervals object:
+						dimensions[[i]]$values = head(v, -1)
+						dimensions[[i]]$to = dimensions[[i]]$to - 1
+					} else
+						stop(paste("incorrect length of dimensions values for dimension", i))
+					dimensions[[i]]$point = FALSE
+				}
 			}
 		}
 	}
@@ -107,16 +115,26 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 
 #' @param nx integer; number of cells in x direction
 #' @param ny integer; number of cells in y direction
-#' @param xlim length 2 numeric vector with extent in x direction
-#' @param ylim length 2 numeric vector with extent in y direction
+#' @param deltax numeric; cell size in x direction
+#' @param deltay numeric; cell size in y direction (negative)
+#' @param xlim length 2 numeric vector with extent (min, max) in x direction
+#' @param ylim length 2 numeric vector with extent (min, max) in y direction
 #' @param values value(s) to populate the raster values with
 #' @export
 #' @name st_as_stars
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
-		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = runif(nx * ny)) {
-	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta =  diff(xlim)/nx, 
+st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, 
+		deltax = diff(xlim)/nx, deltay = -diff(ylim)/ny,
+		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = 0.) {
+	if (missing(nx) && !missing(deltax))
+		nx = ceiling(diff(xlim) / deltax)
+	if (missing(ny) && !missing(deltay)) {
+		if (deltay > 0)
+			deltay = -deltay
+		ny = ceiling(-diff(ylim) / deltay)
+	}
+	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta = deltax, 
 		refsys = st_crs(.x))
-	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = -diff(ylim)/ny, 
+	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = deltay, 
 		refsys = st_crs(.x))
 	st_as_stars(values = array(values, c(x = nx, y = ny)),
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
@@ -187,21 +205,34 @@ has_sfc = function(x) {
 	length(which_sfc(x)) > 0
 }
 
+#' retrieve coordinates for raster or vector cube cells
+#'
+#' retrieve coordinates for raster or vector cube cells
+#' @param x object of class \code{stars}
+#' @param add_max logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value
+#' @name st_coordinates
+#' @param ... ignored
 #' @export
-st_coordinates.stars = function(x, ..., .max = FALSE) {
+st_coordinates.stars = function(x, ..., add_max = FALSE) {
+	dims = st_dimensions(x)
+	xy = attr(dims, "raster")$dimensions
 	if (has_rotate_or_shear(x)) {
+		if (add_max)
+			stop("add_max will not work for rotated/shared rasters")
 		d = dim(x)
-		xy = attr(st_dimensions(x), "raster")$dimensions
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
-		as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-			get_geotransform(x))) # givesl cell centers
+		setNames(as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
+			get_geotransform(x))), xy) # gives cell centers
 	} else {
-		ret = do.call(expand.grid, expand_dimensions(x)) # cell offsets
-		if (.max) 
-			cbind(ret, do.call(expand.grid, expand_dimensions(x, .max = TRUE)))
-		else
-			ret
+		if (add_max) {
+			cbind(
+				do.call(expand.grid, expand_dimensions(x, center = FALSE)), # cell offsets
+				setNames(do.call(expand.grid, expand_dimensions(dims[xy], max = TRUE)),
+					paste0(xy, "_max"))
+			)
+		} else
+			do.call(expand.grid, expand_dimensions(x)) # cell centers for x/y if raster
 	}
 }
 
@@ -210,10 +241,10 @@ st_coordinates.dimensions = function(x, ...) {
 	st_coordinates(st_as_stars(list(), dimensions = x))
 }
 
-
+#' @name st_coordinates
 #' @export
-as.data.frame.stars = function(x, ..., .max = FALSE) {
-	data.frame(st_coordinates(x, .max = .max), lapply(x, function(y) structure(y, dim = NULL)))
+as.data.frame.stars = function(x, ..., add_max = FALSE) {
+	data.frame(st_coordinates(x, add_max = add_max), lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 
@@ -342,7 +373,7 @@ c.stars = function(..., along = NA_integer_) {
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	if (length(drop) > 0)
-		st_as_stars(lapply(x, adrop, drop = drop, ...), dimensions = st_dimensions(x)[-drop])
+		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
 	else 
 		x
 }
@@ -373,9 +404,8 @@ st_bbox.dimensions = function(obj, ...) {
 				if (is_curvilinear(obj))
 					c(xmin = min(x$values), ymin = min(y$values), xmax = max(x$values), ymax = max(y$values))
 				else {
-					e = expand_dimensions(obj)
-					rx = range(e[[ r$dimensions[1] ]])
-					ry = range(e[[ r$dimensions[2] ]])
+					rx = range(x) # dispatches into range.dimension
+					ry = range(y)
 					c(xmin = rx[1], ymin = ry[1], xmax = rx[2], ymax = ry[2])
 				}
 			}
@@ -383,8 +413,10 @@ st_bbox.dimensions = function(obj, ...) {
 	} else {
 		if (! has_sfc(obj))
 			stop("dimensions table does not have x & y, nor an sfc dimension") # nocov
-		ix = which(sapply(obj, function(i) inherits(i$values, "sfc")))
-		st_bbox(obj[[ ix[1] ]]$values) # FIXME: what if there is more than one, e.g. O.D.?
+		ix = which_sfc(obj)
+		if (length(ix) > 1)
+			warning("returning the bounding box of the first geometry dimension")
+		st_bbox(obj[[ ix[1] ]]$values)
 	}
 }
 
@@ -458,7 +490,8 @@ merge.stars = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
+	#out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
+	out = do.call(abind, st_redimension(x))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -472,7 +505,7 @@ merge.stars = function(x, y, ...) {
 sort_out_along = function(ret) { 
 	d1 = st_dimensions(ret[[1]])
 	d2 = st_dimensions(ret[[2]])
-	if ("time" %in% names(d1) && d1$time$offset != d2$time$offset)
+	if ("time" %in% names(d1) && (isTRUE(d1$time$offset != d2$time$offset) || (d1$time$values != d2$time$values)))
 		"time"
 	else
 		NA_integer_

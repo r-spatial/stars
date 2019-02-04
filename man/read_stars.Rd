@@ -16,7 +16,7 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 
 \item{options}{character; opening options}
 
-\item{driver}{character; driver to use for opening file}
+\item{driver}{character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.}
 
 \item{sub}{integer or logical; sub-datasets to be read}
 
@@ -69,7 +69,7 @@ attr(st, "dimensions")$y$delta = -1
 attr(st, "dimensions")$y$offset = 12
 st
 tmp = tempfile(fileext = ".tif")
-st_write(st, tmp)
+write_stars(st, tmp)
 (red <- read_stars(tmp))
 read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, 
    nBufXSize = 2, nBufYSize = 2))[[1]]

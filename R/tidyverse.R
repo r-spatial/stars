@@ -132,7 +132,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
 				mapping = ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
 					xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
 					fill = !!rlang::sym(names(data)[1]))
-			ggplot2::geom_rect(mapping = mapping, data = as.data.frame(data, .max = TRUE), ...)
+			ggplot2::geom_rect(mapping = mapping, data = as.data.frame(data, add_max = TRUE), ...)
 		}
 	} else if (has_sfc(d))
 		ggplot2::geom_sf(data = st_as_sf(data), ...)
@@ -147,6 +147,7 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
+	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 
