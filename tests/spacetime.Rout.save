@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -309,10 +309,7 @@ STFDF> all.equal(stfdf, stfdf[stfdf,]) # converts character to factor...
 > x = st_as_stars(stfdf)
 > xx = as(x, "STFDF")
 > 
-> library(sp)
-> pts = SpatialPoints(rbind(c(0,0), c(0,1), c(1,0), c(1,1)))
-> gridded(pts) = TRUE
-> 
+> # as.xts.stars:
 > library(xts)
 Loading required package: zoo
 
@@ -322,11 +319,25 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
+> as.xts(x)
+                     [,1] [,2] [,3]
+2010-08-05 10:00:00  9.38 21.1 29.8
+2010-08-05 11:00:00 11.50 19.8 31.2
+2010-08-05 12:00:00 10.40 20.5 29.8
+2010-08-05 13:00:00 10.30 21.4 29.4
+Warning message:
+In as.xts.stars(x) : all but first attribute will be ignored
+> 
+> library(sp)
+> pts = SpatialPoints(rbind(c(0,0), c(0,1), c(1,0), c(1,1)))
+> gridded(pts) = TRUE
+> 
 > tm = xts(1:10, as.Date("2010-01-01")+0:9)
 > stfdf = STFDF(pts, tm, data.frame(foo = seq_len(length(pts) * length(tm))))
 > x = st_as_stars(stfdf)
 > xx = as(x, "STFDF")
 > 
+> 
 > proc.time()
    user  system elapsed 
-  0.886   0.202   0.778 
+  1.154   0.073   1.220 

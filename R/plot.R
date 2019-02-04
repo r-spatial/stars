@@ -77,10 +77,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 					layout(matrix(c(1,2), nrow = 2, ncol = 1), widths = 1, heights = c(key.width, 1)),  # 3 top
 					layout(matrix(c(2,1), nrow = 1, ncol = 2), widths = c(1, key.width), heights = 1)   # 4 right
 				)
-				if (is.factor(values)) {
+				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes, ...)
-				} else
+				else
 					.image_scale(values, col, breaks = breaks, key.pos = key.pos, 
 						key.width = key.width, key.length = key.length, axes = axes, ...) 
 			}
@@ -89,7 +89,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
 
 			# plot the map:
-			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, main = NULL)
+			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, 
+				key.width = key.width, key.length = key.length, main = NULL)
 			if (!is.null(main))
 				title(main)
 
@@ -137,7 +138,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	} else if (has_sfc(x)) {
 		if (key.pos.missing)
 			key.pos = -1
-		plot(st_as_sf(x), ..., key.pos = key.pos, axes = axes)
+		plot(st_as_sf(x), ..., key.pos = key.pos, key.length = key.length, key.width = key.width, reset = reset, axes = axes)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {
@@ -184,10 +185,11 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
-		maxColorValue = max(x[[attr]]),
+		maxColorValue = max(x[[attr]], na.rm = TRUE),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
-		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE) {
+		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
+		key.width = lcm(1.8), key.length = 0.618) {
 
 	dots = list(...)
 
@@ -215,31 +217,38 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		return(image(ed, ..., xlab = xlab, ylab = ylab))
 	}
 
-	if (!is_curvilinear(x)) {
-		dims = expand_dimensions(x)
+	if (! is_curvilinear(x)) {
+		dims = expand_dimensions.stars(x, center = FALSE, max = FALSE)
+		d_max = expand_dimensions.stars(x, center = FALSE, max = TRUE)
+		if (tail(dims[[dimx]], 1) != tail(d_max[[dimx]], 1))
+			dims[[ dimx ]] = c(dims[[dimx]], tail(d_max[[dimx]], 1))
+		if (tail(dims[[dimy]], 1) != tail(d_max[[dimy]], 1))
+			dims[[ dimy ]] = c(dims[[dimy]], tail(d_max[[dimy]], 1))
+
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 		if (y_is_neg)
 			dims[[ dimy ]] = rev(dims[[ dimy ]])
 	}
 
-	if (is.null(asp)) {
-		bb = st_bbox(x)
-		asp <- ifelse(isTRUE(st_is_longlat(x)), 1/cos((mean(bb[c(2,4)]) * pi)/180), 1.0)
-	}
+	if (is.null(asp))
+		asp = if (isTRUE(st_is_longlat(x))) {
+				bb = st_bbox(x)
+				1 / cos((mean(bb[c(2,4)]) * pi)/180)
+			} else
+				1.0
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
 	# rearrange ar:
-	third = setdiff(1:3, c(dimxn, dimyn))[1]
-	ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
-			aperm(ar, c(dimxn, dimyn, third))
-		else
-			aperm(ar, c(dimxn, dimyn))
+	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
+	ar = aperm(ar, c(dimxn, dimyn, others))
 
 	if (! is.null(rgb)) {
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
+		if (!y_is_neg) # need to flip y?
+			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
 		ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
 		nas = apply(ar, 1, function(x) any(is.na(x)))
 		ar = rgb(ar[!nas,], maxColorValue = maxColorValue)
@@ -257,26 +266,28 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) {
 		x = st_as_sf(x[1], as_points = as_points)
-		mplot = function(x, col, ...) {
+		mplot = function(x, col, ..., zlim) {
 			if (missing(col))
 				plot(x, ...)
 			else
 				plot(x, pal = col, ...) # need to swap arg names: FIXME:?
 		}
 		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, 
-			key.pos = key.pos, logz = logz, ...)
+			key.pos = key.pos, key.width = key.width, key.length = key.length, logz = logz, ...)
 	} else { # regular grid, no RGB:
 		if (y_is_neg) { # need to flip y?
-			ar = if (length(dim(x)) == 3) # FIXME: deal with more than 3 dims here?
-				ar[ , rev(seq_len(dim(ar)[2])), band]
-			else
-				ar[ , rev(seq_len(dim(ar)[2]))]
+			ar = if (length(dim(ar)) == 2)
+					ar[ , rev(seq_len(dim(ar)[2]))]
+				else
+					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
 			xlim = xlim, ylim = ylim, axes = FALSE, ...)
 	}
-	if (text_values)
+	if (text_values) {
+		dims = expand_dimensions.stars(x, center = TRUE)
 		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
+	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
             .degAxis(1)

@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -17,16 +17,16 @@ Type 'q()' to quit R.
 
 > ## load dependencies
 > library(testthat)
-> 
-> ## test package
-> test_check("stars")
-Loading required package: stars
+> library(stars)
 Loading required package: abind
 Loading required package: sf
 Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> 
+> ## test package
+> test_check("stars")
 ══ testthat results  ═══════════════════════════════════════════════════════════
-OK: 6 SKIPPED: 0 FAILED: 0
+OK: 39 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.679   0.060   0.707 
+  0.913   0.076   0.952 

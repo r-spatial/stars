@@ -54,6 +54,7 @@
 
 	d = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(dim(x)))
+
 	x = unclass(x)
 	if (length(x))
 		x = x[i]
@@ -71,6 +72,19 @@
 		}
 	}
 
+	if (is_curvilinear(d)) { # fill the row/col selectors for $values matrices:
+		args_xy = rep(list(rlang::missing_arg()), 2)
+		xy = attr(d, "raster")$dimensions
+		for (i in seq_along(mc)) {
+			if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+				if (names(d)[i] == xy[1])
+					args_xy[[1]] = mc[[i]]
+				if (names(d)[i] == xy[2])
+					args_xy[[2]] = mc[[i]]
+			}
+		}
+	}
+
 	# subset arrays:
 	args[["drop"]] = FALSE
 	for (i in names(x))
@@ -81,8 +95,8 @@
 		ed = expand_dimensions(d)
 		xy = attr(d, "raster")$dimensions
 		if (is_curvilinear(d)) { # subset curvilinear lat/lon matrices/rasters: can't do one-at-a-time!
-			d[[ xy[1] ]]$values = eval(rlang::expr(d[[ xy[1] ]]$values[!!!args]))
-			d[[ xy[2] ]]$values = eval(rlang::expr(d[[ xy[2] ]]$values[!!!args]))
+			d[[ xy[1] ]]$values = eval(rlang::expr(d[[ xy[1] ]]$values[!!!args_xy]))
+			d[[ xy[2] ]]$values = eval(rlang::expr(d[[ xy[2] ]]$values[!!!args_xy]))
 		}
 		
 		# dimensions:
@@ -91,15 +105,17 @@
 			name_i = names(d)[i]
 			argi = args[i]
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
-					length(argi) > 0 && is.numeric(argi[[1]]) && ! all(diff(eval(argi[[1]])) == 1))
-				d[[i]]$values = ed[[i]]
+					argi[[1]] != rlang::missing_arg() && 
+					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
+				d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
 			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
 		}
 	}
+	x = st_as_stars(x, dimensions = d)
 	if (drop)
-		adrop(st_as_stars(x, dimensions = d))
+		adrop(x)
 	else
-		st_as_stars(x, dimensions = d)
+		x
 }
 
 #' @name stars_subset

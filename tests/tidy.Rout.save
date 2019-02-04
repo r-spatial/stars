@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -112,6 +112,11 @@ x      50 100  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > 
+> suppressPackageStartupMessages(library(ggplot2))
+> ggplot() + geom_stars(data = x) + coord_equal() + facet_wrap(~band)
+> ggplot() + geom_stars(data = x[,c(1:50,52:100),c(1:45, 50:60)]) +
++ 	coord_equal()
+> 
 > proc.time()
    user  system elapsed 
-  0.799   0.061   0.851 
+  3.124   0.107   3.220 

@@ -205,7 +205,7 @@ y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 > x = read_stars(geomatrix)
 > y = st_transform(x, st_crs(4326))
 > st_coordinates(x)[1:10,]
-        V1      V2
+         x       y
 1  1841000 1144000
 2  1841002 1143995
 3  1841003 1143990
@@ -230,10 +230,10 @@ attribute(s):
  Max.   :305.5       
  NA's   :228240      
 dimension(s):
-     from  to     offset   delta  refsys point values    
-x       1 180          0       2      NA    NA   NULL [x]
-y       1 170         90      -1      NA    NA   NULL [y]
-time    1  24 2001-01-16 30 days POSIXct    NA   NULL    
+     from  to     offset   delta refsys point values    
+x       1 180          0       2     NA    NA   NULL [x]
+y       1 170         90      -1     NA    NA   NULL [y]
+time    1  24 2001-01-16 30 days  PCICt    NA   NULL    
 > st_as_stars(st_bbox(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -314,10 +314,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-   from  to  offset delta                       refsys point      values    
-x     1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE        NULL [x]
-y     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE        NULL [y]
-X1    1   6      NA    NA                           NA    NA X1, ..., X6    
+   from  to  offset delta                       refsys point    values    
+x     1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE      NULL [x]
+y     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE      NULL [y]
+X1    1   6      NA    NA                           NA    NA X1,...,X6    
 > 
 > read_stars(c(tif,tif)) # merges as attributes
 stars object with 3 dimensions and 2 attributes
@@ -513,7 +513,7 @@ times    1    3     NA    NA     NA    NA   NULL
 > 
 > st_dimensions(list(matrix(1, 4,4))) # st_dimensions.default
    from to offset delta refsys point
-X1    1  1     NA    NA     NA    NA
+X1    1  1     NA    NA     NA FALSE
                                            values
 X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
@@ -546,4 +546,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  8.985   0.629   9.607 
+  7.233   0.651   7.876 

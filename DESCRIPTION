@@ -1,6 +1,6 @@
 Package: stars
 Title: Scalable, Spatiotemporal Tidy Arrays: Raster and Vector Datacubes
-Version: 0.2-1
+Version: 0.3-0
 Date: 2018-11-24
 Authors@R: 
     c(person(given = "Edzer",
@@ -38,6 +38,7 @@ Imports:
     rlang,
     units
 Suggests: 
+    PCICt,
     covr,
     dplyr (>= 0.7-0),
     ggplot2,
@@ -68,6 +69,7 @@ Collate:
     'read.R'
     'sf.R'
     'dimensions.R'
+    'values.R'
     'plot.R'
     'tidyverse.R'
     'transform.R'
@@ -84,3 +86,4 @@ Collate:
     'warp.R'
     'aggregate.R'
     'xts.R'
+    'intervals.R'
