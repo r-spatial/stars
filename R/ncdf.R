@@ -137,7 +137,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
   for (i in seq_along(coords)) {
-    if (isTRUE(regular[i])) {
+    if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]] - dx/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
