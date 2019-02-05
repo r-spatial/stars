@@ -409,7 +409,11 @@ print.dimensions = function(x, ..., digits = 6) {
 						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
 			}
-			if (!is.na(y$refsys) && nchar(y$refsys) > 28)
+			nc = if (inherits(y$refsys, "crs"))
+					nchar(y$refsys$proj4string)
+				else
+					nchar(y$refsys)
+			if (!is.na(y$refsys) && nc > 28)
 				y$refsys = paste0(substr(y$refsys, 1L, 25),"...")
 			y
 		}

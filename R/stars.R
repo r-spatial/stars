@@ -164,7 +164,7 @@ has_rotate_or_shear = function(x) {
 	dimensions = st_dimensions(x)
 	if (has_raster(x)) {
 		r = attr(dimensions, "raster")
-		!any(is.na(r$affine)) && r$affine != 0.0
+		!any(is.na(r$affine)) && any(r$affine != 0.0)
 	} else
 		FALSE
 }
@@ -192,7 +192,7 @@ is_rectilinear = function(x) {
 
 is_curvilinear = function(x) {
 	d = st_dimensions(x)
-	has_raster(x) && attr(d, "raster")$curvilinear
+	has_raster(x) && isTRUE(attr(d, "raster")$curvilinear)
 }
 
 which_sfc = function(x) {

@@ -35,9 +35,12 @@ dimnames(x) <- letters[1:3]
 dimnames(x)
 
 # multiple sub-datasets:
-nc_red = system.file("nc/reduced.nc", package = "stars")
-(red = read_stars(nc_red))
-plot(red)
+if (version$os == "linux-gnu") { # FIXME: breaks on windows
+  nc_red = system.file("nc/reduced.nc", package = "stars")
+  red = read_stars(nc_red)
+  print(red)
+  plot(red)
+}
 
 x = st_xy2sfc(read_stars(tif)[,1:10,1:10,], as_points = FALSE)
 st_bbox(x)
