@@ -6,7 +6,7 @@
 
 * support for `PCICt` 360- and 365-day calendars; #29
 
-* remove import of `ncdf4` in favour of `RNetCDF`, now in line with practice in `ncmeta` package. 
+* remove import of `ncdf4` in favour of `RNetCDF`, now in line with practice in `ncmeta` package. Thanks to David Blodgett for motivation and testing (see #87, #94). 
 
 * `st_as_sf` uses date/time column names when appropriate
 
