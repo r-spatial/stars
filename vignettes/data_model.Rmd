@@ -154,16 +154,44 @@ Now, the y-axis and x-axis have different rotation in degrees of respectively
 atan2(c(0.1, 0.2), 1) * 180 / pi
 ```
 
-## Rectilinear grids
+## Rectilinear grids: setting cell offsets, centers, or boundaries
 
 [Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.
 
+We can define a rectilinear grid by specifying the cell _boundaries_, meaning for every dimension we specify _one more_ value than the dimension size:
 ```{r}
-x = c(0, 0.5, 1, 2, 4, 5)
-y = c(0.3, 0.5, 1, 2, 2.2)
+x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
+y = c(0.3, 0.5, 1, 2, 2.2) # 5 numbers: boundaries!
 (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+st_bbox(r)
 image(r, axes = TRUE, col = grey((1:20)/20))
 ```
+
+Would we leave out the last value, than `stars` may come up with a _different_ cell boundary for the last cell, as this is now derived from the width of the one-but-last cell:
+```{r}
+x = c(0, 0.5, 1, 2, 4)  # 5 numbers: offsets only!
+y = c(0.3, 0.5, 1, 2)   # 4 numbers: offsets only!
+(r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+st_bbox(r)
+```
+
+This is not problematic if cells have a constant width, in which case the boundaries are reduced to an `offset` and `delta` value, irrespective whether an upper boundary is given:
+```{r}
+x = c(0, 1, 2, 3, 4)  # 5 numbers: offsets only!
+y = c(0.5, 1, 1.5, 2)   # 4 numbers: offsets only!
+(r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+st_bbox(r)
+```
+
+Alternatively, one can also set the _cell midpoints_ by specifying arguments `cell_midpoints` to the `st_dimensions` call:
+```{r}
+x = st_as_stars(matrix(1:9,3,3),
+	st_dimensions(x = c(1,2,3), y = c(2,3,10), cell_midpoints = TRUE))
+```
+When the dimension is regular, this results in `offset` being
+shifted back with half a `delta`, or else in intervals derived from
+the distances between cell centers.  This should obviously not be
+done when cell boundaries are specified.
 
 ## Curvilinear grids
 
