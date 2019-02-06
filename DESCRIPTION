@@ -17,6 +17,9 @@ Authors@R:
              role = "ctb"),
       person(given = "Adriano",
              family = "Fantini",
+             role = "ctb"), 
+      person(given = "David", 
+             family = "Blodgett", 
              role = "ctb"))
 Description: Reading, manipulating, writing and plotting
     spatiotemporal Arrays (raster and vector data cubes) in R, using GDAL
