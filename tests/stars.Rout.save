@@ -248,6 +248,20 @@ dimension(s):
   from  to offset     delta refsys point values    
 x    1 360      0         1 NA, NA    NA   NULL [x]
 y    1 180     90 -0.944444 NA, NA    NA   NULL [y]
+> st_as_stars(st_bbox(x), deltax = 20, deltay = 20)
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    values  
+ Min.   :0  
+ 1st Qu.:0  
+ Median :0  
+ Mean   :0  
+ 3rd Qu.:0  
+ Max.   :0  
+dimension(s):
+  from to offset delta refsys point values    
+x    1 18      0    20 NA, NA    NA   NULL [x]
+y    1  9     90   -20 NA, NA    NA   NULL [y]
 > df = as.data.frame(x)
 > 
 > st_as_stars()
@@ -261,12 +275,12 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from  to offset delta                                    refsys point values
-x    1 360   -180     1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
-y    1 180     90    -1 4326, +proj=longlat +datum=WGS84 +no_defs    NA   NULL
-     
-x [x]
-y [y]
+  from  to offset delta
+x    1 360   -180     1
+y    1 180     90    -1
+                                                      refsys point values    
+x 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [x]
+y 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [y]
 > 
 > dimnames(x)
 [1] "x"    "y"    "time"
@@ -275,8 +289,12 @@ y [y]
 [1] "a" "b" "c"
 > 
 > # multiple sub-datasets:
-> nc_red = system.file("nc/reduced.nc", package = "stars")
-> (red = read_stars(nc_red))
+> if (version$os == "linux-gnu") { # FIXME: breaks on windows
++   nc_red = system.file("nc/reduced.nc", package = "stars")
++   red = read_stars(nc_red)
++   print(red)
++   plot(red)
++ }
 sst, anom, err, ice, 
 stars object with 4 dimensions and 4 attributes
 attribute(s):
@@ -296,7 +314,6 @@ zlev    1   1      0 [m]    NA      NA    NA   NULL
 time    1   1 1981-12-31    NA POSIXct    NA   NULL    
 Warning message:
 ignoring unrecognized unit: percentage 
-> plot(red)
 > 
 > x = st_xy2sfc(read_stars(tif)[,1:10,1:10,], as_points = FALSE)
 > st_bbox(x)
@@ -546,4 +563,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  7.322   0.640   7.955 
+  8.137   0.668   8.802 

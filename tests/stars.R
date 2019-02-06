@@ -26,6 +26,7 @@ st_coordinates(x)[1:10,]
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
 st_as_stars(st_bbox(x))
+st_as_stars(st_bbox(x), deltax = 20, deltay = 20)
 df = as.data.frame(x)
 
 st_as_stars()

@@ -68,13 +68,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Don't want scalar
   # todo handle choice of grid
   nas <- is.na(meta$axis$dimension)
-  if (any(nas)) meta$axis$dimension[nas] <- -1
+  if (any(nas)) meta$axis$dimension[nas] <- -1 # nocov
   if (is.null(var)) {
     ix <- 1
     if (meta$grid$grid[ix] == "S") {
-      ix <- which(!meta$grid$grid == "S")[1L]
+      ix <- which(!meta$grid$grid == "S")[1L] # nocov
 
-      if (length(ix) < 1)  stop("only scalar variables found, not yet supported")
+      if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
     var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
   }

@@ -18,7 +18,7 @@ to_curvilinear = function(x) {
 
 transform_curvilinear = function(x, crs, ...) {
 	if(is.numeric(crs)){
-	  crs = st_crs(crs)  	
+	  crs = st_crs(crs)  	 # nocov
 	}
 	if(inherits(crs, "crs")){
 	  crs = crs$proj4string	

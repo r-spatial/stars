@@ -297,8 +297,8 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = strsplit(gsub("[\\{\\}]" , "", rhs), ",")
 					pr$dim_extra[[v]] = as.numeric(rhs[[1]])
 				} else {
-					rhs = get_val(paste0("NETCDF_DIM_", v), meta)
-					pr$dim_extra[[v]] = as.numeric(rhs)
+					rhs = get_val(paste0("NETCDF_DIM_", v), meta) # nocov # FIXME: find example?
+					pr$dim_extra[[v]] = as.numeric(rhs)           # nocov
 				}
 
 				cal = get_val(paste0(v, "#calendar"), meta)
@@ -461,8 +461,9 @@ combine_dimensions = function(dots, along) {
 				dims[[along]]$offset = min(offset)
 				dims[[along]]$delta = diff(offset)[1]
 			} else {
-				dims[[along]]$values = offset
-				dims[[along]]$delta = NA_real_
+				dims[[along]]$values = offset  # nocov # FIXME: find example?
+				dims[[along]]$delta = NA_real_ # nocov
+				# FIXME: irregular: should set $values here and NA offset!
 			}
 			dims[[along]]$from = 1
 			dims[[along]]$to = length(offset)

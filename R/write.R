@@ -1,5 +1,5 @@
 st_write.stars = function(obj, dsn, layer, ...) {
-	.Deprecated("read_stars")
+	.Deprecated("read_stars") # nocov
 }
 
 #' @name write_stars
