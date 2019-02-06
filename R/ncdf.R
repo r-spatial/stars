@@ -1,10 +1,3 @@
-#' @importFrom RNetCDF open.nc var.get.nc close.nc
-#' @importFrom ncmeta nc_meta
-#' @importFrom stats setNames
-NULL
-
-
-
 .is_regular <- function(coords_list) {
   unlist(lapply(coords_list, function(x) regular_intervals(x)))
 }
@@ -64,6 +57,12 @@ NULL
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
+
+  if (!requireNamespace("ncmeta", quietly = TRUE))
+    stop("package ncmeta required, please install it first") # nocov
+  if (!requireNamespace("RNetCDF", quietly = TRUE))
+    stop("package RNetCDF required, please install it first") # nocov
+
   meta = ncmeta::nc_meta(.x)
   # Don't want scalar
   # todo handle choice of grid

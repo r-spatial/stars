@@ -36,12 +36,11 @@ Imports:
     methods,
 	parallel,
     classInt (>= 0.2-2),
-    RNetCDF (>= 1.8-2),
-    ncmeta (>= 0.0.3),
     rlang,
     units
 Suggests: 
     PCICt,
+    RNetCDF (>= 1.8-2),
     covr,
     dplyr (>= 0.7-0),
     ggplot2,
@@ -52,6 +51,7 @@ Suggests:
     knitr,
     lwgeom,
     maps,
+    ncmeta (>= 0.0.3),
 	pbapply,
     plm,
     raster,
