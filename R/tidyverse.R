@@ -49,7 +49,7 @@ select.stars <- function(.data, ...) {
 #' @name dplyr
 pull.stars = function (.data, var = -1) {
 	var = rlang::enquo(var)
-	dplyr::pull(to_df(.data), !!var)
+	structure(dplyr::pull(to_df(.data), !!var), dim = dim(.data))
 }
 
 #' @name dplyr
@@ -81,9 +81,9 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
     
   nd <- length(dim(.data))
   indices <- rep(list(rlang::missing_arg()), nd + 1)
-  if (is.character(along))
-  	along = which(along == names(st_dimensions(.data)))
-  indices[[along + 1]] <- index
+  along = rlang::expr_text(rlang::ensym(along))
+  ix = which(along == names(st_dimensions(.data)))[1]
+  indices[[ix + 1]] <- index
   indices[["drop"]] <- drop
   
   eval(rlang::expr(.data[!!!indices]))
@@ -118,6 +118,13 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
         stop("package ggplot2 required, please install it first") # nocov
 
 	d = st_dimensions(data)
+	for (i in seq_along(data)) {
+		if (inherits(data[[i]], "units"))
+			data[[i]] = units::drop_units(data[[i]])
+	}
+	if (is_curvilinear(data))
+		data = st_as_sf(st_downsample(data, downsample), as_points = FALSE)
+
 	if (has_raster(d) && (is_regular(d) || is_rectilinear(d))) {
 		xy = attr(d, "raster")$dimensions
 		data = st_downsample(data, downsample)

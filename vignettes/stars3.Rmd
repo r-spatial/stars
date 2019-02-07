@@ -1,0 +1,113 @@
+---
+title: "3. stars tidyverse methods"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{3. stars tidyverse methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+#ev = FALSE
+ev = TRUE
+```
+
+This vignette shows how some of the tidyverse verbs can be used on
+`stars` objects.
+
+The `stars` and `tidyverse` packages are loaded by
+```{r}
+library(stars)
+library(dplyr)
+```
+Methods now available for class `stars` are
+``` {r}
+methods(class = "stars")
+```
+
+We will work with a three-band section of a landsat image:
+```{r}
+system.file("tif/L7_ETMs.tif", package = "stars") %>%
+	read_stars -> x
+x
+```
+
+## `slice`
+`slice` slices a a sub-array out of the cube; this is done by specifying
+the dimension on which to act, and the slice number. 
+```{r}
+x %>% slice(band, 6) -> x6
+x6
+```
+It returns a lower-dimensional array if a single element is selected
+along the slice dimension.
+
+## `filter`
+Similar to `slice`, `filter` selects on dimensions but evaluates their values
+rather than their index: in
+```{r}
+x %>% filter(x > 289000, x < 291000, band > 3) -> x7
+x7
+```
+the subarray is created based on the x _coordinate_ values.
+
+Note that `filter` converts the object to a `tbl_cube`, and uses
+the `dplyr` `filter` method for `tbl_cube` objects. This has the
+limitation that `stars` objects with rectilinear, curvilinear or
+simple feature geometries cannot be handled. For such objects, using
+regular `[` selection or using `st_crop` may be an alternative.
+
+## `pull`
+
+`pull` pulls out an array from a stars object:
+```{r}
+x %>% pull(1) -> x8
+class(x8)
+dim(x8)
+```
+
+## `mutate`
+```{r}
+x %>% mutate(band2 = 2 * L7_ETMs.tif) -> x2 
+```
+
+## `select`
+
+`select` selects an attribute, or a set of attributes:
+```{r}
+x2 %>% select(band2) -> x9
+x9
+```
+
+## `geom_stars`
+
+`geom_raster` is a `ggplot2` geom function that accepts `stars`
+objects as its `data` argument and
+
+* sets up the raster or vector spatial coordinates as plot dimensions, and
+the first attribute as the fill variable
+* allows for downsampling (without choosing a suitable downsampling level)
+* chooses between using `geom_raster`, `geom_rect` and `geom_sf` depending on
+whether the geometry is regular, rectilinear or has vector geometries
+
+An example use is
+```{r}
+library(ggplot2)
+library(viridis)
+ggplot() + geom_stars(data = x) +
+  coord_equal() +
+  facet_wrap(~band) +
+  theme_void() +
+  scale_fill_viridis() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0))
+```

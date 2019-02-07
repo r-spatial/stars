@@ -1,0 +1,268 @@
+---
+title: "1. introduction"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{1. introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+ev = suppressWarnings(require(starsdata, quietly = TRUE))
+```
+
+Package `stars` provides infrastructure for _data cubes_, array
+data with labeled dimensions, with emphasis on arrays where some
+of the dimensions relate to time and/or space.
+
+Spatial data cubes are arrays with one or more spatial dimensions.
+Raster datacubes have at least two spatial dimensions that form the
+raster tesselation. Vector data cubes have at least one spatial
+dimension that may for instance reflect a polygon tesselation, or
+a set of point locations. Conversions between the two (rasterization,
+polygonization) are provided. Vector data are represented by simple
+feature geometries (packages `sf`). Tidyverse methods are provided.
+
+The `stars` package is loaded by
+```{r}
+library(stars)
+```
+Spatiotemporal arrays are stored in objects of class `stars`; 
+methods for class `stars` currently available are
+
+``` {r}
+methods(class = "stars")
+```
+(tidyverse methods are only visible after loading package `tidyverse`).
+
+# Reading a satellite image
+
+We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = read_stars(tif)
+plot(x)
+```
+
+We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions called `x`, `y` and `band`, and has one attribute.
+```{r}
+x
+```
+
+Each dimension has a name; the meaning of the fields of a single dimension are:
+
+|*field* |*meaning*                                                   |
+|--------|------------------------------------------------------------|
+| from   | the origin index (1)                 |
+| to     | the final index (dim(x)[i])          |
+| offset | the start value for this dimension (pixel boundary), if regular |
+| delta  | the step (pixel, cell) size for this dimension, if regular      |
+| refsys | the reference system, or proj4string |
+| point  | logical; whether cells refer to points, or intervals |
+| values | the sequence of values for this dimension (e.g., geometries), if irregular |
+
+This means that for an index i (starting at $i=1$) along a certain dimension, the corresponding dimension value (coordinate, time) is $\mbox{offset} + (i-1) \times \mbox{delta}$. This value then refers to the start (edge) of the cell or interval; in order to get the interval middle or cell centre, one needs to add half an offset. 
+
+Dimension `band` is a simple sequence from 1 to 6. Since bands refer to colors, one could put their wavelength values in the `values` field.
+
+For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cell indexes increase from top to bottom, in the direction opposite to the $y$ axis.
+
+`read_stars` reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.
+
+The data structure `stars` is a generalisation of the `tbl_cube` found in `dplyr`; we can convert to that by
+```{r}
+library(dplyr)
+as.tbl_cube(x)
+```
+but this will cause a loss of certain properties (cell size,
+reference system, vector geometries)
+
+## switching attributes to dimensions and back
+```{r}
+(x.spl = split(x, "band"))
+merge(x.spl)
+```
+we see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with `setNames`, and dimension names and values with `st_set_dimensions`:
+```{r}
+merge(x.spl) %>% setNames(names(x)) %>%
+  st_set_dimensions(3, values = paste0("band", 1:6)) %>%
+  st_set_dimensions(names = c("x", "y", "band"))
+```
+
+## Overviews
+We can read rasters at a lower resolution when they contain so-called overviews. For this
+GeoTIFF file, the were created with the `gdaladdo` utility, in particular
+```
+gdaladdo -r average L7_ETMs.tif  2 4 8 16
+```
+which adds course resolution versions by averaging blocks of pixels.
+
+```{r}
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=1")))
+image(x)
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=2")))
+image(x)
+(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+image(x)
+```
+
+
+# Reading a raster time series: netcdf
+
+Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
+```{r eval=ev}
+system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
+	read_stars("data/full_data_daily_2013.nc") -> w
+```
+
+We see that
+```{r eval=ev}
+w
+```
+
+For this dataset we can see that
+
+* variables have units associated (and a wrong unit, `C` is assigned to temperature)
+* time is now a dimension, with proper units and time steps
+
+Alternatively, this dataset can be read using `read_ncdf`, as in
+```{r}
+system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
+    read_ncdf()
+```
+which doesn't convert time values in a proper R time format.
+
+## Reading datasets from multiple files
+
+Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
+
+We read the data by giving `read_stars` a vector with character names:
+```{r eval=ev}
+x = c(
+"avhrr-only-v2.19810901.nc",
+"avhrr-only-v2.19810902.nc",
+"avhrr-only-v2.19810903.nc",
+"avhrr-only-v2.19810904.nc",
+"avhrr-only-v2.19810905.nc",
+"avhrr-only-v2.19810906.nc",
+"avhrr-only-v2.19810907.nc",
+"avhrr-only-v2.19810908.nc",
+"avhrr-only-v2.19810909.nc"
+)
+# see the second vignette:
+# install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+(y = read_stars(file_list, quiet = TRUE))
+```
+
+Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
+```{r eval=ev}
+library(abind)
+z <- y %>% select(sst) %>% adrop
+```
+
+We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
+```{r eval=ev}
+library(ggplot2)
+library(viridis)
+library(ggthemes)
+ggplot() +  
+  geom_stars(data = z[1], alpha = 0.8, downsample = c(10, 10, 1)) + 
+  facet_wrap("time") +
+  scale_fill_viridis() +
+  coord_equal() +
+  theme_map() +
+  theme(legend.position="bottom") +
+  theme(legend.key.width=unit(2, "cm"))
+```
+
+# Writing stars objects to disk
+
+We can write a stars object to disk by using `write_stars`; this used the GDAL write engine. Writing NetCDF files without going through the GDAL interface is currently not supported.
+`write_stars` currently writes only a single attribute:
+
+```{r}
+write_stars(adrop(y[1]), "sst.tif")
+```
+See the explanation of `merge` above to see how multiple attributes
+can be merged (folded) into a dimension.
+
+# Cropping a raster's extent
+
+Using a curvilinear grid, taken from the example of `read_ncdf`:
+```{r}
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+##plot(prec) ## gives error about unique breaks
+## remove NAs, zeros, and give a large number
+## of breaks (used for validating in detail)
+qu_0_omit = function(x, ..., n = 22) {
+  x = na.omit(x)
+  c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
+}
+prec_slice = stars::slice.stars(prec, index = 17, along = "time")
+plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
+nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
+plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
+```
+we now crop the grid to those cells falling in 
+```{r}
+nc = st_transform(nc, st_crs(prec_slice)) # datum transformation
+plot(prec_slice[nc], border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
+plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
+```
+
+The selection `prec_slice[nc]` essentially calls `st_crop(prec_slice,
+nc)` to get a cropped selection.  What happened here is that all
+cells not intersecting with North Carolina (sea) are set to `NA`
+values. For regular grids, the extent of the resulting `stars`
+object is also be reduced (cropped) by default; this can be
+controlled with the `crop` parameter to `st_crop` and `[.stars`.
+
+# Vector data cube example
+
+Like `tbl_cube`, `stars` arrays have no limits to the number of dimensions they handle. An example is the origin-destination (OD) matrix, by time and travel mode.
+
+## OD: space x space x travel mode x time x time
+
+We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patters over the day, for a certain period.
+
+```{r}
+nc = st_read(system.file("gpkg/nc.gpkg", package="sf")) 
+to = from = st_geometry(nc) # 100 polygons: O and D regions
+mode = c("car", "bike", "foot") # travel mode
+day = 1:100 # arbitrary
+library(units)
+units(day) = as_units("days since 2015-01-01")
+hour = set_units(0:23, h) # hour of day
+dims = st_dimensions(origin = from, destination = to, mode = mode, day = day, hour = hour)
+(n = dim(dims))
+traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
+(st = st_as_stars(list(traffic = traffic),  dimensions = dims))
+```
+
+This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
+```{r}
+st %>% as.tbl_cube 
+```
+
+The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
+```{r eval=ev}
+b <- st %>% as.tbl_cube %>%
+  filter(mode == "bike") %>%
+  group_by(hour) %>%
+  summarise(traffic = mean(traffic)) %>%
+  as.data.frame()
+require(ggforce) # for plotting a units variable
+ggplot() +  
+  geom_line(data=b, aes(x=hour, y=traffic))
+```

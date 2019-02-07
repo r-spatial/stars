@@ -195,7 +195,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (st_crs(x) != st_crs(y))
-		stop("for cropping, the CRS of both objects has to be identical")
+		stop("for cropping, the CRS of both objects have to be identical")
 	if (crop && has_raster(x)) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
@@ -227,7 +227,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 			st_as_sfc(st_dimensions(x)[dxy], as_points = TRUE)
 		else
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
-	inside = st_intersects(y, xy_grd)[[1]]
+	inside = st_intersects(st_union(y), xy_grd)[[1]]
 	d = dim(x) # cropped x
 	mask = rep(NA_real_, prod(d[dxy]))
 	mask[inside] = 1

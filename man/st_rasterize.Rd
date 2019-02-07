@@ -4,8 +4,9 @@
 \alias{st_rasterize}
 \title{rasterize simple feature geometries}
 \usage{
-st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
-  file = tempfile(), driver = "GTiff", options = character(0))
+st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_,
+  ...), file = tempfile(), driver = "GTiff", options = character(0),
+  ...)
 }
 \arguments{
 \item{sf}{object of class \code{sf}}
@@ -17,6 +18,8 @@ st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_),
 \item{driver}{driver for temporary file}
 
 \item{options}{character; options vector for \code{GDALRasterize}}
+
+\item{...}{arguments passed on to \link{st_as_stars}}
 }
 \description{
 rasterize simple feature geometries

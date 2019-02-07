@@ -1,0 +1,105 @@
+---
+title: "5. vector-raster and raster-vector conversion"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{5. vector-raster and raster-vector conversion}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(collapse = TRUE)
+suppressPackageStartupMessages(library(sf))
+ev = sf_extSoftVersion()["GDAL"] >= "2.4.0"
+```
+
+This vignette shows how `stars` object can be moved from vector
+and raster representations.
+
+# Rasterizing an `sf` vector object
+
+```{r}
+library(stars)
+system.file("gpkg/nc.gpkg", package = "sf") %>%
+  read_sf() %>%
+  st_transform(32119) -> nc
+nc$dens = nc$BIR79 / units::set_units(st_area(nc), km^2)
+(nc.st = st_rasterize(nc["dens"], deltax = 5000, deltay = 5000))
+plot(nc.st)
+```
+The algorithm used is the GDAL `rasterize` utility, all options of
+this utility can be passed to `st_rasterize`. The geometry of the
+final raster can be controlled by passing a target bounding box and
+either the raster dimensions `nx` and `ny`, or pixel size by the
+`deltax` and `deltay` parameters.
+
+# Vectorizing a raster object to an `sf` object
+
+`stars` objects can be converted into an `sf` object using
+`st_as_sf`.  It has a number of options, depending on whether
+pixels represent the point value at the pixel center, or small
+square polygons with a single value.
+
+We will work again with the landsat-7 6-band image:
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+x = read_stars(tif)[,1:50,1:50,]
+```
+
+## Polygonizing
+
+In case raster cells reflect point values and we want to get
+a vector representatoin of the whole field, we can draw contour
+lines and export the contour sets:
+```{r eval=ev}
+p = st_as_sf(x, as_points = TRUE, merge = TRUE)
+plot(p)
+```
+
+## Exporting to points
+
+Alternatively, we can simply export all the pixels as points, and
+get them either as a wide table with all bands per point, and no
+replicated `POINT` geometries:
+```{r}
+st_as_sf(x, as_points = TRUE, merge = FALSE)
+```
+or as a long table with a single attribute and all points replicated:
+```{r}
+st_as_sf(x, as_points = TRUE, merge = FALSE, long = TRUE)
+```
+as we can see, an additional attribute `band` now indicates which band is concerned.
+
+## Exporting to polygons
+
+Alternatively, we can export to polygons and either get a single polygon per
+pixel, as in
+```{r}
+st_as_sf(x[1], as_points = FALSE, merge = FALSE)
+```
+or merge polygons that have identical pixel values;
+```{r}
+p = st_as_sf(x[1], as_points = FALSE, merge = TRUE)
+```
+When plotted with boundaries, we see the resolved boundaries of areas with the
+same pixel value:
+```{r}
+plot(p)
+```
+
+# Switching between vector and raster in `stars` objects
+
+We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a `stars` object by
+```{r}
+x.sf = st_xy2sfc(x, as_points = TRUE)
+x.sf
+```
+which also requires setting the `as_points` arguments as in `st_as_sf`.

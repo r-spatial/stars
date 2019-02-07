@@ -1,13 +1,15 @@
 ---
-title: 'stars proxy objects'
+title: '2. stars proxy objects'
 author: "Edzer Pebesma"
-date: "Sep 8, 2018"
 output:
   html_document:
     toc: true
-    theme: united
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Stars proxy objects}
+  %\VignetteIndexEntry{2. stars proxy objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -181,7 +183,7 @@ plot(st_as_sfc(bb), add = TRUE, lwd = .5, border = 'red')
 
 ## Lazy evaluation, changing evaluation order
 
-Some other actions can be carried out on `stars_proxy` objects, but their effect is delayed until the data are actually needed (plot, write).  For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called `call_list`:
+Some other actions can be carried out on `stars_proxy` objects, but their effect is delayed until the data are actually needed (`plot`, `write_stars`).  For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called `call_list`:
 
 ```{r,eval=EVAL}
 yy = adrop(y)

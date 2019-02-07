@@ -7,6 +7,7 @@
 #' @param file temporary file name
 #' @param driver driver for temporary file
 #' @param options character; options vector for \code{GDALRasterize}
+#' @param ... arguments passed on to \link{st_as_stars}
 #' @examples
 #' demo(nc, echo = FALSE, ask = FALSE)
 #' (x = st_rasterize(nc)) # default grid:
@@ -29,8 +30,11 @@
 #' r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
 #' plot(r, axes = TRUE, reset = FALSE)
 #' plot(ls, add = TRUE, col = "red")
-st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_), 
-		file = tempfile(), driver = "GTiff", options = character(0)) {
+st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_, ...), 
+		file = tempfile(), driver = "GTiff", options = character(0), ...) {
 	sf::gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
-	setNames(read_stars(file, driver = driver), names(sf)[1])
+	ret = read_stars(file, driver = driver)
+	for (i in seq_along(ret))
+		ret[[i]][is.nan(ret[[i]])] = NA_real_
+	setNames(ret, names(sf)[1])
 }

@@ -25,8 +25,8 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > ## test package
 > test_check("stars")
 ══ testthat results  ═══════════════════════════════════════════════════════════
-OK: 39 SKIPPED: 0 FAILED: 0
+OK: 53 SKIPPED: 0 FAILED: 0
 > 
 > proc.time()
    user  system elapsed 
-  0.913   0.076   0.952 
+  0.884   0.068   0.919 
