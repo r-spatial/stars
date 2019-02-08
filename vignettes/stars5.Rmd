@@ -49,20 +49,23 @@ either the raster dimensions `nx` and `ny`, or pixel size by the
 pixels represent the point value at the pixel center, or small
 square polygons with a single value.
 
-We will work again with the landsat-7 6-band image:
+We will work again with the landsat-7 6-band image, but will select
+the first band and round the values:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = read_stars(tif)[,1:50,1:50,]
+x = read_stars(tif)[,1:50,1:50,1:2]
+x[[1]] = round(x[[1]]/5)
 ```
 
 ## Polygonizing
 
 In case raster cells reflect point values and we want to get
 a vector representatoin of the whole field, we can draw contour
-lines and export the contour sets:
+lines and export the contour sets (only available when the 
+GDAL version is at least 2.4.0):
 ```{r eval=ev}
-p = st_as_sf(x, as_points = TRUE, merge = TRUE)
-plot(p)
+#p = st_as_sf(x, as_points = TRUE, merge = TRUE)
+#plot(p)
 ```
 
 ## Exporting to points
