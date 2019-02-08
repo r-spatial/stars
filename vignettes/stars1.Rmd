@@ -10,8 +10,8 @@ output:
     toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{1. introduction}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -86,14 +86,16 @@ as.tbl_cube(x)
 but this will cause a loss of certain properties (cell size,
 reference system, vector geometries)
 
-## switching attributes to dimensions and back
+## Switching attributes to dimensions and back
+
 ```{r}
 (x.spl = split(x, "band"))
 merge(x.spl)
 ```
-we see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with `setNames`, and dimension names and values with `st_set_dimensions`:
+We see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with `setNames`, and dimension names and values with `st_set_dimensions`:
 ```{r}
-merge(x.spl) %>% setNames(names(x)) %>%
+merge(x.spl) %>% 
+  setNames(names(x)) %>%
   st_set_dimensions(3, values = paste0("band", 1:6)) %>%
   st_set_dimensions(names = c("x", "y", "band"))
 ```
@@ -120,10 +122,10 @@ The `stars` subset operator `[` works a bit different: its
 * second argument selects the first dimension
 * third argument selects the second dimension, etc
 
-thus,
+Thus,
 
 ```{r}
-x["two", 1:10, ,2:4]
+x["two", 1:10, , 2:4]
 ```
 selects the second attribute, the first 10 columns (x-coordinate),
 all rows, and bands 2-4.
@@ -132,13 +134,13 @@ Alternatively, when `[` is given a single argument of class `sf`,
 `sfc` or `bbox`, `[` will work as a crop operator:
 ```{r}
 circle = st_sfc(st_buffer(st_point(c(293749.5, 9115745)), 400), crs = st_crs(x))
-plot(x[circle][,,,1], reset = FALSE)
+plot(x[circle][, , , 1], reset = FALSE)
 plot(circle, col = NA, border = 'red', add = TRUE, lwd = 2)
 ```
 
 ## Overviews
 We can read rasters at a lower resolution when they contain so-called overviews. For this
-GeoTIFF file, the were created with the `gdaladdo` utility, in particular
+GeoTIFF file, they were created with the `gdaladdo` utility, in particular
 ```
 gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
@@ -153,8 +155,7 @@ image(x)
 image(x)
 ```
 
-
-# Reading a raster time series: netcdf
+# Reading a raster time series: NetCDF
 
 Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
 ```{r eval=ev}
@@ -163,6 +164,7 @@ system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
 ```
 
 We see that
+
 ```{r eval=ev}
 w
 ```
@@ -205,7 +207,7 @@ file_list = system.file(paste0("netcdf/", x), package = "starsdata")
 Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
 ```{r eval=ev}
 library(abind)
-z <- y %>% select(sst) %>% adrop
+z <- y %>% select(sst) %>% adrop()
 ```
 
 We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
@@ -219,8 +221,8 @@ ggplot() +
   scale_fill_viridis() +
   coord_equal() +
   theme_map() +
-  theme(legend.position="bottom") +
-  theme(legend.key.width=unit(2, "cm"))
+  theme(legend.position = "bottom") +
+  theme(legend.key.width = unit(2, "cm"))
 ```
 
 # Writing stars objects to disk
@@ -254,15 +256,14 @@ nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
 ```
 
-we now crop the grid to those cells falling in 
+We can now crop the grid to those cells falling in 
 ```{r}
 nc = st_transform(nc, st_crs(prec_slice)) # datum transformation
 plot(prec_slice[nc], border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
 ```
 
-The selection `prec_slice[nc]` essentially calls `st_crop(prec_slice,
-nc)` to get a cropped selection.  What happened here is that all
+The selection `prec_slice[nc]` essentially calls `st_crop(prec_slice, nc)` to get a cropped selection. What happened here is that all
 cells not intersecting with North Carolina (sea) are set to `NA`
 values. For regular grids, the extent of the resulting `stars`
 object is also be reduced (cropped) by default; this can be
@@ -274,7 +275,7 @@ Like `tbl_cube`, `stars` arrays have no limits to the number of dimensions they 
 
 ## OD: space x space x travel mode x time x time
 
-We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patters over the day, for a certain period.
+We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patterns over the day, for a certain period.
 
 ```{r}
 nc = st_read(system.file("gpkg/nc.gpkg", package="sf")) 
@@ -292,17 +293,18 @@ traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
 ```{r}
-st %>% as.tbl_cube 
+st %>% as.tbl_cube()
 ```
 
 The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
 ```{r eval=ev}
-b <- st %>% as.tbl_cube %>%
+b <- st %>% 
+  as.tbl_cube() %>%
   filter(mode == "bike") %>%
   group_by(hour) %>%
   summarise(traffic = mean(traffic)) %>%
   as.data.frame()
 require(ggforce) # for plotting a units variable
 ggplot() +  
-  geom_line(data=b, aes(x=hour, y=traffic))
+  geom_line(data = b, aes(x = hour, y = traffic))
 ```
