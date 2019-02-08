@@ -138,7 +138,7 @@ plot(circle, col = NA, border = 'red', add = TRUE, lwd = 2)
 
 ## Overviews
 We can read rasters at a lower resolution when they contain so-called overviews. For this
-GeoTIFF file, the were created with the `gdaladdo` utility, in particular
+GeoTIFF file, they were created with the `gdaladdo` utility, in particular
 ```
 gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
@@ -274,7 +274,7 @@ Like `tbl_cube`, `stars` arrays have no limits to the number of dimensions they 
 
 ## OD: space x space x travel mode x time x time
 
-We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patters over the day, for a certain period.
+We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patterns over the day, for a certain period.
 
 ```{r}
 nc = st_read(system.file("gpkg/nc.gpkg", package="sf")) 
