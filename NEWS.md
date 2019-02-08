@@ -1,5 +1,7 @@
 # version 0.3-0
 
+* rewrote vignettes, added vignettes; #99
+
 * deprecate `st_write.stars` for `write_stars`; #96
 
 * use "native" R array-factor support

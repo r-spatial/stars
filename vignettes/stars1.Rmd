@@ -193,6 +193,7 @@ We can write a stars object to disk by using `write_stars`; this used the GDAL w
 ```{r}
 write_stars(adrop(y[1]), "sst.tif")
 ```
+
 See the explanation of `merge` above to see how multiple attributes
 can be merged (folded) into a dimension.
 
@@ -214,6 +215,7 @@ plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE
 nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
 ```
+
 we now crop the grid to those cells falling in 
 ```{r}
 nc = st_transform(nc, st_crs(prec_slice)) # datum transformation

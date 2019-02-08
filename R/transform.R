@@ -17,12 +17,12 @@ to_curvilinear = function(x) {
 }
 
 transform_curvilinear = function(x, crs, ...) {
-	if(is.numeric(crs)){
-	  crs = st_crs(crs)  	 # nocov
-	}
-	if(inherits(crs, "crs")){
-	  crs = crs$proj4string	
-	}
+	if(is.numeric(crs))
+		crs = st_crs(crs)  	 # nocov
+	
+	if(inherits(crs, "crs"))
+		crs = crs$proj4string	
+
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))

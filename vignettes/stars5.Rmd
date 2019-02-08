@@ -1,5 +1,5 @@
 ---
-title: "5. vector-raster and raster-vector conversion"
+title: "5. vector-raster conversions, reprojection, warping"
 author: "Edzer Pebesma"
 output:
   html_document:
@@ -103,3 +103,45 @@ x.sf = st_xy2sfc(x, as_points = TRUE)
 x.sf
 ```
 which also requires setting the `as_points` arguments as in `st_as_sf`.
+
+# Reprojecting a raster
+
+If we accept that curvilinear rasters are rasters too, and that
+regular and rectilinear grids are special cases of curvilinear grids,
+reprojecting a raster is no longer a "problem", it just recomputes
+new coordinates for every raster cell, and generally results in a
+curvilinear grid (that sometimes can be brought back to a regular
+or rectilinear grid). If curvilinear grid cells are represented
+by coordinates of the cell center, the actual shape of a grid cell
+gets lost, and this may be a larger effect if grid cells are large
+or if the transformation is stronger non-linear.
+
+An example of the reprojection of the grid created above is
+```{r}
+nc.st %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
+nc.curv
+plot(nc.curv, border=NA, graticule=TRUE)
+```
+where it should be noted that the dimensionality of the grid didn't
+change: the same set of raster cells has been replotted in the new
+CRS, but now in a curvilinear grid.
+
+# Warping a raster
+
+Warping a raster means creating a new _regular_ grid in a new CRS,
+based on a (usually regular) grid in another CRS. We can do the
+transformation of the previous section by first creating a target
+grid:
+```{r}
+nc %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") %>% st_bbox() %>%
+	st_as_stars() -> newgrid
+```
+and then warping the old raster to the new
+```{r}
+nc.st %>% st_warp(newgrid) -> nc.new
+nc.new 
+plot(nc.new, graticule = TRUE)
+```
+This new object has a regular grid in the new CRS, aligned with
+the new x- and y-axes.
+

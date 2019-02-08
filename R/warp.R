@@ -40,7 +40,13 @@ transform_grid_grid = function(x, target) {
 	xy_names = attr(target, "raster")$dimensions
 	new_pts = st_coordinates(target[xy_names])
 	dxy = attr(target, "raster")$dimensions
-	pts = sf_project(from = target[[ dxy[1] ]]$refsys, to = st_crs(x)$proj4string, pts = new_pts)
+
+	from = if (inherits(target[[ dxy[1] ]]$refsys, "crs")) # FIXME: drop support for this?
+			target[[ dxy[1] ]]$refsys$proj4string
+		else
+			target[[ dxy[1] ]]$refsys
+
+	pts = sf_project(from = from, to = st_crs(x)$proj4string, pts = new_pts)
 
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
