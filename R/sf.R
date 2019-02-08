@@ -125,7 +125,9 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 		nc = sapply(dfs, ncol)
 		df = do.call(cbind, dfs)
 
-		if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
+		if (length(dim(x)) == 1) # one-dimensional cube...
+			names(df) = names(x)
+		else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
 			names(df) = names(dfs)
 		else { # another exception... time as second dimension
 			e = expand_dimensions(x)

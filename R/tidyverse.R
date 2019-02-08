@@ -117,13 +117,14 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
     if (!requireNamespace("ggplot2", quietly = TRUE))
         stop("package ggplot2 required, please install it first") # nocov
 
-	d = st_dimensions(data)
 	for (i in seq_along(data)) {
 		if (inherits(data[[i]], "units"))
 			data[[i]] = units::drop_units(data[[i]])
 	}
 	if (is_curvilinear(data))
-		data = st_as_sf(st_downsample(data, downsample), as_points = FALSE)
+		data = st_xy2sfc(st_downsample(data, downsample), as_points = FALSE)
+
+	d = st_dimensions(data)
 
 	if (has_raster(d) && (is_regular(d) || is_rectilinear(d))) {
 		xy = attr(d, "raster")$dimensions
@@ -141,9 +142,11 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
 					fill = !!rlang::sym(names(data)[1]))
 			ggplot2::geom_rect(mapping = mapping, data = as.data.frame(data, add_max = TRUE), ...)
 		}
-	} else if (has_sfc(d))
-		ggplot2::geom_sf(data = st_as_sf(data), ...)
-	else
+	} else if (has_sfc(d)) {
+		if (is.null(mapping))
+			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1]))
+		ggplot2::geom_sf(data = st_as_sf(data), color = NA, mapping = mapping, ...)
+	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
 }
 
