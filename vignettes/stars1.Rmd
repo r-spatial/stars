@@ -98,6 +98,44 @@ merge(x.spl) %>% setNames(names(x)) %>%
   st_set_dimensions(names = c("x", "y", "band"))
 ```
 
+## Subsetting
+
+Besides the `tidyverse` subsetting and selection operators explained
+in [this vignette](stars3.html), we can also use `[` and `[[`.
+
+Since `stars` objects are a list of `array`s with a metadata table
+describing dimensins, list extraction (and assignment) works as expected:
+
+```{r}
+class(x[[1]])
+dim(x[[1]])
+x$two = 2 * x[[1]]
+x
+```
+At this level, we can work with `array` objects directly.
+
+The `stars` subset operator `[` works a bit different: its
+
+* first argument selects attributes
+* second argument selects the first dimension
+* third argument selects the second dimension, etc
+
+thus,
+
+```{r}
+x["two", 1:10, ,2:4]
+```
+selects the second attribute, the first 10 columns (x-coordinate),
+all rows, and bands 2-4.
+
+Alternatively, when `[` is given a single argument of class `sf`,
+`sfc` or `bbox`, `[` will work as a crop operator:
+```{r}
+circle = st_sfc(st_buffer(st_point(c(293749.5, 9115745)), 400), crs = st_crs(x))
+plot(x[circle][,,,1], reset = FALSE)
+plot(circle, col = NA, border = 'red', add = TRUE, lwd = 2)
+```
+
 ## Overviews
 We can read rasters at a lower resolution when they contain so-called overviews. For this
 GeoTIFF file, the were created with the `gdaladdo` utility, in particular
