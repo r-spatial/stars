@@ -35,6 +35,7 @@ nc$dens = nc$BIR79 / units::set_units(st_area(nc), km^2)
 (nc.st = st_rasterize(nc["dens"], deltax = 5000, deltay = 5000))
 plot(nc.st)
 ```
+
 The algorithm used is the GDAL `rasterize` utility, all options of
 this utility can be passed to `st_rasterize`. The geometry of the
 final raster can be controlled by passing a target bounding box and
@@ -122,6 +123,7 @@ nc.st %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
 nc.curv
 plot(nc.curv, border=NA, graticule=TRUE)
 ```
+
 where it should be noted that the dimensionality of the grid didn't
 change: the same set of raster cells has been replotted in the new
 CRS, but now in a curvilinear grid.
@@ -142,6 +144,7 @@ nc.st %>% st_warp(newgrid) -> nc.new
 nc.new 
 plot(nc.new, graticule = TRUE)
 ```
+
 This new object has a regular grid in the new CRS, aligned with
 the new x- and y-axes.
 
