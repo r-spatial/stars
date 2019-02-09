@@ -70,7 +70,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply apply a function to array dimensions: aggregate over space, time, or something else
 #' @name st_apply
 #' @param X object of class \code{stars}
-#' @param MARGIN see \link[base]{apply}; if \code{MARGIN} is a character vector, 
+#' @param MARGIN see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied 
 #' @param FUN see \link[base]{apply}
 #' @param ... arguments passed on to \code{FUN}
 #' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
@@ -80,7 +80,9 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' st_apply(x, 1:2, mean) # mean band value for each pixel
+#' st_apply(x, c("x", "y"), mean) # equivalent to the above
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
+#' st_apply(x, "band", mean) # equivalent to the above
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
 st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE) {
