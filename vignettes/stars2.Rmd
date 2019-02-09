@@ -1,5 +1,5 @@
 ---
-title: '2. stars proxy objects'
+title: "2. stars proxy objects"
 author: "Edzer Pebesma"
 output:
   html_document:
@@ -26,12 +26,12 @@ R's working memory (RAM), consider yourself lucky. This document
 was not written for you.  If your imagery is too large, or for
 other reasons you want to work with smaller chunks of data than
 the files in which they come, read on about your options.
-First we will discuss the low-level interface for this, then
+First, we will discuss the low-level interface for this, then
 the higher level, using stars proxy objects that delay all reading.
 
 # Preamble: the starsdata package
 
-To run all of the examples in in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the `stars` package. They are in a [drat repo](https://github.com/eddelbuettel/drat), installation is done by
+To run all of the examples in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the `stars` package. They are in a [drat repo](https://github.com/eddelbuettel/drat), installation is done by
 ```{r eval=FALSE}
 install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
 ```
@@ -45,19 +45,19 @@ a lot of memory. Remember that your file may be compressed, and
 that pixel values represented in the file by bytes are converted
 to 8-byte doubles in R. 
 
-The reason of using `RasterIO` for this is that the parameters we
+The reason for using `RasterIO` for this is that the parameters we
 use are directly mapped to the [GDAL RasterIO function](https://www.gdal.org/classGDALDataset.html) used (after
 adapting the 1-based offset index in R to 0-based offset in C++).
 
 ## Reading a particular chunk 
 
-We can read a (spatially) rectangular chunk of data by
+<!-- We can read a (spatially) rectangular chunk of data by -->
 
 An example of using `RasterIO` is
 ```{r}
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-rasterio = list(nXOff = 6, nYOff = 6, nXSize = 100, nYSize = 100, bands = c(1,3,4))
+rasterio = list(nXOff = 6, nYOff = 6, nXSize = 100, nYSize = 100, bands = c(1, 3, 4))
 (x = read_stars(tif, RasterIO = rasterio))
 dim(x)
 ```
@@ -68,7 +68,7 @@ st_dimensions(read_stars(tif))
 and we see that
 
 * the `delta` values remain the same,
-* the offset (x/y coordinates of origing) of the grid remain the same
+* the offset (x/y coordinates of origin) of the grid remain the same
 * the `from` and `to` reflect the new area, and relate to the new `delta` values
 * `dim(x)` reflects the new size, and
 * only three bands were read
@@ -80,7 +80,7 @@ done by setting `nBufXSize` and `nBufYSize`
 
 ```{r}
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 100, nYSize = 100,
-   nBufXSize = 20, nBufYSize = 20, bands = c(1,3,4))
+                nBufXSize = 20, nBufYSize = 20, bands = c(1, 3, 4))
 (x = read_stars(tif, RasterIO = rasterio))
 ```
 and we see that in addition:
@@ -89,7 +89,7 @@ and we see that in addition:
 * the offset coordinates of the grid are still the same
 * the `from` and `to` reflect the new area, but relate to the new `delta` cell size values
 
-We can also read at higher resolution; here we read a 3 x 3 area and blow it up to 20 x 20:
+We can also read at higher resolution; here we read a 3 x 3 area and blow it up to 100 x 100:
 ```{r}
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 3, nYSize = 3,
    nBufXSize = 100, nBufYSize = 100, bands = 1)
@@ -98,7 +98,7 @@ dim(x)
 plot(x)
 ```
 
-The reason we "see"" only three grid cells is that the default sampling method is "nearest neighbour". We can modify this by
+The reason we "see" only three grid cells is that the default sampling method is "nearest neighbour". We can modify this by
 
 ```{r}
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 3, nYSize = 3,
@@ -113,18 +113,17 @@ The following methods are allowed for parameter `resample`:
 | `resample` | method used                        |
 |------------|------------------------------------|
 |`nearest_neighbour`|   Nearest neighbour (default) |
-|`bilinear` | 	 Bilinear (2x2 kernel) |
+|`bilinear` |      Bilinear (2x2 kernel) |
 |`cubic`     |  Cubic Convolution Approximation (4x4 kernel) |
-| `cubic_spline` |  Cubic B-Spline Approximation (4x4 kernel) |
+|`cubic_spline` |  Cubic B-Spline Approximation (4x4 kernel) |
 |`lanczos` |  Lanczos windowed sinc interpolation (6x6 kernel) |
 |`average` |  Average |
 |`mode` |  Mode (selects the value which appears most often of all the sampled points) |
-| `Gauss` |  Gauss blurring |
+|`Gauss` |  Gauss blurring |
 
 All these methods are implemented in GDAL; for what these methods exactly do, we refer to the GDAL documentation or source code.
 
 # Stars proxy objects
-
 
 Stars proxy objects take another approach: upon creation they contain no data at all, but only pointers to where the data can be read. Data is only read when it is needed, and only as much as is needed: if we plot a proxy objects, the data are read at the resolution of pixels on the screen, rather than at the native resolution, so that if we have e.g. a 10000 x 10000 Sentinel 2 (level 1C) image, we can open it by
 ```{r, eval=EVAL}
@@ -144,6 +143,7 @@ p = read_stars(s2, proxy = FALSE)
 then only the reading would take over a minute, and require 5 Gb memory.
 
 ## Methods for stars proxy objects
+
 ```{r}
 methods(class = "stars_proxy")
 ```
@@ -193,7 +193,7 @@ st_dimensions(yyy) # and dimensions not adjusted
 attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 ```
 
-Doing this allows for optimizating the order in which operations are done. As an example, for `st_apply`, reading can be done sequential over the dimensions over which the function is applied: 
+Doing this allows for optimizing the order in which operations are done. As an example, for `st_apply`, reading can be done sequentially over the dimensions over which the function is applied: 
 
 * If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed. 
 * If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in
@@ -212,10 +212,10 @@ Fetching the data now involves reading the whole array and then evaluating the `
 
 ### Plotting with changed evaluation order
 
-For the sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by
+For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by
 ```{r,eval=EVAL}
 # S2 10m: band 4: near infrared, band 1: red.
-ndvi = function(x) (x[4]-x[1])/(x[4] + x[1])
+ndvi = function(x) (x[4] - x[1])/(x[4] + x[1])
 rm(x)
 (s2.ndvi = st_apply(p, c("x", "y"), ndvi))
 system.time(plot(s2.ndvi)) # read - compute ndvi - plot 

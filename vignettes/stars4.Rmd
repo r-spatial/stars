@@ -158,7 +158,7 @@ atan2(c(0.1, 0.2), 1) * 180 / pi
 
 ## Rectilinear grids
 
-[Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axes has its own irregular subdivision.
+[Rectilinear grids](https://en.wikipedia.org/wiki/Regular_grid) have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axis has its own irregular subdivision.
 
 We can define a rectilinear grid by specifying the cell _boundaries_, meaning for every dimension we specify _one more_ value than the dimension size:
 ```{r}
@@ -187,8 +187,8 @@ st_bbox(r)
 
 Alternatively, one can also set the _cell midpoints_ by specifying arguments `cell_midpoints` to the `st_dimensions` call:
 ```{r}
-x = st_as_stars(matrix(1:9,3,3),
-	st_dimensions(x = c(1,2,3), y = c(2,3,10), cell_midpoints = TRUE))
+x = st_as_stars(matrix(1:9, 3, 3), 
+                st_dimensions(x = c(1, 2, 3), y = c(2, 3, 10), cell_midpoints = TRUE))
 ```
 When the dimension is regular, this results in `offset` being
 shifted back with half a `delta`, or else in intervals derived from
@@ -197,7 +197,7 @@ done when cell boundaries are specified.
 
 ## Curvilinear grids
 
-Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or netcdf) files in which they are found have two raster layers, one with the latitudes and one with the longitudes for every grid cell. Using the GDAL interface, we need to compose a `stars` object from the array and a long and lat matrix. The matrices with longitude and latitude values are stored in the `values` field of their respective dimensions.
+Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or NetCDF) files in which they are found have two raster layers, one with the latitudes and one with the longitudes for every grid cell. Using the GDAL interface, we need to compose a `stars` object from the array and a long and lat matrix. The matrices with longitude and latitude values are stored in the `values` field of their respective dimensions.
 
 As an example, we will use a Sentinel 5P dataset available from package `starsdata`; this package can be installed with
 ```{r eval=FALSE}

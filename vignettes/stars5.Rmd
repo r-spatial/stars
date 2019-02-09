@@ -53,7 +53,7 @@ We will work again with the landsat-7 6-band image, but will select
 the first band and round the values:
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-x = read_stars(tif)[,1:50,1:50,1:2]
+x = read_stars(tif)[, 1:50, 1:50, 1:2]
 x[[1]] = round(x[[1]]/5)
 ```
 
@@ -124,7 +124,7 @@ An example of the reprojection of the grid created above is
 ```{r}
 nc.st %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
 nc.curv
-plot(nc.curv, border=NA, graticule=TRUE)
+plot(nc.curv, border = NA, graticule = TRUE)
 ```
 
 where it should be noted that the dimensionality of the grid didn't
@@ -150,4 +150,3 @@ plot(nc.new, graticule = TRUE)
 
 This new object has a regular grid in the new CRS, aligned with
 the new x- and y-axes.
-

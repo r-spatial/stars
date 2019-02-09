@@ -35,6 +35,7 @@ storage in such workflows.
 * blog posts: [first](http://r-spatial.org/r/2017/11/23/stars1.html),
 [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
 [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
+* vignettes: [first](https://r-spatial.github.io/stars/articles/stars1.html), [second](https://r-spatial.github.io/stars/articles/stars2.html), [third](https://r-spatial.github.io/stars/articles/stars3.html), [fourth](https://r-spatial.github.io/stars/articles/stars4.html), [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
 
 ## Proposal
 
