@@ -78,6 +78,7 @@ dim(x8)
 ## `mutate`
 ```{r}
 x %>% mutate(band2 = 2 * L7_ETMs.tif) -> x2 
+x2
 ```
 
 ## `select`
@@ -103,11 +104,12 @@ An example use is
 ```{r}
 library(ggplot2)
 library(viridis)
-ggplot() + geom_stars(data = x) +
+ggplot() + 
+  geom_stars(data = x) +
   coord_equal() +
   facet_wrap(~band) +
   theme_void() +
   scale_fill_viridis() +
-  scale_x_discrete(expand=c(0,0)) +
-  scale_y_discrete(expand=c(0,0))
+  scale_x_discrete(expand = c(0, 0)) +
+  scale_y_discrete(expand = c(0, 0))
 ```
