@@ -187,8 +187,8 @@ st_bbox(r)
 
 Alternatively, one can also set the _cell midpoints_ by specifying arguments `cell_midpoints` to the `st_dimensions` call:
 ```{r}
-x = st_as_stars(matrix(1:9,3,3),
-	st_dimensions(x = c(1,2,3), y = c(2,3,10), cell_midpoints = TRUE))
+x = st_as_stars(matrix(1:9, 3, 3), 
+                st_dimensions(x = c(1, 2, 3), y = c(2, 3, 10), cell_midpoints = TRUE))
 ```
 When the dimension is regular, this results in `offset` being
 shifted back with half a `delta`, or else in intervals derived from
