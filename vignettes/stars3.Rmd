@@ -42,7 +42,7 @@ x
 ```
 
 ## `slice`
-`slice` slices a a sub-array out of the cube; this is done by specifying
+`slice` slices a sub-array out of the cube; this is done by specifying
 the dimension on which to act, and the slice number. 
 ```{r}
 x %>% slice(band, 6) -> x6
