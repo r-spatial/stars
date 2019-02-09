@@ -1,5 +1,5 @@
 ---
-title: '2. stars proxy objects'
+title: "2. stars proxy objects"
 author: "Edzer Pebesma"
 output:
   html_document:
@@ -26,7 +26,7 @@ R's working memory (RAM), consider yourself lucky. This document
 was not written for you.  If your imagery is too large, or for
 other reasons you want to work with smaller chunks of data than
 the files in which they come, read on about your options.
-First we will discuss the low-level interface for this, then
+First, we will discuss the low-level interface for this, then
 the higher level, using stars proxy objects that delay all reading.
 
 # Preamble: the starsdata package
@@ -45,7 +45,7 @@ a lot of memory. Remember that your file may be compressed, and
 that pixel values represented in the file by bytes are converted
 to 8-byte doubles in R. 
 
-The reason of using `RasterIO` for this is that the parameters we
+The reason for using `RasterIO` for this is that the parameters we
 use are directly mapped to the [GDAL RasterIO function](https://www.gdal.org/classGDALDataset.html) used (after
 adapting the 1-based offset index in R to 0-based offset in C++).
 
@@ -68,7 +68,7 @@ st_dimensions(read_stars(tif))
 and we see that
 
 * the `delta` values remain the same,
-* the offset (x/y coordinates of origing) of the grid remain the same
+* the offset (x/y coordinates of origin) of the grid remain the same
 * the `from` and `to` reflect the new area, and relate to the new `delta` values
 * `dim(x)` reflects the new size, and
 * only three bands were read
@@ -98,7 +98,7 @@ dim(x)
 plot(x)
 ```
 
-The reason we "see"" only three grid cells is that the default sampling method is "nearest neighbour". We can modify this by
+The reason we "see" only three grid cells is that the default sampling method is "nearest neighbour". We can modify this by
 
 ```{r}
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 3, nYSize = 3,
@@ -113,7 +113,7 @@ The following methods are allowed for parameter `resample`:
 | `resample` | method used                        |
 |------------|------------------------------------|
 |`nearest_neighbour`|   Nearest neighbour (default) |
-|`bilinear` | 	 Bilinear (2x2 kernel) |
+|`bilinear` |      Bilinear (2x2 kernel) |
 |`cubic`     |  Cubic Convolution Approximation (4x4 kernel) |
 | `cubic_spline` |  Cubic B-Spline Approximation (4x4 kernel) |
 |`lanczos` |  Lanczos windowed sinc interpolation (6x6 kernel) |
@@ -193,7 +193,7 @@ st_dimensions(yyy) # and dimensions not adjusted
 attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 ```
 
-Doing this allows for optimizating the order in which operations are done. As an example, for `st_apply`, reading can be done sequential over the dimensions over which the function is applied: 
+Doing this allows for optimizing the order in which operations are done. As an example, for `st_apply`, reading can be done sequentially over the dimensions over which the function is applied: 
 
 * If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed. 
 * If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in
