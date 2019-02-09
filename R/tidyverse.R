@@ -100,6 +100,7 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 #' @param data see \link[ggplot2]{geom_raster}
 #' @param ... see \link[ggplot2]{geom_raster}
 #' @param downsample downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 1 does not downsample
+#' @param sf logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2]{geom_sf}.
 #' @name geom_stars
 #' @details \code{geom_stars} returns (a call to) either \link[ggplot2]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples.
 #' @export
@@ -112,7 +113,7 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 #'     theme_void() +
 #'     scale_x_discrete(expand=c(0,0))+
 #'     scale_y_discrete(expand=c(0,0))
-geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
+geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FALSE) {
 
     if (!requireNamespace("ggplot2", quietly = TRUE))
         stop("package ggplot2 required, please install it first") # nocov
@@ -121,7 +122,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
 		if (inherits(data[[i]], "units"))
 			data[[i]] = units::drop_units(data[[i]])
 	}
-	if (is_curvilinear(data))
+	if (is_curvilinear(data) || sf)
 		data = st_xy2sfc(st_downsample(data, downsample), as_points = FALSE)
 
 	d = st_dimensions(data)
@@ -145,7 +146,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1) {
 	} else if (has_sfc(d)) {
 		if (is.null(mapping))
 			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1]))
-		ggplot2::geom_sf(data = st_as_sf(data), color = NA, mapping = mapping, ...)
+		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), color = NA, mapping = mapping, ...)
 	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
 }

@@ -84,10 +84,10 @@ attribute(s):
  (Other):25   Max.   :1000.0  
  NA's   : 1                   
 dimension(s):
-    from  to offset delta                       refsys point
-sfc    1 155     NA    NA +proj=sterea +lat_0=52.15...  TRUE
-                                               values
-sfc POINT (181072 333611), ..., POINT (180627 330190)
+         from  to offset delta                       refsys point
+geometry    1 155     NA    NA +proj=sterea +lat_0=52.15...  TRUE
+                                                  values
+geometry POINT (181072 333611),...,POINT (180627 330190)
 > (gr = st_as_stars(meuse.grid))
 stars object with 2 dimensions and 5 attributes
 attribute(s):
@@ -195,4 +195,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  1.316   0.071   1.377 
+  0.598   0.046   0.636 

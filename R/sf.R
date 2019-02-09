@@ -45,21 +45,22 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	# overwrite raster-x with sfc:
 	d[[ dxy[1] ]] = create_dimension(from = 1, to = length(sfc), values = sfc)
 	# rename raster-x to sfc:
-	names(d)[names(d) == dxy[1] ] = "sfc"
+	names(d)[names(d) == dxy[1] ] = "geometry"
 	# remove y:
 	d[[ dxy[2] ]] = NULL
 	attr(d, "raster") = get_raster(dimensions = rep(NA_character_, 2))
 	# flatten arrays:
 	for (i in seq_along(x))
-		dim(x[[i]]) = c(sfc = length(keep), olddim[-xy_pos]) 
+		dim(x[[i]]) = c(geometry = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
 	if (na.rm) {
 		args = rep(list(rlang::missing_arg()), length(dim(x[[1]])))
 		args[[1]] = which(keep)
+		args[["drop"]] = FALSE
 		for (i in seq_along(x))
-			x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
+			x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), 
+				levels = attr(x[[i]], "levels"))
 	}
-
 	structure(x, dimensions = d)
 }
 
@@ -135,7 +136,8 @@ st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE,
 				names(df) = as.character(e[-ix][[1]])
 		}
 
-		st_sf(df, geometry = sfc, crs = crs)
+		df[[ names(st_dimensions(x))[ ix[1] ] ]] = sfc # keep dimension name
+		st_sf(df, crs = crs)
 	}
 }
 
@@ -150,15 +152,15 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 	st
 }
 
-
 #' @name st_as_stars
+#' @param name character; name for the geometry dimensions
 #' @export
-st_as_stars.sf = function(.x, ...) {
+st_as_stars.sf = function(.x, ..., name = attr(.x, "sf_column")) {
 	geom = st_geometry(.x)
 	if (length(list(...)))
-		stop("secondary arguments ignored")
-	dimensions = create_dimensions(list(sfc = 
-			create_dimension(1, length(geom), refsys = st_crs(geom)$proj4string, values = geom)))
+		stop("... arguments ignored")
+	dimensions = create_dimensions(setNames(list(create_dimension(1, length(geom), 
+		refsys = st_crs(geom)$proj4string, values = geom)), name))
 	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
 	st_as_stars(lst, dimensions = dimensions)
 }

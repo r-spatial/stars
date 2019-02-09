@@ -14,4 +14,4 @@ suppressPackageStartupMessages(library(ggplot2))
 ggplot() + geom_stars(data = x) + coord_equal() + facet_wrap(~band)
 ggplot() + geom_stars(data = x[,c(1:50,52:100),c(1:45, 50:60)]) +
 	coord_equal()
-ggplot() + geom_stars(data = st_xy2sfc(adrop(x[,1:10,1:10,1]), as_points = FALSE))
+ggplot() + geom_stars(data = x[,1:10,1:10,1:2], sf = TRUE) + facet_wrap(~band)

@@ -25,7 +25,7 @@ st_as_stars(.x, ...)
   xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")],
   values = 0)
 
-\method{st_as_stars}{sf}(.x, ...)
+\method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
 \method{st_as_stars}{Raster}(.x, ...)
 

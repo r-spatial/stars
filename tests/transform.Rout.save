@@ -64,12 +64,12 @@ attribute(s):
  3rd Qu.:60.00  
  Max.   :74.00  
 dimension(s):
-     from  to offset delta                       refsys point
-sfc     1 100     NA    NA +proj=longlat +datum=WGS8... FALSE
-band    1   3     NA    NA                           NA    NA
-                                                                values
-sfc  POLYGON ((-34.91617 -7.9498...,...,POLYGON ((-34.91385 -7.9521...
-band                                                              NULL
+         from  to offset delta                       refsys point
+geometry    1 100     NA    NA +proj=longlat +datum=WGS8... FALSE
+band        1   3     NA    NA                           NA    NA
+                                                                    values
+geometry POLYGON ((-34.91617 -7.9498...,...,POLYGON ((-34.91385 -7.9521...
+band                                                                  NULL
 > (x__ = st_transform_proj(x, st_crs(4326)))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -81,12 +81,12 @@ attribute(s):
  3rd Qu.:60.00  
  Max.   :74.00  
 dimension(s):
-     from  to offset delta                       refsys point
-sfc     1 100     NA    NA +proj=longlat +datum=WGS8... FALSE
-band    1   3     NA    NA                           NA    NA
-                                                                values
-sfc  POLYGON ((-34.91617 -7.9498...,...,POLYGON ((-34.91385 -7.9521...
-band                                                              NULL
+         from  to offset delta                       refsys point
+geometry    1 100     NA    NA +proj=longlat +datum=WGS8... FALSE
+band        1   3     NA    NA                           NA    NA
+                                                                    values
+geometry POLYGON ((-34.91617 -7.9498...,...,POLYGON ((-34.91385 -7.9521...
+band                                                                  NULL
 > all.equal(x_,x__,check.attributes = FALSE)
 [1] TRUE
 > 
@@ -128,4 +128,4 @@ In st_transform_proj.stars(st_as_stars(list(matrix(1, 10, 10))),  :
 > 
 > proc.time()
    user  system elapsed 
-  0.693   0.028   0.712 
+  0.523   0.053   0.568 
