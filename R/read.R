@@ -96,6 +96,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		names(sub_datasets) = nms
 		sub_datasets = sub_datasets[sub]
 
+		print(sub_datasets)
+
 		nms = names(sub_datasets)
 
 		.read_stars = function(x, options, driver, quiet, proxy, curvilinear) {
