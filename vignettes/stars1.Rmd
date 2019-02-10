@@ -230,7 +230,7 @@ ggplot() +
 We can write a stars object to disk by using `write_stars`; this used the GDAL write engine. Writing NetCDF files without going through the GDAL interface is currently not supported.
 `write_stars` currently writes only a single attribute:
 
-```{r}
+```{r eval=ev}
 write_stars(adrop(y[1]), "sst.tif")
 ```
 

@@ -145,7 +145,7 @@ and then warping the old raster to the new
 ```{r}
 nc.st %>% st_warp(newgrid) -> nc.new
 nc.new 
-plot(nc.new, graticule = TRUE)
+plot(nc.new)
 ```
 
 This new object has a regular grid in the new CRS, aligned with
