@@ -217,8 +217,18 @@ y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 9  1841012 1143960
 10 1841014 1143955
 > 
-> nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
-> (x = read_stars(nc))
+> if (version$os == "linux-gnu") { # FIXME: breaks on windows
++  nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
++  x = read_stars(nc)
++  print(x)
++  print(st_as_stars(st_bbox(x)))
++  print(st_as_stars(st_bbox(x), deltax = 20, deltay = 20))
++  df = as.data.frame(x)
++ 
++  print(dimnames(x))
++  dimnames(x) <- letters[1:3]
++  print(dimnames(x))
++ }
 stars object with 3 dimensions and 1 attribute
 attribute(s):
  tos_O1_2001-2002.nc 
@@ -234,7 +244,6 @@ dimension(s):
 x       1 180          0       2     NA    NA   NULL [x]
 y       1 170         90      -1     NA    NA   NULL [y]
 time    1  24 2001-01-16 30 days  PCICt    NA   NULL    
-> st_as_stars(st_bbox(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     values  
@@ -248,7 +257,6 @@ dimension(s):
   from  to offset     delta refsys point values    
 x    1 360      0         1 NA, NA    NA   NULL [x]
 y    1 180     90 -0.944444 NA, NA    NA   NULL [y]
-> st_as_stars(st_bbox(x), deltax = 20, deltay = 20)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     values  
@@ -262,9 +270,9 @@ dimension(s):
   from to offset delta refsys point values    
 x    1 18      0    20 NA, NA    NA   NULL [x]
 y    1  9     90   -20 NA, NA    NA   NULL [y]
-> df = as.data.frame(x)
-> 
-> st_as_stars()
+[1] "x"    "y"    "time"
+[1] "a" "b" "c"
+> print(st_as_stars())
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     values  
@@ -281,12 +289,6 @@ y    1 180     90    -1
                                                       refsys point values    
 x 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [x]
 y 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [y]
-> 
-> dimnames(x)
-[1] "x"    "y"    "time"
-> dimnames(x) <- letters[1:3]
-> dimnames(x)
-[1] "a" "b" "c"
 > 
 > # multiple sub-datasets:
 > if (version$os == "linux-gnu") { # FIXME: breaks on windows
@@ -450,7 +452,7 @@ y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 > 
 > # c:
 > f = system.file("netcdf/avhrr-only-v2.19810902.nc", package = "starsdata")
-> if (f != "") {
+> if (f != "" && version$os == "linux-gnu") { # FIXME: breaks on windows
 +   files = c("avhrr-only-v2.19810901.nc",
 +   "avhrr-only-v2.19810902.nc",
 +   "avhrr-only-v2.19810903.nc",
@@ -528,7 +530,7 @@ x        1 1440      0  0.25     NA    NA   NULL [x]
 y        1  720     90 -0.25     NA    NA   NULL [y]
 times    1    3     NA    NA     NA    NA   NULL    
 > 
-> st_dimensions(list(matrix(1, 4,4))) # st_dimensions.default
+> st_dimensions(list(matrix(1, 4, 4))) # st_dimensions.default
    from to offset delta refsys point
 X1    1  1     NA    NA     NA FALSE
                                            values
@@ -563,4 +565,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  8.137   0.668   8.802 
+  6.812   0.592   7.404 

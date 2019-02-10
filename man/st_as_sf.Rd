@@ -46,6 +46,6 @@ x
 (p = st_as_sf(x)) # removes NA areas
 (p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 plot(p, axes = TRUE)
-(p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
+(p = st_as_sf(x, na.rm = FALSE, merge = TRUE)) # includes polygons with NA values
 plot(p, axes = TRUE)
 }
