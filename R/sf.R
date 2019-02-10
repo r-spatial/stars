@@ -30,7 +30,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
 	dxy = attr(d, "raster")$dimensions
 	xy_pos = match(dxy, names(d))
-	if (! all(xy_pos == 1:2))
+	if (! all(xy_pos == 1:2)) # FIXME: better enforce this
 		stop("raster dimensions need to be first and second dimension")
 
 	# find which records are NA for all attributes:
@@ -86,6 +86,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' x[[1]] = x[[1]] < 100 # make the rest binary
 #' x
 #' (p = st_as_sf(x)) # removes NA areas
+#' (p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 #' plot(p, axes = TRUE)
 #' (p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
 #' plot(p, axes = TRUE)
@@ -94,8 +95,6 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 
 	crs = st_crs(x)
 	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
-		if (any(dim(x)[-(1:2)] > 1))
-			stop("all but first raster layer ignored; use merge=FALSE to convert all layers at once")
 		mask = if (na.rm) {
 				mask = x[1]
 				mask[[1]] = !is.na(mask[[1]])

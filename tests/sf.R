@@ -16,6 +16,8 @@ plot(sfc, add = TRUE)
 
 sf = st_as_sf(x, as_points = FALSE)
 plot(sf, border = NA)
+sf = st_as_sf(x[,,,1], as_points = FALSE, merge = TRUE)
+plot(sf, border = NA)
 
 sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE, na.rm = FALSE)
 sfc2 <- st_as_sfc(x, as_points = TRUE, use_cpp = FALSE)
