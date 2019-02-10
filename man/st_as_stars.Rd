@@ -59,6 +59,8 @@ st_as_stars(.x, ...)
 
 \item{values}{value(s) to populate the raster values with}
 
+\item{name}{character; name for the geometry dimensions}
+
 \item{downsample}{integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.}
 
 \item{url}{character; URL of the stars endpoint where the data reside}

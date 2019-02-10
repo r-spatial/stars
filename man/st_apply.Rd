@@ -11,7 +11,7 @@
 \arguments{
 \item{X}{object of class \code{stars}}
 
-\item{MARGIN}{see \link[base]{apply}; if \code{MARGIN} is a character vector,}
+\item{MARGIN}{see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied}
 
 \item{FUN}{see \link[base]{apply}}
 
@@ -31,6 +31,8 @@ st_apply apply a function to array dimensions: aggregate over space, time, or so
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 st_apply(x, 1:2, mean) # mean band value for each pixel
+st_apply(x, c("x", "y"), mean) # equivalent to the above
 st_apply(x, 3, mean)   # mean of all pixels for each band
+st_apply(x, "band", mean) # equivalent to the above
 st_apply(x, 1:2, range) # min and max band value for each pixel
 }
