@@ -44,6 +44,7 @@ x[[1]][x[[1]] < 30] = NA # set lower values to NA
 x[[1]] = x[[1]] < 100 # make the rest binary
 x
 (p = st_as_sf(x)) # removes NA areas
+(p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 plot(p, axes = TRUE)
 (p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
 plot(p, axes = TRUE)
