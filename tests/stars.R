@@ -29,13 +29,12 @@ if (version$os == "linux-gnu") { # FIXME: breaks on windows
  print(st_as_stars(st_bbox(x)))
  print(st_as_stars(st_bbox(x), deltax = 20, deltay = 20))
  df = as.data.frame(x)
+
+ print(dimnames(x))
+ dimnames(x) <- letters[1:3]
+ print(dimnames(x))
 }
-
-st_as_stars()
-
-dimnames(x)
-dimnames(x) <- letters[1:3]
-dimnames(x)
+print(st_as_stars())
 
 # multiple sub-datasets:
 if (version$os == "linux-gnu") { # FIXME: breaks on windows
