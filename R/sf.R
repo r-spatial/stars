@@ -89,56 +89,89 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' plot(p, axes = TRUE)
 #' (p = st_as_sf(x, na.rm = FALSE)) # includes polygons with NA values
 #' plot(p, axes = TRUE)
-st_as_sf.stars = function(x, ..., as_points = !merge, na.rm = TRUE, 
-		merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)), 
+st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE, 
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE) { 
 
 	crs = st_crs(x)
-	if (merge) {
-		mask = if(na.rm) {
+	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
+		if (any(dim(x)[-(1:2)] > 1))
+			stop("all but first raster layer ignored; use merge=FALSE to convert all layers at once")
+		mask = if (na.rm) {
 				mask = x[1]
 				mask[[1]] = !is.na(mask[[1]])
 				mask
 			} else
 				NULL
 		ret = gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
-				use_contours = as_points, ...)
+				use_contours = FALSE, ...)
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels")))
 			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
-		return(st_set_crs(ret, crs))
-	}
+		st_set_crs(ret, crs)
+	} else {
 
-	if (has_raster(x))
-		x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
+		if (merge)
+			stop("merge not yet supported for the as_points=TRUE case")
 
-	if (! has_sfc(x))
-		stop("no feature geometry column found")
+		if (has_raster(x))
+			x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
 
-	if (long)
-		st_as_sf(as.data.frame(x), crs = crs)
-	else {
-		ix = which_sfc(x)
-		if (length(ix) > 1)	
-			warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
-		sfc = st_dimensions(x)[[ ix[1] ]]$values
-		dfs = lapply(x, function(y) as.data.frame(y))
-		nc = sapply(dfs, ncol)
-		df = do.call(cbind, dfs)
-
-		if (length(dim(x)) == 1) # one-dimensional cube...
-			names(df) = names(x)
-		else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
-			names(df) = names(dfs)
-		else { # another exception... time as second dimension
-			e = expand_dimensions(x)
-			if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt")))
-				names(df) = as.character(e[-ix][[1]])
+		if (! has_sfc(x))
+			stop("no feature geometry column found")
+	
+		if (long) {
+			st_as_sf(as.data.frame(x), crs = crs)
+		} else {
+			ix = which_sfc(x)
+			if (length(ix) > 1)	
+				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
+			sfc = st_dimensions(x)[[ ix[1] ]]$values
+			dfs = lapply(x, function(y) as.data.frame(y))
+			nc = sapply(dfs, ncol)
+			df = do.call(cbind, dfs)
+	
+			if (length(dim(x)) == 1) # one-dimensional cube...
+				names(df) = names(x)
+			else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
+				names(df) = names(dfs)
+			else { # another exception... time as second dimension
+				e = expand_dimensions(x)
+				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt")))
+					names(df) = as.character(e[-ix][[1]])
+			}
+	
+			df[[ names(st_dimensions(x))[ ix[1] ] ]] = sfc # keep dimension name
+			st_sf(df, crs = crs)
 		}
-
-		df[[ names(st_dimensions(x))[ ix[1] ] ]] = sfc # keep dimension name
-		st_sf(df, crs = crs)
 	}
+}
+
+#' Compute contour lines or sets
+#' 
+#' Compute contour lines or sets
+#' @param x object of class \code{stars}
+#' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
+#' @param contour_lines logical; if \code{FALSE}, polygons are returned (contour sets), otherwise contour lines
+#' @param breaks numerical; values at which to "draw" contour levels
+#' @details this function requires GDAL >= 2.4.0
+#' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}
+#' @export
+st_contour = function(x, na.rm = TRUE, contour_lines = FALSE, 
+		breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks) {
+#nocov start
+	mask = if (na.rm) { 
+			mask = x[1]
+			mask[[1]] = !is.na(mask[[1]])
+			mask
+		} else
+			NULL
+	ret = gdal_polygonize(x, mask, use_integer = FALSE, geotransform = get_geotransform(x),
+			use_contours = TRUE, contour_lines = contour_lines, breaks = breaks)
+	# factor levels?
+	if (!is.null(lev <- attr(x[[1]], "levels")))
+		ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
+	st_set_crs(ret, st_crs(x))
+#nocov end
 }
 
 

@@ -9,9 +9,9 @@
 \method{st_as_sfc}{stars}(x, ..., as_points,
   which = seq_len(prod(dim(x)[1:2])))
 
-\method{st_as_sf}{stars}(x, ..., as_points = !merge, na.rm = TRUE,
-  merge = has_raster(x) && !(is_curvilinear(x) || is_rectilinear(x)),
-  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE)
+\method{st_as_sf}{stars}(x, ..., as_points = FALSE, merge = FALSE,
+  na.rm = TRUE, use_integer = is.logical(x[[1]]) || is.integer(x[[1]]),
+  long = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -22,9 +22,9 @@
 
 \item{which}{linear index of cells to keep (this argument is not recommended to be used)}
 
-\item{na.rm}{logical; should missing valued cells be removed, or also be converted to features?}
-
 \item{merge}{logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details}
+
+\item{na.rm}{logical; should missing valued cells be removed, or also be converted to features?}
 
 \item{use_integer}{(relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).}
 
