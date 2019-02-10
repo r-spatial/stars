@@ -33,7 +33,7 @@ the higher level, using stars proxy objects that delay all reading.
 
 To run all of the examples in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the `stars` package. They are in a [drat repo](https://github.com/eddelbuettel/drat), installation is done by
 ```{r eval=FALSE}
-install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+install.packages("starsdata", repos = "https://uni-muenster.sciebo.de/s/JH68CJIvfpLTeqd", type = "source") 
 ```
 
 # Reading chunks, change resolution, select bands

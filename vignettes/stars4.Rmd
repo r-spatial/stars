@@ -201,7 +201,7 @@ Curvilinear grids are grids whose grid lines are not straight. Rather than descr
 
 As an example, we will use a Sentinel 5P dataset available from package `starsdata`; this package can be installed with
 ```{r eval=FALSE}
-install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+install.packages("starsdata", repos = "https://uni-muenster.sciebo.de/s/JH68CJIvfpLTeqd", type = "source") 
 ```
 
 The dataset is found here:
