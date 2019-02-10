@@ -12,8 +12,9 @@ install:
 
 # Adapt as necessary starting from here
 
+# - Rscript -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "win.binary")'
+
 build_script:
-  - Rscript -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "win.binary")'
   - travis-tool.sh install_deps
 
 test_script:
