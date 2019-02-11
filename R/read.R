@@ -1,3 +1,13 @@
+prefixes = c("NETCDF:", "HDF:")
+
+maybe_normalizePath = function(.x) { 
+	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
+	if (any(sapply(prefixes, has_prefix, x = .x)))
+		.x
+	else
+		normalizePath(.x, mustWork = FALSE)
+}
+
 
 #' read raster/array dataset from file or connection
 #'
@@ -62,11 +72,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		RasterIO = list(), proxy = FALSE, curvilinear = character(0)) {
 
 	x = if (is.list(.x)) {
-			f = function(y) enc2utf8(normalizePath(y, mustWork = FALSE))
+			f = function(y) enc2utf8(maybe_normalizePath(y, mustWork = FALSE))
 			rapply(.x, f, classes = "character", how = "replace")
 		} else
-			# enc2utf8(normalizePath(.x, mustWork = FALSE))
-			enc2utf8(.x)
+			enc2utf8(maybe_normalizePath(.x))
 	
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
