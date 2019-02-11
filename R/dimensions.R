@@ -261,7 +261,6 @@ get_geotransform = function(x) {
 
 #' @export
 print.stars_raster = function(x, ...) {
-	# print(unclass(x), ...)
 	if (any(is.na(x$affine)))
 		cat(paste("affine parameters:", x$affine[1], x$affine[2], "\n"))
 	else if (any(x$affine != 0.0))

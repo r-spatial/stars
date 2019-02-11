@@ -23,8 +23,8 @@ x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
-if (version$os == "linux-gnu") { # FIXME: breaks on windows
- nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
+# if (version$os == "linux-gnu") { # FIXME: breaks on windows
+ nc = paste0("NETCDF:", system.file("nc/tos_O1_2001-2002.nc", package = "stars"), ":tos")
  x = read_stars(nc)
  print(x)
  print(st_as_stars(st_bbox(x)))
@@ -34,7 +34,7 @@ if (version$os == "linux-gnu") { # FIXME: breaks on windows
  print(dimnames(x))
  dimnames(x) <- letters[1:3]
  print(dimnames(x))
-}
+# }
 print(st_as_stars())
 
 # multiple sub-datasets:
