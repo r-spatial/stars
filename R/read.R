@@ -65,7 +65,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			f = function(y) enc2utf8(normalizePath(y, mustWork = FALSE))
 			rapply(.x, f, classes = "character", how = "replace")
 		} else
-			enc2utf8(normalizePath(.x, mustWork = FALSE))
+			# enc2utf8(normalizePath(.x, mustWork = FALSE))
+			enc2utf8(.x)
 	
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
