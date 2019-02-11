@@ -99,6 +99,12 @@ same pixel value:
 plot(p)
 ```
 
+A further option `connect8` can be set to `TRUE` to use 8
+connectedness, rather than the default 4 connectedness algorithm.
+In both cases, the polygons returned will often be invalid according
+to the simple feature standard, but can be made valid using
+`lwgeom::st_make_valid`.
+
 # Switching between vector and raster in `stars` objects
 
 We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a `stars` object by
