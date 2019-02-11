@@ -279,7 +279,10 @@ get_val = function(pattern, meta) {
 
 parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
-	name = tail(strsplit(name, ":")[[1]], 1)
+	name = if (length(grep(":", name)) == 0) # name is not the variable, but the file name; FIXME: how to make it the variable?
+			"zzzzz40163a99980" # bogus string, to avoid match
+		else
+			tail(strsplit(name, ":")[[1]], 1)
 	# unit:
 	pr$units = get_val(paste0(name, "#units"), meta)
 	# extra dims: NETCDF_DIM_EXTRA={time,zlev}

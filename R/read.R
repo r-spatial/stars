@@ -72,7 +72,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		RasterIO = list(), proxy = FALSE, curvilinear = character(0)) {
 
 	x = if (is.list(.x)) {
-			f = function(y) enc2utf8(maybe_normalizePath(y, mustWork = FALSE))
+			f = function(y) enc2utf8(maybe_normalizePath(y))
 			rapply(.x, f, classes = "character", how = "replace")
 		} else
 			enc2utf8(maybe_normalizePath(.x))

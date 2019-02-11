@@ -33,7 +33,7 @@ r = r[buf, epsilon = 1e-5] # crops with shrinked bounding box
 
 # c:
 f = system.file("netcdf/avhrr-only-v2.19810902.nc", package = "starsdata")
-if (f != "" && version$os == "linux-gnu") { # FIXME: breaks on windows
+if (f != "") {
   files = c("avhrr-only-v2.19810901.nc",
   "avhrr-only-v2.19810902.nc",
   "avhrr-only-v2.19810903.nc",

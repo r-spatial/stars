@@ -23,28 +23,22 @@ x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
-# if (version$os == "linux-gnu") { # FIXME: breaks on windows
-# nc = paste0("NETCDF:", system.file("nc/tos_O1_2001-2002.nc", package = "stars"), ":tos")
- nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
- x = read_stars(nc)
- print(x)
- print(st_as_stars(st_bbox(x)))
- print(st_as_stars(st_bbox(x), deltax = 20, deltay = 20))
- df = as.data.frame(x)
+nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
+(x = read_stars(nc))
+st_as_stars(st_bbox(x))
+st_as_stars(st_bbox(x), deltax = 20, deltay = 20)
+df = as.data.frame(x)
 
- print(dimnames(x))
- dimnames(x) <- letters[1:3]
- print(dimnames(x))
-# }
-print(st_as_stars())
+dimnames(x)
+dimnames(x) <- letters[1:3]
+dimnames(x)
+st_as_stars()
 
 # multiple sub-datasets:
-if (version$os == "linux-gnu") { # FIXME: breaks on windows
-  nc_red = system.file("nc/reduced.nc", package = "stars")
-  red = read_stars(nc_red)
-  print(red)
-  plot(red)
-}
+nc_red = system.file("nc/reduced.nc", package = "stars")
+red = read_stars(nc_red)
+red
+plot(red)
 
 x = st_xy2sfc(read_stars(tif)[,1:10,1:10,], as_points = FALSE)
 st_bbox(x)
@@ -70,7 +64,7 @@ x[is.na(x)] = 0
 
 # c:
 f = system.file("netcdf/avhrr-only-v2.19810902.nc", package = "starsdata")
-if (f != "" && version$os == "linux-gnu") { # FIXME: breaks on windows
+if (f != "") {
   files = c("avhrr-only-v2.19810901.nc",
   "avhrr-only-v2.19810902.nc",
   "avhrr-only-v2.19810903.nc",
