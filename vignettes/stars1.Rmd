@@ -144,15 +144,20 @@ GeoTIFF file, they were created with the `gdaladdo` utility, in particular
 ```
 gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
-which adds course resolution versions by averaging blocks of pixels.
+which adds course resolution versions by using the _average_
+resampling method to compute values based on blocks of pixels.
 
 ```{r}
-(x = read_stars(tif, options = c("OVERVIEW_LEVEL=1")))
-image(x)
-(x = read_stars(tif, options = c("OVERVIEW_LEVEL=2")))
-image(x)
-(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
-image(x)
+x1 = read_stars(tif, options = c("OVERVIEW_LEVEL=1"))
+x2 = read_stars(tif, options = c("OVERVIEW_LEVEL=2"))
+x3 = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))
+dim(x1)
+dim(x2)
+dim(x3)
+par(mfrow = c(1, 3), mar = rep(0.2, 4))
+image(x1[,,,1])
+image(x2[,,,1])
+image(x3[,,,1])
 ```
 
 # Reading a raster time series: NetCDF
