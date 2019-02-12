@@ -280,7 +280,7 @@ get_val = function(pattern, meta) {
 
 parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
-	name = if (length(grep(":", name, fixed = TRUE)) == 0) # name is not the variable, but the file name; FIXME: how to make it the variable?
+	name = if (grepl(":", name, fixed = TRUE) || grepl("\\1", name, fixed = TRUE)) # name is not the variable, but the file name; FIXME: how to make it the variable?
 			"zzzzz40163a99980" # bogus string, to avoid match
 		else
 			tail(strsplit(name, ":")[[1]], 1)
