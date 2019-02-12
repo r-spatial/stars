@@ -270,6 +270,7 @@ print.stars_raster = function(x, ...) {
 }
 
 get_val = function(pattern, meta) {
+	print(paste0("pattern:", meta))
 	i = grep(pattern, meta)
 	if (length(i))
 		strsplit(meta[i], "=")[[1]][2]
@@ -284,6 +285,7 @@ parse_netcdf_meta = function(pr, name) {
 		else
 			tail(strsplit(name, ":")[[1]], 1)
 	# unit:
+	print(paste0("name:", name))
 	pr$units = get_val(paste0(name, "#units"), meta)
 	# extra dims: NETCDF_DIM_EXTRA={time,zlev}
 	val = get_val("NETCDF_DIM_EXTRA", meta)

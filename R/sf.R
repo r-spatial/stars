@@ -108,9 +108,11 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 					stop("sf version >= 0.7-3 needed for option connect8")
 				gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
 					use_contours = FALSE, ...)
-			} else
-				gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
-					use_contours = FALSE, connect8 = connect8)
+			} 
+#			else # FIXME: uncomment when 0.7-3 hits CRAN
+#				gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
+#					use_contours = FALSE, connect8 = connect8)
+
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels")))
 			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
