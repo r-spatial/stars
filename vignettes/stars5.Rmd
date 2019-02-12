@@ -91,7 +91,7 @@ st_as_sf(x[1], as_points = FALSE, merge = FALSE)
 ```
 or merge polygons that have identical pixel values;
 ```{r}
-p = st_as_sf(x[1,,,1], as_points = FALSE, merge = TRUE)
+p = st_as_sf(x, as_points = FALSE, merge = TRUE)
 ```
 When plotted with boundaries, we see the resolved boundaries of areas with the
 same pixel value:

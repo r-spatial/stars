@@ -42,28 +42,30 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 + st_crs(nit.c) = 4326
 + print(nit.c)
 + 
-+ png("nit1.png", 800, 800)
-+ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-+ maps::map('world', add = TRUE, col = 'red')
-+ dev.off()
++ if (capabilities()["png"]) {
++  png("nit1.png", 800, 800)
++  plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
++  maps::map('world', add = TRUE, col = 'red')
++  dev.off()
 + 
-+ png("nit2.png", 800, 800)
-+ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-+ maps::map('world', add = TRUE, col = 'red')
-+ dev.off()
++  png("nit2.png", 800, 800)
++  plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
++  maps::map('world', add = TRUE, col = 'red')
++  dev.off()
 + 
-+ nit.c = stars:::st_downsample(nit.c, 8)
-+ print(nit.c)
++  nit.c = stars:::st_downsample(nit.c, 8)
++  print(nit.c)
++  
++  png("nit3.png", 800, 800)
++  plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
++  maps::map('world', add = TRUE, col = 'red')
++  dev.off()
 + 
-+ png("nit3.png", 800, 800)
-+ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
-+ maps::map('world', add = TRUE, col = 'red')
-+ dev.off()
-+ 
-+ png("nit4.png", 800, 800)
-+ plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
-+ maps::map('world', add = TRUE, col = 'red')
-+ dev.off()
++  png("nit4.png", 800, 800)
++  plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, border = NA)
++  maps::map('world', add = TRUE, col = 'red')
++  dev.off()
++ }
 + 
 + }
 //PRODUCT/longitude, 
@@ -110,4 +112,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  8.472   0.117   8.581 
+  7.724   0.164   7.880 
