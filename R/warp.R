@@ -110,22 +110,27 @@ st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use
 			on.exit(unlink(src[[1]])) # a temp file
 		}
 		if (missing(dest) && missing(crs)) {
+			delete = TRUE
 			dest = tempfile(fileext = ".tif")
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
-			if (!debug)
-				on.exit(unlink(dest))
-			else	
-				cat("Writing to: ", dest, "\n")
-			read_stars(dest)
-		} else {
-			dest = st_as_stars_proxy(dest)
-			if (!debug)
-				on.exit(unlink(dest[[1]]))
-			else
-				cat("Writing to: ", dest[[1]], "\n")
-			sf::gdal_utils("warp", src[[1]], dest[[1]], options = options)
-			st_as_stars(dest)
+		} else {  # dest exists, and should be used: should use warper rather than warp
+			dest = if (! inherits(dest, "stars_proxy")) {
+					delete = TRUE
+					st_as_stars_proxy(dest)[[1]]
+				} else {
+					delete = FALSE
+					dest[[1]] # the file name of the stars_proxy, not to be deleted
+				}
+			if (utils::packageVersion("sf") <= "0.7-2")
+				sf::gdal_utils("warp", src[[1]], dest)
+			else 
+				sf::gdal_utils("warper", src[[1]], dest) # not "warp"!
 		}
+		if (debug)
+			cat("Writing to: ", dest, "\n")
+		if (delete)
+			on.exit(unlink(dest)) # a temp file
+		read_stars(dest)
 	} else {
 		if (missing(dest)) {
 			if (missing(crs))
