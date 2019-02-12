@@ -21,7 +21,7 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x1 = read_stars(tif))
 (x1p = read_stars(tif, proxy = TRUE))
 (x1a = st_warp(x1, crs = st_crs(4326)))
-(x1b = st_warp(x1, x1a, gdal = TRUE))
+(x1b = st_warp(x1, x1p, gdal = TRUE))
 
 # does gdal reproduce what stars does? Smaller grid:
 (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
