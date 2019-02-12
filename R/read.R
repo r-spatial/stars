@@ -1,8 +1,7 @@
-prefixes = c("NETCDF:", "HDF5:", "HDF4:")
-
-maybe_normalizePath = function(.x) { 
+maybe_normalizePath = function(.x, np = FALSE) { 
+	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
-	if (any(sapply(prefixes, has_prefix, x = .x)))
+	if (!np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
 	else
 		normalizePath(.x, mustWork = FALSE)
@@ -22,6 +21,7 @@ maybe_normalizePath = function(.x) {
 #' @param RasterIO list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.
 #' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
+#' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set
 #' @return object of class \code{stars}
 #' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
@@ -69,13 +69,13 @@ maybe_normalizePath = function(.x) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0), 
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = FALSE, curvilinear = character(0)) {
+		RasterIO = list(), proxy = FALSE, curvilinear = character(0), normalize_path = TRUE) {
 
 	x = if (is.list(.x)) {
-			f = function(y) enc2utf8(maybe_normalizePath(y))
-			rapply(.x, f, classes = "character", how = "replace")
+			f = function(y, np) enc2utf8(maybe_normalizePath(y, np))
+			rapply(.x, f, classes = "character", how = "replace", np = normalize_path)
 		} else
-			enc2utf8(maybe_normalizePath(.x))
+			enc2utf8(maybe_normalizePath(.x, np = normalize_path))
 	
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
