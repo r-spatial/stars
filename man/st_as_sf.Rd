@@ -48,7 +48,7 @@ x
 (p = st_as_sf(x)) # removes NA areas
 (p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 all(st_is_valid(p)) # not all valid, see details
-plot(p, axes = TRUE)
+# plot(p, axes = TRUE)
 (p = st_as_sf(x, na.rm = FALSE, merge = TRUE)) # includes polygons with NA values
-plot(p, axes = TRUE)
+# plot(p, axes = TRUE)
 }

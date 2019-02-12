@@ -71,6 +71,8 @@ POINT (290810.8 9120533)
 > 
 > sf = st_as_sf(x, as_points = FALSE)
 > plot(sf, border = NA)
+> sf = st_as_sf(x[,,,1], as_points = FALSE, merge = TRUE)
+> plot(sf, border = NA)
 > 
 > sfc1 <- st_as_sfc(x, as_points = TRUE, use_cpp = TRUE, na.rm = FALSE)
 > sfc2 <- st_as_sfc(x, as_points = TRUE, use_cpp = FALSE)
@@ -203,4 +205,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.594   0.033   0.619 
+  0.650   0.057   0.700 
