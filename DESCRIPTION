@@ -1,5 +1,5 @@
 Package: stars
-Title: Scalable, Spatiotemporal Tidy Arrays: Raster and Vector Datacubes
+Title: Spatiotemporal Raster and Vector Datacubes
 Version: 0.3-0
 Date: 2018-11-24
 Authors@R: 
@@ -23,7 +23,7 @@ Authors@R:
              role = "ctb"))
 Description: Reading, manipulating, writing and plotting
     spatiotemporal Arrays (raster and vector data cubes) in R, using GDAL
-    bindings provided by package sf.
+    bindings provided by package sf, and NetCDF bindings using RNetCDF.
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
