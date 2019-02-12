@@ -270,7 +270,6 @@ print.stars_raster = function(x, ...) {
 }
 
 get_val = function(pattern, meta) {
-	#print(paste0("pattern:", meta))
 	i = grep(pattern, meta)
 	if (length(i))
 		strsplit(meta[i], "=")[[1]][2]
@@ -280,13 +279,13 @@ get_val = function(pattern, meta) {
 
 parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
+	print(paste0("name:", name))
 	#name = if (!grepl(":", name, fixed = TRUE) || grepl("\\1", name, fixed = TRUE)) # name is not the variable, but the file name; FIXME: how to make it the variable?
 	name = if (!grepl(":", name, fixed = TRUE) || grepl("\\1", name, fixed = TRUE)) # name is not the variable, but the file name; FIXME: how to make it the variable?
 			"zzzzz40163a99980" # bogus string, to avoid match
 		else
 			tail(strsplit(name, ":")[[1]], 1)
 	# unit:
-	print(paste0("name:", name))
 	pr$units = get_val(paste0(name, "#units"), meta)
 	# extra dims: NETCDF_DIM_EXTRA={time,zlev}
 	val = get_val("NETCDF_DIM_EXTRA", meta)
