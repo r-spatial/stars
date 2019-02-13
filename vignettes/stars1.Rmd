@@ -144,7 +144,7 @@ GeoTIFF file, they were created with the `gdaladdo` utility, in particular
 ```
 gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
-which adds course resolution versions by using the _average_
+which adds coarse resolution versions by using the _average_
 resampling method to compute values based on blocks of pixels.
 
 ```{r}
