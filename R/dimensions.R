@@ -65,7 +65,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 }
 
 #' @name st_dimensions
-#' @param which integer which dimension to change
+#' @param which integer or character; index or name of the dimension to be changed
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
 #' @export
@@ -98,6 +98,14 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 		}
 	}
 	st_as_stars(unclass(.x), dimensions = d)
+}
+
+#' @name st_dimensions
+#' @param max logical; if \code{TRUE} return the end, rather than the beginning of an interval
+#' @param center logical; if \code{TRUE} return the center of an interval; if \code{NA} return the center for raster dimensions, and the start of intervals in other cases
+#' @export
+st_get_dimension_values = function(.x, which, ..., max = FALSE, center = NA) {
+	expand_dimensions(.x, ..., max = max, center = center)[[which]]
 }
 
 

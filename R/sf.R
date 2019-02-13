@@ -28,10 +28,13 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	if (! has_raster(x))
 		stop("x and/or y not among dimensions")
 
+	x = st_upfront(x)
+
 	dxy = attr(d, "raster")$dimensions
 	xy_pos = match(dxy, names(d))
 	if (! all(xy_pos == 1:2)) # FIXME: better enforce this
 		stop("raster dimensions need to be first and second dimension")
+
 
 	# find which records are NA for all attributes:
 	a = abind(x, along = length(dim(x)) + 1)

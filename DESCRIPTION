@@ -22,7 +22,7 @@ Authors@R:
              family = "Blodgett", 
              role = "ctb"))
 Description: Reading, manipulating, writing and plotting
-    spatiotemporal Arrays (raster and vector data cubes) in R, using GDAL
+    spatiotemporal arrays (raster and vector data cubes) in R, using GDAL
     bindings provided by package sf, and NetCDF bindings using RNetCDF.
 License: Apache License
 URL: https://github.com/r-spatial/stars/

@@ -8,6 +8,7 @@ gdal_crs(tif)
 plot(x)
 plot(x, join_zlim = FALSE)
 x %>% st_set_dimensions(names = c('a', 'b', 'c'))
+st_get_dimension_values(x, 3)
 
 x + x
 x * x

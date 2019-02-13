@@ -51,12 +51,12 @@ st_as_STFDF = function(x) {
 	geom = if (rst) {
 			xy = attr(d, "raster")$dimensions
 			tm = e[[ setdiff(names(d), xy) ]]
-			x = aperm(x, c(xy, setdiff(names(d), xy)))
+			x = st_upfront(x, xy)
 			sp::geometry(as(adrop(x[,,,1]), "Spatial"))
 		} else {
 			w = which_sfc(x)
 			tm = e[[ setdiff(seq_along(dim(x)), w) ]]
-			x = aperm(x, c(w, setdiff(seq_along(dim(x)), w)))
+			x = st_upfront(x, w)
 			sp::geometry(as(adrop(x[,,1]), "Spatial"))
 		}
 

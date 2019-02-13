@@ -6,6 +6,7 @@
 \alias{st_dimensions.array}
 \alias{st_dimensions.default}
 \alias{st_set_dimensions}
+\alias{st_get_dimension_values}
 \title{get dimensions from stars object}
 \usage{
 st_dimensions(.x, ...)
@@ -18,6 +19,8 @@ st_dimensions(.x, ...)
   cell_midpoints = FALSE, point = FALSE)
 
 st_set_dimensions(.x, which, values, names, ...)
+
+st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 }
 \arguments{
 \item{.x}{object to retrieve dimensions information from}
@@ -32,11 +35,15 @@ st_set_dimensions(.x, which, values, names, ...)
 
 \item{point}{logical; does the pixel value (measure) refer to a point (location) value or to an pixel (area) summary value?}
 
-\item{which}{integer which dimension to change}
+\item{which}{integer or character; index or name of the dimension to be changed}
 
 \item{values}{values for this dimension (e.g. \code{sfc} list-column)}
 
 \item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
+
+\item{max}{logical; if \code{TRUE} return the end, rather than the beginning of an interval}
+
+\item{center}{logical; if \code{TRUE} return the center of an interval; if \code{NA} return the center for raster dimensions, and the start of intervals in other cases}
 }
 \value{
 the \code{dimensions} attribute of \code{x}, of class \code{dimensions}

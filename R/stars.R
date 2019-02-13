@@ -557,3 +557,9 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 		dim(value) = dim(x)
 	NextMethod()
 }
+
+st_upfront = function(x, xy = attr(st_dimensions(x), "raster")$dimensions) {
+	if (!is.character(xy))
+		xy = names(st_dimensions(x))[xy]
+	aperm(x, c(xy, setdiff(names(st_dimensions(x)), xy)))
+}

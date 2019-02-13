@@ -42,11 +42,8 @@
 		x = if (has_raster(x))
 			st_crop(x, i, crop = crop, ...)
 		else {
-			ix = which_sfc(x)
-			if (ix != 1) # put first
-				x = aperm(x, c(ix, setdiff(seq_len(dim(x)), ix)))
-			sfc = st_geometry(x)
-			sel = which(lengths(st_intersects(sfc, i)) > 0)
+			x = st_upfront(x, which_sfc(x))
+			sel = which(lengths(st_intersects(st_geometry(x), i)) > 0)
 			x[, sel]
 		}
 		return(x)

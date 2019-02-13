@@ -82,6 +82,8 @@ dimension(s):
 a    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 b    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 c    1   6      NA    NA                           NA    NA   NULL    
+> st_get_dimension_values(x, 3)
+[1] 1 2 3 4 5 6
 > 
 > x + x
 stars object with 3 dimensions and 1 attribute
@@ -560,4 +562,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.907   0.527   7.434 
+  6.978   0.615   7.586 

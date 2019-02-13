@@ -320,7 +320,7 @@ The following objects are masked from 'package:base':
     as.Date, as.Date.numeric
 
 > as.xts(x)
-                     [,1] [,2] [,3]
+                        1    2    3
 2010-08-05 10:00:00  9.38 21.1 29.8
 2010-08-05 11:00:00 11.50 19.8 31.2
 2010-08-05 12:00:00 10.40 20.5 29.8
@@ -340,4 +340,4 @@ In as.xts.stars(x) : all but first attribute will be ignored
 > 
 > proc.time()
    user  system elapsed 
-  1.154   0.073   1.220 
+  0.790   0.059   0.841 
