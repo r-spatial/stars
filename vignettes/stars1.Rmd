@@ -106,7 +106,7 @@ Besides the `tidyverse` subsetting and selection operators explained
 in [this vignette](stars3.html), we can also use `[` and `[[`.
 
 Since `stars` objects are a list of `array`s with a metadata table
-describing dimensins, list extraction (and assignment) works as expected:
+describing dimensions, list extraction (and assignment) works as expected:
 
 ```{r}
 class(x[[1]])
