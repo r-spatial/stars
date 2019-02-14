@@ -2,9 +2,11 @@ st_write.stars = function(obj, dsn, layer, ...) {
 	.Deprecated("read_stars") # nocov
 }
 
+
 #' @name write_stars
 #' @export
 write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
+
 
 #' write stars object to gdal dataset (typically: to file)
 #' 
@@ -22,7 +24,8 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 		options = character(0), type = "Float32", NA_value = NA_real_) {
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
-	sf::gdal_write(obj[layer], ..., file = dsn, driver = driver, options = options, 
+	obj = st_upfront(obj[layer])
+	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
 	invisible(obj)
 }
