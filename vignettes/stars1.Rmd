@@ -146,8 +146,9 @@ gdaladdo -r average L7_ETMs.tif  2 4 8 16
 ```
 which adds coarse resolution versions by using the _average_
 resampling method to compute values based on blocks of pixels.
+These can be read by
 
-```{r}
+```{r eval=FALSE}
 x1 = read_stars(tif, options = c("OVERVIEW_LEVEL=1"))
 x2 = read_stars(tif, options = c("OVERVIEW_LEVEL=2"))
 x3 = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))

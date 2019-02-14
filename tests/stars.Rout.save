@@ -85,6 +85,69 @@ c    1   6      NA    NA                           NA    NA   NULL
 > st_get_dimension_values(x, 3)
 [1] 1 2 3 4 5 6
 > 
+> (x1 = st_set_dimensions(x, "band", values = c(1,2,3,4,5,7), names = "band_number", point = TRUE))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+            from  to  offset delta                       refsys point  values
+x              1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL
+y              1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL
+band_number    1   6      NA    NA                           NA  TRUE 1,...,7
+               
+x           [x]
+y           [y]
+band_number    
+> rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)) %>%
++ 	units::set_units(um) -> bw # units::set_units(µm) -> bw
+> # set bandwidth midpoint:
+> (x2 = st_set_dimensions(x, "band", values = 0.5 * (bw[,1]+bw[,2]), 
++    names = "bandwidth_midpoint", point = TRUE))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+                   from  to  offset delta                       refsys point
+x                     1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
+y                     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+bandwidth_midpoint    1   6      NA    NA                      udunits  TRUE
+                                       values    
+x                                        NULL [x]
+y                                        NULL [y]
+bandwidth_midpoint 0.4825 [um],...,2.215 [um]    
+> # set bandwidth intervals:
+> (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif    
+ Min.   :  1.00  
+ 1st Qu.: 54.00  
+ Median : 69.00  
+ Mean   : 68.91  
+ 3rd Qu.: 86.00  
+ Max.   :255.00  
+dimension(s):
+          from  to  offset delta                       refsys point
+x            1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
+y            1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+bandwidth    1   6      NA    NA                      udunits    NA
+                                          values    
+x                                           NULL [x]
+y                                           NULL [y]
+bandwidth [0.45,0.515) [um],...,[2.08,2.35) [um]    
+> 
 > x + x
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -562,4 +625,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.978   0.615   7.586 
+  7.484   0.593   8.069 
