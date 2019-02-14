@@ -54,3 +54,15 @@ get dimensions from stars object
 \details{
 dimensions can be specified in two ways. The simplest is to pass a vector with numeric values for a numeric dimension, or character values for a categorical dimension. Parameter \code{cell_midpoints} is used to specify whether numeric values refer to the offset (start) of a dimension interval (default), or to the center; the center case is only available for regular dimensions. For rectilinear numeric dimensions, one can specify either a vector with cell borders (start values), or a data.frame with two columns named "start" and "end", with the respective interval start and end values. In the first case, the end values are computed from the start values by assuming the last two intervals have equal width.
 }
+\examples{
+x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+# Landsat 7 ETM+ band semantics: https://landsat.gsfc.nasa.gov/the-enhanced-thematic-mapper-plus/
+# set bands to values 1,2,3,4,5,7:
+(x1 = st_set_dimensions(x, "band", values = c(1,2,3,4,5,7), names = "band_number", point = TRUE))
+# set band values as bandwidth
+bw = units::set_units(rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)), µm)
+# set bandwidth midpoint:
+(x2 = st_set_dimensions(x, "band", values = 0.5 * (bw[,1]+bw[,2]), names = "bandwidth_midpoint", point = TRUE))
+# set bandwidth intervals:
+(x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
+}

@@ -69,10 +69,24 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
 #' @export
+#' @examples
+#' x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+#' # Landsat 7 ETM+ band semantics: https://landsat.gsfc.nasa.gov/the-enhanced-thematic-mapper-plus/
+#' # set bands to values 1,2,3,4,5,7:
+#' (x1 = st_set_dimensions(x, "band", values = c(1,2,3,4,5,7), names = "band_number", point = TRUE))
+#' # set band values as bandwidth
+#' bw = units::set_units(rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)), µm)
+#' # set bandwidth midpoint:
+#' (x2 = st_set_dimensions(x, "band", values = 0.5 * (bw[,1]+bw[,2]), names = "bandwidth_midpoint", point = TRUE))
+#' # set bandwidth intervals:
+#' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values, names, ...) {
 	d = st_dimensions(.x)
 	if (! missing(values)) {
-		stopifnot(!missing(which))
+		if (is.character(which))
+			which = match(which, names(d))
+		if (is.na(which))
+			stop("which should be a name or index of an existing dimensions")
 		if (dim(.x)[which] != length(values)) {
 			if (dim(.x)[which] == length(values) - 1)
 				values = as_intervals(values)
@@ -179,6 +193,8 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				else
 					set_dimension_values(start = values)
 		}
+		if (inherits(values, "units") || (inherits(values, "intervals") && inherits(values$start, "units")))
+			refsys = "udunits"
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
 		refsys = refsys, point = point, values = values), class = "dimension")

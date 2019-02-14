@@ -1,4 +1,14 @@
+#' create an intervals object
+#' 
+#' create an intervals object, assuming left-closed and right-open intervals
+#' @param start vector with start values, or 2-column matrix with start and end values in column 1 and 2, respectively
+#' @param end vector with end values
+#' @export
 make_intervals = function(start, end) {
+	if (missing(end) && is.matrix(start) && ncol(start) == 2) {
+		end = start[,2]
+		start = start[,1]
+	}
 	stopifnot(length(start) > 0, length(start) == length(end))
 	structure(list(start = start, end = end), class = "intervals")
 }
@@ -21,5 +31,10 @@ tail.intervals = function(x, n) make_intervals(tail(x$start, n), tail(x$end, n))
 }
 
 format.intervals = function(x, ...) {
-	paste0("[", format(x$start, ...), ",", format(x$end, ...), ")")
+	if (inherits(x$start, "units")) {
+		stopifnot(units(x$start) == units(x$end))
+		paste0("[", format(as.numeric(x$start), ...), ",", format(as.numeric(x$end), ...), ") ",
+			"[", as.character(units(x$start)), "]")
+	} else
+		paste0("[", format(x$start, ...), ",", format(x$end, ...), ")")
 }
