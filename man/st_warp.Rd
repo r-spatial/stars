@@ -4,7 +4,7 @@
 \alias{st_warp}
 \title{Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system}
 \usage{
-st_warp(src, dest, ..., crs = NA, cellsize = NA_real_,
+st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
   segments = 100, use_gdal = FALSE, options = character(0),
   no_data_value = -9999, debug = FALSE)
 }
