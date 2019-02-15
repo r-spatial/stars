@@ -185,7 +185,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' image(x, col = grey((3:9)/10))
 #' image(x, rgb = c(1,3,5)) # rgb composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
-		maxColorValue = max(x[[attr]], na.rm = TRUE),
+		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
@@ -249,17 +249,25 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		xy = dim(ar)[1:2]
 		if (!y_is_neg) # need to flip y?
 			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
-		ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
-		nas = apply(ar, 1, function(x) any(is.na(x)))
-		ar = rgb(ar[!nas,], maxColorValue = maxColorValue)
-		mat = rep(NA_character_, prod(xy))
-		mat[!nas] = ar
-		dim(mat) = xy
 		if (dev.capabilities("rasterImage")$rasterImage != "yes")
 			stop("rgb plotting not supported on this device")
 		if (! isTRUE(dots$add)) {
 			plot.new()
 			plot.window(xlim = xlim, ylim = ylim, asp = asp)
+		}
+		if (is.numeric(rgb) && length(rgb) == 3) {
+			ar = structure(ar[ , , rgb], dim = c(prod(xy), 3)) # flattens x/y
+			nas = apply(ar, 1, function(x) any(is.na(x)))
+			ar = grDevices::rgb(ar[!nas,], maxColorValue = maxColorValue)
+			mat = rep(NA_character_, prod(xy))
+			mat[!nas] = ar
+			dim(mat) = xy
+		} else {
+			stopifnot(inherits(rgb, "data.frame"))
+			# rgb has col 1: index, col 2: label, col 3-5: R, G, B
+			ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
+			rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
+			mat = structure(rgb, dim = xy)
 		}
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
