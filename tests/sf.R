@@ -3,7 +3,8 @@ library(sf)
 #jp2 = system.file("jp2/B01.jp2", package = "stars")
 #(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+#(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))) # FIXME: breaks on windows
+(x = read_stars(tif)[,1:20,1:20])
 # names(x) = "L7_ETM"
 
 # library(abind)

@@ -101,15 +101,19 @@ transform_grid_grid = function(x, target) {
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
-st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use_gdal = FALSE, 
-		options = character(0), no_data_value = -9999, debug = FALSE) {
+st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100, 
+		use_gdal = FALSE, options = character(0), no_data_value = -9999, debug = FALSE) {
+
+	if (!is.na(crs))
+		crs = st_crs(crs)
+
 	if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value)
 		if (! inherits(src, "stars_proxy")) {
 			src = st_as_stars_proxy(src)
 			on.exit(unlink(src[[1]])) # a temp file
 		}
-		if (missing(dest) && missing(crs)) {
+		if (missing(dest) && is.na(crs)) {
 			delete = TRUE
 			dest = tempfile(fileext = ".tif")
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
@@ -133,7 +137,7 @@ st_warp = function(src, dest, ..., crs, cellsize = NA_real_, segments = 100, use
 		read_stars(dest)
 	} else {
 		if (missing(dest)) {
-			if (missing(crs))
+			if (is.na(crs))
 				stop("either dest or crs should be specified")
 			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
 		} else if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
