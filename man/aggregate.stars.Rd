@@ -2,26 +2,24 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate.stars}
 \alias{aggregate.stars}
-\title{spatially aggregate stars object to feature geometry}
+\title{spatially or temporally aggregate stars object}
 \usage{
 \method{aggregate}{stars}(x, by, FUN, ..., drop = FALSE,
-  dim = which_sfc(x)[1], join = st_intersects)
+  join = st_intersects)
 }
 \arguments{
 \item{x}{object of class \code{stars} with information to be aggregated}
 
-\item{by}{object of class \code{stars} with aggregation geometry}
+\item{by}{object of class \code{sf}, \code{sfc} or \code{POSIXct} with aggregation geometry}
 
-\item{FUN}{aggregation function}
+\item{FUN}{aggregation function, such as \code{mean}}
 
-\item{...}{arguments passed on to \code{FUN}}
+\item{...}{arguments passed on to \code{FUN}, such as \code{na.rm=TRUE}}
 
 \item{drop}{logical; ignored}
-
-\item{dim}{integer; geometry dimension that will be aggregated}
 
 \item{join}{join function to find matches of x to by}
 }
 \description{
-spatially aggregate stars object to feature geometry
+spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution
 }

@@ -168,7 +168,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param asp numeric; aspect ratio of image
-#' @param rgb integer; specify three bands to form an rgb composite
+#' @param rgb integer; specify three bands to form an rgb composite. Experimental: rgb color table; see Details.
 #' @param maxColorValue numeric; passed on to \link{rgb}
 #' @param xlab character; x axis label
 #' @param ylab character; y axis label
@@ -178,6 +178,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
+#' @details use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")

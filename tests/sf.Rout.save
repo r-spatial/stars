@@ -20,53 +20,54 @@ Type 'q()' to quit R.
 > #jp2 = system.file("jp2/B01.jp2", package = "stars")
 > #(x = read_stars(jp2, options = c("OVERVIEW_LEVEL=3")))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> (x = read_stars(tif, options = c("OVERVIEW_LEVEL=3")))
+> #(x = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))) # FIXME: breaks on windows
+> (x = read_stars(tif)[,1:20,1:20])
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   : 12.00  
- 1st Qu.: 58.00  
- Median : 71.00  
- Mean   : 69.24  
- 3rd Qu.: 83.00  
- Max.   :137.00  
+  L7_ETMs.tif   
+ Min.   : 17.0  
+ 1st Qu.: 44.0  
+ Median : 58.0  
+ Mean   : 58.2  
+ 3rd Qu.: 70.0  
+ Max.   :130.0  
 dimension(s):
-     from to  offset   delta                       refsys point values    
-x       1 22  288776 452.114 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 22 9120761    -456 +proj=utm +zone=25 +south... FALSE   NULL [y]
-band    1  6      NA      NA                           NA    NA   NULL    
+     from to  offset delta                       refsys point values    
+x       1 20  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 20 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1  6      NA    NA                           NA    NA   NULL    
 > # names(x) = "L7_ETM"
 > 
 > # library(abind)
 > # x = adrop(x)
 > image(x)
 > (sfc = st_as_sfc(x, as_points = FALSE))
-Geometry set for 484 features 
+Geometry set for 400 features 
 geometry type:  POLYGON
 dimension:      XY
-bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
+bbox:           xmin: 288776.3 ymin: 9120191 xmax: 289346.3 ymax: 9120761
 epsg (SRID):    NA
 proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
 First 5 geometries:
-POLYGON ((288776.3 9120761, 289228.4 9120761, 2...
-POLYGON ((289228.4 9120761, 289680.5 9120761, 2...
-POLYGON ((289680.5 9120761, 290132.6 9120761, 2...
-POLYGON ((290132.6 9120761, 290584.7 9120761, 2...
-POLYGON ((290584.7 9120761, 291036.8 9120761, 2...
+POLYGON ((288776.3 9120761, 288804.8 9120761, 2...
+POLYGON ((288804.8 9120761, 288833.3 9120761, 2...
+POLYGON ((288833.3 9120761, 288861.8 9120761, 2...
+POLYGON ((288861.8 9120761, 288890.3 9120761, 2...
+POLYGON ((288890.3 9120761, 288918.8 9120761, 2...
 > plot(sfc, add  =TRUE)
 > (sfc = st_as_sfc(x, as_points = TRUE))
-Geometry set for 484 features 
+Geometry set for 400 features 
 geometry type:  POINT
 dimension:      XY
-bbox:           xmin: 289002.3 ymin: 9110957 xmax: 298496.7 ymax: 9120533
+bbox:           xmin: 288790.5 ymin: 9120205 xmax: 289332 ymax: 9120747
 epsg (SRID):    NA
 proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
 First 5 geometries:
-POINT (289002.3 9120533)
-POINT (289454.4 9120533)
-POINT (289906.5 9120533)
-POINT (290358.6 9120533)
-POINT (290810.8 9120533)
+POINT (288790.5 9120747)
+POINT (288819 9120747)
+POINT (288847.5 9120747)
+POINT (288876 9120747)
+POINT (288904.5 9120747)
 > plot(sfc, add = TRUE)
 > 
 > sf = st_as_sf(x, as_points = FALSE)
@@ -205,4 +206,4 @@ y    1 10      3  -0.2 NA, NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.650   0.057   0.700 
+  0.666   0.044   0.705 

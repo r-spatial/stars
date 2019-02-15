@@ -1,5 +1,13 @@
 # version 0.3-0
 
+* add `st_get_dimension_values` to get the values of a particular dimension (if meaningful); #100
+
+* allow for setting intervals as dimension values; see examples of `st_dimensions`
+
+* add `st_contour`, and clean up `st_as_sf`; #99
+
+* experimental color table support; https://github.com/r-spatial/mapview/issues/208
+
 * rewrote vignettes, added vignettes; #99
 
 * deprecate `st_write.stars` for `write_stars`; #96

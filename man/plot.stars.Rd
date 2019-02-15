@@ -56,7 +56,7 @@
 
 \item{asp}{numeric; aspect ratio of image}
 
-\item{rgb}{integer; specify three bands to form an rgb composite}
+\item{rgb}{integer; specify three bands to form an rgb composite. Experimental: rgb color table; see Details.}
 
 \item{maxColorValue}{numeric; passed on to \link{rgb}}
 
@@ -78,6 +78,9 @@
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension
+}
+\details{
+use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

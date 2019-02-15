@@ -58,14 +58,68 @@ attribute(s):
  Max.   :183.27  
  NA's   :8429    
 dimension(s):
-     from   to     offset  delta                       refsys point
-aggr    1    9         NA     NA +proj=longlat +datum=WGS8...    NA
-time    1 4383 1998-01-01 1 days                         Date FALSE
-                                                                values
-aggr POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
-time                                                              NULL
+         from   to     offset  delta                       refsys point
+geometry    1    9         NA     NA +proj=longlat +datum=WGS8... FALSE
+time        1 4383 1998-01-01 1 days                         Date FALSE
+                                                                    values
+geometry POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
+time                                                                  NULL
 > 
+> # adapted from ?read_stars:
+> m = array(1:720, dim = c(x = 10, y = 12, t = 6)) # named dim
+> st = st_as_stars(m)
+> attr(st, "dimensions")$y$delta = -1
+> attr(st, "dimensions")$y$offset = 12
+> st = st_set_dimensions(st, 3, values = Sys.Date() + 1:6)
+> 
+> tmp = tempfile(fileext = ".tif")
+> write_stars(st, tmp)
+> 
+> (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
++    nBufXSize = 2, nBufYSize = 2)))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+ file5580678efa2e.tif 
+ Min.   : 33.0        
+ 1st Qu.:199.2        
+ Median :365.5        
+ Mean   :365.5        
+ 3rd Qu.:531.8        
+ Max.   :698.0        
+dimension(s):
+     from to offset delta refsys point values    
+x       1  2      0     5     NA    NA   NULL [x]
+y       1  2     12    -6     NA    NA   NULL [y]
+band    1  6     NA    NA     NA    NA   NULL    
+> 
+> sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), 4326)
+> (a = aggregate(st_set_crs(st, 4326), sfc, mean))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+      A1        
+ Min.   : 28.0  
+ 1st Qu.:194.2  
+ Median :360.5  
+ Mean   :360.5  
+ 3rd Qu.:526.8  
+ Max.   :693.0  
+dimension(s):
+         from to     offset  delta                       refsys point
+geometry    1  4         NA     NA +proj=longlat +datum=WGS8... FALSE
+t           1  6 2019-02-16 1 days                         Date    NA
+                                                                    values
+geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POLYGON ((5 6, 10 6, 10 0, ...
+t                                                                     NULL
+> a[[1]]
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]   28  148  268  388  508  628
+[2,]   33  153  273  393  513  633
+[3,]   88  208  328  448  568  688
+[4,]   93  213  333  453  573  693
+> sum(a[[1]])*30 == sum(1:720)
+[1] TRUE
 > 
 > proc.time()
    user  system elapsed 
-  3.866   0.040   3.899 
+  0.841   0.060   0.893 
