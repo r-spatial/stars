@@ -5,7 +5,7 @@
 \title{spatially or temporally aggregate stars object}
 \usage{
 \method{aggregate}{stars}(x, by, FUN, ..., drop = FALSE,
-  join = st_intersects)
+  join = st_intersects, as_points = TRUE, rightmost.closed = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars} with information to be aggregated}
@@ -19,6 +19,10 @@
 \item{drop}{logical; ignored}
 
 \item{join}{join function to find matches of x to by}
+
+\item{as_points}{see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?}
+
+\item{rightmost.closed}{see \link{findInterval}}
 }
 \description{
 spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution

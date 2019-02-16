@@ -201,6 +201,14 @@ which_sfc = function(x) {
 	which(sapply(x, function(i) inherits(i$values, "sfc")))
 }
 
+which_time = function(x) {
+	if (inherits(x, "stars"))
+		x = st_dimensions(x)
+	which(sapply(x, function(i) 
+		inherits(i$values, c("POSIXct", "Date", "PCICt")) || 
+		i$refsys %in% c("POSIXct", "Date", "PCICt")))
+}
+
 has_sfc = function(x) {
 	length(which_sfc(x)) > 0
 }
