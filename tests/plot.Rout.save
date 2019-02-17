@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -41,7 +41,10 @@ POINT (9.791584 54.07312)
 POINT (13.64701 52.44775)
 POINT (13.29635 52.65315)
 > 
+> rgb = read.csv(system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata"), header = TRUE, sep = ";")
+> luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
+> plot(luc, rgb = rgb, axes = TRUE)
 > 
 > proc.time()
    user  system elapsed 
-  1.043   0.045   1.079 
+  1.443   0.069   1.504 
