@@ -76,7 +76,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' (x1 = st_set_dimensions(x, "band", values = c(1,2,3,4,5,7), names = "band_number", point = TRUE))
 #' # set band values as bandwidth
 #' rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)) %>%
-#'   units::set_units("µm") -> bw # units::set_units(µm) -> bw
+#'   units::set_units("μm") -> bw # units::set_units(µm) -> bw
 #' # set bandwidth midpoint:
 #' (x2 = st_set_dimensions(x, "band", values = 0.5 * (bw[,1]+bw[,2]), 
 #'    names = "bandwidth_midpoint", point = TRUE))
