@@ -2,7 +2,7 @@
 #' 
 #' spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution 
 #' @param x object of class \code{stars} with information to be aggregated
-#' @param by object of class \code{sf}, \code{sfc} or \code{POSIXct} with aggregation geometry
+#' @param by object of class \code{sf}, \code{sfc}, or a time class (\code{Date}, \code{POSIXct}, or \code{PCICt}) with aggregation geometry/time periods
 #' @param FUN aggregation function, such as \code{mean}
 #' @param ... arguments passed on to \code{FUN}, such as \code{na.rm=TRUE}
 #' @param drop logical; ignored
