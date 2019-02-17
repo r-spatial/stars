@@ -32,3 +32,5 @@ sum(a[[1]])*30 == sum(1:720)
 
 tm0 = Sys.Date() + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))
+
+units::set_units(1:10, "μm")
