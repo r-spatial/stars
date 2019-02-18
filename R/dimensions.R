@@ -121,6 +121,8 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 #' @param center logical; if \code{TRUE} return the center of an interval; if \code{NA} return the center for raster dimensions, and the start of intervals in other cases
 #' @export
 st_get_dimension_values = function(.x, which, ..., max = FALSE, center = NA) {
+	if (!inherits(which, c("numeric", "character")) || length(which) != 1)
+		stop("argument which should be a length 1 dimension index or name") # nocov
 	expand_dimensions(.x, ..., max = max, center = center)[[which]]
 }
 
