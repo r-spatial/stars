@@ -70,7 +70,7 @@ time                                                                  NULL
 > st = st_as_stars(m)
 > attr(st, "dimensions")$y$delta = -1
 > attr(st, "dimensions")$y$offset = 12
-> tm = Sys.Date() + 1:6
+> tm = as.Date("2019-02-19") + 1:6
 > st = st_set_crs(st_set_dimensions(st, 3, values = tm), 4326)
 > 
 > tmp = tempfile(fileext = ".tif")
@@ -80,7 +80,7 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- file2f692914780a.tif 
+ file3ddf60859226.tif 
  Min.   : 33.0        
  1st Qu.:199.2        
  Median :365.5        
@@ -108,7 +108,7 @@ attribute(s):
 dimension(s):
          from to     offset  delta                       refsys point
 geometry    1  4         NA     NA +proj=longlat +datum=WGS8... FALSE
-t           1  6 2019-02-18 1 days                         Date    NA
+t           1  6 2019-02-20 1 days                         Date    NA
                                                                     values
 geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POLYGON ((5 6, 10 6, 10 0, ...
 t                                                                     NULL
@@ -121,10 +121,10 @@ t                                                                     NULL
 > sum(a[[1]])*30 == sum(1:720)
 [1] TRUE
 > 
-> tm0 = Sys.Date() + -1:8
+> tm0 = as.Date("2019-02-19") + -1:8
 > (a = aggregate(st, tm0, mean, na.rm = TRUE))
-[1] "2019-02-18" "2019-02-19" "2019-02-20" "2019-02-21" "2019-02-22"
-[6] "2019-02-23"
+[1] "2019-02-20" "2019-02-21" "2019-02-22" "2019-02-23" "2019-02-24"
+[6] "2019-02-25"
 stars object with 3 dimensions and 1 attribute
 attribute(s):
       A1        
@@ -137,10 +137,10 @@ attribute(s):
  NA's   :480    
 dimension(s):
      from to     offset  delta                       refsys point values    
-time    1 10 2019-02-16 1 days                         Date    NA   NULL    
+time    1 10 2019-02-18 1 days                         Date    NA   NULL    
 x       1 10          0      1 +proj=longlat +datum=WGS8... FALSE   NULL [x]
 y       1 12         12     -1 +proj=longlat +datum=WGS8... FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.900   0.060   0.952 
+  0.923   0.056   0.972 

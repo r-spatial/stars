@@ -16,7 +16,7 @@ m = array(1:720, dim = c(x = 10, y = 12, t = 6)) # named dim
 st = st_as_stars(m)
 attr(st, "dimensions")$y$delta = -1
 attr(st, "dimensions")$y$offset = 12
-tm = Sys.Date() + 1:6
+tm = as.Date("2019-02-19") + 1:6
 st = st_set_crs(st_set_dimensions(st, 3, values = tm), 4326)
 
 tmp = tempfile(fileext = ".tif")
@@ -30,5 +30,5 @@ sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), 4326)
 a[[1]]
 sum(a[[1]])*30 == sum(1:720)
 
-tm0 = Sys.Date() + -1:8
+tm0 = as.Date("2019-02-19") + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))

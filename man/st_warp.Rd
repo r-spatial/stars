@@ -6,7 +6,7 @@
 \usage{
 st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
   segments = 100, use_gdal = FALSE, options = character(0),
-  no_data_value = -9999, debug = FALSE)
+  no_data_value = -9999, debug = FALSE, method = "near")
 }
 \arguments{
 \item{src}{object of class \code{stars} with source raster}
@@ -28,11 +28,15 @@ st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
 \item{no_data_value}{value used by gdalwarp for no_data (NA) when writing to temporaray file}
 
 \item{debug}{logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name}
+
+\item{method}{character; see below}
 }
 \description{
 Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system
 }
 \details{
+\code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
+
 For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 }
 \examples{

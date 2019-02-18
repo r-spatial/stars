@@ -88,7 +88,9 @@ transform_grid_grid = function(x, target) {
 #' @param options character vector with options, passed on to gdalwarp
 #' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporaray file
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
+#' @param method character; see below
 #' @param ... ignored
+#' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples
 #' geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 #' (x = read_stars(geomatrix))
@@ -102,13 +104,14 @@ transform_grid_grid = function(x, target) {
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100, 
-		use_gdal = FALSE, options = character(0), no_data_value = -9999, debug = FALSE) {
+		use_gdal = FALSE, options = character(0), no_data_value = -9999, debug = FALSE,
+		method = "near") {
 
 	if (!is.na(crs))
 		crs = st_crs(crs)
 
 	if (use_gdal) {
-		options = c(options, "-dstnodata", no_data_value)
+		options = c(options, "-dstnodata", no_data_value, "-r", method)
 		if (! inherits(src, "stars_proxy")) {
 			src = st_as_stars_proxy(src)
 			on.exit(unlink(src[[1]])) # a temp file
@@ -126,9 +129,9 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 					dest[[1]] # the file name of the stars_proxy, not to be deleted
 				}
 			if (utils::packageVersion("sf") <= "0.7-2")
-				sf::gdal_utils("warp", src[[1]], dest)
+				sf::gdal_utils("warp", src[[1]], dest, options = options)
 			else 
-				sf::gdal_utils("warper", src[[1]], dest) # not "warp"!
+				sf::gdal_utils("warper", src[[1]], dest, options = method) # not "warp"!
 		}
 		if (debug)
 			cat("Writing to: ", dest, "\n")
