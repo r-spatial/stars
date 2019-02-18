@@ -88,7 +88,7 @@ transform_grid_grid = function(x, target) {
 #' @param options character vector with options, passed on to gdalwarp
 #' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporaray file
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
-#' @param method character; see below
+#' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE} 
 #' @param ... ignored
 #' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples

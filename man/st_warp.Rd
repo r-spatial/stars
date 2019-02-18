@@ -29,7 +29,7 @@ st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
 
 \item{debug}{logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name}
 
-\item{method}{character; see below}
+\item{method}{character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}}
 }
 \description{
 Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system
