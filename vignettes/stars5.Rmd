@@ -149,7 +149,7 @@ nc %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") %>% st_bbox() %>%
 ```
 and then warping the old raster to the new
 ```{r}
-nc.st %>% st_warp(newgrid) -> nc.new
+nc.st %>% st_warp(newgrid, use_gdal=TRUE) -> nc.new
 nc.new 
 plot(nc.new)
 ```

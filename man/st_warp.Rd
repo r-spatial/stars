@@ -6,7 +6,7 @@
 \usage{
 st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
   segments = 100, use_gdal = FALSE, options = character(0),
-  no_data_value = -9999, debug = FALSE, method = "near")
+  no_data_value = NA_real_, debug = FALSE, method = "near")
 }
 \arguments{
 \item{src}{object of class \code{stars} with source raster}
