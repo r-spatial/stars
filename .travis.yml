@@ -7,7 +7,7 @@ r:
 
 sudo: required
 dist: trusty
-# cache: packages
+cache: packages
 latex: true
 
 addons:
