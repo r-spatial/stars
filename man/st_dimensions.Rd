@@ -18,7 +18,8 @@ st_dimensions(.x, ...)
 \method{st_dimensions}{default}(.x, ..., .raster, affine = c(0, 0),
   cell_midpoints = FALSE, point = FALSE)
 
-st_set_dimensions(.x, which, values, names, ...)
+st_set_dimensions(.x, which, values = NULL, point = NULL,
+  names = NULL, ...)
 
 st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 }

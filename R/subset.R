@@ -104,7 +104,10 @@
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
 					all(argi[[1]] != rlang::missing_arg()) && 
 					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
-				d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
+				d[[i]]$values = if(isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+						ed[[i]]
+					else
+						as_intervals(ed[[i]], add_last = TRUE)
 			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
 		}
 	}

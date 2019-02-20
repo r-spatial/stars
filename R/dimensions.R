@@ -82,11 +82,11 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #'    names = "bandwidth_midpoint", point = TRUE))
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
-st_set_dimensions = function(.x, which, values, names, ...) {
+st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, ...) {
 	d = st_dimensions(.x)
-	if (! missing(values)) {
+	if (! is.null(values)) {
 		if (is.character(which))
-			which = match(which, names(d))
+			which = match(which, base::names(d))
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
 		if (dim(.x)[which] != length(values)) {
@@ -95,23 +95,23 @@ st_set_dimensions = function(.x, which, values, names, ...) {
 			else
 				stop(paste("length of values does not match dimension", which))
 		}
-		d[[which]] = create_dimension(values = values, ...)
-		if (! missing(names) && length(names) == 1)
+		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
+		if (! is.null(names) && length(names) == 1)
 			base::names(d)[which] = names
 		else if (inherits(values, "sfc"))
 			base::names(d)[which] = "sfc"
-	} else { # set all names
-		if (! missing(names)) {
-			# handle names in raster attribute, #46
-			r = attr(d, "raster")
-			if (any(!is.na(r$dimensions))) {
-				r$dimensions = names[match(r$dimensions, names(d))]
-				attr(d, "raster") = r
-			}
-			if (length(d) != length(names))
-				stop("length of names should match number of dimension")
-			base::names(d) = names
+	} else if (!is.null(point) && is.logical(point)) {
+		d[[which]]$point = point
+	} else if (!missing(names)) {
+		# handle names in raster attribute, #46
+		r = attr(d, "raster")
+		if (any(!is.na(r$dimensions))) {
+			r$dimensions = names[match(r$dimensions, names(d))]
+			attr(d, "raster") = r
 		}
+		if (length(d) != length(names))
+			stop("length of names should match number of dimension")
+		base::names(d) = names
 	}
 	st_as_stars(unclass(.x), dimensions = d)
 }

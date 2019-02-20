@@ -32,3 +32,10 @@ sum(a[[1]])*30 == sum(1:720)
 
 tm0 = as.Date("2019-02-19") + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))
+
+# with "by" geometry not overlapping x
+pt = st_point(c(-10,-10))
+(sfc = c(sfc, st_sfc(pt, crs = st_crs(sfc))))
+(a = aggregate(st, sfc, mean))
+
+(a = aggregate(st, st, mean))

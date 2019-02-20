@@ -2,7 +2,7 @@
 #' 
 #' spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution 
 #' @param x object of class \code{stars} with information to be aggregated
-#' @param by object of class \code{sf}, \code{sfc}, or a time class (\code{Date}, \code{POSIXct}, or \code{PCICt}) with aggregation geometry/time periods
+#' @param by object of class \code{sf}, \code{sfc}, or a time class (\code{Date}, \code{POSIXct}, or \code{PCICt}) with aggregation geometry/time periods; if of class \code{stars}, it is converted to sfc by \code{st_as_sfc(by, as_points = FALSE)}
 #' @param FUN aggregation function, such as \code{mean}
 #' @param ... arguments passed on to \code{FUN}, such as \code{na.rm=TRUE}
 #' @param drop logical; ignored
@@ -12,6 +12,9 @@
 #' @export
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = TRUE, rightmost.closed = FALSE) {
+
+	if (inherits(by, "stars"))
+		by = st_as_sfc(by, as_points = FALSE)
 
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt")
 	if (!(inherits(by, classes)))

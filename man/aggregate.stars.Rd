@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{object of class \code{stars} with information to be aggregated}
 
-\item{by}{object of class \code{sf}, \code{sfc}, or a time class (\code{Date}, \code{POSIXct}, or \code{PCICt}) with aggregation geometry/time periods}
+\item{by}{object of class \code{sf}, \code{sfc}, or a time class (\code{Date}, \code{POSIXct}, or \code{PCICt}) with aggregation geometry/time periods; if of class \code{stars}, it is converted to sfc by \code{st_as_sfc(by, as_points = FALSE)}}
 
 \item{FUN}{aggregation function, such as \code{mean}}
 
