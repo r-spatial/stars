@@ -1,5 +1,7 @@
 # version 0.3-0
 
+* fix `st_warp` with `use_gdal=TRUE`, allowing for multi-band warps
+
 * add `st_get_dimension_values` to get the values of a particular dimension (if meaningful); #100
 
 * allow for setting intervals as dimension values; see examples of `st_dimensions`
