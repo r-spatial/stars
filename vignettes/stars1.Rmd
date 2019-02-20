@@ -25,7 +25,7 @@ data with labeled dimensions, with emphasis on arrays where some
 of the dimensions relate to time and/or space.
 
 Spatial data cubes are arrays with one or more spatial dimensions.
-Raster datacubes have at least two spatial dimensions that form the
+Raster data cubes have at least two spatial dimensions that form the
 raster tesselation. Vector data cubes have at least one spatial
 dimension that may for instance reflect a polygon tesselation, or
 a set of point locations. Conversions between the two (rasterization,
