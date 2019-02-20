@@ -1,0 +1,128 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(stars))
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = read_stars(tif)
+> y = st_set_dimensions(x, "band", point = TRUE)
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point  values    
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+band    1  4      NA    NA                           NA  TRUE 1,...,2    
+> y = st_set_dimensions(x, "band", point = NA)
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point          values
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE            NULL
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE            NULL
+band    1  4      NA    NA                           NA    NA [1,2),...,[2,3)
+        
+x    [x]
+y    [y]
+band    
+> y = st_set_dimensions(x, "band", point = FALSE)
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point          values
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE            NULL
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE            NULL
+band    1  4      NA    NA                           NA FALSE [1,2),...,[2,3)
+        
+x    [x]
+y    [y]
+band    
+> y = st_set_dimensions(x, "band", values = letters[1:6])
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point  values    
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+band    1  4      NA    NA                           NA    NA a,...,b    
+> y = st_set_dimensions(x, "band", values = letters[1:6], point = NA)
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point  values    
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+band    1  4      NA    NA                           NA    NA a,...,b    
+> y = st_set_dimensions(x, "band", values = letters[1:6], point = TRUE)
+> y[,1:10, 1:10, c(1,4,3,2)]
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+  L7_ETMs.tif   
+ Min.   :25.00  
+ 1st Qu.:45.00  
+ Median :57.00  
+ Mean   :56.53  
+ 3rd Qu.:64.00  
+ Max.   :97.00  
+dimension(s):
+     from to  offset delta                       refsys point  values    
+x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
+y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+band    1  4      NA    NA                           NA  TRUE a,...,b    
+> 
+> proc.time()
+   user  system elapsed 
+  0.422   0.004   0.418 
