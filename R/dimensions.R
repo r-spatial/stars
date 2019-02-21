@@ -486,6 +486,8 @@ combine_dimensions = function(dots, along) {
 		if (any(is.na(offset))) {
 			dims[[along]]$from = 1
 			dims[[along]]$to = sum(sapply(dots, function(x) { d = st_dimensions(x)[[along]]; d$to - d$from + 1} ))
+			if (!is.null(dims[[along]]$values))
+				dims[[along]]$values = do.call(c, lapply(dots, function(x) attr(x, "dimensions")[[along]]$values))
 		} else {
 			offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
 			if (length(unique(diff(offset))) == 1) { # regular & sorted
