@@ -55,6 +55,7 @@ x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
 y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > # image(r, axes = TRUE, col = grey((1:20)/20))
 > (a = st_area(r))
+Missing coordinate reference system: assuming Cartesian coordinates
 stars object with 2 dimensions and 1 attribute
 attribute(s):
      area       
@@ -103,4 +104,4 @@ curvilinear grid
 > 
 > proc.time()
    user  system elapsed 
-  7.499   0.101   7.588 
+  7.166   0.132   7.297 

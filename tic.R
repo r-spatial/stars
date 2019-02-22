@@ -1,10 +1,7 @@
 add_package_checks()
 
-#get_stage("install") %>%
-#  add_step(step_install_cran("lwgeom", configure.args="--without-liblwgeom"))
-
 ###
-# deploy pkgdowm site
+# deploy pkgdown site
 ###
 if (Sys.getenv("id_rsa") != "") {
 

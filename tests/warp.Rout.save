@@ -27,146 +27,36 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > plot(x2, breaks = "equal", axes=TRUE)
 > plot(y, breaks = "equal", axes=TRUE)
 > names(x2) = names(y)
-> all.equal(x2, y) # yes
+> all.equal(x2, y) # yes?
 [1] TRUE
 > 
-> # does gdal reproduce with stars template object?
-> (x2 = st_warp(x, y, use_gdal = TRUE))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
- file108515cfb01.tif 
- Min.   : 74.0       
- 1st Qu.:115.0       
- Median :123.0       
- Mean   :126.4       
- 3rd Qu.:132.0       
- Max.   :255.0       
- NA's   :224         
-dimension(s):
-  from to  offset    delta                       refsys point values    
-x    1 25 1840902  5.22015 +proj=utm +zone=11 +datum... FALSE   NULL [x]
-y    1 25 1144003 -5.22015 +proj=utm +zone=11 +datum... FALSE   NULL [y]
-> 
-> # does gdal reproduce what stars does, default cell size?
-> (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
- geomatrix.tif  
- Min.   : 74.0  
- 1st Qu.:115.0  
- Median :123.0  
- Mean   :126.4  
- 3rd Qu.:132.0  
- Max.   :255.0  
- NA's   :224    
-dimension(s):
-  from to  offset    delta                       refsys point values    
-x    1 25 1840902  5.22015 +proj=utm +zone=11 +datum...    NA   NULL [x]
-y    1 25 1144003 -5.22015 +proj=utm +zone=11 +datum...    NA   NULL [y]
-> (y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
- file1085591cdc9e.tif 
- Min.   : 74.0        
- 1st Qu.:115.0        
- Median :123.0        
- Mean   :126.4        
- 3rd Qu.:132.0        
- Max.   :255.0        
- NA's   :224          
-dimension(s):
-  from to  offset    delta                       refsys point values    
-x    1 25 1840902  5.22015 +proj=utm +zone=11 +datum... FALSE   NULL [x]
-y    1 25 1144003 -5.22015 +proj=utm +zone=11 +datum... FALSE   NULL [y]
-> 
-> # try with multiple bands:
-> tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> (x1 = read_stars(tif))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
-dimension(s):
-     from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
-> (x1p = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in file:
-$L7_ETMs.tif
-[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
-
-dimension(s):
-     from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
-> (x1a = st_warp(x1, crs = st_crs(4326)))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.93  
- 3rd Qu.: 86.00  
- Max.   :255.00  
- NA's   :8778    
-dimension(s):
-     from  to   offset        delta                       refsys point values
-x       1 350 -34.9166  0.000259243 +proj=longlat +datum=WGS8...    NA   NULL
-y       1 352 -7.94982 -0.000259243 +proj=longlat +datum=WGS8...    NA   NULL
-band    1   6       NA           NA                           NA    NA   NULL
-        
-x    [x]
-y    [y]
-band    
-> (x1b = st_warp(x1, x1p, use_gdal = TRUE))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
-dimension(s):
-     from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
-> 
-> # does gdal reproduce what stars does? Smaller grid:
-> (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
- geomatrix.tif  
- Min.   : 74.0  
- 1st Qu.:115.0  
- Median :123.0  
- Mean   :126.7  
- 3rd Qu.:132.0  
- Max.   :255.0  
- NA's   :727    
-dimension(s):
-  from to  offset delta                       refsys point values    
-x    1 44 1840902     3 +proj=utm +zone=11 +datum...    NA   NULL [x]
-y    1 44 1144003    -3 +proj=utm +zone=11 +datum...    NA   NULL [y]
-> # x2 = x2[,2:43,2:43]
-> plot(x2, breaks = "equal", axes=TRUE, reset = FALSE)
-> plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red')
-> ### doesn't work: FIXME: check with more recent GDAL:
-> #(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
-> #plot(y, breaks = "equal")
-> #names(x2) = names(y)
-> #all.equal(x2, y) 
+> if (Sys.getenv("USER") != "travis") {
++ # does gdal reproduce with stars template object?
++ (x2 = st_warp(x, y, use_gdal = TRUE))
++ 
++ # does gdal reproduce what stars does, default cell size?
++ (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
++ (y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
++ 
++ # try with multiple bands:
++ tif = system.file("tif/L7_ETMs.tif", package = "stars")
++ (x1 = read_stars(tif))
++ (x1p = read_stars(tif, proxy = TRUE))
++ (x1a = st_warp(x1, crs = st_crs(4326)))
++ (x1b = st_warp(x1, x1p, use_gdal = TRUE))
++ 
++ # does gdal reproduce what stars does? Smaller grid:
++ (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
++ # x2 = x2[,2:43,2:43]
++ plot(x2, breaks = "equal", axes=TRUE, reset = FALSE)
++ plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red')
++ ### doesn't work: FIXME: check with more recent GDAL:
++ #(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
++ #plot(y, breaks = "equal")
++ #names(x2) = names(y)
++ #all.equal(x2, y) 
++ }
 > 
 > proc.time()
    user  system elapsed 
-  0.742   0.080   0.815 
+  0.654   0.059   0.706 

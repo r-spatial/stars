@@ -21,13 +21,10 @@ addons:
       - libgeos-dev
       - libgdal-dev
       - netcdf-bin
-      - postgresql-server-dev-9.6 # required for postgis installation
 
 before_install:
   - R -q -e 'install.packages("remotes"); remotes::install_github("ropenscilabs/tic"); tic::prepare_all_stages(); tic::before_install()'
-  - R -q -e 'install.packages("starsdata",  repos = "http://pebesma.staff.ifgi.de", type = "source")'
-  - R -q -e 'install.packages("rgeos")'
-  - export _R_CHECK_FORCE_SUGGESTS_=false
+  - R -q -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source")'
 
 # after_success: R -q -e 'tic::after_success()'
 after_success: R -q -e 'covr::codecov(quiet = FALSE)'
