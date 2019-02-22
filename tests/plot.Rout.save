@@ -43,8 +43,8 @@ POINT (13.29635 52.65315)
 > 
 > rgb = read.csv(system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata"), header = TRUE, sep = ";")
 > luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
-> plot(luc, rgb = rgb, axes = TRUE)
+> plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 > 
 > proc.time()
    user  system elapsed 
-  1.443   0.069   1.504 
+  1.963   0.076   2.031 

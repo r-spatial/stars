@@ -9,4 +9,4 @@ st_geometry(aq)
 
 rgb = read.csv(system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata"), header = TRUE, sep = ";")
 luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
-plot(luc, rgb = rgb, axes = TRUE)
+plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)

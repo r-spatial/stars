@@ -65,7 +65,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			n[dxy] = get_downsample(dims)
 			x = st_downsample(x, n)
 		}
-		if (length(dims) == 2 || dims[3] == 1 || !is.null(dots$rgb)) { ## ONE IMAGE:
+		if (length(dims) == 2 || dims[3] == 1 || (!is.null(dots$rgb) && is.numeric(dots$rgb))) { ## ONE IMAGE:
 			# set up key region
 			values = structure(x[[1]], dim = NULL) # array -> vector
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) &&
@@ -266,11 +266,12 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		} else {
 			stopifnot(inherits(rgb, "data.frame"))
 			# rgb has col 1: index, col 2: label, col 3-5: R, G, B
-			ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
+			#ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
+			ar = as.vector(ar) # flattens x/y to 1-D index vector
 			rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
 			mat = structure(rgb, dim = xy)
 		}
-		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add) # absorbs breaks & add
+		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add, zlim) # absorbs breaks, add & zlim
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
 		myRasterImage(t(mat), xlim[1], ylim[1], xlim[2], ylim[2], interpolate = interpolate, ...)
 	} else if (is_curvilinear(x) || has_rotate_or_shear(x)) {
