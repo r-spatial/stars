@@ -27,10 +27,6 @@ before_install:
   - R -q -e 'install.packages("remotes"); remotes::install_github("ropenscilabs/tic"); tic::prepare_all_stages(); tic::before_install()'
   - R -q -e 'install.packages("starsdata",  repos = "http://pebesma.staff.ifgi.de", type = "source")'
   - R -q -e 'install.packages("rgeos")'
-  # install postgis from source (required for lwgeom installation):
-  - wget http://download.osgeo.org/postgis/source/postgis-2.4.4.tar.gz
-  - (mv postgis* /tmp; cd /tmp; tar xzf postgis-2.4.4.tar.gz)
-  - (cd /tmp/postgis-2.4.4 ; ./configure; make; sudo make install)
   - export _R_CHECK_FORCE_SUGGESTS_=false
 
 # after_success: R -q -e 'tic::after_success()'
