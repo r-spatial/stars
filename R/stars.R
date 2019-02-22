@@ -575,6 +575,8 @@ st_upfront = function(x, xy = attr(st_dimensions(x), "raster")$dimensions) {
 #' @export
 st_area.stars = function(x, ...) {
 	crs = st_crs(x)
+	if (is.na(crs))
+		message("Missing coordinate reference system: assuming Cartesian coordinates")
 	d = st_dimensions(st_upfront(x))[1:2]
 	a = if (isTRUE(st_is_longlat(x)) || is_curvilinear(x))
 			st_area(st_as_sfc(x, as_points = FALSE)) # has units
