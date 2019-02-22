@@ -571,3 +571,35 @@ st_upfront = function(x, xy = attr(st_dimensions(x), "raster")$dimensions) {
 		xy = names(st_dimensions(x))[xy]
 	aperm(x, c(xy, setdiff(names(st_dimensions(x)), xy)))
 }
+
+#' @export
+st_area.stars = function(x, ...) {
+	crs = st_crs(x)
+	d = st_dimensions(st_upfront(x))[1:2]
+	a = if (isTRUE(st_is_longlat(x)) || is_curvilinear(x))
+			st_area(st_as_sfc(x, as_points = FALSE)) # has units
+		else { 
+			a = if (is_regular(x))
+					d[[1]]$delta * d[[2]]$delta
+				else { # rectilinear:
+					x = if (inherits(d[[1]]$values, "intervals"))
+							d[[1]]$values
+						else
+							as_intervals(d[[1]]$values)
+					y = if (inherits(d[[2]]$values, "intervals"))
+							d[[2]]$values
+						else
+							as_intervals(d[[2]]$values)
+					apply(do.call(cbind, x), 1, diff) %o% apply(do.call(cbind, y), 1, diff)
+				}
+			if (!is.na(crs))
+				units::set_units(abs(a), paste0(crs$units, "^2"), mode = "standard")
+			else
+				abs(a)
+		}
+	lst = if (inherits(a, "units"))
+			list(area = `units<-`(array(a, dim(d)), units(a)))
+		else
+			list(area = array(a, dim(d)))
+	st_stars(lst, dimensions = d)
+}

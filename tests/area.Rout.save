@@ -1,0 +1,106 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = read_stars(tif)
+> (a = st_area(x))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+   area [m^2]   
+ Min.   :812.2  
+ 1st Qu.:812.2  
+ Median :812.2  
+ Mean   :812.2  
+ 3rd Qu.:812.2  
+ Max.   :812.2  
+dimension(s):
+  from  to  offset delta                       refsys point values    
+x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+> 
+> m = matrix(1:20, nrow = 5, ncol = 4)
+> x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
+> y = c(0.3, 0.5, 1, 2, 2.2) # 5 numbers: boundaries!
+> (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+       m        
+ Min.   : 1.00  
+ 1st Qu.: 5.75  
+ Median :10.50  
+ Mean   :10.50  
+ 3rd Qu.:15.25  
+ Max.   :20.00  
+dimension(s):
+  from to offset delta refsys point                values    
+x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
+y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
+> # image(r, axes = TRUE, col = grey((1:20)/20))
+> (a = st_area(r))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     area       
+ Min.   :0.100  
+ 1st Qu.:0.200  
+ Median :0.325  
+ Mean   :0.475  
+ 3rd Qu.:0.500  
+ Max.   :2.000  
+dimension(s):
+  from to offset delta refsys point                values    
+x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
+y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
+> plot(a, axes = TRUE)
+> 
+> (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
+[1] "/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
+> if (s5p != "") {
++ nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
++ 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
++ nit.c[[1]][nit.c[[1]] > 9e+36] = NA
++ st_crs(nit.c) = 4326
++ print((a <- st_area(nit.c)))
++ plot(a, axes = TRUE, border = NA)
++ }
+//PRODUCT/longitude, 
+//PRODUCT/latitude, 
+//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+   area [m^2]       
+ Min.   : 25990150  
+ 1st Qu.: 28050933  
+ Median : 35705689  
+ Mean   : 42968454  
+ 3rd Qu.: 54640139  
+ Max.   :101184840  
+dimension(s):
+  from  to offset delta                       refsys point
+x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
+y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
+                          values    
+x [450x278] -5.81066,...,30.9468 [x]
+y  [450x278] 28.3605,...,51.4686 [y]
+curvilinear grid
+> 
+> proc.time()
+   user  system elapsed 
+  7.499   0.101   7.588 
