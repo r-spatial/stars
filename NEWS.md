@@ -1,5 +1,7 @@
 # version 0.3-0
 
+* add `st_area` method to return raster grid cell sizes; #99
+
 * fix `st_warp` with `use_gdal=TRUE`, allowing for multi-band warps
 
 * add `st_get_dimension_values` to get the values of a particular dimension (if meaningful); #100
