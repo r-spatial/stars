@@ -335,7 +335,7 @@ parse_netcdf_meta = function(pr, name) {
 				cal = get_val(paste0(v, "#calendar"), meta)
 				u =   get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day")) {
+					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
 						origin = 0:1
 						units(origin) = try_as_units(u)
 						delta = as.numeric(set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard"))
