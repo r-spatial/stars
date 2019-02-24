@@ -41,10 +41,13 @@ POINT (9.791584 54.07312)
 POINT (13.64701 52.44775)
 POINT (13.29635 52.65315)
 > 
-> rgb = read.csv(system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata"), header = TRUE, sep = ";")
-> luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
-> plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
+> csv = system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata")
+> if (csv != "") {
++ 	rgb = read.csv(csv, header = TRUE, sep = ";")
++ 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
++ 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
++ }
 > 
 > proc.time()
    user  system elapsed 
-  1.963   0.076   2.031 
+  1.772   0.087   1.851 

@@ -286,14 +286,14 @@ y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 > (x = read_stars(nc))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- tos_O1_2001-2002.nc 
- Min.   :271.2       
- 1st Qu.:275.1       
- Median :285.5       
- Mean   :286.7       
- 3rd Qu.:299.1       
- Max.   :305.5       
- NA's   :228240      
+ tos_O1_2001-2002.nc [K]
+ Min.   :271.2          
+ 1st Qu.:275.1          
+ Median :285.5          
+ Mean   :286.7          
+ 3rd Qu.:299.1          
+ Max.   :305.5          
+ NA's   :228240         
 dimension(s):
      from  to     offset   delta refsys point values    
 x       1 180          0       2     NA    NA   NULL [x]
@@ -625,4 +625,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  7.484   0.593   8.069 
+  6.830   0.584   7.414 

@@ -179,6 +179,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 get_data_units = function(data) {
 	units = unique(attr(data, "units")) # will fail parsing in as_units() when more than one
+	if (length(units) > 1) {
+		warning(paste("more than one unit available for subdataset: using only", units[1]))
+		units = units[1]
+	}
 	if (!is.null(units) && nzchar(units))
 		units = try(units::as_units(units), silent = TRUE)
 	if (inherits(units, "units"))
