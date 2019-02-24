@@ -178,7 +178,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 }
 
 get_data_units = function(data) {
-	units = attr(data, "units")
+	units = unique(attr(data, "units")) # will fail parsing in as_units() when more than one
 	if (!is.null(units) && nzchar(units))
 		units = try(units::as_units(units), silent = TRUE)
 	if (inherits(units, "units"))
