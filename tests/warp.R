@@ -9,6 +9,7 @@ plot(y, breaks = "equal", axes=TRUE)
 names(x2) = names(y)
 all.equal(x2, y) # yes?
 
+if (Sys.getenv("USER") != "travis") { # FIXME: to be removed when sf >= 0.7-4 is on CRAN
 # does gdal reproduce with stars template object?
 (x2 = st_warp(x, y, use_gdal = TRUE))
 
@@ -33,3 +34,4 @@ plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red')
 #plot(y, breaks = "equal")
 #names(x2) = names(y)
 #all.equal(x2, y) 
+}
