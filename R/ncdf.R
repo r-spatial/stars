@@ -1,5 +1,13 @@
-.is_regular <- function(coords_list) {
-  unlist(lapply(coords_list, function(x) regular_intervals(x)))
+.is_regular <- function(coords_list, eps) {
+  unlist(lapply(coords_list, function(x) regular_intervals(x, epsilon = eps)))
+}
+
+.is_unique <- function(x, eps) {
+	u = unique(x)
+	if (all(diff(sort(u)) < eps))
+		mean(u)
+	else
+		u
 }
 
 
@@ -31,6 +39,7 @@
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns (see Details)
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
+#' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
 #' @details
 #' If `var` is not set the first set of variables on a shared grid is used.
 #' It's supposed to be the grid with the most dimensions, but there's no control
@@ -57,7 +66,8 @@
 #' plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
-read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0)) {
+read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
+		eps = 1e-12) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -124,7 +134,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## can we create a raster?
   raster = NULL
   ## which coords are regular
-  regular = .is_regular(coords)
+  regular = .is_regular(coords, eps)
   if (length(coords) > 1) {
     # if (all(regular[1:2])) {
     raster = get_raster(affine = c(0, 0),
@@ -137,7 +147,19 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
   for (i in seq_along(coords)) {
-    if (regular[i]) {
+	var_names = nc_var_names(nc)
+	if (names(coords)[i] %in% var_names &&
+			!is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
+			bounds %in% var_names) {
+		bounds = RNetCDF::var.get.nc(nc, bounds)
+		is_reg = length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
+		if (is_reg) {
+			dimensions[[i]]$offset = bounds[1,1]
+			dimensions[[i]]$delta = u
+		} else {
+			dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
+		}
+	} else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]] - dx/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
@@ -200,3 +222,20 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
   ret
 }
+
+nc_get_attr = function(nc, var, att) {
+	a = RNetCDF::var.inq.nc(nc, var)
+	for (i in seq_len(a$natts) - 1)
+		if (RNetCDF::att.inq.nc(nc, var, i)$name == att)
+			return(RNetCDF::att.get.nc(nc, var, att))
+	NULL
+}
+
+nc_var_names = function(nc) {
+	sapply(seq_len(RNetCDF::file.inq.nc(nc)$nvars), function(i) RNetCDF::var.inq.nc(nc, i-1)$name)
+}
+
+#f = system.file("nc/reduced.nc", package = "stars")
+#nc_get_attr(open.nc(f), "time", "bounds")
+#nc_get_attr(open.nc(f), "time", "axis")
+#nc_get_attr(open.nc(f), "time", "calendar")

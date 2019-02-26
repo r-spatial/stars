@@ -5,7 +5,7 @@
 \title{Read NetCDF into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0))
+  curvilinear = character(0), eps = 1e-12)
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -17,6 +17,8 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 \item{ncsub}{matrix of start, count columns (see Details)}
 
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
+
+\item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.
