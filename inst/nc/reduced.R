@@ -1,0 +1,8 @@
+library(ncdf4)
+nc = nc_open("reduced.nc", write=TRUE)
+ncatt_put(nc, 'sst', 'units', 'degree_C')
+ncatt_put(nc, 'anom', 'units', 'degree_C')
+ncatt_put(nc, 'err', 'units', 'degree_C')
+ncatt_put(nc, 'ice', 'units', 'percent')
+nc_sync(nc)
+nc_close(nc)

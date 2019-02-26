@@ -356,12 +356,10 @@ y 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [y]
 > nc_red = system.file("nc/reduced.nc", package = "stars")
 > red = read_stars(nc_red)
 sst, anom, err, ice, 
-Warning message:
-ignoring unrecognized unit: percentage 
 > red
 stars object with 4 dimensions and 4 attributes
 attribute(s):
-   sst [C*°]       anom [C*°]        err [C*°]          ice       
+    sst [°C]       anom [°C]          err [°C]     ice [percent]  
  Min.   :-1.80   Min.   :-10.160   Min.   :0.110   Min.   :0.010  
  1st Qu.:-0.03   1st Qu.: -0.580   1st Qu.:0.160   1st Qu.:0.470  
  Median :13.65   Median : -0.080   Median :0.270   Median :0.920  
@@ -625,4 +623,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.830   0.584   7.414 
+  7.181   0.607   7.783 

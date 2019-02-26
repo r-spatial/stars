@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > read_ncdf(f)
 stars object with 4 dimensions and 4 attributes
 attribute(s):
-      sst            anom               err             ice       
+    sst [°C]       anom [°C]          err [°C]     ice [percent]  
  Min.   :-1.80   Min.   :-10.160   Min.   :0.110   Min.   :0.010  
  1st Qu.:-0.03   1st Qu.: -0.580   1st Qu.:0.160   1st Qu.:0.470  
  Median :13.65   Median : -0.080   Median :0.270   Median :0.920  
@@ -38,7 +38,7 @@ time    1   1     NA    NA POSIXct    NA 1981-12-31
 > read_ncdf(f, var = c("anom"))
 stars object with 4 dimensions and 1 attribute
 attribute(s):
-     anom         
+   anom [°C]      
  Min.   :-10.160  
  1st Qu.: -0.580  
  Median : -0.080  
@@ -55,7 +55,7 @@ time    1   1     NA    NA POSIXct    NA 1981-12-31
 > read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 stars object with 4 dimensions and 4 attributes
 attribute(s):
-      sst             anom                err             ice        
+    sst [°C]        anom [°C]           err [°C]     ice [percent]   
  Min.   :-1.390   Min.   :-1.07000   Min.   :0.300   Min.   :0.0100  
  1st Qu.:-0.720   1st Qu.:-0.36250   1st Qu.:0.300   1st Qu.:0.1100  
  Median :-0.515   Median : 0.19500   Median :0.300   Median :0.1700  
@@ -72,4 +72,4 @@ time    1  1     NA    NA POSIXct    NA 1981-12-31
 > 
 > proc.time()
    user  system elapsed 
-  0.580   0.048   0.619 
+  0.612   0.027   0.633 

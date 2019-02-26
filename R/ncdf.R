@@ -3,11 +3,11 @@
 }
 
 .is_unique <- function(x, eps) {
-	u = unique(x)
-	if (all(diff(sort(u)) < eps))
-		mean(u)
-	else
-		u
+  u = unique(x)
+  if (all(diff(sort(u)) < eps))
+    mean(u)
+  else
+    u
 }
 
 
@@ -67,7 +67,7 @@
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-		eps = 1e-12) {
+    eps = 1e-12) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -114,6 +114,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   vars = ncmeta::nc_vars(nc)
   out = setNames(out, var)
+  # units:
+  for (i in var)
+    if (!is.null(u <- nc_get_attr(nc, i, "units")))
+      units(out[[i]]) = try_as_units(u)
+
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
@@ -147,19 +152,19 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
   for (i in seq_along(coords)) {
-	var_names = nc_var_names(nc)
-	if (names(coords)[i] %in% var_names &&
-			!is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
-			bounds %in% var_names) {
-		bounds = RNetCDF::var.get.nc(nc, bounds)
-		is_reg = length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
-		if (is_reg) {
-			dimensions[[i]]$offset = bounds[1,1]
-			dimensions[[i]]$delta = u
-		} else {
-			dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
-		}
-	} else if (regular[i]) {
+    var_names = nc_var_names(nc)
+    if (names(coords)[i] %in% var_names &&
+        !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
+        bounds %in% var_names) {
+      bounds = RNetCDF::var.get.nc(nc, bounds)
+      is_reg = length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
+      if (is_reg) {
+        dimensions[[i]]$offset = bounds[1,1]
+        dimensions[[i]]$delta = u
+      } else {
+        dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
+      }
+    } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]] - dx/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
@@ -224,15 +229,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 nc_get_attr = function(nc, var, att) {
-	a = RNetCDF::var.inq.nc(nc, var)
-	for (i in seq_len(a$natts) - 1)
-		if (RNetCDF::att.inq.nc(nc, var, i)$name == att)
-			return(RNetCDF::att.get.nc(nc, var, att))
-	NULL
+  a = RNetCDF::var.inq.nc(nc, var)
+  for (i in seq_len(a$natts) - 1)
+    if (RNetCDF::att.inq.nc(nc, var, i)$name == att)
+      return(RNetCDF::att.get.nc(nc, var, att))
+  NULL
 }
 
 nc_var_names = function(nc) {
-	sapply(seq_len(RNetCDF::file.inq.nc(nc)$nvars), function(i) RNetCDF::var.inq.nc(nc, i-1)$name)
+  sapply(seq_len(RNetCDF::file.inq.nc(nc)$nvars), function(i) RNetCDF::var.inq.nc(nc, i-1)$name)
 }
 
 #f = system.file("nc/reduced.nc", package = "stars")
