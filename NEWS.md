@@ -1,3 +1,7 @@
+# version 0.3-1
+
+* provide time parsing (POSIXct, PCICt) for `read_ncdf`; #115
+
 # version 0.3-0
 
 * add `st_area` method to return raster grid cell sizes; #99
