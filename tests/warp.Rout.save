@@ -30,7 +30,7 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > all.equal(x2, y) # yes?
 [1] TRUE
 > 
-> if (Sys.getenv("USER") != "travis") { # FIXME: to be removed when sf >= 0.7-4 is on CRAN
+> if (FALSE) { # FIXME: to be removed when sf >= 0.7-4 is on CRAN
 + # does gdal reproduce with stars template object?
 + (x2 = st_warp(x, y, use_gdal = TRUE))
 + 
@@ -59,4 +59,4 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 > 
 > proc.time()
    user  system elapsed 
-  0.766   0.071   0.829 
+  0.380   0.039   0.412 
