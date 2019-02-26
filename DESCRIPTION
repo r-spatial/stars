@@ -64,6 +64,7 @@ Suggests:
 	xts,
 	starsdata
 VignetteBuilder: knitr
+Remotes: r-spatial/sf
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 Collate: 
