@@ -52,7 +52,8 @@
 #'   x = na.omit(x)
 #'   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 #' }
-#' prec_slice = stars::slice.stars(prec, index = 17, along = "time")
+#' library(dplyr)
+#' prec_slice = slice(prec, index = 17, along = "time")
 #' plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
@@ -150,6 +151,40 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     }
   }
 
+  # sort out time -> POSIXct:
+  td = which(names(dimensions) == "time")
+  if (length(td) == 1) {
+	tm = RNetCDF::var.get.nc(nc, variable = "time")
+	u = RNetCDF::att.get.nc(nc, variable = "time", attribute = "units")
+	cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
+	if (cal %in% c("360_day", "365_day", "noleap")) {
+      if (!requireNamespace("PCICt", quietly = TRUE))
+        stop("package PCICt required, please install it first") # nocov
+      #message(paste("calender", cal, "not yet supported"))
+	  t01 = set_units(0:1, u, mode = "standard")
+	  delta = set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
+	  origin = as.character(as.POSIXct(t01[1]))
+	  v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
+	  if (!is.null(dimensions[[td]]$values))
+	    dimensions[[td]]$values = v.pcict
+	  else {
+	    dimensions[[td]]$origin = v.pcict[1]
+	    dimensions[[td]]$delta = diff(v.pcict[1:2])
+	  }
+	  dimensions[[td]]$refsys = "PCICt"
+	} else {
+      if (!is.null(dimensions[[td]]$values))
+        dimensions[[td]]$values = as.POSIXct(units::set_units(tm, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+      else {
+	    t0 = dimensions[[td]]$offset
+	    t1 = dimensions[[td]]$offset + dimensions[[td]]$delta
+	    t.posix = as.POSIXct(units::set_units(c(t0, t1), u, mode = "standard")) # or: utcal.nc(u, c(t0,t1), "c")
+	    dimensions[[td]]$offset = t.posix[1]
+	    dimensions[[td]]$delta = diff(t.posix)
+	  }
+	  dimensions[[td]]$refsys = "POSIXct"
+    }
+  }
 
   ret = st_stars(out, dimensions)
 

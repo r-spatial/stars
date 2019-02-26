@@ -62,7 +62,8 @@ qu_0_omit = function(x, ..., n = 22) {
   x = na.omit(x)
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
-prec_slice = stars::slice.stars(prec, index = 17, along = "time")
+library(dplyr)
+prec_slice = slice(prec, index = 17, along = "time")
 plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)

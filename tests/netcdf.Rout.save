@@ -1,5 +1,5 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
 Copyright (C) 2018 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -30,11 +30,11 @@ attribute(s):
  Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
  NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
 dimension(s):
-     from  to offset delta refsys point values    
-lon     1 180     -1     2     NA    NA   NULL [x]
-lat     1  90    -90     2     NA    NA   NULL [y]
-zlev    1   1     NA    NA     NA    NA      0    
-time    1   1     NA    NA     NA    NA   1460    
+     from  to offset delta  refsys point     values    
+lon     1 180     -1     2      NA    NA       NULL [x]
+lat     1  90    -90     2      NA    NA       NULL [y]
+zlev    1   1     NA    NA      NA    NA          0    
+time    1   1     NA    NA POSIXct    NA 1981-12-31    
 > read_ncdf(f, var = c("anom"))
 stars object with 4 dimensions and 1 attribute
 attribute(s):
@@ -47,11 +47,11 @@ attribute(s):
  Max.   :  2.990  
  NA's   :4448     
 dimension(s):
-     from  to offset delta refsys point values    
-lon     1 180     -1     2     NA    NA   NULL [x]
-lat     1  90    -90     2     NA    NA   NULL [y]
-zlev    1   1     NA    NA     NA    NA      0    
-time    1   1     NA    NA     NA    NA   1460    
+     from  to offset delta  refsys point     values    
+lon     1 180     -1     2      NA    NA       NULL [x]
+lat     1  90    -90     2      NA    NA       NULL [y]
+zlev    1   1     NA    NA      NA    NA          0    
+time    1   1     NA    NA POSIXct    NA 1981-12-31    
 > read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 stars object with 4 dimensions and 4 attributes
 attribute(s):
@@ -64,12 +64,12 @@ attribute(s):
  Max.   : 0.030   Max.   : 0.92000   Max.   :0.320   Max.   :0.5200  
  NA's   :90       NA's   :90         NA's   :90      NA's   :104     
 dimension(s):
-     from to offset delta refsys point values    
-lon     1 10     -1     2     NA    NA   NULL [x]
-lat     1 12    -90     2     NA    NA   NULL [y]
-zlev    1  1     NA    NA     NA    NA      0    
-time    1  1     NA    NA     NA    NA   1460    
+     from to offset delta  refsys point     values    
+lon     1 10     -1     2      NA    NA       NULL [x]
+lat     1 12    -90     2      NA    NA       NULL [y]
+zlev    1  1     NA    NA      NA    NA          0    
+time    1  1     NA    NA POSIXct    NA 1981-12-31    
 > 
 > proc.time()
    user  system elapsed 
-  0.660   0.047   0.700 
+  0.580   0.048   0.619 
