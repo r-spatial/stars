@@ -47,18 +47,16 @@ st_as_STFDF = function(x) {
         stop("package spacetime required, please install it first") #nocov
 	rst = has_raster(x)
 	d = st_dimensions(x)
-	e = expand_dimensions(d)
 	geom = if (rst) {
-			xy = attr(d, "raster")$dimensions
-			tm = e[[ setdiff(names(d), xy) ]]
-			x = st_upfront(x, xy)
+			x = st_upfront(x)
+			time_dim = 3
 			sp::geometry(as(adrop(x[,,,1]), "Spatial"))
 		} else {
-			w = which_sfc(x)
-			tm = e[[ setdiff(seq_along(dim(x)), w) ]]
-			x = st_upfront(x, w)
+			x = st_upfront(x, which_sfc(x))
+			time_dim = 2
 			sp::geometry(as(adrop(x[,,1]), "Spatial"))
 		}
+	tm = st_get_dimension_values(x, time_dim, center = FALSE)
 
 	st = suppressWarnings(spacetime::STF(geom, tm)) # would warn for SpatialGrid -> SpatialPixels
 
