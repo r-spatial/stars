@@ -11,7 +11,7 @@
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @export
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
-		as_points = TRUE, rightmost.closed = FALSE) {
+		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE) {
 
 	if (inherits(by, "stars"))
 		by = st_as_sfc(by, as_points = FALSE)

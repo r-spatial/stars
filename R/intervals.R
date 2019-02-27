@@ -38,3 +38,9 @@ format.intervals = function(x, ...) {
 	} else
 		paste0("[", format(x$start, ...), ",", format(x$end, ...), ")")
 }
+
+find_interval = function(x, intervals) {
+	i = findInterval(x, c(intervals$start, tail(intervals$end, 1)))
+	i[i == 0 | i > length(intervals)] = NA
+	i
+}

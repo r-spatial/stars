@@ -5,7 +5,8 @@
 \title{spatially or temporally aggregate stars object}
 \usage{
 \method{aggregate}{stars}(x, by, FUN, ..., drop = FALSE,
-  join = st_intersects, as_points = TRUE, rightmost.closed = FALSE)
+  join = st_intersects, as_points = any(st_dimension(by) == 2, na.rm =
+  TRUE), rightmost.closed = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars} with information to be aggregated}

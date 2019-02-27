@@ -151,6 +151,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
+  to_rectilinear = FALSE
   for (i in seq_along(coords)) {
     var_names = nc_var_names(nc)
     if (names(coords)[i] %in% var_names &&
@@ -163,6 +164,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         dimensions[[i]]$delta = u
       } else {
         dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
+        to_rectilinear = TRUE
       }
     } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
@@ -177,6 +179,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       dimensions[[i]]$delta[1L] = NA
     }
   }
+  if (to_rectilinear)
+    dimensions = as_rectilinear(dimensions)
 
   # sort out time -> POSIXct:
   td = which(names(dimensions) == "time")
@@ -223,9 +227,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                                                         collapse = FALSE,
                                                                         unpack = TRUE))
     names(curvi_coords)[1:2] <- names(dimensions)[1:2]
-    ret = st_as_stars(ret, curvilinear = curvi_coords)
-  }
-  ret
+    st_as_stars(ret, curvilinear = curvi_coords)
+  } else
+    ret
 }
 
 nc_get_attr = function(nc, var, att) {
@@ -240,7 +244,13 @@ nc_var_names = function(nc) {
   sapply(seq_len(RNetCDF::file.inq.nc(nc)$nvars), function(i) RNetCDF::var.inq.nc(nc, i-1)$name)
 }
 
-#f = system.file("nc/reduced.nc", package = "stars")
-#nc_get_attr(open.nc(f), "time", "bounds")
-#nc_get_attr(open.nc(f), "time", "axis")
-#nc_get_attr(open.nc(f), "time", "calendar")
+as_rectilinear = function(d) {
+	ed = expand_dimensions(d, center = FALSE)
+	for (i in attr(d, "raster")$dimensions) {
+		if (!is.na(d[[ i ]]$offset)) {
+			d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
+			d[[i]]$offset = d[[i]]$delta = NA
+		}
+	}
+	d
+}

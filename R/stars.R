@@ -605,3 +605,8 @@ st_area.stars = function(x, ...) {
 			list(area = array(a, dim(d)))
 	st_stars(lst, dimensions = d)
 }
+
+#' @export
+drop_units.stars = function(x) {
+	st_stars(lapply(x, drop_units), dimensions = st_dimensions(x))
+}

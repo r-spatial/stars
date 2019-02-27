@@ -196,7 +196,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
-	if (crop && has_raster(x)) {
+	if (crop && (is_regular(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]
@@ -219,12 +219,15 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 			}
 		}
 		x = eval(rlang::expr(x[!!!args]))
-	}
+	} else if (crop)
+		warning("crop only crops regular grids")
+
 	if (inherits(y, "bbox"))
 		y = st_as_sfc(y)
 	dxy = attr(dm, "raster")$dimensions
-	xy_grd = if (is_curvilinear(x))
-			st_as_sfc(st_dimensions(x)[dxy], as_points = TRUE)
+	as_points = all(st_dimension(y) == 2, na.rm = TRUE) # for points/lines: make polygons, otherwise: make points
+	xy_grd = if (is_curvilinear(x) || !as_points)
+			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points)
 		else
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 	inside = st_intersects(st_union(y), xy_grd)[[1]]
