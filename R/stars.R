@@ -612,3 +612,9 @@ st_area.stars = function(x, ...) {
 drop_units.stars = function(x) {
 	st_stars(lapply(x, drop_units), dimensions = st_dimensions(x))
 }
+
+#' @export
+predict.stars = function(x, model, ...) {
+	pr = as.data.frame(predict(model, as.data.frame(x), ...))
+	st_stars(lapply(pr, function(y) structure(y, dim = dim(x))), st_dimensions(x))
+}
