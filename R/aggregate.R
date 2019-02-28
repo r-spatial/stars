@@ -40,12 +40,13 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				else
 					d[[ which_sfc(x) ]]$values
 			
-			unlist(join(x_geoms, by))
+			# unlist(join(x_geoms, by))
+			sapply(join(x_geoms, by), function(x) if (length(x)) x[1] else NA)
 		} else { # time:
 			ndims = 1
 			x = st_upfront(x, which_time(x))
 			values = expand_dimensions(x)[[1]]
-			print(values)
+			# print(values)
 			i = findInterval(values, by, rightmost.closed = rightmost.closed)
 			i[ i == 0 | i == length(by) ] = NA
 			i
@@ -56,7 +57,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	agr_grps = function(x, grps, uq, FUN, ...) { 
 		do.call(rbind, lapply(uq, function(i) {
-				sel <- grps == i
+				sel <- which(grps == i)
 				if (!isTRUE(any(sel)))
 					rep(NA_real_, ncol(x))
 				else

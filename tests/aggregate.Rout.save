@@ -80,13 +80,13 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- filec4c75271aee.tif 
- Min.   : 33.0       
- 1st Qu.:199.2       
- Median :365.5       
- Mean   :365.5       
- 3rd Qu.:531.8       
- Max.   :698.0       
+ file43883882144b.tif 
+ Min.   : 33.0        
+ 1st Qu.:199.2        
+ Median :365.5        
+ Mean   :365.5        
+ 3rd Qu.:531.8        
+ Max.   :698.0        
 dimension(s):
      from to offset delta                       refsys point values    
 x       1  2      0     5 +proj=longlat +datum=WGS8... FALSE   NULL [x]
@@ -123,8 +123,6 @@ t                                                                     NULL
 > 
 > tm0 = as.Date("2019-02-19") + -1:8
 > (a = aggregate(st, tm0, mean, na.rm = TRUE))
-[1] "2019-02-20" "2019-02-21" "2019-02-22" "2019-02-23" "2019-02-24"
-[6] "2019-02-25"
 stars object with 3 dimensions and 1 attribute
 attribute(s):
       A1        
@@ -196,4 +194,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.886   0.059   0.936 
+  0.889   0.048   0.928 
