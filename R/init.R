@@ -1,7 +1,7 @@
 #' @importFrom graphics image.default image par plot title box text axis plot.new plot.window rasterImage layout lcm
 #' @importFrom grDevices dev.capabilities dev.size grey rgb
 #' @importFrom utils head tail setTxtProgressBar txtProgressBar
-#' @importFrom stats na.omit runif aggregate setNames
+#' @importFrom stats na.omit runif aggregate setNames predict
 #' @importFrom tools file_ext
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop asub

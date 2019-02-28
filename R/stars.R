@@ -615,7 +615,7 @@ drop_units.stars = function(x) {
 
 #' @export
 predict.stars = function(object, model, ...) {
-	pr = predict(model, as.data.frame(object), ...)
+	pr = predict(model, as.data.frame(st_as_stars(object)), ...)
 	if (!inherits(pr, "data.frame"))
 		pr = data.frame(prediction = pr)
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
