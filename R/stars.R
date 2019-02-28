@@ -511,13 +511,13 @@ merge.stars = function(x, y, ...) {
 }
 
 sort_out_along = function(ret) { 
-  d1 = st_dimensions(ret[[1]])
-  d2 = st_dimensions(ret[[2]])
-  if ("time" %in% names(d1) && 
-      (isTRUE(d1$time$offset != d2$time$offset) || !any(d1$time$values %in% d2$time$values)))
-    "time"
-  else
-    NA_integer_
+	d1 = st_dimensions(ret[[1]])
+	d2 = st_dimensions(ret[[2]])
+	if ("time" %in% names(d1) && (isTRUE(d1$time$offset != d2$time$offset) || 
+			!any(d1$time$values %in% d2$time$values)))
+		"time"
+	else
+		NA_integer_
 }
 
 
