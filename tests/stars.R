@@ -126,3 +126,8 @@ if (FALSE && require("starsdata")) {
     curvilinear = c("//PRODUCT/latitude", "//PRODUCT/longitude"))
   print(all.equal(nit.c, nit.c2))
 }
+
+# predict:
+(x = read_stars(tif))
+model = lm(x~L7_ETMs.tif, head(as.data.frame(x), 50))
+predict(x, model)
