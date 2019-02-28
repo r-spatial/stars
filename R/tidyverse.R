@@ -11,9 +11,12 @@ get_dims = function(d_cube, d_stars) {
 	xy = attr(d_stars, "raster")$dimensions
 	d_stars = d_stars[names(d_cube)]
 	for (i in seq_along(d_cube)) {
-		d_stars[[i]]$values = if (is.list(d_stars[[i]]$values))
+		d_stars[[i]]$values = if (inherits(d_stars[[i]]$values, "intervals")) {
+				v = d_stars[[i]]$values
+				d_stars[[i]]$values = v[ na.omit(find_interval(d_cube[[i]], v)) ]
+			} else if (is.list(d_stars[[i]]$values)) {
 				d_stars[[i]]$values[ d_cube[[i]] ]
-			else
+			} else
 				d_cube[[i]]
 		d_stars[[i]] = create_dimension(values = d_stars[[i]]$values, point = d_stars[[i]]$point, 
 			refsys = d_stars[[i]]$refsys, is_raster = names(d_stars)[i] %in% xy)
