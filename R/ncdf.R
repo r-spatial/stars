@@ -198,7 +198,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       if (!is.null(dimensions[[td]]$values))
         dimensions[[td]]$values = v.pcict
       else {
-        dimensions[[td]]$origin = v.pcict[1]
+        dimensions[[td]]$offset = v.pcict[1]
         dimensions[[td]]$delta = diff(v.pcict[1:2])
       }
       dimensions[[td]]$refsys = "PCICt"
