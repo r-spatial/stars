@@ -112,7 +112,8 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		if (length(d) != length(names))
 			stop("length of names should match number of dimension")
 		base::names(d) = names
-	}
+	} else
+		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
 	st_as_stars(unclass(.x), dimensions = d)
 }
 
