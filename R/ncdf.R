@@ -214,8 +214,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       if (!is.null(dimensions[[td]]$values)) {
 		v = dimensions[[td]]$values
 		if (inherits(v, "intervals")) {
-          start = as.POSIXct(units::set_units(start, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
-          end =   as.POSIXct(units::set_units(end,   u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          start = as.POSIXct(units::set_units(v$start, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          end =   as.POSIXct(units::set_units(v$end,   u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
           dimensions[[td]]$values = make_intervals(start, end)
 		} else
           dimensions[[td]]$values = as.POSIXct(units::set_units(tm, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
