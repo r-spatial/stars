@@ -26,6 +26,13 @@ head.intervals = function(x, n) make_intervals(head(x$start, n), head(x$end, n))
 
 tail.intervals = function(x, n) make_intervals(tail(x$start, n), tail(x$end, n))
 
+c.intervals = function(...) {
+	dots = list(...)
+	start = do.call(c, lapply(dots, function(x) x$start))
+	end = do.call(c, lapply(dots, function(x) x$end))
+	make_intervals(start, end)
+}
+
 `[.intervals` = function(x, i, ...) {
 	make_intervals(x$start[i], x$end[i])
 }

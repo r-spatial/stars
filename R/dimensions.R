@@ -122,7 +122,7 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 #' @param center logical; if \code{TRUE} return the center of an interval; if \code{NA} return the center for raster dimensions, and the start of intervals in other cases
 #' @export
 st_get_dimension_values = function(.x, which, ..., max = FALSE, center = NA) {
-	if (!inherits(which, c("numeric", "character")) || length(which) != 1)
+	if ((!is.numeric(which) && !is.character(which)) || length(which) != 1)
 		stop("argument which should be a length 1 dimension index or name") # nocov
 	expand_dimensions(.x, ..., max = max, center = center)[[which]]
 }
@@ -157,8 +157,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_, 
 		refsys = NA_character_, point = NA, values = NULL, is_raster = FALSE)  {
 
-#	if (inherits(refsys, "crs"))
-#		refsys = refsys$proj4string
+	example = NA
 
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
@@ -172,21 +171,30 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				if (regular_intervals(values)) {
 					offset = values[1]
 					if (length(values) > 1) {
-						delta = values[2] - values[1]
+						delta = diff(values[1:2])
 					# shift half grid cell size if x or y raster dim cell midpoints:
 						if (is_raster)
 							offset = offset - 0.5 * delta
 					}
 					values = NULL
-				}
-				if (inherits(offset, "POSIXct"))
-					refsys = "POSIXct"
-				if (inherits(offset, "Date"))
-					refsys = "Date"
-				if (inherits(offset, "PCICt"))
-					refsys = "PCICt"
+					example = offset
+				} else
+					example = values
 			}
 		}
+		if (inherits(values, "intervals"))
+			example = values$start
+
+		# refsys:
+		if (inherits(example, "POSIXct"))
+			refsys = "POSIXct"
+		else if (inherits(example, "Date"))
+			refsys = "Date"
+		else if (inherits(example, "PCICt"))
+			refsys = "PCICt"
+		else if (inherits(example, "units"))
+			refsys = "udunits"
+
 		if (inherits(values, "sfc")) {
 			point = inherits(values, "sfc_POINT")
 			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
@@ -198,8 +206,6 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				else
 					set_dimension_values(start = values)
 		}
-		if (inherits(values, "units") || (inherits(values, "intervals") && inherits(values$start, "units")))
-			refsys = "udunits"
 	}
 	structure(list(from = from, to = to, offset = offset, delta = delta, 
 		refsys = refsys, point = point, values = values), class = "dimension")
@@ -484,23 +490,14 @@ combine_dimensions = function(dots, along) {
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
 		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
-		if (any(is.na(offset))) {
+		if (any(is.na(offset))) { # concatenate values if non-NULL:
 			dims[[along]]$from = 1
 			dims[[along]]$to = sum(sapply(dots, function(x) { d = st_dimensions(x)[[along]]; d$to - d$from + 1} ))
 			if (!is.null(dims[[along]]$values))
 				dims[[along]]$values = do.call(c, lapply(dots, function(x) attr(x, "dimensions")[[along]]$values))
 		} else {
-			offset = structure(do.call(c, offset), tzone = attr(offset[[1]], "tzone")) # preserve TZ
-			if (length(unique(diff(offset))) == 1) { # regular & sorted
-				dims[[along]]$offset = min(offset)
-				dims[[along]]$delta = diff(offset)[1]
-			} else {
-				dims[[along]]$values = offset  # nocov # FIXME: find example?
-				dims[[along]]$delta = NA_real_ # nocov
-				# FIXME: irregular: should set $values here and NA offset!
-			}
-			dims[[along]]$from = 1
-			dims[[along]]$to = length(offset)
+			values = do.call(c, lapply(dots, function(y) st_get_dimension_values(y, along)))
+			dims[[along]] = create_dimension(values = values)
 		}
 	}
 	dims
