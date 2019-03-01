@@ -31,12 +31,18 @@ tail.intervals = function(x, n) make_intervals(tail(x$start, n), tail(x$end, n))
 }
 
 format.intervals = function(x, ...) {
+	mformat = function(x, ..., digits = getOption("digits")) {
+		if (inherits(x, "PCICt")) 
+			format(x, ...)
+		else
+			format(x, digits = digits, ...) 
+	}
 	if (inherits(x$start, "units")) {
 		stopifnot(units(x$start) == units(x$end))
 		paste0("[", format(as.numeric(x$start), ...), ",", format(as.numeric(x$end), ...), ") ",
 			"[", as.character(units(x$start)), "]")
 	} else
-		paste0("[", format(x$start, ...), ",", format(x$end, ...), ")")
+		paste0("[", mformat(x$start, ...), ",", mformat(x$end, ...), ")")
 }
 
 find_interval = function(x, intervals) {

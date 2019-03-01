@@ -158,7 +158,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
         bounds %in% var_names) {
       bounds = RNetCDF::var.get.nc(nc, bounds)
-      is_reg = length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
+	  if (!is.matrix(bounds)) # single instance, returns a vector
+	  	bounds = matrix(bounds, nrow = 2)
+      is_reg = ncol(bounds) > 1 & length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
       if (is_reg) {
         dimensions[[i]]$offset = bounds[1,1]
         dimensions[[i]]$delta = u
@@ -195,17 +197,29 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       delta = set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
       origin = as.character(as.POSIXct(t01[1]))
       v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
-      if (!is.null(dimensions[[td]]$values))
-        dimensions[[td]]$values = v.pcict
-      else {
+      if (!is.null(dimensions[[td]]$values)) {
+		v = dimensions[[td]]$values
+        if (inherits(v, "intervals")) {
+          start = PCICt::as.PCICt(v$start * as.numeric(delta), cal, origin)
+          end =   PCICt::as.PCICt(v$end   * as.numeric(delta), cal, origin)
+          dimensions[[td]]$values = make_intervals(start, end)
+        } else
+          dimensions[[td]]$values = v.pcict
+      } else {
         dimensions[[td]]$offset = v.pcict[1]
         dimensions[[td]]$delta = diff(v.pcict[1:2])
       }
       dimensions[[td]]$refsys = "PCICt"
     } else { # Gregorian/Julian, POSIXct:
-      if (!is.null(dimensions[[td]]$values))
-        dimensions[[td]]$values = as.POSIXct(units::set_units(tm, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
-      else {
+      if (!is.null(dimensions[[td]]$values)) {
+		v = dimensions[[td]]$values
+		if (inherits(v, "intervals")) {
+          start = as.POSIXct(units::set_units(start, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          end =   as.POSIXct(units::set_units(end,   u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          dimensions[[td]]$values = make_intervals(start, end)
+		} else
+          dimensions[[td]]$values = as.POSIXct(units::set_units(tm, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+      } else {
         t0 = dimensions[[td]]$offset
         t1 = dimensions[[td]]$offset + dimensions[[td]]$delta
         t.posix = as.POSIXct(units::set_units(c(t0, t1), u, mode = "standard")) # or: utcal.nc(u, c(t0,t1), "c")
