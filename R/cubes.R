@@ -6,12 +6,13 @@
 #' @details wronly interprets time, at the moment, and only for P1M (monthly)
 #' @examples
 #' 
-#' library(gdalcubes)
-#' example(cube_view)
-#' st_cube_view_to_dimensions(vnew)
-#' st_get_dimension_values(st_cube_view_to_dimensions(vnew), 1)
-#' st_get_dimension_values(st_cube_view_to_dimensions(vnew), 2)
-#' st_get_dimension_values(st_cube_view_to_dimensions(vnew), 3)
+#' if(require(gdalcubes)) {
+#'   example(cube_view)
+#'   st_cube_view_to_dimensions(vnew)
+#'   st_get_dimension_values(st_cube_view_to_dimensions(vnew), 1)
+#'   st_get_dimension_values(st_cube_view_to_dimensions(vnew), 2)
+#'   st_get_dimension_values(st_cube_view_to_dimensions(vnew), 3)
+#' }
 #' 
 st_cube_view_to_dimensions = function(v, ...) {
 	sp = v$space
