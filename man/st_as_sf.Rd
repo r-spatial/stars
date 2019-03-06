@@ -30,7 +30,7 @@
 
 \item{long}{logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled}
 
-\item{connect8}{logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied (this option can only be made to work after sf 0.7-3 has arrived on CRAN).}
+\item{connect8}{logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.}
 }
 \description{
 Convert stars object into an sf object
