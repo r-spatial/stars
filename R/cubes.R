@@ -4,6 +4,7 @@
 #' @param v object of class \code{cube_view} (package gdalcubes)
 #' @param ... ignored
 #' @details wronly interprets time, at the moment, and only for P1M (monthly)
+#' @export
 #' @examples
 #' 
 #' if(require(gdalcubes)) {

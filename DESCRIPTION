@@ -90,3 +90,4 @@ Collate:
     'aggregate.R'
     'xts.R'
     'intervals.R'
+    'cubes.R'
