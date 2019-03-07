@@ -50,22 +50,20 @@ st_as_stars.cube = function(.x, ..., proxy = TRUE) {
   if (!requireNamespace("gdalcubes", quietly = TRUE))
     stop("package gdalcubes required, please install it first") # nocov
   
-  if (proxy) {
+  if (proxy)
     stop("proxy = TRUE is not yet implemented")
-  }
-  else {
-    v = gdalcubes::cube_view(.x)
+  
+  v = gdalcubes::cube_view(.x)
     
-    outnc = tempfile(fileext = ".nc")
-    gdalcubes::write_ncdf(.x, outnc)
+  outnc = tempfile(fileext = ".nc")
+  gdalcubes::write_ncdf(.x, outnc)
     
-    subdatasets = paste0("NETCDF:\"", outnc, "\":", names(.x), sep="", collapse = NULL)
+  subdatasets = paste0("NETCDF:\"", outnc, "\":", names(.x), sep="", collapse = NULL)
     
-    out = read_stars(subdatasets)
-    out = st_set_dimensions(out, "x", point = FALSE)
-    out = st_set_dimensions(out, "y", point = FALSE)
-    out = st_set_dimensions(out, "time", point = FALSE, values=as.POSIXct(gdalcubes::dimension_values(.x, "S")$t, tz = "GMT"))
-    return(out)
-  }
+  out = read_stars(subdatasets)
+  out = st_set_dimensions(out, "x", point = FALSE)
+  out = st_set_dimensions(out, "y", point = FALSE)
+  out = st_set_dimensions(out, "time", point = FALSE, values=as.POSIXct(gdalcubes::dimension_values(.x, "S")$t, tz = "GMT"))
+  out
 }
 
