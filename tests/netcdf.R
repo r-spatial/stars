@@ -1,3 +1,4 @@
+Sys.setenv(TZ="UTC")
 suppressPackageStartupMessages(library(stars))
 # read_ncdf:
 f <- system.file("nc/reduced.nc", package = "stars")

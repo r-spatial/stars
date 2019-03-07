@@ -1,3 +1,4 @@
+Sys.setenv(TZ="UTC")
 suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(stars))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
