@@ -114,8 +114,12 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		base::names(d) = names
 	} else
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
-	st_as_stars(unclass(.x), dimensions = d)
+	if (inherits(.x, "stars_proxy"))
+		structure(.x, dimensions = d)
+	else
+		st_as_stars(unclass(.x), dimensions = d)
 }
+
 
 #' @name st_dimensions
 #' @param max logical; if \code{TRUE} return the end, rather than the beginning of an interval
