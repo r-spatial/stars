@@ -17,15 +17,10 @@
 #' 
 st_cube_view_to_dimensions = function(v, ...) {
 	sp = v$space
-	x = create_dimension(values = seq(sp$left, sp$right, length.out = sp$nx), refsys = sp$srs, point = FALSE)
-	y = create_dimension(values = seq(sp$top, sp$bottom, length.out = sp$ny), refsys = sp$srs, point = FALSE)
-	time = v$time
-	t = if (time$dt == "P1M") {
-		t0 = as.Date(paste0(time$t0, "-01"))
-		t1 = as.Date(paste0(time$t1, "-01"))
-		create_dimension(values = seq(from = t0, to = t1, length.out = time$nt), refsys = "Date", point = FALSE) # wrong!!!
-	}
-	create_dimensions(list(x = x, y = y, t = t))
+	x = create_dimension(values = seq(sp$left, sp$right, length.out = sp$nx), refsys = sp$srs, point = FALSE) # might not work if srs is not proj4
+	y = create_dimension(values = seq(sp$top, sp$bottom, length.out = sp$ny), refsys = sp$srs, point = FALSE) # might not work if srs is not proj4
+	time = create_dimension(values=as.POSIXct(gdalcubes::dimension_values(v, "S")$t, tz = "GMT"), refsys = "POSIXct", point = FALSE) 
+	create_dimensions(list(x = x, y = y, time = time))
 }
 
 
@@ -50,17 +45,16 @@ st_as_stars.cube = function(.x, ..., proxy = TRUE) {
   if (!requireNamespace("gdalcubes", quietly = TRUE))
     stop("package gdalcubes required, please install it first") # nocov
   
+  v = gdalcubes::cube_view(.x)
+  outnc = tempfile(fileext = ".nc")
+  subdatasets = paste0("NETCDF:\"", outnc, "\":", names(.x), sep="", collapse = NULL)
   if (proxy) {
-    stop("proxy = TRUE is not yet implemented")
+    out = st_stars_proxy(list(subdatasets), st_cube_view_to_dimensions(v))
+    create_ncdf = call("write_ncdf", .x, outnc) # assumption here is that the gdalcubes package namespace is loaded, this should be okay due to calling requireNamespace before.
+    collect(out, create_ncdf, "write_ncdf") # this, at the moment, does not work with st_as_stars, because fetch tries to read the files before the call list is evaluated
   }
   else {
-    v = gdalcubes::cube_view(.x)
-    
-    outnc = tempfile(fileext = ".nc")
     gdalcubes::write_ncdf(.x, outnc)
-    
-    subdatasets = paste0("NETCDF:\"", outnc, "\":", names(.x), sep="", collapse = NULL)
-    
     out = read_stars(subdatasets)
     out = st_set_dimensions(out, "x", point = FALSE)
     out = st_set_dimensions(out, "y", point = FALSE)
