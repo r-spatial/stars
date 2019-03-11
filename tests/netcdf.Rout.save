@@ -15,6 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> Sys.setenv(TZ="UTC")
 > suppressPackageStartupMessages(library(stars))
 > # read_ncdf:
 > f <- system.file("nc/reduced.nc", package = "stars")
@@ -30,11 +31,11 @@ attribute(s):
  Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
  NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
 dimension(s):
-     from  to offset delta  refsys point     values    
-lon     1 180     -1     2      NA    NA       NULL [x]
-lat     1  90    -90     2      NA    NA       NULL [y]
-zlev    1   1     NA    NA      NA    NA          0    
-time    1   1     NA    NA POSIXct    NA 1981-12-31    
+     from  to offset delta  refsys point         values    
+lon     1 180     -1     2      NA    NA           NULL [x]
+lat     1  90    -90     2      NA    NA           NULL [y]
+zlev    1   1     NA    NA      NA    NA              0    
+time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    
 > read_ncdf(f, var = c("anom"))
 stars object with 4 dimensions and 1 attribute
 attribute(s):
@@ -47,11 +48,11 @@ attribute(s):
  Max.   :  2.990  
  NA's   :4448     
 dimension(s):
-     from  to offset delta  refsys point     values    
-lon     1 180     -1     2      NA    NA       NULL [x]
-lat     1  90    -90     2      NA    NA       NULL [y]
-zlev    1   1     NA    NA      NA    NA          0    
-time    1   1     NA    NA POSIXct    NA 1981-12-31    
+     from  to offset delta  refsys point         values    
+lon     1 180     -1     2      NA    NA           NULL [x]
+lat     1  90    -90     2      NA    NA           NULL [y]
+zlev    1   1     NA    NA      NA    NA              0    
+time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    
 > read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 stars object with 4 dimensions and 4 attributes
 attribute(s):
@@ -64,12 +65,12 @@ attribute(s):
  Max.   : 0.030   Max.   : 0.92000   Max.   :0.320   Max.   :0.5200  
  NA's   :90       NA's   :90         NA's   :90      NA's   :104     
 dimension(s):
-     from to offset delta  refsys point     values    
-lon     1 10     -1     2      NA    NA       NULL [x]
-lat     1 12    -90     2      NA    NA       NULL [y]
-zlev    1  1     NA    NA      NA    NA          0    
-time    1  1     NA    NA POSIXct    NA 1981-12-31    
+     from to offset delta  refsys point         values    
+lon     1 10     -1     2      NA    NA           NULL [x]
+lat     1 12    -90     2      NA    NA           NULL [y]
+zlev    1  1     NA    NA      NA    NA              0    
+time    1  1     NA    NA POSIXct    NA 1981-12-31 UTC    
 > 
 > proc.time()
    user  system elapsed 
-  0.612   0.027   0.633 
+  0.573   0.051   0.615 

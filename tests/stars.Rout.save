@@ -15,6 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> Sys.setenv(TZ="UTC")
 > suppressPackageStartupMessages(library(stars))
 > set.seed(13521) # runif
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -384,11 +385,11 @@ attribute(s):
  Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
  NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
 dimension(s):
-     from  to     offset delta  refsys point values    
-x       1 180         -1     2      NA    NA   NULL [x]
-y       1  90         90    -2      NA    NA   NULL [y]
-zlev    1   1      0 [m]    NA      NA    NA   NULL    
-time    1   1 1981-12-31    NA POSIXct    NA   NULL    
+     from  to         offset delta  refsys point values    
+x       1 180             -1     2      NA    NA   NULL [x]
+y       1  90             90    -2      NA    NA   NULL [y]
+zlev    1   1          0 [m]    NA      NA    NA   NULL    
+time    1   1 1981-12-31 UTC    NA POSIXct    NA   NULL    
 > plot(red)
 > 
 > x = st_xy2sfc(read_stars(tif)[,1:10,1:10,], as_points = FALSE)
@@ -568,11 +569,11 @@ attribute(s), summary of first 1e+05 cells:
  Max.   : 9.36   Max.   : 3.70  
  NA's   :13360   NA's   :13360  
 dimension(s):
-     from   to     offset  delta  refsys point values    
-x       1 1440          0   0.25      NA    NA   NULL [x]
-y       1  720         90  -0.25      NA    NA   NULL [y]
-zlev    1    1      0 [m]     NA      NA    NA   NULL    
-time    1    9 1981-09-01 1 days POSIXct    NA   NULL    
+     from   to         offset  delta  refsys point values    
+x       1 1440              0   0.25      NA    NA   NULL [x]
+y       1  720             90  -0.25      NA    NA   NULL [y]
+zlev    1    1          0 [m]     NA      NA    NA   NULL    
+time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL    
 stars object with 3 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
    sst [C*°]       anom [C*°]   
@@ -672,4 +673,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  7.923   0.552   8.466 
+  7.471   0.532   7.995 

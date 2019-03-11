@@ -45,13 +45,12 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		pb = txtProgressBar()
 		setTxtProgressBar(pb, 0)
 	}
-	# create:
-	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
-		type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
 
 	# write chunks:
 	d = dim(obj)
 	di = st_dimensions(obj)
+
+	created = FALSE
 
 	ncol = ceiling(d[1] / chunk_size[1])
 	nrow = ceiling(d[2] / chunk_size[2])
@@ -61,7 +60,19 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		for (row in 1:nrow) {
 			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
 			di[[2]]$to   = min(row * chunk_size[2], d[2])
-			write_stars(st_as_stars(structure(obj, dimensions = di)), dsn = dsn, layer = layer, driver = driver,
+			chunk = st_as_stars(structure(obj, dimensions = di))
+			if (! created) { # create:
+				d = st_dimensions(chunk)
+				d_obj = st_dimensions(obj)
+				d[[1]]$from = d[[2]]$from = 1
+				d[[1]]$to = d_obj[[1]]$to
+				d[[2]]$to = d_obj[[2]]$to
+				# reset dimensions 1/2 to original:
+				sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options, 
+					type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+			}
+			created = TRUE
+			write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
 				options = options, type = type, update = TRUE)
 			if (progress)
 				setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))

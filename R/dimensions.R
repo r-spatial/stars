@@ -114,8 +114,12 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		base::names(d) = names
 	} else
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
-	st_as_stars(unclass(.x), dimensions = d)
+	if (inherits(.x, "stars_proxy"))
+		structure(.x, dimensions = d)
+	else
+		st_as_stars(unclass(.x), dimensions = d)
 }
+
 
 #' @name st_dimensions
 #' @param max logical; if \code{TRUE} return the end, rather than the beginning of an interval
@@ -436,7 +440,7 @@ dim.dimensions = function(x) {
 
 
 #' @export
-print.dimensions = function(x, ..., digits = 6) {
+print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	lst = lapply(x, function(y) {
 			if (length(y$values) > 2) {
 				y$values = if (is.array(y$values))
@@ -457,8 +461,8 @@ print.dimensions = function(x, ..., digits = 6) {
 		}
 	)
 	mformat = function(x, ..., digits) {
-		if (inherits(x, "PCICt")) 
-			format(x, ...)
+		if (inherits(x, c("PCICt", "POSIXct"))) 
+			format(x, ..., usetz = usetz)
 		else
 			format(x, digits = digits, ...) 
 	}
