@@ -287,6 +287,11 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
 	collect(X, match.call(), "st_apply", "X")
 }
 
+#' @export
+predict.stars_proxy = function(object, model, ...) {
+	collect(object, match.call(), "predict", "object")
+}
+
 #nocov start
 get_data_url = function(url, expr = NULL) {
 	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
@@ -316,3 +321,4 @@ put_data_url = function(url, name, value) {
     httr::PUT(url, body = list(name = name, value = value), encode = "json")
 }
 #nocov end
+
