@@ -110,17 +110,24 @@ fetch = function(x, downsample = 0, ...) {
 	}
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
-	if (!is.null(bands <- d[["band"]])) # we may want to select here
-		rasterio$bands = bands$values %||% bands$from:bands$to
+	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) # we want to select here
+		rasterio$bands = bands$values
 
 	# do it:
 	ret = lapply(x, read_stars, RasterIO = rasterio, 
 		NA_value = attr(x, "NA_value") %||% NA_real_, ...)
 
-	if (length(ret) == 1)
+	ret = if (length(ret) == 1)
 		st_redimension(ret[[1]])
 	else
 		do.call(c, lapply(ret, st_redimension))
+	
+	new_dim = st_dimensions(ret)
+	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
+		if (!is.null(v <- d[[dm]]$values))
+			new_dim[[dm]]$values = v
+
+	st_stars(ret, new_dim)
 }
 
 check_xy_warn = function(call, dimensions) {
@@ -290,6 +297,11 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
 #' @export
 predict.stars_proxy = function(object, model, ...) {
 	collect(object, match.call(), "predict", "object")
+}
+
+#' @export
+split.stars_proxy = function(x, ...) {
+	collect(x, match.call(), "split")
 }
 
 #nocov start
