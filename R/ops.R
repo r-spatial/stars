@@ -75,6 +75,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param ... arguments passed on to \code{FUN}
 #' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
 #' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
+#' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -85,7 +86,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, "band", mean) # equivalent to the above
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
 #' @export
-st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE) {
+st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, rename = TRUE) {
 	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))
@@ -110,9 +111,11 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE)
 	}
 	ret = lapply(X, fn, ...) 
 	dim_ret = dim(ret[[1]])
-	if (length(dim_ret) == length(MARGIN)) # FUN returned a single value
+	if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
+		if (length(ret) == 1 && rename && make.names(fname) == fname)
+			ret = setNames(ret, fname)
 		st_stars(ret, st_dimensions(X)[MARGIN])
-	else { # FUN returned multiple values:
+	} else { # FUN returned multiple values:
 		orig = st_dimensions(X)[MARGIN]
 		r = attr(orig, "raster")
 		dims = c(structure(list(list()), names = fname), orig)

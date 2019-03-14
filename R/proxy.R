@@ -124,10 +124,12 @@ fetch = function(x, downsample = 0, ...) {
 	
 	new_dim = st_dimensions(ret)
 	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
-		if (!is.null(v <- d[[dm]]$values))
-			new_dim[[dm]]$values = v
+		if (dm %in% names(new_dim))
+			new_dim[[dm]] = d[[dm]]
+#		if (!is.null(v <- d[[dm]]$values))
+#			new_dim[[dm]]$values = v
 
-	st_stars(ret, new_dim)
+	st_stars(setNames(ret, names(x)), new_dim)
 }
 
 check_xy_warn = function(call, dimensions) {

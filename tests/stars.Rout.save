@@ -227,7 +227,7 @@ band    1   6      NA    NA                           NA    NA   NULL
 > st_apply(x, 3, min)
 stars object with 1 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
+      min       
  Min.   : 1.00  
  1st Qu.: 3.00  
  Median :15.00  
@@ -240,7 +240,7 @@ band    1  6     NA    NA     NA    NA   NULL
 > st_apply(x, 1:2, max)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
+      max        
  Min.   : 55.00  
  1st Qu.: 85.00  
  Median : 96.00  
@@ -640,4 +640,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  7.357   0.553   7.917 
+  7.007   0.616   7.621 
