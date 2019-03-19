@@ -86,8 +86,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
-    #var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
-    var = meta$variable$name[which.max(meta$variable$ndims)]
+    if (utils::packageVersion("ncmeta") <= "0.0.3") {
+     var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
+    } else {
+     grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
+     var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
+    }
   }
   ##
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
@@ -148,6 +152,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     #}
 
   }
+browser()
   dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
 
   ## if either x, y rectilinear assume both are
