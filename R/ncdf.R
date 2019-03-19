@@ -86,7 +86,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
-    var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
+    #var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
+    var = meta$variable$name[which.max(meta$variable$ndims)]
   }
   ##
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
