@@ -52,8 +52,7 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = ceiling(colrow_from_xy(pts, get_geotransform(x)))
-	xy[ xy[,1] < 1 | xy[,1] > d[[ dxy[1] ]]$to | xy[,2] < 1 | xy[,2] > d[[ dxy[2] ]]$to, ] = NA
+	xy = floor(colrow_from_xy(pts, x, NA_outside = TRUE)) + 1
 
 	from = x[[1]] #[,,1]
 	dims = dim(x)

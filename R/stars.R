@@ -141,23 +141,43 @@ st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180,
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 
-xy_from_colrow = function(x, geotransform, inverse = FALSE) {
+xy_from_colrow = function(x, geotransform) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
 # 0-based indices:
 # Xp = geotransform[0] + P*geotransform[1] + L*geotransform[2];
 # Yp = geotransform[3] + P*geotransform[4] + L*geotransform[5];
-	if (inverse) {
-		geotransform = gdal_inv_geotransform(geotransform)
-		if (any(is.na(geotransform)))
-			stop("geotransform not invertible")
-	}
-	stopifnot(ncol(x) == 2)
+	stopifnot(ncol(x) == 2, length(geotransform) == 6, !any(is.na(geotransform)))
 	matrix(geotransform[c(1, 4)], nrow(x), 2, byrow = TRUE) + 
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-colrow_from_xy = function(x, geotransform) {
-	xy_from_colrow(x, geotransform, inverse = TRUE) # will return floating point col/row numbers!!
+colrow_from_xy = function(x, obj, NA_outside = FALSE) {
+	if (inherits(obj, "stars"))
+		obj = st_dimensions(obj)
+	xy = attr(obj, "raster")$dimensions
+	if (inherits(obj, "dimensions"))
+		gt = get_geotransform(obj)
+
+	if (!any(is.na(gt))) { # have geotransform
+		inv_gt = gdal_inv_geotransform(gt)
+		if (any(is.na(inv_gt)))
+			stop("geotransform not invertible")
+		ret = xy_from_colrow(x, inv_gt) # will return floating point col/row numbers!!
+		if (NA_outside)
+			ret[ ret[,1] < 0 | ret[,1] >= obj[[ xy[1] ]]$to | ret[,2] < 0 | ret[,2] >= obj[[ xy[2] ]]$to, ] = NA
+		ret
+	} else if (is_rectilinear(obj)) {
+		ix = obj[[ xy[1] ]]$values 
+		if (!inherits(ix, "intervals"))
+			ix = as_intervals(ix, add_last = length(ix) == dim(obj)[ xy[1] ])
+		cols = find_interval(x[,1], ix)
+		iy = obj[[ xy[2] ]]$values 
+		if (!inherits(iy, "intervals"))
+			iy = as_intervals(iy, add_last = length(iy) == dim(obj)[ xy[2] ])
+		rows = find_interval(x[,1], iy) # always NA_outside
+		cbind(cols, rows) - 1 
+	} else
+		stop("colrow_from_xy not supported for this object")
 }
 
 has_rotate_or_shear = function(x) {

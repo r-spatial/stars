@@ -35,9 +35,12 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				by = st_geometry(by)
 	
 			# find groups:
-			x_geoms = if (has_raster(x))
-					st_as_sfc(x, as_points = as_points)
-				else
+			x_geoms = if (has_raster(x)) {
+					if (identical(join, st_intersection) && utils::packageVersion("sf") >= "0.7-4")
+						x_geoms
+					else
+						st_as_sfc(x, as_points = as_points)
+				} else
 					d[[ which_sfc(x) ]]$values
 			
 			# unlist(join(x_geoms, by))
