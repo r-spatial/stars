@@ -39,8 +39,6 @@ that order.
 
 
 If \code{var} is not set the first set of variables on a shared grid is used.
-It's supposed to be the grid with the most dimensions, but there's no control
-yet (see \code{\link[ncmeta]{nc_grids(.x)}} for the current assumption).
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
 and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
