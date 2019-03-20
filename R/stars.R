@@ -224,7 +224,9 @@ has_sfc = function(x) {
 st_coordinates.stars = function(x, ..., add_max = FALSE) {
 	dims = st_dimensions(x)
 	xy = attr(dims, "raster")$dimensions
-	if (has_rotate_or_shear(x)) {
+	if (is_curvilinear(x))
+		setNames(data.frame(as.vector(dims[[ xy[1] ]]$values), as.vector(dims[[ xy[2] ]]$values)), xy)
+	else if (has_rotate_or_shear(x)) {
 		if (add_max)
 			stop("add_max will not work for rotated/shared rasters")
 		d = dim(x)

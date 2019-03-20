@@ -69,7 +69,7 @@ ll = setNames(c(lon, lat), c("lon", "lat"))
 d = st_dimensions(lon = 1:3, lat = 1:3)
 a = st_as_stars(list(X = array(1:9, c(3,3))), dimensions = d)
 (st = st_as_stars(a, curvilinear = ll))
-as.data.frame(st)[1:11,]
+as.data.frame(st)
 st_bbox(st)
 
 # time regular:
