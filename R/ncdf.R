@@ -41,13 +41,11 @@
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
 #' @details
-#' If `var` is not set the first set of variables on a shared grid is used.
-#' It's supposed to be the grid with the most dimensions, but there's no control
-#' yet (see `ncmeta::nc_grids(.x)` for the current assumption).
+#' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
 #' \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-#' and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). If the count value
-#' is `NA` then all steps are included. Axis order must match that of the variable/s being read.
+#' and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
+#' is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 #' @export
 #' @examples
 #' #' precipitation data in a curvilinear NetCDF
@@ -86,7 +84,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
-    var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
+    if (utils::packageVersion("ncmeta") <= "0.0.3") {
+     var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
+    } else {
+     grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
+     var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
+    }
   }
   ##
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
@@ -126,7 +129,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     subidx <- seq(ncsub[ic, "start"], length = ncsub[ic, "count"])
 
     ## create_dimvar means we can var_get it
-    ##if (nc$dim[[dims$name[ic]]]$create_dimvar) {
     ## test checks if there's actuall a variable of the dim name
     if (dims$name[ic] %in% vars$name) {
       coords[[ic]] <- RNetCDF::var.get.nc(nc, variable = dims$name[ic])[subidx]
@@ -141,12 +143,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## which coords are regular
   regular = .is_regular(coords, eps)
   if (length(coords) > 1) {
-    # if (all(regular[1:2])) {
     raster = get_raster(affine = c(0, 0),
                         dimensions = names(coords)[1:2], curvilinear = FALSE)
-    #}
-
   }
+
   dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
 
   ## if either x, y rectilinear assume both are
