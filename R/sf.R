@@ -7,8 +7,6 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 	r = attr(st_dimensions(x), "raster")
 	gt = get_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
-	if (utils::packageVersion("sf") <= "0.7-2" && is_rectilinear(x))
-		stop("for converting rectilinear grids to sf, upgrade sf to a version > 0.7-2")
 	st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt) 
 }
 
