@@ -38,13 +38,11 @@ assumed that the coordinates are 2D and that they relate to the first two dimens
 that order.
 
 
-If `var` is not set the first set of variables on a shared grid is used.
-It's supposed to be the grid with the most dimensions, but there's no control
-yet (see `ncmeta::nc_grids(.x)` for the current assumption).
+If \code{var} is not set the first set of variables on a shared grid is used.
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). If the count value
-is `NA` then all steps are included. Axis order must match that of the variable/s being read.
+and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
+is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
