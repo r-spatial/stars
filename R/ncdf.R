@@ -5,7 +5,7 @@
 .is_unique <- function(x, eps) {
   u = unique(x)
   if (all(diff(sort(u)) < eps))
-    mean(u)
+    mean(x) # rather than mean(u)
   else
     u
 }
@@ -157,16 +157,27 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     if (names(coords)[i] %in% var_names &&
         !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
         bounds %in% var_names) {
+
       bounds = RNetCDF::var.get.nc(nc, bounds)
 	  if (!is.matrix(bounds)) # single instance, returns a vector
 	  	bounds = matrix(bounds, nrow = 2)
-      is_reg = ncol(bounds) > 1 & length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1
-      if (is_reg) {
+      is_reg = ncol(bounds) > 1 && length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1 &&
+        length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
+
+      if (is_reg && abs(u + v) < eps) {
+        warning(paste("bounds for", names(coords)[i], "seem to be reversed"))
+        u = v
+      }
+
+      if (is_reg && abs(v - u) < eps) {
         dimensions[[i]]$offset = bounds[1,1]
-        dimensions[[i]]$delta = u
+        dimensions[[i]]$delta = v
       } else {
+		bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
         dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
-        to_rectilinear = TRUE
+        dimensions[[i]]$point = FALSE
+        if (i %in% 1:2) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
+			to_rectilinear = TRUE
       }
     } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
