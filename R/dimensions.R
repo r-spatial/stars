@@ -415,13 +415,15 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	gt = get_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
-	if (! is.null(xy) && all(!is.na(xy))) { # we have raster:
-		if (!max && (is.na(center) || center))
-			where = 0.5
+	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
+		where_xy = if (!max && (is.na(center) || center))
+				0.5
+			else
+				where
 		if (xy[1] %in% names(lst)) # x
-			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where, gt, "x")
+			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where_xy, gt, "x")
 		if (xy[2] %in% names(lst))  # y
-			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where, gt, "y")
+			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where_xy, gt, "y")
 	}
 	for (nm in setdiff(names(lst), xy)) # non-xy dimensions
 		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where, NA, NA)
