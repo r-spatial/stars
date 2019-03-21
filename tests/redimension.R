@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 r = read_stars(list(a = c(tif,tif), b = c(tif, tif)), proxy = TRUE)
 (xx = st_redimension(r, along = list(foo = 1:4)))

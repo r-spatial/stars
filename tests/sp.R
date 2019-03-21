@@ -1,7 +1,7 @@
 library(sp)
 demo(meuse)
 
-library(stars)
+suppressPackageStartupMessages(library(stars))
 (m = st_as_stars(meuse))
 (gr = st_as_stars(meuse.grid))
 

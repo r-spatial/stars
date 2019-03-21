@@ -1,4 +1,4 @@
-suppressPackageStartupMessages(library(stars))
+library(stars)
 
 library(spacetime)
 data(air) # this loads several datasets in .GlobalEnv

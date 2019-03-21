@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 # can stars reproduce what gdal does, by default?

@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 
 # regular, but not spatial:
 d = st_dimensions(a = 1:3, b = 1:3, band = c("foo", "bar"))

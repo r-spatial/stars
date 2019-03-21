@@ -1,5 +1,5 @@
 library(spacetime)
-library(stars)
+suppressPackageStartupMessages(library(stars))
 data(air) # this loads several datasets in .GlobalEnv
 dim(air)
 d = st_dimensions(station = st_as_sfc(stations), time = dates)

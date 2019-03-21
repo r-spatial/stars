@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -47,6 +47,7 @@ station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
 time                                                       NULL
 > (a = aggregate(aq, blocks, mean, na.rm = TRUE))
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
      PM10        
@@ -80,7 +81,7 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- file43883882144b.tif 
+ file269a4e40125e.tif 
  Min.   : 33.0        
  1st Qu.:199.2        
  Median :365.5        
@@ -95,6 +96,7 @@ band    1  6     NA    NA                           NA    NA   NULL
 > 
 > sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), 4326)
 > (a = aggregate(st, sfc, mean))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -175,6 +177,7 @@ t                                                      NULL
 > 
 > (a = aggregate(st, st, mean))
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
       A1        
@@ -194,4 +197,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.889   0.048   0.928 
+  0.945   0.052   0.993 

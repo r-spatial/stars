@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,10 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: abind
-Loading required package: sf
-Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> suppressPackageStartupMessages(library(stars))
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > r = read_stars(list(a = c(tif,tif), b = c(tif, tif)), proxy = TRUE)
 > (xx = st_redimension(r, along = list(foo = 1:4)))
@@ -70,20 +67,20 @@ foo     1   4       1     1                           NA    NA   NULL
 > st_as_stars(rr)
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
- a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3 
- Min.   : 47.00                                                                                                
- 1st Qu.: 65.00                                                                                                
- Median : 76.00                                                                                                
- Mean   : 77.34                                                                                                
- 3rd Qu.: 87.00                                                                                                
- Max.   :255.00                                                                                                
- a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3.1 
- Min.   : 47.00                                                                                                  
- 1st Qu.: 65.00                                                                                                  
- Median : 76.00                                                                                                  
- Mean   : 77.34                                                                                                  
- 3rd Qu.: 87.00                                                                                                  
- Max.   :255.00                                                                                                  
+ a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+ Min.   : 47.00                                          
+ 1st Qu.: 65.00                                          
+ Median : 76.00                                          
+ Mean   : 77.34                                          
+ 3rd Qu.: 87.00                                          
+ Max.   :255.00                                          
+ a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+ Min.   : 47.00                                          
+ 1st Qu.: 65.00                                          
+ Median : 76.00                                          
+ Mean   : 77.34                                          
+ 3rd Qu.: 87.00                                          
+ Max.   :255.00                                          
 dimension(s):
         from  to  offset delta                       refsys point
 x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
@@ -125,13 +122,13 @@ bar     1   2 2001-01-01 365 days                         Date    NA   NULL
 > st_as_stars(rrr)
 stars object with 4 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
- L7_ETMs.tif.L7_ETMs.tif.1.L7_ETMs.tif.2.L7_ETMs.tif.3.L7_ETMs.tif.4.L7_ETMs.tif.5.L7_ETMs.tif.6.L7_ETMs.tif.7 
- Min.   : 47.00                                                                                                
- 1st Qu.: 65.00                                                                                                
- Median : 76.00                                                                                                
- Mean   : 77.34                                                                                                
- 3rd Qu.: 87.00                                                                                                
- Max.   :255.00                                                                                                
+ a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
+ Min.   : 47.00                                                                                                  
+ 1st Qu.: 65.00                                                                                                  
+ Median : 76.00                                                                                                  
+ Mean   : 77.34                                                                                                  
+ 3rd Qu.: 87.00                                                                                                  
+ Max.   :255.00                                                                                                  
 dimension(s):
         from  to  offset delta                       refsys point
 x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
@@ -177,4 +174,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.298   0.215   1.504 
+  1.055   0.160   1.207 
