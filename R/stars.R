@@ -162,9 +162,9 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		inv_gt = gdal_inv_geotransform(gt)
 		if (any(is.na(inv_gt)))
 			stop("geotransform not invertible")
-		ret = xy_from_colrow(x, inv_gt) # will return floating point col/row numbers!!
+		ret = floor(xy_from_colrow(x, inv_gt) + 1.)# will return floating point col/row numbers!!
 		if (NA_outside)
-			ret[ ret[,1] < 0 | ret[,1] >= obj[[ xy[1] ]]$to | ret[,2] < 0 | ret[,2] >= obj[[ xy[2] ]]$to, ] = NA
+			ret[ ret[,1] < 1 | ret[,1] > obj[[ xy[1] ]]$to | ret[,2] < 1 | ret[,2] > obj[[ xy[2] ]]$to, ] = NA
 		ret
 	} else if (is_rectilinear(obj)) {
 		ix = obj[[ xy[1] ]]$values 
@@ -175,7 +175,7 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		if (!inherits(iy, "intervals"))
 			iy = as_intervals(iy, add_last = length(iy) == dim(obj)[ xy[2] ])
 		rows = find_interval(x[,1], iy) # always NA_outside
-		cbind(cols, rows) - 1 
+		cbind(cols, rows)
 	} else
 		stop("colrow_from_xy not supported for this object")
 }

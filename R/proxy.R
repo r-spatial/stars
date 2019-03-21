@@ -274,7 +274,7 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
 		# FIXME: document how EXACTLY cropping works; https://github.com/hypertidy/tidync/issues/73
-		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm) + 0.5)
+		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
 		for (i in seq_along(dm)) {
 			if (names(d[i]) == xd) {
 				dm[[ xd ]]$from = max(1, cr[1, 1])

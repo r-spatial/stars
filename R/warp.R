@@ -52,7 +52,7 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = floor(colrow_from_xy(pts, x, NA_outside = TRUE)) + 1
+	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
 
 	from = x[[1]] #[,,1]
 	dims = dim(x)
