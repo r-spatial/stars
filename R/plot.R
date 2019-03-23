@@ -244,6 +244,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	# rearrange ar:
 	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
 	ar = aperm(ar, c(dimxn, dimyn, others))
+	if (text_values)
+		ar_text = ar # keep original order for cell text labels
 
 	if (! is.null(rgb)) {
 		if (is_curvilinear(x))
@@ -297,7 +299,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 	if (text_values) {
 		dims = expand_dimensions.stars(x, center = TRUE)
-		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
+		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar_text))) # xxx
 	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
