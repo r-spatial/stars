@@ -165,15 +165,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
 
       if (is_reg && abs(u + v) < eps) {
-        warning(paste("bounds for", names(coords)[i], "seem to be reversed"))
-        u = v
+          warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
+		  bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
+          u = v
       }
 
       if (is_reg && abs(v - u) < eps) {
         dimensions[[i]]$offset = bounds[1,1]
         dimensions[[i]]$delta = v
       } else {
-		bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
         dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
         dimensions[[i]]$point = FALSE
         if (i %in% 1:2) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
