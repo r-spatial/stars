@@ -47,19 +47,19 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	}
 
 	# write chunks:
-	d = dim(obj)
+	dim_obj = dim(obj)
 	di = st_dimensions(obj)
 
 	created = FALSE
 
-	ncol = ceiling(d[1] / chunk_size[1])
-	nrow = ceiling(d[2] / chunk_size[2])
+	ncol = ceiling(dim_obj[1] / chunk_size[1])
+	nrow = ceiling(dim_obj[2] / chunk_size[2])
 	for (col in 1:ncol) { 
 		di[[1]]$from = 1 + (col - 1) * chunk_size[1]
-		di[[1]]$to   = min(col * chunk_size[1], d[1])
+		di[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
 		for (row in 1:nrow) {
 			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
-			di[[2]]$to   = min(row * chunk_size[2], d[2])
+			di[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
 			chunk = st_as_stars(structure(obj, dimensions = di))
 			if (! created) { # create:
 				d = st_dimensions(chunk)
