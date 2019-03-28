@@ -119,7 +119,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
-					else
+					else if (identical(main, names(x)[1])) # default value: omit on multi
+						title(paste(format(labels[i])))
+					else # user-defined
 						title(paste(main, format(labels[i])))
 				}
 				box(col = box_col)

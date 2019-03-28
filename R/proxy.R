@@ -224,26 +224,24 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 }
 
 #' @export
-"[.stars_proxy" = function(x, ..., drop = FALSE, crop = TRUE) {
+"[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
 	mc = match.call()
 	lst = as.list(mc)
 	if (length(lst) < 3)
 		return(x) # 
-	if (as.character(lst[[3]]) != "" && crop) { # i present: do attr selection or bbox now:
-		x = if (is.character(lst[[3]]))
-			st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
-		else {
-			i = as.character(lst[[3]])
-			if (inherits(get(i), c("sf", "sfc", "stars", "bbox")))
-				st_crop(x, get(i), ...)
-			else
-				stop(paste("unrecognized selector:", i))
-		}
-		if (length(lst) == 3 && crop) # we're done
-			return(x)
-		lst[[3]] = TRUE # this one has been handled
+	if (missing(i)) # insert:
+		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
+	if (inherits(i, c("character", "logical", "numeric"))) {
+		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
+		lst[["i"]] = TRUE # this one has been handled now
+	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
+		x = st_crop(x, i, ...)
+		lst[["i"]] = TRUE # this one has been handled now
 	}
-	collect(x, as.call(lst), "[") # postpone every arguments > 3 to after reading cells
+	if (length(lst) == 3 && isTRUE(lst[["i"]]))
+		x
+	else
+		collect(x, as.call(lst), "[") # postpone every arguments > 3 to after reading cells
 }
 
 # shrink bbox with e * width in each direction
@@ -335,4 +333,3 @@ put_data_url = function(url, name, value) {
     httr::PUT(url, body = list(name = name, value = value), encode = "json")
 }
 #nocov end
-

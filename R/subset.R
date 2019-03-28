@@ -227,7 +227,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	dxy = attr(dm, "raster")$dimensions
 	as_points = all(st_dimension(y) == 2, na.rm = TRUE) # for points/lines: make polygons, otherwise: make points
 	xy_grd = if (is_curvilinear(x) || !as_points)
-			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points)
+			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
 		else
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 	inside = st_intersects(st_union(y), xy_grd)[[1]]

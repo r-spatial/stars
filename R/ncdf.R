@@ -119,7 +119,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out = setNames(out, var)
   # units:
   for (i in var)
-    if (!is.null(u <- nc_get_attr(nc, i, "units")))
+    if (is.numeric(out[[i]]) && !is.null(u <- nc_get_attr(nc, i, "units")))
       units(out[[i]]) = try_as_units(u)
 
   ## cannot assume we have coord dims

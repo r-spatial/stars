@@ -97,12 +97,12 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 
 	fn = function(y, ...) {
 		ret = if (PROGRESS)
-				pbapply::pbapply(y, MARGIN, FUN, ..., cl = CLUSTER)
+				pbapply::pbapply(X = y, MARGIN = MARGIN, FUN = FUN, ..., cl = CLUSTER)
 			else {
 				if (is.null(CLUSTER))
-					apply(y, MARGIN, FUN, ...)
+					apply(X = y, MARGIN = MARGIN, FUN = FUN, ...)
 				else
-					parallel::parApply(CLUSTER, y, MARGIN, FUN, ...)
+					parallel::parApply(CLUSTER, X = y, MARGIN = MARGIN, FUN = FUN, ...)
 			}
 		if (is.array(ret))
 			ret
@@ -111,11 +111,11 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 	}
 	ret = lapply(X, fn, ...) 
 	dim_ret = dim(ret[[1]])
-	if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
+	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
 		if (length(ret) == 1 && rename && make.names(fname) == fname)
 			ret = setNames(ret, fname)
 		st_stars(ret, st_dimensions(X)[MARGIN])
-	} else { # FUN returned multiple values:
+	} else { # FUN returned multiple values: need to set dimension name & values
 		orig = st_dimensions(X)[MARGIN]
 		r = attr(orig, "raster")
 		dims = c(structure(list(list()), names = fname), orig)
@@ -125,4 +125,7 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 				create_dimension(to = dim_ret[1])
 		st_stars(ret, dimensions = create_dimensions(dims, r))
 	}
+	for (i in seq_along(ret))
+		names(dim(ret[[i]])) = names(st_dimensions(ret))
+	ret
 }

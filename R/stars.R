@@ -238,10 +238,11 @@ has_sfc = function(x) {
 #' retrieve coordinates for raster or vector cube cells
 #' @param x object of class \code{stars}
 #' @param add_max logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value
+#' @param center logical; (only if \code{add_max} is FALSE): should grid cell center coordinates be returned (TRUE) or offset values (FALSE)? \code{center} can be a named logical vector or list to specify values for each dimension.
 #' @name st_coordinates
 #' @param ... ignored
 #' @export
-st_coordinates.stars = function(x, ..., add_max = FALSE) {
+st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 	dims = st_dimensions(x)
 	xy = attr(dims, "raster")$dimensions
 	if (is_curvilinear(x))
@@ -249,6 +250,8 @@ st_coordinates.stars = function(x, ..., add_max = FALSE) {
 	else if (has_rotate_or_shear(x)) {
 		if (add_max)
 			stop("add_max will not work for rotated/shared rasters")
+		if (isTRUE(!center)) # center = FALSE
+			warning("center values are given for spatial coordinates")
 		d = dim(x)
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
@@ -262,19 +265,20 @@ st_coordinates.stars = function(x, ..., add_max = FALSE) {
 					paste0(xy, "_max"))
 			)
 		} else
-			do.call(expand.grid, expand_dimensions(x)) # cell centers for x/y if raster
+			do.call(expand.grid, expand_dimensions(x, center = center)) # cell centers for x/y if raster
 	}
 }
 
 #' @export
 st_coordinates.dimensions = function(x, ...) {
-	st_coordinates(st_as_stars(list(), dimensions = x))
+	st_coordinates(st_as_stars(list(), dimensions = x), ...)
 }
 
 #' @name st_coordinates
 #' @export
-as.data.frame.stars = function(x, ..., add_max = FALSE) {
-	data.frame(st_coordinates(x, add_max = add_max), lapply(x, function(y) structure(y, dim = NULL)))
+as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
+	data.frame(st_coordinates(x, add_max = add_max, center = center), 
+		lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 

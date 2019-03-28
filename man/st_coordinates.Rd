@@ -6,9 +6,9 @@
 \alias{as.data.frame.stars}
 \title{retrieve coordinates for raster or vector cube cells}
 \usage{
-\method{st_coordinates}{stars}(x, ..., add_max = FALSE)
+\method{st_coordinates}{stars}(x, ..., add_max = FALSE, center = TRUE)
 
-\method{as.data.frame}{stars}(x, ..., add_max = FALSE)
+\method{as.data.frame}{stars}(x, ..., add_max = FALSE, center = NA)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -16,6 +16,8 @@
 \item{...}{ignored}
 
 \item{add_max}{logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value}
+
+\item{center}{logical; (only if \code{add_max} is FALSE): should grid cell center coordinates be returned (TRUE) or offset values (FALSE)? \code{center} can be a named logical vector or list to specify values for each dimension.}
 }
 \description{
 retrieve coordinates for raster or vector cube cells

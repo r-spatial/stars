@@ -1,4 +1,8 @@
 #' @export
+st_as_stars.STSDF = function(.x, ...) st_as_stars(as(.x, "STFDF"), ...)
+
+
+#' @export
 st_as_stars.STFDF = function(.x, ...) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") #nocov

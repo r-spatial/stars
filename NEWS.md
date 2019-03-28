@@ -1,5 +1,7 @@
 # version 0.3-1
 
+* handle bounds, when given, in `read_ncdf`
+
 * provide time parsing (POSIXct, PCICt) for `read_ncdf`; #115
 
 # version 0.3-0

@@ -17,8 +17,9 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		by = st_as_sfc(by, as_points = FALSE)
 
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt")
-	if (!(inherits(by, classes)))
-		stop(paste("currently, only `by' arguments of class", paste(classes, collapse= ", "), "supported"))
+	if (!inherits(by, classes))
+		stop(paste("currently, only `by' arguments of class", 
+			paste(classes, collapse= ", "), "supported"))
 
 	drop_y = FALSE
 	grps = if (inherits(by, c("sf", "sfc"))) {
@@ -103,3 +104,16 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	# now we have |g| rows, with |g| the number of groups
 	# assign each group to the target group of "by"
 	# redimension the matrix such that unaffected dimensions match again
+
+#' @export
+aggregate.stars_proxy = function(x, by, FUN, ...) {
+	if (inherits(by, "stars"))
+		by = st_as_sfc(by, as_points = FALSE)
+	if (!inherits(by, c("sf", "sfc", "sfg")))
+		stop("aggregate.stars_proxy only implemented for spatial `by' arguments")
+	by = st_geometry(by)
+
+	# this assumes the result is small, no need to proxy
+	l = lapply(seq_along(by), function(i) aggregate(st_as_stars(x[by[i]]), by[i], FUN, ...))
+	do.call(c, c(l, along = list(which_sfc(l[[1]]))))
+}

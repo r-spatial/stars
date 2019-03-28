@@ -400,15 +400,20 @@ expand_dimensions.stars = function(x, ...) {
 #   add_max = TRUE: add in addition to x and y start values an x_max and y_max end values
 expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 
-	if (isTRUE(max) && isTRUE(center))
+	if (length(center) == 1)
+		center = setNames(rep(center, length(x)), names(x))
+	if (length(max) == 1)
+		max = setNames(rep(max, length(x)), names(x))
+
+	if (is.list(max))
+		max = unlist(max)
+	if (is.list(center))
+		center = unlist(center)
+
+	if (any(max & center, na.rm = TRUE))
 		stop("only one of max and center can be TRUE, not both")
 
-	where = if (max) 
-			1.0
-		else if (isTRUE(center))
-			0.5
-		else
-			0.0
+	where = ifelse(max, 1.0, ifelse(isTRUE(center), 0.5, 0.0)) # defaults to 0!
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions
@@ -416,17 +421,19 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
 	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
-		where_xy = if (!max && (is.na(center) || center))
-				0.5
-			else
-				where
+		where[xy] = ifelse(!max[xy] && (is.na(center[xy]) || center[xy]), 0.5, where[xy])
+#		where_xy = if (!max && (is.na(center) || center))
+#				0.5
+#			else
+#				where
 		if (xy[1] %in% names(lst)) # x
-			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where_xy, gt, "x")
+			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where[[ xy[1] ]], gt, "x")
 		if (xy[2] %in% names(lst))  # y
-			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where_xy, gt, "y")
+			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where[[ xy[2] ]], gt, "y")
 	}
+
 	for (nm in setdiff(names(lst), xy)) # non-xy dimensions
-		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where, NA, NA)
+		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where[[nm]], NA, NA)
 
 	lst
 }
