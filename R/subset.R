@@ -138,6 +138,7 @@
 #' @param x object of class \code{stars}
 #' @param y object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.
 #' @param epsilon numeric; shrink the bounding box of \code{y} to its center with this factor.
+#' @param as_points logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
 #' @details for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
@@ -190,7 +191,8 @@
 #' plot(l7[,1:13,1:13,1], reset = FALSE)
 #' image(l7[bb,,,1], add = TRUE, col = sf.colors())
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
-st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
+st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0, 
+		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
@@ -225,8 +227,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	if (inherits(y, "bbox"))
 		y = st_as_sfc(y)
 	dxy = attr(dm, "raster")$dimensions
-	as_points = all(st_dimension(y) == 2, na.rm = TRUE) # for points/lines: make polygons, otherwise: make points
-	xy_grd = if (is_curvilinear(x) || !as_points)
+	xy_grd = if (is_curvilinear(x) || !as_points) # FIXME: for curvilinear as_points should work too!
 			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
 		else
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
