@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -45,7 +45,7 @@ y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 call list:
 [[1]]
-x[, , , 2:3]
+x[i = TRUE, , , 2:3]
 
 > r+r
 stars_proxy object with 1 attribute in file:
@@ -438,4 +438,4 @@ times    1    2     1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.846   0.615   3.452 
+  2.793   0.655   3.441 

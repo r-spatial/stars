@@ -349,11 +349,17 @@ parse_netcdf_meta = function(pr, name) {
 					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
 						origin = 0:1
 						units(origin) = try_as_units(u)
-						delta = as.numeric(set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard"))
+						delta = if (grepl("months", u)) {
+								if (cal == "360_day")
+									set_units(30 * 24 * 3600, "s", mode = "standard")
+								else
+									set_units((365/12) * 24 * 3600, "s", mode = "standard")
+							} else
+								set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
 						origin_txt = as.character(as.POSIXct(origin[1]))
     					if (!requireNamespace("PCICt", quietly = TRUE))
         					stop("package PCICt required, please install it first") # nocov
-						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * delta, cal, origin_txt)
+						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
 					} else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
 						if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),

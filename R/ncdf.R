@@ -205,7 +205,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       if (!requireNamespace("PCICt", quietly = TRUE))
         stop("package PCICt required, please install it first") # nocov
       t01 = set_units(0:1, u, mode = "standard")
-      delta = set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
+	  delta = if (grepl("months", u)) {
+          if (cal == "360_day")
+		    set_units(30 * 24 * 3600, "s", mode = "standard")
+		  else
+		    set_units((365/12) * 24 * 3600, "s", mode = "standard")
+        } else
+          set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
       origin = as.character(as.POSIXct(t01[1]))
       v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
       if (!is.null(dimensions[[td]]$values)) {

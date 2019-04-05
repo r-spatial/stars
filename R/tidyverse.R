@@ -92,10 +92,14 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   eval(rlang::expr(.data[!!!indices]))
 }
 
-
+#' @name st_coordinates
 #' @export
+#' @param .x object to be converted to a tibble
 as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
-	cc = tibble::as_tibble(st_coordinates(.x, add_max = add_max, center = center))
+    if (!requireNamespace("dplyr", quietly = TRUE))
+        stop("package dplyr required, please install it first") # nocov
+
+	cc = dplyr::as_tibble(st_coordinates(.x, add_max = add_max, center = center))
 	do.call(dplyr::bind_cols, append(cc, lapply(.x, function(y) structure(y, dim = NULL))))
 }
 
@@ -141,14 +145,14 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FAL
 			if (is.null(mapping))
 				mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
 					fill = !!rlang::sym(names(data)[1]))
-			ggplot2::geom_raster(mapping = mapping, data = tibble::as_tibble(data), ...)
+			ggplot2::geom_raster(mapping = mapping, data = dplyr::as_tibble(data), ...)
 		} else {  # rectilinear: use geom_rect, passing on cell boundaries
 			xy_max = paste0(xy, "_max")
 			if (is.null(mapping))
 				mapping = ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
 					xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
 					fill = !!rlang::sym(names(data)[1]))
-			ggplot2::geom_rect(mapping = mapping, data = tibble::as_tibble(data, add_max = TRUE), ...)
+			ggplot2::geom_rect(mapping = mapping, data = dplyr::as_tibble(data, add_max = TRUE), ...)
 		}
 	} else if (has_sfc(d)) {
 		if (is.null(mapping))
@@ -160,13 +164,13 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FAL
 
 register_all_s3_methods = function() {
 	register_s3_method("dplyr", "filter", "stars") # nocov start
+	register_s3_method("dplyr", "as_tibble", "stars")
 	register_s3_method("dplyr", "select", "stars")
 	register_s3_method("dplyr", "mutate", "stars")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
-	register_s3_method("tibble", "as_tibble", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 
