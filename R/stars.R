@@ -589,8 +589,15 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 
 #' @export
 "$<-.stars" = function(x, i, value) {
-	if (is.null(dim(value)))
-		dim(value) = dim(x)
+	if (!is.null(value)) {
+		if (prod(dim(x)) %% length(value) != 0) { # error:
+			if (is.null(dim(value)))
+				stop(paste("replacement has length", length(value), ", data has dim", paste(dim(x), collapse = ", ")))
+			else
+				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
+		}
+		value = array(value, dim(x))
+	}
 	NextMethod()
 }
 
