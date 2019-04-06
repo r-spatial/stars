@@ -233,7 +233,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 	inside = st_intersects(st_union(y), xy_grd)[[1]]
 	d = dim(x) # cropped x
-	mask = rep(NA_real_, prod(d[dxy]))
-	mask[inside] = 1
-	x * array(mask, d) # replicates over secondary dims
+	mask = rep(TRUE, prod(d[dxy]))
+	mask[inside] = FALSE
+	mask = array(mask, d) # replicates over secondary dims
+	for (i in seq_along(x))
+		x[[i]][mask] = NA
+	x
 }
