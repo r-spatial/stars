@@ -596,7 +596,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 			else
 				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
 		}
-		value = array(value, dim(x))
+		value = if (is.factor(value))
+				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))
+			else
+				array(value, dim(x))
 	}
 	NextMethod()
 }
