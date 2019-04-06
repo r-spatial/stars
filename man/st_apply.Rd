@@ -37,4 +37,8 @@ st_apply(x, c("x", "y"), mean) # equivalent to the above
 st_apply(x, 3, mean)   # mean of all pixels for each band
 st_apply(x, "band", mean) # equivalent to the above
 st_apply(x, 1:2, range) # min and max band value for each pixel
+# to get a progress bar also in non-interactive mode, specify:
+if (require(pbapply)) { # install it, if FALSE
+  pboptions(type = "timer")
+}
 }
