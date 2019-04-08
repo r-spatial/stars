@@ -1,3 +1,23 @@
+# reset the offset when x is a sub-raster (i.e, starts at index larger than 1)
+reset_sub = function(x) {
+	d = st_dimensions(x)
+	xy = attr(d, "raster")$dimensions
+	if (all(is.na(xy)))
+		return(x)
+	
+	for (i in xy) {
+		if (d[[ i ]]$from > 1) {
+			if (!is_regular(x))
+				stop("can only write sub-rasters for regular grids")
+			ioff = d[[ i ]]$from - 1
+			d[[ i ]]$offset = d[[ i ]]$offset + ioff * d[[ i ]]$delta
+			d[[ i ]]$to = d[[ i ]]$to - ioff
+			d[[ i ]]$from = 1
+		}
+	}
+	structure(x, dimensions = d)
+}
+
 st_write.stars = function(obj, dsn, layer, ...) {
 	.Deprecated("read_stars") # nocov
 }
@@ -24,7 +44,7 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 		options = character(0), type = "Float32", NA_value = NA_real_) {
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
-	obj = st_upfront(obj[layer])
+	obj = reset_sub(st_upfront(obj[layer]))
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
 	invisible(obj)
