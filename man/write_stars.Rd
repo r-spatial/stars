@@ -10,7 +10,7 @@ write_stars(obj, dsn, layer, ...)
 
 \method{write_stars}{stars}(obj, dsn, layer = 1, ...,
   driver = detect.driver(dsn), options = character(0),
-  type = "Float32", NA_value = NA_real_)
+  type = "Float32", NA_value = NA_real_, update = FALSE)
 
 \method{write_stars}{stars_proxy}(obj, dsn, layer = 1, ...,
   driver = detect.driver(dsn), options = character(0),
@@ -33,6 +33,8 @@ write_stars(obj, dsn, layer, ...)
 \item{type}{character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.}
 
 \item{NA_value}{non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.}
+
+\item{update}{logical; if \code{TRUE}, an existing file is being updated}
 
 \item{chunk_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
 

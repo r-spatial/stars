@@ -38,13 +38,16 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param options character vector with options
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
+#' @param update logical; if \code{TRUE}, an existing file is being updated
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
-		options = character(0), type = "Float32", NA_value = NA_real_) {
+		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE) {
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
-	obj = reset_sub(st_upfront(obj[layer]))
+	obj = st_upfront(obj[layer])
+	if (! update) # new file: should not be a sub-array
+		obj = reset_sub(obj)
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
 	invisible(obj)
