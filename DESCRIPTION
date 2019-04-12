@@ -33,7 +33,7 @@ Depends:
     sf (>= 0.7-3)
 Imports:
     methods,
-	parallel,
+	  parallel,
     classInt (>= 0.2-2),
     rlang,
     units
@@ -42,6 +42,7 @@ Suggests:
     RNetCDF (>= 1.8-2),
     covr,
     dplyr (>= 0.7-0),
+    future.apply,
     ggforce,
     ggplot2,
     ggthemes,
@@ -52,17 +53,17 @@ Suggests:
     lwgeom,
     maps,
     ncmeta (>= 0.0.3),
-	pbapply,
+	  pbapply,
     plm,
     raster,
     rmarkdown,
     sp,
     spacetime,
     testthat,
-	viridis,
-	zoo,
-	xts,
-	starsdata
+	  viridis,
+	  zoo,
+	  xts,
+	  starsdata
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1
