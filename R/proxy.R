@@ -235,12 +235,15 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
 		lst[["i"]] = TRUE # this one has been handled now
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
-		x = st_crop(x, i, ...)
-		lst[["i"]] = TRUE # this one has been handled now
+		x = st_crop(x, i, ...) # does bounding box cropping only
+		if (inherits(i, c("stars", "bbox")))
+			lst[["i"]] = TRUE # this one has been handled now
 	}
-	if (length(lst) == 3 && isTRUE(lst[["i"]]))
+
+	# return:
+	if (length(lst) == 3 && isTRUE(lst[["i"]])) 
 		x
-	else
+	else # still processing the geometries inside the bbox:
 		collect(x, as.call(lst), "[") # postpone every arguments > 3 to after reading cells
 }
 
