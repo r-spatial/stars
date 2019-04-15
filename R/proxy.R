@@ -223,6 +223,13 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 	collect(a, match.call(), "aperm", "a")
 }
 
+
+#' @export
+merge.stars_proxy = function(x, y, ...) {
+	collect(x, match.call(), "merge")
+}
+
+
 #' @export
 "[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
 	mc = match.call()
