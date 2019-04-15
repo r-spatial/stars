@@ -49,7 +49,8 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 	if (! update) # new file: should not be a sub-array
 		obj = reset_sub(obj)
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
-		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
+		type = type, NA_value = NA_value, geotransform = get_geotransform(obj), 
+		update = update)
 	invisible(obj)
 }
 
