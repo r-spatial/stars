@@ -60,8 +60,8 @@ Suggests:
     spacetime,
     testthat,
 	viridis,
-	zoo,
 	xts,
+	zoo,
 	starsdata
 VignetteBuilder: knitr
 Encoding: UTF-8
