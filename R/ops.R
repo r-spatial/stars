@@ -109,12 +109,11 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			else {
 				if (is.null(CLUSTER) && !FUTURE)
 					apply(X = y, MARGIN = MARGIN, FUN = FUN, ...)
-			  else if (FUTURE){
-			    oopts = options(future.globals.maxSize = +Inf)
-			    on.exit(options(oopts))
-			    future_apply(y, MARGIN = MARGIN, FUN = FUN, ...)
-			  }
-				else
+				else if (FUTURE) {
+					oopts = options(future.globals.maxSize = +Inf)
+					on.exit(options(oopts))
+					future.apply::future_apply(y, MARGIN = MARGIN, FUN = FUN, ...)
+				} else
 					parallel::parApply(CLUSTER, X = y, MARGIN = MARGIN, FUN = FUN, ...)
 			}
 		if (is.array(ret))
