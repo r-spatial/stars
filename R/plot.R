@@ -184,7 +184,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
-#' @param add.geom list with aruments to \code{plot} that will be added to an image or sub-image
+#' @param add.geom object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image
 #' @details use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 #' @export
 #' @examples
@@ -316,8 +316,11 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
             axis(2)
 		}
 	}
-	if (!is.null(add.geom))
+	if (!is.null(add.geom)) {
+		if (inherits(add.geom, c("sf", "sfc")))
+			add.geom = list(add.geom)
 		do.call(plot, c(add.geom, add = TRUE))
+	}
 }
 
 # reduce resolution of x, keeping (most of) extent

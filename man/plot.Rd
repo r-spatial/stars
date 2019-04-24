@@ -85,7 +85,7 @@
 
 \item{logz}{logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.}
 
-\item{add.geom}{list with aruments to \code{plot} that will be added to an image or sub-image}
+\item{add.geom}{object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
