@@ -1,6 +1,9 @@
+
 #' plot stars object, with subplots for each level of first non-spatial dimension
+#' 
+#' plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 #'
-#' @name plot.stars
+#' @name plot
 #' @param x object of class \code{stars}
 #' @param y ignored
 #' @param join_zlim logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}
@@ -167,7 +170,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 		breaks
 }
 
-#' @name plot.stars
+#' @name plot
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param asp numeric; aspect ratio of image
@@ -181,6 +184,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
+#' @param add.geom list with aruments to \code{plot} that will be added to an image or sub-image
 #' @details use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 #' @export
 #' @examples
@@ -193,7 +197,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
 		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
-		key.width = lcm(1.8), key.length = 0.618) {
+		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL) {
 
 	dots = list(...)
 
@@ -312,6 +316,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
             axis(2)
 		}
 	}
+	if (!is.null(add.geom))
+		do.call(plot, c(add.geom, add = TRUE))
 }
 
 # reduce resolution of x, keeping (most of) extent
