@@ -74,7 +74,6 @@ st_transform.stars =  function(x, crs, ...) {
 }
 
 #' @name st_transform
-#' @export
 st_transform_proj.stars =  function(x, crs, ...) {
 
 	if (inherits(crs, "crs"))

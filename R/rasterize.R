@@ -38,3 +38,55 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 		ret[[i]][is.nan(ret[[i]])] = NA_real_
 	setNames(ret, names(sf)[1])
 }
+
+
+#' @export
+# points -> raster
+st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreasing = TRUE) {
+	if (is.character(xy))
+		xy = match(names(.x), xy)
+
+	index = NULL
+	dimensions = list()
+	for (i in dims) {
+		v = .x[[i]]
+		if (inherits(v, "sfc")) {
+    		if (!requireNamespace("digest", quietly = TRUE))
+        		stop("package digest required, please install it first") # nocov
+			dig = sapply(v, digest::digest)
+			uv = unique(dig) # don't sort
+			ix = match(dig, uv)
+		} else {
+			suv = sort(unique(v), decreasing = length(xy) == 2 && i == xy[2])
+			ix = match(v, suv)
+		}
+		index = cbind(index, ix)
+		dimensions[[i]] = if (inherits(v, "sfc")) 
+				create_dimension(values = v[match(uv, dig)])
+			else
+				create_dimension(values = suv)
+	}
+	names(dimensions) = names(.x)[dims]
+
+	raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
+	d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
+	l = lapply(.x[-dims], function(x) {
+			m = array(NA, dim = dim(d))
+			m[index] = x # match order
+			m 
+		}
+	)
+	st_stars(l, d)
+}
+
+#' replace POINT simple feature geometry list with an x y raster
+#' @param x object of class \code{stars}, or of class \code{sf}
+#' @param ... passed on to \link{as.data.frame.stars}
+#' @return object of class \code{stars} with a POINT list replaced by x and y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
+#' @export
+st_sfc2xy = function(x, ...) {
+	if (inherits(x, "sf"))
+		x = st_as_stars(x)
+	i = which_sfc(x)
+	st_as_stars(as.data.frame(x, ...)) # too simplistic?!
+}

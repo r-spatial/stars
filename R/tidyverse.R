@@ -72,7 +72,6 @@ as.tbl_cube.stars = function(x, ...) {
 #' @param along name or index of dimension to which the slice should be applied
 #' @param index integer value(s) for this index
 #' @param drop logical; drop dimensions that only have a single index?
-#' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x1 = read_stars(tif)
@@ -93,7 +92,6 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 }
 
 #' @name st_coordinates
-#' @export
 #' @param .x object to be converted to a tibble
 as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
     if (!requireNamespace("dplyr", quietly = TRUE))
