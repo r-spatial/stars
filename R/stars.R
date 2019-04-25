@@ -619,7 +619,7 @@ st_area.stars = function(x, ...) {
 	a = if (isTRUE(st_is_longlat(x)) || is_curvilinear(x))
 			st_area(st_as_sfc(x, as_points = FALSE)) # has units
 		else { 
-			a = if (is_regular(x))
+			a = if (is_regular_grid(x))
 					d[[1]]$delta * d[[2]]$delta
 				else { # rectilinear:
 					x = if (inherits(d[[1]]$values, "intervals"))
