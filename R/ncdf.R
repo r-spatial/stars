@@ -159,14 +159,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         bounds %in% var_names) {
 
       bounds = RNetCDF::var.get.nc(nc, bounds)
-	  if (!is.matrix(bounds)) # single instance, returns a vector
-	  	bounds = matrix(bounds, nrow = 2)
+      if (!is.matrix(bounds)) # single instance, returns a vector
+        bounds = matrix(bounds, nrow = 2)
       is_reg = ncol(bounds) > 1 && length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1 &&
         length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
 
       if (is_reg && abs(u + v) < eps) {
           warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
-		  bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
+          bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
           u = v
       }
 
@@ -177,7 +177,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
         dimensions[[i]]$point = FALSE
         if (i %in% 1:2) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
-			to_rectilinear = TRUE
+          to_rectilinear = TRUE
       }
     } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
@@ -205,17 +205,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       if (!requireNamespace("PCICt", quietly = TRUE))
         stop("package PCICt required, please install it first") # nocov
       t01 = set_units(0:1, u, mode = "standard")
-	  delta = if (grepl("months", u)) {
+      delta = if (grepl("months", u)) {
           if (cal == "360_day")
-		    set_units(30 * 24 * 3600, "s", mode = "standard")
-		  else
-		    set_units((365/12) * 24 * 3600, "s", mode = "standard")
+            set_units(30 * 24 * 3600, "s", mode = "standard")
+          else
+            set_units((365/12) * 24 * 3600, "s", mode = "standard")
         } else
           set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
       origin = as.character(as.POSIXct(t01[1]))
       v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
       if (!is.null(dimensions[[td]]$values)) {
-		v = dimensions[[td]]$values
+        v = dimensions[[td]]$values
         if (inherits(v, "intervals")) {
           start = PCICt::as.PCICt(v$start * as.numeric(delta), cal, origin)
           end =   PCICt::as.PCICt(v$end   * as.numeric(delta), cal, origin)
@@ -229,12 +229,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       dimensions[[td]]$refsys = "PCICt"
     } else { # Gregorian/Julian, POSIXct:
       if (!is.null(dimensions[[td]]$values)) {
-		v = dimensions[[td]]$values
-		if (inherits(v, "intervals")) {
+        v = dimensions[[td]]$values
+        if (inherits(v, "intervals")) {
           start = as.POSIXct(units::set_units(v$start, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
           end =   as.POSIXct(units::set_units(v$end,   u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
           dimensions[[td]]$values = make_intervals(start, end)
-		} else
+        } else
           dimensions[[td]]$values = as.POSIXct(units::set_units(tm, u, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
       } else {
         t0 = dimensions[[td]]$offset
@@ -276,12 +276,12 @@ nc_var_names = function(nc) {
 }
 
 as_rectilinear = function(d) {
-	ed = expand_dimensions(d, center = FALSE)
-	for (i in attr(d, "raster")$dimensions) {
-		if (!is.na(d[[ i ]]$offset)) {
-			d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
-			d[[i]]$offset = d[[i]]$delta = NA
-		}
-	}
-	d
+    ed = expand_dimensions(d, center = FALSE)
+    for (i in attr(d, "raster")$dimensions) {
+        if (!is.na(d[[ i ]]$offset)) {
+            d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
+            d[[i]]$offset = d[[i]]$delta = NA
+        }
+    }
+    d
 }
