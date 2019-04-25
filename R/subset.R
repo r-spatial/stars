@@ -198,7 +198,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
-	if (crop && (is_regular(x) || has_rotate_or_shear(x))) {
+	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]

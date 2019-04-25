@@ -195,7 +195,7 @@ has_raster = function(x) {
 	!is.null(r <- attr(x, "raster")) && all(r$dimensions %in% names(x))
 }
 
-is_regular = function(x) {
+is_regular_grid = function(x) {
 	has_raster(x) && !(has_rotate_or_shear(x) || is_rectilinear(x) || is_curvilinear(x))
 }
 

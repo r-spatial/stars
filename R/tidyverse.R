@@ -136,10 +136,10 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FAL
 
 	d = st_dimensions(data)
 
-	if (has_raster(d) && (is_regular(d) || is_rectilinear(d))) {
+	if (has_raster(d) && (is_regular_grid(d) || is_rectilinear(d))) {
 		xy = attr(d, "raster")$dimensions
 		data = st_downsample(data, downsample)
-		if (is_regular(d)) {
+		if (is_regular_grid(d)) {
 			if (is.null(mapping))
 				mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
 					fill = !!rlang::sym(names(data)[1]))
