@@ -1,8 +1,8 @@
 .is_regular <- function(coords_list, eps) {
-  unlist(lapply(coords_list, function(x) regular_intervals(x, epsilon = eps)))
+  sapply(coords_list, function(x) regular_intervals(x, epsilon = eps))
 }
 
-.is_unique <- function(x, eps) {
+.unique_fuzz <- function(x, eps) {
   u = unique(x)
   if (all(diff(sort(u)) < eps))
     mean(x) # rather than mean(u)
@@ -161,8 +161,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       bounds = RNetCDF::var.get.nc(nc, bounds)
       if (!is.matrix(bounds)) # single instance, returns a vector
         bounds = matrix(bounds, nrow = 2)
-      is_reg = ncol(bounds) > 1 && length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1 &&
-        length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
+      is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
+        length(v <- .unique_fuzz(diff(bounds[1,]), eps)) == 1
 
       if (is_reg && abs(u + v) < eps) {
           warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
