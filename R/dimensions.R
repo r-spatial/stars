@@ -154,7 +154,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 				else
 					return(FALSE)
 			}
-		diff(range(ud)) / mean(ud) < epsilon
+		abs(diff(range(ud)) / mean(ud)) < epsilon
 	}
 }
 
