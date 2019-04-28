@@ -138,6 +138,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
      grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
      var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
     }
+    
+    message(sprintf("no 'var' specified, using %s", paste(var, collapse = ", ")))
+    message(sprintf("other available variables:\n %s", paste(setdiff(meta$variable$name, var), collapse = ", ")))
   }
   ##
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
@@ -201,6 +204,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         dimensions = names(coords)[1:2], curvilinear = FALSE)
   }
 
+  
+  ## we expect an error with "../rasterwise/extdata/R13352.nc"
+  ## because of https://github.com/hypertidy/tidync/issues/75
+  ## best to fix with tidync-reader
   dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
 
   ## if either x, y rectilinear assume both are
@@ -214,7 +221,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         bounds %in% var_names) {
 
       bounds = RNetCDF::var.get.nc(nc, bounds)
-#<<<<<<< HEAD
       if (!is.matrix(bounds)) # single instance, returns a vector
         bounds = matrix(bounds, nrow = 2)
       is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
@@ -224,19 +230,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
           warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
           bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
           u = v
-# =======
-#       
-#       # single instance, returns a vector
-#       if (!is.matrix(bounds)) bounds = matrix(bounds, nrow = 2)
-#       
-#       is_reg = ncol(bounds) > 1 && length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1 &&
-#         length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
-#       
-#       if (is_reg && abs(u + v) < eps) {
-#         warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
-#         bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
-#         u = v
-#>>>>>>> 41aa5175e299753f10010815dc8af23d1961e16c
+
       }
       
       if (is_reg && abs(v - u) < eps) {
@@ -273,7 +267,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       #cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
       ## might not exist, so default to NULL
       calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
-      dimensions <- make_cal_time(nc, dimensions, calendar)
+      tunit = unlist(atts$value[atts$variable == "time"])[1L]
+      dimensions <- make_cal_time(nc, dimensions, time_unit = tunit, calendar)
     }
   }
 
@@ -304,18 +299,15 @@ as_rectilinear = function(d) {
     d
 }
 
-
-make_cal_time <- function(nc, dimensions, cal = NULL) {
+## FIXME: this function should return unit-ed times, not modify dimensions
+## it should also live in the units package (or RNetCDF, or PCICt or ...)
+make_cal_time <- function(nc, dimensions, time_unit = NULL, cal = NULL) {
   td = which(names(dimensions) == "time")
   if (length(td) == 1) {
-    ## FIXME: tm, u, cal are all available in coords, and meta
-    ## there might not be a variable called time, even if there's a dimension of that name
-    ## and the values are already obtained earlier
-    #tm = try(RNetCDF::var.get.nc(nc, variable = "time"), silent = TRUE)
     tm = get_dimension_values(dimensions[["time"]], geotransform = NA)
-    u = try(RNetCDF::att.get.nc(nc, variable = "time", attribute = "units"), silent = TRUE)
-    if (inherits(u, "try-error")) {
-      message("not variable 'time', ignoring units of time dimension")
+    u = time_unit
+    if (is.null(u) || inherits(u, "try-error")) {
+      warning("no variable 'time', ignoring units of time dimension")
       return(dimensions)
     }
     
