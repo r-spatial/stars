@@ -84,6 +84,7 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
 #' @param ncsub matrix of start, count columns (see Details)
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
+#' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -109,7 +110,7 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12) {
+    eps = 1e-12, make_time = TRUE) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -256,23 +257,66 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (to_rectilinear)
     dimensions = as_rectilinear(dimensions)
 
+  
   # sort out time -> POSIXct:
+  ## assuming that the variable is called "time", no other option
+  if (make_time) {
+    if ("time" %in% names(dimensions)) {
+      atts = meta$attribute[meta$attribute$variable == "time", ]
+      #cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
+      ## might not exist, so default to NULL
+      calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
+      dimensions <- make_cal_time(nc, dimensions, calendar)
+    }
+  }
+
+  ret = st_stars(out, dimensions)
+
+  if (length(curvilinear) == 2) {
+    curvi_coords = lapply(curvilinear, function(.v) RNetCDF::var.get.nc(nc,
+                                                                        variable = .v,
+                                                                        ## note there subtle subsetting into x,y
+                                                                        start = ncsub[1:2, "start", drop = TRUE],
+                                                                        count = ncsub[1:2, "count", drop = TRUE],
+                                                                        collapse = FALSE,
+                                                                        unpack = TRUE))
+    names(curvi_coords)[1:2] <- names(dimensions)[1:2]
+    st_as_stars(ret, curvilinear = curvi_coords)
+  } else
+    ret
+}
+
+as_rectilinear = function(d) {
+    ed = expand_dimensions(d, center = FALSE)
+    for (i in attr(d, "raster")$dimensions) {
+        if (!is.na(d[[ i ]]$offset)) {
+            d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
+            d[[i]]$offset = d[[i]]$delta = NA
+        }
+    }
+    d
+}
+
+
+make_cal_time <- function(nc, dimensions, cal = NULL) {
   td = which(names(dimensions) == "time")
   if (length(td) == 1) {
+    ## FIXME: tm, u, cal are all available in coords, and meta
     tm = RNetCDF::var.get.nc(nc, variable = "time")
     u = RNetCDF::att.get.nc(nc, variable = "time", attribute = "units")
-    cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
-    if (cal %in% c("360_day", "365_day", "noleap")) {
+    
+    ##cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
+    if (! is.null(cal)  && cal %in% c("360_day", "365_day", "noleap")) {
       if (!requireNamespace("PCICt", quietly = TRUE))
         stop("package PCICt required, please install it first") # nocov
       t01 = set_units(0:1, u, mode = "standard")
       delta = if (grepl("months", u)) {
-          if (cal == "360_day")
-            set_units(30 * 24 * 3600, "s", mode = "standard")
-          else
-            set_units((365/12) * 24 * 3600, "s", mode = "standard")
-        } else
-          set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
+        if (cal == "360_day")
+          set_units(30 * 24 * 3600, "s", mode = "standard")
+        else
+          set_units((365/12) * 24 * 3600, "s", mode = "standard")
+      } else
+        set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
       origin = as.character(as.POSIXct(t01[1]))
       v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
       if (!is.null(dimensions[[td]]$values)) {
@@ -307,30 +351,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       dimensions[[td]]$refsys = "POSIXct"
     }
   }
-
-  ret = st_stars(out, dimensions)
-
-  if (length(curvilinear) == 2) {
-    curvi_coords = lapply(curvilinear, function(.v) RNetCDF::var.get.nc(nc,
-                                                                        variable = .v,
-                                                                        ## note there subtle subsetting into x,y
-                                                                        start = ncsub[1:2, "start", drop = TRUE],
-                                                                        count = ncsub[1:2, "count", drop = TRUE],
-                                                                        collapse = FALSE,
-                                                                        unpack = TRUE))
-    names(curvi_coords)[1:2] <- names(dimensions)[1:2]
-    st_as_stars(ret, curvilinear = curvi_coords)
-  } else
-    ret
+  dimensions
 }
 
-as_rectilinear = function(d) {
-    ed = expand_dimensions(d, center = FALSE)
-    for (i in attr(d, "raster")$dimensions) {
-        if (!is.na(d[[ i ]]$offset)) {
-            d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
-            d[[i]]$offset = d[[i]]$delta = NA
-        }
-    }
-    d
-}
+
+
