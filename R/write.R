@@ -7,7 +7,7 @@ reset_sub = function(x) {
 	
 	for (i in xy) {
 		if (d[[ i ]]$from > 1) {
-			if (!is_regular(x))
+			if (!is_regular_grid(x))
 				stop("can only write sub-rasters for regular grids")
 			ioff = d[[ i ]]$from - 1
 			d[[ i ]]$offset = d[[ i ]]$offset + ioff * d[[ i ]]$delta

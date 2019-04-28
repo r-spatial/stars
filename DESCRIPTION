@@ -41,6 +41,7 @@ Suggests:
     PCICt,
     RNetCDF (>= 1.8-2),
     covr,
+	digest,
     dplyr (>= 0.7-0),
     future.apply,
     ggforce,

@@ -195,7 +195,7 @@ has_raster = function(x) {
 	!is.null(r <- attr(x, "raster")) && all(r$dimensions %in% names(x))
 }
 
-is_regular = function(x) {
+is_regular_grid = function(x) {
 	has_raster(x) && !(has_rotate_or_shear(x) || is_rectilinear(x) || is_curvilinear(x))
 }
 
@@ -619,7 +619,7 @@ st_area.stars = function(x, ...) {
 	a = if (isTRUE(st_is_longlat(x)) || is_curvilinear(x))
 			st_area(st_as_sfc(x, as_points = FALSE)) # has units
 		else { 
-			a = if (is_regular(x))
+			a = if (is_regular_grid(x))
 					d[[1]]$delta * d[[2]]$delta
 				else { # rectilinear:
 					x = if (inherits(d[[1]]$values, "intervals"))

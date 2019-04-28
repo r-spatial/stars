@@ -15,8 +15,8 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
-#' @param na.rm logical; remove cells with all missing values?
-#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
+#' @param na.rm logical; omit (remove) cells which are entirely missing valued (across other dimensions)?
+#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
 #' @export
 st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 

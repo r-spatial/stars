@@ -20,7 +20,7 @@ dim.stars_proxy = function(x) {
 	dim(st_dimensions(x))
 }
 
-#' @name plot.stars
+#' @name plot
 #' @export
 #' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.
 plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {

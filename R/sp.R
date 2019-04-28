@@ -4,7 +4,7 @@ setAs("stars", "Spatial", function(from) {
 	geom = if (has_raster(from)) {
 		if (length(dim(from)) > 2)
 			stop("stars object must have two (raster: x, y) dimensions")
-		if (!is_regular(from))
+		if (!is_regular_grid(from))
 			stop("only regular rasters can be converted to Spatial")
 		d = st_dimensions(from)
 		xy = attr(d, "raster")$dimensions

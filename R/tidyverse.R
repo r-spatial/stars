@@ -72,7 +72,6 @@ as.tbl_cube.stars = function(x, ...) {
 #' @param along name or index of dimension to which the slice should be applied
 #' @param index integer value(s) for this index
 #' @param drop logical; drop dimensions that only have a single index?
-#' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x1 = read_stars(tif)
@@ -93,7 +92,6 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 }
 
 #' @name st_coordinates
-#' @export
 #' @param .x object to be converted to a tibble
 as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
     if (!requireNamespace("dplyr", quietly = TRUE))
@@ -138,10 +136,10 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FAL
 
 	d = st_dimensions(data)
 
-	if (has_raster(d) && (is_regular(d) || is_rectilinear(d))) {
+	if (has_raster(d) && (is_regular_grid(d) || is_rectilinear(d))) {
 		xy = attr(d, "raster")$dimensions
 		data = st_downsample(data, downsample)
-		if (is_regular(d)) {
+		if (is_regular_grid(d)) {
 			if (is.null(mapping))
 				mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
 					fill = !!rlang::sym(names(data)[1]))

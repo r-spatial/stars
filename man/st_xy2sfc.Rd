@@ -13,10 +13,10 @@ st_xy2sfc(x, as_points, ..., na.rm = TRUE)
 
 \item{...}{arguments passed on to \code{st_as_sfc}}
 
-\item{na.rm}{logical; remove cells with all missing values?}
+\item{na.rm}{logical; omit (remove) cells which are entirely missing valued (across other dimensions)?}
 }
 \value{
-object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
+object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
 }
 \description{
 replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
