@@ -5,7 +5,7 @@
 \title{Read NetCDF into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0), eps = 1e-12)
+  curvilinear = character(0), eps = 1e-12, make_time = TRUE)
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -19,6 +19,8 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 
 \item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
+
+\item{make_time}{if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.

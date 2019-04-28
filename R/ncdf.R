@@ -85,6 +85,7 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
 #' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
+#' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -110,7 +111,7 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12, make_time = TRUE) {
+    eps = 1e-12, make_time = TRUE, make_units = TRUE) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -165,10 +166,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   vars = ncmeta::nc_vars(nc)
   out = setNames(out, var)
   # units:
-  for (i in var)
-    if (is.numeric(out[[i]]) && length(u <- ncmeta::nc_att(nc, i, "units")$value) > 0)
-      units(out[[i]]) = try_as_units(u[[1]])
-
+  ## FIXME: this should be a meta-getter function, with NULL as fallback
+  nc_units = meta$attribute[meta$attribute$attribute == "units", ]
+  if (nrow(nc_units) > 0 && make_units) {
+    for (i in var) {
+      if (is.numeric(out[[i]]) && i %in% nc_units$variable) {
+        uval = unlist(nc_units$value[nc_units$variable == i])
+        units(out[[i]]) = try_as_units(uval[1L])
+      }
+    }
+  }
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
