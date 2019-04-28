@@ -309,8 +309,15 @@ make_cal_time <- function(nc, dimensions, cal = NULL) {
   td = which(names(dimensions) == "time")
   if (length(td) == 1) {
     ## FIXME: tm, u, cal are all available in coords, and meta
-    tm = RNetCDF::var.get.nc(nc, variable = "time")
-    u = RNetCDF::att.get.nc(nc, variable = "time", attribute = "units")
+    ## there might not be a variable called time, even if there's a dimension of that name
+    ## and the values are already obtained earlier
+    #tm = try(RNetCDF::var.get.nc(nc, variable = "time"), silent = TRUE)
+    tm = get_dimension_values(dimensions[["time"]], geotransform = NA)
+    u = try(RNetCDF::att.get.nc(nc, variable = "time", attribute = "units"), silent = TRUE)
+    if (inherits(u, "try-error")) {
+      message("not variable 'time', ignoring units of time dimension")
+      return(dimensions)
+    }
     
     ##cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
     if (! is.null(cal)  && cal %in% c("360_day", "365_day", "noleap")) {
