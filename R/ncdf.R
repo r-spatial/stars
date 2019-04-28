@@ -117,6 +117,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     stop("package RNetCDF required, please install it first") # nocov
 
   meta = ncmeta::nc_meta(.x)
+  coord_var <- ncmeta::nc_coord_var(.x)
+  
   # Don't want scalar
   # todo handle choice of grid
   nas <- is.na(meta$axis$dimension)
@@ -163,8 +165,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out = setNames(out, var)
   # units:
   for (i in var)
-    if (is.numeric(out[[i]]) && !is.null(u <- nc_get_attr(nc, i, "units")))
-      units(out[[i]]) = try_as_units(u)
+    if (is.numeric(out[[i]]) && length(u <- ncmeta::nc_att(nc, i, "units")$value) > 0)
+      units(out[[i]]) = try_as_units(u[[1]])
 
   ## cannot assume we have coord dims
   ## - so create them as 1:length if needed
@@ -195,14 +197,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
+  var_names = meta$variable$name
+  
   to_rectilinear = FALSE
   for (i in seq_along(coords)) {
-    var_names = nc_var_names(nc)
     if (names(coords)[i] %in% var_names &&
-        !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
+        length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
         bounds %in% var_names) {
 
       bounds = RNetCDF::var.get.nc(nc, bounds)
+#<<<<<<< HEAD
       if (!is.matrix(bounds)) # single instance, returns a vector
         bounds = matrix(bounds, nrow = 2)
       is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
@@ -212,8 +216,21 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
           warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
           bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
           u = v
+# =======
+#       
+#       # single instance, returns a vector
+#       if (!is.matrix(bounds)) bounds = matrix(bounds, nrow = 2)
+#       
+#       is_reg = ncol(bounds) > 1 && length(u <- .is_unique(apply(bounds, 2, diff), eps)) == 1 &&
+#         length(v <- .is_unique(diff(bounds[1,]), eps)) == 1
+#       
+#       if (is_reg && abs(u + v) < eps) {
+#         warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
+#         bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
+#         u = v
+#>>>>>>> 41aa5175e299753f10010815dc8af23d1961e16c
       }
-
+      
       if (is_reg && abs(v - u) < eps) {
         dimensions[[i]]$offset = bounds[1,1]
         dimensions[[i]]$delta = v
@@ -222,7 +239,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         dimensions[[i]]$point = FALSE
         if (i %in% 1:2) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
           to_rectilinear = TRUE
-      }
+    }
     } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]] - dx/2
@@ -305,18 +322,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     st_as_stars(ret, curvilinear = curvi_coords)
   } else
     ret
-}
-
-nc_get_attr = function(nc, var, att) {
-  a = RNetCDF::var.inq.nc(nc, var)
-  for (i in seq_len(a$natts) - 1)
-    if (RNetCDF::att.inq.nc(nc, var, i)$name == att)
-      return(RNetCDF::att.get.nc(nc, var, att))
-  NULL
-}
-
-nc_var_names = function(nc) {
-  sapply(seq_len(RNetCDF::file.inq.nc(nc)$nvars), function(i) RNetCDF::var.inq.nc(nc, i-1)$name)
 }
 
 as_rectilinear = function(d) {
