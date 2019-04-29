@@ -140,7 +140,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     }
     
     message(sprintf("no 'var' specified, using %s", paste(var, collapse = ", ")))
-    message(sprintf("other available variables:\n %s", paste(setdiff(meta$variable$name, var), collapse = ", ")))
+    other_vars <- setdiff(meta$variable$name, var)
+    if (length(other_vars) > 0)
+    message(sprintf("other available variables:\n %s", paste(other_vars, collapse = ", ")))
   }
   ##
   dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
@@ -267,7 +269,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       #cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
       ## might not exist, so default to NULL
       calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
-      tunit = unlist(atts$value[atts$variable == "time"])[1L]
+      tunit = unlist(atts$value[atts$attribute == "units"])[1L]
       dimensions <- make_cal_time(nc, dimensions, time_unit = tunit, calendar)
     }
   }
