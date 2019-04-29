@@ -169,8 +169,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                                      count = ncsub[, "count", drop = TRUE],
                                                      collapse = FALSE, ## keep 1-dims
                                                      unpack = TRUE,     ## offset and scale applied internally
-                                                     rawchar = FALSE))
-
+                                                     rawchar = TRUE))  ## needed for NC_CHAR, as per
+                                  ## "../rasterwise/extdata/R13352.nc"
+                                  ## https://github.com/hypertidy/tidync/issues/75
+  ## check for NC_CHAR case
+  out = lapply(out, function(.v) if (mode(.v) == "raw") array(unlist(lapply(.v, rawToChar)), dims$length) else .v)
+  
+  
   vars = ncmeta::nc_vars(nc)
   out = setNames(out, var)
   # units:
@@ -209,10 +214,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         dimensions = names(coords)[1:2], curvilinear = FALSE)
   }
 
-  
-  ## we expect an error with "../rasterwise/extdata/R13352.nc"
-  ## because of https://github.com/hypertidy/tidync/issues/75
-  ## best to fix with tidync-reader
+  ## are we curvilinear?
+  if (all(c("X", "Y") %in% names(coord_var))) {
+    cvar = coord_var[coord_var$variable == var[1], ]
+    XY_curvi = unlist(cvar[c("X", "Y")])
+
+   if (all(!is.na(XY_curvi)) && all(meta$variable$ndims[match(XY_curvi, meta$variable$name)] == 2)) {
+     curvilinear = XY_curvi
+   }
+  }
+
   dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
 
   ## if either x, y rectilinear assume both are
@@ -244,7 +255,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       } else {
         dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
         dimensions[[i]]$point = FALSE
-        if (i %in% 1:2) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
+        if (i %in% 1:2 && length(curvilinear) < 1) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
           to_rectilinear = TRUE
     }
     } else if (regular[i]) {
