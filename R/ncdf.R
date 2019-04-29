@@ -15,12 +15,15 @@
 # - allow stars_proxy to be pulled
 # - allow stars_proxy to apply select_var
 # - 
-#' @examples
-#' f <- system.file("nc/reduced.nc", package = "stars")
-#' read_stars_tidync(f)
-#' read_stars_tidync(f, select_var = "anom", proxy = FALSE) ## only works if proxy = FALSE
-#' read_stars_tidync(f, lon = index <= 10, lat = index <= 12, time = index < 2)
+# examples
+# f <- system.file("nc/reduced.nc", package = "stars")
+# read_stars_tidync(f)
+# read_stars_tidync(f, select_var = "anom", proxy = FALSE) ## only works if proxy = FALSE
+# read_stars_tidync(f, lon = index <= 10, lat = index <= 12, time = index < 2)
 read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
+  if (!requireNamespace("tidync", quietly = TRUE))
+    stop("package tidync required, please install it first") # nocov
+  
   if (length(.x) > 1) {
     warning("only first source/file used")
     .x = .x[1L]
@@ -33,20 +36,20 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
     
     nms = names(tt)
     tt = lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
-    dims = stars:::create_dimensions(setNames(lapply(nms, 
-                                                     function(nm) stars:::create_dimension(values = tt[[nm]][[nm]])), nms))
+    dims = create_dimensions(setNames(lapply(nms, 
+                                                     function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
     attr(x, "transforms") = NULL
     attr(x, "source") = NULL
     
     class(x) = "list"
-    out = stars:::st_stars(x, dims)
+    out = st_stars(x, dims)
   } else {
     x = tidync::tidync(.x) %>% tidync::hyper_filter(...) #%>% tidync::hyper_array()
     tt = tidync::hyper_transforms(x, all = FALSE)
     nms = names(tt)
     tt =  lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
-    dims = stars:::create_dimensions(setNames(lapply(nms, 
-                                                     function(nm) stars:::create_dimension(values = tt[[nm]][[nm]])), nms))
+    dims = create_dimensions(setNames(lapply(nms, 
+                                                     function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
     
     out = structure(list(names = .x), dimensions = dims, NA_value = NA, class = c("stars_proxy", "stars"))
   }

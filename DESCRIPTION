@@ -41,7 +41,7 @@ Suggests:
     PCICt,
     RNetCDF (>= 1.8-2),
     covr,
-	digest,
+    digest,
     dplyr (>= 0.7-0),
     future.apply,
     ggforce,
@@ -54,17 +54,18 @@ Suggests:
     lwgeom,
     maps,
     ncmeta (>= 0.0.3),
-	pbapply,
+    pbapply,
     plm,
     raster,
     rmarkdown,
     sp,
     spacetime,
     testthat,
-	viridis,
-	xts,
-	zoo,
-	starsdata
+    viridis,
+    xts,
+    zoo,
+    starsdata,
+    tidync
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1
