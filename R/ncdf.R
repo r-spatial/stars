@@ -9,8 +9,23 @@
   else
     u
 }
-
-
+units_or_null <- function(u) {
+  un = try(suppressWarnings(as_units(u)), silent = TRUE)
+  if (inherits(un, "try-error")) {
+    #warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
+    NULL
+  } else
+    un
+}
+unit_izer_ncmeta <- function(attribute, variable, ...) {
+  unit_df <- attribute[attribute$name == "units", ]
+  if (is.null(unit_df) || nrow(unit_df) < 1) return(NULL)
+  unit <- lapply(unit_df$value, function(x) units_or_null(x[[1]]))
+  unit_df$unit <- unit
+  unit_df$unit_ok <- !unlist(lapply(unit, is.null))
+  variable$unit <- unit_df$unit[match(variable$name, unit_df$variable)]
+  variable
+}
 # TODO
 # - allow stars_proxy to be pulled
 # - allow stars_proxy to apply select_var
@@ -20,6 +35,7 @@
 # read_stars_tidync(f)
 # read_stars_tidync(f, select_var = "anom", proxy = FALSE) ## only works if proxy = FALSE
 # read_stars_tidync(f, lon = index <= 10, lat = index <= 12, time = index < 2)
+#' @importFrom units set_units
 read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
   if (!requireNamespace("tidync", quietly = TRUE))
     stop("package tidync required, please install it first") # nocov
@@ -29,25 +45,49 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
     .x = .x[1L]
   }
   if (!proxy) {
-    x = tidync::tidync(.x) %>% 
+    tnc =  tidync::tidync(.x)
+    if (!is.null(select_var)) tnc = tidync::activate(tnc, select_var[1])
+    x = tnc %>% 
       tidync::hyper_filter(...) %>% 
        tidync::hyper_array(select_var = select_var, drop = FALSE)  ## always keep degenerate dims
     tt = attr(x, "transforms")
     
+    variable <- unit_izer_ncmeta(ncmeta::nc_atts(.x), ncmeta::nc_vars(.x))
     nms = names(tt)
     tt = lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
+    for (idim in seq_along(tt)) {
+      if (names(tt)[idim] %in% variable$name) {
+        uit <- variable$unit[match(names(tt)[idim], variable$name)][[1]]
+        if (!is.null(uit)) units(tt[[idim]][[nms[idim]]]) = uit
+      }
+    }
     dims = create_dimensions(setNames(lapply(nms, 
                                                      function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
+    
     attr(x, "transforms") = NULL
     attr(x, "source") = NULL
     
     class(x) = "list"
+    for (ivar in seq_along(x)) {
+      if (names(x)[ivar] %in% variable$name) {
+        uit <- variable$unit[match(names(x)[ivar], variable$name)][[1]]
+        if (!is.null(uit)) units(x[[ivar]]) = uit
+      }
+    }
     out = st_stars(x, dims)
   } else {
     x = tidync::tidync(.x) %>% tidync::hyper_filter(...) #%>% tidync::hyper_array()
     tt = tidync::hyper_transforms(x, all = FALSE)
     nms = names(tt)
     tt =  lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
+    ## FIXME remove duplicated code from above
+    for (idim in seq_along(tt)) {
+      if (names(tt)[idim] %in% variable$name) {
+        uit <- variable$unit[match(names(tt)[idim], variable$name)][[1]]
+        
+        if (!is.null(uit)) units(tt[[idim]][[nms[idim]]]) = uit
+      }
+    }
     dims = create_dimensions(setNames(lapply(nms, 
                                                      function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
     
@@ -180,7 +220,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out = setNames(out, var)
   # units:
   ## FIXME: this should be a meta-getter function, with NULL as fallback
-  nc_units = meta$attribute[meta$attribute$attribute == "units", ]
+  nc_units = meta$attribute[meta$attribute$name == "units", ]
 
   if (!is.null(nc_units) && nrow(nc_units) > 0 && make_units) {
     for (i in var) {
@@ -285,12 +325,22 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       if (!is.na(TIME_name) && length(TIME_name) == 1L && meta$variable$ndims[match(TIME_name, meta$variable$name)] == 1) {
        atts = meta$attribute[meta$attribute$variable == TIME_name, ]
        ## might not exist, so default to NULL
-       calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
-       tunit = unlist(atts$value[atts$attribute == "units"])[1L]
-       dimensions <- make_cal_time(nc, dimensions, time_name = TIME_name, time_unit = tunit, calendar)
-    }
-    }
-  }
+       calendar = unlist(atts$value[atts$name == "calendar"])[1L]
+       tunit = unlist(atts$value[atts$name == "units"])[1L]
+       if (TIME_name %in% names(dimensions)) {
+        tdim <- NULL
+         if (is.null(tunit) || inherits(tunit, "try-error")) {
+           warning("ignoring units of time dimension, not able to interpret")
+         } else {
+          tdim = make_cal_time2(dimensions[[TIME_name]], time_unit = tunit, cal = calendar)
+
+         }
+        
+       if (!is.null(tdim)) dimensions[[TIME_name]] <- tdim
+    
+      }
+      }
+    }}
 
   ret = st_stars(out, dimensions)
 
@@ -319,9 +369,69 @@ as_rectilinear = function(d) {
     d
 }
 
+
+
+make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
+    tm = get_dimension_values(dimension, geotransform = NA)
+ 
+    if(! is.null(cal)  && cal %in% c("360_day", "365_day", "noleap")) {
+      if (!requireNamespace("PCICt", quietly = TRUE)) {
+        stop("package PCICt required, please install it first") # nocov
+      }
+      t01 = set_units(0:1, time_unit, mode = "standard")
+      delta = if (grepl("months", time_unit)) {
+        if (cal == "360_day")
+          set_units(30 * 24 * 3600, "s", mode = "standard")
+        else
+          set_units((365/12) * 24 * 3600, "s", mode = "standard")
+      } else
+        set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
+    
+
+      origin = as.character(as.POSIXct(t01[1]))
+      v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
+      if (!is.null(dimension$values)) {
+        v = dimension$values
+        if (inherits(v, "intervals")) {
+          start = PCICt::as.PCICt(v$start * as.numeric(delta), cal, origin)
+          end =   PCICt::as.PCICt(v$end   * as.numeric(delta), cal, origin)
+          dimension$values = make_intervals(start, end)
+        } else
+          dimension$values = v.pcict
+      } else {
+        dimension$offset = v.pcict[1]
+        dimension$delta = diff(v.pcict[1:2])
+      }
+      
+      dimension$refsys = "PCICt"
+    } else { # Gregorian/Julian, POSIXct:
+      if (!is.null(dimension$values)) {
+        v = dimension$values
+        if (inherits(v, "intervals")) {
+          start = as.POSIXct(units::set_units(v$start, time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          end =   as.POSIXct(units::set_units(v$end,   time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+          dimension$values = make_intervals(start, end)
+        } else
+          dimension$values = as.POSIXct(units::set_units(tm, time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
+      } else {
+        t0 = dimension$offset
+        t1 = dimension$offset + dimension$delta
+        t.posix = as.POSIXct(units::set_units(c(t0, t1), time_unit, mode = "standard")) # or: utcal.nc(u, c(t0,t1), "c")
+        dimension$offset = t.posix[1]
+        dimension$delta = diff(t.posix)
+      }
+      dimension$refsys = "POSIXct"
+    }
+    dimension
+  
+    
+}
+
+
+
 ## FIXME: this function should return unit-ed times, not modify dimensions
 ## it should also live in the units package (or RNetCDF, or PCICt or ...)
-make_cal_time <- function(nc, dimensions, time_name, time_unit = NULL, cal = NULL) {
+make_cal_time <- function(dimensions, time_name, time_unit = NULL, cal = NULL) {
   td = which(names(dimensions) == time_name)
   if (length(td) == 1) {
     tm = get_dimension_values(dimensions[[time_name]], geotransform = NA)
