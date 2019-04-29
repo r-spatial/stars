@@ -36,7 +36,7 @@ unit_izer_ncmeta <- function(attribute, variable, ...) {
 # read_stars_tidync(f, select_var = "anom", proxy = FALSE) ## only works if proxy = FALSE
 # read_stars_tidync(f, lon = index <= 10, lat = index <= 12, time = index < 2)
 #' @importFrom units set_units
-read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
+read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time = TRUE, make_units = TRUE) {
   if (!requireNamespace("tidync", quietly = TRUE))
     stop("package tidync required, please install it first") # nocov
   
@@ -44,53 +44,60 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE) {
     warning("only first source/file used")
     .x = .x[1L]
   }
-  if (!proxy) {
-    tnc =  tidync::tidync(.x)
-    if (!is.null(select_var)) tnc = tidync::activate(tnc, select_var[1])
-    x = tnc %>% 
-      tidync::hyper_filter(...) %>% 
-       tidync::hyper_array(select_var = select_var, drop = FALSE)  ## always keep degenerate dims
-    tt = attr(x, "transforms")
-    
-    variable <- unit_izer_ncmeta(ncmeta::nc_atts(.x), ncmeta::nc_vars(.x))
-    nms = names(tt)
-    tt = lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
+  coord_var = ncmeta::nc_coord_var(.x)
+  tnc =  tidync::tidync(.x) %>%  tidync::hyper_filter(...)
+  if (!is.null(select_var)) tnc = tidync::activate(tnc, select_var[1])
+  ## FIXME: get this stuff from tidync object
+  variable = unit_izer_ncmeta(ncmeta::nc_atts(.x), ncmeta::nc_vars(.x))
+
+  tt = tidync::hyper_transforms(tnc, all = FALSE)
+  tt =  lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
+  nms = names(tt)
+  
+  if (make_units) {
     for (idim in seq_along(tt)) {
-      if (names(tt)[idim] %in% variable$name) {
+      if (nms[idim] %in% variable$name) {
         uit <- variable$unit[match(names(tt)[idim], variable$name)][[1]]
-        if (!is.null(uit)) units(tt[[idim]][[nms[idim]]]) = uit
+        if (nms[idim] %in% coord_var$variable && !nms[idim] %in% coord_var[["T"]]) {
+          
+      ## we have a standard units thing
+      if (!is.null(uit)) {
+        tt[[idim]][[nms[idim]]] = units::as_units(tt[[idim]][[nms[idim]]], uit)
       }
-    }
-    dims = create_dimensions(setNames(lapply(nms, 
-                                                     function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
+      
+        }
+      }}}
+  dims = create_dimensions(setNames(lapply(nms, 
+                                           function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
+  
+  if (make_time) {
+   for (idim in seq_along(tt)) {
+     if (nms[idim] %in% variable$name) {
+       uit <- variable$unit[match(names(tt)[idim], variable$name)][[1]]
+       if (nms[idim] %in% coord_var$variable && nms[idim] %in% coord_var[["T"]]) {
+         ## we have a time thing
+         dims[[idim]]  = make_cal_time2(dims[[idim]], nms[idim], uit)
+       } 
+     }
+   }
+  }
     
+  
+  
+  if (!proxy) {
+    x = tnc %>% 
+       tidync::hyper_array(select_var = select_var, drop = FALSE)  ## always keep degenerate dims
     attr(x, "transforms") = NULL
     attr(x, "source") = NULL
-    
     class(x) = "list"
     for (ivar in seq_along(x)) {
       if (names(x)[ivar] %in% variable$name) {
         uit <- variable$unit[match(names(x)[ivar], variable$name)][[1]]
-        if (!is.null(uit)) units(x[[ivar]]) = uit
+        if (!is.null(uit)) x[[ivar]] <- units::as_units(x[[ivar]], uit)
       }
     }
     out = st_stars(x, dims)
   } else {
-    x = tidync::tidync(.x) %>% tidync::hyper_filter(...) #%>% tidync::hyper_array()
-    tt = tidync::hyper_transforms(x, all = FALSE)
-    nms = names(tt)
-    tt =  lapply(tt, function(tab) tab[tab$selected, , drop = FALSE])
-    ## FIXME remove duplicated code from above
-    for (idim in seq_along(tt)) {
-      if (names(tt)[idim] %in% variable$name) {
-        uit <- variable$unit[match(names(tt)[idim], variable$name)][[1]]
-        
-        if (!is.null(uit)) units(tt[[idim]][[nms[idim]]]) = uit
-      }
-    }
-    dims = create_dimensions(setNames(lapply(nms, 
-                                                     function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
-    
     out = structure(list(names = .x), dimensions = dims, NA_value = NA, class = c("stars_proxy", "stars"))
   }
   out
