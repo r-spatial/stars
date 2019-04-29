@@ -181,7 +181,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # units:
   ## FIXME: this should be a meta-getter function, with NULL as fallback
   nc_units = meta$attribute[meta$attribute$attribute == "units", ]
-  if (nrow(nc_units) > 0 && make_units) {
+
+  if (!is.null(nc_units) && nrow(nc_units) > 0 && make_units) {
     for (i in var) {
       if (is.numeric(out[[i]]) && i %in% nc_units$variable) {
         uval = unlist(nc_units$value[nc_units$variable == i])
@@ -278,13 +279,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # sort out time -> POSIXct:
   ## assuming that the variable is called "time", no other option
   if (make_time) {
-    if ("time" %in% names(dimensions)) {
-      atts = meta$attribute[meta$attribute$variable == "time", ]
-      #cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
-      ## might not exist, so default to NULL
-      calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
-      tunit = unlist(atts$value[atts$attribute == "units"])[1L]
-      dimensions <- make_cal_time(nc, dimensions, time_unit = tunit, calendar)
+    if (all("T" %in% names(coord_var))) {
+      tvar = coord_var[coord_var$variable == var[1], ]
+      TIME_name = as.character(na.omit(unlist(cvar[c("T")])))
+      if (!is.na(TIME_name) && length(TIME_name) == 1L && meta$variable$ndims[match(TIME_name, meta$variable$name)] == 1) {
+       atts = meta$attribute[meta$attribute$variable == TIME_name, ]
+       ## might not exist, so default to NULL
+       calendar = unlist(atts$value[atts$attribute == "calendar"])[1L]
+       tunit = unlist(atts$value[atts$attribute == "units"])[1L]
+       dimensions <- make_cal_time(nc, dimensions, time_name = TIME_name, time_unit = tunit, calendar)
+    }
     }
   }
 
@@ -317,17 +321,16 @@ as_rectilinear = function(d) {
 
 ## FIXME: this function should return unit-ed times, not modify dimensions
 ## it should also live in the units package (or RNetCDF, or PCICt or ...)
-make_cal_time <- function(nc, dimensions, time_unit = NULL, cal = NULL) {
-  td = which(names(dimensions) == "time")
+make_cal_time <- function(nc, dimensions, time_name, time_unit = NULL, cal = NULL) {
+  td = which(names(dimensions) == time_name)
   if (length(td) == 1) {
-    tm = get_dimension_values(dimensions[["time"]], geotransform = NA)
+    tm = get_dimension_values(dimensions[[time_name]], geotransform = NA)
     u = time_unit
     if (is.null(u) || inherits(u, "try-error")) {
-      warning("no variable 'time', ignoring units of time dimension")
+      warning("ignoring units of time dimension, not able to interpret")
       return(dimensions)
     }
     
-    ##cal = RNetCDF::att.get.nc(nc, variable = "time", attribute = "calendar")
     if (! is.null(cal)  && cal %in% c("360_day", "365_day", "noleap")) {
       if (!requireNamespace("PCICt", quietly = TRUE))
         stop("package PCICt required, please install it first") # nocov
