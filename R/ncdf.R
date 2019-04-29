@@ -67,8 +67,29 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
       
         }
       }}}
+  
+  curvilinear = character(0)
+  ## are we curvilinear?
+  XY_curvi <- NULL
+  if (all(c("X", "Y") %in% names(coord_var))) {
+    cvar = coord_var[coord_var$variable == tidync::hyper_vars(tnc)$name[1], ]
+    XY_curvi = unlist(cvar[1, c("X", "Y")])
+   
+    if (all(!is.na(XY_curvi)) && all(tnc$variable$ndims[match(XY_curvi, tnc$variable$name)] == 2)) {
+      ## AAND these are both 2d vars
+      curvilinear = XY_curvi
+    } else {
+      XY_curvi <- character(0)
+    }
+  }
+  ## can we create a raster?
+  raster = NULL
+  if (length(tt) > 1) {
+    raster = get_raster(affine = c(0, 0),
+                        dimensions = names(tt)[1:2], curvilinear = length(curvilinear) == 2)
+  }
   dims = create_dimensions(setNames(lapply(nms, 
-                                           function(nm) create_dimension(values = tt[[nm]][[nm]])), nms))
+                                           function(nm) create_dimension(values = tt[[nm]][[nm]])), nms), raster = raster)
   
   if (make_time) {
    for (idim in seq_along(tt)) {
@@ -97,9 +118,27 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
       }
     }
     out = st_stars(x, dims)
+   
+
+    if (length(curvilinear) == 2) {
+      #nc = RNetCDF::open.nc(.x)
+
+      curvi_coords = tidync::hyper_array(tnc %>%
+                                   ## FIXME ...
+                                   tidync::activate((tnc$grid %>% 
+                                              tidyr::unnest() %>% 
+                                              dplyr::filter(variable == XY_curvi[1]) %>% 
+                                              dplyr::pull(.data$grid))[1L]), select_var = XY_curvi)
+      
+      names(curvi_coords)[1:2] <- names(dims)[1:2]
+      out = st_as_stars(out, curvilinear = curvi_coords)
+    }
+    
   } else {
     out = structure(list(names = .x), dimensions = dims, NA_value = NA, class = c("stars_proxy", "stars"))
   }
+  
+
   out
 }
 
