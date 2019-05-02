@@ -82,6 +82,18 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
       XY_curvi <- character(0)
     }
   }
+  curvi_coords = NULL
+  if (length(curvilinear == 2)) {
+   #grid = tnc$grid %>% tidyr::unnest()
+   grid = tnc$grid %>% tidyr::unnest(cols = c(variables))
+   curvi_coords = tidync::hyper_array(tnc %>%
+                                       ## FIXME ...
+                                       tidync::activate((grid %>% 
+                                                           dplyr::filter(variable == XY_curvi[1]) %>% 
+                                                           dplyr::pull(.data$grid))[1L]), select_var = XY_curvi)
+  
+   names(curvi_coords)[1:2] <- curvilinear
+  }
   ## can we create a raster?
   raster = NULL
   if (length(tt) > 1) {
@@ -90,7 +102,18 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
   }
   dims = create_dimensions(setNames(lapply(nms, 
                                            function(nm) create_dimension(values = tt[[nm]][[nm]])), nms), raster = raster)
-  
+  if (!is.null(curvi_coords)) {
+
+    dims[[names(tt)[1]]]$values = curvi_coords[[1]]
+    dims[[names(tt)[1]]]$offset = NA
+    dims[[names(tt)[1]]]$delta = NA
+    
+    dims[[names(tt)[2]]]$values = curvi_coords[[2]]
+    dims[[names(tt)[2]]]$offset = NA
+    dims[[names(tt)[2]]]$delta = NA
+    
+    
+  }
   if (make_time) {
    for (idim in seq_along(tt)) {
      if (nms[idim] %in% variable$name) {
@@ -118,24 +141,12 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
       }
     }
     out = st_stars(x, dims)
-   
-
-    if (length(curvilinear) == 2) {
-      #nc = RNetCDF::open.nc(.x)
-
-      curvi_coords = tidync::hyper_array(tnc %>%
-                                   ## FIXME ...
-                                   tidync::activate((tnc$grid %>% 
-                                              tidyr::unnest() %>% 
-                                              dplyr::filter(variable == XY_curvi[1]) %>% 
-                                              dplyr::pull(.data$grid))[1L]), select_var = XY_curvi)
-      
-      names(curvi_coords)[1:2] <- names(dims)[1:2]
-      out = st_as_stars(out, curvilinear = curvi_coords)
-    }
+    out = st_as_stars(out, curvilinear = curvi_coords)
+    
     
   } else {
-    out = structure(list(names = .x), dimensions = dims, NA_value = NA, class = c("stars_proxy", "stars"))
+    out = list(names = .x)
+    out = st_stars_proxy(out, dims, NA_value = NA)
   }
   
 
