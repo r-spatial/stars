@@ -22,7 +22,7 @@ transform_curvilinear = function(x, crs, ...) {
 	
 	if(inherits(crs, "crs"))
 		crs = crs$proj4string	
-
+		
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
@@ -54,6 +54,9 @@ transform_curvilinear = function(x, crs, ...) {
 #' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
 #' @export
 st_transform.stars =  function(x, crs, ...) {
+
+	stopifnot(!is.na(crs), !is.na(st_crs(x)))
+
 	if (has_sfc(x)) {
 		if (!inherits(crs, "crs") && !inherits(crs, "stars"))
 			crs = st_crs(crs) # needed for GDAL's transform of features
@@ -74,7 +77,10 @@ st_transform.stars =  function(x, crs, ...) {
 }
 
 #' @name st_transform
+#' @export
 st_transform_proj.stars =  function(x, crs, ...) {
+
+	stopifnot(!is.na(crs), !is.na(st_crs(x)))
 
 	if (inherits(crs, "crs"))
 		crs = crs$proj4string

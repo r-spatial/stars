@@ -8,7 +8,7 @@
 \usage{
 \method{st_transform}{stars}(x, crs, ...)
 
-st_transform_proj.stars(x, crs, ...)
+\method{st_transform_proj}{stars}(x, crs, ...)
 }
 \arguments{
 \item{x}{object of class \code{stars}, with either raster or simple feature geometries}

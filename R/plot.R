@@ -1,3 +1,11 @@
+make_label = function(x, i = 1) {
+	if (inherits(x[[i]], "units"))
+		make_unit_label(names(x)[i], units(x[[i]]))
+	else
+		names(x)[i]
+}
+	
+
 
 #' plot stars object, with subplots for each level of first non-spatial dimension
 #' 
@@ -21,7 +29,7 @@
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
 #' @export
-plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, 
+plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, 
 		reset = TRUE, box_col = grey(.8), center_time = FALSE) {

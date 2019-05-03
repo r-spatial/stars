@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -17,7 +17,7 @@ Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
 > demo(nc, echo = FALSE, ask = FALSE)
-Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/sf/gpkg/nc.gpkg' using driver `GPKG'
+Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/sf/gpkg/nc.gpkg' using driver `GPKG'
 Simple feature collection with 100 features and 14 fields
 Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
 geometry type:  MULTIPOLYGON
@@ -115,4 +115,4 @@ y    1 10      1  -0.1 NA, NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.542   0.021   0.554 
+  0.568   0.028   0.587 

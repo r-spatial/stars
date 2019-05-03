@@ -12,6 +12,11 @@
 #' @import units
 NULL
 
+# re-export:
+#' @importFrom lwgeom st_transform_proj
+#' @export
+lwgeom::st_transform_proj
+
 setOldClass("stars")
 
 .onLoad = function(libname, pkgname) {

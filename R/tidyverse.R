@@ -124,8 +124,8 @@ as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
 #'     scale_y_discrete(expand=c(0,0))
 geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FALSE) {
 
-    if (!requireNamespace("ggplot2", quietly = TRUE))
-        stop("package ggplot2 required, please install it first") # nocov
+	if (!requireNamespace("ggplot2", quietly = TRUE))
+		stop("package ggplot2 required, please install it first") # nocov
 
 	for (i in seq_along(data)) {
 		if (inherits(data[[i]], "units"))
