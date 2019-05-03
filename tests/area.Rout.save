@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -69,7 +69,7 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > plot(a, axes = TRUE)
 > 
 > (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
-[1] "/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
+[1] "/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
 > if (s5p != "") {
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
@@ -98,7 +98,10 @@ y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
 x [450x278] -5.81066,...,30.9468 [x]
 y  [450x278] 28.3605,...,51.4686 [y]
 curvilinear grid
+Warning message:
+In classInt::classIntervals(na.omit(values), min(nbreaks - 1, n.unq),  :
+  N is large, and some styles will run very slowly; sampling imposed
 > 
 > proc.time()
    user  system elapsed 
-  6.894   0.104   6.997 
+  7.725   0.145   7.865 

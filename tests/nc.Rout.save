@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > # examples with the sf::nc polygon dataset NOT ABOUT NETCDF's, see e.g. stars.R netcdf.R
 > suppressPackageStartupMessages(library(sf))
 > nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
-Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/sf/gpkg/nc.gpkg' using driver `GPKG'
+Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/sf/gpkg/nc.gpkg' using driver `GPKG'
 Simple feature collection with 100 features and 14 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY
@@ -264,4 +264,4 @@ year                                                        1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  0.603   0.032   0.628 
+  0.646   0.047   0.684 

@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -308,43 +308,43 @@ sst, anom,
 stars_proxy object with 2 attributes in files:
 $sst
                                                                                 avhrr-only-v2.19810901.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
                                                                                 avhrr-only-v2.19810902.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst" 
                                                                                 avhrr-only-v2.19810903.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst" 
                                                                                 avhrr-only-v2.19810904.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810904.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810904.nc\":sst" 
                                                                                 avhrr-only-v2.19810905.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810905.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810905.nc\":sst" 
                                                                                 avhrr-only-v2.19810906.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810906.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810906.nc\":sst" 
                                                                                 avhrr-only-v2.19810907.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810907.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810907.nc\":sst" 
                                                                                 avhrr-only-v2.19810908.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810908.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810908.nc\":sst" 
                                                                                 avhrr-only-v2.19810909.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810909.nc\":sst" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810909.nc\":sst" 
 
 $anom
                                                                                  avhrr-only-v2.19810901.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom" 
                                                                                  avhrr-only-v2.19810902.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810902.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810902.nc\":anom" 
                                                                                  avhrr-only-v2.19810903.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810903.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810903.nc\":anom" 
                                                                                  avhrr-only-v2.19810904.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810904.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810904.nc\":anom" 
                                                                                  avhrr-only-v2.19810905.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810905.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810905.nc\":anom" 
                                                                                  avhrr-only-v2.19810906.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810906.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810906.nc\":anom" 
                                                                                  avhrr-only-v2.19810907.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810907.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810907.nc\":anom" 
                                                                                  avhrr-only-v2.19810908.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810908.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810908.nc\":anom" 
                                                                                  avhrr-only-v2.19810909.nc 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810909.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810909.nc\":anom" 
 
 dimension(s):
      from   to         offset  delta  refsys point values    
@@ -398,14 +398,14 @@ Error in c.stars_proxy(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("198
   for proxy objects, along argument is not implemented
 stars_proxy object with 2 attributes in files:
 $sst
-[1] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst"
-[2] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst"
-[3] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst"
+[1] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst"
+[2] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst"
+[3] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst"
 
 $anom
-[1] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom"
-[2] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810902.nc\":anom"
-[3] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810903.nc\":anom"
+[1] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom"
+[2] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810902.nc\":anom"
+[3] "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810903.nc\":anom"
 
 dimension(s):
       from   to         offset delta  refsys point values    
@@ -424,9 +424,9 @@ adrop(x = x)
 stars_proxy object with 1 attribute in files:
 $sst.anom
                                                                                                        sst 
- "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
+ "NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst" 
                                                                                                       anom 
-"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.5/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom" 
+"NETCDF:\"/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/starsdata/netcdf/avhrr-only-v2.19810901.nc\":anom" 
 
 dimension(s):
       from   to         offset  delta  refsys point values    
@@ -438,4 +438,4 @@ times    1    2     1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.793   0.655   3.441 
+  2.656   0.387   3.035 

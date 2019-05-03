@@ -7,8 +7,8 @@
 \alias{plot.stars_proxy}
 \title{plot stars object, with subplots for each level of first non-spatial dimension}
 \usage{
-\method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = names(x)[1],
-  axes = FALSE, downsample = TRUE, nbreaks = 11,
+\method{plot}{stars}(x, y, ..., join_zlim = TRUE, main = make_label(x,
+  1), axes = FALSE, downsample = TRUE, nbreaks = 11,
   breaks = "quantile", col = grey(1:(nbreaks - 1)/nbreaks),
   key.pos = get_key_pos(x, ...), key.width = lcm(1.8),
   key.length = 0.618, reset = TRUE, box_col = grey(0.8),

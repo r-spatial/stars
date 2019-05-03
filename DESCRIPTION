@@ -35,6 +35,7 @@ Imports:
     methods,
 	parallel,
     classInt (>= 0.2-2),
+	lwgeom,
     rlang,
     units
 Suggests: 
@@ -51,7 +52,6 @@ Suggests:
     httr,
     jsonlite,
     knitr,
-    lwgeom,
     maps,
     ncmeta (>= 0.0.3),
 	pbapply,
