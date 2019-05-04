@@ -100,8 +100,16 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
     raster = get_raster(affine = c(0, 0),
                         dimensions = names(tt)[1:2], curvilinear = length(curvilinear) == 2)
   }
-  dims = create_dimensions(setNames(lapply(nms, 
-                                           function(nm) create_dimension(values = tt[[nm]][[nm]])), nms), raster = raster)
+  dims = vector("list", length(nms))
+  for (i in seq_along(dims)) {
+    nm = nms[i]
+    if (nrow(tt[[nm]]) > 1) { ## we are rectilinear, or degenerate rectilinear
+      dims[[i]] = create_dimension(values = tt[[nm]][[nm]])
+    } else { ## we are simple offset
+      dims[[i]] = create_dimension(from = 1L, to = 1L, offset = tt[[nm]][[nm]])
+    }
+  }
+  dims = create_dimensions(setNames(dims, nms), raster = raster)
   if (!is.null(curvi_coords)) {
 
     dims[[names(tt)[1]]]$values = curvi_coords[[1]]
@@ -145,15 +153,20 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
     
     
   } else {
+
+    ## if we are proxy, defer to GDAL subdatasets
     hvars = if (is.null(select_var)) tidync::hyper_vars(tnc)$name else select_var
-    out = stats::setNames(as.list(rep(.x, length(hvars))), hvars)
+    sds = unlist(sf::gdal_subdatasets(.x))
+    sds = unlist(lapply(sprintf(":%s", hvars), function(p) grep(p, sds, value = TRUE)))
+  
+    out = stats::setNames(as.list(sds), hvars)
     out = st_stars_proxy(out, dims, NA_value = NA)
+    #class(out) = c("ncdf_proxy", class(out))
   }
   
-
+  
   out
 }
-
 
 
 #' Read NetCDF into stars object
