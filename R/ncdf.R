@@ -106,7 +106,9 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
     if (nrow(tt[[nm]]) > 1) { ## we are rectilinear, or degenerate rectilinear
       dims[[i]] = create_dimension(values = tt[[nm]][[nm]])
     } else { ## we are simple offset
-      dims[[i]] = create_dimension(from = 1L, to = 1L, offset = tt[[nm]][[nm]])
+      uval = tt[[nm]][[nm]]  ## so we can get an NA, whether units of not
+      
+      dims[[i]] = create_dimension(from = 1L, to = 1L, offset = uval, delta = uval[NA])
     }
   }
   dims = create_dimensions(setNames(dims, nms), raster = raster)
