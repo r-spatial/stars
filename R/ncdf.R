@@ -145,7 +145,8 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
     
     
   } else {
-    out = list(names = .x)
+    hvars = if (is.null(select_var)) tidync::hyper_vars(tnc)$name else select_var
+    out = stats::setNames(as.list(rep(.x, length(hvars))), hvars)
     out = st_stars_proxy(out, dims, NA_value = NA)
   }
   
