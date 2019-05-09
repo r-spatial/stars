@@ -171,7 +171,8 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 			values = log10(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
-			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
+			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, 
+				warnSmallN = FALSE)$brks
 		else
 			range(values, na.rm = TRUE) # lowest and highest!
 	} else # breaks was given:
