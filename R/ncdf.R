@@ -159,8 +159,11 @@ read_stars_tidync = function(.x, ..., select_var = NULL, proxy = TRUE, make_time
     ## if we are proxy, defer to GDAL subdatasets
     hvars = if (is.null(select_var)) tidync::hyper_vars(tnc)$name else select_var
     sds = unlist(sf::gdal_subdatasets(.x))
-    sds = unlist(lapply(sprintf(":%s", hvars), function(p) grep(p, sds, value = TRUE)))
-  
+    if (length(sds) > 0)  {
+      sds = unlist(lapply(sprintf(":%s", hvars), function(p) grep(p, sds, value = TRUE)))
+    } else {
+      sds = .x
+    }
     out = stats::setNames(as.list(sds), hvars)
     out = st_stars_proxy(out, dims, NA_value = NA)
     #class(out) = c("ncdf_proxy", class(out))
