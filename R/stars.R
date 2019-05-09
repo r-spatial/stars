@@ -656,3 +656,30 @@ predict.stars = function(object, model, ...) {
 		pr = data.frame(prediction = pr)
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
 }
+
+#' create an array with dimension values
+#' 
+#' create an array with dimension values
+#' @param x object of class \code{stars}
+#' @param which integer; indices of the dimensions to address (default: all)
+#' @return \code{stars} object with dimension values as attributes
+#' @export
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x1 = read_stars(tif)
+#' (x = st_dim_to_attr(x1))
+#' plot(x)
+#' (x = st_dim_to_attr(x1, 2:3))
+#' plot(x)
+#' (x= st_dim_to_attr(x1, 3))
+#' plot(x)
+st_dim_to_attr = function(x, which = seq_along(dim(x))) {
+	d = dim(x)
+	l = vector("list", length = length(which))
+	e = expand_dimensions(x)
+	for (i in seq_along(which)) {
+		dp = c(which[i], setdiff(seq_along(dim(x)), which[i]))
+		l[[i]] = aperm(array(e[[ which[i] ]], d[dp]), order(dp))
+	}
+	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
+}
