@@ -406,6 +406,8 @@ c.stars = function(..., along = NA_integer_) {
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
+	if (is.logical(drop))
+		drop = which(drop)
 	if (length(drop) > 0)
 		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
 	else 
@@ -604,10 +606,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 	NextMethod()
 }
 
-st_upfront = function(x, xy = attr(st_dimensions(x), "raster")$dimensions) {
-	if (!is.character(xy))
-		xy = names(st_dimensions(x))[xy]
-	aperm(x, c(xy, setdiff(names(st_dimensions(x)), xy)))
+st_upfront = function(x, first = attr(st_dimensions(x), "raster")$dimensions) {
+	if (!is.character(first))
+		first = names(st_dimensions(x))[first]
+	aperm(x, c(first, setdiff(names(st_dimensions(x)), first)))
 }
 
 #' @export
