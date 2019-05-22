@@ -1,0 +1,10 @@
+pandoc: '2.2'
+pkgdown: 1.3.0
+pkgdown_sha: ~
+articles:
+  stars1: stars1.html
+  stars2: stars2.html
+  stars3: stars3.html
+  stars4: stars4.html
+  stars5: stars5.html
+
