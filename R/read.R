@@ -14,7 +14,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' @param .x character vector with name(s) of file(s) or data source(s) to be read
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.
-#' @param sub integer or logical; sub-datasets to be read
+#' @param sub character, integer or logical; name, index or indicator of sub-dataset(s) to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
