@@ -98,10 +98,7 @@ y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
 x [450x278] -5.81066,...,30.9468 [x]
 y  [450x278] 28.3605,...,51.4686 [y]
 curvilinear grid
-Warning message:
-In classInt::classIntervals(na.omit(values), min(nbreaks - 1, n.unq),  :
-  N is large, and some styles will run very slowly; sampling imposed
 > 
 > proc.time()
    user  system elapsed 
-  7.725   0.145   7.865 
+  7.535   0.136   7.669 

@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -174,15 +174,13 @@ Data attributes:
 [1] TRUE
 > 
 > all.equal(meuse, m2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"                   
-[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Modes: character, NULL > >"              
-[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Lengths: 155, 0 > >"                     
-[4] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: target is character, current is NULL > >"
-[5] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"                 
-[6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
-[7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
-[8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
-[9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
+[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"        
+[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: 155 string mismatches > >"    
+[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"      
+[4] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                            
+[5] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"              
+[6] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"
+[7] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                
 > all.equal(meuse.grid, gr2)
 [1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 1 string mismatch > >"       
 [2] "Attributes: < Component \"grid\": Attributes: < Component \"cellcentre.offset\": Names: 1 string mismatch > >"    
@@ -192,4 +190,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  0.574   0.052   0.618 
+  0.675   0.068   0.741 
