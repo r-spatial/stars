@@ -145,7 +145,7 @@ Data attributes:
 Object of class SpatialGridDataFrame
 Coordinates:
      min    max
-  178440 181560
+x 178440 181560
 y 329600 333760
 Is projected: TRUE 
 proj4string :
@@ -155,7 +155,7 @@ proj4string :
 +units=m +no_defs]
 Grid attributes:
   cellcentre.offset cellsize cells.dim
-             178460       40        78
+x            178460       40        78
 y            329620       40       104
 Data attributes:
      part.a          part.b           dist         soil       ffreq     
@@ -182,12 +182,10 @@ Data attributes:
 [6] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"
 [7] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                
 > all.equal(meuse.grid, gr2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 1 string mismatch > >"       
-[2] "Attributes: < Component \"grid\": Attributes: < Component \"cellcentre.offset\": Names: 1 string mismatch > >"    
-[3] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
-[4] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
-[5] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
+[1] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
+[2] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
+[3] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
 > 
 > proc.time()
    user  system elapsed 
-  0.675   0.068   0.741 
+  0.670   0.056   0.722 

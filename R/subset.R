@@ -61,9 +61,12 @@
 			mc[-(1:2)]
 		else
 			mc[-(1:3)]
+
 	do_select = FALSE
 	for (i in seq_along(mc)) { 
-		if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+		if (is.name(mc[[i]]) && as.character(mc[[i]]) != "") # "get" it:
+			mc[[i]] = eval(mc[[i]], parent.frame())
+		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = mc[[i]]
 			do_select = TRUE
 		}
@@ -73,7 +76,7 @@
 		args_xy = rep(list(rlang::missing_arg()), 2)
 		xy = attr(d, "raster")$dimensions
 		for (i in seq_along(mc)) {
-			if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+			if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 				if (names(d)[i] == xy[1])
 					args_xy[[1]] = mc[[i]]
 				if (names(d)[i] == xy[2])
@@ -104,7 +107,7 @@
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
 					all(argi[[1]] != rlang::missing_arg()) && 
 					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
-				d[[i]]$values = if(isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
 						ed[[i]]
 					else
 						as_intervals(ed[[i]], add_last = TRUE)
