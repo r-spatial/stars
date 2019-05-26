@@ -70,10 +70,18 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		setTxtProgressBar(pb, 0)
 	}
 
-	# write chunks:
 	dim_obj = dim(obj)
-	di = st_dimensions(obj)
+	if (prod(chunk_size) > prod(dim_obj[1:2])) {
+		write_stars(st_as_stars(obj), dsn, layer, ..., driver = driver, options = options,
+			type = type, NA_value = NA_value)
+		return(invisible(obj))
+	}
 
+	if (di[[1]]$from > 1 || di[[2]]$from > 1)
+		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
+
+	# write chunks:
+	di = st_dimensions(obj)
 	created = FALSE
 
 	ncol = ceiling(dim_obj[1] / chunk_size[1])
