@@ -46,7 +46,7 @@ that pixel values represented in the file by bytes are converted
 to 8-byte doubles in R. 
 
 The reason for using `RasterIO` for this is that the parameters we
-use are directly mapped to the [GDAL RasterIO function](https://www.gdal.org/classGDALDataset.html) used (after
+use are directly mapped to the GDAL RasterIO function used (after
 adapting the 1-based offset index in R to 0-based offset in C++).
 
 ## Reading a particular chunk 
