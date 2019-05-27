@@ -114,7 +114,7 @@
 <h1 class="hasAnchor">
 <a href="#reading-chunks-change-resolution-select-bands" class="anchor"></a>Reading chunks, change resolution, select bands</h1>
 <p><code>read_stars</code> has an argument called <code>RasterIO</code> which controls how a GDAL dataset is being read. By default, all pixels and all bands are read in memory. This can consume a lot of time and require a lot of memory. Remember that your file may be compressed, and that pixel values represented in the file by bytes are converted to 8-byte doubles in R.</p>
-<p>The reason for using <code>RasterIO</code> for this is that the parameters we use are directly mapped to the <a href="https://www.gdal.org/classGDALDataset.html">GDAL RasterIO function</a> used (after adapting the 1-based offset index in R to 0-based offset in C++).</p>
+<p>The reason for using <code>RasterIO</code> for this is that the parameters we use are directly mapped to the GDAL RasterIO function used (after adapting the 1-based offset index in R to 0-based offset in C++).</p>
 <div id="reading-a-particular-chunk" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reading-a-particular-chunk" class="anchor"></a>Reading a particular chunk</h2>
@@ -277,7 +277,7 @@
 <a class="sourceLine" id="cb8-4" data-line-number="4">## imposed</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   3.124   0.808   4.017</code></pre>
+##   2.284   0.932   2.150</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -419,7 +419,7 @@
 <a class="sourceLine" id="cb17-20" data-line-number="20">## imposed</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.684   0.924   3.420</code></pre>
+##   2.244   0.972   2.148</code></pre>
 </div>
 </div>
 </div>
