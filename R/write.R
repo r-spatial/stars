@@ -77,11 +77,11 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		return(invisible(obj))
 	}
 
+	# write chunks:
+	di = st_dimensions(obj)
 	if (di[[1]]$from > 1 || di[[2]]$from > 1)
 		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
 
-	# write chunks:
-	di = st_dimensions(obj)
 	created = FALSE
 
 	ncol = ceiling(dim_obj[1] / chunk_size[1])
