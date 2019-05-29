@@ -18,7 +18,9 @@
 #' @export
 Ops.stars <- function(e1, e2) {
 	#ret = if (is.array(e2))
-	ret = if (!inherits(e2, "stars"))
+	ret = if (missing(e2))
+			lapply(e1, .Generic)
+		else if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
 		else
 			mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
