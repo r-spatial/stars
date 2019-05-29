@@ -296,7 +296,11 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 			}
 		}
 	}
-	st_stars_proxy(x, dm)
+	x = st_stars_proxy(x, dm) # crop to bb
+	if (inherits(y, c("sf", "sfc")))
+		collect(x, match.call(), "st_crop")
+	else
+		x
 }
 
 #' @export

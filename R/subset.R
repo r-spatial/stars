@@ -243,3 +243,21 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 		x[[i]][mask] = NA
 	x
 }
+
+#' @export
+st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
+	stopifnot(all(domain == c(0,0,1,1)))
+	x = st_upfront(x)
+	d = st_dimensions(x)
+	if (d[[1]]$from != 1) {
+		d[[1]]$offset = d[[1]]$offset + (d[[1]]$from - 1) * d[[1]]$delta
+		d[[1]]$to = d[[1]]$to - d[[1]]$from + 1
+		d[[1]]$from = 1
+	}
+	if (d[[2]]$from != 1) {
+		d[[2]]$offset = d[[2]]$offset + (d[[2]]$from - 1) * d[[2]]$delta
+		d[[2]]$to = d[[2]]$to - d[[2]]$from + 1
+		d[[2]]$from = 1
+	}
+	st_stars(x, dimensions = d)
+}
