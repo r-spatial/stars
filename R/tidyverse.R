@@ -105,6 +105,7 @@ as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
 #' ggplot geom for stars objects
 #' 
 #' ggplot geom for stars objects
+#' @name geom_stars
 #' @param mapping see \link[ggplot2]{geom_raster}
 #' @param data see \link[ggplot2]{geom_raster}
 #' @param ... see \link[ggplot2]{geom_raster}
@@ -158,6 +159,19 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 1, sf = FAL
 		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), color = NA, mapping = mapping, ...)
 	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
+}
+
+#' @name geom_stars
+theme_stars = function(...) {
+
+	if (!requireNamespace("ggplot2", quietly = TRUE))
+		stop("package ggplot2 required, please install it first") # nocov
+
+	# coord_equal() +
+    # scale_fill_viridis() +
+    # scale_x_discrete(expand=c(0,0)) +
+    # scale_y_discrete(expand=c(0,0)) +
+    ggplot2::theme_void()
 }
 
 register_all_s3_methods = function() {

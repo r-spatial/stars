@@ -2,10 +2,13 @@
 % Please edit documentation in R/tidyverse.R
 \name{geom_stars}
 \alias{geom_stars}
+\alias{theme_stars}
 \title{ggplot geom for stars objects}
 \usage{
 geom_stars(mapping = NULL, data = NULL, ..., downsample = 1,
   sf = FALSE)
+
+theme_stars(...)
 }
 \arguments{
 \item{mapping}{see \link[ggplot2]{geom_raster}}
