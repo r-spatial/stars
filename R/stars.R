@@ -103,8 +103,8 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	else {
 		dimensions = st_dimensions(.x)
 		xy = names(curvilinear)
-		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
-		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
+		dimensions[[ xy[2] ]]$values = structure(curvilinear[[2]], dim = setNames(dim(curvilinear[[1]]), xy))
 		# erase regular grid coefficients $offset and $delta:
 		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
 		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
