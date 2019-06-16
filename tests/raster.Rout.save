@@ -1,6 +1,6 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -34,15 +34,15 @@ x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > (r = as(x, "Raster"))
-class       : RasterBrick 
-dimensions  : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
-resolution  : 28.5, 28.5  (x, y)
-extent      : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-coord. ref. : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-data source : in memory
-names       : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
-min values  :      47,      32,      21,       9,       1,       1 
-max values  :     255,     255,     255,     255,     255,     255 
+class      : RasterBrick 
+dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
+resolution : 28.5, 28.5  (x, y)
+extent     : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
+crs        : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+source     : memory
+names      : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
+min values :      47,      32,      21,       9,       1,       1 
+max values :     255,     255,     255,     255,     255,     255 
 
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
@@ -59,10 +59,10 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south...    NA
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south...    NA
 band    1   6      NA    NA                           NA    NA
-                    values    
-x                     NULL [x]
-y                     NULL [y]
-band layer.1, ..., layer.6    
+                  values    
+x                   NULL [x]
+y                   NULL [y]
+band layer.1,...,layer.6    
 > 
 > library(abind)
 > x = adrop(x[,,,1]) # 1 band
@@ -71,4 +71,4 @@ band layer.1, ..., layer.6
 > 
 > proc.time()
    user  system elapsed 
-  1.120   0.047   1.159 
+  1.186   0.079   1.257 

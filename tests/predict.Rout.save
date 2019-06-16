@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -33,6 +33,7 @@ dimension(s):
 x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
+> st_crs(x) = st_crs(x) # cleans trailing space
 > model = lm(x~L7_ETMs.tif, head(as.data.frame(x), 50))
 > x = predict(x, model)
 > 
@@ -90,4 +91,4 @@ split(x = x, 3)
 > 
 > proc.time()
    user  system elapsed 
-  1.762   0.071   1.824 
+  1.825   0.076   1.894 
