@@ -174,11 +174,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>() <span class='kw'>-&gt;</span> <span class='no'>x</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)</div><div class='output co'>#&gt; <span class='message'>Registered S3 methods overwritten by 'ggplot2':</span>
-#&gt; <span class='message'>  method         from </span>
-#&gt; <span class='message'>  [.quosures     rlang</span>
-#&gt; <span class='message'>  c.quosures     rlang</span>
-#&gt; <span class='message'>  print.quosures rlang</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() + <span class='fu'>geom_stars</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>x</span>) +
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() + <span class='fu'>geom_stars</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>x</span>) +
     <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed'>coord_equal</a></span>() +
     <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>band</span>) +
     <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_void</a></span>() +
