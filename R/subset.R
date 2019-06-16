@@ -199,7 +199,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
-	if (st_crs(x) != st_crs(y))
+	if (inherits(y, c("stars", "sf", "sfc", "bbox")) && st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
@@ -209,9 +209,11 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 				st_bbox(y)
 			else
 				y
+		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
+			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm)
 		cr[,1] = cr[,1] - dm[[xd]]$from + 1
 		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {

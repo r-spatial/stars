@@ -30,7 +30,7 @@ st_as_stars(.x, ...)
 \method{st_as_stars}{Raster}(.x, ...)
 
 \method{st_as_stars}{stars_proxy}(.x, ..., downsample = 0,
-  url = attr(.x, "url"), env = parent.frame())
+  url = attr(.x, "url"), envir = parent.frame())
 }
 \arguments{
 \item{.x}{object to convert}
@@ -65,7 +65,7 @@ st_as_stars(.x, ...)
 
 \item{url}{character; URL of the stars endpoint where the data reside}
 
-\item{env}{environment at the data endpoint to resolve objects in}
+\item{envir}{environment to resolve objects in}
 }
 \description{
 convert objects into a stars object
