@@ -1,5 +1,9 @@
 # version 0.3-1
 
+* `geom_stars` now works with `stars_proxy` objects, but needs `downsample` to be set; #21
+
+* `NA` values in Float32 rasters are now read correctly with `read_stars`; #182
+
 * handle bounds, when given, in `read_ncdf`
 
 * provide time parsing (POSIXct, PCICt) for `read_ncdf`; #115

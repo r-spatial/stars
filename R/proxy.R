@@ -109,11 +109,13 @@ fetch = function(x, downsample = 0, ...) {
 	dy = d[[ xy[2] ]]
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
+
 	downsample = rep(downsample, length.out = 2)
-	if (any(downsample > 0)) {
+	if (downsample[1] > 0) 
 		nBufXSize = nBufXSize / (downsample[1] + 1)
+	if (downsample[2] > 0) 
 		nBufYSize = nBufYSize / (downsample[2] + 1)
-	}
+
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
 	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) # we want to select here
@@ -173,7 +175,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
 		# there are cases where this is not right. Hence:
 		# TODO: only warn when there is a reason to warn.
-		if (downsample != 0)
+		if (!all(downsample == 0))
 			lapply(attr(.x, "call_list"), check_xy_warn, dimensions = st_dimensions(.x))
 		process_call_list(fetch(.x, ..., downsample = downsample), cl, envir = envir)
 	}
