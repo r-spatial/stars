@@ -137,7 +137,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>geom_stars</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+    <pre class="usage"><span class='fu'>geom_stars</span>(<span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>sf</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>theme_stars</span>(<span class='no'>...</span>)</pre>
@@ -147,40 +147,40 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mapping</th>
-      <td><p>see <a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_raster</a></p></td>
+      <td><p>see <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>see <a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_raster</a></p></td>
+      <td><p>see <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>see <a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_raster</a></p></td>
+      <td><p>see <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a></p></td>
     </tr>
     <tr>
       <th>downsample</th>
-      <td><p>downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 1 does not downsample</p></td>
+      <td><p>downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample</p></td>
     </tr>
     <tr>
       <th>sf</th>
-      <td><p>logical; if <code>TRUE</code> rasters will be converted to polygons and plotted using <a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggsf'>geom_sf</a>.</p></td>
+      <td><p>logical; if <code>TRUE</code> rasters will be converted to polygons and plotted using <a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>geom_stars</code> returns (a call to) either <a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_raster</a>, <a href='https://www.rdocumentation.org/packages/ggplot2/topics/geom_tile'>geom_tile</a>, or <a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggsf'>geom_sf</a>, depending on the raster or vector geometry; for the first to, an <a href='https://www.rdocumentation.org/packages/ggplot2/topics/aes'>aes</a> call is constructed with the raster dimension names and the first array as fill variable. Further calls to <a href='https://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed'>coord_equal</a> and <a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a> are needed to control aspect ratio and the layers to be plotted; see examples.</p>
+    <p><code>geom_stars</code> returns (a call to) either <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a>, <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a>, or <a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a>, depending on the raster or vector geometry; for the first to, an <a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a> call is constructed with the raster dimension names and the first array as fill variable. Further calls to <a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_equal</a> and <a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a> are needed to control aspect ratio and the layers to be plotted; see examples.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>() <span class='kw'>-&gt;</span> <span class='no'>x</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>ggplot2</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></span>() + <span class='fu'>geom_stars</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>x</span>) +
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed'>coord_equal</a></span>() +
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap'>facet_wrap</a></span>(~<span class='no'>band</span>) +
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme'>theme_void</a></span>() +
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/scale_discrete'>scale_x_discrete</a></span>(<span class='kw'>expand</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))+
-    <span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/scale_discrete'>scale_y_discrete</a></span>(<span class='kw'>expand</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))</div><div class='img'><img src='geom_stars-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() + <span class='fu'>geom_stars</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>x</span>) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_equal</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(~<span class='no'>band</span>) +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_void</a></span>() +
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_x_discrete</a></span>(<span class='kw'>expand</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))+
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_y_discrete</a></span>(<span class='kw'>expand</span><span class='kw'>=</span><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))</div><div class='img'><img src='geom_stars-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
