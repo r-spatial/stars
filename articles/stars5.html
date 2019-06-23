@@ -116,18 +116,18 @@
 <a class="sourceLine" id="cb1-7" data-line-number="7">(<span class="dt">nc.st =</span> <span class="kw"><a href="../reference/st_rasterize.html">st_rasterize</a></span>(nc[<span class="st">"dens"</span>], <span class="dt">deltax =</span> <span class="dv">5000</span>, <span class="dt">deltay =</span> <span class="dv">5000</span>))</a>
 <a class="sourceLine" id="cb1-8" data-line-number="8">## stars object with 2 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb1-9" data-line-number="9">## attribute(s):</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">##      dens        </a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">##  Min.   : 0.255  </a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">##  1st Qu.: 1.226  </a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">##  Median : 1.932  </a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">##  Mean   : 3.346  </a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">##  3rd Qu.: 3.826  </a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">##  Max.   :21.248  </a>
-<a class="sourceLine" id="cb1-17" data-line-number="17">##  NA's   :4808    </a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">##      dens       </a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">##  Min.   : 0.25  </a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">##  1st Qu.: 1.22  </a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">##  Median : 1.93  </a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">##  Mean   : 3.32  </a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">##  3rd Qu.: 3.83  </a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">##  Max.   :21.25  </a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">##  NA's   :31717  </a>
 <a class="sourceLine" id="cb1-18" data-line-number="18">## dimension(s):</a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">##   from  to offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb1-20" data-line-number="20">## x    1 162 123829  5000 +proj=lcc +lat_1=36.16666... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb1-21" data-line-number="21">## y    1  61 318260 -5000 +proj=lcc +lat_1=36.16666... FALSE   NULL [y]</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">##   from  to offset    delta                       refsys point values    </a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">## x    1 416 123829  1943.82 +proj=lcc +lat_1=36.16666... FALSE   NULL [x]</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21">## y    1 157 318260 -1943.82 +proj=lcc +lat_1=36.16666... FALSE   NULL [y]</a>
 <a class="sourceLine" id="cb1-22" data-line-number="22"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nc.st)</a></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>deltax</code> and <code>deltay</code> parameters.</p>
@@ -256,21 +256,21 @@
 <a class="sourceLine" id="cb10-2" data-line-number="2">nc.curv</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">## stars object with 2 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">##      dens        </a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">##  Min.   : 0.255  </a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">##  1st Qu.: 1.226  </a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">##  Median : 1.932  </a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">##  Mean   : 3.346  </a>
-<a class="sourceLine" id="cb10-10" data-line-number="10">##  3rd Qu.: 3.826  </a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">##  Max.   :21.248  </a>
-<a class="sourceLine" id="cb10-12" data-line-number="12">##  NA's   :4808    </a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">##      dens       </a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">##  Min.   : 0.25  </a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">##  1st Qu.: 1.22  </a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">##  Median : 1.93  </a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">##  Mean   : 3.32  </a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">##  3rd Qu.: 3.83  </a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">##  Max.   :21.25  </a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">##  NA's   :31717  </a>
 <a class="sourceLine" id="cb10-13" data-line-number="13">## dimension(s):</a>
 <a class="sourceLine" id="cb10-14" data-line-number="14">##   from  to offset delta                       refsys point</a>
-<a class="sourceLine" id="cb10-15" data-line-number="15">## x    1 162     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
-<a class="sourceLine" id="cb10-16" data-line-number="16">## y    1  61     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
-<a class="sourceLine" id="cb10-17" data-line-number="17">##                           values    </a>
-<a class="sourceLine" id="cb10-18" data-line-number="18">## x [162x61] -2210936,...,-1371611 [x]</a>
-<a class="sourceLine" id="cb10-19" data-line-number="19">## y    [162x61] 90650.2,...,538204 [y]</a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">## x    1 416     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
+<a class="sourceLine" id="cb10-16" data-line-number="16">## y    1 157     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
+<a class="sourceLine" id="cb10-17" data-line-number="17">##                            values    </a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">## x [416x157] -2212729,...,-1371162 [x]</a>
+<a class="sourceLine" id="cb10-19" data-line-number="19">## y    [416x157] 88931.4,...,540012 [y]</a>
 <a class="sourceLine" id="cb10-20" data-line-number="20">## curvilinear grid</a>
 <a class="sourceLine" id="cb10-21" data-line-number="21"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nc.curv, <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">graticule =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
@@ -289,16 +289,16 @@
 <a class="sourceLine" id="cb12-4" data-line-number="4">## attribute(s):</a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">##      dens       </a>
 <a class="sourceLine" id="cb12-6" data-line-number="6">##  Min.   : 0.25  </a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">##  1st Qu.: 1.23  </a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">##  1st Qu.: 1.22  </a>
 <a class="sourceLine" id="cb12-8" data-line-number="8">##  Median : 1.93  </a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">##  Mean   : 3.34  </a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">##  Mean   : 3.32  </a>
 <a class="sourceLine" id="cb12-10" data-line-number="10">##  3rd Qu.: 3.83  </a>
 <a class="sourceLine" id="cb12-11" data-line-number="11">##  Max.   :21.25  </a>
-<a class="sourceLine" id="cb12-12" data-line-number="12">##  NA's   :35981  </a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">##  NA's   :36136  </a>
 <a class="sourceLine" id="cb12-13" data-line-number="13">## dimension(s):</a>
 <a class="sourceLine" id="cb12-14" data-line-number="14">##   from  to   offset    delta</a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">## x    1 360 -2188110  2211.11</a>
-<a class="sourceLine" id="cb12-16" data-line-number="16">## y    1 180   494924 -1990.85</a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">## x    1 380 -2188110  2098.09</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">## y    1 171   494924 -2098.09</a>
 <a class="sourceLine" id="cb12-17" data-line-number="17">##                                                       refsys point values</a>
 <a class="sourceLine" id="cb12-18" data-line-number="18">## x NA...                       , +proj=laea +lat_0=34 +lon...    NA   NULL</a>
 <a class="sourceLine" id="cb12-19" data-line-number="19">## y NA...                       , +proj=laea +lat_0=34 +lon...    NA   NULL</a>
