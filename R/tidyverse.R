@@ -135,7 +135,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 			data[[i]] = units::drop_units(data[[i]])
 	}
 	if (inherits(data, "stars_proxy"))
-		data = st_as_stars(data, downsample = downsample)
+		data = st_as_stars(data, downsample = downsample) # fetches data
 	else if (any(downsample > 0))
 		data = st_downsample(data, downsample)
 
