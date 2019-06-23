@@ -1,5 +1,7 @@
 # version 0.3-1
 
+* `st_as_stars.bbox` now has an `ncells` and `pretty` argument, to better choose default raster dimensions
+
 * `geom_stars` now works with `stars_proxy` objects, but needs `downsample` to be set; #21
 
 * `NA` values in Float32 rasters are now read correctly with `read_stars`; #182

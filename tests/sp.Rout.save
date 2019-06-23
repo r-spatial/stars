@@ -174,13 +174,15 @@ Data attributes:
 [1] TRUE
 > 
 > all.equal(meuse, m2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"        
-[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: 155 string mismatches > >"    
-[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"      
-[4] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                            
-[5] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"              
-[6] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"
-[7] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                
+[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"                   
+[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Modes: character, NULL > >"              
+[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Lengths: 155, 0 > >"                     
+[4] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: target is character, current is NULL > >"
+[5] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"                 
+[6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
+[7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
+[8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
+[9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
 > all.equal(meuse.grid, gr2)
 [1] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
 [2] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
@@ -188,4 +190,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  0.670   0.056   0.722 
+  0.723   0.063   0.781 
