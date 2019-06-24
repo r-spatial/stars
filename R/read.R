@@ -78,10 +78,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			enc2utf8(maybe_normalizePath(.x, np = normalize_path))
 	
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
-		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
-			RasterIO = RasterIO, ...)
-		lat = read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value, 
-			RasterIO = RasterIO, ...)
+		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...))
+		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...))
 		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
 	}
 
@@ -104,7 +104,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# FIXME: only tested for NetCDF:
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
 		names(sub_datasets) = nms
-		sub_datasets = sub_datasets[sub] %||% sub_datasets[sub("//", "/", sub)]
+		if (any(sapply(sub_datasets[sub], is.null)))
+			sub = sub("//", "/", sub)
+		sub_datasets = sub_datasets[sub]
 		nms = names(sub_datasets)
 
 		.read_stars = function(x, options, driver, quiet, proxy, curvilinear) {
