@@ -60,7 +60,7 @@ st_as_stars(.x, ...)
 
 \item{n}{the (approximate) target number of grid cells}
 
-\item{pretty}{logical; should cell coordinates have pretty values?}
+\item{pretty}{logical; should cell coordinates have \link{pretty} values?}
 
 \item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely?}
 
@@ -78,5 +78,5 @@ convert objects into a stars object
 \details{
 if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 
-For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If \code{dx} and \code{dy} are missing, they are set to a single value computed as sqrt(the area of the bounding box divided by \code{n}). If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy). Postive \code{dy} will be made negative. Further named arguments are passed on to \code{pretty}.
+For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 }

@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -25,7 +25,7 @@ Linking to GEOS 3.7.0, GDAL 2.4.0, PROJ 5.2.0
 > dim(air)
 space  time 
    70  4383 
-> d = st_dimensions(station = st_as_sfc(stations), time = dates)
+> d = st_dimensions(station = st_set_crs(st_as_sfc(stations), 4326), time = dates)
 > 
 > blocks = st_make_grid(st_as_sfc("POLYGON ((5.871619 47.26986, 15.03811 47.26986, 15.03811 55.05653, 5.871619 55.05653, 5.871619 47.26986))", crs = 4326),
 + 	n = c(3,3))
@@ -84,7 +84,7 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- file376a7d746708.tif 
+ file54a97c7fdb06.tif 
  Min.   : 33.0        
  1st Qu.:199.2        
  Median :365.5        
@@ -200,4 +200,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.881   0.060   0.937 
+  1.051   0.092   1.136 
