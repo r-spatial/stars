@@ -104,7 +104,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# FIXME: only tested for NetCDF:
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
 		names(sub_datasets) = nms
-		sub_datasets = sub_datasets[sub]
+		sub_datasets = sub_datasets[sub] %||% sub_datasets[sub("//", "/", sub)]
 		nms = names(sub_datasets)
 
 		.read_stars = function(x, options, driver, quiet, proxy, curvilinear) {
