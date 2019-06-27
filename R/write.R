@@ -126,7 +126,7 @@ detect.driver = function(filename) {
 		if (ext == 'tif' | ext == 'tiff') { return('GTiff')
 		} else if (ext == 'grd') { return('raster')
 		} else if (ext == 'asc') { return('ascii')
-		} else if (ext == 'nc' | ext == 'cdf' | ext == 'ncdf') { return('CDF')
+		} else if (ext == 'nc' || ext == 'cdf' || ext == 'ncdf') { return('netcdf')
 		} else if (ext == 'kml') { return('KML')
 		} else if (ext == 'kmz') { return('KML')		
 		} else if (ext == 'big') { return('big.matrix')
