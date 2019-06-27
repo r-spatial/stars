@@ -105,7 +105,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
 		names(sub_datasets) = nms
 		if (any(sapply(sub_datasets[sub], is.null)))
-			sub = sub("//", "/", sub)
+			sub = sub("^//", "/", sub) # GDAL2->3, HDF5, double to single slash?
 		sub_datasets = sub_datasets[sub]
 		nms = names(sub_datasets)
 
