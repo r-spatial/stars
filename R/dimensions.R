@@ -535,8 +535,14 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 			x$values = x$values[i]
 		if (!is.na(x$from)) {
 			rang = x$from:x$to # valid range
+			if (max(i) > -1 && min(i) < 0)
+				stop("cannot mix positive and negative indexes")
+			if (is.logical(i))
+				i = which(i)
+			else if (all(i < 0))
+				i = setdiff(rang, abs(i)) # subtract
 			if (all(diff(i) == 1)) {
-				if (min(i) < 1 || max(i) > length(rang))
+				if (max(i) > length(rang))
 					stop("invalid range selected")
 				sel = rang[i]
 				x$from = min(sel)
