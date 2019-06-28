@@ -1,3 +1,17 @@
+# version 0.3-2
+
+* scale was applied wrongly on multi-band images; #189, this requires sf >= 0.7-5
+
+* `.nc` is now recognized correctly in `write_stars`; #186 
+
+* `[` subset now works correctly with negative or logical indices; #184, #185
+
+* `NA` values for float32 grids are now correctly detected; #182, this requires sf >= 0.7-5
+
+* cropping of a `stars_proxy` object now works; #179
+
+* `st_apply` can now loop over raster layers; examples found in #176
+
 # version 0.3-1
 
 * `st_as_stars.bbox` now has an `ncells` and `pretty` argument, to better choose default raster dimensions
