@@ -127,6 +127,19 @@
       <small>Source: <a href='https://github.com/r-spatial/stars/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="version-0-3-2" class="section level1">
+<h1 class="page-header">
+<a href="#version-0-3-2" class="anchor"></a>version 0.3-2<small> Unreleased </small>
+</h1>
+<ul>
+<li><p>scale was applied wrongly on multi-band images; <a href='https://github.com/r-spatial/stars/issues/189'>#189</a>, this requires sf &gt;= 0.7-5</p></li>
+<li><p><code>.nc</code> is now recognized correctly in <code>write_stars</code>; <a href='https://github.com/r-spatial/stars/issues/186'>#186</a></p></li>
+<li><p><code>[</code> subset now works correctly with negative or logical indices; <a href='https://github.com/r-spatial/stars/issues/184'>#184</a>, <a href='https://github.com/r-spatial/stars/issues/185'>#185</a></p></li>
+<li><p><code>NA</code> values for float32 grids are now correctly detected; <a href='https://github.com/r-spatial/stars/issues/182'>#182</a>, this requires sf &gt;= 0.7-5</p></li>
+<li><p>cropping of a <code>stars_proxy</code> object now works; <a href='https://github.com/r-spatial/stars/issues/179'>#179</a></p></li>
+<li><p><code>st_apply</code> can now loop over raster layers; examples found in <a href='https://github.com/r-spatial/stars/issues/176'>#176</a></p></li>
+</ul>
+</div>
     <div id="version-0-3-1" class="section level1">
 <h1 class="page-header">
 <a href="#version-0-3-1" class="anchor"></a>version 0.3-1<small> 2019-04-23 </small>
@@ -223,6 +236,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#version-0-3-2">0.3-2</a></li>
         <li><a href="#version-0-3-1">0.3-1</a></li>
         <li><a href="#version-0-3-0">0.3-0</a></li>
         <li><a href="#version-0-2-0">0.2-0</a></li>
