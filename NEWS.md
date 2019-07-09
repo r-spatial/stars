@@ -2,7 +2,7 @@
 
 * scale was applied wrongly on multi-band images; #189, this requires sf >= 0.7-5
 
-* `.nc` is now recognized correctly in `write_stars`; #186 
+* `.nc` is now recognized correctly by `write_stars` and will write a NetCDF file; #186 
 
 * `[` subset now works correctly with negative or logical indices; #184, #185
 
@@ -10,7 +10,7 @@
 
 * cropping of a `stars_proxy` object now works; #179
 
-* `st_apply` can now loop over raster layers; examples found in #176
+* `st_apply` can now loop over raster layers; examples in #176
 
 # version 0.3-1
 

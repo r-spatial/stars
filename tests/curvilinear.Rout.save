@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -34,6 +34,8 @@ Type 'q()' to quit R.
 + # more direct method:
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
++ if (inherits(nit.c[[1]], "units"))
++ 	nit.c[[1]] = units::drop_units(nit.c[[1]])
 + nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 + all.equal(nit.c0, nit.c)
 + st_crs(nit.c) = 4326
@@ -109,4 +111,4 @@ null device
 > 
 > proc.time()
    user  system elapsed 
-  6.959   0.157   7.108 
+  7.392   0.113   7.498 
