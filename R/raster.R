@@ -77,5 +77,10 @@ setAs("stars_proxy", "Raster", function(from) {
         stop("package raster required, please install it first") # nocov
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to Raster* objects")
+	if (length(attr(from, "call_list"))) {
+		fname = paste0(tempfile(), ".tif")
+		write_stars(from, fname)
+		from = fname
+	}
 	raster::brick(unlist(from))
 })
