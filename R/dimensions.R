@@ -166,9 +166,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
 		to = length(values)
-		if (is.character(values) || is.factor(values))
-			values = as.character(values)
-		else if (is.atomic(values)) { 
+		if (!(is.character(values) || is.factor(values)) && is.atomic(values)) { 
 			if (! all(is.finite(values)))
 				warning("dimension value(s) non-finite")
 			else {
@@ -378,10 +376,14 @@ parse_netcdf_meta = function(pr, name) {
 try_as_units = function(u) {
 	un = try(as_units(u), silent = TRUE)
 	if (inherits(un, "try-error")) {
-		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
-		NULL
-	} else
-		un
+		# try without ^:
+		un = try(as_units(sub("^", "", u, fixed = TRUE)), silent = TRUE)
+		if (inherits(un, "try-error")) {
+			warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
+			return(NULL)
+		}
+	} 
+	un
 }
 
 parse_gdal_meta = function(properties) {
