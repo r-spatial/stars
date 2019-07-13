@@ -150,7 +150,7 @@
   <span class='kw'>cell_midpoints</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='fu'>st_set_dimensions</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='kw'>values</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+  <span class='kw'>names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>xy</span>, <span class='no'>...</span>)
 
 <span class='fu'>st_get_dimension_values</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='no'>...</span>, <span class='kw'>max</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
     
@@ -192,6 +192,10 @@
     <tr>
       <th>names</th>
       <td><p>character; new names vector for (all) dimensions, ignoring <code>which</code></p></td>
+    </tr>
+    <tr>
+      <th>xy</th>
+      <td><p>length-2 character vector; (new) names for the <code>x</code> and <code>y</code> raster dimensions</p></td>
     </tr>
     <tr>
       <th>max</th>
