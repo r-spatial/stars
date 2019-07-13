@@ -153,7 +153,7 @@
   <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>logz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/layout'>lcm</a></span>(<span class='fl'>1.8</span>), <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>,
-  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>)
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>,
@@ -188,7 +188,7 @@
     </tr>
     <tr>
       <th>downsample</th>
-      <td><p>logical; if <code>TRUE</code> will try to plot not many more pixels than actually are visibule.</p></td>
+      <td><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the downsampling rate; see Details.</p></td>
     </tr>
     <tr>
       <th>nbreaks</th>
@@ -282,11 +282,16 @@
       <th>add.geom</th>
       <td><p>object of class <code>sfc</code>, or list with arguments to <code>plot</code>, that will be added to an image or sub-image</p></td>
     </tr>
+    <tr>
+      <th>border</th>
+      <td><p>color used for cell borders (only in case <code>x</code> is a curvilinear or rotated/sheared grid)</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208</p>
+    <p>Downsampling: a value for <code>downsample</code> of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on.</p>
+<p>use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208</p>
 <p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and it and has to be set manually.</p>
     
 

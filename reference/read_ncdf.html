@@ -138,7 +138,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_ncdf</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ncsub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>character</a></span>(<span class='fl'>0</span>), <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-12</span>)</pre>
+  <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/character'>character</a></span>(<span class='fl'>0</span>), <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-12</span>, <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,6 +166,10 @@
     <tr>
       <th>eps</th>
       <td><p>numeric; dimension value increases are considered identical when they differ less than <code>eps</code></p></td>
+    </tr>
+    <tr>
+      <th>ignore_bounds</th>
+      <td><p>logical; should bounds values for dimensions, if present, be ignored?</p></td>
     </tr>
     </table>
     
@@ -238,12 +242,12 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 
 <span class='co'>#' precipitation data in a curvilinear NetCDF</span>
 <span class='no'>prec_file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"nc/test_stageiv_xyt.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'>read_ncdf</span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Could not parse expression: ‘`kg` `m`^-2’. Returning as a single symbolic unit()</span></div><div class='output co'>#&gt; <span class='warning'>Warning: ignoring unrecognized unit: kg m^-2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: bounds for time seem to be reversed; reverting them</span></div><div class='input'>
+<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'>read_ncdf</span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>), <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Could not parse expression: ‘`kg` `m`^-2’. Returning as a single symbolic unit()</span></div><div class='input'>
 <span class='co'>##plot(prec) ## gives error about unique breaks</span>
 <span class='co'>## remove NAs, zeros, and give a large number</span>
 <span class='co'>## of breaks (used for validating in detail)</span>
 <span class='no'>qu_0_omit</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>22</span>) {
-  <span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/na.fail'>na.omit</a></span>(<span class='no'>x</span>)
+  <span class='no'>x</span> <span class='kw'>=</span> <span class='kw pkg'>units</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/units/topics/drop_units'>drop_units</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/na.fail'>na.omit</a></span>(<span class='no'>x</span>))
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/quantile'>quantile</a></span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>], <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>n</span>)))
 }
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
