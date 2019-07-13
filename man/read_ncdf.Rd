@@ -5,7 +5,7 @@
 \title{Read NetCDF into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0), eps = 1e-12)
+  curvilinear = character(0), eps = 1e-12, ignore_bounds = FALSE)
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -19,6 +19,8 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 
 \item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
+
+\item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.
@@ -53,13 +55,13 @@ read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 
 #' precipitation data in a curvilinear NetCDF
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
 
 ##plot(prec) ## gives error about unique breaks
 ## remove NAs, zeros, and give a large number
 ## of breaks (used for validating in detail)
 qu_0_omit = function(x, ..., n = 22) {
-  x = na.omit(x)
+  x = units::drop_units(na.omit(x))
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
 library(dplyr)

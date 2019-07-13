@@ -1,3 +1,17 @@
+# version 0.3-3
+
+* retain `factor` levels with dimension values when set in `st_set_dimensions`; #188
+
+* add conversion from `stars_proxy` to `Raster`: #193
+
+* make plotting of multiple curvilinear grids work
+
+* plot by default no cell borders in case of curvilinear, rotated or sheared grids
+
+* robustify handling of units
+
+* allow `read_ncdf` to ignore bounds
+
 # version 0.3-2
 
 * scale was applied wrongly on multi-band images; #189, this requires sf >= 0.7-5
