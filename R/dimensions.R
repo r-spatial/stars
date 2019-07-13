@@ -68,6 +68,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' @param which integer or character; index or name of the dimension to be changed
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
+#' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
 #' @examples
 #' x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
@@ -82,7 +83,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #'    names = "bandwidth_midpoint", point = TRUE))
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
-st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, ...) {
+st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
 	d = st_dimensions(.x)
 	if (! is.null(values)) {
 		if (is.character(which))
@@ -112,6 +113,11 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		if (length(d) != length(names))
 			stop("length of names should match number of dimension")
 		base::names(d) = names
+	} else if (! missing(xy)) {
+		stopifnot(length(xy) == 2)
+		r = attr(d, "raster")
+		r$dimensions = as.character(xy)
+		attr(d, "raster") = r
 	} else
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
 	if (inherits(.x, "stars_proxy"))

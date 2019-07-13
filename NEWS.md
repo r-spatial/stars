@@ -1,5 +1,7 @@
 # version 0.3-3
 
+* we can now set and unset the `x` and `y` raster dimensions with `xy` argument in `st_set_dimensions`; #190
+
 * retain `factor` levels with dimension values when set in `st_set_dimensions`; #188
 
 * add conversion from `stars_proxy` to `Raster`: #193
