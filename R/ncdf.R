@@ -40,6 +40,7 @@
 #' @param ncsub matrix of start, count columns (see Details)
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
+#' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -50,13 +51,13 @@
 #' @examples
 #' #' precipitation data in a curvilinear NetCDF
 #' prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-#' prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+#' prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
 #'
 #' ##plot(prec) ## gives error about unique breaks
 #' ## remove NAs, zeros, and give a large number
 #' ## of breaks (used for validating in detail)
 #' qu_0_omit = function(x, ..., n = 22) {
-#'   x = na.omit(x)
+#'   x = units::drop_units(na.omit(x))
 #'   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 #' }
 #' library(dplyr)
@@ -65,7 +66,7 @@
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12) {
+    eps = 1e-12, ignore_bounds = FALSE) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -154,7 +155,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   to_rectilinear = FALSE
   for (i in seq_along(coords)) {
     var_names = nc_var_names(nc)
-    if (names(coords)[i] %in% var_names &&
+    if (names(coords)[i] %in% var_names && !ignore_bounds &&
         !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
         bounds %in% var_names) {
 
