@@ -22,8 +22,13 @@ Ops.stars <- function(e1, e2) {
 			lapply(e1, .Generic)
 		else if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
-		else
-			mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+		else {
+			if (!all(dim(e1) == dim(e2))) {
+				stopifnot(length(e2) == 1)
+				lapply(e1, .Generic, e2 = as.vector(e2[[1]]))
+			} else
+				mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+		}
 	if (! inherits(e1, "stars"))
 		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
 	else
