@@ -136,9 +136,9 @@ plot(a, max.plot = 23)
 We can integrate over time, e.g. to find out when the maximum precipitation occurred (here reported as the index of the time step):
 
 ``` r
-fn = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geometry", fn) %>%
-  plot(key.pos = 1)
+index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
+st_apply(a, "geometry", index_max) %>%
+  plot(main = "time step of maximum precipitation")
 ```
 
 ![](images/unnamed-chunk-10-1.png)
