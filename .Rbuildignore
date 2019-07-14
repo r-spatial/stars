@@ -12,6 +12,7 @@ jamie
 tic.R
 TODO
 README.md
+README.Rmd
 ^.*\.Rproj$
 ^\.Rproj\.user$
 images
