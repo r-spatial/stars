@@ -95,22 +95,47 @@
   <div class="contents col-md-9">
 <div id="spatiotemporal-arrays-raster-and-vector-datacubes" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#spatiotemporal-arrays-raster-and-vector-datacubes" class="anchor"></a>Spatiotemporal Arrays, Raster and Vector Datacubes</h1></div>
+<a href="#spatiotemporal-arrays-raster-and-vector-datacubes" class="anchor"></a>Spatiotemporal Arrays: Raster and Vector Datacubes</h1></div>
 
 <p>Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include</p>
 <ul>
-<li>raster data</li>
 <li>socio-economic or demographic data,</li>
 <li>environmental variables monitored at fixed stations,</li>
+<li>raster maps</li>
 <li>time series of satellite images with multiple spectral bands,</li>
 <li>spatial simulations, and</li>
-<li>climate model results.</li>
+<li>climate or weather model output.</li>
 </ul>
-<p>Currently, R does not have infrastructure to handle and analyse such arrays easily. Package <code>raster</code> is probably still the most powerful package for handling this kind of data in memory and on disk, but does not address non-raster time series, rasters time series with multiple attributes, rasters with mixed type attributes, or spatially distributed sets of satellite images.</p>
-<p>This project will not only deal with these cases, but also extend the “in memory or on disk” model to that where the data are held remotely in cloud storage, which is a more feasible option e.g. for satellite data collected Today. We will implement pipe-based workflows that are developed and tested on samples before they are evaluated for complete datasets, and discuss the challenges of visualisation and storage in such workflows.</p>
-<div id="progress" class="section level2">
+<p>This R package provides classes and methods for reading, manipulating, plotting and writing such data cubes, to the extent that there are proper formats for doing so.</p>
+<div id="raster-and-vector-data-cubes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#progress" class="anchor"></a>Progress</h2>
+<a href="#raster-and-vector-data-cubes" class="anchor"></a>Raster and vector data cubes</h2>
+<p>The canonical data cube most of us have in mind is that where two dimensions represent spatial raster dimensions, and the third time (or band), as e.g. shown here:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="st">"https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png"</span>)</a></code></pre></div>
+<p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png" width="50%"></p>
+<p>By data cubes however we also consider higher-dimensional cubes (hypercubes) such as a five-dimensional cube where in addition to time, spectral band and sensor form dimensions:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="st">"https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png"</span>)</a></code></pre></div>
+<p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png" width="50%"></p>
+<p>or lower-dimensional cubes such as a raster image:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(stars)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># Loading required package: abind</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># Loading required package: sf</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co"># Linking to GEOS 3.7.0, GDAL 2.4.0, PROJ 5.2.0</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">tif =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="kw"><a href="reference/read_stars.html">read_stars</a></span>(tif) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="st">  </span><span class="kw">slice</span>(prec, <span class="dt">index =</span> <span class="dv">1</span>, <span class="dt">along =</span> <span class="st">"band"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>()</a></code></pre></div>
+<p><img src="images/unnamed-chunk-3-1.png"></p>
+</div>
+<div id="the-raster-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-raster-package" class="anchor"></a>The <code>raster</code> package</h2>
+<p>Package <code>raster</code> is probably still the most powerful package for handling this kind of data in memory and on disk, but does not address non-raster time series, rasters time series with multiple attributes, rasters with mixed type attributes, or spatially distributed sets of satellite images.</p>
+</div>
+<div id="other-stars-resources" class="section level2">
+<h2 class="hasAnchor">
+<a href="#other-stars-resources" class="anchor"></a>Other <code>stars</code> resources:</h2>
 <ul>
 <li>blog posts: <a href="http://r-spatial.org/r/2017/11/23/stars1.html">first</a>, <a href="https://www.r-spatial.org/r/2018/03/22/stars2.html">second</a>, <a href="https://www.r-spatial.org/r/2018/03/23/stars3.html">third</a>
 </li>
@@ -118,16 +143,12 @@
 </li>
 <li>How <code>raster</code> functions map to <code>stars</code> functions: <a href="https://github.com/r-spatial/stars/wiki/How-%60raster%60-functions-map-to-%60stars%60-functions">wiki</a>
 </li>
+<li>the original <a href="https://github.com/edzer/stars/blob/master/PROPOSAL.md">R Consortium proposal</a>.</li>
 </ul>
-</div>
-<div id="proposal" class="section level2">
-<h2 class="hasAnchor">
-<a href="#proposal" class="anchor"></a>Proposal</h2>
-<p>Read the full proposal <a href="https://github.com/edzer/stars/blob/master/PROPOSAL.md">here</a>.</p>
 <div id="acknowledgment" class="section level3">
 <h3 class="hasAnchor">
 <a href="#acknowledgment" class="anchor"></a>Acknowledgment</h3>
-<p>This project is being realized with financial <a href="https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants">support</a> from the</p>
+<p>This project has been realized with financial <a href="https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants">support</a> from the</p>
 <p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400"></a></p>
 </div>
 </div>
