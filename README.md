@@ -30,7 +30,7 @@ By data cubes however we also consider higher-dimensional cubes (hypercubes) suc
 or lower-dimensional cubes such as a raster image:
 
 ``` r
-suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
@@ -86,8 +86,6 @@ Raster and vector time series analysis example
 In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and the first 12 time steps are plotted:
 
 ``` r
-library(stars)
-suppressPackageStartupMessages(library(dplyr)) # for slice generic
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
 # Warning: Could not parse expression: '`kg` `m`^-2'. Returning as a single
@@ -125,7 +123,7 @@ prec %>%
 and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:
 
 ``` r
-a = aggregate(prec, nc, max)
+a = aggregate(prec, by = nc, FUN = max)
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
@@ -133,7 +131,7 @@ plot(a, max.plot = 23, border = 'grey', lwd = .5)
 
 ![](images/unnamed-chunk-9-1.png)
 
-We can integrate over time, e.g. to find out when the maximum precipitation occurred:
+We can integrate over (reduce) time, for instance to find out *when* the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:
 
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
@@ -150,14 +148,14 @@ Other packages for data cubes
 
 ### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)
 
-Package `gdalcubes` can be used to create data cubes (or functions from them) from image collections, sets of multi-band images with different
+Package `gdalcubes` can be used to create data cubes (or functions from them) from image collections, sets of multi-band images with varying
 
 -   spatial resolution
 -   spatial extent
 -   coordinate reference systems (e.g., spread over multiple UTM zones)
 -   observation times
 
-and does this by resampling and/or aggregating over space and/or time; it heavily reuses GDAL VRT's and gdalwarp for spatial resampling and/or warping.
+and does this by resampling and/or aggregating over space and/or time. It reuses GDAL VRT's and gdalwarp for spatial resampling and/or warping, and handles temporal resampling or aggregation itself.
 
 ### [`ncdfgeom`](https://github.com/USGS-R/ncdfgeom)
 
@@ -168,8 +166,8 @@ and does this by resampling and/or aggregating over space and/or time; it heavil
 Package `raster` is a powerful package for handling raster maps and stacks of raster maps both in memory and on disk, but does not address
 
 -   non-raster time series,
--   rasters time series with multiple attributes,
--   rasters with mixed type attributes (e.g., numeric, logical and factor)
+-   multi-attribute rasters time series
+-   rasters with mixed type attributes (e.g., numeric, logical, factor, POSIXct)
 -   rectilinear or curvilinear rasters
 
 A list of `stars` commands matching existing `raster` commands is found in this [wiki](https://github.com/r-spatial/stars/wiki/How-%60raster%60-functions-map-to-%60stars%60-functions). A list of translations in the opposite direction (from `stars` to `raster`) still needs to be made.

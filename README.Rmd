@@ -56,7 +56,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/maste
 
 or lower-dimensional cubes such as a raster image:
 ```{r}
-suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(dplyr))
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
@@ -151,8 +151,6 @@ In the following, a curvilinear grid with hourly precipitation values of
 a hurricane is imported and the first 12 time steps are plotted:
 
 ```{r}
-library(stars)
-suppressPackageStartupMessages(library(dplyr)) # for slice generic
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
@@ -168,12 +166,13 @@ and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and plotted:
 
 ```{r}
-a = aggregate(prec, nc, max)
+a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
-We can integrate over time, e.g. to find out when the maximum
-precipitation occurred:
+We can integrate over (reduce) time, for instance to find out _when_
+the maximum precipitation occurred. The following code finds the time
+index, and then the corresponding time value:
 
 ```{r, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
@@ -189,7 +188,7 @@ st_apply(a, "geometry", index_max) %>%
 
 Package `gdalcubes` can be used to create data cubes (or functions
 from them) from image collections, sets of multi-band images with
-different
+varying
 
 * spatial resolution
 * spatial extent
@@ -197,8 +196,8 @@ different
 * observation times
 
 and does this by resampling and/or aggregating over space and/or
-time; it heavily reuses GDAL VRT's and gdalwarp for spatial
-resampling and/or warping.
+time. It reuses GDAL VRT's and gdalwarp for spatial resampling and/or
+warping, and handles temporal resampling or aggregation itself.
 
 ### [`ncdfgeom`](https://github.com/USGS-R/ncdfgeom)
 
@@ -212,8 +211,8 @@ and stacks of raster maps both in memory and on disk, but does
 not address
 
 * non-raster time series, 
-* rasters time series with multiple attributes, 
-* rasters with mixed type attributes (e.g., numeric, logical and factor)
+* multi-attribute rasters time series
+* rasters with mixed type attributes (e.g., numeric, logical, factor, POSIXct)
 * rectilinear or curvilinear rasters
 
 A list of `stars` commands matching
