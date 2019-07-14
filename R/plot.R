@@ -29,7 +29,7 @@ make_label = function(x, i = 1) {
 #' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
-#' @hook NULL or function; hook function that will be called on every sub-plot.
+#' @param hook NULL or function; hook function that will be called on every sub-plot.
 #' @details 
 #' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on. 
 #' @export
