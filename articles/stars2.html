@@ -277,7 +277,7 @@
 <a class="sourceLine" id="cb8-4" data-line-number="4">## imposed</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.120   0.928   2.056</code></pre>
+##   2.240   0.896   2.104</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -420,7 +420,7 @@
 <a class="sourceLine" id="cb17-20" data-line-number="20">## imposed</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.228   0.824   2.069</code></pre>
+##   2.200   1.040   2.176</code></pre>
 </div>
 </div>
 </div>

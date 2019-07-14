@@ -143,7 +143,7 @@
   <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"quantile"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/gray'>grey</a></span>(<span class='fl'>1</span>:(<span class='no'>nbreaks</span> - <span class='fl'>1</span>)/<span class='no'>nbreaks</span>),
   <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='fu'>get_key_pos</span>(<span class='no'>x</span>, <span class='no'>...</span>), <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/layout'>lcm</a></span>(<span class='fl'>1.8</span>),
   <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>box_col</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/gray'>grey</a></span>(<span class='fl'>0.8</span>),
-  <span class='kw'>center_time</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>center_time</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>hook</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/image'>image</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>asp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -225,6 +225,10 @@
     <tr>
       <th>center_time</th>
       <td><p>logical; if <code>TRUE</code>, sub-plot titles will show the center of time intervals, otherwise their start</p></td>
+    </tr>
+    <tr>
+      <th>hook</th>
+      <td><p>NULL or function; hook function that will be called on every sub-plot.</p></td>
     </tr>
     <tr>
       <th>band</th>
