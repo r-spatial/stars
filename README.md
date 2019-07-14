@@ -55,8 +55,35 @@ or points (e.g. denoting sensor locations):
 
 <img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png" width="50%" />
 
-The [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/) package
--------------------------------------------------------------------
+NetCDF, GDAL
+------------
+
+`stars` provides two functions to read data: `read_ncdf` and `read_stars`, where the latter reads through GDAL. (In the future, both will be integrated in `read_stars`.) For reading NetCDF files, package `RNetCDF` is used, for reading through GDAL, package `sf` provides the binary linking to GDAL.
+
+For vector and raster operations, `stars` uses as much as possible the routines available in GDAL and PROJ (e.g. `st_transform`, `rasterize`, `polygonize`, `warp`).
+
+Out-of-memory (on-disk) rasters
+-------------------------------
+
+Package `stars` provides `stars_proxy` objects (currently only when read through GDAL), which contain only the dimensions metadata and pointers to the files on disk. These objects work lazily: reading and processing data is postponed to the moment that pixels are really needed (at plot time, or when writing to disk), and is done at the lowest spatial resolution possible that still fulfills the resolution of the graphics device. More details are found in the [stars proxy vignette](https://r-spatial.github.io/stars/articles/stars2.html).
+
+The following methods are currently available for `stars_proxy` objects:
+
+``` r
+methods(class = "stars_proxy")
+#  [1] [              adrop          aggregate      aperm         
+#  [5] as.data.frame  c              coerce         dim           
+#  [9] initialize     Math           merge          Ops           
+# [13] plot           predict        print          show          
+# [17] slotsFromS3    split          st_apply       st_as_stars   
+# [21] st_crop        st_redimension write_stars   
+# see '?methods' for accessing help and source code
+```
+
+Other packages for data cubes
+-----------------------------
+
+### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)
 
 Package `gdalcubes` can be used to create data cubes (or functions from them) from image collections, sets of multi-band images with different
 
@@ -67,8 +94,11 @@ Package `gdalcubes` can be used to create data cubes (or functions from them) fr
 
 and does this by resampling and/or aggregating over space and/or time; it heavily reuses GDAL VRT's and gdalwarp for spatial resampling and/or warping.
 
-The [`raster`](https://github.com/rspatial/raster/) package
------------------------------------------------------------
+### [`ncdfgeom`](https://github.com/USGS-R/ncdfgeom)
+
+`ncdfgeom` reads and writes vector data cubes from and to netcdf files in a standards-compliant way.
+
+### [`raster`](https://github.com/rspatial/raster/)
 
 Package `raster` is a powerful package for handling raster maps and stacks of raster maps both in memory and on disk, but does not address
 
