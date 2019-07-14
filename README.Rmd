@@ -59,7 +59,7 @@ suppressPackageStartupMessages(library(tidyverse))
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
-  slice(prec, index = 1, along = "band") %>%
+  slice(index = 1, along = "band") %>%
   plot()
 ```
 
@@ -152,7 +152,9 @@ library(stars)
 suppressPackageStartupMessages(library(dplyr)) # for slice generic
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-plot(prec, downsample = c(5, 5, 1))
+prec %>%
+  slice(index = 1:12, along = "time") %>%
+  plot(downsample = c(5, 5, 1))
 ```
 
 and next, intersected with with the counties of North Carolina, where

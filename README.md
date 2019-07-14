@@ -37,7 +37,7 @@ library(stars)
 # Linking to GEOS 3.7.0, GDAL 2.4.0, PROJ 5.2.0
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
-  slice(prec, index = 1, along = "band") %>%
+  slice(index = 1, along = "band") %>%
   plot()
 ```
 
@@ -111,7 +111,9 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # y       NA   [87x118] 32.4413,...,37.6193 [y]
 # time    NA                           NULL    
 # curvilinear grid
-plot(prec, downsample = c(5, 5, 1))
+prec %>%
+  slice(index = 1:12, along = "time") %>%
+  plot(downsample = c(5, 5, 1))
 ```
 
 ![](images/unnamed-chunk-8-1.png)
