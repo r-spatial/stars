@@ -133,12 +133,14 @@ plot(a, max.plot = 23, border = 'grey', lwd = .5)
 
 ![](images/unnamed-chunk-9-1.png)
 
-We can integrate over time, e.g. to find out when the maximum precipitation occurred (here reported as the index of the time step):
+We can integrate over time, e.g. to find out when the maximum precipitation occurred:
 
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 st_apply(a, "geometry", index_max) %>%
-  plot(main = "time step of maximum precipitation")
+  mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
+  select(when) %>%
+  plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
 ![](images/unnamed-chunk-10-1.png)

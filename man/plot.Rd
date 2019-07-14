@@ -12,7 +12,7 @@
   breaks = "quantile", col = grey(1:(nbreaks - 1)/nbreaks),
   key.pos = get_key_pos(x, ...), key.width = lcm(1.8),
   key.length = 0.618, reset = TRUE, box_col = grey(0.8),
-  center_time = FALSE)
+  center_time = FALSE, hook = NULL)
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
   rgb = NULL, maxColorValue = ifelse(inherits(rgb, "data.frame"), 255,
@@ -58,6 +58,8 @@
 \item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
 
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
+
+\item{hook}{NULL or function; hook function that will be called on every sub-plot.}
 
 \item{band}{integer; which band (dimension) to plot}
 

@@ -638,7 +638,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 			else
 				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
 		}
-		value = if (is.factor(value))
+		value = if (inherits(value, c("factor", "POSIXct")))
 				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))
 			else
 				array(value, dim(x))

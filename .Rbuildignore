@@ -13,6 +13,7 @@ tic.R
 TODO
 README.md
 README.Rmd
+README.html
 ^.*\.Rproj$
 ^\.Rproj\.user$
 images
