@@ -45,40 +45,6 @@ read_stars(tif) %>%
 
 Raster data do not need to be regular and aligned with North/East, and package `stars` supports besides *regular* also *rotated*, *sheared*, *rectilinear* and *curvilinear* rasters:
 
-``` r
-x = 1:5
-y = 1:4
-d = st_dimensions(x = x, y = y, .raster = c("x", "y"))
-m = matrix(runif(20),5,4)
-r1 = st_as_stars(r = m, dimensions = d)
-
-r = attr(d, "raster")
-r$affine = c(0.2, -0.2)
-attr(d, "raster") = r
-r2 = st_as_stars(r = m, dimensions = d)
-
-r = attr(d, "raster")
-r$affine = c(0.1, -0.3)
-attr(d, "raster") = r
-r3 = st_as_stars(r = m, dimensions = d)
-
-x = c(1, 2, 3.5, 5, 6)
-y = c(1, 1.5, 3, 3.5)
-d = st_dimensions(x = x, y = y, .raster = c("x", "y"))
-r4 = st_as_stars(r = m, dimensions = d)
-
-grd = st_make_grid(cellsize = c(10,10), offset = c(-130,10), n= c(8,5), crs=st_crs(4326))
-r5 = st_transform(grd, "+proj=laea +lon_0=-70 +lat_0=35")
-
-par(mfrow = c(2,3))
-r1 = st_make_grid(cellsize = c(1,1), n = c(5,4), offset = c(0,0))
-plot(r1, main = "regular")
-plot(st_geometry(st_as_sf(r2)), main = "rotated")
-plot(st_geometry(st_as_sf(r3)), main = "sheared")
-plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
-plot(st_geometry((r5)), main = "curvilinear")
-```
-
 ![](images/unnamed-chunk-4-1.png)
 
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
