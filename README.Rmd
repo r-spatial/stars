@@ -142,6 +142,29 @@ The following methods are currently available for `stars_proxy` objects:
 methods(class = "stars_proxy")
 ```
 
+## Raster-vector example
+
+In the following, a curvilinear grid with hourly precipitation values of
+a hurricane is imported and plotted:
+
+```{r}
+library(stars)
+suppressPackageStartupMessages(library(dplyr)) # for slice generic
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+(prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
+plot(prec, downsample = c(5, 5, 1))
+```
+
+and next, intersected with with the counties of North Carolina, where
+the maximum precipitation intensity was obtained per county, and plotted:
+
+```{r}
+nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
+nc = st_transform(nc, st_crs(prec)) # transform from NAD27 to WGS84
+a = aggregate(prec, nc, max)
+plot(a, max.plot = 23)
+```
+
 ## Other packages for data cubes
 
 ### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)

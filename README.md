@@ -80,6 +80,55 @@ methods(class = "stars_proxy")
 # see '?methods' for accessing help and source code
 ```
 
+Raster-vector example
+---------------------
+
+In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and plotted:
+
+``` r
+library(stars)
+suppressPackageStartupMessages(library(dplyr)) # for slice generic
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+(prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
+# Warning: Could not parse expression: '`kg` `m`^-2'. Returning as a single
+# symbolic unit()
+# stars object with 3 dimensions and 1 attribute
+# attribute(s):
+#  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]
+#  Min.   :  0.000                                         
+#  1st Qu.:  0.000                                         
+#  Median :  0.750                                         
+#  Mean   :  4.143                                         
+#  3rd Qu.:  4.630                                         
+#  Max.   :163.750                                         
+# dimension(s):
+#      from  to                  offset   delta                       refsys
+# x       1  87                      NA      NA +proj=longlat +datum=WGS8...
+# y       1 118                      NA      NA +proj=longlat +datum=WGS8...
+# time    1  23 2018-09-13 18:30:00 UTC 1 hours                      POSIXct
+#      point                         values    
+# x       NA [87x118] -80.6113,...,-74.8822 [x]
+# y       NA   [87x118] 32.4413,...,37.6193 [y]
+# time    NA                           NULL    
+# curvilinear grid
+plot(prec, downsample = c(5, 5, 1))
+```
+
+![](images/unnamed-chunk-8-1.png)
+
+and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:
+
+``` r
+nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
+nc = st_transform(nc, st_crs(prec)) # transform from NAD27 to WGS84
+a = aggregate(prec, nc, max)
+# although coordinates are longitude/latitude, st_intersects assumes that they are planar
+# although coordinates are longitude/latitude, st_intersects assumes that they are planar
+plot(a, max.plot = 23)
+```
+
+![](images/unnamed-chunk-9-1.png)
+
 Other packages for data cubes
 -----------------------------
 
