@@ -145,7 +145,7 @@ methods(class = "stars_proxy")
 ## Raster-vector example
 
 In the following, a curvilinear grid with hourly precipitation values of
-a hurricane is imported and plotted:
+a hurricane is imported and the first 12 time steps are plotted:
 
 ```{r}
 library(stars)
