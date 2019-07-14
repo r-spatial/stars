@@ -29,13 +29,14 @@ make_label = function(x, i = 1) {
 #' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
+#' @hook NULL or function; hook function that will be called on every sub-plot.
 #' @details 
 #' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on. 
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, 
-		reset = TRUE, box_col = grey(.8), center_time = FALSE) {
+		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL) {
 
 	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
@@ -144,6 +145,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					else # user-defined
 						title(paste(main, format(labels[i])))
 				}
+				if (!is.null(hook) && is.function(hook))
+					hook()
 				box(col = box_col)
 			}
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:

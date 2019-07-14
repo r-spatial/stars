@@ -60,7 +60,7 @@ NetCDF, GDAL
 
 `stars` provides two functions to read data: `read_ncdf` and `read_stars`, where the latter reads through GDAL. (In the future, both will be integrated in `read_stars`.) For reading NetCDF files, package `RNetCDF` is used, for reading through GDAL, package `sf` provides the binary linking to GDAL.
 
-For vector and raster operations, `stars` uses as much as possible the routines available in GDAL and PROJ (e.g. `st_transform`, `rasterize`, `polygonize`, `warp`).
+For vector and raster operations, `stars` uses as much as possible the routines available in GDAL and PROJ (e.g. `st_transform`, `rasterize`, `polygonize`, `warp`). Read more about this in the vignette on [vector-raster conversions, reprojection, warping](https://r-spatial.github.io/stars/articles/stars5.html).
 
 Out-of-memory (on-disk) rasters
 -------------------------------
@@ -80,8 +80,8 @@ methods(class = "stars_proxy")
 # see '?methods' for accessing help and source code
 ```
 
-Raster-vector example
----------------------
+Raster and vector time series analysis example
+----------------------------------------------
 
 In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and the first 12 time steps are plotted:
 
@@ -111,9 +111,13 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # y       NA   [87x118] 32.4413,...,37.6193 [y]
 # time    NA                           NULL    
 # curvilinear grid
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
+  st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
+nc_outline = st_union(st_geometry(nc))
+plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
 prec %>%
   slice(index = 1:12, along = "time") %>%
-  plot(downsample = c(5, 5, 1))
+  plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
 
 ![](images/unnamed-chunk-8-1.png)
@@ -121,8 +125,6 @@ prec %>%
 and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:
 
 ``` r
-nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
-nc = st_transform(nc, st_crs(prec)) # transform from NAD27 to WGS84
 a = aggregate(prec, nc, max)
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
