@@ -128,7 +128,7 @@ and next, intersected with with the counties of North Carolina, where the maximu
 a = aggregate(prec, nc, max)
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
 # although coordinates are longitude/latitude, st_intersects assumes that they are planar
-plot(a, max.plot = 23)
+plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
 ![](images/unnamed-chunk-9-1.png)

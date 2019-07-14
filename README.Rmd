@@ -169,7 +169,7 @@ the maximum precipitation intensity was obtained per county, and plotted:
 
 ```{r}
 a = aggregate(prec, nc, max)
-plot(a, max.plot = 23)
+plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
 We can integrate over time, e.g. to find out when the maximum
