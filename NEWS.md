@@ -1,4 +1,4 @@
-# version 0.3-3
+# version 0.3-2
 
 * we can now set and unset the `x` and `y` raster dimensions with `xy` argument in `st_set_dimensions`; #190
 
@@ -13,8 +13,6 @@
 * robustify handling of units
 
 * allow `read_ncdf` to ignore bounds
-
-# version 0.3-2
 
 * scale was applied wrongly on multi-band images; #189, this requires sf >= 0.7-5
 
