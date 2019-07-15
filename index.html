@@ -129,9 +129,9 @@
 <a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="reference/read_stars.html">read_stars</a></span>(tif) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span>, <span class="dt">along =</span> <span class="st">"band"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>()</a></code></pre></div>
-<p><img src="images/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="https:/raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-3-1.png" width="700"></p>
 <p>Raster data do not need to be regular and aligned with North/East, and package <code>stars</code> supports besides <em>regular</em> also <em>rotated</em>, <em>sheared</em>, <em>rectilinear</em> and <em>curvilinear</em> rasters:</p>
-<p><img src="images/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="https:/raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-4-1.png" width="700"></p>
 <p>Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png" width="50%"></p>
 <p>or points (e.g. denoting sensor locations):</p>
@@ -191,20 +191,20 @@
 <a class="sourceLine" id="cb3-28" data-line-number="28">prec <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-29" data-line-number="29"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">along =</span> <span class="st">"time"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-30" data-line-number="30"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">downsample =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>), <span class="dt">hook =</span> plot_hook)</a></code></pre></div>
-<p><img src="images/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="https:/raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-8-1.png" width="700"></p>
 <p>and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">a =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/aggregate">aggregate</a></span>(prec, <span class="dt">by =</span> nc, <span class="dt">FUN =</span> max)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="reference/plot.html">plot</a></span>(a, <span class="dt">max.plot =</span> <span class="dv">23</span>, <span class="dt">border =</span> <span class="st">'grey'</span>, <span class="dt">lwd =</span> <span class="fl">.5</span>)</a></code></pre></div>
-<p><img src="images/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="https:/raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-9-1.png" width="700"></p>
 <p>We can integrate over (reduce) time, for instance to find out <em>when</em> the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">index_max =<span class="st"> </span><span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/all">all</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(x)), <span class="ot">NA</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which.min">which.max</a></span>(x))</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="reference/st_apply.html">st_apply</a></span>(a, <span class="st">"geometry"</span>, index_max) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">when =</span> <span class="kw"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span>(a, <span class="st">"time"</span>)[.<span class="op">$</span>index_max]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(when) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">key.pos =</span> <span class="dv">1</span>, <span class="dt">main =</span> <span class="st">"time of maximum precipitation"</span>)</a></code></pre></div>
-<p><img src="images/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="https:/raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div id="other-packages-for-data-cubes" class="section level2">
 <h2 class="hasAnchor">
