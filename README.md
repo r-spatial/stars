@@ -41,11 +41,11 @@ read_stars(tif) %>%
   plot()
 ```
 
-![](images/unnamed-chunk-3-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-3-1.png)
 
 Raster data do not need to be regular and aligned with North/East, and package `stars` supports besides *regular* also *rotated*, *sheared*, *rectilinear* and *curvilinear* rasters:
 
-![](images/unnamed-chunk-4-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-4-1.png)
 
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
@@ -118,7 +118,7 @@ prec %>%
   plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
 
-![](images/unnamed-chunk-8-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-8-1.png)
 
 and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:
 
@@ -129,7 +129,7 @@ a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
-![](images/unnamed-chunk-9-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-9-1.png)
 
 We can integrate over (reduce) time, for instance to find out *when* the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:
 
@@ -141,7 +141,7 @@ st_apply(a, "geometry", index_max) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
-![](images/unnamed-chunk-10-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-10-1.png)
 
 Other packages for data cubes
 -----------------------------

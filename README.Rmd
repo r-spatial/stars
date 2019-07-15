@@ -9,8 +9,8 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#",
-  #fig.path = "https://raw.githubusercontent.com/r-spatial/stars/master/images/"
-  fig.path = "images/"
+  fig.path = "https://raw.githubusercontent.com/r-spatial/stars/master/images/"
+  # fig.path = "images/"
 )
 is_online = curl::has_internet()
 ```
