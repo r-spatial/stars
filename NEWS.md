@@ -1,6 +1,8 @@
 # version 0.3-2
 
-* we can now set and unset the `x` and `y` raster dimensions with `xy` argument in `st_set_dimensions`; #190
+* plot uses `rasterImage` by default if available; #194
+
+* the `x` and `y` raster dimensions can be set and unset with `xy` argument in `st_set_dimensions`; #190
 
 * retain `factor` levels with dimension values when set in `st_set_dimensions`; #188
 
