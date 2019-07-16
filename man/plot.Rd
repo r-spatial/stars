@@ -21,7 +21,8 @@
   ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
   interpolate = FALSE, as_points = FALSE, key.pos = NULL,
   logz = FALSE, key.width = lcm(1.8), key.length = 0.618,
-  add.geom = NULL, border = NA)
+  add.geom = NULL, border = NA,
+  useRaster = dev.capabilities("rasterImage")$rasterImage == "yes")
 
 \method{plot}{stars_proxy}(x, y, ...,
   downsample = get_downsample(dim(x)))
@@ -90,6 +91,8 @@
 \item{add.geom}{object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image}
 
 \item{border}{color used for cell borders (only in case \code{x} is a curvilinear or rotated/sheared grid)}
+
+\item{useRaster}{logical; use the rasterImage capabilities of the graphics device?}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
