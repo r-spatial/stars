@@ -153,7 +153,8 @@
   <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>logz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/layout'>lcm</a></span>(<span class='fl'>1.8</span>), <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>,
-  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>)
+  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>useRaster</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/grDevices/topics/dev.capabilities'>dev.capabilities</a></span>(<span class='st'>"rasterImage"</span>)$<span class='no'>rasterImage</span> <span class='kw'>==</span> <span class='st'>"yes"</span>)
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>,
@@ -289,6 +290,10 @@
     <tr>
       <th>border</th>
       <td><p>color used for cell borders (only in case <code>x</code> is a curvilinear or rotated/sheared grid)</p></td>
+    </tr>
+    <tr>
+      <th>useRaster</th>
+      <td><p>logical; use the rasterImage capabilities of the graphics device?</p></td>
     </tr>
     </table>
     
