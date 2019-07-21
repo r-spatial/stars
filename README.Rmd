@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   fig.path = "https://raw.githubusercontent.com/r-spatial/stars/master/images/"
   # fig.path = "images/"
 )
+on_travis = Sys.getenv("USER") == "travis"
+# on_travis = TRUE
 is_online = curl::has_internet()
 ```
 
@@ -19,9 +21,9 @@ is_online = curl::has_internet()
 
 [![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars)
 [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
-[![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
+[![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 [![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
-[![Downloads](http://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](http://www.r-pkg.org/pkg/stars)
+[![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 
 Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
 
@@ -42,7 +44,7 @@ The canonical data cube most of us have in mind is that where two
 dimensions represent spatial raster dimensions, and the third time
 (or band), as e.g. shown here:
 
-```{r,out.width='50%',echo=FALSE}
+```{r cube1,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
 ```
 
@@ -50,12 +52,12 @@ By data cubes however we also consider higher-dimensional cubes
 (hypercubes) such as a five-dimensional cube where in addition to
 time, spectral band and sensor form dimensions:
 
-```{r,out.width='50%',echo=FALSE}
+```{r cube2,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png")
 ```
 
 or lower-dimensional cubes such as a raster image:
-```{r}
+```{r plot1,eval=!on_travis}
 suppressPackageStartupMessages(library(dplyr))
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -64,11 +66,15 @@ read_stars(tif) %>%
   plot()
 ```
 
+```{r plot1-backup,out.width='50%',echo=FALSE,eval=on_travis}
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot1-1.png")
+```
+
 Raster data do not need to be regular and aligned with North/East,
 and package `stars` supports besides _regular_ also _rotated_,
 _sheared_, _rectilinear_ and _curvilinear_ rasters:
 
-```{r echo=FALSE}
+```{r plot2,echo=FALSE,eval=!on_travis}
 x = 1:5
 y = 1:4
 d = st_dimensions(x = x, y = y, .raster = c("x", "y"))
@@ -102,15 +108,19 @@ plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
 plot(st_geometry((r5)), main = "curvilinear")
 ```
 
+```{r plot2-backup,out.width='50%',echo=FALSE,eval=on_travis}
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot2-1.png")
+```
+
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
-```{r,out.width='50%',echo=FALSE}
+```{r cube3,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png")
 ```
 
 or points (e.g. denoting sensor locations):
 
-```{r,out.width='50%',echo=FALSE}
+```{r cube4,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png")
 ```
 
@@ -141,7 +151,7 @@ details are found in the [stars proxy
 vignette](https://r-spatial.github.io/stars/articles/stars2.html).
 
 The following methods are currently available for `stars_proxy` objects:
-```{r}
+```{r methods}
 methods(class = "stars_proxy")
 ```
 
@@ -150,7 +160,7 @@ methods(class = "stars_proxy")
 In the following, a curvilinear grid with hourly precipitation values of
 a hurricane is imported and the first 12 time steps are plotted:
 
-```{r}
+```{r plot3,eval=!on_travis}
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
@@ -161,25 +171,34 @@ prec %>%
   slice(index = 1:12, along = "time") %>%
   plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
+```{r plot3-backup,out.width='50%',echo=FALSE,eval=on_travis}
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot3-1.png")
+```
 
 and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and plotted:
 
-```{r}
+```{r plot4,eval=!on_travis}
 a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
+```
+```{r plot4-backup,out.width='50%',echo=FALSE,eval=on_travis}
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot4-1.png")
 ```
 
 We can integrate over (reduce) time, for instance to find out _when_
 the maximum precipitation occurred. The following code finds the time
 index, and then the corresponding time value:
 
-```{r, fig.height=3}
+```{r plot5, fig.height=3,eval=!on_travis}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 st_apply(a, "geometry", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
+```
+```{r plot5-backup,out.width='50%',echo=FALSE,eval=on_travis}
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot5-1.png")
 ```
 
 ## Other packages for data cubes
@@ -223,7 +242,7 @@ A list of translations in the opposite direction (from `stars` to
 
 ## Other `stars` resources:
 
-* blog posts: [first](http://r-spatial.org/r/2017/11/23/stars1.html),
+* blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
 [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
 [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
 * vignettes: [first](https://r-spatial.github.io/stars/articles/stars1.html), [second](https://r-spatial.github.io/stars/articles/stars2.html), [third](https://r-spatial.github.io/stars/articles/stars3.html), [fourth](https://r-spatial.github.io/stars/articles/stars4.html), [fifth](https://r-spatial.github.io/stars/articles/stars5.html)

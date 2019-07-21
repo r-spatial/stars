@@ -3,7 +3,7 @@
 Spatiotemporal Arrays: Raster and Vector Datacubes
 ==================================================
 
-[![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars) [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars) [![CRAN](http://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) [![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html) [![Downloads](http://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](http://www.r-pkg.org/pkg/stars)
+[![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars) [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars) [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) [![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html) [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 
 Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
 
@@ -41,11 +41,11 @@ read_stars(tif) %>%
   plot()
 ```
 
-![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-3-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/plot1-1.png)
 
 Raster data do not need to be regular and aligned with North/East, and package `stars` supports besides *regular* also *rotated*, *sheared*, *rectilinear* and *curvilinear* rasters:
 
-![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-4-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/plot2-1.png)
 
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
@@ -118,7 +118,7 @@ prec %>%
   plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
 
-![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-8-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/plot3-1.png)
 
 and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:
 
@@ -129,7 +129,7 @@ a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
-![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-9-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/plot4-1.png)
 
 We can integrate over (reduce) time, for instance to find out *when* the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:
 
@@ -141,7 +141,7 @@ st_apply(a, "geometry", index_max) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
-![](https://raw.githubusercontent.com/r-spatial/stars/master/images/unnamed-chunk-10-1.png)
+![](https://raw.githubusercontent.com/r-spatial/stars/master/images/plot5-1.png)
 
 Other packages for data cubes
 -----------------------------
@@ -175,7 +175,7 @@ A list of `stars` commands matching existing `raster` commands is found in this 
 Other `stars` resources:
 ------------------------
 
--   blog posts: [first](http://r-spatial.org/r/2017/11/23/stars1.html), [second](https://www.r-spatial.org/r/2018/03/22/stars2.html), [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
+-   blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html), [second](https://www.r-spatial.org/r/2018/03/22/stars2.html), [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
 -   vignettes: [first](https://r-spatial.github.io/stars/articles/stars1.html), [second](https://r-spatial.github.io/stars/articles/stars2.html), [third](https://r-spatial.github.io/stars/articles/stars3.html), [fourth](https://r-spatial.github.io/stars/articles/stars4.html), [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
 -   the original [R Consortium proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
