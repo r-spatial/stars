@@ -12,25 +12,43 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
 		} else
 			as_points = p
 	}
-	if (has_raster(x) && inherits(y, "sfc_POINT") && !as_points) {
-		stopifnot(isTRUE(sparse))
+	if (has_raster(x) && 
+			inherits(y, "sfc_POINT") && 
+			!as_points &&
+			!is_curvilinear(x)) {
+
 		cr = colrow_from_xy(st_coordinates(y), x, NA_outside = TRUE)
 		ncells = prod(dim(d[xy]))
 		ncols = dim(x)[ xy[1] ]
 		ix = (cr[,2] - 1) * ncols + cr[,1] # for all points, the 1-based index in (as.vector) x
-		# create the transpose:
-    	ret = structure(lapply(as.list(ix), function(x) if (is.na(x)) integer(0) else x),
-        	predicate = "intersects",
-        	region.id = seq_along(y),
-        	ncol = ncells,
-        	class = "sgbp")
+		# create the transpose sgbp:
+   		ret = structure(lapply(as.list(ix), function(x) if (is.na(x)) integer(0) else x),
+       		predicate = "intersects",
+       		region.id = seq_along(y),
+       		ncol = ncells,
+       		class = "sgbp")
 		if (! sparse)
 			ret = as.matrix(ret)
-		# then transpose if needed:
-		if (!transpose) 
+		if (! transpose) 
 			t(ret)
 		else
 			ret
 	} else
 		st_intersects(st_as_sf(x, as_points = as_points), y, sparse = sparse, ...)
+}
+
+#' @export
+st_join.stars = function(x, y, ..., of_y = TRUE) {
+	if (!requireNamespace("dplyr", quietly = TRUE)) 
+		stop("dplyr needed: install first?")
+	if (inherits(y, "sfc"))
+		y = st_sf(y)
+	if (!inherits(y, "sf"))
+		stop("argument y should be of class sf, or sfc")
+	ix = st_intersects(x, y, sparse = TRUE, ..., transpose = of_y)
+	i = unlist(ix)
+	j = rep(seq_along(ix), lengths(ix))
+	# TODO: recycle i and j such that further slices are also output (See aggregate?);
+	# first slice is returned by
+	st_sf(dplyr::bind_cols(as.data.frame(x)[i,], y[j,]))
 }

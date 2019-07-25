@@ -85,7 +85,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
-    if (utils::packageVersion("ncmeta") <= "0.0.3") {
+    if (utils::packageVersion("ncmeta") == "0.0.3") { # 0.0.3 is required
      var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
     } else {
      grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
