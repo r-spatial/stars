@@ -5,7 +5,8 @@
 \title{Read NetCDF into stars object}
 \usage{
 read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0), eps = 1e-12, ignore_bounds = FALSE)
+  curvilinear = character(0), eps = 1e-12, ignore_bounds = FALSE,
+  make_time = TRUE, make_units = TRUE)
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -21,6 +22,10 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 \item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
 
 \item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
+
+\item{make_time}{if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable}
+
+\item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.

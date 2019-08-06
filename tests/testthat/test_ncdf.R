@@ -60,13 +60,17 @@ test_that("normal bcsd", {
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
   
-  out <-read_ncdf(f, curvilinear = c("lon", "lat"))
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
+  
+  expect_match(warn[1], "Could not parse expression:.*Returning as a single symbolic unit()")
+  expect_match(warn[2], "ignoring unrecognized unit: kg m\\^-2")
+  expect_match(warn[3], "bounds for time seem to be reversed; reverting them")
   
   st_dim <- st_dimensions(out)
   
-  expect(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+  expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
   
-  expect(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+  expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
   
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
 })
