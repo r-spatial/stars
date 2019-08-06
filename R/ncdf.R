@@ -351,8 +351,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   to_rectilinear = FALSE
   for (i in seq_along(coords)) {
     if (names(coords)[i] %in% var_names && !ignore_bounds &&
-        !is.null(bounds <- nc_get_attr(nc, names(coords)[i], "bounds")) &&
-        # alternate from merge conflict length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
+        length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
         bounds %in% var_names) {
 
       bounds = RNetCDF::var.get.nc(nc, bounds)
