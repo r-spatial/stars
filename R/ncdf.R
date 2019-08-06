@@ -89,12 +89,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
-    if (utils::packageVersion("ncmeta") <= "0.0.3") {
-     var = meta$grid$variable[meta$grid$grid[ix] == meta$grid$grid]
-    } else {
-     grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
-     var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
-    }
+    grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
+    var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
     
     message(sprintf("no 'var' specified, using %s", paste(var, collapse = ", ")))
     other_vars <- setdiff(meta$variable$name, var)
