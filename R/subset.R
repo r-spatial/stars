@@ -61,9 +61,12 @@
 			mc[-(1:2)]
 		else
 			mc[-(1:3)]
+
 	do_select = FALSE
 	for (i in seq_along(mc)) { 
-		if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+		if (is.name(mc[[i]]) && as.character(mc[[i]]) != "") # try to "get" it:
+			mc[[i]] = eval(mc[[i]], parent.frame())
+		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = mc[[i]]
 			do_select = TRUE
 		}
@@ -73,7 +76,7 @@
 		args_xy = rep(list(rlang::missing_arg()), 2)
 		xy = attr(d, "raster")$dimensions
 		for (i in seq_along(mc)) {
-			if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+			if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 				if (names(d)[i] == xy[1])
 					args_xy[[1]] = mc[[i]]
 				if (names(d)[i] == xy[2])
@@ -104,7 +107,7 @@
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
 					all(argi[[1]] != rlang::missing_arg()) && 
 					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
-				d[[i]]$values = if(isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
 						ed[[i]]
 					else
 						as_intervals(ed[[i]], add_last = TRUE)
@@ -196,7 +199,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
-	if (st_crs(x) != st_crs(y))
+	if (inherits(y, c("stars", "sf", "sfc", "bbox")) && st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
@@ -206,9 +209,11 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 				st_bbox(y)
 			else
 				y
+		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
+			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm)
 		cr[,1] = cr[,1] - dm[[xd]]$from + 1
 		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {
@@ -239,4 +244,22 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0,
 	for (i in seq_along(x))
 		x[[i]][mask] = NA
 	x
+}
+
+#' @export
+st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
+	stopifnot(all(domain == c(0,0,1,1)))
+	x = st_upfront(x)
+	d = st_dimensions(x)
+	if (d[[1]]$from != 1) {
+		d[[1]]$offset = d[[1]]$offset + (d[[1]]$from - 1) * d[[1]]$delta
+		d[[1]]$to = d[[1]]$to - d[[1]]$from + 1
+		d[[1]]$from = 1
+	}
+	if (d[[2]]$from != 1) {
+		d[[2]]$offset = d[[2]]$offset + (d[[2]]$from - 1) * d[[2]]$delta
+		d[[2]]$to = d[[2]]$to - d[[2]]$from + 1
+		d[[2]]$from = 1
+	}
+	st_stars(x, dimensions = d)
 }

@@ -18,10 +18,17 @@
 #' @export
 Ops.stars <- function(e1, e2) {
 	#ret = if (is.array(e2))
-	ret = if (!inherits(e2, "stars"))
+	ret = if (missing(e2))
+			lapply(e1, .Generic)
+		else if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
-		else
-			mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+		else {
+			if (!all(dim(e1) == dim(e2))) {
+				stopifnot(length(e2) == 1)
+				lapply(e1, .Generic, e2 = as.vector(e2[[1]]))
+			} else
+				mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
+		}
 	if (! inherits(e1, "stars"))
 		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
 	else
@@ -124,19 +131,30 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 	ret = lapply(X, fn, ...) 
 	dim_ret = dim(ret[[1]])
 	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
-		if (length(ret) == 1 && rename && make.names(fname) == fname)
-			ret = setNames(ret, fname)
-		st_stars(ret, st_dimensions(X)[MARGIN])
-	} else { # FUN returned multiple values: need to set dimension name & values
-		orig = st_dimensions(X)[MARGIN]
-		r = attr(orig, "raster")
-		dims = c(structure(list(list()), names = fname), orig)
-		dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
-				create_dimension(values = dimnames(ret[[1]])[[1]])
-			else
-				create_dimension(to = dim_ret[1])
-		st_stars(ret, dimensions = create_dimensions(dims, r))
-	}
+			if (length(ret) == 1 && rename && make.names(fname) == fname)
+				ret = setNames(ret, fname)
+			st_stars(ret, st_dimensions(X)[MARGIN])
+		} else { # FUN returned multiple values: need to set dimension name & values
+			dim_no_margin = dim(X)[-MARGIN]
+			no_margin = setdiff(seq_along(dim(X)), MARGIN)
+			if (length(no_margin) > 1 && dim(ret[[1]])[1] == prod(dim_no_margin)) {
+				r = attr(st_dimensions(X), "raster")
+				new_dim = c(dim_no_margin, dim(ret[[1]])[-1])
+				for (i in seq_along(ret))
+					dim(ret[[i]]) = new_dim
+				# set dims:
+				dims = st_dimensions(X)[c(no_margin, MARGIN)]
+			} else {
+				orig = st_dimensions(X)[MARGIN]
+				r = attr(orig, "raster")
+				dims = c(structure(list(list()), names = fname), orig)
+				dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
+						create_dimension(values = dimnames(ret[[1]])[[1]])
+					else
+						create_dimension(to = dim_ret[1])
+			}
+			st_stars(ret, dimensions = create_dimensions(dims, r))
+		}
 	for (i in seq_along(ret))
 		names(dim(ret[[i]])) = names(st_dimensions(ret))
 	ret

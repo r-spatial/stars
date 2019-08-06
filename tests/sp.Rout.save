@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -145,7 +145,7 @@ Data attributes:
 Object of class SpatialGridDataFrame
 Coordinates:
      min    max
-  178440 181560
+x 178440 181560
 y 329600 333760
 Is projected: TRUE 
 proj4string :
@@ -155,7 +155,7 @@ proj4string :
 +units=m +no_defs]
 Grid attributes:
   cellcentre.offset cellsize cells.dim
-             178460       40        78
+x            178460       40        78
 y            329620       40       104
 Data attributes:
      part.a          part.b           dist         soil       ffreq     
@@ -184,12 +184,10 @@ Data attributes:
 [8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
 [9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
 > all.equal(meuse.grid, gr2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 1 string mismatch > >"       
-[2] "Attributes: < Component \"grid\": Attributes: < Component \"cellcentre.offset\": Names: 1 string mismatch > >"    
-[3] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
-[4] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
-[5] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
+[1] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
+[2] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
+[3] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
 > 
 > proc.time()
    user  system elapsed 
-  0.574   0.052   0.618 
+  0.723   0.063   0.781 

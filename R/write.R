@@ -70,9 +70,17 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		setTxtProgressBar(pb, 0)
 	}
 
-	# write chunks:
 	dim_obj = dim(obj)
+	if (prod(chunk_size) > prod(dim_obj[1:2])) {
+		write_stars(st_as_stars(obj), dsn, layer, ..., driver = driver, options = options,
+			type = type, NA_value = NA_value)
+		return(invisible(obj))
+	}
+
+	# write chunks:
 	di = st_dimensions(obj)
+	if (di[[1]]$from > 1 || di[[2]]$from > 1)
+		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
 
 	created = FALSE
 
@@ -118,7 +126,7 @@ detect.driver = function(filename) {
 		if (ext == 'tif' | ext == 'tiff') { return('GTiff')
 		} else if (ext == 'grd') { return('raster')
 		} else if (ext == 'asc') { return('ascii')
-		} else if (ext == 'nc' | ext == 'cdf' | ext == 'ncdf') { return('CDF')
+		} else if (ext == 'nc' || ext == 'cdf' || ext == 'ncdf') { return('netcdf')
 		} else if (ext == 'kml') { return('KML')
 		} else if (ext == 'kmz') { return('KML')		
 		} else if (ext == 'big') { return('big.matrix')

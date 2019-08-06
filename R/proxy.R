@@ -20,6 +20,12 @@ dim.stars_proxy = function(x) {
 	dim(st_dimensions(x))
 }
 
+#' @export
+as.data.frame.stars_proxy = function(x, ...) {
+	as.data.frame(st_as_stars(x), ...)
+}
+
+
 #' @name plot
 #' @export
 #' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.
@@ -103,11 +109,13 @@ fetch = function(x, downsample = 0, ...) {
 	dy = d[[ xy[2] ]]
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
+
 	downsample = rep(downsample, length.out = 2)
-	if (any(downsample > 0)) {
+	if (downsample[1] > 0) 
 		nBufXSize = nBufXSize / (downsample[1] + 1)
+	if (downsample[2] > 0) 
 		nBufYSize = nBufYSize / (downsample[2] + 1)
-	}
+
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
 	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) # we want to select here
@@ -126,10 +134,8 @@ fetch = function(x, downsample = 0, ...) {
 	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
 		if (dm %in% names(new_dim))
 			new_dim[[dm]] = d[[dm]]
-#		if (!is.null(v <- d[[dm]]$values))
-#			new_dim[[dm]]$values = v
 
-	st_stars(setNames(ret, names(x)), new_dim)
+	st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x)) # FIXME: fails on non-GDAL readable proj4strings?
 }
 
 check_xy_warn = function(call, dimensions) {
@@ -151,16 +157,16 @@ check_xy_warn = function(call, dimensions) {
 #' @name st_as_stars
 #' @param downsample integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.
 #' @param url character; URL of the stars endpoint where the data reside 
-#' @param env environment at the data endpoint to resolve objects in
+#' @param envir environment to resolve objects in
 #' @export
-st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), env = parent.frame()) {
+st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), envir = parent.frame()) {
 	if (! is.null(url)) { # execute/get remotely: # nocov start
 		# if existing, convert call_list to character:
 		attr(.x, "call_list") = lapply(attr(.x, "call_list"), deparse)
 		# push the object to url, then st_as_stars() it there:
 		tempnam = substr(tempfile(pattern = "Z", tmpdir = "", fileext = ""), 2, 15)
 		put_data_url(url, tempnam, .x)
-		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", env = data)") # evaluate in "data" first
+		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", envir = data)") # evaluate in "data" first
 		ret = get_data_url(url, expr)
 		put_data_url(url, tempnam, NULL) # remove the temporary object
 		ret # nocov end
@@ -169,9 +175,9 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
 		# there are cases where this is not right. Hence:
 		# TODO: only warn when there is a reason to warn.
-		if (downsample != 0)
+		if (!all(downsample == 0))
 			lapply(attr(.x, "call_list"), check_xy_warn, dimensions = st_dimensions(.x))
-		process_call_list(fetch(.x, ..., downsample = downsample), cl, env = env)
+		process_call_list(fetch(.x, ..., downsample = downsample), cl, envir = envir)
 	}
 }
 
@@ -186,14 +192,14 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE
 }
 
 # execute the call list on a stars object
-process_call_list = function(x, cl, env = parent.frame()) {
+process_call_list = function(x, cl, envir = new.env()) {
 	for (i in seq_along(cl)) {
 		if (is.character(cl[[i]]))
 			cl[[i]] = parse(text = cl[[i]])[[1]]
 		stopifnot(is.call(cl[[i]]))
 		lst = as.list(cl[[i]]) 
-		env [[ names(lst)[[2]] ]] = x # FIXME: side effects in case we trash parent.frame()?
-		x = eval(cl[[i]], envir = env)
+		envir [[ names(lst)[[2]] ]] = x
+		x = eval(cl[[i]], envir = envir, enclos = parent.frame())
 	}
 	x
 }
@@ -296,7 +302,11 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 			}
 		}
 	}
-	st_stars_proxy(x, dm)
+	x = st_stars_proxy(x, dm) # crop to bb
+#	if (inherits(y, c("sf", "sfc"))) # FIXME: or DOCME?
+#		collect(x, match.call(), "st_crop")
+#	else
+	x
 }
 
 #' @export

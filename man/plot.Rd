@@ -12,7 +12,7 @@
   breaks = "quantile", col = grey(1:(nbreaks - 1)/nbreaks),
   key.pos = get_key_pos(x, ...), key.width = lcm(1.8),
   key.length = 0.618, reset = TRUE, box_col = grey(0.8),
-  center_time = FALSE)
+  center_time = FALSE, hook = NULL)
 
 \method{image}{stars}(x, ..., band = 1, attr = 1, asp = NULL,
   rgb = NULL, maxColorValue = ifelse(inherits(rgb, "data.frame"), 255,
@@ -21,7 +21,8 @@
   ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
   interpolate = FALSE, as_points = FALSE, key.pos = NULL,
   logz = FALSE, key.width = lcm(1.8), key.length = 0.618,
-  add.geom = NULL)
+  add.geom = NULL, border = NA,
+  useRaster = dev.capabilities("rasterImage")$rasterImage == "yes")
 
 \method{plot}{stars_proxy}(x, y, ...,
   downsample = get_downsample(dim(x)))
@@ -39,7 +40,7 @@
 
 \item{axes}{logical; should axes and box be added to the plot?}
 
-\item{downsample}{logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.}
+\item{downsample}{logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the downsampling rate; see Details.}
 
 \item{nbreaks}{number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.}
 
@@ -58,6 +59,8 @@
 \item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
 
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
+
+\item{hook}{NULL or function; hook function that will be called on every sub-plot.}
 
 \item{band}{integer; which band (dimension) to plot}
 
@@ -86,11 +89,17 @@
 \item{logz}{logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.}
 
 \item{add.geom}{object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image}
+
+\item{border}{color used for cell borders (only in case \code{x} is a curvilinear or rotated/sheared grid)}
+
+\item{useRaster}{logical; use the rasterImage capabilities of the graphics device?}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 }
 \details{
+Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on.
+
 use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 
 when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.

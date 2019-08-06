@@ -130,7 +130,12 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			if (length(ix) > 1)	
 				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
-			dfs = lapply(x, function(y) as.data.frame(y))
+			un_dim = function(x) { # remove a dim attribute from data.frame columns
+				for (i in seq_along(x))
+					x[[i]] = structure(x[[i]], dim = NULL)
+				x
+			}
+			dfs = lapply(x, function(y) un_dim(as.data.frame(y)))
 			nc = sapply(dfs, ncol)
 			df = do.call(cbind, dfs)
 	

@@ -15,14 +15,14 @@ st_as_stars.STFDF = function(.x, ...) {
 			ny = gp[2,3]
 			if (! sp::fullgrid(.x@sp)) { # SpatialPixels
 				lst = vector("list", ncol(.x@data))
-				for (j in seq_along(.x@data)) {
+				for (j in seq_along(.x@data)) { # attributes
 					px2vec = function(pix) {
 						sp::fullgrid(pix) = TRUE
 						as.vector(as.matrix(pix))
 					}
 					a = array(NA_real_, c(nx, ny, dim(.x)[2]))
-					for (i in seq_len(dim(.x)[2]))
-						a[,,i] = px2vec(.x[,i])
+					for (i in seq_len(dim(.x)[2])) # time
+						a[,,i] = px2vec(.x[,i,j])
 					lst[[j]] = as.vector(a)
 				}
 				.x@data = as.data.frame(setNames(lst, names(.x@data)))
@@ -54,11 +54,11 @@ st_as_STFDF = function(x) {
 	geom = if (rst) {
 			x = st_upfront(x)
 			time_dim = 3
-			sp::geometry(as(adrop(x[,,,1]), "Spatial"))
+			sp::geometry(as(adrop(x[,,,1], drop = 3), "Spatial"))
 		} else {
 			x = st_upfront(x, which_sfc(x))
 			time_dim = 2
-			sp::geometry(as(adrop(x[,,1]), "Spatial"))
+			sp::geometry(as(adrop(x[,,1], drop = 2), "Spatial"))
 		}
 	tm = st_get_dimension_values(x, time_dim, center = FALSE)
 

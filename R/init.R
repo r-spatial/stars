@@ -18,6 +18,7 @@ NULL
 lwgeom::st_transform_proj
 
 setOldClass("stars")
+setOldClass("stars_proxy")
 
 .onLoad = function(libname, pkgname) {
 	register_all_s3_methods() # dynamically registers non-imported pkgs (tidyverse) # nocov

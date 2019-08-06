@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.3-1
+Version: 0.3-2
 Authors@R: 
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -26,11 +26,11 @@ Description: Reading, manipulating, writing and plotting
 License: Apache License
 URL: https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Additional_repositories: http://pebesma.staff.ifgi.de
+Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 0.7-3)
+    sf (>= 0.7-5)
 Imports:
     methods,
 	parallel,
@@ -85,6 +85,7 @@ Collate:
     'sp.R'
     'spacetime.R'
     'ncdf.R'
+    'ncdf_tidync.R'
     'proxy.R'
     'factors.R'
     'rasterize.R'

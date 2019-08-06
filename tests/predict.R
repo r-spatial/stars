@@ -2,6 +2,7 @@ suppressPackageStartupMessages(library(stars))
 # predict:
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))
+st_crs(x) = st_crs(x) # cleans trailing space
 model = lm(x~L7_ETMs.tif, head(as.data.frame(x), 50))
 x = predict(x, model)
 

@@ -61,6 +61,7 @@ st_as_raster = function(x, ...) {
 #' @name as
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Raster-method
+#' @aliases coerce,stars_proxy,Raster-method
 setAs("stars", "Raster", function(from) { 
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") # nocov
@@ -69,4 +70,17 @@ setAs("stars", "Raster", function(from) {
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to Raster* objects")
 	st_as_raster(from)
+})
+
+setAs("stars_proxy", "Raster", function(from) { 
+    if (!requireNamespace("raster", quietly = TRUE))
+        stop("package raster required, please install it first") # nocov
+	if (!is_regular_grid(from))
+		stop("only regular rasters can be converted to Raster* objects")
+	if (length(attr(from, "call_list"))) {
+		fname = paste0(tempfile(), ".tif")
+		write_stars(from, fname)
+		from = fname
+	}
+	raster::brick(unlist(from))
 })

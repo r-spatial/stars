@@ -17,6 +17,8 @@ nit.c0 = st_as_stars(nit, curvilinear = ll)
 # more direct method:
 nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
+if (inherits(nit.c[[1]], "units"))
+	nit.c[[1]] = units::drop_units(nit.c[[1]])
 nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 all.equal(nit.c0, nit.c)
 st_crs(nit.c) = 4326

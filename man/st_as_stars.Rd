@@ -20,22 +20,21 @@ st_as_stars(.x, ...)
 \method{st_as_stars}{stars}(.x, ..., curvilinear = NULL,
   crs = st_crs(4326))
 
-\method{st_as_stars}{bbox}(.x, ..., nx = 360, ny = 180,
-  deltax = diff(xlim)/nx, deltay = -diff(ylim)/ny,
+\method{st_as_stars}{bbox}(.x, ..., nx, ny, dx = dy, dy = dx,
   xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")],
-  values = 0)
+  values = 0, n = 64800, pretty = FALSE, inside = FALSE)
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
 \method{st_as_stars}{Raster}(.x, ...)
 
 \method{st_as_stars}{stars_proxy}(.x, ..., downsample = 0,
-  url = attr(.x, "url"), env = parent.frame())
+  url = attr(.x, "url"), envir = parent.frame())
 }
 \arguments{
 \item{.x}{object to convert}
 
-\item{...}{ignored}
+\item{...}{in case \code{.x} is of class \code{bbox}, arguments passed on to \link{pretty}}
 
 \item{dimensions}{object of class dimensions}
 
@@ -45,13 +44,13 @@ st_as_stars(.x, ...)
 
 \item{crs}{object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details}
 
-\item{nx}{integer; number of cells in x direction}
+\item{nx}{integer; number of cells in x direction; see details}
 
-\item{ny}{integer; number of cells in y direction}
+\item{ny}{integer; number of cells in y direction; see details}
 
-\item{deltax}{numeric; cell size in x direction}
+\item{dx}{numeric; cell size in x direction; see details}
 
-\item{deltay}{numeric; cell size in y direction (negative)}
+\item{dy}{numeric; cell size in y direction; see details}
 
 \item{xlim}{length 2 numeric vector with extent (min, max) in x direction}
 
@@ -59,17 +58,25 @@ st_as_stars(.x, ...)
 
 \item{values}{value(s) to populate the raster values with}
 
+\item{n}{the (approximate) target number of grid cells}
+
+\item{pretty}{logical; should cell coordinates have \link{pretty} values?}
+
+\item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely?}
+
 \item{name}{character; name for the geometry dimensions}
 
 \item{downsample}{integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.}
 
 \item{url}{character; URL of the stars endpoint where the data reside}
 
-\item{env}{environment at the data endpoint to resolve objects in}
+\item{envir}{environment to resolve objects in}
 }
 \description{
 convert objects into a stars object
 }
 \details{
 if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
+
+For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 }

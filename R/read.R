@@ -14,7 +14,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' @param .x character vector with name(s) of file(s) or data source(s) to be read
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.
-#' @param sub integer or logical; sub-datasets to be read
+#' @param sub character, integer or logical; name, index or indicator of sub-dataset(s) to be read
 #' @param quiet logical; print progress output?
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
@@ -78,10 +78,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			enc2utf8(maybe_normalizePath(.x, np = normalize_path))
 	
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
-		lon = read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
-			RasterIO = RasterIO, ...)
-		lat = read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value, 
-			RasterIO = RasterIO, ...)
+		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...))
+		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value, 
+			RasterIO = RasterIO, ...))
 		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
 	}
 
@@ -104,6 +104,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# FIXME: only tested for NetCDF:
 		nms = sapply(strsplit(unlist(sub_datasets), ":"), tail, 1)
 		names(sub_datasets) = nms
+		if (any(sapply(sub_datasets[sub], is.null)))
+			sub = sub("^//", "/", sub) # GDAL2->3, HDF5, double to single slash?
 		sub_datasets = sub_datasets[sub]
 		nms = names(sub_datasets)
 

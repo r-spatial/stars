@@ -2,10 +2,13 @@
 % Please edit documentation in R/tidyverse.R
 \name{geom_stars}
 \alias{geom_stars}
+\alias{theme_stars}
 \title{ggplot geom for stars objects}
 \usage{
-geom_stars(mapping = NULL, data = NULL, ..., downsample = 1,
+geom_stars(mapping = NULL, data = NULL, ..., downsample = 0,
   sf = FALSE)
+
+theme_stars(...)
 }
 \arguments{
 \item{mapping}{see \link[ggplot2]{geom_raster}}
@@ -14,7 +17,7 @@ geom_stars(mapping = NULL, data = NULL, ..., downsample = 1,
 
 \item{...}{see \link[ggplot2]{geom_raster}}
 
-\item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 1 does not downsample}
+\item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample}
 
 \item{sf}{logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2]{geom_sf}.}
 }

@@ -32,6 +32,13 @@
 #' plot(ls, add = TRUE, col = "red")
 st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_, ...), 
 		file = tempfile(), driver = "GTiff", options = character(0), ...) {
+	template = st_normalize(template)
+	isn = sapply(sf, is.numeric)
+	if (!any(isn)) {
+		sf$ID = seq_len(nrow(sf))
+		sf = sf["ID"]
+	} else
+		sf = sf[isn]
 	sf::gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
 	ret = read_stars(file, driver = driver)
 	for (i in seq_along(ret))

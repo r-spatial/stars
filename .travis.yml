@@ -7,7 +7,7 @@ r:
 
 sudo: required
 dist: trusty
-cache: packages
+# cache: packages
 latex: true
 
 addons:
@@ -24,7 +24,7 @@ addons:
 
 before_install:
   - R -q -e 'install.packages("remotes"); remotes::install_github("ropenscilabs/tic"); tic::prepare_all_stages(); tic::before_install()'
-  - R -q -e 'install.packages("starsdata", repos = "https://cran.uni-muenster.de/pebesma" , type = "source")'
+  - R -q -e 'install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma" , type = "source")'
 
 # after_success: R -q -e 'tic::after_success()'
 after_success: R -q -e 'covr::codecov(quiet = FALSE)'
