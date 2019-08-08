@@ -1,15 +1,3 @@
-.is_regular <- function(coords_list, eps) {
-  sapply(coords_list, function(x) regular_intervals(x, epsilon = eps))
-}
-
-.unique_fuzz <- function(x, eps) {
-  u = unique(x)
-  if (all(diff(sort(u)) < eps))
-    mean(x) # rather than mean(u)
-  else
-    u
-}
-
 
 #' Read NetCDF into stars object
 #'
@@ -75,18 +63,96 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (!requireNamespace("RNetCDF", quietly = TRUE))
     stop("package RNetCDF required, please install it first") # nocov
 
-  meta = ncmeta::nc_meta(.x)
+  # Get all the nc metadata
+  meta <- .fix_meta(ncmeta::nc_meta(.x))
+  
+  # Get relevant variables
+  var <- .get_vars(var, meta)
+  
+  # Get coordinate variable info
   coord_var <- ncmeta::nc_coord_var(.x)
   
-  # Don't want scalar
-  # todo handle choice of grid
+  # Get dimensions for representative var in correct axis order.
+  dims <- .get_dims(meta, var[1L])
+
+  # Validate that ncsub matches dims
+  ncsub <- .validate_ncsub(ncsub, dims)
+
+  nc = RNetCDF::open.nc(.x)
+  on.exit(RNetCDF::close.nc(nc), add = TRUE)
+  
+  # Get all the data from the nc file
+  out_data <- .get_data(nc, var, ncsub, dims)
+  out_data <- setNames(out_data, var)
+  out_data <- .set_nc_units(out_data, meta$attribute, make_units)
+  
+  # Get coordinates from netcdf or create them 
+  coords <- .get_coords(nc, dims, ncsub)
+
+  # Figure out if we have a raster or not
+  raster <- .get_nc_raster(coords)
+
+  # Create stars dimensions object
+  dimensions <- .get_nc_dimensions(template_data = out_data[[1]], 
+                                   dims = dims, raster = raster, 
+                                   var_names = meta$variable$name, 
+                                   eps = eps, coords = coords, 
+                                   ignore_bounds = ignore_bounds, 
+                                   coord_var = coord_var, nc = nc, ncsub = ncsub)
+
+  # Add time to dimensions if possible.
+  dimensions <- .get_nc_time(dimensions, make_time, 
+                            coord_var, var[1], meta)
+
+  # Make initial response data
+  ret = st_stars(out_data, dimensions)
+
+  # Check if we have curvilinear data
+  curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
+  
+  # Add curvilinear and return
+  if (length(curvilinear) == 2) {
+    curvi_coords = .get_curvilinear_coords(curvilinear, dimensions, nc, ncsub)
+    return(st_as_stars(ret, curvilinear = curvi_coords))
+  } else
+    return(ret)
+}
+
+.fix_meta <- function(meta) {
   nas <- is.na(meta$axis$dimension)
   if (any(nas)) meta$axis$dimension[nas] <- -1 # nocov
+  meta
+}
+
+.is_regular <- function(coords_list, eps) {
+  sapply(coords_list, function(x) regular_intervals(x, epsilon = eps))
+}
+
+.unique_fuzz <- function(x, eps) {
+  u = unique(x)
+  if (all(diff(sort(u)) < eps))
+    mean(x) # rather than mean(u)
+  else
+    u
+}
+
+.as_rectilinear = function(d) {
+    ed = expand_dimensions(d, center = FALSE)
+    for (i in attr(d, "raster")$dimensions) {
+        if (!is.na(d[[ i ]]$offset)) {
+            d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
+            d[[i]]$offset = d[[i]]$delta = NA
+        }
+    }
+    d
+}
+
+.get_vars <- function(var, meta) {
   if (is.null(var)) {
     ix <- 1
     if (meta$grid$grid[ix] == "S") {
       ix <- which(!meta$grid$grid == "S")[1L] # nocov
-
+      
       if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
     }
     grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
@@ -95,12 +161,43 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     message(sprintf("no 'var' specified, using %s", paste(var, collapse = ", ")))
     other_vars <- setdiff(meta$variable$name, var)
     if (length(other_vars) > 0)
-    message(sprintf("other available variables:\n %s", paste(other_vars, collapse = ", ")))
+      message(sprintf("other available variables:\n %s", paste(other_vars, collapse = ", ")))
   }
-  ##
-  dims_index = meta$axis$dimension[meta$axis$variable == var[1L]]
-  dims = meta$dimension[match(dims_index, meta$dimension$id), ]
+  return(var)
+}
 
+.get_dims <- function(meta, var) {
+  meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
+                     meta$dimension$id), ]
+}
+
+.get_data <- function(nc, var, ncsub, dims) {
+  out_data <- lapply(var, function(.v) RNetCDF::var.get.nc(nc,
+                                                     variable = .v,
+                                                     start = ncsub[, "start", drop = TRUE],
+                                                     count = ncsub[, "count", drop = TRUE],
+                                                     collapse = FALSE, ## keep 1-dims
+                                                     unpack = TRUE,     ## offset and scale applied internally
+                                                     rawchar = TRUE))  ## needed for NC_CHAR, as per
+  ## "../rasterwise/extdata/R13352.nc"
+  ## https://github.com/hypertidy/tidync/issues/75
+  ## check for NC_CHAR case
+  lapply(out_data, function(.v) {
+    if (mode(.v) == "raw") {
+      array(unlist(lapply(.v, rawToChar)), dims$length) 
+    } else .v
+  })
+}
+
+.get_attributes <- function(attribute, att) {
+  if(att %in% attribute$name)
+    attribute[attribute$name == att, ]
+  else {
+    NULL
+  }
+}
+
+.validate_ncsub <- function(ncsub, dims) {
   ## need to validate existing ncsub here
   if (is.null(ncsub)) {
     ncsub = cbind(start = 1, count = dims$length)
@@ -108,96 +205,96 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   } else {
     ## needs more attention
     if (nrow(dims) != nrow(ncsub)) stop("input ncsub doesn't match available dims") # nocov
-    if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) stop("start or count out of bounds")  # nocov
+    if (any(ncsub[, "start"] < 1) || any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) 
+      stop("start or count out of bounds")  # nocov
   }
-
-  nc = RNetCDF::open.nc(.x)
-  on.exit(RNetCDF::close.nc(nc), add = TRUE)
-  out = lapply(var, function(.v) RNetCDF::var.get.nc(nc,
-                                                     variable = .v,
-                                                     start = ncsub[, "start", drop = TRUE],
-                                                     count = ncsub[, "count", drop = TRUE],
-                                                     collapse = FALSE, ## keep 1-dims
-                                                     unpack = TRUE,     ## offset and scale applied internally
-                                                     rawchar = TRUE))  ## needed for NC_CHAR, as per
-                                  ## "../rasterwise/extdata/R13352.nc"
-                                  ## https://github.com/hypertidy/tidync/issues/75
-  ## check for NC_CHAR case
-  out = lapply(out, function(.v) if (mode(.v) == "raw") array(unlist(lapply(.v, rawToChar)), dims$length) else .v)
   
-  
-  vars = ncmeta::nc_vars(nc)
-  out = setNames(out, var)
-  # units:
-  ## FIXME: this should be a meta-getter function, with NULL as fallback
-  nc_units = meta$attribute[meta$attribute$name == "units", ]
+  return(ncsub)
+}
 
+.set_nc_units <- function(data_list, nc_atts, make_units) {
+  # Get all the units
+  nc_units <- .get_attributes(nc_atts, "units")
+  
   if (!is.null(nc_units) && nrow(nc_units) > 0 && make_units) {
-    for (i in var) {
-      if (is.numeric(out[[i]]) && i %in% nc_units$variable) {
-        uval = unlist(nc_units$value[nc_units$variable == i])
-        units(out[[i]]) = try_as_units(uval[1L])
+    for (i in names(data_list)) {
+      if (is.numeric(data_list[[i]]) && i %in% nc_units$variable) {
+        uval <- unlist(nc_units$value[nc_units$variable == i])
+        units(data_list[[i]]) <- try_as_units(uval[1L])
       }
     }
   }
-  ## cannot assume we have coord dims
+  return(data_list)
+}
+
+.get_coords <- function(nc, dims, ncsub) {
+  ## cannot assume we have COORDS style coordinate varibales
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
   for (ic in seq_along(coords)) {
     subidx <- seq(ncsub[ic, "start"], length = ncsub[ic, "count"])
-
+    
     ## create_dimvar means we can var_get it
     ## test checks if there's actuall a variable of the dim name
-    if (dims$name[ic] %in% vars$name) {
+    if (dims$name[ic] %in% ncmeta::nc_vars(nc)$name) {
       coords[[ic]] <- RNetCDF::var.get.nc(nc, variable = dims$name[ic])[subidx]
-
+      
     } else {
       coords[[ic]] <- subidx##seq_len(dims$length[ic])
     }
   }
+  return(coords)
+}
 
+.get_nc_raster <- function(coords) {
   ## can we create a raster?
   raster = NULL
   ## which coords are regular
-  regular = .is_regular(coords, eps)
   if (length(coords) > 1) {
     raster = get_raster(affine = c(0, 0),
                         dimensions = names(coords)[1:2], curvilinear = FALSE)
   }
+  return(raster)
+}
 
+.check_curvilinear <- function(coord_var, var, variables) {
   ## are we curvilinear?
   if (all(c("X", "Y") %in% names(coord_var))) {
-    cvar = coord_var[coord_var$variable == var[1], ]
+    cvar = coord_var[coord_var$variable == var, ]
     XY_curvi = unlist(cvar[c("X", "Y")])
-
-   if (all(!is.na(XY_curvi)) && all(meta$variable$ndims[match(XY_curvi, meta$variable$name)] == 2)) {
-     curvilinear = XY_curvi
-   }
+    
+    if (all(!is.na(XY_curvi)) && all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
+      curvilinear = XY_curvi
+    }
   }
+}
 
-  dimensions = create_dimensions(setNames(dim(out[[1]]), dims$name), raster)
-
+.get_nc_dimensions <- function(template_data, dims, raster, var_names, 
+                              eps, coords, ignore_bounds, coord_var, nc, ncsub) {
+  dimensions = create_dimensions(setNames(dim(template_data), dims$name), raster)
+  
   ## if either x, y rectilinear assume both are
   #if (sum(regular[1:2]) == 1) regular[1:2] <- c(FALSE, FALSE)
-  var_names = meta$variable$name
   
   to_rectilinear = FALSE
+  regular <- .is_regular(coords, eps)
+  
   for (i in seq_along(coords)) {
     if (names(coords)[i] %in% var_names && !ignore_bounds &&
         length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
         bounds %in% var_names) {
-
+      
       bounds = RNetCDF::var.get.nc(nc, bounds)
       if (!is.matrix(bounds)) # single instance, returns a vector
         bounds = matrix(bounds, nrow = 2)
       is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
         length(v <- .unique_fuzz(diff(bounds[1,]), eps)) == 1
-
+      
       if (is_reg && abs(u + v) < eps) {
-          warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
-          bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
-          u = v
-
+        warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
+        bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
+        u = v
+        
       }
       
       if (is_reg && abs(v - u) < eps) {
@@ -208,7 +305,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         dimensions[[i]]$point = FALSE
         if (i %in% 1:2 && length(curvilinear) < 1) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
           to_rectilinear = TRUE
-    }
+      }
     } else if (regular[i]) {
       dx <- diff(coords[[i]][1:2])
       dimensions[[i]]$offset[1L] = coords[[i]][ncsub[i, "start"]] - dx/2
@@ -223,63 +320,56 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     }
   }
   if (to_rectilinear)
-    dimensions = as_rectilinear(dimensions)
+    dimensions = .as_rectilinear(dimensions)
+  return(dimensions)
+}
 
-  
+.get_nc_time <- function(dimensions, make_time, coord_var, var, meta) {
   # sort out time -> POSIXct:
-  ## assuming that the variable is called "time", no other option
   if (make_time) {
     if (all("T" %in% names(coord_var))) {
-      tvar = coord_var[coord_var$variable == var[1], ]
-      TIME_name = as.character(na.omit(unlist(cvar[c("T")])))
-      if (!is.na(TIME_name) && length(TIME_name) == 1L && meta$variable$ndims[match(TIME_name, meta$variable$name)] == 1) {
-       atts = meta$attribute[meta$attribute$variable == TIME_name, ]
-       ## might not exist, so default to NULL
-       calendar = unlist(atts$value[atts$name == "calendar"])[1L]
-       tunit = unlist(atts$value[atts$name == "units"])[1L]
-       if (TIME_name %in% names(dimensions)) {
-        tdim <- NULL
-         if (is.null(tunit) || inherits(tunit, "try-error")) {
-           warning("ignoring units of time dimension, not able to interpret")
-         } else {
-          tdim = make_cal_time2(dimensions[[TIME_name]], time_unit = tunit, cal = calendar)
-
-         }
-        
-       if (!is.null(tdim)) dimensions[[TIME_name]] <- tdim
-    
-      }
-      }
-    }}
-
-  ret = st_stars(out, dimensions)
-
-  if (length(curvilinear) == 2) {
-    curvi_coords = lapply(curvilinear, function(.v) RNetCDF::var.get.nc(nc,
-                                                                        variable = .v,
-                                                                        ## note there subtle subsetting into x,y
-                                                                        start = ncsub[1:2, "start", drop = TRUE],
-                                                                        count = ncsub[1:2, "count", drop = TRUE],
-                                                                        collapse = FALSE,
-                                                                        unpack = TRUE))
-    names(curvi_coords)[1:2] <- names(dimensions)[1:2]
-    st_as_stars(ret, curvilinear = curvi_coords)
-  } else
-    ret
-}
-
-as_rectilinear = function(d) {
-    ed = expand_dimensions(d, center = FALSE)
-    for (i in attr(d, "raster")$dimensions) {
-        if (!is.na(d[[ i ]]$offset)) {
-            d[[i]]$values = as_intervals(ed[[i]], add_last = TRUE)
-            d[[i]]$offset = d[[i]]$delta = NA
+      tvar = coord_var[coord_var$variable == var, ]
+      
+      TIME_name = as.character(na.omit(unlist(
+        coord_var[coord_var$variable == var, ][c("T")])))
+      
+      if (!is.na(TIME_name) && length(TIME_name) == 1L && 
+          meta$variable$ndims[match(TIME_name, meta$variable$name)] == 1) {
+        atts = meta$attribute[meta$attribute$variable == TIME_name, ]
+        ## might not exist, so default to NULL
+        calendar = unlist(atts$value[atts$name == "calendar"])[1L]
+        tunit = unlist(atts$value[atts$name == "units"])[1L]
+        if (TIME_name %in% names(dimensions)) {
+          tdim <- NULL
+          if (is.null(tunit) || inherits(tunit, "try-error")) {
+            warning("ignoring units of time dimension, not able to interpret")
+          } else {
+            tdim = make_cal_time2(dimensions[[TIME_name]], time_unit = tunit, cal = calendar)
+            
+          }
+          
+          if (!is.null(tdim)) dimensions[[TIME_name]] <- tdim
+          
         }
+      }
     }
-    d
+  }
+  return(dimensions)
 }
 
-
+.get_curvilinear_coords <- function(curvilinear, dimensions, nc, ncsub) {
+  curvi_coords <- lapply(curvilinear, function(.v) {
+    RNetCDF::var.get.nc(nc,
+                        variable = .v,
+                        ## note there subtle subsetting into x,y
+                        start = ncsub[1:2, "start", drop = TRUE],
+                        count = ncsub[1:2, "count", drop = TRUE],
+                        collapse = FALSE,
+                        unpack = TRUE)
+  })
+  names(curvi_coords)[1:2] <- names(dimensions)[1:2]
+  return(curvi_coords)
+}
 
 make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
     tm = get_dimension_values(dimension, geotransform = NA)
