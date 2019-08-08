@@ -40,12 +40,15 @@ test_that("normal bcsd", {
   expect_equal(st_dim$longitude$delta, 0.125)
 })
 
-# Leaving these here but commented in case there is interest in more robust handling of odd files.
-# see dblodgett-usgs/stars for sample files or PR #87 in r-spatial/stars.
-# test_that("broken bcsd", {
-#   expect_warning(nc <- read_ncdf(system.file("nc/bcsd_obs_1999_borked.nc", package = "stars")),
-#                  "Found non-canonical axis order in NetCDF unexpected bahavior may result.")
-# })
+test_that("non canonical axis order is handled right", {
+  expect_warning(nc <- read_ncdf(system.file("nc/3B42_Daily.19991231.7.test.nc", 
+                                             package = "stars")),
+                 "Non-canonical axis order found, attempting to correct.")
+  expect_equal(names(st_dimensions(nc)), c("lon", "lat"))
+  expect_equal(st_dimensions(nc)[[1]]$to, c(lon = 4L))
+  expect_equal(st_dimensions(nc)[[2]]$to, c(lat = 5L))
+})
+
 # 
 # test_that("euro cordex extra dimvars", {
 #   f <- system.file("nc/EURO-CORDEX_81_DOMAIN000.nc", package = "stars")

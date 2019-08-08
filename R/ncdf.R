@@ -73,7 +73,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   coord_var <- ncmeta::nc_coord_var(.x)
   
   # Get dimensions for representative var in correct axis order.
-  dims <- .get_dims(meta, var[1L])
+  dims <- .get_dims(meta, var[1L], coord_var, meta$axis)
 
   # Validate that ncsub matches dims
   ncsub <- .validate_ncsub(ncsub, dims)
@@ -82,7 +82,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   on.exit(RNetCDF::close.nc(nc), add = TRUE)
   
   # Get all the data from the nc file
-  out_data <- .get_data(nc, var, ncsub, dims)
+  out_data <- .get_data(nc, var, ncsub, dims, coord_var)
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
   
@@ -166,19 +166,71 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   return(var)
 }
 
-.get_dims <- function(meta, var) {
-  meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
-                     meta$dimension$id), ]
+.get_dims <- function(meta, var, coord_var, axis) {
+  dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
+                              meta$dimension$id), ]
+  
+  coord_var <- coord_var[coord_var$variable == var, ]
+  
+  dim_matcher <- axis[axis$variable == coord_var$X, ]$dimension
+  
+  if(length(dim_matcher) < 2) {
+    dim_matcher <- c(dim_matcher, 
+                     axis[axis$variable == coord_var$Y, ]$dimension)
+  }
+  
+  if(!is.na(coord_var$Z)) {
+    z_axis <- axis[axis$variable == coord_var$Z, ]$dimension
+    dim_matcher <- c(dim_matcher, z_axis)
+  }
+  
+  if(!is.na(coord_var$T)) {
+    t_axis <- axis[axis$variable == coord_var$T, ]$dimension
+    dim_matcher <- c(dim_matcher, t_axis)
+  }
+  
+  dims[match(dims$id, dim_matcher), ]
 }
 
-.get_data <- function(nc, var, ncsub, dims) {
-  out_data <- lapply(var, function(.v) RNetCDF::var.get.nc(nc,
-                                                     variable = .v,
-                                                     start = ncsub[, "start", drop = TRUE],
-                                                     count = ncsub[, "count", drop = TRUE],
-                                                     collapse = FALSE, ## keep 1-dims
-                                                     unpack = TRUE,     ## offset and scale applied internally
-                                                     rawchar = TRUE))  ## needed for NC_CHAR, as per
+.get_data <- function(nc, var, ncsub, dims, coord_var) {
+  out_data <- lapply(var, function(.v) {
+    c_v <- coord_var[coord_var$variable == .v, ]
+    
+    coordvar_dimids <- RNetCDF::var.inq.nc(nc, c_v$X)$dimids 
+    
+    if(length(coordvar_dimids) == 1) {
+      coordvar_dimids <- c(coordvar_dimids, 
+                         RNetCDF::var.inq.nc(nc, c_v$Y)$dimids)
+    }
+    
+    if(!is.na(c_v$Z)) {
+      coordvar_dimids <- c(coordvar_dimids, 
+                           RNetCDF::var.inq.nc(nc, c_v$Z)$dimids)
+    }
+    
+    if(!is.na(c_v$T)) {
+      coordvar_dimids <- c(coordvar_dimids, 
+                           RNetCDF::var.inq.nc(nc, c_v$T)$dimids)
+    }
+    
+    var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
+    dimid_matcher <- match(coordvar_dimids, var_dimids)
+    ret <- RNetCDF::var.get.nc(nc,
+                        variable = .v,
+                        start = ncsub[, "start", drop = TRUE][dimid_matcher],
+                        count = ncsub[, "count", drop = TRUE][dimid_matcher],
+                        collapse = FALSE, ## keep 1-dims
+                        unpack = TRUE,     ## offset and scale applied internally
+                        rawchar = TRUE)  ## needed for NC_CHAR, as per
+    
+    if(!all(diff(dimid_matcher[1:2]) == 1)) {
+      warning("Non-canonical axis order found, attempting to correct.")
+      
+      ret <- aperm(ret, dimid_matcher)
+      
+    }
+    return(ret)
+  })
   ## "../rasterwise/extdata/R13352.nc"
   ## https://github.com/hypertidy/tidync/issues/75
   ## check for NC_CHAR case
