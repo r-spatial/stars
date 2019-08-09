@@ -24,7 +24,7 @@ Description: Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in 'R', using 'GDAL'
     bindings provided by 'sf', and 'NetCDF' bindings by 'ncmeta' and 'RNetCDF'.
 License: Apache License
-URL: https://github.com/r-spatial/stars/
+URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
