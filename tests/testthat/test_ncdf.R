@@ -24,6 +24,17 @@ test_that("domain subsetting", {
   expect_equal(st_dim$lon$to - st_dim$lon$from, c("lon" = 9))
   expect_equal(st_dim$lat$to - st_dim$lat$from, c("lat" = 11))
   
+  expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
+                                   count = c(200, 12, 1, 1))),
+               "start or count out of bounds")
+  
+  expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1), 
+                                                count = c(200, 12, 1))),
+               "input ncsub doesn't match available dims")
+  
+  
+  
+  
   # Leaving this here -- NA or -1 counts should return all but this causes other errors.
   # nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
   #                                  count = c(NA, NA, 1, 1)))
