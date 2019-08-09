@@ -95,6 +95,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
 
+  # Check if we have curvilinear data
+  curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
+  
   # Create stars dimensions object
   dimensions <- create_dimensions(setNames(dim(out_data[[1]]), dims$name), raster)
   dimensions <- .get_nc_dimensions(dimensions,
@@ -103,6 +106,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                    nc = nc,
                                    dims = dims,
                                    var_names = meta$variable$name,
+                                   curvilinear,
                                    eps = eps,
                                    ignore_bounds = ignore_bounds)
   dimensions <- .get_nc_time(dimensions, make_time, 
@@ -110,9 +114,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   # Make initial response data
   ret = st_stars(out_data, dimensions)
-
-  # Check if we have curvilinear data
-  curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
   
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
@@ -340,7 +341,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 .get_nc_dimensions <- function(dimensions, coord_var, coords, nc, dims, 
-                               var_names, eps, ignore_bounds) {
+                               var_names, curvilinear, eps, ignore_bounds) {
   
   to_rectilinear = FALSE
   regular <- .is_regular(coords, eps)

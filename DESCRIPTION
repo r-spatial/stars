@@ -85,7 +85,6 @@ Collate:
     'sp.R'
     'spacetime.R'
     'ncdf.R'
-    'ncdf_tidync.R'
     'proxy.R'
     'factors.R'
     'rasterize.R'
