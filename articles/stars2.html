@@ -271,13 +271,10 @@
 <a class="sourceLine" id="cb7-11" data-line-number="11">## y       1 10980  6e+06   -10 +proj=utm +zone=32 +datum...    NA   NULL [y]</a>
 <a class="sourceLine" id="cb7-12" data-line-number="12">## band    1     4     NA    NA                           NA    NA   NULL</a></code></pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(p))</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">## Warning in classInt::classIntervals(na.omit(values), min(nbreaks - 1,</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">## n.unq), : N is large, and some styles will run very slowly; sampling</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">## imposed</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(p))</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.592   0.860   1.463</code></pre>
+##   1.552   0.868   1.447</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -414,13 +411,10 @@
 <a class="sourceLine" id="cb17-14" data-line-number="14">## call list:</a>
 <a class="sourceLine" id="cb17-15" data-line-number="15">## [[1]]</a>
 <a class="sourceLine" id="cb17-16" data-line-number="16">## st_apply(X = X, MARGIN = c("x", "y"), FUN = ndvi)</a>
-<a class="sourceLine" id="cb17-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(s2.ndvi)) <span class="co"># read - compute ndvi - plot </span></a>
-<a class="sourceLine" id="cb17-18" data-line-number="18">## Warning in classInt::classIntervals(na.omit(values), min(nbreaks - 1,</a>
-<a class="sourceLine" id="cb17-19" data-line-number="19">## n.unq), : N is large, and some styles will run very slowly; sampling</a>
-<a class="sourceLine" id="cb17-20" data-line-number="20">## imposed</a></code></pre></div>
+<a class="sourceLine" id="cb17-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(s2.ndvi)) <span class="co"># read - compute ndvi - plot </span></a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.920   0.968   1.878</code></pre>
+##   2.096   0.764   1.889</code></pre>
 </div>
 </div>
 </div>
