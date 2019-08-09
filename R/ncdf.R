@@ -226,8 +226,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     
     var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
     
-    match(coordvar_dimids, var_dimids)}), 
-    var)
+    matcher <- match(coordvar_dimids, var_dimids)
+    
+    if(!all(diff(matcher[1:2]) == 1)) {
+      warning("Non-canonical axis order found, attempting to correct.")
+    }
+    
+    matcher
+  }), 
+  var)
 }
 
 .get_data <- function(nc, var, dims, dimid_matcher) {
@@ -244,7 +251,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         rawchar = TRUE)  ## needed for NC_CHAR, as per
     
     if(!all(diff(dm[1:2]) == 1)) {
-      warning("Non-canonical axis order found, attempting to correct.")
       ret <- aperm(ret, dm)
     }
     return(ret)
@@ -426,15 +432,30 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
 .get_curvilinear_coords <- function(curvilinear, dimensions, nc, dims) {
   curvi_coords <- lapply(curvilinear, function(.v) {
+    
+    cv_matcher <- RNetCDF::var.inq.nc(nc, .v)$dimids
+    cv_matcher <- match(cv_matcher, dims$id[1:2])
+    
     RNetCDF::var.get.nc(nc,
                         variable = .v,
-                        ## note there subtle subsetting into x,y
-                        start = dims[1:2, "start", drop = TRUE],
-                        count = dims[1:2, "count", drop = TRUE],
+                        start = dims[1:2, "start", drop = TRUE][cv_matcher],
+                        count = dims[1:2, "count", drop = TRUE][cv_matcher],
                         collapse = FALSE,
                         unpack = TRUE)
   })
-  names(curvi_coords)[1:2] <- names(dimensions)[1:2]
+  names(curvi_coords)[1:2] <- tolower(names(curvilinear))[1:2]
+  
+  # This is a bit of a hack till we have more test cases.
+  expected_shape <- c(dimensions$x$to, dimensions$y$to)
+  
+  if(!all(dim(curvi_coords$x) == expected_shape)) {
+    curvi_coords$x <- aperm(curvi_coords$x, c(2, 1))
+  }
+  
+  if(!all(dim(curvi_coords$y) == expected_shape)) {
+    curvi_coords$y <- aperm(curvi_coords$y, c(2, 1))
+  }
+  
   return(curvi_coords)
 }
 

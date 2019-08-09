@@ -87,3 +87,20 @@ test_that("curvilinear", {
   
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
 })
+
+test_that("curvilinear broked", {
+  f <- system.file("nc/test_stageiv_xyt_borked.nc", package = "stars")
+  
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
+  
+  expect_match(warn[1], "Non-canonical axis order found, attempting to correct.")
+  expect_match(warn[2], "Could not parse expression:.*Returning as a single symbolic unit()")
+  
+  st_dim <- st_dimensions(out)
+  
+  expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+  
+  expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+  
+  expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+})
