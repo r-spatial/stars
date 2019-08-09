@@ -71,6 +71,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   # Get coordinate variable info
   coord_var <- ncmeta::nc_coord_var(.x)
+  # rasterwise: high-dim/test-1.nc
+  if(ncol(coord_var) == 0) coord_var <- data.frame(variable = NA, X = NA, Y = NA, 
+                                                   Z = NA, T = NA, bounds = NA)
   
   # Get dimensions for representative var in correct axis order.
   dims <- .get_dims(meta, var[1L], coord_var, meta$axis)
@@ -174,30 +177,51 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 #' Gets dimension info ensuring they are in an order suited to coordinate
 #' variables that need to be subset appropriately.
 #' @noRd
-.get_dims <- function(meta, var, coord_var, axis) {
+.get_dims <- function(meta, var, c_v, axis) {
   dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
                               meta$dimension$id), ]
   
-  coord_var <- coord_var[coord_var$variable == var, ]
+  c_v <- c_v[c_v$variable == var, ]
   
-  dim_matcher <- axis[axis$variable == coord_var$X, ]$dimension
+  not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
+  
+  c_v <- c_v[which(not_na == max(not_na)), ]
+  
+  if(nrow(c_v) > 1) {
+    # Two sets of coordinates available. Need to choose.
+    # See rasterwise: EURO-CORDEX_81_DOMAIN000 for example.
+    c_v <- c_v[1, ] #nocov
+    warning(paste("Found two coordinate variable pairs. Chosing:", 
+                  paste(as.character(c_v)[2:5], collapse = " "), 
+                  "for", as.character(c_v)[1])) #nocov
+  }
+  
+  dim_matcher <- axis[axis$variable == c_v$X, ]$dimension
   
   if(length(dim_matcher) < 2) {
     dim_matcher <- c(dim_matcher, 
-                     axis[axis$variable == coord_var$Y, ]$dimension)
+                     axis[axis$variable == c_v$Y, ]$dimension)
   }
   
-  if(!is.na(coord_var$Z)) {
-    z_axis <- axis[axis$variable == coord_var$Z, ]$dimension
+  if(!is.na(c_v$Z)) {
+    z_axis <- axis[axis$variable == c_v$Z, ]$dimension
     dim_matcher <- c(dim_matcher, z_axis)
   }
   
-  if(!is.na(coord_var$T)) {
-    t_axis <- axis[axis$variable == coord_var$T, ]$dimension
+  if(!is.na(c_v$T)) {
+    t_axis <- axis[axis$variable == c_v$T, ]$dimension
     dim_matcher <- c(dim_matcher, t_axis)
   }
   
-  dims[match(dims$id, dim_matcher), ]
+  if(all(!is.na(dim_matcher))) {
+    if(length(dim_matcher) != length(dims$id)) {
+      dim_matcher <- c(dim_matcher, 
+                       dims$id[!dims$id %in% dim_matcher])
+      dim_matcher <- unique(dim_matcher)
+    }
+    dims <- dims[match(dims$id, dim_matcher), ]
+  }
+  return(dims)
 }
 
 #' Gets a list of dimension id matching indexes for use in 
@@ -207,31 +231,38 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   setNames(lapply(var, function(.v) {
     c_v <- coord_var[coord_var$variable == .v, ]
     
-    coordvar_dimids <- RNetCDF::var.inq.nc(nc, c_v$X)$dimids 
+    not_na <- apply(c_v, 1, function(f) sum(!is.na(f)))
     
-    if(length(coordvar_dimids) == 1) {
-      coordvar_dimids <- c(coordvar_dimids, 
-                           RNetCDF::var.inq.nc(nc, c_v$Y)$dimids)
+    c_v <- c_v[which(not_na == max(not_na)), ]
+    
+    matcher <- NULL
+    
+    if(all(!is.na(c_v[2:3]))) {
+      coordvar_dimids <- RNetCDF::var.inq.nc(nc, c_v$X)$dimids 
+      
+      if(length(coordvar_dimids) == 1) {
+        coordvar_dimids <- c(coordvar_dimids, 
+                             RNetCDF::var.inq.nc(nc, c_v$Y)$dimids)
+      }
+      
+      if(!is.na(c_v$Z)) {
+        coordvar_dimids <- c(coordvar_dimids, 
+                             RNetCDF::var.inq.nc(nc, c_v$Z)$dimids)
+      }
+      
+      if(!is.na(c_v$T)) {
+        coordvar_dimids <- c(coordvar_dimids, 
+                             RNetCDF::var.inq.nc(nc, c_v$T)$dimids)
+      }
+      
+      var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
+      
+      matcher <- match(coordvar_dimids, var_dimids)
+      
+      if(!all(diff(matcher[1:2]) == 1)) {
+        warning("Non-canonical axis order found, attempting to correct.")
+      }
     }
-    
-    if(!is.na(c_v$Z)) {
-      coordvar_dimids <- c(coordvar_dimids, 
-                           RNetCDF::var.inq.nc(nc, c_v$Z)$dimids)
-    }
-    
-    if(!is.na(c_v$T)) {
-      coordvar_dimids <- c(coordvar_dimids, 
-                           RNetCDF::var.inq.nc(nc, c_v$T)$dimids)
-    }
-    
-    var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
-    
-    matcher <- match(coordvar_dimids, var_dimids)
-    
-    if(!all(diff(matcher[1:2]) == 1)) {
-      warning("Non-canonical axis order found, attempting to correct.")
-    }
-    
     matcher
   }), 
   var)
@@ -240,7 +271,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 .get_data <- function(nc, var, dims, dimid_matcher) {
   out_data <- lapply(var, function(.v) {
     
-    dm <- dimid_matcher[[.v]]
+    dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
+                dims[, "id", drop = TRUE])
+    if(is.null(dm)) dm <- c(1:nrow(dims))
     
     ret <- RNetCDF::var.get.nc(nc,
                         variable = .v,
