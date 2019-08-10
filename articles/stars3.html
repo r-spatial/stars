@@ -123,20 +123,20 @@
 <a class="sourceLine" id="cb2-2" data-line-number="2">##  [1] [                 [&lt;-               $&lt;-              </a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">##  [4] adrop             aggregate         aperm            </a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">##  [7] as_tibble         as.data.frame     as.tbl_cube      </a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">## [10] c                 coerce            cut              </a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">## [13] dim               dimnames          dimnames&lt;-       </a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">## [16] filter            image             initialize       </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">## [19] is.na             Math              merge            </a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">## [22] mutate            Ops               plot             </a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">## [25] predict           print             pull             </a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">## [28] select            show              slice            </a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">## [31] slotsFromS3       split             st_apply         </a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">## [34] st_area           st_as_sf          st_as_sfc        </a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">## [37] st_as_stars       st_bbox           st_coordinates   </a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">## [40] st_crop           st_crs            st_crs&lt;-         </a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">## [43] st_dimensions     st_geometry       st_intersects    </a>
-<a class="sourceLine" id="cb2-17" data-line-number="17">## [46] st_normalize      st_redimension    st_transform_proj</a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">## [49] st_transform      write_stars      </a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">## [10] c                 coerce            contour          </a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">## [13] cut               dim               dimnames         </a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">## [16] dimnames&lt;-        filter            image            </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">## [19] initialize        is.na             Math             </a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">## [22] merge             mutate            Ops              </a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">## [25] plot              predict           print            </a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">## [28] pull              select            show             </a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">## [31] slice             slotsFromS3       split            </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">## [34] st_apply          st_area           st_as_sf         </a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">## [37] st_as_sfc         st_as_stars       st_bbox          </a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">## [40] st_coordinates    st_crop           st_crs           </a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">## [43] st_crs&lt;-          st_dimensions     st_geometry      </a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">## [46] st_intersects     st_normalize      st_redimension   </a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">## [49] st_transform_proj st_transform      write_stars      </a>
 <a class="sourceLine" id="cb2-19" data-line-number="19">## see '?methods' for accessing help and source code</a></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
