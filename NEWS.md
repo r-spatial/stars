@@ -1,5 +1,7 @@
 # version 0.3-2
 
+* allow for funny units like `m s**-1`; #201
+
 * add `contour` method for `stars` objects; #196
 
 * plot uses `rasterImage` by default if available; #194
