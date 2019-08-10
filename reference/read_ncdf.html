@@ -242,7 +242,8 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 
 <span class='co'>#' precipitation data in a curvilinear NetCDF</span>
 <span class='no'>prec_file</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"nc/test_stageiv_xyt.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'>read_ncdf</span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>), <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Could not parse expression: ‘`kg` `m`^-2’. Returning as a single symbolic unit()</span></div><div class='input'>
+<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'>read_ncdf</span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>), <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
 <span class='co'>##plot(prec) ## gives error about unique breaks</span>
 <span class='co'>## remove NAs, zeros, and give a large number</span>
 <span class='co'>## of breaks (used for validating in detail)</span>
