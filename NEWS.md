@@ -1,5 +1,7 @@
 # version 0.3-2
 
+* add `contour` method for `stars` objects; #196
+
 * plot uses `rasterImage` by default if available; #194
 
 * the `x` and `y` raster dimensions can be set and unset with `xy` argument in `st_set_dimensions`; #190
