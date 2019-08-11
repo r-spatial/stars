@@ -380,16 +380,16 @@ parse_netcdf_meta = function(pr, name) {
 }
 
 try_as_units = function(u) {
-	un = try(as_units(u), silent = TRUE)
+	un = try(suppressWarnings(as_units(u)), silent = TRUE)
+	if (inherits(un, "try-error")) # try without ^:
+		un = try(suppressWarnings(as_units(gsub("^", "", u, fixed = TRUE))), silent = TRUE)
+	if (inherits(un, "try-error")) # try without **
+		un = try(suppressWarnings(as_units(gsub("**", "", u, fixed = TRUE))), silent = TRUE)
 	if (inherits(un, "try-error")) {
-		# try without ^:
-		un = try(as_units(sub("^", "", u, fixed = TRUE)), silent = TRUE)
-		if (inherits(un, "try-error")) {
-			warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
-			return(NULL)
-		}
-	} 
-	un
+		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
+		NULL
+	} else
+		un
 }
 
 parse_gdal_meta = function(properties) {
