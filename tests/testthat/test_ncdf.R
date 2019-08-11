@@ -76,8 +76,7 @@ test_that("curvilinear", {
   
   warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
   
-  expect_match(warn[1], "Could not parse expression:.*Returning as a single symbolic unit()")
-  expect_match(warn[2], "bounds for time seem to be reversed; reverting them")
+  expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
   
   st_dim <- st_dimensions(out)
   
@@ -94,8 +93,7 @@ test_that("curvilinear broked", {
   warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
   
   expect_match(warn[1], "Non-canonical axis order found, attempting to correct.")
-  expect_match(warn[2], "Could not parse expression:.*Returning as a single symbolic unit()")
-  
+
   st_dim <- st_dimensions(out)
   
   expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
