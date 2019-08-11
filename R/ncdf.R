@@ -129,6 +129,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 .fix_meta <- function(meta) {
   nas <- is.na(meta$axis$dimension)
   if (any(nas)) meta$axis$dimension[nas] <- -1 # nocov
+  
+  names(meta$attribute)[names(meta$attribute) == "attribute"] <- "name" # future proofing.
+  
   meta
 }
 
