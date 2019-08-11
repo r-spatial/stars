@@ -74,7 +74,7 @@ test_that("non canonical axis order is handled right", {
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
   
-  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
   
   expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
   
@@ -85,12 +85,18 @@ test_that("curvilinear", {
   expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
   
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+
+  # Should also find the curvilinear grid.  
+  suppressWarnings(out <-read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
+  
+  expect_true(attr(st_dimensions(out), "raster")$curvilinear)
+  
 })
 
 test_that("curvilinear broked", {
   f <- system.file("nc/test_stageiv_xyt_borked.nc", package = "stars")
   
-  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c("lon", "lat")))
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
   
   expect_match(warn[1], "Non-canonical axis order found, attempting to correct.")
 

@@ -26,7 +26,9 @@
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns (see Details)
-#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
+#' @param curvilinear length two character named vector with names of variables holding 
+#' longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
+#' curvilinear coordinates if they are not supplied.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
 #' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
 #' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
@@ -99,7 +101,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
 
   # Check if we have curvilinear data
-  curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
+  if(length(curvilinear) == 0) {
+    curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
+  } else {
+    names(curvilinear) <- c("X", "Y")
+  }
   
   # Create stars dimensions object
   dimensions <- create_dimensions(setNames(dim(out_data[[1]]), dims$name), raster)
@@ -130,7 +136,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   nas <- is.na(meta$axis$dimension)
   if (any(nas)) meta$axis$dimension[nas] <- -1 # nocov
   
-  names(meta$attribute)[names(meta$attribute) == "attribute"] <- "name" # future proofing.
+  if(!is.null(names(meta$attribute))) {
+    names(meta$attribute)[names(meta$attribute) == "attribute"] <- "name" # future proofing.
+  }
   
   meta
 }
@@ -377,8 +385,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     XY_curvi = unlist(cvar[c("X", "Y")])
     
     if (all(!is.na(XY_curvi)) && all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
-      curvilinear = XY_curvi
+      return(XY_curvi)
     }
+  } else {
+    return(character(0))
   }
 }
 

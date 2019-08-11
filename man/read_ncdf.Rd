@@ -17,7 +17,9 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 
 \item{ncsub}{matrix of start, count columns (see Details)}
 
-\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
+\item{curvilinear}{length two character named vector with names of variables holding 
+longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
+curvilinear coordinates if they are not supplied.}
 
 \item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
 
