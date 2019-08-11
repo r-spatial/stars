@@ -34,7 +34,7 @@ Depends:
 Imports:
     methods,
 	parallel,
-    classInt (>= 0.2-2),
+    classInt (>= 0.4-1),
 	lwgeom,
     rlang,
     units
