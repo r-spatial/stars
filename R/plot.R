@@ -179,9 +179,11 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
-		values = as.numeric(structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))])
+		values = structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))]
 		if (isTRUE(logz))
 			values = log10(values)
+		if (is.factor(values))
+			values = as.numeric(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
 			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, 
