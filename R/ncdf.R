@@ -74,10 +74,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   # Get coordinate variable info
   all_coord_var <- ncmeta::nc_coord_var(.x)
-  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta$attribute)
+  
   # rasterwise: high-dim/test-1.nc
-  if(ncol(coord_var) == 0) coord_var <- data.frame(variable = NA, X = NA, Y = NA, 
-                                                   Z = NA, T = NA, bounds = NA)
+  if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA, 
+                                                           Z = NA, T = NA, bounds = NA)
+  
+  nc_prj <- .get_nc_projection(meta$attribute, rep_var, all_coord_var)
+  
+  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta$attribute, nc_prj)
   
   # Get dimensions for representative var in correct axis order.
   dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
@@ -133,7 +137,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Make initial response data
   ret = st_stars(out_data, dimensions)
   
-  st_crs(ret) <- .get_nc_projection(meta$attribute, rep_var, coord_var)
+  st_crs(ret) <- nc_prj
   
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
@@ -222,7 +226,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
 }
 
-.clean_coord_var <- function(c_v, var, atts) {
+.clean_coord_var <- function(c_v, var, atts, prj) {
   c_v <- c_v[c_v$variable == var, ]
   
   not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
@@ -231,12 +235,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   if(nrow(c_v) > 1) {
     # Should use convenience function?
-    atts <- atts[atts$name == "standard_name", ]
-    auxiliary_x <- atts[grepl("projection_x_coordinate", atts$value), ]$variable
-    auxiliary_y <- atts[grepl("projection_y_coordinate", atts$value), ]$variable
+    sn_atts <- atts[atts$name == "standard_name", ]
+    auxiliary_x <- sn_atts[grepl("projection_x_coordinate", sn_atts$value), ]$variable
+    auxiliary_y <- sn_atts[grepl("projection_y_coordinate", sn_atts$value), ]$variable
     
     if(length(auxiliary_x) > 0 && length(auxiliary_y) > 0 && 
-       auxiliary_x %in% c_v$X && auxiliary_y %in% c_v$Y) {
+       auxiliary_x %in% c_v$X && auxiliary_y %in% c_v$Y & 
+       !is.na(prj)) {
       c_v <- c_v[c_v$variable == var & c_v$X == auxiliary_x, ]
     } else {
       warning(paste("Found two coordinate variable pairs. Chosing:", 
