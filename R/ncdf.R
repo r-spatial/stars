@@ -379,13 +379,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 .check_curvilinear <- function(coord_var, var, variables) {
-  ## are we curvilinear?
-  if (all(c("X", "Y") %in% names(coord_var))) {
-    cvar = coord_var[coord_var$variable == var, ]
-    XY_curvi = unlist(cvar[c("X", "Y")])
+  # If we have X and Y coordvars to look at.
+  if (all(c("X", "Y") %in% names(coord_var))) { 
     
-    if (all(!is.na(XY_curvi)) && all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
+    # Actually look at this one.
+    XY_curvi = unlist(coord_var[coord_var$variable == var, ][c("X", "Y")]) 
+    
+    if (all(!is.na(XY_curvi)) && # If all coordinate variables have 2 dims.
+        all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
       return(XY_curvi)
+    } else {
+      return(character(0))
     }
   } else {
     return(character(0))
@@ -495,11 +499,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   expected_shape <- c(dimensions$x$to, dimensions$y$to)
   
   if(!all(dim(curvi_coords$x) == expected_shape)) {
-    curvi_coords$x <- aperm(curvi_coords$x, c(2, 1))
+    curvi_coords$x <- t(curvi_coords$x)
   }
   
   if(!all(dim(curvi_coords$y) == expected_shape)) {
-    curvi_coords$y <- aperm(curvi_coords$y, c(2, 1))
+    curvi_coords$y <- t(curvi_coords$y)
   }
   
   return(curvi_coords)
