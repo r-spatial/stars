@@ -24,6 +24,17 @@ test_that("domain subsetting", {
   expect_equal(st_dim$lon$to - st_dim$lon$from, c("lon" = 9))
   expect_equal(st_dim$lat$to - st_dim$lat$from, c("lat" = 11))
   
+  expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
+                                   count = c(200, 12, 1, 1))),
+               "start or count out of bounds")
+  
+  expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1), 
+                                                count = c(200, 12, 1))),
+               "input ncsub doesn't match available dims")
+  
+  
+  
+  
   # Leaving this here -- NA or -1 counts should return all but this causes other errors.
   # nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), 
   #                                  count = c(NA, NA, 1, 1)))
@@ -40,12 +51,15 @@ test_that("normal bcsd", {
   expect_equal(st_dim$longitude$delta, 0.125)
 })
 
-# Leaving these here but commented in case there is interest in more robust handling of odd files.
-# see dblodgett-usgs/stars for sample files or PR #87 in r-spatial/stars.
-# test_that("broken bcsd", {
-#   expect_warning(nc <- read_ncdf(system.file("nc/bcsd_obs_1999_borked.nc", package = "stars")),
-#                  "Found non-canonical axis order in NetCDF unexpected bahavior may result.")
-# })
+test_that("non canonical axis order is handled right", {
+  expect_warning(nc <- read_ncdf(system.file("nc/3B42_Daily.19991231.7.test.nc", 
+                                             package = "stars")),
+                 "Non-canonical axis order found, attempting to correct.")
+  expect_equal(names(st_dimensions(nc)), c("lon", "lat"))
+  expect_equal(st_dimensions(nc)[[1]]$to, c(lon = 4L))
+  expect_equal(st_dimensions(nc)[[2]]$to, c(lat = 5L))
+})
+
 # 
 # test_that("euro cordex extra dimvars", {
 #   f <- system.file("nc/EURO-CORDEX_81_DOMAIN000.nc", package = "stars")
@@ -60,13 +74,37 @@ test_that("normal bcsd", {
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
   
-  out <-read_ncdf(f, curvilinear = c("lon", "lat"))
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
+  
+  expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
   
   st_dim <- st_dimensions(out)
   
-  expect(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+  expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
   
-  expect(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+  expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+  
+  expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+
+  # Should also find the curvilinear grid.  
+  suppressWarnings(out <-read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
+  
+  expect_true(attr(st_dimensions(out), "raster")$curvilinear)
+  
+})
+
+test_that("curvilinear broked", {
+  f <- system.file("nc/test_stageiv_xyt_borked.nc", package = "stars")
+  
+  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
+  
+  expect_match(warn[1], "Non-canonical axis order found, attempting to correct.")
+
+  st_dim <- st_dimensions(out)
+  
+  expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+  
+  expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
   
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
 })
