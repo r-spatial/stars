@@ -41,8 +41,11 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 		sf = sf[isn]
 	sf::gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
 	ret = read_stars(file, driver = driver)
-	for (i in seq_along(ret))
+	for (i in seq_along(ret)) {
 		ret[[i]][is.nan(ret[[i]])] = NA_real_
+		if (inherits(sf[[i]], "units"))
+			units(ret[[i]]) = units(sf[[i]])
+	}
 	setNames(ret, names(sf)[1])
 }
 
