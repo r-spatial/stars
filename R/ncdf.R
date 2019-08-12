@@ -110,9 +110,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
   
   # Create stars dimensions object
+  axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], c("X", "Y", "Z", "T"))
+  if(length(dims$axis) > 4) { # rasterwise/extdata//high-dim/test-1.nc"
+    axis_matcher <- c(axis_matcher, 5:length(dims$axis))
+  }
+  
   dimensions <- create_dimensions(setNames(dim(out_data[[1]]), 
-                                           dims$name[match(dims$axis, 
-                                                           c("X", "Y", "Z", "T"))]), 
+                                           dims$name[axis_matcher]), 
                                   raster)
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
@@ -193,7 +197,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 .get_nc_projection <- function(atts, rep_var, coord_var) {
-  nc_grid_mapping <- suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
+  if(!is.null(atts)) { # high-dim/test-1.nc
+    nc_grid_mapping <- suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
+  } else {
+    nc_grid_mapping <- list()
+  }
   
   if(length(nc_grid_mapping) == 0) {             
     rep_coord_var <- coord_var[coord_var$variable == rep_var, ]
@@ -208,7 +216,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       return(st_crs(NULL))
     }
   } else {
-    return(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
+    ret <- st_crs(NULL)
+    ret <- try(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
+    return(ret)
   }
 }
 
