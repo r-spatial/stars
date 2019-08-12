@@ -110,7 +110,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
   
   # Create stars dimensions object
-  dimensions <- create_dimensions(setNames(dim(out_data[[1]]), dims$name), raster)
+  dimensions <- create_dimensions(setNames(dim(out_data[[1]]), 
+                                           dims$name[match(dims$axis, 
+                                                           c("X", "Y", "Z", "T"))]), 
+                                  raster)
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
                                    coords = coords,
@@ -241,9 +244,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
                               meta$dimension$id), ]
   
+  canon_order <- c("X", "Y", "Z", "T")
+  
   dims$coord_var <- ""
-  
-  
+  dims$axis <- canon_order[1:nrow(dims)]
   
   rep_var_coordinates <- .get_attributes(meta$attribute, "coordinates", var)
   if(!is.null(rep_var_coordinates)) {
@@ -259,29 +263,30 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
   
   dim_matcher <- axis[axis$variable == c_v$X, ]$dimension
-  
+
   if(length(dim_matcher) < 2) {
-    dim_matcher <- c(dim_matcher, 
+    dim_matcher <- c(dim_matcher,
                      axis[axis$variable == c_v$Y, ]$dimension)
   }
-  
+
   if(!is.na(c_v$Z)) {
     z_axis <- axis[axis$variable == c_v$Z, ]$dimension
     dim_matcher <- c(dim_matcher, z_axis)
   }
-  
+
   if(!is.na(c_v$T)) {
     t_axis <- axis[axis$variable == c_v$T, ]$dimension
     dim_matcher <- c(dim_matcher, t_axis)
   }
-  
+
   if(all(!is.na(dim_matcher))) {
     if(length(dim_matcher) != length(dims$id)) {
-      dim_matcher <- c(dim_matcher, 
+      dim_matcher <- c(dim_matcher,
                        dims$id[!dims$id %in% dim_matcher])
       dim_matcher <- unique(dim_matcher)
     }
     dims <- dims[match(dims$id, dim_matcher), ]
+    dims$axis <- canon_order[1:nrow(dims)]
   }
   return(dims)
 }
