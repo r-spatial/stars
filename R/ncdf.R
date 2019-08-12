@@ -70,15 +70,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   # Get relevant variables
   var <- .get_vars(var, meta)
+  rep_var <- var[1L]
   
   # Get coordinate variable info
-  coord_var <- ncmeta::nc_coord_var(.x)
+  all_coord_var <- ncmeta::nc_coord_var(.x)
+  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta$attribute)
   # rasterwise: high-dim/test-1.nc
   if(ncol(coord_var) == 0) coord_var <- data.frame(variable = NA, X = NA, Y = NA, 
                                                    Z = NA, T = NA, bounds = NA)
   
   # Get dimensions for representative var in correct axis order.
-  dims <- .get_dims(meta, var[1L], coord_var, meta$axis)
+  dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
 
   # Validate that ncsub matches dims
   dims <- .add_ncsub(dims, ncsub)
@@ -102,7 +104,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   # Check if we have curvilinear data
   if(length(curvilinear) == 0) {
-    curvilinear <- .check_curvilinear(coord_var, var[1], meta$variable)
+    curvilinear <- .check_curvilinear(coord_var, rep_var, meta$variable)
   } else {
     names(curvilinear) <- c("X", "Y")
   }
@@ -110,7 +112,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Create stars dimensions object
   dimensions <- create_dimensions(setNames(dim(out_data[[1]]), dims$name), raster)
   dimensions <- .get_nc_dimensions(dimensions,
-                                   coord_var = coord_var,
+                                   coord_var = all_coord_var,
                                    coords = coords,
                                    nc = nc,
                                    dims = dims,
@@ -119,10 +121,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                    eps = eps,
                                    ignore_bounds = ignore_bounds)
   dimensions <- .get_nc_time(dimensions, make_time, 
-                            coord_var, var[1], meta)
+                            coord_var, rep_var, meta)
 
   # Make initial response data
   ret = st_stars(out_data, dimensions)
+  
+  st_crs(ret) <- .get_nc_projection(meta$attribute, rep_var, coord_var)
   
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
@@ -185,13 +189,27 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   return(var)
 }
 
-#' Gets dimension info ensuring they are in an order suited to coordinate
-#' variables that need to be subset appropriately.
-#' @noRd
-.get_dims <- function(meta, var, c_v, axis) {
-  dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
-                              meta$dimension$id), ]
+.get_nc_projection <- function(atts, rep_var, coord_var) {
+  nc_grid_mapping <- suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
   
+  if(length(nc_grid_mapping) == 0) {             
+    rep_coord_var <- coord_var[coord_var$variable == rep_var, ]
+    c_v_units <- .get_attributes(atts, "units", rep_coord_var$X)$value[[1]]
+    if(!is.null(c_v_units) && grepl("degrees", c_v_units, ignore.case = TRUE)) {
+      message(paste("No projection information found in nc file. \n",
+                    "Coordinate variable units found to be degrees, \n",
+                    "assuming WGS84 Lat/Lon."))
+      return(st_crs(4326))
+    } else {
+      warning("No projection information found in nc file.")
+      return(st_crs(NULL))
+    }
+  } else {
+    return(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
+  }
+}
+
+.clean_coord_var <- function(c_v, var, atts) {
   c_v <- c_v[c_v$variable == var, ]
   
   not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
@@ -199,12 +217,45 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   c_v <- c_v[which(not_na == max(not_na)), ]
   
   if(nrow(c_v) > 1) {
-    # Two sets of coordinates available. Need to choose.
-    # See rasterwise: EURO-CORDEX_81_DOMAIN000 for example.
-    c_v <- c_v[1, ] #nocov
-    warning(paste("Found two coordinate variable pairs. Chosing:", 
-                  paste(as.character(c_v)[2:5], collapse = " "), 
-                  "for", as.character(c_v)[1])) #nocov
+    # Should use convenience function?
+    atts <- atts[atts$name == "standard_name", ]
+    auxiliary_x <- atts[grepl("projection_x_coordinate", atts$value), ]$variable
+    auxiliary_y <- atts[grepl("projection_y_coordinate", atts$value), ]$variable
+    
+    if(length(auxiliary_x) > 0 && length(auxiliary_y) > 0 && 
+       auxiliary_x %in% c_v$X && auxiliary_y %in% c_v$Y) {
+      c_v <- c_v[c_v$variable == var & c_v$X == auxiliary_x, ]
+    } else {
+      warning(paste("Found two coordinate variable pairs. Chosing:", 
+                    paste(as.character(c_v)[2:5], collapse = " "), 
+                    "for", as.character(c_v)[1])) #nocov
+    }
+  }
+  return(c_v)
+}
+
+#' Gets dimension info ensuring they are in an order suited to coordinate
+#' variables that need to be subset appropriately.
+#' @noRd
+.get_dims <- function(meta, var, c_v, axis) {
+  dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var], 
+                              meta$dimension$id), ]
+  
+  dims$coord_var <- ""
+  
+  
+  
+  rep_var_coordinates <- .get_attributes(meta$attribute, "coordinates", var)
+  if(!is.null(rep_var_coordinates)) {
+    rep_var_coordinates <- strsplit(rep_var_coordinates$value[[1]], " ")[[1]]
+  }
+  
+  x_cv <- axis[axis$variable == c_v$X, ]
+  y_cv <- axis[axis$variable == c_v$Y, ]
+  
+  if(nrow(x_cv) == 1 & nrow(y_cv) == 1) {
+    dims[dims$id == x_cv$dimension, ]$coord_var <- x_cv$variable
+    dims[dims$id == y_cv$dimension, ]$coord_var <- y_cv$variable
   }
   
   dim_matcher <- axis[axis$variable == c_v$X, ]$dimension
@@ -239,12 +290,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 #' requesting data from a given NetCDF file.
 #' @noRd
 .get_dimid_matcher <- function(nc, coord_var, var) {
-  setNames(lapply(var, function(.v) {
-    c_v <- coord_var[coord_var$variable == .v, ]
-    
-    not_na <- apply(c_v, 1, function(f) sum(!is.na(f)))
-    
-    c_v <- c_v[which(not_na == max(not_na)), ]
+  setNames(lapply(var, FUN = function(.v, c_v, nc) {
     
     matcher <- NULL
     
@@ -275,7 +321,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       }
     }
     matcher
-  }), 
+  }, c_v = coord_var, nc = nc), 
   var)
 }
 
@@ -309,7 +355,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   })
 }
 
-.get_attributes <- function(attribute, att) {
+.get_attributes <- function(attribute, att, var = NULL) {
+  if(!is.null(var)) attribute <- attribute[attribute$variable == var, ]
   if(att %in% attribute$name)
     attribute[attribute$name == att, ]
   else {
@@ -564,3 +611,5 @@ make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
   
     
 }
+
+

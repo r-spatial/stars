@@ -60,16 +60,17 @@ test_that("non canonical axis order is handled right", {
   expect_equal(st_dimensions(nc)[[2]]$to, c(lat = 5L))
 })
 
-# 
-# test_that("euro cordex extra dimvars", {
-#   f <- system.file("nc/EURO-CORDEX_81_DOMAIN000.nc", package = "stars")
-#   
-#   suppressWarnings(out <- read_ncdf(f))
-#   
-#   expect_equal(names(out), c("topo", "xlat", "xlon"))
-#   
-#   expect(sf::st_crs(out) == sf::st_crs("+proj=lcc +lat_1=30 +lat_2=65 +lat_0=48 +lon_0=9.75 +x_0=-6000 +y_0=-6000 +a=6371229 +b=6371229 +units=m +no_defs"))
-# })
+
+test_that("euro cordex extra dimvars", {
+  f <- unzip(zipfile = system.file("nc/EURO-CORDEX_81_DOMAIN000_mask_int.nc.zip", package = "stars"), exdir = tempdir())
+
+  expect_warning(out <- read_ncdf(f, var = "mask"),
+                 "Didn't find a longitude of prime meridian for datum, assuming 0.")
+
+  expect_equal(names(out), c("mask"))
+
+  expect_equal(sf::st_crs(out), sf::st_crs("+proj=lcc +lat_1=30 +lat_2=65 +lat_0=48 +lon_0=9.75 +x_0=-6000 +y_0=-6000 +a=6371229 +b=6371229 +units=m +no_defs"))
+})
 
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
