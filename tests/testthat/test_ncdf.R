@@ -70,6 +70,17 @@ test_that("euro cordex extra dimvars", {
   expect_equal(names(out), c("mask"))
 
   expect_equal(sf::st_crs(out), sf::st_crs("+proj=lcc +lat_1=30 +lat_2=65 +lat_0=48 +lon_0=9.75 +x_0=-6000 +y_0=-6000 +a=6371229 +b=6371229 +units=m +no_defs"))
+  
+  expect_error(out <- suppressWarnings(read_ncdf(f, var = "mask", curvilinear = c("X", "Y"))),
+                 "Curvilinear variables not found in file.")
+  
+  out1 <- suppressWarnings(read_ncdf(f, var = "mask", curvilinear = c("xlat", "xlon")))
+  out2 <- suppressWarnings(read_ncdf(f, var = "mask", curvilinear = c("xlon", "xlat")))
+  
+  expect_true(attr(st_dimensions(out1), "raster")$curvilinear)
+  expect_true(attr(st_dimensions(out2), "raster")$curvilinear)
+  
+  expect_equal(st_dimensions(out1), st_dimensions(out2))
 })
 
 test_that("curvilinear", {
@@ -88,7 +99,7 @@ test_that("curvilinear", {
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
 
   # Should also find the curvilinear grid.  
-  suppressWarnings(out <-read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
+  suppressWarnings(out <- read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
   
   expect_true(attr(st_dimensions(out), "raster")$curvilinear)
   

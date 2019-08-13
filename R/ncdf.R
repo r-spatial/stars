@@ -81,7 +81,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   nc_prj <- .get_nc_projection(meta$attribute, rep_var, all_coord_var)
   
-  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta$attribute, nc_prj)
+  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, nc_prj, curvilinear)
+  
+  curvilinear <- if(coord_var$curvilinear) {
+    c(X = coord_var$X, Y = coord_var$Y) } else character(0)
   
   # Get dimensions for representative var in correct axis order.
   dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
@@ -105,13 +108,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out_data <- .get_data(nc, var, dims, dimid_matcher)
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
-
-  # Check if we have curvilinear data
-  if(length(curvilinear) == 0) {
-    curvilinear <- .check_curvilinear(coord_var, rep_var, meta$variable)
-  } else {
-    names(curvilinear) <- c("X", "Y")
-  }
   
   # Create stars dimensions object
   axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], c("X", "Y", "Z", "T"))
@@ -220,22 +216,31 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       return(st_crs(NULL))
     }
   } else {
-    ret <- st_crs(NULL)
     ret <- try(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
-    return(ret)
+    if(class(ret) == "try-error") {
+      return(st_crs(NULL))
+    } else {
+      return(ret)
+    }
   }
 }
 
-.clean_coord_var <- function(c_v, var, atts, prj) {
+.clean_coord_var <- function(c_v, var, meta, prj, curvilinear) {
   c_v <- c_v[c_v$variable == var, ]
   
   not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
   
   c_v <- c_v[which(not_na == max(not_na)), ]
   
-  if(nrow(c_v) > 1) {
+  check_curvi <- .check_curvilinear(c_v, var, meta$variable, curvilinear)
+  
+  if(length(curvilinear) > 0) {
+    if(length(check_curvi) == 0) stop("Curvilinear coordinate variables provided by not found in file.")
+    c_v <- c_v[c_v$variable == var & c_v$X == check_curvi[1], ]
+    c_v$curvilinear <- TRUE
+  } else if(nrow(c_v) > 1 | length(check_curvi) == 2) {
     # Should use convenience function?
-    sn_atts <- atts[atts$name == "standard_name", ]
+    sn_atts <- meta$attribute[meta$attribute$name == "standard_name", ]
     auxiliary_x <- sn_atts[grepl("projection_x_coordinate", sn_atts$value), ]$variable
     auxiliary_y <- sn_atts[grepl("projection_y_coordinate", sn_atts$value), ]$variable
     
@@ -243,13 +248,56 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
        auxiliary_x %in% c_v$X && auxiliary_y %in% c_v$Y & 
        !is.na(prj)) {
       c_v <- c_v[c_v$variable == var & c_v$X == auxiliary_x, ]
-    } else {
+      c_v$curvilinear <- FALSE
+    } else if (length(check_curvi) == 2) {
+      c_v <- c_v[c_v$variable == var & c_v$X == check_curvi[1], ]
+      c_v$curvilinear <- TRUE
+    } else{
+      c_v <- c_v[1, ]
       warning(paste("Found two coordinate variable pairs. Chosing:", 
                     paste(as.character(c_v)[2:5], collapse = " "), 
                     "for", as.character(c_v)[1])) #nocov
     }
+  } else {
+    c_v$curvilinear <- FALSE
   }
   return(c_v)
+}
+
+.check_curvilinear <- function(coord_var, var, variables, curvilinear) {
+  if(length(curvilinear) > 0) {
+    if(!all(curvilinear %in% variables$name)) stop("Curvilinear variables not found in file.")
+    if(!length(curvilinear) == 2 | all(!is.character(curvilinear))) stop("Curvilinear input must be a length two character vector.")
+    if(all(variables$ndims[match(curvilinear, variables$name)] == 2)) {
+      xy_coords <- coord_var[c("X", "Y")]
+      if(!curvilinear[1] %in% c(xy_coords$X, xy_coords$Y) | !curvilinear[2] %in% c(xy_coords$X, xy_coords$Y)) {
+        warning("Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
+        return(stats::setNames(c("X", "Y"), curvilinear))
+      } else {
+        if(!curvilinear[1] %in% xy_coords$X) {
+          curvilinear <- curvilinear[2:1]
+        }
+        return(stats::setNames(curvilinear, c("X", "Y")))
+      }
+    } else {
+      stop("Specified curvilinear coordinates are not 2-dimensional.")
+    }
+  }
+  # If we have X and Y coordvars to look at.
+  if (all(c("X", "Y") %in% names(coord_var))) { 
+    
+    # Actually look at this one.
+    XY_curvi = unlist(coord_var[coord_var$variable == var, ][c("X", "Y")]) 
+    
+    if (all(!is.na(XY_curvi)) && # If all coordinate variables have 2 dims.
+        all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
+      return(XY_curvi)
+    } else {
+      return(character(0))
+    }
+  } else {
+    return(character(0))
+  }
 }
 
 #' Gets dimension info ensuring they are in an order suited to coordinate
@@ -443,24 +491,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         dimensions = names(coords)[1:2], curvilinear = FALSE)
   }
   return(raster)
-}
-
-.check_curvilinear <- function(coord_var, var, variables) {
-  # If we have X and Y coordvars to look at.
-  if (all(c("X", "Y") %in% names(coord_var))) { 
-    
-    # Actually look at this one.
-    XY_curvi = unlist(coord_var[coord_var$variable == var, ][c("X", "Y")]) 
-    
-    if (all(!is.na(XY_curvi)) && # If all coordinate variables have 2 dims.
-        all(variables$ndims[match(XY_curvi, variables$name)] == 2)) {
-      return(XY_curvi)
-    } else {
-      return(character(0))
-    }
-  } else {
-    return(character(0))
-  }
 }
 
 .get_nc_dimensions <- function(dimensions, coord_var, coords, nc, dims, 
