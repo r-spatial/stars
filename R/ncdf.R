@@ -75,7 +75,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Get coordinate variable info
   all_coord_var <- ncmeta::nc_coord_var(.x)
   
-  # rasterwise: high-dim/test-1.nc
   if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA, 
                                                            Z = NA, T = NA, bounds = NA)
   
@@ -111,7 +110,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   # Create stars dimensions object
   axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], c("X", "Y", "Z", "T"))
-  if(length(dims$axis) > 4) { # rasterwise/extdata//high-dim/test-1.nc"
+  if(length(dims$axis) > 4) {
     axis_matcher <- c(axis_matcher, 5:length(dims$axis))
   }
   
@@ -197,7 +196,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 .get_nc_projection <- function(atts, rep_var, coord_var) {
-  if(!is.null(atts)) { # high-dim/test-1.nc
+  if(!is.null(atts)) {
     nc_grid_mapping <- suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
   } else {
     nc_grid_mapping <- list()
@@ -272,7 +271,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       xy_coords <- coord_var[c("X", "Y")]
       if(!curvilinear[1] %in% c(xy_coords$X, xy_coords$Y) | !curvilinear[2] %in% c(xy_coords$X, xy_coords$Y)) {
         warning("Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
-        return(stats::setNames(c("X", "Y"), curvilinear))
+        return(stats::setNames(curvilinear, c("X", "Y")))
       } else {
         if(!curvilinear[1] %in% xy_coords$X) {
           curvilinear <- curvilinear[2:1]
@@ -408,7 +407,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         unpack = TRUE,     ## offset and scale applied internally
                         rawchar = TRUE)  ## needed for NC_CHAR, as per
     
-    if(!all(diff(dm[1:2]) == 1)) {
+    if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
       ret <- aperm(ret, dm)
     }
     return(ret)

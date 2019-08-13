@@ -108,6 +108,15 @@ test_that("curvilinear", {
 test_that("curvilinear broked", {
   f <- system.file("nc/test_stageiv_xyt_borked.nc", package = "stars")
   
+  expect_error(suppressMessages(read_ncdf(f, curvilinear = c("lon", "lat", "time"))), 
+               "Curvilinear input must be a length two character vector.")
+  
+  expect_error(read_ncdf(f, curvilinear = c("time", "time_bounds")), 
+               "Specified curvilinear coordinates are not 2-dimensional.")
+  
+  expect_warning(suppressMessages(read_ncdf(f, curvilinear = c("lon", "time_bounds"))), 
+               "Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
+  
   warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
   
   expect_match(warn[1], "Non-canonical axis order found, attempting to correct.")
@@ -119,4 +128,11 @@ test_that("curvilinear broked", {
   expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
   
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+})
+
+test_that("high-dim from rasterwise", {
+  f <- system.file("nc/test-1.nc", package = "stars")
+  out <- suppressWarnings(read_ncdf(f, var = "a"))
+  
+  expect_equal(names(st_dimensions(out)), c("x", "y", "c3", "c4", "c5"))
 })
