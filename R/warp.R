@@ -106,6 +106,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
 		method = "near") {
 
+	src = st_normalize(src)
+
 	if (!is.na(crs))
 		crs = st_crs(crs)
 
