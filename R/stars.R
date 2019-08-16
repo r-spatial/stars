@@ -725,3 +725,9 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 	}
 	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
 }
+
+#' @export
+st_interpolate_aw.stars = function(x, to, extensive, ...) {
+	x = st_as_sf(x)
+	NextMethod()
+}

@@ -33,9 +33,9 @@ Depends:
     sf (>= 0.7-5)
 Imports:
     methods,
-	parallel,
+    parallel,
     classInt (>= 0.4-1),
-	lwgeom,
+    lwgeom,
     rlang,
     units
 Suggests: 
@@ -94,3 +94,4 @@ Collate:
     'xts.R'
     'intervals.R'
     'geom.R'
+    'mosaic.R'
