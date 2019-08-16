@@ -135,9 +135,10 @@
 <a class="sourceLine" id="cb2-14" data-line-number="14">## [37] st_as_sfc         st_as_stars       st_bbox          </a>
 <a class="sourceLine" id="cb2-15" data-line-number="15">## [40] st_coordinates    st_crop           st_crs           </a>
 <a class="sourceLine" id="cb2-16" data-line-number="16">## [43] st_crs&lt;-          st_dimensions     st_geometry      </a>
-<a class="sourceLine" id="cb2-17" data-line-number="17">## [46] st_intersects     st_normalize      st_redimension   </a>
-<a class="sourceLine" id="cb2-18" data-line-number="18">## [49] st_transform_proj st_transform      write_stars      </a>
-<a class="sourceLine" id="cb2-19" data-line-number="19">## see '?methods' for accessing help and source code</a></code></pre></div>
+<a class="sourceLine" id="cb2-17" data-line-number="17">## [46] st_interpolate_aw st_intersects     st_normalize     </a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">## [49] st_redimension    st_transform_proj st_transform     </a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">## [52] write_stars      </a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">## see '?methods' for accessing help and source code</a></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">    </span>read_stars -&gt;<span class="st"> </span>x</a>
