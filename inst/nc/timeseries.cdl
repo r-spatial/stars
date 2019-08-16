@@ -1,0 +1,66 @@
+netcdf timeseries {
+dimensions:
+	station = 10 ;
+	time = 20 ;
+variables:
+	int num(station) ;
+		num:long_name = "Station number" ;
+		num:cf_role = "timeseries_id" ;
+	int time(time) ;
+		time:units = "days since 1970-01-01 00:00:00 UTC" ;
+		time:long_name = "time" ;
+		time:calendar = "gregorian" ;
+	float pr(station, time) ;
+		pr:units = "kg m-2 s-1" ;
+		pr:_FillValue = -10.f ;
+		pr:long_name = "Total precipitation flux" ;
+		pr:coordinates = "lat lon alt num" ;
+		pr:standard_name = "precipitation_flux" ;
+	float lat(station) ;
+		lat:units = "degrees_north" ;
+		lat:long_name = "Station latitude" ;
+		lat:standard_name = "latitude" ;
+	float lon(station) ;
+		lon:units = "degrees_east" ;
+		lon:long_name = "Station longitude" ;
+		lon:standard_name = "longitude" ;
+	float alt(station) ;
+		alt:units = "m" ;
+		alt:long_name = "Vertical distance above the surface" ;
+		alt:standard_name = "height" ;
+
+// global attributes:
+		:featureType = "timeSeries" ;
+		:Conventions = "CF-1.7" ;
+data:
+
+ num = 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ;
+
+ time = 10957, 11323, 11688, 12053, 12418, 12784, 13149, 13514, 13879, 
+14245, 14610, 14975, 15340, 15706, 16071, 16436, 16801, 17167, 
+17532, 17897 ;
+
+ pr =
+  88, 54, 90, 35, 83, 19, 71, 38, 93, 65, 57, 16, 
+41, 42, 76, 77, 80, 52, 65, 12, 9, 37, 86, 82, 75, 
+67, 66, 75, 34, 27, 0, 84, 40, 75, 59, 48, 100, 55, 
+39, 44, 12, 56, 88, 69, 68, 36, 52, 75, 79, 44, 22, 
+43, 75, 23, 15, 16, 44, 75, 5, 21, 17, 58, 6, 28, 
+3, 39, 66, 9, 52, 94, 78, 99, 80, 45, 20, 9, 81, 
+42, 88, 92, 84, 25, 1, 9, 64, 50, 34, 56, 49, 58, 
+22, 31, 94, 32, 83, 28, 87, 94, 94, 60, 2, 69, 12, 
+89, 8, 50, 89, 22, 0, 47, 99, 57, 90, 24, 68, 87, 
+74, 33, 7, 46, 79, 39, 92, 44, 85, 40, 10, 82, 63, 
+10, 74, 60, 29, 73, 56, 88, 55, 98, 40, 30, 14, 10, 
+41, 30, 20, 98, 74, 46, 71, 69, 40, 26, 69, 69, 26, 
+62, 1, 58, 95, 86, 82, 55, 10, 51, 11, 98, 28, 19, 
+53, 33, 81, 8, 12, 74, 27, 71, 88, 8, 51, 56, 68, 
+24, 97, 87, 97, 80, 43, 81, 25, 40, 20, 81, 32, 80, 
+8, 7, 38, 52, 97, 87 ;
+
+ lat = 68, 14, -20, -23, 12, 5, -77, 20, 46, -28 ;
+
+ lon = -135, -102, 135, -63, -88, -5, 66, -165, 63, -168 ;
+
+ alt = 0, 10, 500, 20, 75, -10, 54321, 63, 42, 100 ;
+}
