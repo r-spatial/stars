@@ -21,7 +21,7 @@ st_mosaic = function(..., options = c("-vrtnodata", "-9999")) {
 	}
 	src = sapply(list(...), lst_write)
 	dst = tempfile(fileext = ".tif")
-	on.exit(unlink(c(dst, src)))
+	on.exit(unlink(c(src, dst)))
 	sf::gdal_utils("buildvrt", src, dst, options)
 	setNames(read_stars(dst), names(list(...)[[1]])[1])
 }
