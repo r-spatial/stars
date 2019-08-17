@@ -22,3 +22,9 @@ the gdal function buildvrt builds a mosaic of input images; these imput images c
 
 uses \link[sf]{gdal_utils} to internally call \code{buildvrt}; no executables external to R are called.
 }
+\examples{
+x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+x1 = x[,100:200,100:200,]
+x2 = x[,150:300,150:300,]
+plot(st_mosaic(x1, x2))
+}
