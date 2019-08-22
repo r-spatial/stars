@@ -427,7 +427,13 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	if (any(max & center, na.rm = TRUE))
 		stop("only one of max and center can be TRUE, not both")
 
-	where = ifelse(max, 1.0, ifelse(isTRUE(center), 0.5, 0.0)) # defaults to 0!
+	where = setNames(rep(0.0, length(x)), names(x)) # offset
+	for (i in seq_along(x)) {
+		if (max[i])
+			where[i] = 1.0
+		if (isTRUE(center[i]))
+			where[i] = 0.5
+	}
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions
