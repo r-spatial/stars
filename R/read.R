@@ -186,7 +186,7 @@ get_data_units = function(data) {
 		units = units[1] # nocov
 	}
 	if (!is.null(units) && nzchar(units))
-		units = try(units::as_units(units), silent = TRUE)
+		units = try_as_units(units)
 	if (inherits(units, "units"))
 		units::set_units(structure(data, units = NULL), units, mode = "standard")
 	else
