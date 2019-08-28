@@ -1,5 +1,13 @@
 # version 0.3-2
 
+* `st_mosaic` creates mosaics from spatially disjoint rasters; #210
+
+* #205 large refactoring of `read_ncdf`, by David Blodgett and Mike Sumner, affecting #199, #89, #30, #86, #175
+
+* allow for funny units like `m s**-1`; #201
+
+* add `contour` method for `stars` objects; #196
+
 * plot uses `rasterImage` by default if available; #194
 
 * the `x` and `y` raster dimensions can be set and unset with `xy` argument in `st_set_dimensions`; #190

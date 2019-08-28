@@ -155,7 +155,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	}
 }
 
-#' Compute contour lines or sets
+#' Compute or plot contour lines or sets
 #' 
 #' Compute contour lines or sets
 #' @param x object of class \code{stars}
@@ -163,7 +163,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 #' @param contour_lines logical; if \code{FALSE}, polygons are returned (contour sets), otherwise contour lines
 #' @param breaks numerical; values at which to "draw" contour levels
 #' @details this function requires GDAL >= 2.4.0
-#' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}
+#' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}; \link{contour} plots contour lines using R's native algorithm (which also plots contour levels)
 #' @export
 st_contour = function(x, na.rm = TRUE, contour_lines = FALSE, 
 		breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks) {

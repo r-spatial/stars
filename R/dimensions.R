@@ -380,16 +380,16 @@ parse_netcdf_meta = function(pr, name) {
 }
 
 try_as_units = function(u) {
-	un = try(as_units(u), silent = TRUE)
+	un = try(suppressWarnings(as_units(u)), silent = TRUE)
+	if (inherits(un, "try-error")) # try without ^:
+		un = try(suppressWarnings(as_units(gsub("^", "", u, fixed = TRUE))), silent = TRUE)
+	if (inherits(un, "try-error")) # try without **
+		un = try(suppressWarnings(as_units(gsub("**", "", u, fixed = TRUE))), silent = TRUE)
 	if (inherits(un, "try-error")) {
-		# try without ^:
-		un = try(as_units(sub("^", "", u, fixed = TRUE)), silent = TRUE)
-		if (inherits(un, "try-error")) {
-			warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
-			return(NULL)
-		}
-	} 
-	un
+		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
+		NULL
+	} else
+		un
 }
 
 parse_gdal_meta = function(properties) {
@@ -427,7 +427,13 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	if (any(max & center, na.rm = TRUE))
 		stop("only one of max and center can be TRUE, not both")
 
-	where = ifelse(max, 1.0, ifelse(isTRUE(center), 0.5, 0.0)) # defaults to 0!
+	where = setNames(rep(0.0, length(x)), names(x)) # offset
+	for (i in seq_along(x)) {
+		if (max[i])
+			where[i] = 1.0
+		if (isTRUE(center[i]))
+			where[i] = 0.5
+	}
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions

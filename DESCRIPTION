@@ -24,7 +24,7 @@ Description: Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in 'R', using 'GDAL'
     bindings provided by 'sf', and 'NetCDF' bindings by 'ncmeta' and 'RNetCDF'.
 License: Apache License
-URL: https://github.com/r-spatial/stars/
+URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
@@ -33,16 +33,16 @@ Depends:
     sf (>= 0.8-0)
 Imports:
     methods,
-	parallel,
-    classInt (>= 0.2-2),
-	lwgeom,
+    parallel,
+    classInt (>= 0.4-1),
+    lwgeom,
     rlang,
     units
 Suggests: 
     PCICt,
     RNetCDF (>= 1.8-2),
     covr,
-	digest,
+    digest,
     dplyr (>= 0.7-0),
     future.apply,
     ggforce,
@@ -54,17 +54,18 @@ Suggests:
     knitr,
     maps,
     ncmeta (>= 0.0.3),
-	pbapply,
+    pbapply,
     plm,
     raster,
     rmarkdown,
     sp,
     spacetime,
     testthat,
-	viridis,
-	xts,
-	zoo,
-	starsdata
+    viridis,
+    xts,
+    zoo,
+    starsdata,
+    tidync
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1
@@ -93,3 +94,4 @@ Collate:
     'xts.R'
     'intervals.R'
     'geom.R'
+    'mosaic.R'

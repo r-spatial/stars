@@ -214,8 +214,10 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		iy = obj[[ xy[2] ]]$values 
 		if (!inherits(iy, "intervals"))
 			iy = as_intervals(iy, add_last = length(iy) == dim(obj)[ xy[2] ])
-		rows = find_interval(x[,1], iy) # always NA_outside
+		rows = find_interval(x[,2], iy) # always NA_outside
 		cbind(cols, rows)
+	} else if (is_curvilinear(obj)) {
+		stop("colrow_from_xy not supported for curvilinear objects")
 	} else
 		stop("colrow_from_xy not supported for this object")
 }
@@ -724,4 +726,10 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 		l[[i]] = aperm(array(e[[ which[i] ]], d[dp]), order(dp))
 	}
 	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
+}
+
+#' @export
+st_interpolate_aw.stars = function(x, to, extensive, ...) {
+	x = st_as_sf(x)
+	NextMethod()
 }

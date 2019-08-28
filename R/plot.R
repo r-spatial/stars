@@ -179,9 +179,11 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
 		# take a regular sample from x[[1]]:
-		values = as.numeric(structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))])
+		values = structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))]
 		if (isTRUE(logz))
 			values = log10(values)
+		if (is.factor(values))
+			values = as.numeric(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
 			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, 
@@ -368,4 +370,30 @@ st_downsample = function(x, n) {
 # one cell per screen/device pixel:
 get_downsample = function(dims, px = dev.size("px")) { 
 	floor(sqrt(prod(dims) / prod(px)))
+}
+
+
+#' plot contours of a stars object
+#'
+#' plot contours of a stars object
+#' @param x object of class \code{stars}
+#' @param ... other parameters passed on to \link[graphics]{contour}
+#' @details this uses the R internal contour algorithm, which (by default) plots contours; \link{st_contour} uses the GDAL contour algorithm that returns contours as simple features.
+#' @export
+#' @examples
+#' d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
+#' r = st_as_stars(t(volcano))
+#' r = st_set_dimensions(r, 1, offset = 0, delta = 1)
+#' r = st_set_dimensions(r, 2, offset = 0, delta = -1)
+#' plot(r, reset = FALSE)
+#' contour(r, add = TRUE)
+contour.stars = function(x, ...) {
+	if (!(is_regular_grid(x) || is_rectilinear(x)))
+		stop("contour only works for regular or rectilinear grids")
+	x = st_upfront(adrop(x)) # drop singular dimensions, put x/y first
+	dx = dim(x)
+	if (length(dx) != 2)
+		stop("contour only supported for 2-D arrays") # nocov
+	e = expand_dimensions(x)
+	contour(z = x[[1]][,rev(seq_len(dx[2]))], x = e[[1]], y = rev(e[[2]]), ...)
 }

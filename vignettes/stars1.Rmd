@@ -253,7 +253,8 @@ prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
 ## remove NAs, zeros, and give a large number
 ## of breaks (used for validating in detail)
 qu_0_omit = function(x, ..., n = 22) {
-  x = units::drop_units(na.omit(x))
+  if (inherits(x, "units"))
+    x = units::drop_units(na.omit(x))
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
 library(dplyr) # loads slice generic
