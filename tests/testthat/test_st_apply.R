@@ -7,6 +7,7 @@ test_that('st_apply retains units', {
 		  X<-st_as_stars(set_units(array(1:27, c(3,3,3)),'m'))
 		  expect_equal(units(X[[1]]), units(st_apply(X, 1:2, mean)[[1]]))
 		  expect_equal(units(X[[1]]), units(st_apply(X, 3, max)[[1]]))
+		  expect_equal(units(log(X[[1]])), units(st_apply(X, 3, function(x) log(sum(x)))[[1]]))
 		  X[['u']]<-array(1:27, c(3,3,3))
 		  expect_equal(units(X[[1]]), units(st_apply(X, 1:2, mean)[[1]]))
 		  expect_equal(units(X[[1]]), units(st_apply(X, 3, max)[[1]]))

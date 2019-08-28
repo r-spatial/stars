@@ -127,14 +127,17 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 		{
 			ret <- array(ret,dX)
 		}
-		if(inherits(y,'units')){
-			# calculate function directly on one subset to see what the output units are
-			funUnits<-FUN(do.call('[',c( list(y),ifelse(1:length(dim(y)) %in% MARGIN,1,lapply(dim(y), seq)))))
-			if(inherits(funUnits,'units'))
-				if(all.equal(units(funUnits), units(y))){
-					units(ret) <- units(y)
-				}
-		}
+		# calculate function directly on one subset to see what the output units are
+		ySubset<-do.call('[',c(list(y),
+				       # take the first element for all dimensions in the margin otherwise the full dimension
+				       ifelse(1:length(dim(y)) %in% MARGIN,
+					      1,
+					      lapply(dim(y), seq))
+				       )
+		)
+		funResult<-FUN(ySubset)
+		if(inherits(funResult,'units'))
+				units(ret) <- units(funResult)
 		return(ret)
 	}
 	ret = lapply(X, fn, ...) 
