@@ -31,7 +31,6 @@ test_that("basic st_as_stars", {
                sf::st_crs(geom_poly)$proj4string)
   
   expect_s3_class(dim$geometry$values, "sfc_POLYGON")
-  
   expect_false(dim$geometry$point)  
   
   stars_obj <- st_as_stars(test_list, sf_geometry = geom_point)

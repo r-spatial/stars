@@ -68,6 +68,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Get all the nc metadata
   meta <- .fix_meta(ncmeta::nc_meta(.x))
   
+  if(.is_netcdf_cf_dsg(meta)) {
+    if (!requireNamespace("ncdfgeom", quietly = TRUE))
+      stop("package ncdfgeom required, please install it first") # nocov
+    
+    geom <- .get_geom_name(meta)
+    
+    return(st_as_stars(ncdfgeom::read_timeseries_dsg(.x), sf_geometry = geom))
+  }
+  
   # Get relevant variables
   var <- .get_vars(var, meta)
   rep_var <- var[1L]
@@ -659,6 +668,31 @@ make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
     dimension
   
     
+}
+
+.is_netcdf_cf_dsg <- function(meta) {
+  featuretype <- .get_attributes(meta$attribute, "featureType", "NC_GLOBAL")
+  
+  if(!is.null(featuretype)) {
+    if(grepl( "timeseries", featuretype$value, ignore.case = TRUE)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+.get_geom_name <- function(meta) {
+  geometry <- unlist(unique(.get_attributes(meta$attribute, "geometry")$value))
+  if(length(geometry) > 1) {
+    warning(paste("Only a single geometry is supported. Using", geometry[1])) #nocov
+    geometry <- geometry[1]
+  }
+  
+  if(!is.null(geometry)) {
+    ncdfgeom::read_geometry(meta$source$source)
+  } else {
+    NA
+  }
 }
 
 #' @param sf_geometry sf data.frame with geometry and attributes to be added to stars object. 
