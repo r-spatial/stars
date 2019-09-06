@@ -86,7 +86,11 @@ st_join.stars = function(x, y, ..., join = st_intersects, what = "left", as_poin
 			x[[i]][!sel] = NA
 		# add matching fields from y:
 		for (i in setdiff(names(y), attr(y, "sf_column"))) {
-			a = array(NA_real_, dim(x)) # FIXME: take care of other types here 
+			na_mode = NA
+			storage.mode(na_mode) = storage.mode(y[[i]])
+			a = array(na_mode, dim(x))
+			attr(a, "units") = attr(y[[i]], "units")
+			attr(a, "levels") = attr(y[[i]], "levels")
 			a[sel] = y[[i]][ix]
 			x[[ i ]] = a
 		}
@@ -100,9 +104,13 @@ st_join.stars = function(x, y, ..., join = st_intersects, what = "left", as_poin
 		i = unlist(ix) # sequence of x indexes
 		j = rep(seq_along(ix), li) # possibly repeated y indexes
 		stopifnot(length(i) == length(j))
-		recycle = prod(dim(x)[-(1:2)]) # 1 in case of no dimensions beyond x and y
-		i = rep(i, recycle)
-		j = rep(j, recycle)
+		if (length(dim(x)) > 2) {
+			recycle = prod(dim(x)[-(1:2)]) # 1 in case of no dimensions beyond x and y
+			i = rep(i, recycle)
+			j = rep(j, recycle)
+			# FIXME: create a stars object with an sfc dimension
+			warning("a stars object should probably have been created here; please file an issue")
+		}
 		st_sf(dplyr::bind_cols(as.data.frame(x)[i,], y[j,]))
 	} else
 		stop('value for "what" not supported')
