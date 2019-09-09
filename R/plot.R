@@ -178,8 +178,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
-		# take a regular sample from x[[1]]:
-		values = structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))]
+		## take a regular sample from x[[1]]:
+		# values = structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))]
+		values = structure(x[[1]], dim = NULL)
 		if (isTRUE(logz))
 			values = log10(values)
 		if (is.factor(values))
