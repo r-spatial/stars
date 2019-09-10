@@ -1,5 +1,7 @@
 # version 0.3-2
 
+* `plot` now uses all data to figure out breaks, in order to also find extremes; #216
+
 * `st_mosaic` creates mosaics from spatially disjoint rasters; #210
 
 * #205 large refactoring of `read_ncdf`, by David Blodgett and Mike Sumner, affecting #199, #89, #30, #86, #175
