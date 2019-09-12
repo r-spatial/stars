@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -22,8 +22,8 @@ Type 'q()' to quit R.
 > ## test package
 > test_check("stars")
 ══ testthat results  ═══════════════════════════════════════════════════════════
-OK: 55 SKIPPED: 0 FAILED: 0
+[ OK: 76 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
 > 
 > proc.time()
    user  system elapsed 
-  1.076   0.075   1.115 
+  2.777   0.083   2.840 

@@ -214,8 +214,10 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		iy = obj[[ xy[2] ]]$values 
 		if (!inherits(iy, "intervals"))
 			iy = as_intervals(iy, add_last = length(iy) == dim(obj)[ xy[2] ])
-		rows = find_interval(x[,1], iy) # always NA_outside
+		rows = find_interval(x[,2], iy) # always NA_outside
 		cbind(cols, rows)
+	} else if (is_curvilinear(obj)) {
+		stop("colrow_from_xy not supported for curvilinear objects")
 	} else
 		stop("colrow_from_xy not supported for this object")
 }
