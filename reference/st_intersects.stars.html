@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>create an intervals object — make_intervals • stars</title>
+<title>spatial intersect predicate for stars and sfc object — st_intersects.stars • stars</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="create an intervals object — make_intervals" />
-<meta property="og:description" content="create an intervals object, assuming left-closed and right-open intervals" />
+<meta property="og:title" content="spatial intersect predicate for stars and sfc object — st_intersects.stars" />
+<meta property="og:description" content="spatial intersect predicate for stars and sfc object" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,36 +132,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>create an intervals object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/intervals.R'><code>R/intervals.R</code></a></small>
-    <div class="hidden name"><code>make_intervals.Rd</code></div>
+    <h1>spatial intersect predicate for stars and sfc object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/geom.R'><code>R/geom.R</code></a></small>
+    <div class="hidden name"><code>st_intersects.stars.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>create an intervals object, assuming left-closed and right-open intervals</p>
+    <p>spatial intersect predicate for stars and sfc object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_intervals</span>(<span class='no'>start</span>, <span class='no'>end</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for stars</span>
+<span class='fu'>st_intersects</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>sparse</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>transpose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>start</th>
-      <td><p>vector with start values, or 2-column matrix with start and end values in column 1 and 2, respectively</p></td>
+      <th>x</th>
+      <td><p>object of class stars</p></td>
     </tr>
     <tr>
-      <th>end</th>
-      <td><p>vector with end values</p></td>
+      <th>y</th>
+      <td><p>object that has an `st_geometry` method: of class `sf` or `sfc`, or `stars` object with an `sfc` dimension</p></td>
+    </tr>
+    <tr>
+      <th>sparse</th>
+      <td><p>logical; if TRUE, return the a sparse logical matrix (object of class `sgbp`), if FALSE, return a logical matrix</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>ignored, or passed on to `st_intersects.sf` for curvilinear grids</p></td>
+    </tr>
+    <tr>
+      <th>as_points</th>
+      <td><p>logical, should grid cells be considered as points (TRUE) or polygons (FALSE)? Default: FALSE and warning emitted</p></td>
+    </tr>
+    <tr>
+      <th>transpose</th>
+      <td><p>logical; should the transpose of the `sgbp` object be returned?</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>`sgbp` object if sparse = TRUE, logical matrix otherwise</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>curvilinear grids are always converted to polygons, so points on grid boundaries may intersect with two cells touched; for other grids each cell boundary or corner belongs only to one cell.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
     </ul>
 
   </div>

@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2. stars proxy objects • stars</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="2. stars proxy objects">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -76,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/r-spatial/stars">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -89,6 +90,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -108,7 +110,7 @@
 <h1 class="hasAnchor">
 <a href="#preamble-the-starsdata-package" class="anchor"></a>Preamble: the starsdata package</h1>
 <p>To run all of the examples in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the <code>stars</code> package. They are in a <a href="https://github.com/eddelbuettel/drat">drat repo</a>, installation is done by</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"starsdata"</span>, <span class="dt">repos =</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, <span class="dt">type =</span> <span class="st">"source"</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"starsdata"</span>, <span class="dt">repos =</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, <span class="dt">type =</span> <span class="st">"source"</span>) </a></code></pre></div>
 </div>
 <div id="reading-chunks-change-resolution-select-bands" class="section level1">
 <h1 class="hasAnchor">
@@ -120,12 +122,12 @@
 <a href="#reading-a-particular-chunk" class="anchor"></a>Reading a particular chunk</h2>
 <!-- We can read a (spatially) rectangular chunk of data by -->
 <p>An example of using <code>RasterIO</code> is</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(stars)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">## Loading required package: abind</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">## Loading required package: sf</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">tif =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">rasterio =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">100</span>, <span class="dt">nYSize =</span> <span class="dv">100</span>, <span class="dt">bands =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">tif =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">rasterio =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">100</span>, <span class="dt">nYSize =</span> <span class="dv">100</span>, <span class="dt">bands =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
 <a class="sourceLine" id="cb2-7" data-line-number="7">(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">RasterIO =</span> rasterio))</a>
 <a class="sourceLine" id="cb2-8" data-line-number="8">## stars object with 3 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb2-9" data-line-number="9">## attribute(s):</a>
@@ -141,7 +143,7 @@
 <a class="sourceLine" id="cb2-19" data-line-number="19">## x       6 105  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
 <a class="sourceLine" id="cb2-20" data-line-number="20">## y       6 105 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
 <a class="sourceLine" id="cb2-21" data-line-number="21">## band    1   3      NA    NA                           NA    NA   NULL</a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x)</a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x)</a>
 <a class="sourceLine" id="cb2-23" data-line-number="23">##    x    y band </a>
 <a class="sourceLine" id="cb2-24" data-line-number="24">##  100  100    3</a></code></pre></div>
 <p>Compare this to</p>
@@ -156,7 +158,7 @@
 <li>the offset (x/y coordinates of origin) of the grid remain the same</li>
 <li>the <code>from</code> and <code>to</code> reflect the new area, and relate to the new <code>delta</code> values</li>
 <li>
-<code><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim(x)</a></code> reflects the new size, and</li>
+<code><a href="https://rdrr.io/r/base/dim.html">dim(x)</a></code> reflects the new size, and</li>
 <li>only three bands were read</li>
 </ul>
 </div>
@@ -164,8 +166,8 @@
 <h2 class="hasAnchor">
 <a href="#reading-at-a-different-resolution" class="anchor"></a>Reading at a different resolution</h2>
 <p>Reading datasets at a lower (but also higher!) resolution can be done by setting <code>nBufXSize</code> and <code>nBufYSize</code></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">100</span>, <span class="dt">nYSize =</span> <span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">                <span class="dt">nBufXSize =</span> <span class="dv">20</span>, <span class="dt">nBufYSize =</span> <span class="dv">20</span>, <span class="dt">bands =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">100</span>, <span class="dt">nYSize =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">                <span class="dt">nBufXSize =</span> <span class="dv">20</span>, <span class="dt">nBufYSize =</span> <span class="dv">20</span>, <span class="dt">bands =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>))</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">(<span class="dt">x =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">RasterIO =</span> rasterio))</a>
 <a class="sourceLine" id="cb4-4" data-line-number="4">## stars object with 3 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5">## attribute(s):</a>
@@ -189,19 +191,19 @@
 <li>the <code>from</code> and <code>to</code> reflect the new area, but relate to the new <code>delta</code> cell size values</li>
 </ul>
 <p>We can also read at higher resolution; here we read a 3 x 3 area and blow it up to 100 x 100:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">3</span>, <span class="dt">nYSize =</span> <span class="dv">3</span>,</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">3</span>, <span class="dt">nYSize =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">   <span class="dt">nBufXSize =</span> <span class="dv">100</span>, <span class="dt">nBufYSize =</span> <span class="dv">100</span>, <span class="dt">bands =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">RasterIO =</span> rasterio)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x)</a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">##   x   y </a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">## 100 100</a>
 <a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw"><a href="../reference/plot.html">plot</a></span>(x)</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The reason we “see” only three grid cells is that the default sampling method is “nearest neighbour”. We can modify this by</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">3</span>, <span class="dt">nYSize =</span> <span class="dv">3</span>,</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">rasterio =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">nXOff =</span> <span class="dv">6</span>, <span class="dt">nYOff =</span> <span class="dv">6</span>, <span class="dt">nXSize =</span> <span class="dv">3</span>, <span class="dt">nYSize =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">   <span class="dt">nBufXSize =</span> <span class="dv">100</span>, <span class="dt">nBufYSize =</span> <span class="dv">100</span>, <span class="dt">bands =</span> <span class="dv">1</span>, <span class="dt">resample =</span> <span class="st">"cubic_spline"</span>)</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">RasterIO =</span> rasterio)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x)</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x)</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">##   x   y </a>
 <a class="sourceLine" id="cb6-6" data-line-number="6">## 100 100</a>
 <a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw"><a href="../reference/plot.html">plot</a></span>(x)</a></code></pre></div>
@@ -258,8 +260,8 @@
 <h1 class="hasAnchor">
 <a href="#stars-proxy-objects" class="anchor"></a>Stars proxy objects</h1>
 <p>Stars proxy objects take another approach: upon creation they contain no data at all, but only pointers to where the data can be read. Data is only read when it is needed, and only as much as is needed: if we plot a proxy objects, the data are read at the resolution of pixels on the screen, rather than at the native resolution, so that if we have e.g. a 10000 x 10000 Sentinel 2 (level 1C) image, we can open it by</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">granule =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">s2 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"SENTINEL2_L1C:/vsizip/"</span>, granule, <span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span>)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">granule =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">s2 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"SENTINEL2_L1C:/vsizip/"</span>, granule, <span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span>)</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">(<span class="dt">p =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">## stars_proxy object with 1 attribute in file:</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</a>
@@ -271,17 +273,17 @@
 <a class="sourceLine" id="cb7-11" data-line-number="11">## y       1 10980  6e+06   -10 +proj=utm +zone=32 +datum...    NA   NULL [y]</a>
 <a class="sourceLine" id="cb7-12" data-line-number="12">## band    1     4     NA    NA                           NA    NA   NULL</a></code></pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(p))</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(p))</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.632   0.940   1.518</code></pre>
+##   2.092   1.232   2.121</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
 <div id="methods-for-stars-proxy-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#methods-for-stars-proxy-objects" class="anchor"></a>Methods for stars proxy objects</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/methods">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars_proxy"</span>)</a>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars_proxy"</span>)</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">##  [1] [              adrop          aggregate      aperm         </a>
 <a class="sourceLine" id="cb11-3" data-line-number="3">##  [5] as.data.frame  c              coerce         dim           </a>
 <a class="sourceLine" id="cb11-4" data-line-number="4">##  [9] initialize     Math           merge          Ops           </a>
@@ -293,8 +295,8 @@
 <div id="select-attributes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#select-attributes" class="anchor"></a>Select attributes</h2>
-<p>We can select attributes as with regular <code>stars</code> objects, by using the first argument to <code>[</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">x =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"avhrr-only-v2.19810901.nc"</span>,</a>
+<p>We can select attributes as with regular <code>stars</code> objects, by using the first argument to <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">x =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"avhrr-only-v2.19810901.nc"</span>,</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">"avhrr-only-v2.19810902.nc"</span>,</a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">"avhrr-only-v2.19810903.nc"</span>,</a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">"avhrr-only-v2.19810904.nc"</span>,</a>
@@ -303,9 +305,9 @@
 <a class="sourceLine" id="cb12-7" data-line-number="7"><span class="st">"avhrr-only-v2.19810907.nc"</span>,</a>
 <a class="sourceLine" id="cb12-8" data-line-number="8"><span class="st">"avhrr-only-v2.19810908.nc"</span>,</a>
 <a class="sourceLine" id="cb12-9" data-line-number="9"><span class="st">"avhrr-only-v2.19810909.nc"</span>)</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">file_list =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"netcdf/"</span>, x), <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">file_list =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"netcdf/"</span>, x), <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
 <a class="sourceLine" id="cb12-11" data-line-number="11">y =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(file_list, <span class="dt">quiet =</span> <span class="ot">TRUE</span>, <span class="dt">proxy =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(y)</a>
+<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(y)</a>
 <a class="sourceLine" id="cb12-13" data-line-number="13">## [1] "sst"  "anom" "err"  "ice"</a>
 <a class="sourceLine" id="cb12-14" data-line-number="14">y[<span class="st">"sst"</span>]</a>
 <a class="sourceLine" id="cb12-15" data-line-number="15">## stars_proxy object with 1 attribute in files:</a>
@@ -332,7 +334,7 @@
 <h2 class="hasAnchor">
 <a href="#select-an-area" class="anchor"></a>Select an area</h2>
 <p>Another possibility is to crop, or select a rectangular region based on a spatial object. This can be done by passing a <code>bbox</code> object, or an <code>sf</code>, <code>sfc</code> or <code>stars</code> object from which the bounding box will be taken. An example:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">bb =<span class="st"> </span><span class="kw">st_bbox</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">xmin =</span> <span class="fl">10.125</span>, <span class="dt">ymin =</span> <span class="fl">0.125</span>, <span class="dt">xmax =</span> <span class="fl">70.125</span>, <span class="dt">ymax =</span> <span class="fl">70.125</span>))</a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">bb =<span class="st"> </span><span class="kw">st_bbox</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">xmin =</span> <span class="fl">10.125</span>, <span class="dt">ymin =</span> <span class="fl">0.125</span>, <span class="dt">xmax =</span> <span class="fl">70.125</span>, <span class="dt">ymax =</span> <span class="fl">70.125</span>))</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2">ysub =<span class="st"> </span>y[bb]</a>
 <a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(ysub)</a>
 <a class="sourceLine" id="cb13-4" data-line-number="4">##      from  to         offset  delta  refsys point values    </a>
@@ -340,7 +342,7 @@
 <a class="sourceLine" id="cb13-6" data-line-number="6">## y      80 360             90  -0.25      NA    NA   NULL [y]</a>
 <a class="sourceLine" id="cb13-7" data-line-number="7">## zlev    1   1          0 [m]     NA      NA    NA   NULL    </a>
 <a class="sourceLine" id="cb13-8" data-line-number="8">## time    1   9 1981-09-01 UTC 1 days POSIXct    NA   NULL</a>
-<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(ysub) <span class="co"># still no data here!!</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/class.html">class</a></span>(ysub) <span class="co"># still no data here!!</span></a>
 <a class="sourceLine" id="cb13-10" data-line-number="10">## [1] "stars_proxy" "stars"</a>
 <a class="sourceLine" id="cb13-11" data-line-number="11"><span class="kw"><a href="../reference/plot.html">plot</a></span>(ysub, <span class="dt">reset =</span> <span class="ot">FALSE</span>) <span class="co"># plot reads the data, at resolution that is relevant</span></a>
 <a class="sourceLine" id="cb13-12" data-line-number="12"><span class="kw"><a href="../reference/plot.html">plot</a></span>(<span class="kw">st_as_sfc</span>(bb), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lwd =</span> <span class="fl">.5</span>, <span class="dt">border =</span> <span class="st">'red'</span>)</a></code></pre></div>
@@ -352,7 +354,7 @@
 <p>Some other actions can be carried out on <code>stars_proxy</code> objects, but their effect is delayed until the data are actually needed (<code>plot</code>, <code>write_stars</code>). For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called <code>call_list</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">yy =<span class="st"> </span><span class="kw">adrop</span>(y)</a>
 <a class="sourceLine" id="cb14-2" data-line-number="2">yyy =<span class="st"> </span>yy[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,]</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(yyy) <span class="co"># still no data</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/class.html">class</a></span>(yyy) <span class="co"># still no data</span></a>
 <a class="sourceLine" id="cb14-4" data-line-number="4">## [1] "stars_proxy" "stars"</a>
 <a class="sourceLine" id="cb14-5" data-line-number="5"><span class="kw"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(yyy) <span class="co"># and dimensions not adjusted</span></a>
 <a class="sourceLine" id="cb14-6" data-line-number="6">##      from   to         offset  delta  refsys point values    </a>
@@ -360,7 +362,7 @@
 <a class="sourceLine" id="cb14-8" data-line-number="8">## y       1  720             90  -0.25      NA    NA   NULL [y]</a>
 <a class="sourceLine" id="cb14-9" data-line-number="9">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </a>
 <a class="sourceLine" id="cb14-10" data-line-number="10">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</a>
-<a class="sourceLine" id="cb14-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/attr">attr</a></span>(yyy, <span class="st">"call_list"</span>) <span class="co"># the name of object in the call (y) is replaced with x:</span></a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"><span class="kw"><a href="https://rdrr.io/r/base/attr.html">attr</a></span>(yyy, <span class="st">"call_list"</span>) <span class="co"># the name of object in the call (y) is replaced with x:</span></a>
 <a class="sourceLine" id="cb14-12" data-line-number="12">## [[1]]</a>
 <a class="sourceLine" id="cb14-13" data-line-number="13">## x[i = TRUE, 1:10, 1:10, ]</a></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
@@ -368,7 +370,7 @@
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
 <li>If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(<span class="kw"><a href="../reference/st_apply.html">st_apply</a></span>(x, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), range))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(<span class="kw"><a href="../reference/st_apply.html">st_apply</a></span>(x, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), range))</a></code></pre></div>
 <p>the order of evaluation needs to be reversed: only <code>plot</code> knows which pixels are going to be shown, so that should be in control of how <code>x</code> is subsampled <em>before</em> <code>st_apply</code> is carried out on this subsample.</p>
 <div id="fetching-the-data" class="section level3">
 <h3 class="hasAnchor">
@@ -397,8 +399,8 @@
 <p>For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># S2 10m: band 4: near infrared, band 1: red.</span></a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">ndvi =<span class="st"> </span><span class="cf">function</span>(x) (x[<span class="dv">4</span>] <span class="op">-</span><span class="st"> </span>x[<span class="dv">1</span>])<span class="op">/</span>(x[<span class="dv">4</span>] <span class="op">+</span><span class="st"> </span>x[<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(x)</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">(<span class="dt">s2.ndvi =</span> <span class="kw"><a href="../reference/st_apply.html">st_apply</a></span>(p, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), ndvi))</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(x)</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">(<span class="dt">s2.ndvi =</span> <span class="kw"><a href="../reference/st_apply.html">st_apply</a></span>(p, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), ndvi))</a>
 <a class="sourceLine" id="cb17-5" data-line-number="5">## stars_proxy object with 1 attribute in file:</a>
 <a class="sourceLine" id="cb17-6" data-line-number="6">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</a>
 <a class="sourceLine" id="cb17-7" data-line-number="7">## [1] "SENTINEL2_L1C:/vsizip//usr/local/lib/R/site-library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</a>
@@ -411,16 +413,17 @@
 <a class="sourceLine" id="cb17-14" data-line-number="14">## call list:</a>
 <a class="sourceLine" id="cb17-15" data-line-number="15">## [[1]]</a>
 <a class="sourceLine" id="cb17-16" data-line-number="16">## st_apply(X = X, MARGIN = c("x", "y"), FUN = ndvi)</a>
-<a class="sourceLine" id="cb17-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(s2.ndvi)) <span class="co"># read - compute ndvi - plot </span></a></code></pre></div>
+<a class="sourceLine" id="cb17-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(s2.ndvi)) <span class="co"># read - compute ndvi - plot </span></a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.148   0.860   1.951</code></pre>
+##   2.312   1.060   2.270</code></pre>
 </div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -447,17 +450,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Edzer Pebesma.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

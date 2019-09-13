@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>create an intervals object — make_intervals • stars</title>
+<title>Spatially join a stars and an `sf` object — st_join.stars • stars</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="create an intervals object — make_intervals" />
-<meta property="og:description" content="create an intervals object, assuming left-closed and right-open intervals" />
+<meta property="og:title" content="Spatially join a stars and an `sf` object — st_join.stars" />
+<meta property="og:description" content="Spatially join a stars and an `sf` object" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,36 +132,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>create an intervals object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/intervals.R'><code>R/intervals.R</code></a></small>
-    <div class="hidden name"><code>make_intervals.Rd</code></div>
+    <h1>Spatially join a stars and an `sf` object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/geom.R'><code>R/geom.R</code></a></small>
+    <div class="hidden name"><code>st_join.stars.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>create an intervals object, assuming left-closed and right-open intervals</p>
+    <p>Spatially join a stars and an `sf` object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_intervals</span>(<span class='no'>start</span>, <span class='no'>end</span>)</pre>
+    <pre class="usage"><span class='fu'>st_join.stars</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>st_intersects</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
+  <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>start</th>
-      <td><p>vector with start values, or 2-column matrix with start and end values in column 1 and 2, respectively</p></td>
+      <th>x</th>
+      <td><p>object of class stars</p></td>
     </tr>
     <tr>
-      <th>end</th>
-      <td><p>vector with end values</p></td>
+      <th>y</th>
+      <td><p>object of class sf, or one that can be coerced into that by <a href='st_as_sf.html'>st_as_sf</a></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>arguments that will be passed on to the join function</p></td>
+    </tr>
+    <tr>
+      <th>join</th>
+      <td><p>join function, which should return an sgbp object</p></td>
+    </tr>
+    <tr>
+      <th>what</th>
+      <td><p>either "left1" or "right"</p></td>
+    </tr>
+    <tr>
+      <th>as_points</th>
+      <td><p>logical; controls whether grid cells in <code>x</code> will be treated as points, or as cell areas; the <a href='st_intersects.stars.html'>st_intersects.stars</a> method by default will derive this from <code>x</code>'s metadata, or else assume areas.</p></td>
+    </tr>
+    <tr>
+      <th>warn</th>
+      <td><p>logical; if TRUE, warn on 1-to-many matches when <code>what</code> is <code>"left1"</code></p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if <code>warn</code> is TRUE a warning is raised). If what is "inner", an object of class <code>sf</code> with all matching records of x and y.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>

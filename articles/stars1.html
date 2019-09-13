@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>1. introduction • stars</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="1. introduction">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -76,7 +77,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/r-spatial/stars">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -89,6 +90,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -106,12 +108,12 @@
 <p>Package <code>stars</code> provides infrastructure for <em>data cubes</em>, array data with labeled dimensions, with emphasis on arrays where some of the dimensions relate to time and/or space.</p>
 <p>Spatial data cubes are arrays with one or more spatial dimensions. Raster data cubes have at least two spatial dimensions that form the raster tesselation. Vector data cubes have at least one spatial dimension that may for instance reflect a polygon tesselation, or a set of point locations. Conversions between the two (rasterization, polygonization) are provided. Vector data are represented by simple feature geometries (packages <code>sf</code>). Tidyverse methods are provided.</p>
 <p>The <code>stars</code> package is loaded by</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(stars)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">## Loading required package: abind</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">## Loading required package: sf</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</a></code></pre></div>
 <p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/methods">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars"</span>)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars"</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">##  [1] [                 [&lt;-               $&lt;-              </a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">##  [4] adrop             aggregate         aperm            </a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">##  [7] as.data.frame     c                 coerce           </a>
@@ -133,7 +135,7 @@
 <h1 class="hasAnchor">
 <a href="#reading-a-satellite-image" class="anchor"></a>Reading a satellite image</h1>
 <p>We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">tif =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">tif =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif)</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw"><a href="../reference/plot.html">plot</a></span>(x)</a></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
@@ -199,7 +201,7 @@
 <p>For this particular dataset (and most other raster datasets), we see that offset for dimension <code>y</code> is negative: this means that consecutive array values have decreasing <span class="math inline">\(y\)</span> values: cell indexes increase from top to bottom, in the direction opposite to the <span class="math inline">\(y\)</span> axis.</p>
 <p><code>read_stars</code> reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single <code>stars</code> array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.</p>
 <p>The data structure <code>stars</code> is a generalisation of the <code>tbl_cube</code> found in <code>dplyr</code>; we can convert to that by</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">## </a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">## Attaching package: 'dplyr'</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">## The following objects are masked from 'package:stats':</a>
@@ -218,7 +220,7 @@
 <div id="switching-attributes-to-dimensions-and-back" class="section level2">
 <h2 class="hasAnchor">
 <a href="#switching-attributes-to-dimensions-and-back" class="anchor"></a>Switching attributes to dimensions and back</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">(<span class="dt">x.spl =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/split">split</a></span>(x, <span class="st">"band"</span>))</a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">(<span class="dt">x.spl =</span> <span class="kw"><a href="https://rdrr.io/r/base/split.html">split</a></span>(x, <span class="st">"band"</span>))</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">## stars object with 2 dimensions and 6 attributes</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">## attribute(s):</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4">##       X1               X2               X3               X4         </a>
@@ -239,7 +241,7 @@
 <a class="sourceLine" id="cb6-19" data-line-number="19">##   from  to  offset delta                       refsys point values    </a>
 <a class="sourceLine" id="cb6-20" data-line-number="20">## x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
 <a class="sourceLine" id="cb6-21" data-line-number="21">## y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(x.spl)</a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="kw"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(x.spl)</a>
 <a class="sourceLine" id="cb6-23" data-line-number="23">## stars object with 3 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb6-24" data-line-number="24">## attribute(s):</a>
 <a class="sourceLine" id="cb6-25" data-line-number="25">##        X         </a>
@@ -255,10 +257,10 @@
 <a class="sourceLine" id="cb6-35" data-line-number="35">## y     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE      NULL [y]</a>
 <a class="sourceLine" id="cb6-36" data-line-number="36">## X1    1   6      NA    NA                           NA    NA X1,...,X6</a></code></pre></div>
 <p>We see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with <code>setNames</code>, and dimension names and values with <code>st_set_dimensions</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(x.spl) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/setNames">setNames</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(x)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span>(<span class="dv">3</span>, <span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"band"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span>(<span class="dt">names =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"band"</span>))</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/merge.html">merge</a></span>(x.spl) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(x)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span>(<span class="dv">3</span>, <span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"band"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span>(<span class="dt">names =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"band"</span>))</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">## stars object with 3 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">## attribute(s):</a>
 <a class="sourceLine" id="cb7-7" data-line-number="7">##   L7_ETMs.tif    </a>
@@ -281,11 +283,11 @@
 <div id="subsetting" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subsetting" class="anchor"></a>Subsetting</h2>
-<p>Besides the <code>tidyverse</code> subsetting and selection operators explained in <a href="stars3.html">this vignette</a>, we can also use <code>[</code> and <code>[[</code>.</p>
+<p>Besides the <code>tidyverse</code> subsetting and selection operators explained in <a href="stars3.html">this vignette</a>, we can also use <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> and <code><a href="https://rdrr.io/r/base/Extract.html">[[</a></code>.</p>
 <p>Since <code>stars</code> objects are a list of <code>array</code>s with a metadata table describing dimensions, list extraction (and assignment) works as expected:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(x[[<span class="dv">1</span>]])</a>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/class.html">class</a></span>(x[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">## [1] "array"</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x[[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x[[<span class="dv">1</span>]])</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">##    x    y band </a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">##  349  352    6</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">x<span class="op">$</span>two =<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x[[<span class="dv">1</span>]]</a>
@@ -305,7 +307,7 @@
 <a class="sourceLine" id="cb8-20" data-line-number="20">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
 <a class="sourceLine" id="cb8-21" data-line-number="21">## band    1   6      NA    NA                           NA    NA   NULL</a></code></pre></div>
 <p>At this level, we can work with <code>array</code> objects directly.</p>
-<p>The <code>stars</code> subset operator <code>[</code> works a bit different: its</p>
+<p>The <code>stars</code> subset operator <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> works a bit different: its</p>
 <ul>
 <li>first argument selects attributes</li>
 <li>second argument selects the first dimension</li>
@@ -328,8 +330,8 @@
 <a class="sourceLine" id="cb9-14" data-line-number="14">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
 <a class="sourceLine" id="cb9-15" data-line-number="15">## band    2   4      NA    NA                           NA    NA   NULL</a></code></pre></div>
 <p>selects the second attribute, the first 10 columns (x-coordinate), all rows, and bands 2-4.</p>
-<p>Alternatively, when <code>[</code> is given a single argument of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, <code>[</code> will work as a crop operator:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">circle =<span class="st"> </span><span class="kw">st_sfc</span>(<span class="kw">st_buffer</span>(<span class="kw">st_point</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">293749.5</span>, <span class="dv">9115745</span>)), <span class="dv">400</span>), <span class="dt">crs =</span> <span class="kw">st_crs</span>(x))</a>
+<p>Alternatively, when <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> is given a single argument of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> will work as a crop operator:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">circle =<span class="st"> </span><span class="kw">st_sfc</span>(<span class="kw">st_buffer</span>(<span class="kw">st_point</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">293749.5</span>, <span class="dv">9115745</span>)), <span class="dv">400</span>), <span class="dt">crs =</span> <span class="kw">st_crs</span>(x))</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="../reference/plot.html">plot</a></span>(x[circle][, , , <span class="dv">1</span>], <span class="dt">reset =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw"><a href="../reference/plot.html">plot</a></span>(circle, <span class="dt">col =</span> <span class="ot">NA</span>, <span class="dt">border =</span> <span class="st">'red'</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
@@ -340,23 +342,23 @@
 <p>We can read rasters at a lower resolution when they contain so-called overviews. For this GeoTIFF file, they were created with the <code>gdaladdo</code> utility, in particular</p>
 <pre><code>gdaladdo -r average L7_ETMs.tif  2 4 8 16</code></pre>
 <p>which adds coarse resolution versions by using the <em>average</em> resampling method to compute values based on blocks of pixels. These can be read by</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">x1 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"OVERVIEW_LEVEL=1"</span>))</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">x2 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"OVERVIEW_LEVEL=2"</span>))</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">x3 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"OVERVIEW_LEVEL=3"</span>))</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x1)</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x2)</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(x3)</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">mar =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="fl">0.2</span>, <span class="dv">4</span>))</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/image">image</a></span>(x1[,,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/image">image</a></span>(x2[,,,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/image">image</a></span>(x3[,,,<span class="dv">1</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">x1 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"OVERVIEW_LEVEL=1"</span>))</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">x2 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"OVERVIEW_LEVEL=2"</span>))</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">x3 =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif, <span class="dt">options =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"OVERVIEW_LEVEL=3"</span>))</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x1)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x2)</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x3)</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/graphics/par.html">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">mar =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="fl">0.2</span>, <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="kw"><a href="https://rdrr.io/r/graphics/image.html">image</a></span>(x1[,,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/image.html">image</a></span>(x2[,,,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="kw"><a href="https://rdrr.io/r/graphics/image.html">image</a></span>(x3[,,,<span class="dv">1</span>])</a></code></pre></div>
 </div>
 </div>
 <div id="reading-a-raster-time-series-netcdf" class="section level1">
 <h1 class="hasAnchor">
 <a href="#reading-a-raster-time-series-netcdf" class="anchor"></a>Reading a raster time series: NetCDF</h1>
 <p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"nc/bcsd_obs_1999.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/bcsd_obs_1999.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb13-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="st">"data/full_data_daily_2013.nc"</span>) -&gt;<span class="st"> </span>w</a>
 <a class="sourceLine" id="cb13-3" data-line-number="3">## pr, tas,</a></code></pre></div>
 <p>We see that</p>
@@ -382,7 +384,7 @@
 <li>time is now a dimension, with proper units and time steps</li>
 </ul>
 <p>Alternatively, this dataset can be read using <code>read_ncdf</code>, as in</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"nc/bcsd_obs_1999.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/bcsd_obs_1999.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb15-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="../reference/read_ncdf.html">read_ncdf</a></span>()</a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">## no 'var' specified, using pr, tas</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4">## other available variables:</a>
@@ -415,7 +417,7 @@
 <a href="#reading-datasets-from-multiple-files" class="anchor"></a>Reading datasets from multiple files</h2>
 <p>Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found <a href="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/">here</a>; a subset of the 1981 data was downloaded from <a href="ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/">here</a>.</p>
 <p>We read the data by giving <code>read_stars</code> a vector with character names:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">x =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(</a>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">x =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="st">"avhrr-only-v2.19810901.nc"</span>,</a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"><span class="st">"avhrr-only-v2.19810902.nc"</span>,</a>
 <a class="sourceLine" id="cb16-4" data-line-number="4"><span class="st">"avhrr-only-v2.19810903.nc"</span>,</a>
@@ -428,7 +430,7 @@
 <a class="sourceLine" id="cb16-11" data-line-number="11">)</a>
 <a class="sourceLine" id="cb16-12" data-line-number="12"><span class="co"># see the second vignette:</span></a>
 <a class="sourceLine" id="cb16-13" data-line-number="13"><span class="co"># install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") </span></a>
-<a class="sourceLine" id="cb16-14" data-line-number="14">file_list =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"netcdf/"</span>, x), <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">file_list =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"netcdf/"</span>, x), <span class="dt">package =</span> <span class="st">"starsdata"</span>)</a>
 <a class="sourceLine" id="cb16-15" data-line-number="15">(<span class="dt">y =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(file_list, <span class="dt">quiet =</span> <span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb16-16" data-line-number="16">## stars object with 4 dimensions and 4 attributes</a>
 <a class="sourceLine" id="cb16-17" data-line-number="17">## attribute(s), summary of first 1e+05 cells:</a>
@@ -447,19 +449,19 @@
 <a class="sourceLine" id="cb16-30" data-line-number="30">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </a>
 <a class="sourceLine" id="cb16-31" data-line-number="31">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</a></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(abind)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">z &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(sst) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/abind/topics/adrop">adrop</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(abind)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">z &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(sst) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/abind/man/adrop.html">adrop</a></span>()</a></code></pre></div>
 <p>We can now graph the sea surface temperature (SST) using <code>ggplot</code>, which needs data in a long table form, and without units:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(viridis)</a>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(viridis)</a>
 <a class="sourceLine" id="cb18-3" data-line-number="3">## Loading required package: viridisLite</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggthemes)</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggthemes)</a>
 <a class="sourceLine" id="cb18-5" data-line-number="5"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span><span class="st">  </span></a>
-<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/geom_stars.html">geom_stars</a></span>(<span class="dt">data =</span> z[<span class="dv">1</span>], <span class="dt">alpha =</span> <span class="fl">0.8</span>, <span class="dt">downsample =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/geom_stars.html">geom_stars</a></span>(<span class="dt">data =</span> z[<span class="dv">1</span>], <span class="dt">alpha =</span> <span class="fl">0.8</span>, <span class="dt">downsample =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="st">"time"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/viridis/topics/scale_viridis">scale_fill_viridis</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/viridis/man/scale_viridis.html">scale_fill_viridis</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb18-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb18-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggthemes/topics/theme_map">theme_map</a></span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb18-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/ggthemes/man/theme_map.html">theme_map</a></span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb18-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"bottom"</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb18-12" data-line-number="12"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.key.width =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/reexports.html">unit</a></span>(<span class="dv">2</span>, <span class="st">"cm"</span>))</a></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
@@ -469,15 +471,15 @@
 <h1 class="hasAnchor">
 <a href="#writing-stars-objects-to-disk" class="anchor"></a>Writing stars objects to disk</h1>
 <p>We can write a stars object to disk by using <code>write_stars</code>; this used the GDAL write engine. Writing NetCDF files without going through the GDAL interface is currently not supported. <code>write_stars</code> currently writes only a single attribute:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="../reference/write_stars.html">write_stars</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/abind/topics/adrop">adrop</a></span>(y[<span class="dv">1</span>]), <span class="st">"sst.tif"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="../reference/write_stars.html">write_stars</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/abind/man/adrop.html">adrop</a></span>(y[<span class="dv">1</span>]), <span class="st">"sst.tif"</span>)</a></code></pre></div>
 <p>See the explanation of <code>merge</code> above to see how multiple attributes can be merged (folded) into a dimension.</p>
 </div>
 <div id="cropping-a-rasters-extent" class="section level1">
 <h1 class="hasAnchor">
 <a href="#cropping-a-rasters-extent" class="anchor"></a>Cropping a raster’s extent</h1>
 <p>Using a curvilinear grid, taken from the example of <code>read_ncdf</code>:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">prec_file =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"nc/test_stageiv_xyt.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">prec =<span class="st"> </span><span class="kw"><a href="../reference/read_ncdf.html">read_ncdf</a></span>(prec_file, <span class="dt">curvilinear =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>))</a>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">prec_file =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/test_stageiv_xyt.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">prec =<span class="st"> </span><span class="kw"><a href="../reference/read_ncdf.html">read_ncdf</a></span>(prec_file, <span class="dt">curvilinear =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>))</a>
 <a class="sourceLine" id="cb20-3" data-line-number="3">## no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</a>
 <a class="sourceLine" id="cb20-4" data-line-number="4">## other available variables:</a>
 <a class="sourceLine" id="cb20-5" data-line-number="5">##  time_bounds, lon, lat, time</a>
@@ -490,14 +492,14 @@
 <a class="sourceLine" id="cb20-12" data-line-number="12">## remove NAs, zeros, and give a large number</a>
 <a class="sourceLine" id="cb20-13" data-line-number="13">## of breaks (used for validating in detail)</a>
 <a class="sourceLine" id="cb20-14" data-line-number="14">qu_<span class="dv">0</span>_omit =<span class="st"> </span><span class="cf">function</span>(x, ..., <span class="dt">n =</span> <span class="dv">22</span>) {</a>
-<a class="sourceLine" id="cb20-15" data-line-number="15">  <span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">inherits</a></span>(x, <span class="st">"units"</span>))</a>
-<a class="sourceLine" id="cb20-16" data-line-number="16">    x =<span class="st"> </span>units<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/units/topics/drop_units">drop_units</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/na.fail">na.omit</a></span>(x))</a>
-<a class="sourceLine" id="cb20-17" data-line-number="17">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(x[x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>], <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> n)))</a>
+<a class="sourceLine" id="cb20-15" data-line-number="15">  <span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/class.html">inherits</a></span>(x, <span class="st">"units"</span>))</a>
+<a class="sourceLine" id="cb20-16" data-line-number="16">    x =<span class="st"> </span>units<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/units/man/drop_units.html">drop_units</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span>(x))</a>
+<a class="sourceLine" id="cb20-17" data-line-number="17">  <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(x[x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>], <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> n)))</a>
 <a class="sourceLine" id="cb20-18" data-line-number="18">}</a>
-<a class="sourceLine" id="cb20-19" data-line-number="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr) <span class="co"># loads slice generic</span></a>
+<a class="sourceLine" id="cb20-19" data-line-number="19"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr) <span class="co"># loads slice generic</span></a>
 <a class="sourceLine" id="cb20-20" data-line-number="20">prec_slice =<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(prec, <span class="dt">index =</span> <span class="dv">17</span>, <span class="dt">along =</span> <span class="st">"time"</span>)</a>
 <a class="sourceLine" id="cb20-21" data-line-number="21"><span class="kw"><a href="../reference/plot.html">plot</a></span>(prec_slice, <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">breaks =</span> <span class="kw">qu_0_omit</span>(prec_slice[[<span class="dv">1</span>]]), <span class="dt">reset =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb20-22" data-line-number="22">nc =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_read">read_sf</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package =</span> <span class="st">"sf"</span>), <span class="st">"nc.gpkg"</span>)</a>
+<a class="sourceLine" id="cb20-22" data-line-number="22">nc =<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/sf/man/st_read.html">read_sf</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package =</span> <span class="st">"sf"</span>), <span class="st">"nc.gpkg"</span>)</a>
 <a class="sourceLine" id="cb20-23" data-line-number="23"><span class="kw"><a href="../reference/plot.html">plot</a></span>(<span class="kw">st_geometry</span>(nc), <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">reset =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="ot">NA</span>, <span class="dt">border =</span> <span class="st">'red'</span>)</a></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>We can now crop the grid to those cells falling in</p>
@@ -516,7 +518,7 @@
 <h2 class="hasAnchor">
 <a href="#od-space-x-space-x-travel-mode-x-time-x-time" class="anchor"></a>OD: space x space x travel mode x time x time</h2>
 <p>We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patterns over the day, for a certain period.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">nc =<span class="st"> </span><span class="kw">st_read</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package=</span><span class="st">"sf"</span>)) </a>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">nc =<span class="st"> </span><span class="kw">st_read</span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package=</span><span class="st">"sf"</span>)) </a>
 <a class="sourceLine" id="cb22-2" data-line-number="2">## Reading layer `nc.gpkg' from data source `/usr/local/lib/R/site-library/sf/gpkg/nc.gpkg' using driver `GPKG'</a>
 <a class="sourceLine" id="cb22-3" data-line-number="3">## Simple feature collection with 100 features and 14 fields</a>
 <a class="sourceLine" id="cb22-4" data-line-number="4">## geometry type:  MULTIPOLYGON</a>
@@ -525,30 +527,30 @@
 <a class="sourceLine" id="cb22-7" data-line-number="7">## epsg (SRID):    4267</a>
 <a class="sourceLine" id="cb22-8" data-line-number="8">## proj4string:    +proj=longlat +datum=NAD27 +no_defs</a>
 <a class="sourceLine" id="cb22-9" data-line-number="9">to =<span class="st"> </span>from =<span class="st"> </span><span class="kw">st_geometry</span>(nc) <span class="co"># 100 polygons: O and D regions</span></a>
-<a class="sourceLine" id="cb22-10" data-line-number="10">mode =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span>) <span class="co"># travel mode</span></a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">mode =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span>) <span class="co"># travel mode</span></a>
 <a class="sourceLine" id="cb22-11" data-line-number="11">day =<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="co"># arbitrary</span></a>
-<a class="sourceLine" id="cb22-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(units)</a>
+<a class="sourceLine" id="cb22-12" data-line-number="12"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(units)</a>
 <a class="sourceLine" id="cb22-13" data-line-number="13">## Warning in .get_ud_xml_dir(TRUE): multiple udunits databases present: /</a>
 <a class="sourceLine" id="cb22-14" data-line-number="14">## usr/local/lib/R/site-library/RNetCDF/udunits/udunits2.xml /usr/share/xml/</a>
 <a class="sourceLine" id="cb22-15" data-line-number="15">## udunits/udunits2.xml</a>
 <a class="sourceLine" id="cb22-16" data-line-number="16">## udunits system database from /usr/local/lib/R/site-library/RNetCDF/udunits</a>
-<a class="sourceLine" id="cb22-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/units/topics/units">units</a></span>(day) =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/units/topics/as_units">as_units</a></span>(<span class="st">"days since 2015-01-01"</span>)</a>
-<a class="sourceLine" id="cb22-18" data-line-number="18">hour =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/units/topics/set_units">set_units</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">23</span>, h) <span class="co"># hour of day</span></a>
+<a class="sourceLine" id="cb22-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/pkg/units/man/units.html">units</a></span>(day) =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/units/man/as_units.html">as_units</a></span>(<span class="st">"days since 2015-01-01"</span>)</a>
+<a class="sourceLine" id="cb22-18" data-line-number="18">hour =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span>(<span class="dv">0</span><span class="op">:</span><span class="dv">23</span>, h) <span class="co"># hour of day</span></a>
 <a class="sourceLine" id="cb22-19" data-line-number="19">dims =<span class="st"> </span><span class="kw"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="dt">origin =</span> from, <span class="dt">destination =</span> to, <span class="dt">mode =</span> mode, <span class="dt">day =</span> day, <span class="dt">hour =</span> hour)</a>
-<a class="sourceLine" id="cb22-20" data-line-number="20">(<span class="dt">n =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(dims))</a>
+<a class="sourceLine" id="cb22-20" data-line-number="20">(<span class="dt">n =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(dims))</a>
 <a class="sourceLine" id="cb22-21" data-line-number="21">##      origin destination        mode         day        hour </a>
 <a class="sourceLine" id="cb22-22" data-line-number="22">##         100         100           3         100          24</a>
-<a class="sourceLine" id="cb22-23" data-line-number="23">traffic =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/array">array</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Poisson">rpois</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/prod">prod</a></span>(n), <span class="dv">10</span>), <span class="dt">dim =</span> n) <span class="co"># simulated traffic counts</span></a>
-<a class="sourceLine" id="cb22-24" data-line-number="24">(<span class="dt">st =</span> <span class="kw"><a href="../reference/st_as_stars.html">st_as_stars</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))</a>
+<a class="sourceLine" id="cb22-23" data-line-number="23">traffic =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/array.html">array</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Poisson.html">rpois</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/prod.html">prod</a></span>(n), <span class="dv">10</span>), <span class="dt">dim =</span> n) <span class="co"># simulated traffic counts</span></a>
+<a class="sourceLine" id="cb22-24" data-line-number="24">(<span class="dt">st =</span> <span class="kw"><a href="../reference/st_as_stars.html">st_as_stars</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))</a>
 <a class="sourceLine" id="cb22-25" data-line-number="25">## stars object with 5 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb22-26" data-line-number="26">## attribute(s), summary of first 1e+05 cells:</a>
-<a class="sourceLine" id="cb22-27" data-line-number="27">##     traffic  </a>
-<a class="sourceLine" id="cb22-28" data-line-number="28">##  Min.   : 0  </a>
-<a class="sourceLine" id="cb22-29" data-line-number="29">##  1st Qu.: 8  </a>
-<a class="sourceLine" id="cb22-30" data-line-number="30">##  Median :10  </a>
-<a class="sourceLine" id="cb22-31" data-line-number="31">##  Mean   :10  </a>
-<a class="sourceLine" id="cb22-32" data-line-number="32">##  3rd Qu.:12  </a>
-<a class="sourceLine" id="cb22-33" data-line-number="33">##  Max.   :27  </a>
+<a class="sourceLine" id="cb22-27" data-line-number="27">##     traffic      </a>
+<a class="sourceLine" id="cb22-28" data-line-number="28">##  Min.   : 0.000  </a>
+<a class="sourceLine" id="cb22-29" data-line-number="29">##  1st Qu.: 8.000  </a>
+<a class="sourceLine" id="cb22-30" data-line-number="30">##  Median :10.000  </a>
+<a class="sourceLine" id="cb22-31" data-line-number="31">##  Mean   : 9.998  </a>
+<a class="sourceLine" id="cb22-32" data-line-number="32">##  3rd Qu.:12.000  </a>
+<a class="sourceLine" id="cb22-33" data-line-number="33">##  Max.   :26.000  </a>
 <a class="sourceLine" id="cb22-34" data-line-number="34">## dimension(s):</a>
 <a class="sourceLine" id="cb22-35" data-line-number="35">##             from  to                      offset</a>
 <a class="sourceLine" id="cb22-36" data-line-number="36">## origin         1 100                          NA</a>
@@ -582,9 +584,9 @@
 <a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/as.tbl_cube.html">as.tbl_cube</a></span>() <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(mode <span class="op">==</span><span class="st"> "bike"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(hour) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="dt">traffic =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(traffic)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>()</a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(ggforce) <span class="co"># for plotting a units variable</span></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="dt">traffic =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(traffic)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(ggforce) <span class="co"># for plotting a units variable</span></a>
 <a class="sourceLine" id="cb24-8" data-line-number="8">## Loading required package: ggforce</a>
 <a class="sourceLine" id="cb24-9" data-line-number="9"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span><span class="st">  </span></a>
 <a class="sourceLine" id="cb24-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">data =</span> b, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> hour, <span class="dt">y =</span> traffic))</a></code></pre></div>
@@ -594,6 +596,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -624,17 +627,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Edzer Pebesma.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
