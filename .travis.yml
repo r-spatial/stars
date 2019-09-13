@@ -10,9 +10,6 @@ dist: trusty
 # cache: packages
 latex: true
 
-r_github_packages:
-  - r-spatial/sf
-
 addons:
   apt:
     sources:

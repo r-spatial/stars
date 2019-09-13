@@ -190,6 +190,8 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "slice", "stars")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
+	if (utils::packageVersion("sf") >= "0.8-0")
+		register_s3_method("sf", "st_join", "stars")
 }
 
 # from: https://github.com/tidyverse/hms/blob/master/R/zzz.R

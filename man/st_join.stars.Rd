@@ -4,7 +4,7 @@
 \alias{st_join.stars}
 \title{Spatially join a stars and an `sf` object}
 \usage{
-\method{st_join}{stars}(x, y, ..., join = st_intersects, what = "left",
+st_join.stars(x, y, ..., join = st_intersects, what = "left",
   as_points = NA, warn = TRUE)
 }
 \arguments{
