@@ -65,7 +65,8 @@ Suggests:
     xts,
     zoo,
     starsdata,
-    tidync
+    tidync,
+    ncdfgeom
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

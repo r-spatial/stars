@@ -68,6 +68,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Get all the nc metadata
   meta <- .fix_meta(ncmeta::nc_meta(.x))
   
+  if(.is_netcdf_cf_dsg(meta)) {
+    if (!requireNamespace("ncdfgeom", quietly = TRUE))
+      stop("package ncdfgeom required, please install it first") # nocov
+    
+    geom <- .get_geom_name(meta)
+    
+    return(st_as_stars(ncdfgeom::read_timeseries_dsg(.x), sf_geometry = geom))
+  }
+  
   # Get relevant variables
   var <- .get_vars(var, meta)
   rep_var <- var[1L]
@@ -659,6 +668,72 @@ make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
     dimension
   
     
+}
+
+.is_netcdf_cf_dsg <- function(meta) {
+  featuretype <- .get_attributes(meta$attribute, "featureType", "NC_GLOBAL")
+  
+  if(!is.null(featuretype)) {
+    if(grepl( "timeseries", featuretype$value, ignore.case = TRUE)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
+.get_geom_name <- function(meta) {
+  geometry <- unlist(unique(.get_attributes(meta$attribute, "geometry")$value))
+  if(length(geometry) > 1) {
+    warning(paste("Only a single geometry is supported. Using", geometry[1])) #nocov
+    geometry <- geometry[1]
+  }
+  
+  if(!is.null(geometry)) {
+    ncdfgeom::read_geometry(meta$source$source)
+  } else {
+    NA
+  }
+}
+
+#' @param sf_geometry sf data.frame with geometry and attributes to be added to stars object. 
+#' Must have same number of rows as timeseries instances.
+#' @details For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.
+#' @name st_as_stars
+#' @export
+#' 
+st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
+  
+  crs <- sf::st_crs(4326)$proj4string
+  ts_points <- data.frame(X = .x$lons, Y = .x$lats, Z = .x$alts)
+  ts_points <- sf::st_as_sf(ts_points, coords = c("X", "Y", "Z"), crs = crs)
+  
+  data <- .x$data_frames[[1]]
+  
+  gdim <- create_dimension(from = 1, to = length(.x$lats), 
+                           refsys = crs, point = TRUE, 
+                           values = ts_points$geometry)
+  tdim <- create_dimension(from = 1, to = length(.x$time), 
+                           refsys = "POSIXct", point = FALSE, 
+                           values = as.POSIXct(.x$time))
+  dim <- list(time = tdim, points = gdim)
+  
+  if("sf" %in% class(sf_geometry)) {
+    if(length(gdim$values) != length(st_geometry(sf_geometry))) 
+      stop("geometry must be same length as instance dimension of timeseries")
+    
+    is_point <- any(grepl("point", class(st_geometry(sf_geometry)), ignore.case = TRUE))
+    
+    sf_dim <- create_dimension(from = 1, to = length(gdim$values),
+                               refsys = st_crs(sf_geometry)$proj4string, 
+                               point = is_point, is_raster = FALSE,
+                               values = st_geometry(sf_geometry))
+    
+    dim <- c(dim, list(geometry = sf_dim))
+  }
+  
+  st_stars(x = setNames(list(as.matrix(.x$data_frames[[1]])), 
+                        .x$varmeta[[1]]$name), 
+           dimensions =  create_dimensions(dim))
 }
 
 
