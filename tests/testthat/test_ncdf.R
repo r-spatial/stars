@@ -123,11 +123,11 @@ test_that("curvilinear broked", {
 
   st_dim <- st_dimensions(out)
   
-  expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+  expect_true(all(st_dim$y$values < -74 & st_dim$y$values > -81))
   
-  expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+  expect_true(all(st_dim$x$values < 38 & st_dim$x$values > 32))
   
-  expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+  expect_equal(dim(st_dim$y$values), setNames(c(118, 87), c("y", "x")))
 })
 
 test_that("high-dim from rasterwise", {
@@ -160,3 +160,16 @@ test_that("timeseries.nc", {
   expect_equal(names(nc), "pr")
   expect_equal(names(dims), c("time", "points", "geometry"))
 })
+
+test_that("curvilinear 2", {
+  f <- system.file("nc/c201923412.out1_4.nc", package = "stars")
+  nc <- read_ncdf(f)
+  
+  expect_equal(names(st_dimensions(nc)), c("nx", "ny", "time"))
+  
+  expect_true(attributes(st_dimensions(nc))$raster$curvilinear)
+  expect_equal(attributes(st_dimensions(nc))$raster$dimensions, c("nx", "ny"))
+  
+})
+
+
