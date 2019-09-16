@@ -1,3 +1,15 @@
+#' spatial intersect predicate for stars and sfc object
+#'
+#' spatial intersect predicate for stars and sfc object
+#' @param x object of class stars
+#' @param y object that has an `st_geometry` method: of class `sf` or `sfc`, or `stars` object with an `sfc` dimension
+#' @param sparse logical; if TRUE, return the a sparse logical matrix (object of class `sgbp`), if FALSE, return a logical matrix
+#' @param as_points logical, should grid cells be considered as points (TRUE) or polygons (FALSE)? Default: FALSE and warning emitted
+#' @param ... ignored, or passed on to `st_intersects.sf` for curvilinear grids
+#' @param transpose logical; should the transpose of the `sgbp` object be returned?
+#' @return `sgbp` object if sparse = TRUE, logical matrix otherwise
+#' @details curvilinear grids are always converted to polygons, so points on grid boundaries may intersect with two cells touched; for other grids each cell boundary or corner belongs only to one cell.
+#' 
 #' @export
 st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpose = FALSE) { 
 
@@ -55,10 +67,10 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
 #' @param y object of class sf, or one that can be coerced into that by \link{st_as_sf}
 #' @param join join function, which should return an sgbp object
 #' @param ... arguments that will be passed on to the join function
-#' @param as_points logical; controls whether grid cells in \code{x} will be treated as points, or as cell areas; \link{st_intersects.stars} by default will derive this from \code{x}'s metadata, or else assume areas.
+#' @param as_points logical; controls whether grid cells in \code{x} will be treated as points, or as cell areas; the \link{st_intersects.stars} method by default will derive this from \code{x}'s metadata, or else assume areas.
 #' @param what either "left1" or "right"
 #' @param warn logical; if TRUE, warn on 1-to-many matches when \code{what} is \code{"left1"}
-#' @returns If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if \code{warn} is TRUE a warning is raised). If what is "inner", an object of class \code{sf} with all matching records of x and y.
+#' @return If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if \code{warn} is TRUE a warning is raised). If what is "inner", an object of class \code{sf} with all matching records of x and y.
 #' @export
 st_join.stars = function(x, y, ..., join = st_intersects, what = "left", as_points = NA, warn = TRUE) {
 	if (!requireNamespace("dplyr", quietly = TRUE)) 

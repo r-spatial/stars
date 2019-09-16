@@ -4,7 +4,7 @@
 \alias{st_join.stars}
 \title{Spatially join a stars and an `sf` object}
 \usage{
-\method{st_join}{stars}(x, y, ..., join = st_intersects, what = "left",
+st_join.stars(x, y, ..., join = st_intersects, what = "left",
   as_points = NA, warn = TRUE)
 }
 \arguments{
@@ -18,9 +18,12 @@
 
 \item{what}{either "left1" or "right"}
 
-\item{as_points}{logical; controls whether grid cells in \code{x} will be treated as points, or as cell areas; \link{st_intersects.stars} by default will derive this from \code{x}'s metadata, or else assume areas.}
+\item{as_points}{logical; controls whether grid cells in \code{x} will be treated as points, or as cell areas; the \link{st_intersects.stars} method by default will derive this from \code{x}'s metadata, or else assume areas.}
 
 \item{warn}{logical; if TRUE, warn on 1-to-many matches when \code{what} is \code{"left1"}}
+}
+\value{
+If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if \code{warn} is TRUE a warning is raised). If what is "inner", an object of class \code{sf} with all matching records of x and y.
 }
 \description{
 Spatially join a stars and an `sf` object
