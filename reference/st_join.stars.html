@@ -141,8 +141,9 @@
     <p>Spatially join a stars and an `sf` object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_join.stars</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>st_intersects</span>, <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"left"</span>,
-  <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for stars</span>
+<span class='fu'>st_join</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>st_intersects</span>, <span class='no'>...</span>,
+  <span class='kw'>what</span> <span class='kw'>=</span> <span class='st'>"left1"</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,12 +157,12 @@
       <td><p>object of class sf, or one that can be coerced into that by <a href='st_as_sf.html'>st_as_sf</a></p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>arguments that will be passed on to the join function</p></td>
+      <th>join</th>
+      <td><p>the join function, which should return an sgbp object; see details</p></td>
     </tr>
     <tr>
-      <th>join</th>
-      <td><p>join function, which should return an sgbp object</p></td>
+      <th>...</th>
+      <td><p>arguments that will be passed on to the join function</p></td>
     </tr>
     <tr>
       <th>what</th>
@@ -179,7 +180,10 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if <code>warn</code> is TRUE a warning is raised). If what is "inner", an object of class <code>sf</code> with all matching records of x and y.</p>
+    <p>If what is "left1", an object of class stars with the (first) value of y at spatial instances of x</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>When there is more than one match to a single x value, the first matching record from y is taken (and if <code>warn</code> is TRUE a warning is raised). If what is "inner", an object of class <code>sf</code> with all matching records of x and y.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -187,6 +191,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
     </ul>
 
   </div>
@@ -199,7 +204,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>
