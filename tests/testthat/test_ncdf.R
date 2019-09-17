@@ -136,3 +136,27 @@ test_that("high-dim from rasterwise", {
   
   expect_equal(names(st_dimensions(out)), c("x", "y", "c3", "c4", "c5"))
 })
+
+test_that("timeseries.nc", {
+  f <- system.file("nc/timeseries.nc", package = "stars")
+  nc <- read_ncdf(f)
+  dims <- st_dimensions(nc)
+  expect_s3_class(nc, "stars")
+  expect_equal(names(nc), "pr")
+  expect_equal(names(dims), c("time", "points"))
+  
+  poly <- sf::st_buffer(st_transform(st_sf(id = seq_along(dims$points$values), 
+                              geom = dims$points$values, crs = 4326), 3857), 
+                        dist = 100, nQuadSegs = 1)
+  
+  temp_f <- tempfile()
+  file.copy(f, temp_f)
+  
+  suppressWarnings(temp_f <- ncdfgeom::write_geometry(temp_f, poly, "station", "pr"))
+  nc <- read_ncdf(temp_f)
+  
+  dims <- st_dimensions(nc)
+  expect_s3_class(nc, "stars")
+  expect_equal(names(nc), "pr")
+  expect_equal(names(dims), c("time", "points", "geometry"))
+})
