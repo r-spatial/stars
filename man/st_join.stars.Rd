@@ -4,17 +4,17 @@
 \alias{st_join.stars}
 \title{Spatially join a stars and an `sf` object}
 \usage{
-st_join.stars(x, y, ..., join = st_intersects, what = "left",
-  as_points = NA, warn = TRUE)
+\method{st_join}{stars}(x, y, join = st_intersects, ...,
+  what = "left1", as_points = NA, warn = TRUE)
 }
 \arguments{
 \item{x}{object of class stars}
 
 \item{y}{object of class sf, or one that can be coerced into that by \link{st_as_sf}}
 
-\item{...}{arguments that will be passed on to the join function}
+\item{join}{the join function, which should return an sgbp object; see details}
 
-\item{join}{join function, which should return an sgbp object}
+\item{...}{arguments that will be passed on to the join function}
 
 \item{what}{either "left1" or "right"}
 
@@ -23,8 +23,11 @@ st_join.stars(x, y, ..., join = st_intersects, what = "left",
 \item{warn}{logical; if TRUE, warn on 1-to-many matches when \code{what} is \code{"left1"}}
 }
 \value{
-If what is "left1", an object of class stars with the (first) value of y at spatial instances of x: when there is more than one match to a single x value, the first matching record from y is taken (and if \code{warn} is TRUE a warning is raised). If what is "inner", an object of class \code{sf} with all matching records of x and y.
+If what is "left1", an object of class stars with the (first) value of y at spatial instances of x
 }
 \description{
 Spatially join a stars and an `sf` object
+}
+\details{
+When there is more than one match to a single x value, the first matching record from y is taken (and if \code{warn} is TRUE a warning is raised). If what is "inner", an object of class \code{sf} with all matching records of x and y.
 }
