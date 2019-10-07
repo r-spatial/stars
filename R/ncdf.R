@@ -598,17 +598,16 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                         collapse = FALSE,
                         unpack = TRUE)
   })
-  names(curvi_coords)[1:2] <- tolower(names(curvilinear))[1:2]
+  names(curvi_coords)[1:2] <- names(dimensions)[1:2]
   
-  # This is a bit of a hack till we have more test cases.
-  expected_shape <- c(dimensions$x$to, dimensions$y$to)
+  expected_shape <- c(dimensions[[1]]$to, dimensions[[2]]$to)
   
-  if(!all(dim(curvi_coords$x) == expected_shape)) {
-    curvi_coords$x <- t(curvi_coords$x)
+  if(!all(dim(curvi_coords[[1]]) == expected_shape)) {
+    curvi_coords[1] <- t(curvi_coords[1])
   }
   
-  if(!all(dim(curvi_coords$y) == expected_shape)) {
-    curvi_coords$y <- t(curvi_coords$y)
+  if(!all(dim(curvi_coords[2]) == expected_shape)) {
+    curvi_coords[2] <- t(curvi_coords[2])
   }
   
   return(curvi_coords)
@@ -704,8 +703,16 @@ make_cal_time2 <- function(dimension, time_name, time_unit = NULL, cal = NULL) {
 st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
   
   crs <- sf::st_crs(4326)$proj4string
-  ts_points <- data.frame(X = .x$lons, Y = .x$lats, Z = .x$alts)
-  ts_points <- sf::st_as_sf(ts_points, coords = c("X", "Y", "Z"), crs = crs)
+  
+  if(length(.x$alts) == 0) {
+    ts_points <- data.frame(X = .x$lons, Y = .x$lats)
+    ts_points <- sf::st_as_sf(ts_points, coords = c("X", "Y"), crs = crs)
+    
+  } else {
+    ts_points <- data.frame(X = .x$lons, Y = .x$lats, Z = .x$alts)
+    ts_points <- sf::st_as_sf(ts_points, coords = c("X", "Y", "Z"), crs = crs)
+  }
+  
   
   data <- .x$data_frames[[1]]
   

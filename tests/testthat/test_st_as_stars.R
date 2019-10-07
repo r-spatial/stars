@@ -7,6 +7,8 @@ test_that("basic st_as_stars", {
   
   stars_obj <- st_as_stars(test_list)
   
+  expect_true("XYZ" %in% class(st_dimensions(stars_obj)$points$values[[1]]))
+  
   expect_s3_class(stars_obj, "stars")
   
   dim <- stars::st_dimensions(stars_obj)
@@ -40,4 +42,10 @@ test_that("basic st_as_stars", {
                sf::st_crs(geom_point)$proj4string)
   expect_true(dim$geometry$point)  
   expect_s3_class(dim$geometry$values, "sfc_POINT")
+  
+  test_list$alts <- numeric(0)
+  
+  stars_obj <- st_as_stars(test_list)
+  
+  expect_true("XY" %in% class(st_dimensions(stars_obj)$points$values[[1]]))
 })
