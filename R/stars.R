@@ -287,9 +287,18 @@ has_sfc = function(x) {
 st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 	dims = st_dimensions(x)
 	xy = attr(dims, "raster")$dimensions
-	if (is_curvilinear(x))
-		setNames(data.frame(as.vector(dims[[ xy[1] ]]$values), as.vector(dims[[ xy[2] ]]$values)), xy)
-	else if (has_rotate_or_shear(x)) {
+	if (is_curvilinear(x)) {
+		x = st_upfront(x) # x and y first...
+		cc = setNames(data.frame(as.vector(dims[[ xy[1] ]]$values), as.vector(dims[[ xy[2] ]]$values)), xy)
+		dims[ xy ] = NULL # remove
+		out = do.call(expand.grid, append(list(ix = seq_len(nrow(cc))), expand_dimensions(dims, center = center))) 
+			# cell offsets
+		ix = out$ix
+		out$ix = NULL
+		out = cbind(cc[[1]][ix], cc[[2]][ix], out)
+		names(out)[1:2] = xy
+		out
+	} else if (has_rotate_or_shear(x)) {
 		if (add_max)
 			stop("add_max will not work for rotated/shared rasters")
 		if (isTRUE(!center)) # center = FALSE
