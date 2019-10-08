@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.3-2
+Version: 0.4-0
 Authors@R: 
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -53,6 +53,7 @@ Suggests:
     jsonlite,
     knitr,
     maps,
+    ncdfgeom,
     ncmeta (>= 0.0.3),
     pbapply,
     plm,
@@ -60,13 +61,12 @@ Suggests:
     rmarkdown,
     sp,
     spacetime,
+    starsdata,
     testthat,
+    tidync,
     viridis,
     xts,
-    zoo,
-    starsdata,
-    tidync,
-    ncdfgeom
+    zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

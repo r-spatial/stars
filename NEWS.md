@@ -1,4 +1,4 @@
-# version 0.3-2
+# version 0.4-0
 
 * `plot` now uses all data to figure out breaks, in order to also find extremes; #216
 
@@ -36,7 +36,7 @@
 
 * cropping of a `stars_proxy` object now works; #179
 
-* `st_apply` can now loop over raster layers; examples in #176
+* `st_apply` can now loop over Raster layers; examples in #176
 
 # version 0.3-1
 
