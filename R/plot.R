@@ -183,7 +183,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 		values = structure(x[[1]], dim = NULL)
 		if (isTRUE(logz))
 			values = log10(values)
-		if (is.factor(values))
+		if (is.factor(values) || is.logical(values))
 			values = as.numeric(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
