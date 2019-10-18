@@ -138,6 +138,8 @@ test_that("high-dim from rasterwise", {
 })
 
 test_that("timeseries.nc", {
+  skip_on_os("solaris")
+
   f <- system.file("nc/timeseries.nc", package = "stars")
   nc <- read_ncdf(f)
   dims <- st_dimensions(nc)

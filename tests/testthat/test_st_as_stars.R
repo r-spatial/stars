@@ -1,6 +1,8 @@
 context("st_as_stars tests")
 
 test_that("basic st_as_stars", {
+  skip_on_os("solaris")
+
   f <- system.file("nc/timeseries.nc", package = "stars")
   
   test_list <- ncdfgeom::read_timeseries_dsg(f)

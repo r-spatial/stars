@@ -1,3 +1,7 @@
+# version 0.4-1
+
+* skip some tests on solaris
+
 # version 0.4-0
 
 * `plot` now uses all data to figure out breaks, in order to also find extremes; #216
