@@ -59,16 +59,11 @@ read_stars(tif) %>%
 
 ![](man/figures/README-plot1-1.png)<!-- -->
 
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/plot1-1.png" width="50%" />
-
 Raster data do not need to be regular and aligned with North/East, and
 package `stars` supports besides *regular* also *rotated*, *sheared*,
-*rectilinear* and *curvilinear*
-rasters:
+*rectilinear* and *curvilinear* rasters:
 
 ![](man/figures/README-plot2-1.png)<!-- -->
-
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/plot2-1.png" width="50%" />
 
 Vector data cubes arise when we do not have two regularly discretized
 spatial dimensions, but a single dimension indicating spatial feature
@@ -163,7 +158,6 @@ prec %>%
 ```
 
 ![](man/figures/README-plot3-1.png)<!-- -->
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/plot3-1.png" width="50%" />
 
 and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and
@@ -177,7 +171,6 @@ plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
 ![](man/figures/README-plot4-1.png)<!-- -->
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/plot4-1.png" width="50%" />
 
 We can integrate over (reduce) time, for instance to find out *when* the
 maximum precipitation occurred. The following code finds the time index,
@@ -192,7 +185,6 @@ st_apply(a, "geometry", index_max) %>%
 ```
 
 ![](man/figures/README-plot5-1.png)<!-- -->
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/plot5-1.png" width="50%" />
 
 ## Other packages for data cubes
 

@@ -63,10 +63,6 @@ read_stars(tif) %>%
   plot()
 ```
 
-```{r plot1-backup,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot1-1.png")
-```
-
 Raster data do not need to be regular and aligned with North/East,
 and package `stars` supports besides _regular_ also _rotated_,
 _sheared_, _rectilinear_ and _curvilinear_ rasters:
@@ -103,10 +99,6 @@ plot(st_geometry(st_as_sf(r2)), main = "rotated")
 plot(st_geometry(st_as_sf(r3)), main = "sheared")
 plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
 plot(st_geometry((r5)), main = "curvilinear")
-```
-
-```{r plot2-backup,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot2-1.png")
 ```
 
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
@@ -168,9 +160,6 @@ prec %>%
   slice(index = 1:12, along = "time") %>%
   plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
-```{r plot3-backup,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot3-1.png")
-```
 
 and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and plotted:
@@ -178,9 +167,6 @@ the maximum precipitation intensity was obtained per county, and plotted:
 ```{r plot4}
 a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
-```
-```{r plot4-backup,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot4-1.png")
 ```
 
 We can integrate over (reduce) time, for instance to find out _when_
@@ -193,9 +179,6 @@ st_apply(a, "geometry", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
-```
-```{r plot5-backup,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot5-1.png")
 ```
 
 ## Other packages for data cubes
