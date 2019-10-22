@@ -5,15 +5,12 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file - rmarkdown::render('README.Rmd', output_format = 'github_document', output_file = 'README.md') -->
 
 
-```{r readme-setup, echo = FALSE}
+```{r setup, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#",
-  fig.path = "https://raw.githubusercontent.com/r-spatial/stars/master/images/"
-  # fig.path = "images/"
+  fig.path = "man/figures/README-"
 )
-on_travis = Sys.getenv("USER") == "travis"
-# on_travis = TRUE
 is_online = curl::has_internet()
 ```
 
@@ -57,7 +54,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/maste
 ```
 
 or lower-dimensional cubes such as a raster image:
-```{r plot1,eval=!on_travis}
+```{r plot1}
 suppressPackageStartupMessages(library(dplyr))
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -66,7 +63,7 @@ read_stars(tif) %>%
   plot()
 ```
 
-```{r plot1-backup,out.width='50%',echo=FALSE,eval=on_travis}
+```{r plot1-backup,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot1-1.png")
 ```
 
@@ -74,7 +71,7 @@ Raster data do not need to be regular and aligned with North/East,
 and package `stars` supports besides _regular_ also _rotated_,
 _sheared_, _rectilinear_ and _curvilinear_ rasters:
 
-```{r plot2,echo=FALSE,eval=!on_travis}
+```{r plot2,echo=FALSE}
 x = 1:5
 y = 1:4
 d = st_dimensions(x = x, y = y, .raster = c("x", "y"))
@@ -108,7 +105,7 @@ plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
 plot(st_geometry((r5)), main = "curvilinear")
 ```
 
-```{r plot2-backup,out.width='50%',echo=FALSE,eval=on_travis}
+```{r plot2-backup,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot2-1.png")
 ```
 
@@ -160,7 +157,7 @@ methods(class = "stars_proxy")
 In the following, a curvilinear grid with hourly precipitation values of
 a hurricane is imported and the first 12 time steps are plotted:
 
-```{r plot3,eval=!on_travis}
+```{r plot3}
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
@@ -171,18 +168,18 @@ prec %>%
   slice(index = 1:12, along = "time") %>%
   plot(downsample = c(5, 5, 1), hook = plot_hook)
 ```
-```{r plot3-backup,out.width='50%',echo=FALSE,eval=on_travis}
+```{r plot3-backup,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot3-1.png")
 ```
 
 and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and plotted:
 
-```{r plot4,eval=!on_travis}
+```{r plot4}
 a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
-```{r plot4-backup,out.width='50%',echo=FALSE,eval=on_travis}
+```{r plot4-backup,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot4-1.png")
 ```
 
@@ -190,14 +187,14 @@ We can integrate over (reduce) time, for instance to find out _when_
 the maximum precipitation occurred. The following code finds the time
 index, and then the corresponding time value:
 
-```{r plot5, fig.height=3,eval=!on_travis}
+```{r plot5, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 st_apply(a, "geometry", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
-```{r plot5-backup,out.width='50%',echo=FALSE,eval=on_travis}
+```{r plot5-backup,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/plot5-1.png")
 ```
 
