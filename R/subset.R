@@ -64,7 +64,7 @@
 
 	do_select = FALSE
 	for (i in seq_along(mc)) { 
-		if (is.name(mc[[i]]) && as.character(mc[[i]]) != "") # try to "get" it:
+		if ((is.call(mc[[i]]) || is.name(mc[[i]])) && as.character(mc[[i]]) != "") # try to "get" it:
 			mc[[i]] = eval(mc[[i]], parent.frame())
 		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = mc[[i]]
