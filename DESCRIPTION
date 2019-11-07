@@ -63,7 +63,6 @@ Suggests:
     spacetime,
     starsdata,
     testthat,
-    tidync,
     viridis,
     xts,
     zoo
