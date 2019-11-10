@@ -651,7 +651,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 		}
 		value = if (inherits(value, c("factor", "POSIXct")))
 				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))
-			else if (!is.array(value) || any(dim(value) != dim(x)))
+			else if (!is.array(value) || !identical(dim(value), dim(x)))
 				array(value, dim(x))
 			else
 				value
