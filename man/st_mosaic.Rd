@@ -2,17 +2,31 @@
 % Please edit documentation in R/mosaic.R
 \name{st_mosaic}
 \alias{st_mosaic}
+\alias{st_mosaic.stars}
+\alias{st_mosaic.character}
 \title{build mosaic (composite) of several spatially disjoint stars objects}
 \usage{
-st_mosaic(..., options = c("-vrtnodata", "-9999"))
+st_mosaic(.x, ...)
+
+\method{st_mosaic}{stars}(.x, ..., dst = tempfile(fileext = file_ext),
+  options = c("-vrtnodata", "-9999"), file_ext = ".tif")
+
+\method{st_mosaic}{character}(.x, ..., dst = tempfile(fileext =
+  file_ext), options = c("-vrtnodata", "-9999"), file_ext = ".tif")
 }
 \arguments{
-\item{...}{a list of input stars objects}
+\item{.x}{object of class stars, or character vector with input dataset names}
+
+\item{...}{further input stars objects}
+
+\item{dst}{character; destination file name}
 
 \item{options}{character; options to the gdalbuildvrt command}
+
+\item{file_ext}{character; file extension, determining the format used to write to (".tif" implies GeoTIFF)}
 }
 \value{
-a stars object with the composite of the input; see also the documentation of \code{gdalbuildvrt}
+the stars method returns a stars object with the composite of the input; the \code{character} method returns the file name of the file with the mosaic; see also the GDAL documentation of \code{gdalbuildvrt}
 }
 \description{
 build mosaic (composite) of several spatially disjoint stars objects
