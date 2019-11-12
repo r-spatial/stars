@@ -39,4 +39,5 @@ st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext), options 
 st_mosaic.character = function(.x, ...,  dst = tempfile(fileext = file_ext), 
 		options = c("-vrtnodata", "-9999"), file_ext = ".tif") {
 	sf::gdal_utils("buildvrt", .x, dst, options)
+	dst
 }
