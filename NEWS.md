@@ -1,5 +1,9 @@
 # version 0.4-1
 
+* `aggregate.stars` now also takes `by` arguments like "week", "month", or "5 days"
+
+* add `st_as_stars` method for `xts` objects; improve `as.xts` for `stars` objects
+
 * skip some tests on solaris
 
 # version 0.4-0

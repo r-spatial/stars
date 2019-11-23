@@ -615,16 +615,22 @@ st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
 #' @export
 #' @name redimension
 #' @param x object of class \code{stars}
-#' @param new_dims target dimensions
+#' @param new_dims target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes
 #' @param along named list with new dimension name and values
 #' @param ... ignored
 st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
 	d = st_dimensions(x)
-	if (! identical(new_dims, d)) {
-		if (prod(dim(d)) != prod(dim(new_dims)))
+	if (inherits(new_dims, "dimensions")) {
+		di = dim(new_dims)
+	} else {
+		di = new_dims
+		new_dims = create_dimensions(di)
+	}
+	if (! identical(setNames(di, NULL), setNames(dim(x), NULL))) {
+		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
 		for (i in seq_along(x))
-			dim(x[[i]]) = dim(new_dims)
+			dim(x[[i]]) = di
 		st_stars(x, dimensions = new_dims)
 	} else { # collapse attributes into dimension
 		if (length(x) == 1) # only one attribute: do nothing
