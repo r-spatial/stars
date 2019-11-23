@@ -144,7 +144,7 @@
     <pre class="usage"><span class='co'># S3 method for stars</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span>(<span class='no'>x</span>, <span class='no'>by</span>, <span class='no'>FUN</span>, <span class='no'>...</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>st_intersects</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span>(<span class='fu'>st_dimension</span>(<span class='no'>by</span>) <span class='kw'>==</span> <span class='fl'>2</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span>
-  <span class='fl'>TRUE</span>), <span class='kw'>rightmost.closed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='fl'>TRUE</span>), <span class='kw'>rightmost.closed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>left.open</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -155,7 +155,7 @@
     </tr>
     <tr>
       <th>by</th>
-      <td><p>object of class <code>sf</code>, <code>sfc</code>, or a time class (<code>Date</code>, <code>POSIXct</code>, or <code>PCICt</code>) with aggregation geometry/time periods; if of class <code>stars</code>, it is converted to sfc by <code>st_as_sfc(by, as_points = FALSE)</code></p></td>
+      <td><p>object of class <code>sf</code> or <code>sfc</code> for spatial aggregation, for temporal aggregation a vector with time values (<code>Date</code>, <code>POSIXct</code>, or <code>PCICt</code>) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see <a href='https://rdrr.io/r/base/cut.POSIXt.html'>cut.POSIXt</a>); if by is an object of class <code>stars</code>, it is converted to sfc by <code>st_as_sfc(by, as_points = FALSE)</code> thus ignoring its time component.</p></td>
     </tr>
     <tr>
       <th>FUN</th>
@@ -180,6 +180,10 @@
     <tr>
       <th>rightmost.closed</th>
       <td><p>see <a href='https://rdrr.io/r/base/findInterval.html'>findInterval</a></p></td>
+    </tr>
+    <tr>
+      <th>left.open</th>
+      <td><p>logical; used for time intervals, see <a href='https://rdrr.io/r/base/findInterval.html'>findInterval</a> and <a href='https://rdrr.io/r/base/cut.POSIXt.html'>cut.POSIXt</a></p></td>
     </tr>
     </table>
 
