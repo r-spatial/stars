@@ -11,6 +11,29 @@
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @export
+#' @examples
+#' # aggregate time dimension in format Date
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' t1 = as.Date("2018-07-31")
+#' x = read_stars(c(tif, tif, tif, tif), along = list(time = c(t1, t1+1, t1+2, t1+3)))
+#' st_get_dimension_values(x, "time")
+#'
+#' # aggregate time dimension in format Date - interval (from stars 0.4-1)
+#' by_t = "2 days"
+#' x_agg_time2 = aggregate(x, by = by_t, FUN = max) 
+#' st_get_dimension_values(x_agg_time2, "time")
+#' x_agg_time - x_agg_time2
+#'
+#' # aggregate time dimension in format POSIXct
+#' x = st_set_dimensions(x, 4, values = as.POSIXct(c("2018-07-31", 
+#'                                                   "2018-08-01", 
+#'                                                   "2018-08-02", 
+#'                                                   "2018-08-03")), 
+#'                       names = "time")
+#' by_t = as.POSIXct(c("2018-07-31", "2018-08-02"))
+#' x_agg_posix = aggregate(x, by = by_t, FUN = max)
+#' st_get_dimension_values(x_agg_posix, "time")
+#' x_agg_time - x_agg_posix
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE) {
