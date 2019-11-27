@@ -15,10 +15,11 @@
 #' # aggregate time dimension in format Date
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' t1 = as.Date("2018-07-31")
-#' x = read_stars(c(tif, tif, tif, tif), along = list(time = c(t1, t1+1, t1+2, t1+3)))
+#' x = read_stars(c(tif, tif, tif, tif), along = list(time = c(t1, t1+1, t1+2, t1+3)))[,1:30,1:30]
 #' st_get_dimension_values(x, "time")
+#' x_agg_time = aggregate(x, by = t1 + c(0, 2, 4), FUN = max) 
 #'
-#' # aggregate time dimension in format Date - interval (from stars 0.4-1)
+#' # aggregate time dimension in format Date - interval
 #' by_t = "2 days"
 #' x_agg_time2 = aggregate(x, by = by_t, FUN = max) 
 #' st_get_dimension_values(x_agg_time2, "time")

@@ -18,7 +18,7 @@ st_redimension(x, new_dims, along, ...)
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{new_dims}{target dimensions}
+\item{new_dims}{target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes}
 
 \item{along}{named list with new dimension name and values}
 
