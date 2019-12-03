@@ -125,10 +125,15 @@ fetch = function(x, downsample = 0, ...) {
 	ret = lapply(x, read_stars, RasterIO = rasterio, 
 		NA_value = attr(x, "NA_value") %||% NA_real_, ...)
 
+	along = if (length(dim(x)) > 3)
+			setNames(list(st_get_dimension_values(x, 4)), tail(names(st_dimensions(x)), 1))
+		else
+			list(new_dim = names(ret))
+	
 	ret = if (length(ret) == 1)
-		st_redimension(ret[[1]])
+		st_redimension(ret[[1]], along = along)
 	else
-		do.call(c, lapply(ret, st_redimension))
+		do.call(c, lapply(ret, st_redimension, along = along))
 	
 	new_dim = st_dimensions(ret)
 	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
