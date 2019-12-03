@@ -2,8 +2,8 @@ language: r
 
 r:
   - release
-  - oldrel
   - devel #-- tic errors!
+#  - oldrel
 
 sudo: required
 dist: trusty
