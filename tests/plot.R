@@ -13,3 +13,8 @@ if (csv != "") {
 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 }
+
+# https://github.com/r-spatial/stars/issues/233 :
+nc = read_sf(system.file("shape/nc.shp", package = "sf"))
+output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
+plot(output)

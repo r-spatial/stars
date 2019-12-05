@@ -327,7 +327,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			ar = if (length(dim(ar)) == 2)
 					ar[ , rev(seq_len(dim(ar)[2])), drop = FALSE]
 				else
-					ar[ , rev(seq_len(dim(ar)[2])), band, drop = FALSE] # FIXME: breaks if more than 3?
+					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
 			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear(x), ...)
