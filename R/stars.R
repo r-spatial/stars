@@ -459,7 +459,7 @@ c.stars = function(..., along = NA_integer_) {
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	if (is.logical(drop))
 		drop = which(drop)
-	if (length(drop) > 0)
+	if (any(dim(x) > 1) && length(drop) > 0)
 		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
 	else 
 		x
