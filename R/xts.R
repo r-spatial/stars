@@ -28,17 +28,17 @@ st_as_stars.xts = function(.x, ..., dimensions) {
 		stop("xts required: install that first") # nocov
 	if (!requireNamespace("zoo", quietly = TRUE))
 		stop("zoo required: install that first") # nocov
-	time = zoo::index(x)
-	cn = colnames(x)
+	time = zoo::index(.x)
+	cn = colnames(.x)
 	if (!missing(dimensions)) {
-		x = as.matrix(x)
-		dim(x) = dim(dimensions)
-		st_stars(list(x), dimensions)
+		.x = as.matrix(.x)
+		dim(.x) = dim(dimensions)
+		st_stars(list(.x), dimensions)
 	} else {
-		x = st_as_stars(list(as.matrix(x)))
-		x = st_set_dimensions(x, 1, time)
+		.x = st_as_stars(list(as.matrix(.x)))
+		.x = st_set_dimensions(.x, 1, time)
 		if (!is.null(cn))
-			x = st_set_dimensions(x, 2, cn)
-		st_set_dimensions(x, names = c("time", "others"))
+			.x = st_set_dimensions(.x, 2, cn)
+		st_set_dimensions(.x, names = c("time", "others"))
 	}
 }
