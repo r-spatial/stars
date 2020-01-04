@@ -329,27 +329,32 @@
 <a class="sourceLine" id="cb17-3" data-line-number="3">## //PRODUCT/longitude, </a>
 <a class="sourceLine" id="cb17-4" data-line-number="4">## //PRODUCT/latitude, </a>
 <a class="sourceLine" id="cb17-5" data-line-number="5">## //PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column,</a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">nit.c[[<span class="dv">1</span>]][nit.c[[<span class="dv">1</span>]] <span class="op">&gt;</span><span class="st"> </span><span class="fl">9e+36</span>] =<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="kw">st_crs</span>(nit.c) =<span class="st"> </span><span class="dv">4326</span></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8">nit.c</a>
-<a class="sourceLine" id="cb17-9" data-line-number="9">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb17-10" data-line-number="10">## attribute(s):</a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">##  nitrogendioxide_summed_total_column </a>
-<a class="sourceLine" id="cb17-12" data-line-number="12">##  Min.   :0e+00                       </a>
-<a class="sourceLine" id="cb17-13" data-line-number="13">##  1st Qu.:1e-04                       </a>
-<a class="sourceLine" id="cb17-14" data-line-number="14">##  Median :1e-04                       </a>
-<a class="sourceLine" id="cb17-15" data-line-number="15">##  Mean   :1e-04                       </a>
-<a class="sourceLine" id="cb17-16" data-line-number="16">##  3rd Qu.:1e-04                       </a>
-<a class="sourceLine" id="cb17-17" data-line-number="17">##  Max.   :5e-04                       </a>
-<a class="sourceLine" id="cb17-18" data-line-number="18">##  NA's   :330                         </a>
-<a class="sourceLine" id="cb17-19" data-line-number="19">## dimension(s):</a>
-<a class="sourceLine" id="cb17-20" data-line-number="20">##   from  to offset delta                       refsys point</a>
-<a class="sourceLine" id="cb17-21" data-line-number="21">## x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA</a>
-<a class="sourceLine" id="cb17-22" data-line-number="22">## y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA</a>
-<a class="sourceLine" id="cb17-23" data-line-number="23">##                           values    </a>
-<a class="sourceLine" id="cb17-24" data-line-number="24">## x [450x278] -5.81066,...,30.9468 [x]</a>
-<a class="sourceLine" id="cb17-25" data-line-number="25">## y  [450x278] 28.3605,...,51.4686 [y]</a>
-<a class="sourceLine" id="cb17-26" data-line-number="26">## curvilinear grid</a></code></pre></div>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/class.html">inherits</a></span>(nit.c[[<span class="dv">1</span>]], <span class="st">"units"</span>)) {</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">    threshold =<span class="st"> </span>units<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span>(<span class="fl">9e+36</span>, mol<span class="op">/</span>m<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9">    threshold =<span class="st"> </span><span class="fl">9e+36</span></a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">}</a>
+<a class="sourceLine" id="cb17-11" data-line-number="11">nit.c[[<span class="dv">1</span>]][nit.c[[<span class="dv">1</span>]] <span class="op">&gt;</span><span class="st"> </span>threshold] =<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb17-12" data-line-number="12"><span class="kw">st_crs</span>(nit.c) =<span class="st"> </span><span class="dv">4326</span></a>
+<a class="sourceLine" id="cb17-13" data-line-number="13">nit.c</a>
+<a class="sourceLine" id="cb17-14" data-line-number="14">## stars object with 2 dimensions and 1 attribute</a>
+<a class="sourceLine" id="cb17-15" data-line-number="15">## attribute(s):</a>
+<a class="sourceLine" id="cb17-16" data-line-number="16">##  nitrogendioxide_summed_total_column </a>
+<a class="sourceLine" id="cb17-17" data-line-number="17">##  Min.   :0e+00                       </a>
+<a class="sourceLine" id="cb17-18" data-line-number="18">##  1st Qu.:1e-04                       </a>
+<a class="sourceLine" id="cb17-19" data-line-number="19">##  Median :1e-04                       </a>
+<a class="sourceLine" id="cb17-20" data-line-number="20">##  Mean   :1e-04                       </a>
+<a class="sourceLine" id="cb17-21" data-line-number="21">##  3rd Qu.:1e-04                       </a>
+<a class="sourceLine" id="cb17-22" data-line-number="22">##  Max.   :5e-04                       </a>
+<a class="sourceLine" id="cb17-23" data-line-number="23">##  NA's   :330                         </a>
+<a class="sourceLine" id="cb17-24" data-line-number="24">## dimension(s):</a>
+<a class="sourceLine" id="cb17-25" data-line-number="25">##   from  to offset delta                       refsys point</a>
+<a class="sourceLine" id="cb17-26" data-line-number="26">## x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA</a>
+<a class="sourceLine" id="cb17-27" data-line-number="27">## y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA</a>
+<a class="sourceLine" id="cb17-28" data-line-number="28">##                           values    </a>
+<a class="sourceLine" id="cb17-29" data-line-number="29">## x [450x278] -5.81066,...,30.9468 [x]</a>
+<a class="sourceLine" id="cb17-30" data-line-number="30">## y  [450x278] 28.3605,...,51.4686 [y]</a>
+<a class="sourceLine" id="cb17-31" data-line-number="31">## curvilinear grid</a></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nit.c, <span class="dt">breaks =</span> <span class="st">"equal"</span>, <span class="dt">reset =</span> <span class="ot">FALSE</span>, <span class="dt">axes =</span> <span class="ot">TRUE</span>, <span class="dt">as_points =</span> <span class="ot">TRUE</span>, </a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">         <span class="dt">pch =</span> <span class="dv">16</span>,  <span class="dt">logz =</span> <span class="ot">TRUE</span>, <span class="dt">key.length =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb18-3" data-line-number="3">maps<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span>(<span class="st">'world'</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">'red'</span>)</a></code></pre></div>

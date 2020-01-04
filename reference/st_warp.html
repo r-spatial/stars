@@ -141,9 +141,19 @@
     <p>Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_warp</span>(<span class='no'>src</span>, <span class='no'>dest</span>, <span class='no'>...</span>, <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>NA_crs_</span>, <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
-  <span class='kw'>segments</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>use_gdal</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>no_data_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>, <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"near"</span>)</pre>
+    <pre class="usage"><span class='fu'>st_warp</span>(
+  <span class='no'>src</span>,
+  <span class='no'>dest</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>crs</span> <span class='kw'>=</span> <span class='no'>NA_crs_</span>,
+  <span class='kw'>cellsize</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
+  <span class='kw'>segments</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>use_gdal</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  <span class='kw'>no_data_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
+  <span class='kw'>debug</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"near"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

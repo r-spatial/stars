@@ -142,27 +142,54 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>join_zlim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='fu'>make_label</span>(<span class='no'>x</span>,
-  <span class='fl'>1</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>nbreaks</span> <span class='kw'>=</span> <span class='fl'>11</span>,
-  <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"quantile"</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/gray.html'>grey</a></span>(<span class='fl'>1</span>:(<span class='no'>nbreaks</span> - <span class='fl'>1</span>)/<span class='no'>nbreaks</span>),
-  <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='fu'>get_key_pos</span>(<span class='no'>x</span>, <span class='no'>...</span>), <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/graphics/layout.html'>lcm</a></span>(<span class='fl'>1.8</span>),
-  <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>box_col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/gray.html'>grey</a></span>(<span class='fl'>0.8</span>),
-  <span class='kw'>center_time</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>hook</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>plot</span>(
+  <span class='no'>x</span>,
+  <span class='no'>y</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>join_zlim</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>main</span> <span class='kw'>=</span> <span class='fu'>make_label</span>(<span class='no'>x</span>, <span class='fl'>1</span>),
+  <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>nbreaks</span> <span class='kw'>=</span> <span class='fl'>11</span>,
+  <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='st'>"quantile"</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/gray.html'>grey</a></span>(<span class='fl'>1</span>:(<span class='no'>nbreaks</span> - <span class='fl'>1</span>)/<span class='no'>nbreaks</span>),
+  <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='fu'>get_key_pos</span>(<span class='no'>x</span>, <span class='no'>...</span>),
+  <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/graphics/layout.html'>lcm</a></span>(<span class='fl'>1.8</span>),
+  <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>,
+  <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>box_col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/gray.html'>grey</a></span>(<span class='fl'>0.8</span>),
+  <span class='kw'>center_time</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>hook</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>asp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maxColorValue</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/class.html'>inherits</a></span>(<span class='no'>rgb</span>, <span class='st'>"data.frame"</span>), <span class='fl'>255</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>x</span><span class='kw'>[[</span><span class='no'>attr</span>]], <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)), <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>d</span>)[<span class='fl'>1</span>],
-  <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>d</span>)[<span class='fl'>2</span>], <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>xlim</span>,
-  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>logz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/graphics/layout.html'>lcm</a></span>(<span class='fl'>1.8</span>), <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>,
-  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>useRaster</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/dev.capabilities.html'>dev.capabilities</a></span>(<span class='st'>"rasterImage"</span>)$<span class='no'>rasterImage</span> <span class='kw'>==</span> <span class='st'>"yes"</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(
+  <span class='no'>x</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>band</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>attr</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>asp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>rgb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>maxColorValue</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/class.html'>inherits</a></span>(<span class='no'>rgb</span>, <span class='st'>"data.frame"</span>), <span class='fl'>255</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='no'>x</span><span class='kw'>[[</span><span class='no'>attr</span>]], <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)),
+  <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>d</span>)[<span class='fl'>1</span>],
+  <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='no'>axes</span>) <span class='st'>""</span> <span class='kw'>else</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>d</span>)[<span class='fl'>2</span>],
+  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>xlim</span>,
+  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='no'>x</span>)$<span class='no'>ylim</span>,
+  <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>interpolate</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>key.pos</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>logz</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>key.width</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/graphics/layout.html'>lcm</a></span>(<span class='fl'>1.8</span>),
+  <span class='kw'>key.length</span> <span class='kw'>=</span> <span class='fl'>0.618</span>,
+  <span class='kw'>add.geom</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>useRaster</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/dev.capabilities.html'>dev.capabilities</a></span>(<span class='st'>"rasterImage"</span>)$<span class='no'>rasterImage</span> <span class='kw'>==</span> <span class='st'>"yes"</span>
+)
 
 <span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>,
-  <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fu'>get_downsample</span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>x</span>)))</pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>downsample</span> <span class='kw'>=</span> <span class='fu'>get_downsample</span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>x</span>)))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

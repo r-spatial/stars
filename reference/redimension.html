@@ -144,12 +144,20 @@
     <pre class="usage"><span class='fu'>st_redimension</span>(<span class='no'>x</span>, <span class='no'>new_dims</span>, <span class='no'>along</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_redimension</span>(<span class='no'>x</span>, <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
-  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)), <span class='no'>...</span>)
+<span class='fu'>st_redimension</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
+  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)),
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_redimension</span>(<span class='no'>x</span>, <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
-  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)), <span class='no'>...</span>)</pre>
+<span class='fu'>st_redimension</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
+  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)),
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

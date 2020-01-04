@@ -141,9 +141,14 @@
     <p>rasterize simple feature geometries</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_rasterize</span>(<span class='no'>sf</span>, <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'>st_bbox</span>(<span class='no'>sf</span>), <span class='kw'>values</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
-  <span class='no'>...</span>), <span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(), <span class='kw'>driver</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>st_rasterize</span>(
+  <span class='no'>sf</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'>st_bbox</span>(<span class='no'>sf</span>), <span class='kw'>values</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>, <span class='no'>...</span>),
+  <span class='kw'>file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(),
+  <span class='kw'>driver</span> <span class='kw'>=</span> <span class='st'>"GTiff"</span>,
+  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

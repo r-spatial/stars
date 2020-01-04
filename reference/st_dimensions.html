@@ -150,11 +150,24 @@
 <span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='no'>.raster</span>, <span class='kw'>affine</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>),
-  <span class='kw'>cell_midpoints</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>st_dimensions</span>(
+  <span class='no'>.x</span>,
+  <span class='no'>...</span>,
+  <span class='no'>.raster</span>,
+  <span class='kw'>affine</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>),
+  <span class='kw'>cell_midpoints</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>point</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)
 
-<span class='fu'>st_set_dimensions</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='kw'>values</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>xy</span>, <span class='no'>...</span>)
+<span class='fu'>st_set_dimensions</span>(
+  <span class='no'>.x</span>,
+  <span class='no'>which</span>,
+  <span class='kw'>values</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>point</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>xy</span>,
+  <span class='no'>...</span>
+)
 
 <span class='fu'>st_get_dimension_values</span>(<span class='no'>.x</span>, <span class='no'>which</span>, <span class='no'>...</span>, <span class='kw'>max</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>center</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
 

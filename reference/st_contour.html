@@ -141,8 +141,12 @@
     <p>Compute contour lines or sets</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_contour</span>(<span class='no'>x</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>contour_lines</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='kw pkg'>classInt</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/classInt/man/classIntervals.html'>classIntervals</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span>(<span class='no'>x</span><span class='kw'>[[</span><span class='fl'>1</span>]])))$<span class='no'>brks</span>)</pre>
+    <pre class="usage"><span class='fu'>st_contour</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>contour_lines</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='kw pkg'>classInt</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/classInt/man/classIntervals.html'>classIntervals</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span>(<span class='no'>x</span><span class='kw'>[[</span><span class='fl'>1</span>]])))$<span class='no'>brks</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
