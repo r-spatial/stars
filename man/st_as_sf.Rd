@@ -6,12 +6,18 @@
 \alias{st_as_sf.stars}
 \title{Convert stars object into an sf object}
 \usage{
-\method{st_as_sfc}{stars}(x, ..., as_points,
-  which = seq_len(prod(dim(x)[1:2])))
+\method{st_as_sfc}{stars}(x, ..., as_points, which = seq_len(prod(dim(x)[1:2])))
 
-\method{st_as_sf}{stars}(x, ..., as_points = FALSE, merge = FALSE,
-  na.rm = TRUE, use_integer = is.logical(x[[1]]) || is.integer(x[[1]]),
-  long = FALSE, connect8 = FALSE)
+\method{st_as_sf}{stars}(
+  x,
+  ...,
+  as_points = FALSE,
+  merge = FALSE,
+  na.rm = TRUE,
+  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]),
+  long = FALSE,
+  connect8 = FALSE
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}

@@ -5,8 +5,7 @@
 \alias{theme_stars}
 \title{ggplot geom for stars objects}
 \usage{
-geom_stars(mapping = NULL, data = NULL, ..., downsample = 0,
-  sf = FALSE)
+geom_stars(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE)
 
 theme_stars(...)
 }

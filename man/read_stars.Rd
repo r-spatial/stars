@@ -4,10 +4,20 @@
 \alias{read_stars}
 \title{read raster/array dataset from file or connection}
 \usage{
-read_stars(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, quiet = FALSE, NA_value = NA_real_,
-  along = NA_integer_, RasterIO = list(), proxy = FALSE,
-  curvilinear = character(0), normalize_path = TRUE)
+read_stars(
+  .x,
+  ...,
+  options = character(0),
+  driver = character(0),
+  sub = TRUE,
+  quiet = FALSE,
+  NA_value = NA_real_,
+  along = NA_integer_,
+  RasterIO = list(),
+  proxy = FALSE,
+  curvilinear = character(0),
+  normalize_path = TRUE
+)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}

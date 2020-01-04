@@ -8,14 +8,30 @@
 \usage{
 write_stars(obj, dsn, layer, ...)
 
-\method{write_stars}{stars}(obj, dsn, layer = 1, ...,
-  driver = detect.driver(dsn), options = character(0),
-  type = "Float32", NA_value = NA_real_, update = FALSE)
+\method{write_stars}{stars}(
+  obj,
+  dsn,
+  layer = 1,
+  ...,
+  driver = detect.driver(dsn),
+  options = character(0),
+  type = "Float32",
+  NA_value = NA_real_,
+  update = FALSE
+)
 
-\method{write_stars}{stars_proxy}(obj, dsn, layer = 1, ...,
-  driver = detect.driver(dsn), options = character(0),
-  type = "Float32", NA_value = NA_real_, chunk_size = c(dim(obj)[1],
-  floor(2.5e+07/dim(obj)[1])), progress = TRUE)
+\method{write_stars}{stars_proxy}(
+  obj,
+  dsn,
+  layer = 1,
+  ...,
+  driver = detect.driver(dsn),
+  options = character(0),
+  type = "Float32",
+  NA_value = NA_real_,
+  chunk_size = c(dim(obj)[1], floor(2.5e+07/dim(obj)[1])),
+  progress = TRUE
+)
 }
 \arguments{
 \item{obj}{object of class \code{stars}}

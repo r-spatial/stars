@@ -4,9 +4,17 @@
 \alias{read_ncdf}
 \title{Read NetCDF into stars object}
 \usage{
-read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0), eps = 1e-12, ignore_bounds = FALSE,
-  make_time = TRUE, make_units = TRUE)
+read_ncdf(
+  .x,
+  ...,
+  var = NULL,
+  ncsub = NULL,
+  curvilinear = character(0),
+  eps = 1e-12,
+  ignore_bounds = FALSE,
+  make_time = TRUE,
+  make_units = TRUE
+)
 }
 \arguments{
 \item{.x}{NetCDF file or source}

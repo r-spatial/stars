@@ -20,12 +20,22 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{default}(.x = NULL, ..., raster = NULL)
 
-\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL,
-  crs = st_crs(4326))
+\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL, crs = st_crs(4326))
 
-\method{st_as_stars}{bbox}(.x, ..., nx, ny, dx = dy, dy = dx,
-  xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")],
-  values = 0, n = 64800, pretty = FALSE, inside = FALSE)
+\method{st_as_stars}{bbox}(
+  .x,
+  ...,
+  nx,
+  ny,
+  dx = dy,
+  dy = dx,
+  xlim = .x[c("xmin", "xmax")],
+  ylim = .x[c("ymin", "ymax")],
+  values = 0,
+  n = 64800,
+  pretty = FALSE,
+  inside = FALSE
+)
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
@@ -33,8 +43,13 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 
-\method{st_as_stars}{stars_proxy}(.x, ..., downsample = 0,
-  url = attr(.x, "url"), envir = parent.frame())
+\method{st_as_stars}{stars_proxy}(
+  .x,
+  ...,
+  downsample = 0,
+  url = attr(.x, "url"),
+  envir = parent.frame()
+)
 
 \method{st_as_stars}{xts}(.x, ..., dimensions)
 }

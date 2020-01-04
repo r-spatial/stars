@@ -8,11 +8,21 @@
 \usage{
 st_mosaic(.x, ...)
 
-\method{st_mosaic}{stars}(.x, ..., dst = tempfile(fileext = file_ext),
-  options = c("-vrtnodata", "-9999"), file_ext = ".tif")
+\method{st_mosaic}{stars}(
+  .x,
+  ...,
+  dst = tempfile(fileext = file_ext),
+  options = c("-vrtnodata", "-9999"),
+  file_ext = ".tif"
+)
 
-\method{st_mosaic}{character}(.x, ..., dst = tempfile(fileext =
-  file_ext), options = c("-vrtnodata", "-9999"), file_ext = ".tif")
+\method{st_mosaic}{character}(
+  .x,
+  ...,
+  dst = tempfile(fileext = file_ext),
+  options = c("-vrtnodata", "-9999"),
+  file_ext = ".tif"
+)
 }
 \arguments{
 \item{.x}{object of class stars, or character vector with input dataset names}

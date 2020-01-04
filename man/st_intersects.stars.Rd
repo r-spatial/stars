@@ -4,8 +4,7 @@
 \alias{st_intersects.stars}
 \title{spatial intersect predicate for stars and sfc object}
 \usage{
-\method{st_intersects}{stars}(x, y, sparse = TRUE, ..., as_points = NA,
-  transpose = FALSE)
+\method{st_intersects}{stars}(x, y, sparse = TRUE, ..., as_points = NA, transpose = FALSE)
 }
 \arguments{
 \item{x}{object of class stars}

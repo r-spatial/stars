@@ -6,8 +6,7 @@
 \alias{[<-.stars}
 \title{subset stars objects}
 \usage{
-\method{[}{stars}(x, i = TRUE, ..., drop = FALSE,
-  crop = !is_curvilinear(x))
+\method{[}{stars}(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
 \method{[}{stars}(x, i) <- value
 }

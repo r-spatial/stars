@@ -4,8 +4,12 @@
 \alias{st_contour}
 \title{Compute or plot contour lines or sets}
 \usage{
-st_contour(x, na.rm = TRUE, contour_lines = FALSE,
-  breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks)
+st_contour(
+  x,
+  na.rm = TRUE,
+  contour_lines = FALSE,
+  breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}

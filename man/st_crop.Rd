@@ -8,8 +8,14 @@
 \usage{
 \method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 0)
 
-\method{st_crop}{stars}(x, y, ..., crop = TRUE, epsilon = 0,
-  as_points = all(st_dimension(y) == 2, na.rm = TRUE))
+\method{st_crop}{stars}(
+  x,
+  y,
+  ...,
+  crop = TRUE,
+  epsilon = 0,
+  as_points = all(st_dimension(y) == 2, na.rm = TRUE)
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
