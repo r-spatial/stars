@@ -216,7 +216,7 @@ We can construct the curvilinear `stars` raster by calling `st_as_stars` on thre
 ```{r eval=EVAL}
 nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
-nit.c[[1]][nit.c[[1]] > 9e+36] = NA
+nit.c[[1]][nit.c[[1]] > units::set_units(9e+36, mol/m^2)] = NA
 st_crs(nit.c) = 4326
 nit.c
 ```

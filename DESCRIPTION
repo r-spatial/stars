@@ -61,6 +61,7 @@ Suggests:
     rmarkdown,
     sp,
     spacetime,
+    spatstat,
     starsdata,
     testthat,
     viridis,
@@ -68,7 +69,7 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Collate: 
     'init.R'
     'stars.R'
@@ -95,3 +96,4 @@ Collate:
     'intervals.R'
     'geom.R'
     'mosaic.R'
+    'spatstat.R'
