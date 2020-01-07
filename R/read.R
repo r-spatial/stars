@@ -93,7 +93,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
-	data = sf::gdal_read(x, options = options, driver = character(0), read_data = !proxy, 
+	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy, 
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 
 	if (length(data$bands) == 0) { # read sub-datasets: different attributes
