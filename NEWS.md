@@ -1,6 +1,8 @@
 # version 0.4-1
 
-* `aggregate.stars` now also takes `by` arguments like "week", "month", or "5 days"
+* add `as.owin` method to convert (2D raster) stars objects to spatstat `owin`
+
+* for temporal aggregation, `aggregate.stars` now also takes `by` arguments like "week", "month", or "5 days" 
 
 * add `st_as_stars` method for `xts` objects; improve `as.xts` for `stars` objects
 

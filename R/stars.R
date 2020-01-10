@@ -533,6 +533,8 @@ st_crs.stars = function(x, ...) {
 		value = st_crs(value)
 	if (inherits(value, "crs"))
 		value = value$proj4string
+	if (is.na(value))
+		value = NA_character_
 	stopifnot(is.character(value))
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions

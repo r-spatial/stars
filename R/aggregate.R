@@ -35,6 +35,7 @@
 #' x_agg_posix = aggregate(x, by = by_t, FUN = max)
 #' st_get_dimension_values(x_agg_posix, "time")
 #' x_agg_time - x_agg_posix
+#' aggregate(x, "2 days", mean)
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE) {
