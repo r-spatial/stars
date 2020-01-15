@@ -245,7 +245,26 @@
 #&gt; time    1  3 2018-07-31 2 days                         Date    NA   NULL    
 #&gt; x       1 30     288776   28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
 #&gt; y       1 30    9120761  -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
-#&gt; band    1  6         NA     NA                           NA    NA   NULL    </div></pre>
+#&gt; band    1  6         NA     NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span>(<span class='no'>x</span>, <span class='st'>"2 days"</span>, <span class='no'>mean</span>)</div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;   L7_ETMs.tif    
+#&gt;  Min.   : 17.00  
+#&gt;  1st Qu.: 43.00  
+#&gt;  Median : 58.00  
+#&gt;  Mean   : 57.59  
+#&gt;  3rd Qu.: 70.00  
+#&gt;  Max.   :145.00  
+#&gt; dimension(s):
+#&gt;      from to         offset  delta                       refsys point values
+#&gt; time    1  2 2018-07-31 UTC 2 days                      POSIXct    NA   NULL
+#&gt; x       1 30         288776   28.5 +proj=utm +zone=25 +south... FALSE   NULL
+#&gt; y       1 30        9120761  -28.5 +proj=utm +zone=25 +south... FALSE   NULL
+#&gt; band    1  6             NA     NA                           NA    NA   NULL
+#&gt;         
+#&gt; time    
+#&gt; x    [x]
+#&gt; y    [y]
+#&gt; band    </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

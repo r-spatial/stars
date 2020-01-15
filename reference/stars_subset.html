@@ -145,7 +145,9 @@
 [(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
 # S3 method for stars
-[(x, i) <- value</pre>
+[(x, i) <- value
+
+st_flip(x, which = 1)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,8 +176,16 @@
       <th>value</th>
       <td><p>array of dimensions equal to those in <code>x</code>, or a vector or value that will be recycled to such an array</p></td>
     </tr>
+    <tr>
+      <th>which</th>
+      <td><p>character or integer; dimension(s) to be flipped</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>st_flip</code> flips (reverts) the array values along the chosen dimension 
+without(s) changing the dimension properties</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>if <code>i</code> is an object of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned <code>NA</code>.</p>
@@ -251,6 +261,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>

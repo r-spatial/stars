@@ -139,7 +139,9 @@
 <a href="#version-0-4-1" class="anchor"></a>version 0.4-1<small> Unreleased </small>
 </h1>
 <ul>
-<li><p><code>aggregate.stars</code> now also takes <code>by</code> arguments like “week”, “month”, or “5 days”</p></li>
+<li><p>add <code>st_flip</code> to flip arrays along one or more dimensions without changing dimension properties</p></li>
+<li><p>add <code>as.owin</code> method to convert (2D raster) stars objects to spatstat <code>owin</code>; <a href="https://github.com/r-spatial/sf/issues/1233" class="uri">https://github.com/r-spatial/sf/issues/1233</a></p></li>
+<li><p>for temporal aggregation, <code>aggregate.stars</code> now also takes <code>by</code> arguments like “week”, “month”, or “5 days”</p></li>
 <li><p>add <code>st_as_stars</code> method for <code>xts</code> objects; improve <code>as.xts</code> for <code>stars</code> objects</p></li>
 <li><p>skip some tests on solaris</p></li>
 </ul>
