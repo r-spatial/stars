@@ -1,6 +1,8 @@
 # version 0.4-1
 
-* add `as.owin` method to convert (2D raster) stars objects to spatstat `owin`
+* add `st_flip` to flip arrays along one or more dimensions without changing dimension properties
+
+* add `as.owin` method to convert (2D raster) stars objects to spatstat `owin`; https://github.com/r-spatial/sf/issues/1233
 
 * for temporal aggregation, `aggregate.stars` now also takes `by` arguments like "week", "month", or "5 days" 
 

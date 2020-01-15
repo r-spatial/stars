@@ -62,4 +62,5 @@ by_t = as.POSIXct(c("2018-07-31", "2018-08-02"))
 x_agg_posix = aggregate(x, by = by_t, FUN = max)
 st_get_dimension_values(x_agg_posix, "time")
 x_agg_time - x_agg_posix
+aggregate(x, "2 days", mean)
 }
