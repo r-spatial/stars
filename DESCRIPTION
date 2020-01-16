@@ -97,3 +97,5 @@ Collate:
     'geom.R'
     'mosaic.R'
     'spatstat.R'
+    'OpenStreetMap.R'
+    
