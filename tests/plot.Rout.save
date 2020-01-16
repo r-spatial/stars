@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -45,6 +45,11 @@ POINT (13.29635 52.65315)
 + 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 + }
 > 
+> # https://github.com/r-spatial/stars/issues/233 :
+> nc = read_sf(system.file("shape/nc.shp", package = "sf"))
+> output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
+> plot(output)
+> 
 > proc.time()
    user  system elapsed 
-  1.770   0.082   1.843 
+  2.233   0.075   2.302 

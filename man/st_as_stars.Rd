@@ -54,7 +54,7 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{xts}(.x, ..., dimensions)
 
-\method{st_as_stars}{OpenStreetMap}(.x, ...)
+\method{st_as_stars}{OpenStreetMap}(.x, ..., as_col = FALSE)
 }
 \arguments{
 \item{.x}{object to convert}
@@ -99,6 +99,8 @@ Must have same number of rows as timeseries instances.}
 \item{url}{character; URL of the stars endpoint where the data reside}
 
 \item{envir}{environment to resolve objects in}
+
+\item{as_col}{logical; return rgb numbers (FALSE) or (character) color values (TRUE)?}
 }
 \description{
 convert objects into a stars object

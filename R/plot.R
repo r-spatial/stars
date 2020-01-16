@@ -58,7 +58,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	#if (any(dim(x) == 1))
 	#	x = adrop(x)
 
-	if (join_zlim) {
+	if (join_zlim && !is.character(x[[1]])) {
 		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
 		if (length(breaks) > 2)
 			breaks = unique(breaks)
@@ -280,12 +280,15 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	ar = aperm(ar, c(dimxn, dimyn, others))
 	if (text_values)
 		ar_text = ar # keep original order for cell text labels
+	
+	if (is.null(rgb) && is.character(ar))
+		rgb = TRUE
 
 	if (! is.null(rgb)) {
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
-		if (!y_is_neg) # need to flip y?
+		if (! y_is_neg) # need to flip y?
 			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
 		if (!useRaster)
 			stop("rgb plotting not supported on this device")
@@ -301,12 +304,16 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			mat[!nas] = ar
 			dim(mat) = xy
 		} else {
-			stopifnot(inherits(rgb, "data.frame"))
+			stopifnot(isTRUE(rgb) || inherits(rgb, "data.frame"))
 			# rgb has col 1: index, col 2: label, col 3-5: R, G, B
-			#ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
-			ar = as.vector(ar) # flattens x/y to 1-D index vector
-			rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
-			mat = structure(rgb, dim = xy)
+			# ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
+			mat = if (isTRUE(rgb))
+					ar
+				else {
+					ar = as.vector(ar) # flattens x/y to 1-D index vector
+					rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
+					structure(rgb, dim = xy)
+				}
 		}
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add, zlim) # absorbs breaks, add & zlim
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
