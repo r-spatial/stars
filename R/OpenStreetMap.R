@@ -1,4 +1,3 @@
-
 #' @name st_as_stars
 #' @export
 st_as_stars.OpenStreetMap = function(.x, ...) {
