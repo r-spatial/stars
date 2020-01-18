@@ -142,7 +142,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_crop</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>0</span>)
+<span class='fu'>st_crop</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>collect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_crop</span>(
@@ -176,6 +176,10 @@
     <tr>
       <th>epsilon</th>
       <td><p>numeric; shrink the bounding box of <code>y</code> to its center with this factor.</p></td>
+    </tr>
+    <tr>
+      <th>collect</th>
+      <td><p>logical; if <code>TRUE</code>, repeat cropping on <code>stars</code> object, i.e. after data has been read</p></td>
     </tr>
     <tr>
       <th>as_points</th>
