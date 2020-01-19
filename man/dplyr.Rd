@@ -3,24 +3,39 @@
 \name{dplyr}
 \alias{dplyr}
 \alias{filter.stars}
+\alias{filter.stars_proxy}
 \alias{mutate.stars}
+\alias{mutate.stars_proxy}
 \alias{select.stars}
+\alias{select.stars_proxy}
 \alias{pull.stars}
+\alias{pull.stars_proxy}
 \alias{as.tbl_cube.stars}
 \alias{slice.stars}
+\alias{slice.stars_proxy}
 \title{dplyr verbs for stars objects}
 \usage{
 filter.stars(.data, ...)
 
+filter.stars_proxy(.data, ...)
+
 mutate.stars(.data, ...)
+
+mutate.stars_proxy(.data, ...)
 
 select.stars(.data, ...)
 
+select.stars_proxy(.data, ...)
+
 pull.stars(.data, var = -1)
+
+pull.stars_proxy(.data, ...)
 
 as.tbl_cube.stars(x, ...)
 
 slice.stars(.data, along, index, ..., drop = length(index) == 1)
+
+slice.stars_proxy(.data, ...)
 }
 \arguments{
 \item{.data}{object of class \code{stars}}
