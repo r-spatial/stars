@@ -37,10 +37,22 @@ filter.stars <- function(.data, ...) {
 }
 
 #' @name dplyr
+filter.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "filter", ".data")
+}
+
+
+#' @name dplyr
 mutate.stars <- function(.data, ...) {
 	ret = dplyr::mutate(to_df(.data), ...)
 	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
 }
+
+#' @name dplyr
+mutate.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "mutate", ".data")
+}
+
 
 #' @name dplyr
 select.stars <- function(.data, ...) {
@@ -48,11 +60,22 @@ select.stars <- function(.data, ...) {
 	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
 }
 
+
+#' @name dplyr
+select.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "select", ".data")
+}
+
 #' @param var see \link[dplyr]{pull}
 #' @name dplyr
 pull.stars = function (.data, var = -1) {
 	var = rlang::enquo(var)
 	structure(dplyr::pull(to_df(.data), !!var), dim = dim(.data))
+}
+
+#' @name dplyr
+pull.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "pull", ".data")
 }
 
 #' @name dplyr
@@ -89,6 +112,11 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   indices[["drop"]] <- drop
   
   eval(rlang::expr(.data[!!!indices]))
+}
+
+#' @name dplyr
+slice.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "slice", ".data")
 }
 
 #' @name st_coordinates
@@ -181,12 +209,17 @@ theme_stars = function(...) {
 
 register_all_s3_methods = function() {
 	register_s3_method("dplyr", "filter", "stars") # nocov start
+	register_s3_method("dplyr", "filter", "stars_proxy") 
 	register_s3_method("dplyr", "as_tibble", "stars")
 	register_s3_method("dplyr", "select", "stars")
+	register_s3_method("dplyr", "select", "stars_proxy")
 	register_s3_method("dplyr", "mutate", "stars")
+	register_s3_method("dplyr", "mutate", "stars_proxy")
 	register_s3_method("dplyr", "pull", "stars")
+	register_s3_method("dplyr", "pull", "stars_proxy")
 	register_s3_method("dplyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
+	register_s3_method("dplyr", "slice", "stars_proxy")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("spatstat", "as.owin", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end

@@ -253,7 +253,7 @@ merge.stars_proxy = function(x, y, ...) {
 		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
 		lst[["i"]] = TRUE # this one has been handled now
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
-		x = st_crop(x, i, ...) # does bounding box cropping only
+		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
 		if (inherits(i, c("stars", "bbox")))
 			lst[["i"]] = TRUE # this one has been handled now
 	}
@@ -276,8 +276,9 @@ bb_shrink = function(bb, e) {
 }
 
 #' @name st_crop
+#' @param collect logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read
 #' @export
-st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
+st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0, collect = TRUE) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	if (st_crs(x) != st_crs(y))
@@ -308,10 +309,10 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0) {
 		}
 	}
 	x = st_stars_proxy(x, dm) # crop to bb
-#	if (inherits(y, c("sf", "sfc"))) # FIXME: or DOCME?
-#		collect(x, match.call(), "st_crop")
-#	else
-	x
+	if (collect)
+		collect(x, match.call(), "st_crop") # crops further when realised
+	else
+		x
 }
 
 #' @export
