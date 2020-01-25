@@ -362,10 +362,10 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 # reduce resolution of x, keeping (most of) extent
 st_downsample = function(x, n, fill_out = TRUE) {
 	stopifnot(all(n >= 0))
+	d = dim(x)
 	dims = st_dimensions(x)
 	regular = is_regular_grid(x)
 	if (! all(n <= 1)) {
-		d = dim(x)
 		n = rep(n, length.out = length(d))
 		args = rep(list(rlang::missing_arg()), length(d)+1)
 		for (i in seq_along(d))
