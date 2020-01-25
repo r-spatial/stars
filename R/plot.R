@@ -363,27 +363,26 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 st_downsample = function(x, n, fill_out = TRUE) {
 	stopifnot(all(n >= 0))
 	d = dim(x)
+	n = rep(n, length.out = length(d))
 	dims = st_dimensions(x)
 	regular = is_regular_grid(x)
 	if (! all(n <= 1)) {
-		n = rep(n, length.out = length(d))
 		args = rep(list(rlang::missing_arg()), length(d)+1)
 		for (i in seq_along(d))
-			if (n[i] > 1) {
+			if (n[i] > 1)
 				args[[i+1]] = seq(1, d[i], n[i])
-			}
 		x = eval(rlang::expr(x[!!!args]))
-	}
-	if (fill_out && regular) {
-		d_new = st_dimensions(x)
-		for (i in seq_along(d)) {
-			dims[[i]]$delta = dims[[i]]$delta * n[i]
-			dims[[i]]$from = d_new[[i]]$from
-			dims[[i]]$to = d_new[[i]]$to
+		if (fill_out && regular) {
+			d_new = st_dimensions(x)
+			for (i in seq_along(d)) {
+				dims[[i]]$delta = dims[[i]]$delta * n[i]
+				dims[[i]]$from = d_new[[i]]$from
+				dims[[i]]$to = d_new[[i]]$to
+			}
+			x = structure(x, dimensions = dims)
 		}
-		structure(x, dimensions = dims)
-	} else
-		x
+	}
+	x
 }
 
 # compute the degree of downsampling allowed to still have more than 
