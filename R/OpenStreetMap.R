@@ -18,12 +18,12 @@ st_as_stars.OpenStreetMap = function(.x, ..., as_col = FALSE) {
   
 	crs = st_crs(.x$tiles[[1]]$projection)
   
-	dimensions = list(
-		x = create_dimension(from = 1, to = ncols, offset = bbx["xmin"],
-	                      delta = (bbx["xmax"] - bbx["xmin"]) / ncols, refsys = crs$proj4string),
-		y = create_dimension(from = 1, to = nrows, offset = bbx["ymax"],
-                         delta = (bbx["ymin"] - bbx["ymax"]) / ncols, refsys = crs$proj4string),
-		band = create_dimension(values = c("red", "green", "blue")))
+  dimensions = list(
+    x = create_dimension(from = 1, to = ncols, offset = unname(bbx["xmin"]),
+                         delta = unname((bbx["xmax"] - bbx["xmin"]) / ncols), refsys = crs$proj4string),
+    y = create_dimension(from = 1, to = nrows, offset = unname(bbx["ymax"]),
+                         delta = unname((bbx["ymin"] - bbx["ymax"]) / nrows), refsys = crs$proj4string),
+    band = create_dimension(values = c("red", "green", "blue")))
     
 	if (as_col)
 		st_as_stars(a, dimensions = create_dimensions(dimensions[1:2], get_raster()))
