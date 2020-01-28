@@ -1,5 +1,7 @@
 # version 0.4-1
 
+* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
+
 * add `st_as_stars.OpenStreetMap` method; #241 by @mtennekes
 
 * add `st_flip` to flip arrays along one or more dimensions without changing dimension properties

@@ -752,3 +752,25 @@ st_interpolate_aw.stars = function(x, to, extensive, ...) {
 	x = st_as_sf(x)
 	NextMethod()
 }
+
+#' get the raster type (if any) of a stars object
+#' @param x object of class \code{stars}
+#' @return one of \code{NA} (if the object does not have raster dimensions), 
+#' \code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' st_raster_type(x)
+#' @export
+st_raster_type = function(x) {
+	if (!has_raster(x))
+		NA_character_
+	else if (is_curvilinear(x))
+		"curvilinear"
+	else if (is_rectilinear(x))
+		"rectilinear"
+	else if (has_rotate_or_shear(x))
+		"affine"
+	else
+		"regular"
+}
