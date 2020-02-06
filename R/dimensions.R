@@ -206,7 +206,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		if (inherits(values, "sfc")) {
 			point = inherits(values, "sfc_POINT")
 			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
-				refsys = st_crs(values)$proj4string
+				refsys = st_crs(values)
 		}
 		if (is.numeric(values) && (is.na(point) || !point)) {
 			values = if (is_raster)
@@ -234,6 +234,17 @@ create_dimensions = function(lst, raster = NULL) {
 	structure(lst, raster = raster, class = "dimensions")
 }
 
+get_crs = function(pr) {
+	if (!is.null(pr$crs))
+		pr$crs
+	else if (!is.null(pr$proj4string)) # older sf
+		st_crs(pr$proj4string)
+	else if (!is.null(pr$wkt)) # newer sf, but GDAL < 3.0.0
+		st_crs(pr$wkt)
+	else 
+		st_crs(NA)
+}
+
 create_dimensions_from_gdal_meta = function(dims, pr) {
 	#if (all(is.na(pr$geotransform)))
 	#	pr$geotransform = c(0.0,  1.0,  0.0,  0.0,  0.0, -1.0) # some GTiffs...
@@ -245,14 +256,13 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 				offset = pr$geotransform[1], 
 				delta = pr$geotransform[2],
 				point = pr$point,
-				refsys = if (is.null(pr$proj4string)) NA_character_ 
-					else pr$proj4string),
+				refsys = get_crs(pr)),
 			y = create_dimension(from = pr$rows[1], to = pr$rows[2], 
 				offset = pr$geotransform[4],
 				delta = pr$geotransform[6],
 				point = pr$point,
-				refsys = if (is.null(pr$proj4string)) NA_character_ 
-					else pr$proj4string),
+				refsys = get_crs(pr)),
+			# default:
 			create_dimension(from = 1, to = dims[i]) # time? depth+units? To be filled in later...
 		)
 	}
@@ -480,12 +490,10 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
 			}
-			nc = if (inherits(y$refsys, "crs"))
-					nchar(y$refsys$proj4string)
-				else
-					nchar(y$refsys)
-			if (!is.na(y$refsys) && nc > 28)
-				y$refsys = paste0(substr(y$refsys, 1L, 25),"...")
+			if (is.na(y$refsys))
+				y$refsys = NA_character_
+			else if (nchar(tail(format(y$refsys), 1)) > 28)
+				y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, 25),"...")
 			y
 		}
 	)

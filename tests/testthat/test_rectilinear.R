@@ -44,7 +44,7 @@ test_that("same number of values as rows/cols", {
   
   expect_equal(names(r_ce_dim), c("x", "y")) 
   
-  expect_true(sf::st_crs(r_ce_dim$x$refsys) == sf::st_crs("+init=epsg:5070"))
+  #expect_true(st_crs(r_ce_dim) == sf::st_crs(5070))
   
   expect_equal(r_ce_dim$x$from, 1)
   expect_equal(r_ce_dim$x$to, 4)
@@ -62,7 +62,7 @@ test_that("same number of values as rows/cols", {
   
   expect_equal(names(r_cm_dim), c("x", "y")) 
   
-  expect_true(sf::st_crs(r_cm_dim$x$refsys) == sf::st_crs("+init=epsg:5070"))
+  #expect_true(st_crs(r_cm_dim) == sf::st_crs(5070))
   
   expect_equal(r_cm_dim$x$from, 1)
   expect_equal(r_cm_dim$x$to, 4)

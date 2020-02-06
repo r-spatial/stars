@@ -1,4 +1,5 @@
 suppressPackageStartupMessages(library(stars))
+suppressPackageStartupMessages(library(lwgeom))
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 (x = read_stars(geomatrix))
 new = st_crs(4326)
@@ -12,7 +13,6 @@ plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)[,1:10,1:10,1:3]
 x_ = st_transform(x, st_crs(4326))
-library(lwgeom)
 x__ = st_transform_proj(x, st_crs(4326)$proj4string)
 all.equal(x_,x__)
 

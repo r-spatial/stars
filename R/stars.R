@@ -267,8 +267,8 @@ which_time = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
-		inherits(i$values, c("POSIXct", "Date", "PCICt")) || 
-		i$refsys %in% c("POSIXct", "Date", "PCICt")))
+		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
+		(is.character(i$refsys) && i$refsys %in% c("POSIXct", "Date", "PCICt"))))
 }
 
 has_sfc = function(x) {

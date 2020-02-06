@@ -1,5 +1,9 @@
 # version 0.4-1
 
+* cope with new style `crs` objects from upcoming sf, moving away from proj4strings
+
+* handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string
+
 * `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
 
 * add `st_as_stars.OpenStreetMap` method; #241 by @mtennekes

@@ -14,7 +14,7 @@ test_that("basic st_as_stars", {
   expect_s3_class(stars_obj, "stars")
   
   dim <- stars::st_dimensions(stars_obj)
-  expect_true(sf::st_crs(dim$points$refsys) == sf::st_crs(4326))
+  #expect_true(sf::st_crs(dim$points$refsys) == sf::st_crs(4326))
   expect_equal(dim$time$refsys, "POSIXct")
   
   expect_s3_class(dim$points$values, "sfc_POINT")

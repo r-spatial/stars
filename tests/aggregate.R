@@ -25,7 +25,7 @@ write_stars(st, tmp)
 (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
    nBufXSize = 2, nBufYSize = 2)))
 
-sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), 4326)
+sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 (a = aggregate(st, sfc, mean))
 a[[1]]
 sum(a[[1]])*30 == sum(1:720)
