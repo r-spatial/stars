@@ -139,6 +139,8 @@
 <a href="#version-0-4-1" class="anchor"></a>version 0.4-1<small> Unreleased </small>
 </h1>
 <ul>
+<li><p>cope with new style <code>crs</code> objects from upcoming sf, moving away from proj4strings</p></li>
+<li><p>handle full <code>crs</code> objects as <code>refsys</code> element in a spatial dimensions, rather than proj4string</p></li>
 <li><p><code><a href="../reference/st_raster_type.html">st_raster_type(x)</a></code> reveals the raster type of <code>x</code>; <a href='https://github.com/r-spatial/stars/issues/248'>#248</a>, <a href="https://github.com/mtennekes/tmap/issues/368" class="uri">https://github.com/mtennekes/tmap/issues/368</a></p></li>
 <li><p>add <code>st_as_stars.OpenStreetMap</code> method; <a href='https://github.com/r-spatial/stars/issues/241'>#241</a> by <a href='https://github.com/mtennekes'>@mtennekes</a></p></li>
 <li><p>add <code>st_flip</code> to flip arrays along one or more dimensions without changing dimension properties</p></li>
