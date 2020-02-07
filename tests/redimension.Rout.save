@@ -1,5 +1,5 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -82,16 +82,11 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00                                          
  Max.   :255.00                                          
 dimension(s):
-        from  to  offset delta                       refsys point
-x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
-y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
-band       1   6      NA    NA                           NA    NA
-new_dim    1   4      NA    NA                           NA    NA
-                               values    
-x                                NULL [x]
-y                                NULL [y]
-band                             NULL    
-new_dim L7_ETMs.tif,...,L7_ETMs.tif.3    
+     from  to  offset delta                       refsys point values    
+x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+foo     1   4       1     1                           NA    NA   NULL    
 > (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
 stars_proxy object with 1 attribute in files:
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
@@ -130,16 +125,11 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00                                                                                                  
  Max.   :255.00                                                                                                  
 dimension(s):
-        from  to  offset delta                       refsys point
-x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
-y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
-band       1   6      NA    NA                           NA    NA
-new_dim    1   8      NA    NA                           NA    NA
-                               values    
-x                                NULL [x]
-y                                NULL [y]
-band                             NULL    
-new_dim L7_ETMs.tif,...,L7_ETMs.tif.7    
+     from  to     offset    delta                       refsys point values    
+x       1 349     288776     28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
+y       1 352    9120761    -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+band    1   6         NA       NA                           NA    NA   NULL    
+bar     1   2 2001-01-01 365 days                         Date    NA   NULL    
 > 
 > (r = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -174,4 +164,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.055   0.160   1.207 
+  1.043   0.090   1.125 

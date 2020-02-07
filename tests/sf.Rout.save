@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -201,9 +201,9 @@ attribute(s):
  Max.   :1.00  
 dimension(s):
   from to offset delta refsys point values    
-x    1 10      0   0.2 NA, NA    NA   NULL [x]
-y    1 10      3  -0.2 NA, NA    NA   NULL [y]
+x    1 10      0   0.2     NA    NA   NULL [x]
+y    1 10      3  -0.2     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.666   0.044   0.705 
+  0.668   0.060   0.720 

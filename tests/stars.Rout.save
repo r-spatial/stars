@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -323,8 +323,8 @@ attribute(s):
  Max.   :0  
 dimension(s):
   from  to offset delta refsys point values    
-x    1 360      0     1 NA, NA    NA   NULL [x]
-y    1 170     90    -1 NA, NA    NA   NULL [y]
+x    1 360      0     1     NA    NA   NULL [x]
+y    1 170     90    -1     NA    NA   NULL [y]
 > st_bbox(s)
 xmin ymin xmax ymax 
    0  -80  360   90 
@@ -373,12 +373,9 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from  to offset delta
-x    1 360   -180     1
-y    1 180     90    -1
-                                                      refsys point values    
-x 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [x]
-y 4326...                     , +proj=longlat +datum=WGS8...    NA   NULL [y]
+  from  to offset delta                       refsys point values    
+x    1 360   -180     1 +proj=longlat +datum=WGS8...    NA   NULL [x]
+y    1 180     90    -1 +proj=longlat +datum=WGS8...    NA   NULL [y]
 > 
 > # multiple sub-datasets:
 > nc_red = system.file("nc/reduced.nc", package = "stars")
@@ -651,4 +648,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  8.615   0.383   9.013 
+  3.692   0.323   4.018 
