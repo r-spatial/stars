@@ -1,6 +1,6 @@
 # version 0.4-1
 
-* cope with new style `crs` objects from upcoming sf, moving away from proj4strings
+* handle new-style `crs` objects from upcoming sf, moving away from proj4strings
 
 * handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string
 
