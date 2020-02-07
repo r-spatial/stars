@@ -213,6 +213,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   if(length(nc_grid_mapping) == 0) {             
     rep_coord_var <- coord_var[coord_var$variable == rep_var, ]
+    
+    if(nrow(rep_coord_var) == 0) rep_coord_var[1, ] <- NA
+    
     c_v_units <- .get_attributes(atts, "units", rep_coord_var$X)$value[[1]]
     if(!is.null(c_v_units) && grepl("degrees", c_v_units, ignore.case = TRUE)) {
       message(paste("No projection information found in nc file. \n",
@@ -235,6 +238,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
 .clean_coord_var <- function(c_v, var, meta, prj, curvilinear) {
   c_v <- c_v[c_v$variable == var, ]
+  
+  if(nrow(c_v) == 0) c_v[1, ] <- NA
   
   not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
   
