@@ -2,7 +2,7 @@ has_global_longitude = function(x) {
 	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x))[c(1,3)], c(-180,180)))
 }
 
-cut_to_3857 = function(bb) { # Pseudomercator does not have global coverage:
+cut_latitude_to_3857 = function(bb) { # Pseudomercator does not have global coverage:
 	bb[2] = max(bb[2], -85.06)
 	bb[4] = min(bb[4],  85.06)
 	bb
@@ -13,11 +13,11 @@ cut_to_3857 = function(bb) { # Pseudomercator does not have global coverage:
 default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	bb_x = st_bbox(x)
 	if (st_is_longlat(x) && crs == st_crs(3857)) # common case:
-		bb_x = cut_to_3857(bb_x)
+		bb_x = cut_latitude_to_3857(bb_x)
 	envelope = st_as_sfc(bb_x)
 	# global adjustment: needed to have st_segmentize span global extent
 	# https://github.com/r-spatial/mapview/issues/256
-	if (! is.na(segments) && !has_global_longitude(x))
+	if (!is.na(segments) && !has_global_longitude(x))
 		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
@@ -42,6 +42,10 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	p4s = crs$proj4string
 	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
+	if (has_global_longitude(x)) { # if global coverage, don't cross the boundaries:
+		cellsize[1] = diff(bb[c("xmin", "xmax")])/nx
+		cellsize[2] = diff(bb[c("ymin", "ymax")])/ny
+	}
 	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = p4s)
 	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = p4s)
 	create_dimensions(list(x = x, y = y), get_raster())
