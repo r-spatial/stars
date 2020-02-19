@@ -121,14 +121,14 @@
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co"># Loading required package: abind</span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># Loading required package: sf</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># Linking to GEOS 3.8.0, GDAL 3.0.2, PROJ 6.2.1</span></a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">tif =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
 <a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="reference/read_stars.html">read_stars</a></span>(tif) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span>, <span class="dt">along =</span> <span class="st">"band"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>()</a></code></pre></div>
-<p><img src="reference/figures/README-plot1-1.png"><!-- --></p>
+<p><img src="reference/figures/README-plot1-1.png"></p>
 <p>Raster data do not need to be regular and aligned with North/East, and package <code>stars</code> supports besides <em>regular</em> also <em>rotated</em>, <em>sheared</em>, <em>rectilinear</em> and <em>curvilinear</em> rasters:</p>
-<p><img src="reference/figures/README-plot2-1.png"><!-- --></p>
+<p><img src="reference/figures/README-plot2-1.png"></p>
 <p>Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png" width="50%"></p>
 <p>or points (e.g. denoting sensor locations):</p>
@@ -146,12 +146,12 @@
 <p>Package <code>stars</code> provides <code>stars_proxy</code> objects (currently only when read through GDAL), which contain only the dimensions metadata and pointers to the files on disk. These objects work lazily: reading and processing data is postponed to the moment that pixels are really needed (at plot time, or when writing to disk), and is done at the lowest spatial resolution possible that still fulfills the resolution of the graphics device. More details are found in the <a href="https://r-spatial.github.io/stars/articles/stars2.html">stars proxy vignette</a>.</p>
 <p>The following methods are currently available for <code>stars_proxy</code> objects:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars_proxy"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#  [1] [              adrop          aggregate      aperm         </span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#  [5] as.data.frame  c              coerce         dim           </span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#  [9] initialize     Math           merge          Ops           </span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># [13] plot           predict        print          show          </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># [17] slotsFromS3    split          st_apply       st_as_stars   </span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># [21] st_crop        st_redimension write_stars   </span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#  [1] [              adrop          aggregate      aperm          as.data.frame </span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#  [6] c              coerce         dim            filter         initialize    </span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># [11] Math           merge          mutate         Ops            plot          </span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># [16] predict        print          pull           select         show          </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># [21] slice          slotsFromS3    split          st_apply       st_as_stars   </span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># [26] st_crop        st_redimension write_stars   </span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co"># see '?methods' for accessing help and source code</span></a></code></pre></div>
 </div>
 <div id="raster-and-vector-time-series-analysis-example" class="section level2">
@@ -192,20 +192,20 @@
 <a class="sourceLine" id="cb3-32" data-line-number="32">prec <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-33" data-line-number="33"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">along =</span> <span class="st">"time"</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb3-34" data-line-number="34"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">downsample =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>), <span class="dt">hook =</span> plot_hook)</a></code></pre></div>
-<p><img src="reference/figures/README-plot3-1.png"><!-- --></p>
+<p><img src="reference/figures/README-plot3-1.png"></p>
 <p>and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">a =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span>(prec, <span class="dt">by =</span> nc, <span class="dt">FUN =</span> max)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="reference/plot.html">plot</a></span>(a, <span class="dt">max.plot =</span> <span class="dv">23</span>, <span class="dt">border =</span> <span class="st">'grey'</span>, <span class="dt">lwd =</span> <span class="fl">.5</span>)</a></code></pre></div>
-<p><img src="reference/figures/README-plot4-1.png"><!-- --></p>
+<p><img src="reference/figures/README-plot4-1.png"></p>
 <p>We can integrate over (reduce) time, for instance to find out <em>when</em> the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">index_max =<span class="st"> </span><span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/all.html">all</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(x)), <span class="ot">NA</span>, <span class="kw"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span>(x))</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="reference/st_apply.html">st_apply</a></span>(a, <span class="st">"geometry"</span>, index_max) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="reference/st_apply.html">st_apply</a></span>(a, <span class="st">"geom"</span>, index_max) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">when =</span> <span class="kw"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span>(a, <span class="st">"time"</span>)[.<span class="op">$</span>index_max]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(when) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">key.pos =</span> <span class="dv">1</span>, <span class="dt">main =</span> <span class="st">"time of maximum precipitation"</span>)</a></code></pre></div>
-<p><img src="reference/figures/README-plot5-1.png"><!-- --></p>
+<p><img src="reference/figures/README-plot5-1.png"></p>
 </div>
 <div id="other-packages-for-data-cubes" class="section level2">
 <h2 class="hasAnchor">
@@ -298,6 +298,7 @@
 <li><a href="https://cran.r-project.org/package=stars"><img src="https://www.r-pkg.org/badges/version/stars" alt="CRAN"></a></li>
 <li><a href="https://cran.r-project.org/web/checks/check_results_stars.html"><img src="https://cranchecks.info/badges/worst/stars" alt="cran checks"></a></li>
 <li><a href="https://www.r-pkg.org/pkg/stars"><img src="https://cranlogs.r-pkg.org/badges/stars?color=brightgreen" alt="Downloads"></a></li>
+<li><a href="https://CRAN.R-project.org/package=stars"><img src="https://tinyverse.netlify.com/badge/stars" alt="status"></a></li>
 </ul>
 </div>
 </div>
