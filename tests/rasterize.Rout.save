@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -84,12 +84,12 @@ attribute(s):
  NA's   :100  
 dimension(s):
   from to offset delta refsys point values    
-x    1 10      0   0.1 NA, NA    NA   NULL [x]
-y    1 10      1  -0.1 NA, NA    NA   NULL [y]
+x    1 10      0   0.1     NA    NA   NULL [x]
+y    1 10      1  -0.1     NA    NA   NULL [y]
 > # the following two plots suggests a half-gridcell-shift problem:
 > sf_extSoftVersion()["GDAL"]
    GDAL 
-"2.4.0" 
+"3.0.2" 
 > plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE;
 > plot(ls, add = TRUE, col = "red")
 > plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes = TRUE, reset = FALSE)
@@ -107,12 +107,12 @@ attribute(s):
  Max.   :0  
 dimension(s):
   from to offset delta refsys point values    
-x    1 10      0   0.1 NA, NA    NA   NULL [x]
-y    1 10      1  -0.1 NA, NA    NA   NULL [y]
+x    1 10      0   0.1     NA    NA   NULL [x]
+y    1 10      1  -0.1     NA    NA   NULL [y]
 > r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
 > plot(r, axes = TRUE, reset = FALSE)
 > plot(ls, add = TRUE, col = "red")
 > 
 > proc.time()
    user  system elapsed 
-  0.670   0.051   0.712 
+  0.609   0.040   0.640 

@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -67,10 +67,10 @@ Type 'q()' to quit R.
 + }
 + 
 + }
-//PRODUCT/longitude, 
-//PRODUCT/latitude, 
-//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
-stars object with 2 dimensions and 1 attribute
+/PRODUCT/longitude, 
+/PRODUCT/latitude, 
+/PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
+stars object with 3 dimensions and 1 attribute
 attribute(s):
  nitrogendioxide_summed_total_column 
  Min.   :0e+00                       
@@ -81,34 +81,39 @@ attribute(s):
  Max.   :5e-04                       
  NA's   :330                         
 dimension(s):
-  from  to offset delta                       refsys point
-x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
-                          values    
-x [450x278] -5.81066,...,30.9468 [x]
-y  [450x278] 28.3605,...,51.4686 [y]
+     from  to offset delta                       refsys point
+x       1 450     NA    NA +proj=longlat +datum=WGS8...    NA
+y       1 278     NA    NA +proj=longlat +datum=WGS8...    NA
+time    1   1     NA    NA                           NA    NA
+                                     values    
+x    [450x278] -5.81066 [°],...,30.9468 [°] [x]
+y     [450x278] 28.3605 [°],...,51.4686 [°] [y]
+time                                   NULL    
 curvilinear grid
-stars object with 2 dimensions and 1 attribute
+stars object with 3 dimensions and 1 attribute
 attribute(s):
  nitrogendioxide_summed_total_column 
  Min.   :0.00005                     
- 1st Qu.:0.00007                     
+ 1st Qu.:0.00008                     
  Median :0.00008                     
  Mean   :0.00009                     
  3rd Qu.:0.00009                     
  Max.   :0.00023                     
- NA's   :36                          
+ NA's   :37                          
 dimension(s):
-  from to offset delta                       refsys point
-x    1 57     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 35     NA    NA +proj=longlat +datum=WGS8...    NA
-                        values    
-x [57x35] -5.59621,...,30.8488 [x]
-y  [57x35] 28.3605,...,51.1544 [y]
+     from to offset delta                       refsys point
+x       1 57     NA    NA +proj=longlat +datum=WGS8...    NA
+y       1 35     NA    NA +proj=longlat +datum=WGS8...    NA
+time    1  1     NA    NA                           NA    NA
+                                   values    
+x    [57x35] -5.81066 [°],...,30.8108 [°] [x]
+y     [57x35] 28.6622 [°],...,51.4679 [°] [y]
+time                                 NULL    
 curvilinear grid
 null device 
           1 
+There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.392   0.113   7.498 
+  6.664   0.088   6.744 

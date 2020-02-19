@@ -459,9 +459,13 @@ c.stars = function(..., along = NA_integer_) {
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
 	if (is.logical(drop))
 		drop = which(drop)
-	if (any(dim(x) > 1) && length(drop) > 0)
-		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
-	else 
+	if (any(dim(x) > 1) && length(drop) > 0) {
+		l = vector("list", length = length(x))
+		f = sapply(x, is.factor)
+		l[!f] = lapply(x[!f], adrop, drop = drop, one.d.array = TRUE, ...)
+		l[f] = lapply(x[f], function(x) structure(x, dim = dim(x)[-drop]))
+		st_as_stars(setNames(l, names(x)), dimensions = st_dimensions(x)[-drop])
+	} else 
 		x
 }
 
