@@ -145,7 +145,7 @@
 <div id="polygonizing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#polygonizing" class="anchor"></a>Polygonizing</h2>
-<p>In case raster cells reflect point values and we want to get a vector representatoin of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
+<p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">l =<span class="st">  </span><span class="kw"><a href="../reference/st_contour.html">st_contour</a></span>(x,<span class="dt">contour_lines=</span><span class="ot">TRUE</span>, <span class="dt">breaks =</span> <span class="dv">8</span><span class="op">:</span><span class="dv">14</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../reference/plot.html">plot</a></span>(l, <span class="dt">key.pos =</span> <span class="dv">1</span>, <span class="dt">pal =</span> <span class="kw">sf.colors</span>(<span class="dv">6</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">key.length =</span> <span class="fl">0.8</span>)</a></code></pre></div>
 </div>
