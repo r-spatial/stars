@@ -59,9 +59,11 @@ c.stars_proxy = function(..., along = NA_integer_) {
 				stop("don't know how to merge arrays: please specify parameter along")
 			do.call(c, c(dots, along = along))
 		}
-	} else {
+	} else if (along == "crs")
+		combine_along_crs(dots)
+	else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
-			stop("for proxy objects, along argument is not implemented")
+			stop("for proxy objects, along argument as list is not implemented")
 		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
 			d = st_dimensions(dots[[1]])
@@ -88,6 +90,21 @@ c.stars_proxy = function(..., along = NA_integer_) {
 		}
 	}
 }
+
+combine_along_crs = function(dots) {
+	crs = sapply(lapply(l, st_crs), format)
+	# erase offset:
+	erase_offset = function(x) { 
+		d = st_dimensions(x)
+		xy = attr(d, "raster")$dimensions
+		d[[ xy[1] ]]$offset = d[[ xy[2] ]]$offset = NA
+		st_set_crs(st_stars(x, d), NA)
+	}
+	l = lapply(dots, erase_offset)
+	ret = do.call(c.stars_proxy, c(l, along = "CRS"))
+	st_set_dimensions(ret, "CRS", values = crs)
+}
+
 
 #' @export
 #' @name redimension
