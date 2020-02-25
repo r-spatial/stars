@@ -462,7 +462,10 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where[[ xy[2] ]], gt, "y")
 	}
 
-	for (nm in setdiff(names(lst), xy)) # non-xy dimensions
+	if ("crs" %in% names(lst))
+		lst[[ "crs" ]] = dimensions[[ "crs" ]]$values
+
+	for (nm in setdiff(names(lst), c(xy, "crs"))) # non-xy, non-crs dimensions
 		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where[[nm]], NA, NA)
 
 	lst
@@ -486,6 +489,8 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 
 							format(max(y$values), digits = digits))
+					else if (inherits(y$values[[1]], "crs"))
+						paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
 					else
 						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
@@ -514,6 +519,7 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	}
 	print(ret)
 	print(attr(x, "raster"))
+	invisible(ret)
 }
 
 identical_dimensions = function(lst) {
