@@ -41,14 +41,15 @@ st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
 		class = c("stars_proxy", "stars"))
 }
 
-
 #' @export
-c.stars_proxy = function(..., along = NA_integer_) {
+c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
 	if (length(dots) == 1) # do nothing
 		dots[[1]]
+	else if (along_crs)
+		combine_along_crs_proxy(dots)
 	else if (identical(along, NA_integer_)) { 
 		if (identical_dimensions(dots))
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
@@ -61,7 +62,7 @@ c.stars_proxy = function(..., along = NA_integer_) {
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
-			stop("for proxy objects, along argument is not implemented")
+			stop("for proxy objects, along argument as list is not implemented")
 		} else { # loop over attributes, abind them:
 			# along_dim: the number of the dimension along which we merge arrays
 			d = st_dimensions(dots[[1]])
@@ -88,6 +89,22 @@ c.stars_proxy = function(..., along = NA_integer_) {
 		}
 	}
 }
+
+combine_along_crs_proxy = function(dots) {
+	#crs = as.integer(sapply(l, function(x) st_crs(x)$epsg))
+	crs = lapply(l, st_crs)
+	# erase offset:
+	erase_offset = function(x) { 
+		d = st_dimensions(x)
+		xy = attr(d, "raster")$dimensions
+		d[[ xy[1] ]]$offset = d[[ xy[2] ]]$offset = NA
+		st_set_crs(st_stars_proxy(x, d), NA)
+	}
+	l = lapply(dots, erase_offset)
+	ret = do.call(c, c(l, along = "crs"))
+	st_set_dimensions(ret, "crs", values = crs, point = TRUE)
+}
+
 
 #' @export
 #' @name redimension
