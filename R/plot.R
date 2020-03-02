@@ -275,6 +275,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
+	co = attr(ar, "colors")
 	# rearrange ar:
 	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
 	ar = aperm(ar, c(dimxn, dimyn, others))
@@ -307,9 +308,12 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			stopifnot(isTRUE(rgb) || inherits(rgb, "data.frame"))
 			# rgb has col 1: index, col 2: label, col 3-5: R, G, B
 			# ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
-			mat = if (isTRUE(rgb))
-					ar
-				else {
+			mat = if (isTRUE(rgb)) {
+					if (!is.null(co))
+						structure(co[as.vector(ar)], dim = dim(ar))
+					else
+						ar
+				} else {
 					ar = as.vector(ar) # flattens x/y to 1-D index vector
 					rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
 					structure(rgb, dim = xy)

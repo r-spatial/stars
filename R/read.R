@@ -148,6 +148,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		newdims = lengths(meta_data$dim_extra)
 		if (length(newdims) && !proxy)
 			dim(data) = c(dim(data)[1:2], newdims)
+				
+		ct = meta_data$color_tables
+		if (!proxy && any(lengths(ct) > 0)) {
+			ct = ct[[ which(length(ct) > 0)[1] ]]
+			co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
+			data = structure(data + 1, levels = 1:256, colors = co, class = "factor")
+		}
 
 		dims = if (proxy) {
 				if (length(meta_data$bands) > 1) 

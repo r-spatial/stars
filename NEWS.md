@@ -1,8 +1,12 @@
 # version 0.4-1
 
+* handle color tables read through GDAL; #128
+
+* handle dimension `crs` specially, for proxy objects now.
+
 * handle new-style `crs` objects from upcoming sf, moving away from proj4strings
 
-* handle `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string
+* handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string only
 
 * `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
 

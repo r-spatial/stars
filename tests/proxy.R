@@ -58,8 +58,8 @@ if (f != "") {
 
   try(ret <- c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
   #print(ret)
-  ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
-  print(ret)
+  #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
+  #print(ret)
   ret <- st_redimension(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
   print(ret)
 }

@@ -23,7 +23,7 @@
 
 \item{...}{arguments that will be passed on to the join function}
 
-\item{what}{either "left1" or "right"}
+\item{what}{"left1", "right" or "inner"; see details}
 
 \item{as_points}{logical; controls whether grid cells in \code{x} will be treated as points, or as cell areas; the \link{st_intersects.stars} method by default will derive this from \code{x}'s metadata, or else assume areas.}
 

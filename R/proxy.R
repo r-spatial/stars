@@ -96,8 +96,8 @@ combine_along_crs_proxy = function(dots) {
 	# erase offset:
 	erase_offset = function(x) { 
 		d = st_dimensions(x)
-		xy = attr(d, "raster")$dimensions
-		d[[ xy[1] ]]$offset = d[[ xy[2] ]]$offset = NA
+		# xy = attr(d, "raster")$dimensions
+		# d[[ xy[1] ]]$offset = d[[ xy[2] ]]$offset = NA
 		st_set_crs(st_stars_proxy(x, d), NA)
 	}
 	l = lapply(dots, erase_offset)

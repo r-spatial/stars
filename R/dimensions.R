@@ -531,9 +531,14 @@ identical_dimensions = function(lst) {
 	TRUE
 }
 
-combine_dimensions = function(dots, along) {
-	dims = attr(dots[[1]], "dimensions")
+combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
+	dims = st_dimensions(dots[[1]])
 	if (along > length(dims)) {
+		if (length(dots) > 1 && check_dims_identical) {
+			for (i in 2:length(dots))
+				if (!identical(dims, st_dimensions(dots[[i]])))
+					stop(paste("dimensions of element", 1, "and", i, "are not identical"))
+		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
 		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)

@@ -106,8 +106,8 @@ if (f != "") {
   print(ret)
   ret = adrop(c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
   print(ret)
-  ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
-  print(ret)
+  #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
+  #print(ret)
 }
 
 st_dimensions(list(matrix(1, 4, 4))) # st_dimensions.default
