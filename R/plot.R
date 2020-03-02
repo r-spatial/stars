@@ -276,6 +276,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
 	co = attr(ar, "colors")
+	if (!is.null(co) && is.null(rgb))
+		rgb = TRUE
+
 	# rearrange ar:
 	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
 	ar = aperm(ar, c(dimxn, dimyn, others))
