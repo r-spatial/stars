@@ -183,21 +183,37 @@
 </h2>
 <p>Similar to <code>slice</code>, <code>filter</code> selects on dimensions but evaluates their values rather than their index: in</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">289000</span>, x <span class="op">&lt;</span><span class="st"> </span><span class="dv">291000</span>, band <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) -&gt;<span class="st"> </span>x7</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">x7</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">## stars object with 3 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">##   L7_ETMs.tif    </a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">##  Min.   :  5.00  </a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">##  1st Qu.: 54.00  </a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">##  Median : 70.00  </a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">##  Mean   : 71.79  </a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">##  3rd Qu.: 88.00  </a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">##  Max.   :252.00  </a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">## dimension(s):</a>
-<a class="sourceLine" id="cb5-13" data-line-number="13">##      from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb5-14" data-line-number="14">## x       1  70  289004  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb5-15" data-line-number="15">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb5-16" data-line-number="16">## band    1   3       4     1                           NA    NA   NULL</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2">## Registered S3 methods overwritten by 'cubelyr':</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">##   method                 from </a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">##   as.data.frame.tbl_cube dplyr</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">##   as.table.tbl_cube      dplyr</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">##   as_tibble.tbl_cube     dplyr</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">##   auto_copy.tbl_cube     dplyr</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">##   dim.tbl_cube           dplyr</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">##   group_by.tbl_cube      dplyr</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">##   group_vars.tbl_cube    dplyr</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">##   groups.tbl_cube        dplyr</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">##   print.tbl_cube         dplyr</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">##   rename.tbl_cube        dplyr</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">##   same_src.tbl_cube      dplyr</a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">##   select.tbl_cube        dplyr</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">##   summarise.tbl_cube     dplyr</a>
+<a class="sourceLine" id="cb5-17" data-line-number="17">##   tbl_vars.tbl_cube      dplyr</a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">x7</a>
+<a class="sourceLine" id="cb5-19" data-line-number="19">## stars object with 3 dimensions and 1 attribute</a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">## attribute(s):</a>
+<a class="sourceLine" id="cb5-21" data-line-number="21">##   L7_ETMs.tif    </a>
+<a class="sourceLine" id="cb5-22" data-line-number="22">##  Min.   :  5.00  </a>
+<a class="sourceLine" id="cb5-23" data-line-number="23">##  1st Qu.: 54.00  </a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">##  Median : 70.00  </a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">##  Mean   : 71.79  </a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">##  3rd Qu.: 88.00  </a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">##  Max.   :252.00  </a>
+<a class="sourceLine" id="cb5-28" data-line-number="28">## dimension(s):</a>
+<a class="sourceLine" id="cb5-29" data-line-number="29">##      from  to  offset delta                       refsys point values    </a>
+<a class="sourceLine" id="cb5-30" data-line-number="30">## x       1  70  289004  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
+<a class="sourceLine" id="cb5-31" data-line-number="31">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
+<a class="sourceLine" id="cb5-32" data-line-number="32">## band    1   3       4     1                           NA    NA   NULL</a></code></pre></div>
 <p>the subarray is created based on the x <em>coordinate</em> values.</p>
 <p>Note that <code>filter</code> converts the object to a <code>tbl_cube</code>, and uses the <code>dplyr</code> <code>filter</code> method for <code>tbl_cube</code> objects. This has the limitation that <code>stars</code> objects with rectilinear, curvilinear or simple feature geometries cannot be handled. For such objects, using regular <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> selection or using <code>st_crop</code> may be an alternative.</p>
 </div>
