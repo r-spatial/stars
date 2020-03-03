@@ -1,5 +1,7 @@
 # version 0.4-1
 
+* adapt to cubelyr split-off from dplyr; https://github.com/hadley/cubelyr/issues/2
+
 * handle color tables read through GDAL; #128
 
 * handle dimension `crs` specially, for proxy objects now.

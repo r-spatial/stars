@@ -78,9 +78,9 @@ For this particular dataset (and most other raster datasets), we see that offset
 
 `read_stars` reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.
 
-The data structure `stars` is a generalisation of the `tbl_cube` found in `dplyr`; we can convert to that by
+The data structure `stars` is a generalisation of the `tbl_cube` found in `cubelyr`; we can convert to that by
 ```{r}
-library(dplyr)
+library(cubelyr)
 as.tbl_cube(x)
 ```
 but this will cause a loss of certain properties (cell size,
@@ -212,6 +212,7 @@ file_list = system.file(paste0("netcdf/", x), package = "starsdata")
 
 Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
 ```{r eval=ev}
+library(dplyr)
 library(abind)
 z <- y %>% select(sst) %>% adrop()
 ```

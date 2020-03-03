@@ -31,7 +31,11 @@ get_dims = function(d_cube, d_stars) {
 #' @param ... see \link[dplyr]{filter}
 #' @name dplyr
 filter.stars <- function(.data, ...) {
-	cb = dplyr::as.tbl_cube(.data)
+    if (!requireNamespace("dplyr", quietly = TRUE))
+        stop("package dplyr required, please install it first") # nocov
+    if (!requireNamespace("cubelyr", quietly = TRUE))
+        stop("package cubelyr required, please install it first") # nocov
+	cb = cubelyr::as.tbl_cube(.data)
 	cb = dplyr::filter(cb, ...)
 	st_as_stars(cb$mets, dimensions = get_dims(cb$dims, st_dimensions(.data)))
 }
@@ -56,6 +60,8 @@ mutate.stars_proxy = function(.data, ...) {
 
 #' @name dplyr
 select.stars <- function(.data, ...) {
+    if (!requireNamespace("dplyr", quietly = TRUE))
+        stop("package dplyr required, please install it first") # nocov
     ret <- dplyr::select(to_df(.data), ...)
 	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
 }
@@ -69,6 +75,10 @@ select.stars_proxy = function(.data, ...) {
 #' @param var see \link[dplyr]{pull}
 #' @name dplyr
 pull.stars = function (.data, var = -1) {
+    if (!requireNamespace("dplyr", quietly = TRUE))
+        stop("package dplyr required, please install it first") # nocov
+    if (!requireNamespace("rlang", quietly = TRUE))
+        stop("package rlang required, please install it first") # nocov
 	var = rlang::enquo(var)
 	structure(dplyr::pull(to_df(.data), !!var), dim = dim(.data))
 }
@@ -80,7 +90,10 @@ pull.stars_proxy = function(.data, ...) {
 
 #' @name dplyr
 #' @param x object of class \code{stars}
+#' @export
 as.tbl_cube.stars = function(x, ...) {
+    if (!requireNamespace("cubelyr", quietly = TRUE))
+        stop("package cubelyr required, please install it first") # nocov
 	cleanup = function(y) {
 		if (is.list(y))
 			seq_along(y)
@@ -88,7 +101,7 @@ as.tbl_cube.stars = function(x, ...) {
 			y
 	}
 	dims = lapply(expand_dimensions(x), cleanup)
-	dplyr::tbl_cube(dims, c(unclass(x)))
+	cubelyr::tbl_cube(dims, c(unclass(x)))
 }
 
 #' @name dplyr
@@ -103,6 +116,8 @@ as.tbl_cube.stars = function(x, ...) {
 #' x1 %>% slice("x", 50:100)
 slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   #stopifnot(length(index) == 1)
+  if (!requireNamespace("rlang", quietly = TRUE))
+    stop("package rlang required, please install it first") # nocov
     
   nd <- length(dim(.data))
   indices <- rep(list(rlang::missing_arg()), nd + 1)
@@ -217,7 +232,7 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "mutate", "stars_proxy")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "pull", "stars_proxy")
-	register_s3_method("dplyr", "as.tbl_cube", "stars")
+	register_s3_method("cubelyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
 	register_s3_method("dplyr", "slice", "stars_proxy")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
