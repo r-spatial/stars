@@ -223,7 +223,8 @@ theme_stars = function(...) {
 }
 
 register_all_s3_methods = function() {
-	register_s3_method("dplyr", "filter", "stars") # nocov start
+	register_s3_method("cubelyr", "as.tbl_cube", "stars") # nocov start
+	register_s3_method("dplyr", "filter", "stars") 
 	register_s3_method("dplyr", "filter", "stars_proxy") 
 	register_s3_method("dplyr", "as_tibble", "stars")
 	register_s3_method("dplyr", "select", "stars")
@@ -232,14 +233,12 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "mutate", "stars_proxy")
 	register_s3_method("dplyr", "pull", "stars")
 	register_s3_method("dplyr", "pull", "stars_proxy")
-	register_s3_method("cubelyr", "as.tbl_cube", "stars")
 	register_s3_method("dplyr", "slice", "stars")
 	register_s3_method("dplyr", "slice", "stars_proxy")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
+	register_s3_method("sf", "st_join", "stars")
 	register_s3_method("spatstat", "as.owin", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
-	if (utils::packageVersion("sf") >= "0.8-0")
-		register_s3_method("sf", "st_join", "stars")
 }
 
 # from: https://github.com/tidyverse/hms/blob/master/R/zzz.R

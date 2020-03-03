@@ -153,7 +153,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (!proxy && any(lengths(ct) > 0)) {
 			ct = ct[[ which(length(ct) > 0)[1] ]]
 			co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
-			data = structure(data + 1, levels = 1:256, colors = co, class = "factor")
+			data = structure(data + 1, levels = seq_along(co), colors = co, class = "factor")
 		}
 
 		dims = if (proxy) {

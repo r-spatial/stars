@@ -275,9 +275,15 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
+	# handle color table, if present:
 	co = attr(ar, "colors")
-	if (!is.null(co) && is.null(rgb))
-		rgb = TRUE
+	if (! is.null(co)) {
+		if (is.null(rgb))
+			rgb = TRUE
+		interpretation = attr(co, "interpretation")
+		if (!is.null(interpretation) && interpretation != 1)
+			warning("color interpretation is not RGB, but rgb is used nevertheless: colors will probably be wrong")
+	}
 
 	# rearrange ar:
 	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
