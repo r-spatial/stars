@@ -2,12 +2,12 @@ language: r
 
 r:
   - release
-  - devel #-- tic errors!
-#  - oldrel
+  - devel
+  - oldrel
 
 sudo: required
 dist: trusty
-# cache: packages
+cache: packages
 latex: true
 
 addons:
