@@ -265,7 +265,7 @@
 <a class="sourceLine" id="cb7-3" data-line-number="3">(<span class="dt">p =</span> <span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">TRUE</span>))</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">## stars_proxy object with 1 attribute in file:</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">## [1] "SENTINEL2_L1C:/vsizip//usr/local/lib/R/site-library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">## [1] "SENTINEL2_L1C:/vsizip//home/travis/R/Library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</a>
 <a class="sourceLine" id="cb7-7" data-line-number="7">## </a>
 <a class="sourceLine" id="cb7-8" data-line-number="8">## dimension(s):</a>
 <a class="sourceLine" id="cb7-9" data-line-number="9">##      from    to offset delta                       refsys point values    </a>
@@ -276,7 +276,7 @@
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(p))</a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.628   0.796   1.552</code></pre>
+##   1.684   0.636   1.481</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(s2, <span class="dt">proxy =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -311,15 +311,15 @@
 <a class="sourceLine" id="cb12-14" data-line-number="14">y[<span class="st">"sst"</span>]</a>
 <a class="sourceLine" id="cb12-15" data-line-number="15">## stars_proxy object with 1 attribute in files:</a>
 <a class="sourceLine" id="cb12-16" data-line-number="16">## $sst</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17">## [1] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst"</a>
-<a class="sourceLine" id="cb12-18" data-line-number="18">## [2] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst"</a>
-<a class="sourceLine" id="cb12-19" data-line-number="19">## [3] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst"</a>
-<a class="sourceLine" id="cb12-20" data-line-number="20">## [4] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810904.nc\":sst"</a>
-<a class="sourceLine" id="cb12-21" data-line-number="21">## [5] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810905.nc\":sst"</a>
-<a class="sourceLine" id="cb12-22" data-line-number="22">## [6] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810906.nc\":sst"</a>
-<a class="sourceLine" id="cb12-23" data-line-number="23">## [7] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810907.nc\":sst"</a>
-<a class="sourceLine" id="cb12-24" data-line-number="24">## [8] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810908.nc\":sst"</a>
-<a class="sourceLine" id="cb12-25" data-line-number="25">## [9] "NETCDF:\"/usr/local/lib/R/site-library/starsdata/netcdf/avhrr-only-v2.19810909.nc\":sst"</a>
+<a class="sourceLine" id="cb12-17" data-line-number="17">## [1] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst"</a>
+<a class="sourceLine" id="cb12-18" data-line-number="18">## [2] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst"</a>
+<a class="sourceLine" id="cb12-19" data-line-number="19">## [3] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst"</a>
+<a class="sourceLine" id="cb12-20" data-line-number="20">## [4] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810904.nc\":sst"</a>
+<a class="sourceLine" id="cb12-21" data-line-number="21">## [5] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810905.nc\":sst"</a>
+<a class="sourceLine" id="cb12-22" data-line-number="22">## [6] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810906.nc\":sst"</a>
+<a class="sourceLine" id="cb12-23" data-line-number="23">## [7] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810907.nc\":sst"</a>
+<a class="sourceLine" id="cb12-24" data-line-number="24">## [8] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810908.nc\":sst"</a>
+<a class="sourceLine" id="cb12-25" data-line-number="25">## [9] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810909.nc\":sst"</a>
 <a class="sourceLine" id="cb12-26" data-line-number="26">## </a>
 <a class="sourceLine" id="cb12-27" data-line-number="27">## dimension(s):</a>
 <a class="sourceLine" id="cb12-28" data-line-number="28">##      from   to         offset  delta  refsys point values    </a>
@@ -402,7 +402,7 @@
 <a class="sourceLine" id="cb17-4" data-line-number="4">(<span class="dt">s2.ndvi =</span> <span class="kw"><a href="../reference/st_apply.html">st_apply</a></span>(p, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), ndvi))</a>
 <a class="sourceLine" id="cb17-5" data-line-number="5">## stars_proxy object with 1 attribute in file:</a>
 <a class="sourceLine" id="cb17-6" data-line-number="6">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">## [1] "SENTINEL2_L1C:/vsizip//usr/local/lib/R/site-library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">## [1] "SENTINEL2_L1C:/vsizip//home/travis/R/Library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</a>
 <a class="sourceLine" id="cb17-8" data-line-number="8">## </a>
 <a class="sourceLine" id="cb17-9" data-line-number="9">## dimension(s):</a>
 <a class="sourceLine" id="cb17-10" data-line-number="10">##      from    to offset delta                       refsys point values    </a>
@@ -415,7 +415,7 @@
 <a class="sourceLine" id="cb17-17" data-line-number="17"><span class="kw"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="kw"><a href="../reference/plot.html">plot</a></span>(s2.ndvi)) <span class="co"># read - compute ndvi - plot </span></a></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.740   0.720   1.633</code></pre>
+##   1.696   0.796   1.646</code></pre>
 </div>
 </div>
 </div>
