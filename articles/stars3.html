@@ -126,16 +126,16 @@
 <a class="sourceLine" id="cb2-3" data-line-number="3">##  [5] aggregate         aperm             as_tibble         as.data.frame    </a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">##  [9] as.tbl_cube       c                 coerce            contour          </a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">## [13] cut               dim               dimnames          dimnames&lt;-       </a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">## [17] filter            image             initialize        is.na            </a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">## [21] Math              merge             mutate            Ops              </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">## [25] plot              predict           print             pull             </a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">## [29] select            show              slice             slotsFromS3      </a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">## [33] split             st_apply          st_area           st_as_sf         </a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">## [37] st_as_sfc         st_as_stars       st_bbox           st_coordinates   </a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">## [41] st_crop           st_crs            st_crs&lt;-          st_dimensions    </a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">## [45] st_geometry       st_interpolate_aw st_intersects     st_join          </a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">## [49] st_mosaic         st_normalize      st_redimension    st_transform_proj</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">## [53] st_transform      write_stars      </a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">## [17] droplevels        filter            image             initialize       </a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">## [21] is.na             Math              merge             mutate           </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">## [25] Ops               plot              predict           print            </a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">## [29] pull              select            show              slice            </a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">## [33] slotsFromS3       split             st_apply          st_area          </a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">## [37] st_as_sf          st_as_sfc         st_as_stars       st_bbox          </a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">## [41] st_coordinates    st_crop           st_crs            st_crs&lt;-         </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">## [45] st_dimensions     st_geometry       st_interpolate_aw st_intersects    </a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">## [49] st_join           st_mosaic         st_normalize      st_redimension   </a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">## [53] st_transform_proj st_transform      write_stars      </a>
 <a class="sourceLine" id="cb2-16" data-line-number="16">## see '?methods' for accessing help and source code</a></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
