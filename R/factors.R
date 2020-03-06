@@ -32,3 +32,21 @@ cut.matrix = cut.array
 cut.stars = function(x, breaks, ...) {
 	st_stars(lapply(x, cut, breaks = breaks, ...), st_dimensions(x))
 }
+
+#' @export
+droplevels.stars = function(x, ...) {
+	drop_level = function(x, ...) {
+		d = dim(x)
+		l = levels(x)
+		co = attr(x, "colors")
+		dim(x) = NULL
+		x = droplevels(x, ...)
+		sel = match(levels(x), l)
+		structure(x, dim = d, colors = co[sel])
+	}
+	for (i in seq_along(x)) {
+		if (inherits(x[[i]], "factor"))
+			x[[i]] = drop_level(x[[i]], ...)
+	}
+	x
+}

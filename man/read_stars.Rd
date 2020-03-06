@@ -16,7 +16,8 @@ read_stars(
   RasterIO = list(),
   proxy = FALSE,
   curvilinear = character(0),
-  normalize_path = TRUE
+  normalize_path = TRUE,
+  RAT = character(0)
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ read_stars(
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 
 \item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}}
+
+\item{RAT}{character; raster attribute table column name to use as factor levels}
 }
 \value{
 object of class \code{stars}

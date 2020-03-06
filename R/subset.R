@@ -88,7 +88,8 @@
 	# subset arrays:
 	args[["drop"]] = FALSE
 	for (i in names(x))
-		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
+		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"),
+			colors = attr(x[[i]], "colors"))
 
 	# now do dimensions:
 	if (do_select) {

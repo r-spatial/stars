@@ -87,6 +87,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 				st_downsample(x, downsample)
 		dims = dim(x) # may have changed by st_downsample
 
+		if (missing(col) && is.factor(x[[1]]) && !is.null(attr(x[[1]], "colors")))
+			col = attr(x[[1]], "colors")
+
 		if (length(dims) == 2 || dims[3] == 1 || (!is.null(dots$rgb) && is.numeric(dots$rgb))) { ## ONE IMAGE:
 			# set up key region
 			values = structure(x[[1]], dim = NULL) # array -> vector
