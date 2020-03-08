@@ -2,8 +2,8 @@ language: r
 
 r:
   - release
-  - devel
   - oldrel
+  # - devel
 
 sudo: required
 dist: trusty
