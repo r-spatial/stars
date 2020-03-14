@@ -241,6 +241,8 @@ get_crs = function(pr) {
 		st_crs(pr$proj4string)
 	else if (!is.null(pr$wkt)) # newer sf, but GDAL < 3.0.0
 		st_crs(pr$wkt)
+	else if (!is.null(pr$proj_wkt))
+		st_crs(pr$proj_wkt)
 	else 
 		st_crs(NA)
 }
