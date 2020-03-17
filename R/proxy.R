@@ -118,6 +118,7 @@ st_redimension.stars_proxy = function(x, new_dims = st_dimensions(x), along = li
 	st_stars_proxy(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
 }
 
+# fetch a stars object from a stars_proxy object, using downsampling
 fetch = function(x, downsample = 0, ...) {
 	stopifnot(inherits(x, "stars_proxy"))
 	d = st_dimensions(x)
