@@ -158,8 +158,12 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			data = structure(data + 1, levels = seq_along(co), colors = co, class = "factor")
 		}
 		at = meta_data$attribute_tables
-		if (!proxy && any(lengths(at) > 0) && length(RAT))
-			attr(data, "levels") = at[[ which(length(at) > 0)[1] ]][[ RAT ]]
+		if (!proxy && any(lengths(at) > 0)) {
+			attr(data, "levels") = if (length(RAT))
+					at[[ which(length(at) > 0)[1] ]][[ RAT ]]
+				else
+					at[[ which(length(at) > 0)[1] ]][[ 1 ]]
+		}
 
 		dims = if (proxy) {
 				if (length(meta_data$bands) > 1) 
