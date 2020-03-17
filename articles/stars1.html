@@ -125,8 +125,9 @@
 <a class="sourceLine" id="cb2-10" data-line-number="10">## [33] st_bbox           st_coordinates    st_crop           st_crs           </a>
 <a class="sourceLine" id="cb2-11" data-line-number="11">## [37] st_crs&lt;-          st_dimensions     st_geometry       st_interpolate_aw</a>
 <a class="sourceLine" id="cb2-12" data-line-number="12">## [41] st_intersects     st_join           st_mosaic         st_normalize     </a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">## [45] st_redimension    st_transform_proj st_transform      write_stars      </a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">## see '?methods' for accessing help and source code</a></code></pre></div>
+<a class="sourceLine" id="cb2-13" data-line-number="13">## [45] st_redimension    st_sample         st_transform_proj st_transform     </a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">## [49] write_stars      </a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">## see '?methods' for accessing help and source code</a></code></pre></div>
 <p>(tidyverse methods are only visible after loading package <code>tidyverse</code>).</p>
 <div id="reading-a-satellite-image" class="section level1">
 <h1 class="hasAnchor">
@@ -558,13 +559,13 @@
 <a class="sourceLine" id="cb22-21" data-line-number="21">(<span class="dt">st =</span> <span class="kw"><a href="../reference/st_as_stars.html">st_as_stars</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">traffic =</span> traffic),  <span class="dt">dimensions =</span> dims))</a>
 <a class="sourceLine" id="cb22-22" data-line-number="22">## stars object with 5 dimensions and 1 attribute</a>
 <a class="sourceLine" id="cb22-23" data-line-number="23">## attribute(s), summary of first 1e+05 cells:</a>
-<a class="sourceLine" id="cb22-24" data-line-number="24">##     traffic     </a>
-<a class="sourceLine" id="cb22-25" data-line-number="25">##  Min.   : 0.00  </a>
-<a class="sourceLine" id="cb22-26" data-line-number="26">##  1st Qu.: 8.00  </a>
-<a class="sourceLine" id="cb22-27" data-line-number="27">##  Median :10.00  </a>
-<a class="sourceLine" id="cb22-28" data-line-number="28">##  Mean   :10.01  </a>
-<a class="sourceLine" id="cb22-29" data-line-number="29">##  3rd Qu.:12.00  </a>
-<a class="sourceLine" id="cb22-30" data-line-number="30">##  Max.   :27.00  </a>
+<a class="sourceLine" id="cb22-24" data-line-number="24">##     traffic      </a>
+<a class="sourceLine" id="cb22-25" data-line-number="25">##  Min.   : 0.000  </a>
+<a class="sourceLine" id="cb22-26" data-line-number="26">##  1st Qu.: 8.000  </a>
+<a class="sourceLine" id="cb22-27" data-line-number="27">##  Median :10.000  </a>
+<a class="sourceLine" id="cb22-28" data-line-number="28">##  Mean   : 9.992  </a>
+<a class="sourceLine" id="cb22-29" data-line-number="29">##  3rd Qu.:12.000  </a>
+<a class="sourceLine" id="cb22-30" data-line-number="30">##  Max.   :27.000  </a>
 <a class="sourceLine" id="cb22-31" data-line-number="31">## dimension(s):</a>
 <a class="sourceLine" id="cb22-32" data-line-number="32">##             from  to                      offset                       delta</a>
 <a class="sourceLine" id="cb22-33" data-line-number="33">## origin         1 100                          NA                          NA</a>
