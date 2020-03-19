@@ -159,7 +159,11 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (!proxy && any(lengths(ct) > 0)) {
 			ct = ct[[ which(length(ct) > 0)[1] ]]
 			co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
-			data = structure(data + 1, levels = seq_along(co), colors = co, class = "factor")
+			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
+					meta_data$ranges[1,1]
+				else
+					min(data, na.rm = TRUE)
+			data = structure(data + (1 - min_value), levels = seq_along(co), colors = co, class = "factor")
 		}
 		at = meta_data$attribute_tables
 		if (!proxy && any(lengths(at) > 0)) {
