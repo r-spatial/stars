@@ -25,27 +25,27 @@ st_downsample = function(x, n, fill_out = TRUE) {
 }
 
 #' @export
-st_sample.stars = function(x, n, ..., type = "random", replace = FALSE) {
+st_sample.stars = function(x, size, ..., type = "random", replace = FALSE) {
 	if (length(x) > 1)
 		warning("only sampling the first attribute")
 	if (type != "random")
 		warning("only type 'random' supported")
 	v = structure(x[[1]], dim = NULL)
 	if (missing(replace))
-		replace = n > length(v)
-	v[sample(length(v), n, replace = replace, ...)]
+		replace = size > length(v)
+	v[sample(length(v), size, replace = replace, ...)]
 }
 
 #' @export
-st_sample.stars_proxy = function(x, n, ..., type = "regular", quiet = TRUE) {
+st_sample.stars_proxy = function(x, size, ..., type = "regular", quiet = TRUE) {
 	if (length(x) > 1)
 		warning("only sampling the first attribute")
 	if (type != "regular")
 		warning("only type 'regular' for stars_proxy objects supported")
 	d = dim(x)
-	downsampling_rate = round(d / sqrt(n)) # right for x,y-only, oversamples in case of others
+	downsampling_rate = round(d / sqrt(size)) # right for x,y-only, oversamples in case of others
 	if (!quiet)
 		print(downsampling_rate) # nocov
 	st = fetch(x, downsampling_rate)
-	st_sample(st, n, ...)
+	st_sample(st, size, ...)
 }

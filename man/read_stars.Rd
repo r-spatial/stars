@@ -56,12 +56,12 @@ read raster/array dataset from file or connection
 \details{
 In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 
-\code{RasterIO} is a list with zero or more of the following named arguments: 
-\code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1), 
+\code{RasterIO} is a list with zero or more of the following named arguments:
+\code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, code{resample}.
 see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
 \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
-Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image, 
+Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
 has to be one of: "nearest_neighbour" (the default),
 "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".
@@ -86,7 +86,7 @@ st
 tmp = tempfile(fileext = ".tif")
 write_stars(st, tmp)
 (red <- read_stars(tmp))
-read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, 
+read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
    nBufXSize = 2, nBufYSize = 2))[[1]]
 (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
    nBufXSize = 2, nBufYSize = 2)))
