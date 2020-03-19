@@ -163,14 +163,18 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 					meta_data$ranges[1,1]
 				else
 					min(data, na.rm = TRUE)
-			data = structure(data + (1 - min_value), levels = seq_along(co), colors = co, class = "factor")
+			data = structure(data + (1 - min_value), 
+				levels = as.character(seq_along(co)), colors = co, class = "factor")
 		}
 		at = meta_data$attribute_tables
 		if (!proxy && any(lengths(at) > 0)) {
+			which.at = which(lengths(at) > 0)[1]
 			attr(data, "levels") = if (length(RAT))
-					at[[ which(length(at) > 0)[1] ]][[ RAT ]]
-				else
-					at[[ which(length(at) > 0)[1] ]][[ 1 ]]
+					at[[ which.at ]][[ RAT ]]
+				else {
+					first.char = which(sapply(at[[which.at]], class) == "character")[1]
+					at[[ which.at ]][[ first.char ]]
+				}
 		}
 
 		dims = if (proxy) {
