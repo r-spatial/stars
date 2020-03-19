@@ -220,12 +220,12 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>In case <code>.x</code> contains multiple files, they will all be read and combined with <a href='c.stars.html'>c.stars</a>. Along which dimension, or how should objects be merged? If <code>along</code> is set to <code>NA</code> it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called <code>time</code> indicates different time stamps. A single name (or positive value) for <code>along</code> will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to <code>along</code> to specify them; see example.</p>
-<p><code>RasterIO</code> is a list with zero or more of the following named arguments: 
-<code>nXOff</code>, <code>nYOff</code> (both 1-based: the first row/col has offset value 1), 
+<p><code>RasterIO</code> is a list with zero or more of the following named arguments:
+<code>nXOff</code>, <code>nYOff</code> (both 1-based: the first row/col has offset value 1),
 <code>nXSize</code>, <code>nYSize</code>, <code>nBufXSize</code>, <code>nBufYSize</code>, <code>bands</code>, coderesample.
 see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
 <code>bands</code> is an integer vector containing the band numbers to be read (1-based: first band is 1)
-Note that if <code>nBufXSize</code> or <code>nBufYSize</code> are specified for downsampling an image, 
+Note that if <code>nBufXSize</code> or <code>nBufYSize</code> are specified for downsampling an image,
 resulting in an adjusted geotransform. <code>resample</code> reflects the resampling method and
 has to be one of: "nearest_neighbour" (the default),
 "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".</p>
@@ -336,7 +336,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='fu'><a href='write_stars.html'>write_stars</a></span>(<span class='no'>st</span>, <span class='no'>tmp</span>)
 (<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file4ff67da8c4fd.tif 
+#&gt;  file4f981e47d742.tif 
 #&gt;  Min.   :  1.00       
 #&gt;  1st Qu.: 30.75       
 #&gt;  Median : 60.50       
@@ -352,7 +352,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; [2,]   38   98</div><div class='input'>(<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
    <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>)))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file4ff67da8c4fd.tif 
+#&gt;  file4f981e47d742.tif 
 #&gt;  Min.   :33.00        
 #&gt;  1st Qu.:36.75        
 #&gt;  Median :65.50        
