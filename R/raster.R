@@ -33,11 +33,21 @@ st_as_stars.Raster = function(.x, ...) {
 
 st_as_raster = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
+	x = st_upfront(x) # x/y dimensions first
 	if (length(dim(x)) > 3) {
 		warning("folding all higher dimensions into the third dimension") # nocov
 		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect") # nocov
 	}
 	d = st_dimensions(x)
+	if (d[[2]]$delta > 0) { # swap:
+		ny = dim(x)[2]
+		d[[2]]$offset = d[[2]]$offset + ny * d[[2]]$delta # top
+		d[[2]]$delta = -d[[2]]$delta # going down
+		x[[1]] = if (length(dim(x)) == 2)
+				x[[1]][,ny:1]
+			else
+				x[[1]][,ny:1,]
+	}
 	dxy = attr(d, "raster")$dimensions
 	stopifnot(all(dxy %in% names(d)))
 	bb = st_bbox(x)
