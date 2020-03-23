@@ -531,25 +531,27 @@ st_crs.stars = function(x, ...) {
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
-	if (is.na(value))
-		value = NA_crs_
-	if (is.numeric(value))
-		value = st_crs(value)
-	if (inherits(value, "crs"))
-		value = value$proj4string
-	if (is.na(value))
-		value = NA_character_
-	stopifnot(is.character(value))
+	value = if (is.na(value))
+			NA_crs_
+		else if (is.numeric(value) || is.character(value))
+			st_crs(value)
+		else if (inherits(value, "crs"))
+			value
+		else
+			stop(paste("crs of class", class(value), "not recognized"))
+
+	# set CRS in dimensions:
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
-	if (!all(is.na(xy))) {
+	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		d[[ xy[1] ]]$refsys = value
 		d[[ xy[2] ]]$refsys = value
 	}
-	# sfc's:
-	i = sapply(d, function(y) inherits(y$values, "sfc"))
-	for (j in which(i))
+
+	# set crs of sfc's, if any:
+	for (j in which_sfc(x))
 		d[[ j ]]$refsys = value
+
 	structure(x, dimensions = d)
 }
 

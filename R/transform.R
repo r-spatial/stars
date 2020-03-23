@@ -21,12 +21,12 @@ transform_curvilinear = function(x, crs, ...) {
 		crs = st_crs(crs)  	 # nocov
 	
 	if(inherits(crs, "crs"))
-		crs = crs$proj4string	
+		crs = crs$wkt
 		
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
-	pts = sf_project(from = d[[ xy[1] ]]$refsys, to = crs, pts = cc)
+	pts = sf_project(from = d[[ xy[1] ]]$refsys$wkt, to = crs, pts = cc)
 	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = crs
 	d[[ xy[1] ]]$values = matrix(pts[,1], dim(x)[xy])
 	d[[ xy[2] ]]$values = matrix(pts[,2], dim(x)[xy])

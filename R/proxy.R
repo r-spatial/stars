@@ -158,7 +158,7 @@ fetch = function(x, downsample = 0, ...) {
 		if (dm %in% names(new_dim))
 			new_dim[[dm]] = d[[dm]]
 
-	st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x)) # FIXME: fails on non-GDAL readable proj4strings?
+	st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x))
 }
 
 check_xy_warn = function(call, dimensions) {
