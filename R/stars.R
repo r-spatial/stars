@@ -518,15 +518,18 @@ st_bbox.stars = function(obj, ...) {
 
 #' @export
 st_crs.stars = function(x, ...) {
-	d = st_dimensions(x)
-	xy = attr(d, "raster")$dimensions
+	st_crs(st_dimensions(x), ...)
+}
+
+#' @export
+st_crs.dimensions = function(x, ...) {
+	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy)))
-		st_crs(d[[ xy[1] ]]$refsys)
-	else if (has_sfc(d)) # search for simple features:
-		#st_crs(d[[ which_sfc(d)[1] ]]$refsys) # -> would (re)interpret proj4string
-		st_crs(d[[ which_sfc(d)[1] ]]$values)
+		st_crs(x[[ xy[1] ]]$refsys)
+	else if (has_sfc(x)) # search for simple features:
+		st_crs(x[[ which_sfc(x)[1] ]]$values)
 	else
-		st_crs(NA)
+		NA_crs_
 }
 
 #' @export
