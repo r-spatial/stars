@@ -51,10 +51,26 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	create_dimensions(list(x = x, y = y), get_raster())
 }
 
+rename_xy_dimensions = function(x, dims) {
+	stopifnot(inherits(x, "stars"), inherits(dims, "dimensions"))
+	dx = st_dimensions(x)
+	xxy = attr(dx, "raster")$dimensions
+	dimsxy = attr(dims, "raster")$dimensions
+	if (all(xxy == dimsxy))
+		x
+	else {
+		na = names(dx)
+		names(dx)[match(xxy, na)] = dimsxy
+		attr(dx, "raster")$dimensions = dimsxy
+		structure(x, dimensions = dx)
+	}
+}
+
 # transform grid x to dimensions target
 # x is a stars object, target is a dimensions object
 transform_grid_grid = function(x, target) {
 	stopifnot(inherits(target, "dimensions"))
+	x = rename_xy_dimensions(x, target) # so we can match by name
 	xy_names = attr(target, "raster")$dimensions
 	new_pts = st_coordinates(target[xy_names])
 	dxy = attr(target, "raster")$dimensions
@@ -160,6 +176,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			on.exit(unlink(dest)) # a temp file
 		read_stars(dest)
 	} else {
+		if (method != "near")
+			stop("methods other than \"near\" are only supported if use_gdal=TRUE")
 		if (missing(dest)) {
 			if (is.na(crs))
 				stop("either dest or crs should be specified")
