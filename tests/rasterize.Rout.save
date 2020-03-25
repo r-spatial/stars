@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,8 +23,7 @@ Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
 geometry type:  MULTIPOLYGON
 dimension:      XY
 bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-epsg (SRID):    4267
-proj4string:    +proj=longlat +datum=NAD27 +no_defs
+geographic CRS: NAD27
 > (x = st_rasterize(nc)) # default grid:
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -37,9 +36,9 @@ attribute(s):
  Max.   :0.241  
  NA's   :30904  
 dimension(s):
-  from  to   offset      delta                       refsys point values    
-x    1 461 -84.3239  0.0192484 +proj=longlat +datum=NAD2... FALSE   NULL [x]
-y    1 141  36.5896 -0.0192484 +proj=longlat +datum=NAD2... FALSE   NULL [y]
+  from  to   offset      delta refsys point values    
+x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
+y    1 141  36.5896 -0.0192484  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
 > # a bit more customized grid:
 > (x = st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
@@ -54,17 +53,16 @@ attribute(s):
  Max.   :0.2410  
  NA's   :2373    
 dimension(s):
-  from  to   offset      delta                       refsys point values    
-x    1 100 -84.3239  0.0886687 +proj=longlat +datum=NAD2... FALSE   NULL [x]
-y    1  50  36.5896 -0.0541531 +proj=longlat +datum=NAD2... FALSE   NULL [y]
+  from  to   offset      delta refsys point values    
+x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
+y    1  50  36.5896 -0.0541531  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
 > (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1, 0), c(1.1, 1))), st_linestring(rbind(c(0, 0.05), c(1, 0.05))))))
 Simple feature collection with 2 features and 1 field
 geometry type:  LINESTRING
 dimension:      XY
 bbox:           xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
-epsg (SRID):    NA
-proj4string:    NA
+CRS:            NA
   a
 1 1
 2 2
@@ -115,4 +113,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.609   0.040   0.640 
+  0.585   0.017   0.592 

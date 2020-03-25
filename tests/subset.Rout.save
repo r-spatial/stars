@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -31,8 +31,8 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point  values    
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA  TRUE 1,...,2    
 > y = st_set_dimensions(x, "band", point = NA)
 > y[,1:10, 1:10, c(1,4,3,2)]
@@ -47,8 +47,8 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point          values
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE            NULL
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE            NULL
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1  4      NA    NA                           NA    NA [1,2),...,[2,3)
         
 x    [x]
@@ -67,8 +67,8 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point          values
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE            NULL
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE            NULL
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1  4      NA    NA                           NA FALSE [1,2),...,[2,3)
         
 x    [x]
@@ -87,8 +87,8 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point  values    
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA    NA a,...,b    
 > y = st_set_dimensions(x, "band", values = letters[1:6], point = NA)
 > y[,1:10, 1:10, c(1,4,3,2)]
@@ -103,8 +103,8 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point  values    
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA    NA a,...,b    
 > y = st_set_dimensions(x, "band", values = letters[1:6], point = TRUE)
 > y[,1:10, 1:10, c(1,4,3,2)]
@@ -119,10 +119,10 @@ attribute(s):
  Max.   :97.00  
 dimension(s):
      from to  offset delta                       refsys point  values    
-x       1 10  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL [x]
-y       1 10 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL [y]
+x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
+y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA  TRUE a,...,b    
 > 
 > proc.time()
    user  system elapsed 
-  0.422   0.004   0.418 
+  0.650   0.028   0.669 

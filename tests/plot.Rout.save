@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,8 +29,7 @@ Geometry set for 70 features
 geometry type:  POINT
 dimension:      XY
 bbox:           xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
-epsg (SRID):    4326
-proj4string:    +proj=longlat +datum=WGS84 +no_defs
+CRS:            +proj=longlat +datum=WGS84
 First 5 geometries:
 POINT (9.585911 53.67057)
 POINT (9.68503 53.52418)
@@ -52,4 +51,4 @@ POINT (13.29635 52.65315)
 > 
 > proc.time()
    user  system elapsed 
-  2.233   0.075   2.302 
+  2.131   0.078   2.199 

@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -31,8 +31,8 @@ attribute(s):
  Max.   :255.00   Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
@@ -46,26 +46,85 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > image(x)
 > gdal_crs(tif)
-$nbands
-[1] 6
-
-$crs
 Coordinate Reference System:
-  No EPSG code
-  proj4string: "+proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-
-$gt
-[1]  288776.3      28.5       0.0 9120760.8       0.0     -28.5
-
-$gt_inv
-[1] -1.013250e+04  3.508772e-02  0.000000e+00  3.200267e+05  0.000000e+00
-[6] -3.508772e-02
-
+  User input: PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH]] 
+  wkt:
+BOUNDCRS[
+    SOURCECRS[
+        PROJCRS["UTM Zone 25, Southern Hemisphere",
+            BASEGEOGCRS["GRS 1980(IUGG, 1980)",
+                DATUM["unknown",
+                    ELLIPSOID["GRS80",6378137,298.257222101,
+                        LENGTHUNIT["metre",1,
+                            ID["EPSG",9001]]]],
+                PRIMEM["Greenwich",0,
+                    ANGLEUNIT["degree",0.0174532925199433,
+                        ID["EPSG",9122]]]],
+            CONVERSION["UTM zone 25S",
+                METHOD["Transverse Mercator",
+                    ID["EPSG",9807]],
+                PARAMETER["Latitude of natural origin",0,
+                    ANGLEUNIT["degree",0.0174532925199433],
+                    ID["EPSG",8801]],
+                PARAMETER["Longitude of natural origin",-33,
+                    ANGLEUNIT["degree",0.0174532925199433],
+                    ID["EPSG",8802]],
+                PARAMETER["Scale factor at natural origin",0.9996,
+                    SCALEUNIT["unity",1],
+                    ID["EPSG",8805]],
+                PARAMETER["False easting",500000,
+                    LENGTHUNIT["metre",1],
+                    ID["EPSG",8806]],
+                PARAMETER["False northing",10000000,
+                    LENGTHUNIT["metre",1],
+                    ID["EPSG",8807]],
+                ID["EPSG",17025]],
+            CS[Cartesian,2],
+                AXIS["easting",east,
+                    ORDER[1],
+                    LENGTHUNIT["metre",1,
+                        ID["EPSG",9001]]],
+                AXIS["northing",north,
+                    ORDER[2],
+                    LENGTHUNIT["metre",1,
+                        ID["EPSG",9001]]]]],
+    TARGETCRS[
+        GEOGCRS["WGS 84",
+            DATUM["World Geodetic System 1984",
+                ELLIPSOID["WGS 84",6378137,298.257223563,
+                    LENGTHUNIT["metre",1]]],
+            PRIMEM["Greenwich",0,
+                ANGLEUNIT["degree",0.0174532925199433]],
+            CS[ellipsoidal,2],
+                AXIS["latitude",north,
+                    ORDER[1],
+                    ANGLEUNIT["degree",0.0174532925199433]],
+                AXIS["longitude",east,
+                    ORDER[2],
+                    ANGLEUNIT["degree",0.0174532925199433]],
+            ID["EPSG",4326]]],
+    ABRIDGEDTRANSFORMATION["Transformation from GRS 1980(IUGG, 1980) to WGS84",
+        METHOD["Position Vector transformation (geog2D domain)",
+            ID["EPSG",9606]],
+        PARAMETER["X-axis translation",0,
+            ID["EPSG",8605]],
+        PARAMETER["Y-axis translation",0,
+            ID["EPSG",8606]],
+        PARAMETER["Z-axis translation",0,
+            ID["EPSG",8607]],
+        PARAMETER["X-axis rotation",0,
+            ID["EPSG",8608]],
+        PARAMETER["Y-axis rotation",0,
+            ID["EPSG",8609]],
+        PARAMETER["Z-axis rotation",0,
+            ID["EPSG",8610]],
+        PARAMETER["Scale difference",1,
+            ID["EPSG",8611]]]]
 > plot(x)
 > plot(x, join_zlim = FALSE)
 > x %>% st_set_dimensions(names = c('a', 'b', 'c'))
@@ -80,8 +139,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
   from  to  offset delta                       refsys point values    
-a    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-b    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+a    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+b    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 c    1   6      NA    NA                           NA    NA   NULL    
 > st_get_dimension_values(x, 3)
 [1] 1 2 3 4 5 6
@@ -98,8 +157,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
             from  to  offset delta                       refsys point  values
-x              1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE    NULL
-y              1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE    NULL
+x              1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL
+y              1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL
 band_number    1   6      NA    NA                           NA  TRUE 1,...,7
                
 x           [x]
@@ -121,8 +180,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
                    from  to  offset delta                       refsys point
-x                     1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
-y                     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+x                     1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
+y                     1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 bandwidth_midpoint    1   6      NA    NA                      udunits  TRUE
                                        values    
 x                                        NULL [x]
@@ -141,8 +200,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
           from  to  offset delta                       refsys point
-x            1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE
-y            1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE
+x            1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
+y            1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 bandwidth    1   6      NA    NA                      udunits    NA
                                           values    
 x                                           NULL [x]
@@ -161,8 +220,8 @@ attribute(s):
  Max.   :510.0  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > x * x
 stars object with 3 dimensions and 1 attribute
@@ -176,8 +235,8 @@ attribute(s):
  Max.   :65025  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > x[,,,1:3]
 stars object with 3 dimensions and 1 attribute
@@ -191,8 +250,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   3      NA    NA                           NA    NA   NULL    
 > x[,1:100,100:200,]
 stars object with 3 dimensions and 1 attribute
@@ -206,8 +265,8 @@ attribute(s):
  Max.   :252.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 100  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y     100 200 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 100  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y     100 200 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > sqrt(x)
 stars object with 3 dimensions and 1 attribute
@@ -221,8 +280,8 @@ attribute(s):
  Max.   :15.969  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > st_apply(x, 3, min)
 stars object with 1 dimensions and 1 attribute
@@ -249,8 +308,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
   from  to  offset delta                       refsys point values    
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > st_apply(x, 1:2, range)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -264,8 +323,8 @@ attribute(s):
 dimension(s):
       from  to  offset delta                       refsys point values    
 range    1   2      NA    NA                           NA    NA   NULL    
-x        1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y        1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > 
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = read_stars(geomatrix)
@@ -373,9 +432,9 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from  to offset delta                       refsys point values    
-x    1 360   -180     1 +proj=longlat +datum=WGS8...    NA   NULL [x]
-y    1 180     90    -1 +proj=longlat +datum=WGS8...    NA   NULL [y]
+  from  to offset delta refsys point values    
+x    1 360   -180     1 WGS 84    NA   NULL [x]
+y    1 180     90    -1 WGS 84    NA   NULL [y]
 > 
 > # multiple sub-datasets:
 > nc_red = system.file("nc/reduced.nc", package = "stars")
@@ -417,8 +476,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
    from  to  offset delta                       refsys point    values    
-x     1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE      NULL [x]
-y     1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE      NULL [y]
+x     1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE      NULL [x]
+y     1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE      NULL [y]
 X1    1   6      NA    NA                           NA    NA X1,...,X6    
 > 
 > read_stars(c(tif,tif)) # merges as attributes
@@ -433,8 +492,8 @@ attribute(s):
  Max.   :255.00   Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = "sensor")
 stars object with 4 dimensions and 1 attribute
@@ -448,8 +507,8 @@ attribute(s), summary of first 1e+05 cells:
  Max.   :255.00  
 dimension(s):
        from  to  offset delta                       refsys point values    
-x         1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y         1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x         1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y         1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band      1   6      NA    NA                           NA    NA   NULL    
 sensor    1   2      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = 4)
@@ -464,8 +523,8 @@ attribute(s), summary of first 1e+05 cells:
  Max.   :255.00  
 dimension(s):
         from  to  offset delta                       refsys point values    
-x          1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y          1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x          1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y          1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band       1   6      NA    NA                           NA    NA   NULL    
 new_dim    1   2      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = "band")
@@ -480,8 +539,8 @@ attribute(s), summary of first 1e+05 cells:
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1  12      NA    NA                           NA    NA   NULL    
 > read_stars(c(tif,tif), along = 3)
 stars object with 3 dimensions and 1 attribute
@@ -495,8 +554,8 @@ attribute(s), summary of first 1e+05 cells:
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1  12      NA    NA                           NA    NA   NULL    
 > 
 > # cut:
@@ -511,8 +570,8 @@ attribute(s):
  (100,255]: 77264  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255))
 stars object with 2 dimensions and 1 attribute
@@ -523,8 +582,8 @@ attribute(s):
  (100,255]:  5713  
 dimension(s):
   from  to  offset delta                       refsys point values    
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > plot(cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255)))
 > 
 > st_bbox(st_dimensions(x))
@@ -554,8 +613,8 @@ y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
 +   print(ret)
 +   ret = adrop(c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
 +   print(ret)
-+   ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
-+   print(ret)
++   #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
++   #print(ret)
 + }
 sst, anom, 
 sst, anom, 
@@ -597,21 +656,6 @@ dimension(s):
 x        1 1440          0   0.25     NA    NA   NULL [x]
 y        1  720         90  -0.25     NA    NA   NULL [y]
 times    1    3 1981-09-01 1 days   Date    NA   NULL    
-stars object with 3 dimensions and 2 attributes
-attribute(s), summary of first 1e+05 cells:
-   sst [C*°]       anom [C*°]   
- Min.   :-1.80   Min.   :-4.69  
- 1st Qu.:-1.19   1st Qu.:-0.06  
- Median :-1.05   Median : 0.52  
- Mean   :-0.32   Mean   : 0.23  
- 3rd Qu.:-0.20   3rd Qu.: 0.71  
- Max.   : 9.36   Max.   : 3.70  
- NA's   :13360   NA's   :13360  
-dimension(s):
-      from   to offset delta refsys point values    
-x        1 1440      0  0.25     NA    NA   NULL [x]
-y        1  720     90 -0.25     NA    NA   NULL [y]
-times    1    3     NA    NA     NA    NA   NULL    
 > 
 > st_dimensions(list(matrix(1, 4, 4))) # st_dimensions.default
    from to offset delta refsys point
@@ -648,4 +692,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  3.692   0.323   4.018 
+  4.842   0.324   5.173 

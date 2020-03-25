@@ -1,6 +1,6 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -30,8 +30,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > st_crs(x) = st_crs(x) # cleans trailing space
 > model = lm(x~L7_ETMs.tif, head(as.data.frame(x), 50))
@@ -44,8 +44,8 @@ $L7_ETMs.tif
 
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > (yp = predict(y, model))
 stars_proxy object with 1 attribute in file:
@@ -54,8 +54,8 @@ $L7_ETMs.tif
 
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 call list:
 [[1]]
@@ -72,8 +72,8 @@ $L7_ETMs.tif
 
 dimension(s):
      from  to  offset delta                       refsys point          values
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE            NULL
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE            NULL
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1   6      NA    NA                           NA    NA band1,...,band6
         
 x    [x]
@@ -91,4 +91,4 @@ split(x = x, 3)
 > 
 > proc.time()
    user  system elapsed 
-  1.825   0.076   1.894 
+  1.818   0.093   1.907 

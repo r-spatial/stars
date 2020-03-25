@@ -1,6 +1,6 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -51,6 +51,9 @@ Type 'q()' to quit R.
 > meuse.area = SpatialPolygons(list(Polygons(list(Polygon(meuse.area)), "area")))
 
 > proj4string(meuse.area) <- crs
+Warning message:
+In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
+  Discarded datum Amersfoort in CRS definition
 > 
 > suppressPackageStartupMessages(library(stars))
 > (m = st_as_stars(meuse))
@@ -100,8 +103,14 @@ dimension(s):
   from  to offset delta                       refsys point values    
 x    1  78 178440    40 +proj=sterea +lat_0=52.15...    NA   NULL [x]
 y    1 104 333760   -40 +proj=sterea +lat_0=52.15...    NA   NULL [y]
+Warning message:
+In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
+  Discarded datum Unknown_based_on_Bessel_1841_ellipsoid in CRS definition
 > 
 > m2 = as(m, "Spatial")
+Warning message:
+In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
+  Discarded datum Unknown_based_on_Bessel_1841_ellipsoid in CRS definition
 > summary(m2)
 Object of class SpatialPointsDataFrame
 Coordinates:
@@ -110,10 +119,8 @@ coords.x1 178605 181390
 coords.x2 329714 333611
 Is projected: TRUE 
 proj4string :
-[+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889
-+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel
-+towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812
-+units=m +no_defs]
+[+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889
++k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs]
 Number of points: 155
 Data attributes:
     cadmium           copper            lead            zinc       
@@ -141,6 +148,9 @@ Data attributes:
  (Other):25   Max.   :1000.0  
  NA's   : 1                   
 > gr2 = as(gr, "Spatial")
+Warning message:
+In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
+  Discarded datum Unknown_based_on_Bessel_1841_ellipsoid in CRS definition
 > summary(gr2)
 Object of class SpatialGridDataFrame
 Coordinates:
@@ -149,10 +159,8 @@ x 178440 181560
 y 329600 333760
 Is projected: TRUE 
 proj4string :
-[+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889
-+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel
-+towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812
-+units=m +no_defs]
+[+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889
++k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs]
 Grid attributes:
   cellcentre.offset cellsize cells.dim
 x            178460       40        78
@@ -170,6 +178,9 @@ Data attributes:
 > all.equal(meuse, m2, check.attributes = FALSE)
 [1] TRUE
 > fullgrid(meuse.grid) = TRUE
+Warning message:
+In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
+  Discarded datum Unknown_based_on_Bessel_1841_ellipsoid in CRS definition
 > all.equal(meuse.grid, gr2, check.attributes = FALSE)
 [1] TRUE
 > 
@@ -182,12 +193,10 @@ Data attributes:
 [6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
 [7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
 [8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
-[9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
 > all.equal(meuse.grid, gr2)
 [1] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
 [2] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
-[3] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
 > 
 > proc.time()
    user  system elapsed 
-  0.723   0.063   0.781 
+  0.769   0.075   0.834 

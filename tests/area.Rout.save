@@ -1,6 +1,6 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -30,8 +30,8 @@ attribute(s):
  Max.   :812.2  
 dimension(s):
   from  to  offset delta                       refsys point values    
-x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > 
 > m = matrix(1:20, nrow = 5, ncol = 4)
 > x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
@@ -69,7 +69,7 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > plot(a, axes = TRUE)
 > 
 > (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
-[1] "/tmp/RtmpuaufnR/RLIBS_7d6e178a189f/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
+[1] "/tmp/RtmpAhMJFm/RLIBS_13181fa468c5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
 > if (s5p != "") {
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
@@ -80,9 +80,9 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 + print((a <- st_area(nit.c)))
 + plot(a, axes = TRUE, border = NA)
 + }
-//PRODUCT/longitude, 
-//PRODUCT/latitude, 
-//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
+/PRODUCT/longitude, 
+/PRODUCT/latitude, 
+/PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
 stars object with 2 dimensions and 1 attribute
 attribute(s):
    area [m^2]       
@@ -93,14 +93,12 @@ attribute(s):
  3rd Qu.: 54640139  
  Max.   :101184840  
 dimension(s):
-  from  to offset delta                       refsys point
-x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
-                          values    
-x [450x278] -5.81066,...,30.9468 [x]
-y  [450x278] 28.3605,...,51.4686 [y]
+  from  to offset delta refsys point                                 values    
+x    1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°] [x]
+y    1 278     NA    NA WGS 84    NA  [450x278] 28.3605 [°],...,51.4686 [°] [y]
 curvilinear grid
+There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.284   0.151   7.428 
+  6.874   0.101   6.974 
