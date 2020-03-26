@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>5. vector-raster conversions, reprojection, warping • stars</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="5. vector-raster conversions, reprojection, warping">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="stars">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-1</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -94,7 +94,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>5. vector-raster conversions, reprojection, warping</h1>
+      <h1 data-toc-skip>5. vector-raster conversions, reprojection, warping</h1>
                         <h4 class="author">Edzer Pebesma</h4>
             
       
@@ -109,28 +109,28 @@
 <div id="rasterizing-an-sf-vector-object" class="section level1">
 <h1 class="hasAnchor">
 <a href="#rasterizing-an-sf-vector-object" class="anchor"></a>Rasterizing an <code>sf</code> vector object</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">## Loading required package: abind</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package =</span> <span class="st">"sf"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span><span class="kw">read_sf</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="dv">32119</span>) -&gt;<span class="st"> </span>nc</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">nc<span class="op">$</span>dens =<span class="st"> </span>nc<span class="op">$</span>BIR79 <span class="op">/</span><span class="st"> </span>units<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span>(<span class="kw">st_area</span>(nc), km<span class="op">^</span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">(<span class="dt">nc.st =</span> <span class="kw"><a href="../reference/st_rasterize.html">st_rasterize</a></span>(nc[<span class="st">"dens"</span>], <span class="dt">deltax =</span> <span class="dv">5000</span>, <span class="dt">deltay =</span> <span class="dv">5000</span>))</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">## attribute(s):</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">##  dens [1/km^2]  </a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">##  Min.   : 0.25  </a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">##  1st Qu.: 1.22  </a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">##  Median : 1.93  </a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">##  Mean   : 3.32  </a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">##  3rd Qu.: 3.83  </a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">##  Max.   :21.25  </a>
-<a class="sourceLine" id="cb1-17" data-line-number="17">##  NA's   :31717  </a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">## dimension(s):</a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">##   from  to offset    delta                       refsys point values    </a>
-<a class="sourceLine" id="cb1-20" data-line-number="20">## x    1 416 123829  1943.82 +proj=lcc +lat_1=36.16666... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb1-21" data-line-number="21">## y    1 157 318260 -1943.82 +proj=lcc +lat_1=36.16666... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nc.st)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stars</span>)
+<span class="co">## Loading required package: abind</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"sf"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">read_sf</span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="fl">32119</span>) <span class="kw">-&gt;</span> <span class="no">nc</span>
+<span class="no">nc</span>$<span class="no">dens</span> <span class="kw">=</span> <span class="no">nc</span>$<span class="no">BIR79</span> / <span class="kw pkg">units</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span>(<span class="fu">st_area</span>(<span class="no">nc</span>), <span class="no">km</span>^<span class="fl">2</span>)
+(<span class="no">nc.st</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span>(<span class="no">nc</span>[<span class="st">"dens"</span>], <span class="kw">deltax</span> <span class="kw">=</span> <span class="fl">5000</span>, <span class="kw">deltay</span> <span class="kw">=</span> <span class="fl">5000</span>))
+<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##  dens [1/km^2]  </span>
+<span class="co">##  Min.   : 0.25  </span>
+<span class="co">##  1st Qu.: 1.22  </span>
+<span class="co">##  Median : 1.93  </span>
+<span class="co">##  Mean   : 3.32  </span>
+<span class="co">##  3rd Qu.: 3.83  </span>
+<span class="co">##  Max.   :21.25  </span>
+<span class="co">##  NA's   :31717  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from  to offset    delta                       refsys point values    </span>
+<span class="co">## x    1 416 123829  1943.82 PROJCS["NAD83 / North Car... FALSE   NULL [x]</span>
+<span class="co">## y    1 157 318260 -1943.82 PROJCS["NAD83 / North Car... FALSE   NULL [y]</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">nc.st</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>deltax</code> and <code>deltay</code> parameters.</p>
 </div>
@@ -139,88 +139,85 @@
 <a href="#vectorizing-a-raster-object-to-an-sf-object" class="anchor"></a>Vectorizing a raster object to an <code>sf</code> object</h1>
 <p><code>stars</code> objects can be converted into an <code>sf</code> object using <code>st_as_sf</code>. It has a number of options, depending on whether pixels represent the point value at the pixel center, or small square polygons with a single value.</p>
 <p>We will work again with the landsat-7 6-band image, but will select the first band and round the values:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">tif =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">x =<span class="st"> </span><span class="kw"><a href="../reference/read_stars.html">read_stars</a></span>(tif)[, <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">x[[<span class="dv">1</span>]] =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(x[[<span class="dv">1</span>]]<span class="op">/</span><span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">tif</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>)
+<span class="no">x</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">tif</span>)[, <span class="fl">1</span>:<span class="fl">50</span>, <span class="fl">1</span>:<span class="fl">50</span>, <span class="fl">1</span>:<span class="fl">2</span>]
+<span class="no">x</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">x</span><span class="kw">[[</span><span class="fl">1</span>]]/<span class="fl">5</span>)</pre></body></html></div>
 <div id="polygonizing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#polygonizing" class="anchor"></a>Polygonizing</h2>
 <p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">l =<span class="st">  </span><span class="kw"><a href="../reference/st_contour.html">st_contour</a></span>(x,<span class="dt">contour_lines=</span><span class="ot">TRUE</span>, <span class="dt">breaks =</span> <span class="dv">8</span><span class="op">:</span><span class="dv">14</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="../reference/plot.html">plot</a></span>(l, <span class="dt">key.pos =</span> <span class="dv">1</span>, <span class="dt">pal =</span> <span class="kw">sf.colors</span>(<span class="dv">6</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">key.length =</span> <span class="fl">0.8</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">l</span> <span class="kw">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span>(<span class="no">x</span>,<span class="kw">contour_lines</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">breaks</span> <span class="kw">=</span> <span class="fl">8</span>:<span class="fl">14</span>)
+<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">l</span>, <span class="kw">key.pos</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">pal</span> <span class="kw">=</span> <span class="fu">sf.colors</span>(<span class="fl">6</span>), <span class="kw">lwd</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">key.length</span> <span class="kw">=</span> <span class="fl">0.8</span>)</pre></body></html></div>
 </div>
 <div id="exporting-to-points" class="section level2">
 <h2 class="hasAnchor">
 <a href="#exporting-to-points" class="anchor"></a>Exporting to points</h2>
 <p>Alternatively, we can simply export all the pixels as points, and get them either as a wide table with all bands per point, and no replicated <code>POINT</code> geometries:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(x, <span class="dt">as_points =</span> <span class="ot">TRUE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">## Simple feature collection with 2500 features and 2 fields</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">## geometry type:  POINT</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">## dimension:      XY</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">## epsg (SRID):    NA</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">## proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">## First 10 features:</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">## 1              14             11 POINT (288790.5 9120747)</a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">## 2              14             11   POINT (288819 9120747)</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">## 3              13             10 POINT (288847.5 9120747)</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">## 4              12              9   POINT (288876 9120747)</a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">## 5              12             10 POINT (288904.5 9120747)</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">## 6              12             10   POINT (288933 9120747)</a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">## 7              12             10 POINT (288961.5 9120747)</a>
-<a class="sourceLine" id="cb4-17" data-line-number="17">## 8              12             10   POINT (288990 9120747)</a>
-<a class="sourceLine" id="cb4-18" data-line-number="18">## 9              13             10 POINT (289018.5 9120747)</a>
-<a class="sourceLine" id="cb4-19" data-line-number="19">## 10             13             10   POINT (289047 9120747)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(<span class="no">x</span>, <span class="kw">as_points</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">merge</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="co">## Simple feature collection with 2500 features and 2 fields</span>
+<span class="co">## geometry type:  POINT</span>
+<span class="co">## dimension:      XY</span>
+<span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
+<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## First 10 features:</span>
+<span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</span>
+<span class="co">## 1              14             11 POINT (288790.5 9120747)</span>
+<span class="co">## 2              14             11   POINT (288819 9120747)</span>
+<span class="co">## 3              13             10 POINT (288847.5 9120747)</span>
+<span class="co">## 4              12              9   POINT (288876 9120747)</span>
+<span class="co">## 5              12             10 POINT (288904.5 9120747)</span>
+<span class="co">## 6              12             10   POINT (288933 9120747)</span>
+<span class="co">## 7              12             10 POINT (288961.5 9120747)</span>
+<span class="co">## 8              12             10   POINT (288990 9120747)</span>
+<span class="co">## 9              13             10 POINT (289018.5 9120747)</span>
+<span class="co">## 10             13             10   POINT (289047 9120747)</span></pre></body></html></div>
 <p>or as a long table with a single attribute and all points replicated:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(x, <span class="dt">as_points =</span> <span class="ot">TRUE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>, <span class="dt">long =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">## Simple feature collection with 5000 features and 2 fields</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">## geometry type:  POINT</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">## dimension:      XY</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">## epsg (SRID):    NA</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">## proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">## First 10 features:</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">##    band L7_ETMs.tif                 geometry</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">## 1     1          14 POINT (288790.5 9120747)</a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">## 2     1          14   POINT (288819 9120747)</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">## 3     1          13 POINT (288847.5 9120747)</a>
-<a class="sourceLine" id="cb5-13" data-line-number="13">## 4     1          12   POINT (288876 9120747)</a>
-<a class="sourceLine" id="cb5-14" data-line-number="14">## 5     1          12 POINT (288904.5 9120747)</a>
-<a class="sourceLine" id="cb5-15" data-line-number="15">## 6     1          12   POINT (288933 9120747)</a>
-<a class="sourceLine" id="cb5-16" data-line-number="16">## 7     1          12 POINT (288961.5 9120747)</a>
-<a class="sourceLine" id="cb5-17" data-line-number="17">## 8     1          12   POINT (288990 9120747)</a>
-<a class="sourceLine" id="cb5-18" data-line-number="18">## 9     1          13 POINT (289018.5 9120747)</a>
-<a class="sourceLine" id="cb5-19" data-line-number="19">## 10    1          13   POINT (289047 9120747)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(<span class="no">x</span>, <span class="kw">as_points</span> <span class="kw">=</span> <span class="fl">TRUE</span>, <span class="kw">merge</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">long</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="co">## Simple feature collection with 5000 features and 2 fields</span>
+<span class="co">## geometry type:  POINT</span>
+<span class="co">## dimension:      XY</span>
+<span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
+<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## First 10 features:</span>
+<span class="co">##    band L7_ETMs.tif                 geometry</span>
+<span class="co">## 1     1          14 POINT (288790.5 9120747)</span>
+<span class="co">## 2     1          14   POINT (288819 9120747)</span>
+<span class="co">## 3     1          13 POINT (288847.5 9120747)</span>
+<span class="co">## 4     1          12   POINT (288876 9120747)</span>
+<span class="co">## 5     1          12 POINT (288904.5 9120747)</span>
+<span class="co">## 6     1          12   POINT (288933 9120747)</span>
+<span class="co">## 7     1          12 POINT (288961.5 9120747)</span>
+<span class="co">## 8     1          12   POINT (288990 9120747)</span>
+<span class="co">## 9     1          13 POINT (289018.5 9120747)</span>
+<span class="co">## 10    1          13   POINT (289047 9120747)</span></pre></body></html></div>
 <p>as we can see, an additional attribute <code>band</code> now indicates which band is concerned.</p>
 </div>
 <div id="exporting-to-polygons" class="section level2">
 <h2 class="hasAnchor">
 <a href="#exporting-to-polygons" class="anchor"></a>Exporting to polygons</h2>
 <p>Alternatively, we can export to polygons and either get a single polygon per pixel, as in</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(x[<span class="dv">1</span>], <span class="dt">as_points =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">## Simple feature collection with 2500 features and 2 fields</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">## geometry type:  POLYGON</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">## dimension:      XY</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">## bbox:           xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">## epsg (SRID):    NA</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">## proj4string:    +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">## First 10 features:</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</a>
-<a class="sourceLine" id="cb6-10" data-line-number="10">## 1              14             11 POLYGON ((288776.3 9120761,...</a>
-<a class="sourceLine" id="cb6-11" data-line-number="11">## 2              14             11 POLYGON ((288804.8 9120761,...</a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">## 3              13             10 POLYGON ((288833.3 9120761,...</a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">## 4              12              9 POLYGON ((288861.8 9120761,...</a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">## 5              12             10 POLYGON ((288890.3 9120761,...</a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">## 6              12             10 POLYGON ((288918.8 9120761,...</a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">## 7              12             10 POLYGON ((288947.3 9120761,...</a>
-<a class="sourceLine" id="cb6-17" data-line-number="17">## 8              12             10 POLYGON ((288975.8 9120761,...</a>
-<a class="sourceLine" id="cb6-18" data-line-number="18">## 9              13             10 POLYGON ((289004.3 9120761,...</a>
-<a class="sourceLine" id="cb6-19" data-line-number="19">## 10             13             10 POLYGON ((289032.8 9120761,...</a></code></pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(<span class="no">x</span>[<span class="fl">1</span>], <span class="kw">as_points</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">merge</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+<span class="co">## Simple feature collection with 2500 features and 2 fields</span>
+<span class="co">## geometry type:  POLYGON</span>
+<span class="co">## dimension:      XY</span>
+<span class="co">## bbox:           xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span>
+<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## First 10 features:</span>
+<span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</span>
+<span class="co">## 1              14             11 POLYGON ((288776.3 9120761,...</span>
+<span class="co">## 2              14             11 POLYGON ((288804.8 9120761,...</span>
+<span class="co">## 3              13             10 POLYGON ((288833.3 9120761,...</span>
+<span class="co">## 4              12              9 POLYGON ((288861.8 9120761,...</span>
+<span class="co">## 5              12             10 POLYGON ((288890.3 9120761,...</span>
+<span class="co">## 6              12             10 POLYGON ((288918.8 9120761,...</span>
+<span class="co">## 7              12             10 POLYGON ((288947.3 9120761,...</span>
+<span class="co">## 8              12             10 POLYGON ((288975.8 9120761,...</span>
+<span class="co">## 9              13             10 POLYGON ((289004.3 9120761,...</span>
+<span class="co">## 10             13             10 POLYGON ((289032.8 9120761,...</span></pre></body></html></div>
 <p>or merge polygons that have identical pixel values;</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">p =<span class="st"> </span><span class="kw"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(x, <span class="dt">as_points =</span> <span class="ot">FALSE</span>, <span class="dt">merge =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span>(<span class="no">x</span>, <span class="kw">as_points</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">merge</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p>When plotted with boundaries, we see the resolved boundaries of areas with the same pixel value:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(p)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">p</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>A further option <code>connect8</code> can be set to <code>TRUE</code> to use 8 connectedness, rather than the default 4 connectedness algorithm. In both cases, the polygons returned will often be invalid according to the simple feature standard, but can be made valid using <code><a href="https://rdrr.io/pkg/lwgeom/man/valid.html">lwgeom::st_make_valid</a></code>.</p>
 </div>
@@ -229,24 +226,24 @@
 <h1 class="hasAnchor">
 <a href="#switching-between-vector-and-raster-in-stars-objects" class="anchor"></a>Switching between vector and raster in <code>stars</code> objects</h1>
 <p>We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a <code>stars</code> object by</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">x.sf =<span class="st"> </span><span class="kw"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span>(x, <span class="dt">as_points =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">x.sf</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">##   L7_ETMs.tif   </a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">##  Min.   : 7.00  </a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">##  1st Qu.: 9.00  </a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">##  Median :11.00  </a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">##  Mean   :11.25  </a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">##  3rd Qu.:12.00  </a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">##  Max.   :28.00  </a>
-<a class="sourceLine" id="cb9-12" data-line-number="12">## dimension(s):</a>
-<a class="sourceLine" id="cb9-13" data-line-number="13">##          from   to offset delta                       refsys point</a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">## geometry    1 2500     NA    NA +proj=utm +zone=25 +south...  TRUE</a>
-<a class="sourceLine" id="cb9-15" data-line-number="15">## band        1    2     NA    NA                           NA    NA</a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">##                                                       values</a>
-<a class="sourceLine" id="cb9-17" data-line-number="17">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</a>
-<a class="sourceLine" id="cb9-18" data-line-number="18">## band                                                    NULL</a></code></pre></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">x.sf</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span>(<span class="no">x</span>, <span class="kw">as_points</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="no">x.sf</span>
+<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##   L7_ETMs.tif   </span>
+<span class="co">##  Min.   : 7.00  </span>
+<span class="co">##  1st Qu.: 9.00  </span>
+<span class="co">##  Median :11.00  </span>
+<span class="co">##  Mean   :11.25  </span>
+<span class="co">##  3rd Qu.:12.00  </span>
+<span class="co">##  Max.   :28.00  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##          from   to offset delta                       refsys point</span>
+<span class="co">## geometry    1 2500     NA    NA PROJCS["UTM Zone 25, Sout...  TRUE</span>
+<span class="co">## band        1    2     NA    NA                           NA    NA</span>
+<span class="co">##                                                       values</span>
+<span class="co">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</span>
+<span class="co">## band                                                    NULL</span></pre></body></html></div>
 <p>which also requires setting the <code>as_points</code> arguments as in <code>st_as_sf</code>.</p>
 </div>
 <div id="reprojecting-a-raster" class="section level1">
@@ -254,27 +251,27 @@
 <a href="#reprojecting-a-raster" class="anchor"></a>Reprojecting a raster</h1>
 <p>If we accept that curvilinear rasters are rasters too, and that regular and rectilinear grids are special cases of curvilinear grids, reprojecting a raster is no longer a “problem”, it just recomputes new coordinates for every raster cell, and generally results in a curvilinear grid (that sometimes can be brought back to a regular or rectilinear grid). If curvilinear grid cells are represented by coordinates of the cell center, the actual shape of a grid cell gets lost, and this may be a larger effect if grid cells are large or if the transformation is stronger non-linear.</p>
 <p>An example of the reprojection of the grid created above is</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">nc.st <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span>) -&gt;<span class="st"> </span>nc.curv</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">nc.curv</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">##  dens [1/km^2]  </a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">##  Min.   : 0.25  </a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">##  1st Qu.: 1.22  </a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">##  Median : 1.93  </a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">##  Mean   : 3.32  </a>
-<a class="sourceLine" id="cb10-10" data-line-number="10">##  3rd Qu.: 3.83  </a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">##  Max.   :21.25  </a>
-<a class="sourceLine" id="cb10-12" data-line-number="12">##  NA's   :31717  </a>
-<a class="sourceLine" id="cb10-13" data-line-number="13">## dimension(s):</a>
-<a class="sourceLine" id="cb10-14" data-line-number="14">##   from  to offset delta                       refsys point</a>
-<a class="sourceLine" id="cb10-15" data-line-number="15">## x    1 416     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
-<a class="sourceLine" id="cb10-16" data-line-number="16">## y    1 157     NA    NA +proj=laea +lat_0=34 +lon... FALSE</a>
-<a class="sourceLine" id="cb10-17" data-line-number="17">##                            values    </a>
-<a class="sourceLine" id="cb10-18" data-line-number="18">## x [416x157] -2212729,...,-1371162 [x]</a>
-<a class="sourceLine" id="cb10-19" data-line-number="19">## y    [416x157] 88931.4,...,540012 [y]</a>
-<a class="sourceLine" id="cb10-20" data-line-number="20">## curvilinear grid</a>
-<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nc.curv, <span class="dt">border =</span> <span class="ot">NA</span>, <span class="dt">graticule =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">nc.st</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span>) <span class="kw">-&gt;</span> <span class="no">nc.curv</span>
+<span class="no">nc.curv</span>
+<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##  dens [1/km^2]  </span>
+<span class="co">##  Min.   : 0.25  </span>
+<span class="co">##  1st Qu.: 1.22  </span>
+<span class="co">##  Median : 1.93  </span>
+<span class="co">##  Mean   : 3.32  </span>
+<span class="co">##  3rd Qu.: 3.83  </span>
+<span class="co">##  Max.   :21.25  </span>
+<span class="co">##  NA's   :31717  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from  to offset delta                       refsys point</span>
+<span class="co">## x    1 416     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
+<span class="co">## y    1 157     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
+<span class="co">##                            values    </span>
+<span class="co">## x [416x157] -2212729,...,-1371162 [x]</span>
+<span class="co">## y    [416x157] 88931.4,...,540012 [y]</span>
+<span class="co">## curvilinear grid</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">nc.curv</span>, <span class="kw">border</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">graticule</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>where it should be noted that the dimensionality of the grid didn’t change: the same set of raster cells has been replotted in the new CRS, but now in a curvilinear grid.</p>
 </div>
@@ -282,51 +279,36 @@
 <h1 class="hasAnchor">
 <a href="#warping-a-raster" class="anchor"></a>Warping a raster</h1>
 <p>Warping a raster means creating a new <em>regular</em> grid in a new CRS, based on a (usually regular) grid in another CRS. We can do the transformation of the previous section by first creating a target grid:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">nc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">st_bbox</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="../reference/st_as_stars.html">st_as_stars</a></span>() -&gt;<span class="st"> </span>newgrid</a></code></pre></div>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">nc</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span>) <span class="kw">%&gt;%</span> <span class="fu">st_bbox</span>() <span class="kw">%&gt;%</span>
+    <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span>() <span class="kw">-&gt;</span> <span class="no">newgrid</span></pre></body></html></div>
 <p>and then warping the old raster to the new</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">nc.st <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/st_warp.html">st_warp</a></span>(newgrid) -&gt;<span class="st"> </span>nc.new</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">nc.new </a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">##  dens [1/km^2]  </a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">##  Min.   : 0.25  </a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">##  1st Qu.: 1.22  </a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">##  Median : 1.93  </a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">##  Mean   : 3.32  </a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">##  3rd Qu.: 3.83  </a>
-<a class="sourceLine" id="cb12-11" data-line-number="11">##  Max.   :21.25  </a>
-<a class="sourceLine" id="cb12-12" data-line-number="12">##  NA's   :36136  </a>
-<a class="sourceLine" id="cb12-13" data-line-number="13">## dimension(s):</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14">##   from  to   offset    delta                       refsys point values    </a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">## x    1 380 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</a>
-<a class="sourceLine" id="cb12-16" data-line-number="16">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [y]</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="kw"><a href="../reference/plot.html">plot</a></span>(nc.new)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">nc.st</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span>(<span class="no">newgrid</span>) <span class="kw">-&gt;</span> <span class="no">nc.new</span>
+<span class="no">nc.new</span>
+<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##  dens [1/km^2]  </span>
+<span class="co">##  Min.   : 0.25  </span>
+<span class="co">##  1st Qu.: 1.22  </span>
+<span class="co">##  Median : 1.93  </span>
+<span class="co">##  Mean   : 3.32  </span>
+<span class="co">##  3rd Qu.: 3.83  </span>
+<span class="co">##  Max.   :21.25  </span>
+<span class="co">##  NA's   :36136  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from  to   offset    delta                       refsys point values    </span>
+<span class="co">## x    1 380 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</span>
+<span class="co">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [y]</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">nc.new</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>This new object has a regular grid in the new CRS, aligned with the new x- and y-axes.</p>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object</a></li>
-      <li>
-<a href="#vectorizing-a-raster-object-to-an-sf-object">Vectorizing a raster object to an <code>sf</code> object</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#polygonizing">Polygonizing</a></li>
-      <li><a href="#exporting-to-points">Exporting to points</a></li>
-      <li><a href="#exporting-to-polygons">Exporting to polygons</a></li>
-      </ul>
-</li>
-      <li><a href="#switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code> objects</a></li>
-      <li><a href="#reprojecting-a-raster">Reprojecting a raster</a></li>
-      <li><a href="#warping-a-raster">Warping a raster</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -337,7 +319,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

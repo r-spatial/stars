@@ -6,21 +6,21 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spatiotemporal Arrays, Raster and Vector Data Cubes • stars</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Spatiotemporal Arrays, Raster and Vector Data Cubes">
 <meta property="og:description" content="Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in R, using GDAL
     bindings provided by sf, and NetCDF bindings by ncmeta and RNetCDF.">
-<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-1</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -117,15 +117,15 @@
 <p>By data cubes however we also consider higher-dimensional cubes (hypercubes) such as a five-dimensional cube where in addition to time, spectral band and sensor form dimensions:</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png" width="50%"></p>
 <p>or lower-dimensional cubes such as a raster image:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr))</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co"># Loading required package: abind</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># Loading required package: sf</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># Linking to GEOS 3.8.0, GDAL 3.0.2, PROJ 6.2.1</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">tif =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="reference/read_stars.html">read_stars</a></span>(tif) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span>, <span class="dt">along =</span> <span class="st">"band"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stars</span>)
+<span class="co"># Loading required package: abind</span>
+<span class="co"># Loading required package: sf</span>
+<span class="co"># Linking to GEOS 3.8.0, GDAL 3.0.2, PROJ 6.2.1</span>
+<span class="no">tif</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>)
+<span class="fu"><a href="reference/read_stars.html">read_stars</a></span>(<span class="no">tif</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="kw">index</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">along</span> <span class="kw">=</span> <span class="st">"band"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="reference/plot.html">plot</a></span>()</pre></div>
 <p><img src="reference/figures/README-plot1-1.png"></p>
 <p>Raster data do not need to be regular and aligned with North/East, and package <code>stars</code> supports besides <em>regular</em> also <em>rotated</em>, <em>sheared</em>, <em>rectilinear</em> and <em>curvilinear</em> rasters:</p>
 <p><img src="reference/figures/README-plot2-1.png"></p>
@@ -145,66 +145,66 @@
 <a href="#out-of-memory-on-disk-rasters" class="anchor"></a>Out-of-memory (on-disk) rasters</h2>
 <p>Package <code>stars</code> provides <code>stars_proxy</code> objects (currently only when read through GDAL), which contain only the dimensions metadata and pointers to the files on disk. These objects work lazily: reading and processing data is postponed to the moment that pixels are really needed (at plot time, or when writing to disk), and is done at the lowest spatial resolution possible that still fulfills the resolution of the graphics device. More details are found in the <a href="https://r-spatial.github.io/stars/articles/stars2.html">stars proxy vignette</a>.</p>
 <p>The following methods are currently available for <code>stars_proxy</code> objects:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars_proxy"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#  [1] [              adrop          aggregate      aperm          as.data.frame </span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#  [6] c              coerce         dim            filter         initialize    </span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># [11] Math           merge          mutate         Ops            plot          </span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># [16] predict        print          pull           select         show          </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># [21] slice          slotsFromS3    split          st_apply       st_as_stars   </span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># [26] st_crop        st_redimension write_stars   </span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co"># see '?methods' for accessing help and source code</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"stars_proxy"</span>)
+<span class="co">#  [1] [              adrop          aggregate      aperm          as.data.frame </span>
+<span class="co">#  [6] c              coerce         dim            filter         initialize    </span>
+<span class="co"># [11] Math           merge          mutate         Ops            plot          </span>
+<span class="co"># [16] predict        print          pull           select         show          </span>
+<span class="co"># [21] slice          slotsFromS3    split          st_apply       st_as_stars   </span>
+<span class="co"># [26] st_crop        st_redimension write_stars   </span>
+<span class="co"># see '?methods' for accessing help and source code</span></pre></div>
 </div>
 <div id="raster-and-vector-time-series-analysis-example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#raster-and-vector-time-series-analysis-example" class="anchor"></a>Raster and vector time series analysis example</h2>
 <p>In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and the first 12 time steps are plotted:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">prec_file =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/test_stageiv_xyt.nc"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">(<span class="dt">prec =</span> <span class="kw"><a href="reference/read_ncdf.html">read_ncdf</a></span>(prec_file, <span class="dt">curvilinear =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="dt">ignore_bounds =</span> <span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># other available variables:</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#  time_bounds, lon, lat, time</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co"># No projection information found in nc file. </span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#  Coordinate variable units found to be degrees, </span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#  assuming WGS84 Lat/Lon.</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co"># stars object with 3 dimensions and 1 attribute</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co"># attribute(s):</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#  Min.   :  0.000                                         </span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#  1st Qu.:  0.000                                         </span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#  Median :  0.750                                         </span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#  Mean   :  4.143                                         </span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#  3rd Qu.:  4.630                                         </span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#  Max.   :163.750                                         </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co"># dimension(s):</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#      from  to                  offset   delta                       refsys</span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co"># x       1  87                      NA      NA +proj=longlat +datum=WGS8...</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co"># y       1 118                      NA      NA +proj=longlat +datum=WGS8...</span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co"># time    1  23 2018-09-13 18:30:00 UTC 1 hours                      POSIXct</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#      point                         values    </span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co"># x       NA [87x118] -80.6113,...,-74.8822 [x]</span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co"># y       NA   [87x118] 32.4413,...,37.6193 [y]</span></a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co"># time    NA                           NULL    </span></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co"># curvilinear grid</span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28">sf<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/sf/man/st_read.html">read_sf</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="dt">package =</span> <span class="st">"sf"</span>), <span class="st">"nc.gpkg"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="st">  </span><span class="kw"><a href="reference/st_transform.html">st_transform</a></span>(<span class="kw">st_crs</span>(prec)) -&gt;<span class="st"> </span>nc <span class="co"># transform from NAD27 to WGS84</span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30">nc_outline =<span class="st"> </span><span class="kw">st_union</span>(<span class="kw">st_geometry</span>(nc))</a>
-<a class="sourceLine" id="cb3-31" data-line-number="31">plot_hook =<span class="st"> </span><span class="cf">function</span>() <span class="kw"><a href="reference/plot.html">plot</a></span>(nc_outline, <span class="dt">border =</span> <span class="st">'red'</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb3-32" data-line-number="32">prec <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">along =</span> <span class="st">"time"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">downsample =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">1</span>), <span class="dt">hook =</span> plot_hook)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="r"><span class="no">prec_file</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/test_stageiv_xyt.nc"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>)
+(<span class="no">prec</span> <span class="kw">=</span> <span class="fu"><a href="reference/read_ncdf.html">read_ncdf</a></span>(<span class="no">prec_file</span>, <span class="kw">curvilinear</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="kw">ignore_bounds</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
+<span class="co"># no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span>
+<span class="co"># other available variables:</span>
+<span class="co">#  time_bounds, lon, lat, time</span>
+<span class="co"># No projection information found in nc file. </span>
+<span class="co">#  Coordinate variable units found to be degrees, </span>
+<span class="co">#  assuming WGS84 Lat/Lon.</span>
+<span class="co"># stars object with 3 dimensions and 1 attribute</span>
+<span class="co"># attribute(s):</span>
+<span class="co">#  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]</span>
+<span class="co">#  Min.   :  0.000                                         </span>
+<span class="co">#  1st Qu.:  0.000                                         </span>
+<span class="co">#  Median :  0.750                                         </span>
+<span class="co">#  Mean   :  4.143                                         </span>
+<span class="co">#  3rd Qu.:  4.630                                         </span>
+<span class="co">#  Max.   :163.750                                         </span>
+<span class="co"># dimension(s):</span>
+<span class="co">#      from  to                  offset   delta                       refsys</span>
+<span class="co"># x       1  87                      NA      NA +proj=longlat +datum=WGS8...</span>
+<span class="co"># y       1 118                      NA      NA +proj=longlat +datum=WGS8...</span>
+<span class="co"># time    1  23 2018-09-13 18:30:00 UTC 1 hours                      POSIXct</span>
+<span class="co">#      point                         values    </span>
+<span class="co"># x       NA [87x118] -80.6113,...,-74.8822 [x]</span>
+<span class="co"># y       NA   [87x118] 32.4413,...,37.6193 [y]</span>
+<span class="co"># time    NA                           NULL    </span>
+<span class="co"># curvilinear grid</span>
+<span class="kw pkg">sf</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/sf/man/st_read.html">read_sf</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"gpkg/nc.gpkg"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"sf"</span>), <span class="st">"nc.gpkg"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="reference/st_transform.html">st_transform</a></span>(<span class="fu">st_crs</span>(<span class="no">prec</span>)) <span class="kw">-&gt;</span> <span class="no">nc</span> <span class="co"># transform from NAD27 to WGS84</span>
+<span class="no">nc_outline</span> <span class="kw">=</span> <span class="fu">st_union</span>(<span class="fu">st_geometry</span>(<span class="no">nc</span>))
+<span class="no">plot_hook</span> <span class="kw">=</span> <span class="kw">function</span>() <span class="fu"><a href="reference/plot.html">plot</a></span>(<span class="no">nc_outline</span>, <span class="kw">border</span> <span class="kw">=</span> <span class="st">'red'</span>, <span class="kw">add</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="no">prec</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="kw">index</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">12</span>, <span class="kw">along</span> <span class="kw">=</span> <span class="st">"time"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="reference/plot.html">plot</a></span>(<span class="kw">downsample</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">1</span>), <span class="kw">hook</span> <span class="kw">=</span> <span class="no">plot_hook</span>)</pre></div>
 <p><img src="reference/figures/README-plot3-1.png"></p>
 <p>and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">a =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span>(prec, <span class="dt">by =</span> nc, <span class="dt">FUN =</span> max)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="reference/plot.html">plot</a></span>(a, <span class="dt">max.plot =</span> <span class="dv">23</span>, <span class="dt">border =</span> <span class="st">'grey'</span>, <span class="dt">lwd =</span> <span class="fl">.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="r"><span class="no">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span>(<span class="no">prec</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="no">nc</span>, <span class="kw">FUN</span> <span class="kw">=</span> <span class="no">max</span>)
+<span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span>
+<span class="co"># although coordinates are longitude/latitude, st_intersects assumes that they are planar</span>
+<span class="fu"><a href="reference/plot.html">plot</a></span>(<span class="no">a</span>, <span class="kw">max.plot</span> <span class="kw">=</span> <span class="fl">23</span>, <span class="kw">border</span> <span class="kw">=</span> <span class="st">'grey'</span>, <span class="kw">lwd</span> <span class="kw">=</span> <span class="fl">.5</span>)</pre></div>
 <p><img src="reference/figures/README-plot4-1.png"></p>
 <p>We can integrate over (reduce) time, for instance to find out <em>when</em> the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">index_max =<span class="st"> </span><span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/all.html">all</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(x)), <span class="ot">NA</span>, <span class="kw"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span>(x))</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="reference/st_apply.html">st_apply</a></span>(a, <span class="st">"geom"</span>, index_max) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">when =</span> <span class="kw"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span>(a, <span class="st">"time"</span>)[.<span class="op">$</span>index_max]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(when) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="reference/plot.html">plot</a></span>(<span class="dt">key.pos =</span> <span class="dv">1</span>, <span class="dt">main =</span> <span class="st">"time of maximum precipitation"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="no">index_max</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">x</span>)), <span class="fl">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span>(<span class="no">x</span>))
+<span class="fu"><a href="reference/st_apply.html">st_apply</a></span>(<span class="no">a</span>, <span class="st">"geom"</span>, <span class="no">index_max</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">when</span> <span class="kw">=</span> <span class="fu"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span>(<span class="no">a</span>, <span class="st">"time"</span>)[<span class="no">.</span>$<span class="no">index_max</span>]) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">when</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="reference/plot.html">plot</a></span>(<span class="kw">key.pos</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">main</span> <span class="kw">=</span> <span class="st">"time of maximum precipitation"</span>)</pre></div>
 <p><img src="reference/figures/README-plot5-1.png"></p>
 </div>
 <div id="other-packages-for-data-cubes" class="section level2">
@@ -263,13 +263,13 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=stars">https://​cloud.r-project.org/​package=stars</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/r-spatial/stars">https://​github.com/​r-spatial/​stars</a>
+<li>Browse source code at <br><a href="https://github.com/r-spatial/stars/">https://​github.com/​r-spatial/​stars/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/r-spatial/stars/issues/">https://​github.com/​r-spatial/​stars/​issues/​</a>
 </li>
@@ -284,7 +284,7 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
+<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -310,7 +310,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

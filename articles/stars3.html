@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3. stars tidyverse methods • stars</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="3. stars tidyverse methods">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="stars">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-1</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars">
+  <a href="https://github.com/r-spatial/stars/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -94,7 +94,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>3. stars tidyverse methods</h1>
+      <h1 data-toc-skip>3. stars tidyverse methods</h1>
                         <h4 class="author">Edzer Pebesma</h4>
             
       
@@ -107,74 +107,74 @@
     
 <p>This vignette shows how some of the tidyverse verbs can be used on <code>stars</code> objects.</p>
 <p>The <code>stars</code> and <code>tidyverse</code> packages are loaded by</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(stars)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">## Loading required package: abind</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">## Loading required package: sf</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">## </a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">## Attaching package: 'dplyr'</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">## The following objects are masked from 'package:stats':</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">## </a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">##     filter, lag</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">## The following objects are masked from 'package:base':</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">## </a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">##     intersect, setdiff, setequal, union</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stars</span>)
+<span class="co">## Loading required package: abind</span>
+<span class="co">## Loading required package: sf</span>
+<span class="co">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="co">## </span>
+<span class="co">## Attaching package: 'dplyr'</span>
+<span class="co">## The following objects are masked from 'package:stats':</span>
+<span class="co">## </span>
+<span class="co">##     filter, lag</span>
+<span class="co">## The following objects are masked from 'package:base':</span>
+<span class="co">## </span>
+<span class="co">##     intersect, setdiff, setequal, union</span></pre></body></html></div>
 <p>Methods now available for class <code>stars</code> are</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="dt">class =</span> <span class="st">"stars"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">##  [1] [                 [&lt;-               $&lt;-               adrop            </a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">##  [5] aggregate         aperm             as_tibble         as.data.frame    </a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">##  [9] as.tbl_cube       c                 coerce            contour          </a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">## [13] cut               dim               dimnames          dimnames&lt;-       </a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">## [17] droplevels        filter            image             initialize       </a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">## [21] is.na             Math              merge             mutate           </a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">## [25] Ops               plot              predict           print            </a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">## [29] pull              select            show              slice            </a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">## [33] slotsFromS3       split             st_apply          st_area          </a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">## [37] st_as_sf          st_as_sfc         st_as_stars       st_bbox          </a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">## [41] st_coordinates    st_crop           st_crs            st_crs&lt;-         </a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">## [45] st_dimensions     st_geometry       st_interpolate_aw st_intersects    </a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">## [49] st_join           st_mosaic         st_normalize      st_redimension   </a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">## [53] st_sample         st_transform_proj st_transform      write_stars      </a>
-<a class="sourceLine" id="cb2-16" data-line-number="16">## see '?methods' for accessing help and source code</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"stars"</span>)
+<span class="co">##  [1] [                 [&lt;-               $&lt;-               adrop            </span>
+<span class="co">##  [5] aggregate         aperm             as_tibble         as.data.frame    </span>
+<span class="co">##  [9] as.tbl_cube       c                 coerce            contour          </span>
+<span class="co">## [13] cut               dim               dimnames          dimnames&lt;-       </span>
+<span class="co">## [17] droplevels        filter            image             initialize       </span>
+<span class="co">## [21] is.na             Math              merge             mutate           </span>
+<span class="co">## [25] Ops               plot              predict           print            </span>
+<span class="co">## [29] pull              select            show              slice            </span>
+<span class="co">## [33] slotsFromS3       split             st_apply          st_area          </span>
+<span class="co">## [37] st_as_sf          st_as_sfc         st_as_stars       st_bbox          </span>
+<span class="co">## [41] st_coordinates    st_crop           st_crs            st_crs&lt;-         </span>
+<span class="co">## [45] st_dimensions     st_geometry       st_interpolate_aw st_intersects    </span>
+<span class="co">## [49] st_join           st_mosaic         st_normalize      st_redimension   </span>
+<span class="co">## [53] st_sample         st_transform_proj st_transform      write_stars      </span>
+<span class="co">## see '?methods' for accessing help and source code</span></pre></body></html></div>
 <p>We will work with a three-band section of a landsat image:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="dt">package =</span> <span class="st">"stars"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">    </span>read_stars -&gt;<span class="st"> </span>x</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">x</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">## stars object with 3 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">## attribute(s):</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">##   L7_ETMs.tif    </a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">##  Min.   :  1.00  </a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">##  1st Qu.: 54.00  </a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">##  Median : 69.00  </a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">##  Mean   : 68.91  </a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">##  3rd Qu.: 86.00  </a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">##  Max.   :255.00  </a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">## dimension(s):</a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">##      from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb3-16" data-line-number="16">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb3-17" data-line-number="17">## band    1   6      NA    NA                           NA    NA   NULL</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>) <span class="kw">%&gt;%</span>
+    <span class="no">read_stars</span> <span class="kw">-&gt;</span> <span class="no">x</span>
+<span class="no">x</span>
+<span class="co">## stars object with 3 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##   L7_ETMs.tif    </span>
+<span class="co">##  Min.   :  1.00  </span>
+<span class="co">##  1st Qu.: 54.00  </span>
+<span class="co">##  Median : 69.00  </span>
+<span class="co">##  Mean   : 68.91  </span>
+<span class="co">##  3rd Qu.: 86.00  </span>
+<span class="co">##  Max.   :255.00  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
+<span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
 <div id="slice" class="section level2">
 <h2 class="hasAnchor">
 <a href="#slice" class="anchor"></a><code>slice</code>
 </h2>
 <p><code>slice</code> slices a sub-array out of the cube; this is done by specifying the dimension on which to act, and the slice number.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(band, <span class="dv">6</span>) -&gt;<span class="st"> </span>x6</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">x6</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">## stars object with 2 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">##   L7_ETMs.tif    </a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">##  Min.   :  1.00  </a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">##  1st Qu.: 32.00  </a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">##  Median : 60.00  </a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">##  Mean   : 59.98  </a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">##  3rd Qu.: 88.00  </a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">##  Max.   :255.00  </a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">## dimension(s):</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">##   from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">## x    1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">## y    1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a></code></pre></div>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">x</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="no">band</span>, <span class="fl">6</span>) <span class="kw">-&gt;</span> <span class="no">x6</span>
+<span class="no">x6</span>
+<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##   L7_ETMs.tif    </span>
+<span class="co">##  Min.   :  1.00  </span>
+<span class="co">##  1st Qu.: 32.00  </span>
+<span class="co">##  Median : 60.00  </span>
+<span class="co">##  Mean   : 59.98  </span>
+<span class="co">##  3rd Qu.: 88.00  </span>
+<span class="co">##  Max.   :255.00  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from  to  offset delta                       refsys point values    </span>
+<span class="co">## x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span></pre></body></html></div>
 <p>It returns a lower-dimensional array if a single element is selected along the slice dimension.</p>
 </div>
 <div id="filter" class="section level2">
@@ -182,38 +182,38 @@
 <a href="#filter" class="anchor"></a><code>filter</code>
 </h2>
 <p>Similar to <code>slice</code>, <code>filter</code> selects on dimensions but evaluates their values rather than their index: in</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">289000</span>, x <span class="op">&lt;</span><span class="st"> </span><span class="dv">291000</span>, band <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) -&gt;<span class="st"> </span>x7</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">## Registered S3 methods overwritten by 'cubelyr':</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">##   method                 from </a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">##   as.data.frame.tbl_cube dplyr</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">##   as.table.tbl_cube      dplyr</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">##   as_tibble.tbl_cube     dplyr</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">##   auto_copy.tbl_cube     dplyr</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">##   dim.tbl_cube           dplyr</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">##   group_by.tbl_cube      dplyr</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">##   group_vars.tbl_cube    dplyr</a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">##   groups.tbl_cube        dplyr</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">##   print.tbl_cube         dplyr</a>
-<a class="sourceLine" id="cb5-13" data-line-number="13">##   rename.tbl_cube        dplyr</a>
-<a class="sourceLine" id="cb5-14" data-line-number="14">##   same_src.tbl_cube      dplyr</a>
-<a class="sourceLine" id="cb5-15" data-line-number="15">##   select.tbl_cube        dplyr</a>
-<a class="sourceLine" id="cb5-16" data-line-number="16">##   summarise.tbl_cube     dplyr</a>
-<a class="sourceLine" id="cb5-17" data-line-number="17">##   tbl_vars.tbl_cube      dplyr</a>
-<a class="sourceLine" id="cb5-18" data-line-number="18">x7</a>
-<a class="sourceLine" id="cb5-19" data-line-number="19">## stars object with 3 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb5-20" data-line-number="20">## attribute(s):</a>
-<a class="sourceLine" id="cb5-21" data-line-number="21">##   L7_ETMs.tif    </a>
-<a class="sourceLine" id="cb5-22" data-line-number="22">##  Min.   :  5.00  </a>
-<a class="sourceLine" id="cb5-23" data-line-number="23">##  1st Qu.: 54.00  </a>
-<a class="sourceLine" id="cb5-24" data-line-number="24">##  Median : 70.00  </a>
-<a class="sourceLine" id="cb5-25" data-line-number="25">##  Mean   : 71.79  </a>
-<a class="sourceLine" id="cb5-26" data-line-number="26">##  3rd Qu.: 88.00  </a>
-<a class="sourceLine" id="cb5-27" data-line-number="27">##  Max.   :252.00  </a>
-<a class="sourceLine" id="cb5-28" data-line-number="28">## dimension(s):</a>
-<a class="sourceLine" id="cb5-29" data-line-number="29">##      from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb5-30" data-line-number="30">## x       1  70  289004  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb5-31" data-line-number="31">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb5-32" data-line-number="32">## band    1   3       4     1                           NA    NA   NULL</a></code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">x</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">289000</span>, <span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">291000</span>, <span class="no">band</span> <span class="kw">&gt;</span> <span class="fl">3</span>) <span class="kw">-&gt;</span> <span class="no">x7</span>
+<span class="co">## Registered S3 methods overwritten by 'cubelyr':</span>
+<span class="co">##   method                 from </span>
+<span class="co">##   as.data.frame.tbl_cube dplyr</span>
+<span class="co">##   as.table.tbl_cube      dplyr</span>
+<span class="co">##   as_tibble.tbl_cube     dplyr</span>
+<span class="co">##   auto_copy.tbl_cube     dplyr</span>
+<span class="co">##   dim.tbl_cube           dplyr</span>
+<span class="co">##   group_by.tbl_cube      dplyr</span>
+<span class="co">##   group_vars.tbl_cube    dplyr</span>
+<span class="co">##   groups.tbl_cube        dplyr</span>
+<span class="co">##   print.tbl_cube         dplyr</span>
+<span class="co">##   rename.tbl_cube        dplyr</span>
+<span class="co">##   same_src.tbl_cube      dplyr</span>
+<span class="co">##   select.tbl_cube        dplyr</span>
+<span class="co">##   summarise.tbl_cube     dplyr</span>
+<span class="co">##   tbl_vars.tbl_cube      dplyr</span>
+<span class="no">x7</span>
+<span class="co">## stars object with 3 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##   L7_ETMs.tif    </span>
+<span class="co">##  Min.   :  5.00  </span>
+<span class="co">##  1st Qu.: 54.00  </span>
+<span class="co">##  Median : 70.00  </span>
+<span class="co">##  Mean   : 71.79  </span>
+<span class="co">##  3rd Qu.: 88.00  </span>
+<span class="co">##  Max.   :252.00  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">## x       1  70  289004  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
+<span class="co">## band    1   3       4     1                           NA    NA   NULL</span></pre></body></html></div>
 <p>the subarray is created based on the x <em>coordinate</em> values.</p>
 <p>Note that <code>filter</code> converts the object to a <code>tbl_cube</code>, and uses the <code>dplyr</code> <code>filter</code> method for <code>tbl_cube</code> objects. This has the limitation that <code>stars</code> objects with rectilinear, curvilinear or simple feature geometries cannot be handled. For such objects, using regular <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> selection or using <code>st_crop</code> may be an alternative.</p>
 </div>
@@ -222,55 +222,55 @@
 <a href="#pull" class="anchor"></a><code>pull</code>
 </h2>
 <p><code>pull</code> pulls out an array from a stars object:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="dv">1</span>) -&gt;<span class="st"> </span>x8</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/class.html">class</a></span>(x8)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">## [1] "array"</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(x8)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">##    x    y band </a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">##  349  352    6</a></code></pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">x</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(<span class="fl">1</span>) <span class="kw">-&gt;</span> <span class="no">x8</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">x8</span>)
+<span class="co">## [1] "array"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="no">x8</span>)
+<span class="co">##    x    y band </span>
+<span class="co">##  349  352    6</span></pre></body></html></div>
 </div>
 <div id="mutate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mutate" class="anchor"></a><code>mutate</code>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">band2 =</span> <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>L7_ETMs.tif) -&gt;<span class="st"> </span>x2 </a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">x2</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">## stars object with 3 dimensions and 2 attributes</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">##   L7_ETMs.tif         band2      </a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">##  Min.   :  1.00   Min.   :  2.0  </a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">##  1st Qu.: 54.00   1st Qu.:108.0  </a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">##  Median : 69.00   Median :138.0  </a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">##  Mean   : 68.91   Mean   :137.8  </a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">##  3rd Qu.: 86.00   3rd Qu.:172.0  </a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">##  Max.   :255.00   Max.   :510.0  </a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">## dimension(s):</a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">##      from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb7-14" data-line-number="14">## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb7-15" data-line-number="15">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">## band    1   6      NA    NA                           NA    NA   NULL</a></code></pre></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">x</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">band2</span> <span class="kw">=</span> <span class="fl">2</span> * <span class="no">L7_ETMs.tif</span>) <span class="kw">-&gt;</span> <span class="no">x2</span>
+<span class="no">x2</span>
+<span class="co">## stars object with 3 dimensions and 2 attributes</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##   L7_ETMs.tif         band2      </span>
+<span class="co">##  Min.   :  1.00   Min.   :  2.0  </span>
+<span class="co">##  1st Qu.: 54.00   1st Qu.:108.0  </span>
+<span class="co">##  Median : 69.00   Median :138.0  </span>
+<span class="co">##  Mean   : 68.91   Mean   :137.8  </span>
+<span class="co">##  3rd Qu.: 86.00   3rd Qu.:172.0  </span>
+<span class="co">##  Max.   :255.00   Max.   :510.0  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
+<span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
 </div>
 <div id="select" class="section level2">
 <h2 class="hasAnchor">
 <a href="#select" class="anchor"></a><code>select</code>
 </h2>
 <p><code>select</code> selects an attribute, or a set of attributes:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">x2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(band2) -&gt;<span class="st"> </span>x9</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">x9</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">## stars object with 3 dimensions and 1 attribute</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">## attribute(s):</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">##      band2      </a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">##  Min.   :  2.0  </a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">##  1st Qu.:108.0  </a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">##  Median :138.0  </a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">##  Mean   :137.8  </a>
-<a class="sourceLine" id="cb8-10" data-line-number="10">##  3rd Qu.:172.0  </a>
-<a class="sourceLine" id="cb8-11" data-line-number="11">##  Max.   :510.0  </a>
-<a class="sourceLine" id="cb8-12" data-line-number="12">## dimension(s):</a>
-<a class="sourceLine" id="cb8-13" data-line-number="13">##      from  to  offset delta                       refsys point values    </a>
-<a class="sourceLine" id="cb8-14" data-line-number="14">## x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]</a>
-<a class="sourceLine" id="cb8-15" data-line-number="15">## y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]</a>
-<a class="sourceLine" id="cb8-16" data-line-number="16">## band    1   6      NA    NA                           NA    NA   NULL</a></code></pre></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">x2</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">band2</span>) <span class="kw">-&gt;</span> <span class="no">x9</span>
+<span class="no">x9</span>
+<span class="co">## stars object with 3 dimensions and 1 attribute</span>
+<span class="co">## attribute(s):</span>
+<span class="co">##      band2      </span>
+<span class="co">##  Min.   :  2.0  </span>
+<span class="co">##  1st Qu.:108.0  </span>
+<span class="co">##  Median :138.0  </span>
+<span class="co">##  Mean   :137.8  </span>
+<span class="co">##  3rd Qu.:172.0  </span>
+<span class="co">##  Max.   :510.0  </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
+<span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
 </div>
 <div id="geom_stars" class="section level2">
 <h2 class="hasAnchor">
@@ -283,36 +283,26 @@
 <li>chooses between using <code>geom_raster</code>, <code>geom_rect</code> and <code>geom_sf</code> depending on whether the geometry is regular, rectilinear or has vector geometries</li>
 </ul>
 <p>An example use is</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(viridis)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">## Loading required package: viridisLite</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="../reference/geom_stars.html">geom_stars</a></span>(<span class="dt">data =</span> x) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(<span class="op">~</span>band) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/viridis/man/scale_viridis.html">scale_fill_viridis</a></span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="dt">expand =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_y_discrete</a></span>(<span class="dt">expand =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">viridis</span>)
+<span class="co">## Loading required package: viridisLite</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
+  <span class="fu"><a href="../reference/geom_stars.html">geom_stars</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">x</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span>(~<span class="no">band</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span>() +
+  <span class="fu"><a href="https://rdrr.io/pkg/viridis/man/scale_viridis.html">scale_fill_viridis</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_y_discrete</a></span>(<span class="kw">expand</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>))</pre></body></html></div>
 <p><img src="stars3_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#slice"><code>slice</code></a></li>
-      <li><a href="#filter"><code>filter</code></a></li>
-      <li><a href="#pull"><code>pull</code></a></li>
-      <li><a href="#mutate"><code>mutate</code></a></li>
-      <li><a href="#select"><code>select</code></a></li>
-      <li><a href="#geom_stars"><code>geom_stars</code></a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -323,7 +313,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>
