@@ -22,10 +22,10 @@ transform_curvilinear = function(x, crs, ...) {
 
 	to = crs
 	from = if (sf_extSoftVersion()["proj.4"] < "5.0.0") {
-			to = if (inherits(crs, "crs"))
-					crs$proj4string
-				else
-					stopifnot(is.character(crs))
+			if (inherits(crs, "crs"))
+				to = crs$proj4string
+			else
+				stopifnot(is.character(crs))
 			st_crs(x)$proj4string
 		} else
 			st_crs(x)
