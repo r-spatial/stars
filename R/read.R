@@ -155,9 +155,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		if (length(newdims) && !proxy)
 			dim(data) = c(dim(data)[1:2], newdims)
 
+		# handle color table and/or attribute table
 		ct = meta_data$color_tables
 		at = meta_data$attribute_tables
-		if (!proxy && any(lengths(ct) > 0) || any(lengths(at) > 0)) {
+		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0))) {
 			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
 					meta_data$ranges[1,1]
 				else
