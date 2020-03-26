@@ -28,14 +28,13 @@ transform_curvilinear = function(x, crs, ...) {
 				stopifnot(is.character(crs))
 				crs
 			}
-	} else {
+	} else 
 		from = st_crs(x)
-	}
 
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
-	pts = sf_project(from = from, to = crs, pts = cc)
+	pts = sf_project(from, to, cc)
 	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = st_crs(crs)
 	d[[ xy[1] ]]$values = matrix(pts[,1], dim(x)[xy])
 	d[[ xy[2] ]]$values = matrix(pts[,2], dim(x)[xy])
