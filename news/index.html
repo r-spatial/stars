@@ -143,8 +143,10 @@
 <a href="#version-0-4-1" class="anchor"></a>version 0.4-1<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>adapt to cubelyr split-off from dplyr; <a href="https://github.com/hadley/cubelyr/issues/2" class="uri">https://github.com/hadley/cubelyr/issues/2</a></p></li>
-<li><p>handle color tables read through GDAL; <a href='https://github.com/r-spatial/stars/issues/128'>#128</a></p></li>
+<li><p>depend on sf 0.9-0</p></li>
+<li><p>adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; <a href="https://github.com/hadley/cubelyr/issues/2" class="uri">https://github.com/hadley/cubelyr/issues/2</a></p></li>
+<li><p>add <code>droplevels</code> method</p></li>
+<li><p>handle color tables, category tables and raster attribute tables read through GDAL; <a href='https://github.com/r-spatial/stars/issues/128'>#128</a>, <a href='https://github.com/r-spatial/stars/issues/245'>#245</a>; <a href="https://github.com/r-spatial/mapview/issues/208" class="uri">https://github.com/r-spatial/mapview/issues/208</a></p></li>
 <li><p>handle dimension <code>crs</code> specially, for proxy objects now.</p></li>
 <li><p>handle new-style <code>crs</code> objects from upcoming sf, moving away from proj4strings</p></li>
 <li><p>handle full <code>crs</code> objects as <code>refsys</code> element in a spatial dimensions, rather than proj4string only</p></li>
