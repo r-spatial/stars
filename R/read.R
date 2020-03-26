@@ -156,25 +156,35 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			dim(data) = c(dim(data)[1:2], newdims)
 
 		ct = meta_data$color_tables
-		if (!proxy && any(lengths(ct) > 0)) {
-			ct = ct[[ which(length(ct) > 0)[1] ]]
-			co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
+		at = meta_data$attribute_tables
+		if (!proxy && any(lengths(ct) > 0) || any(lengths(at) > 0)) {
 			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
 					meta_data$ranges[1,1]
 				else
 					min(data, na.rm = TRUE)
-			data = structure(data + (1 - min_value), 
-				levels = as.character(seq_along(co)), colors = co, class = "factor")
-		}
-		at = meta_data$attribute_tables
-		if (!proxy && any(lengths(at) > 0)) {
-			which.at = which(lengths(at) > 0)[1]
-			attr(data, "levels") = if (length(RAT))
-					at[[ which.at ]][[ RAT ]]
-				else {
-					first.char = which(sapply(at[[which.at]], class) == "character")[1]
-					at[[ which.at ]][[ first.char ]]
-				}
+			data[data < min_value] = NA
+			if (min_value < 0)
+				stop("categorical values should have minimum value >= 0")
+			if (any(lengths(ct) > 0)) {
+				ct = ct[[ which(length(ct) > 0)[1] ]]
+				co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
+				if (min_value > 0)
+					co = co[-seq_len(min_value)] # removes [0,...,(min_value-1)]
+				data = structure(data + (1 - min_value), 
+					levels = as.character(seq_along(co)), colors = co, class = "factor")
+			}
+			if (any(lengths(at) > 0)) {
+				which.at = which(lengths(at) > 0)[1]
+				at = if (length(RAT))
+						at[[ which.at ]][[ RAT ]]
+					else {
+						first.char = which(sapply(at[[which.at]], class) == "character")[1]
+						at[[ which.at ]][[ first.char ]]
+					}
+				if (min_value > 0)
+					at = at[-seq_len(min_value)]
+				attr(data, "levels") = at
+			}
 		}
 
 		dims = if (proxy) {
