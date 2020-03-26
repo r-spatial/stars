@@ -1,8 +1,12 @@
 # version 0.4-1
 
-* adapt to cubelyr split-off from dplyr; https://github.com/hadley/cubelyr/issues/2
+* depend on sf 0.9-0 
 
-* handle color tables read through GDAL; #128
+* adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; https://github.com/hadley/cubelyr/issues/2
+
+* add `droplevels` method
+
+* handle color tables, category tables and raster attribute tables read through GDAL; #128, #245; https://github.com/r-spatial/mapview/issues/208
 
 * handle dimension `crs` specially, for proxy objects now.
 

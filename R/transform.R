@@ -20,16 +20,15 @@ transform_curvilinear = function(x, crs, ...) {
 	if (is.numeric(crs))
 		crs = st_crs(crs)  	 # nocov
 
-	if (sf_extSoftVersion()["proj.4"] < "5.0.0") {
-		from = st_crs(x)$proj4string
-		to = if (inherits(crs, "crs"))
-				crs$proj4string
-			else {
-				stopifnot(is.character(crs))
-				crs
-			}
-	} else 
-		from = st_crs(x)
+	to = crs
+	from = if (sf_extSoftVersion()["proj.4"] < "5.0.0") {
+			to = if (inherits(crs, "crs"))
+					crs$proj4string
+				else
+					stopifnot(is.character(crs))
+			st_crs(x)$proj4string
+		} else
+			st_crs(x)
 
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
