@@ -176,7 +176,7 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = dy, 
 			refsys = st_crs(.x))
 	}
-	st_as_stars(values = array(values, c(x = nx, y = ny)),
+	st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
 
