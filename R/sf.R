@@ -117,8 +117,13 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 		if (merge)
 			stop("merge not yet supported for the as_points=TRUE case")
 
-		if (has_raster(x))
-			x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
+		if (has_raster(x)) {
+			x = st_xy2sfc(st_upfront(x), as_points = as_points, ..., na.rm = na.rm)
+    		if (st_axis_order() && isTRUE(st_crs(x, parameters = TRUE)$yx)) # swap axes:
+				attr(x, "dimensions")[[ which_sfc(x) ]]$values = 
+        				st_transform(st_dimensions(x)[[ which_sfc(x) ]]$values,
+							pipeline = "+proj=pipeline +step +proj=axisswap +order=2,1")
+		}
 
 		if (! has_sfc(x))
 			stop("no feature geometry column found")

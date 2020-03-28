@@ -361,15 +361,16 @@ aperm.stars = function(a, perm = NULL, ...) {
 		perm = rev(seq_along(dim(a)))
 	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
+	d = st_dimensions(a)
 	if (is.character(perm)) {
-		ns = names(st_dimensions(a))
+		ns = names(d)
 		for (i in seq_along(a)) { # every array 
 			if (is.null(dimnames(a[[i]])))
 				dimnames(a[[i]]) = lapply(as.list(dim(a)), seq_len)
 			dimnames(a[[i]]) = setNames(dimnames(a[[i]]), ns)
 		}
 	}
-	st_stars(lapply(a, aperm, perm = perm, ...), st_dimensions(a)[perm])
+	st_stars(lapply(a, aperm, perm = perm, ...), d[perm])
 }
 
 #' @export
