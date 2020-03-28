@@ -1,5 +1,7 @@
 # version 0.4-1
 
+* handle axis order in `st_transform` (needs sf >= 0.9-1)
+
 * depend on sf 0.9-0 
 
 * adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; https://github.com/hadley/cubelyr/issues/2

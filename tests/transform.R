@@ -14,6 +14,7 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)[,1:10,1:10,1:3]
 x_ = st_transform(x, st_crs(4326))
 x__ = st_transform_proj(x, st_crs(4326)$proj4string)
+st_crs(x_) = st_crs(x__)
 all.equal(x_,x__)
 
 # x__ = st_transform(x, x_) #now in st_warp 
