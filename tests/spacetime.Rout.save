@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -319,14 +319,40 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-> as.xts(x)
-                        1    2    3
-2010-08-05 10:00:00  9.38 21.1 29.8
-2010-08-05 11:00:00 11.50 19.8 31.2
-2010-08-05 12:00:00 10.40 20.5 29.8
-2010-08-05 13:00:00 10.30 21.4 29.4
+> xts = as.xts(x)
 Warning message:
 In as.xts.stars(x) : all but first attribute will be ignored
+> st_as_stars(xts)
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+                
+ Min.   : 9.38  
+ 1st Qu.:11.22  
+ Median :20.80  
+ Mean   :20.38  
+ 3rd Qu.:29.50  
+ Max.   :31.20  
+dimension(s):
+       from to                  offset   delta  refsys point  values
+time      1  4 2010-08-05 10:00:00 UTC 1 hours POSIXct    NA    NULL
+others    1  3                      NA      NA      NA    NA 1,...,3
+> st_as_stars(xts, dimensions = st_dimensions(x))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+                
+ Min.   : 9.38  
+ 1st Qu.:11.22  
+ Median :20.80  
+ Mean   :20.38  
+ 3rd Qu.:29.50  
+ Max.   :31.20  
+dimension(s):
+     from to                  offset   delta  refsys point
+sfc     1  3                      NA      NA      NA  TRUE
+time    1  4 2010-08-05 10:00:00 UTC 1 hours POSIXct    NA
+                          values
+sfc  POINT (0 0),...,POINT (1 1)
+time                        NULL
 > 
 > library(sp)
 > pts = SpatialPoints(rbind(c(0,0), c(0,1), c(1,0), c(1,1)))
@@ -337,7 +363,9 @@ In as.xts.stars(x) : all but first attribute will be ignored
 > x = st_as_stars(stfdf)
 > xx = as(x, "STFDF")
 > 
+> x = st_as_stars(as(stfdf, "STSDF"))
+> 
 > 
 > proc.time()
    user  system elapsed 
-  0.790   0.059   0.841 
+  0.984   0.058   1.051 

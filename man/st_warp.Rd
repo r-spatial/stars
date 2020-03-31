@@ -59,4 +59,9 @@ plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add
 image(y, add = TRUE, nbreaks = 6)
 plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
+# warp 0-360 raster to -180-180 raster:
+r = read_stars(system.file("nc/reduced.nc", package = "stars"))
+r \%>\% st_set_crs(4326) \%>\% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
+plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
+plot(s, axes = TRUE)
 }

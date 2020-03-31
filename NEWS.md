@@ -1,5 +1,7 @@
 # version 0.4-1
 
+* `st_warp` (stars native) flips longitudes a full cycle; #256, #264, #269
+
 * handle axis order in `st_transform` (needs sf >= 0.9-1)
 
 * depend on sf 0.9-0 
