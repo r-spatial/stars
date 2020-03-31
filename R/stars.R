@@ -198,6 +198,11 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 	if (inherits(obj, "dimensions"))
 		gt = get_geotransform(obj)
 
+	if (isTRUE(st_is_longlat(st_crs(obj)))) {
+		bb = st_bbox(obj)
+		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
+		x[,1] = x[,1] + sign * 360.
+	}
 	if (!any(is.na(gt))) { # have geotransform
 		inv_gt = gdal_inv_geotransform(gt)
 		if (any(is.na(inv_gt)))

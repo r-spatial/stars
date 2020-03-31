@@ -52,7 +52,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 }
 
 rename_xy_dimensions = function(x, dims) {
-	stopifnot(inherits(x, "stars"), inherits(dims, "dimensions"))
+	#stopifnot(inherits(x, "stars"), inherits(dims, "dimensions"))
 	dx = st_dimensions(x)
 	xxy = attr(dx, "raster")$dimensions
 	dimsxy = attr(dims, "raster")$dimensions
@@ -69,7 +69,7 @@ rename_xy_dimensions = function(x, dims) {
 # transform grid x to dimensions target
 # x is a stars object, target is a dimensions object
 transform_grid_grid = function(x, target) {
-	stopifnot(inherits(target, "dimensions"))
+	stopifnot(inherits(x, "stars"), inherits(target, "dimensions"))
 	x = rename_xy_dimensions(x, target) # so we can match by name
 	xy_names = attr(target, "raster")$dimensions
 	new_pts = st_coordinates(target[xy_names])
@@ -87,16 +87,14 @@ transform_grid_grid = function(x, target) {
 	d = st_dimensions(x)
 	# get col/row from x/y:
 	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
-
-	from = x[[1]] #[,,1]
 	dims = dim(x)
-	index = matrix(1:prod(dims[dxy]), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
+	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	if (length(dims) > 2) {
 		remaining_dims = dims[setdiff(names(dims), dxy)]
 		newdim = c(prod(dims[dxy]), prod(remaining_dims))
 		for (i in seq_along(x)) {
 			dim(x[[i]]) = newdim
-			x[[i]] = x[[i]][index,]
+			x[[i]] = x[[i]][index,] # FIXME: won't work for dims > 3?
 			dim(x[[i]]) = c(dim(target)[dxy], remaining_dims)
 		}
 	} else {
