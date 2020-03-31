@@ -140,8 +140,11 @@ as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
     if (!requireNamespace("dplyr", quietly = TRUE))
         stop("package dplyr required, please install it first") # nocov
 
-	cc = dplyr::as_tibble(st_coordinates(.x, add_max = add_max, center = center))
-	do.call(dplyr::bind_cols, append(cc, lapply(.x, function(y) structure(y, dim = NULL))))
+	dplyr::as_tibble(append(
+			st_coordinates(.x, add_max = add_max, center = center),
+			lapply(.x, function(y) structure(y, dim = NULL))
+		)
+	)
 }
 
 
