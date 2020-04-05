@@ -98,9 +98,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy,
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 	if (!is.null(data$default_geotransform) && data$default_geotransform == 1) {
-	  ## we have the 0 1 0 0 0 1 transform indicated
-	  ## so stars policy is flip-y and shift to be in 0, ncol, 0, nrow
-	  data$geotransform <- c(0, 1, 0, data$rows[2L], 0, -1)
+		## we have the 0 1 0 0 0 1 transform indicated
+		## so stars policy is flip-y and shift to be in 0, ncol, 0, nrow
+		data$geotransform <- c(0, 1, 0, data$rows[2L], 0, -1)
 	}
 	if (length(data$bands) == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(data$sub) # get named list

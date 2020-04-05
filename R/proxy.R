@@ -141,7 +141,7 @@ fetch = function(x, downsample = 0, ...) {
 
 	# do it:
 	ret = lapply(x, read_stars, RasterIO = rasterio, 
-		NA_value = attr(x, "NA_value") %||% NA_real_, ...)
+		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE, ...)
 
 	along = if (length(dim(x)) > 3)
 			setNames(list(st_get_dimension_values(x, 4)), tail(names(st_dimensions(x)), 1))
