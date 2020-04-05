@@ -115,24 +115,24 @@
   <span class="fu">read_sf</span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span>(<span class="fl">32119</span>) <span class="kw">-&gt;</span> <span class="no">nc</span>
 <span class="no">nc</span>$<span class="no">dens</span> <span class="kw">=</span> <span class="no">nc</span>$<span class="no">BIR79</span> / <span class="kw pkg">units</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span>(<span class="fu">st_area</span>(<span class="no">nc</span>), <span class="no">km</span>^<span class="fl">2</span>)
-(<span class="no">nc.st</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span>(<span class="no">nc</span>[<span class="st">"dens"</span>], <span class="kw">deltax</span> <span class="kw">=</span> <span class="fl">5000</span>, <span class="kw">deltay</span> <span class="kw">=</span> <span class="fl">5000</span>))
+(<span class="no">nc.st</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span>(<span class="no">nc</span>[<span class="st">"dens"</span>], <span class="kw">dx</span> <span class="kw">=</span> <span class="fl">5000</span>, <span class="kw">dy</span> <span class="kw">=</span> <span class="fl">5000</span>))
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##  dens [1/km^2]  </span>
-<span class="co">##  Min.   : 0.25  </span>
-<span class="co">##  1st Qu.: 1.22  </span>
-<span class="co">##  Median : 1.93  </span>
-<span class="co">##  Mean   : 3.32  </span>
-<span class="co">##  3rd Qu.: 3.83  </span>
-<span class="co">##  Max.   :21.25  </span>
-<span class="co">##  NA's   :31717  </span>
+<span class="co">##  dens [1/km^2]   </span>
+<span class="co">##  Min.   : 0.255  </span>
+<span class="co">##  1st Qu.: 1.226  </span>
+<span class="co">##  Median : 1.932  </span>
+<span class="co">##  Mean   : 3.346  </span>
+<span class="co">##  3rd Qu.: 3.826  </span>
+<span class="co">##  Max.   :21.248  </span>
+<span class="co">##  NA's   :4808    </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset    delta                       refsys point values    </span>
-<span class="co">## x    1 416 123829  1943.82 PROJCS["NAD83 / North Car... FALSE   NULL [x]</span>
-<span class="co">## y    1 157 318260 -1943.82 PROJCS["NAD83 / North Car... FALSE   NULL [y]</span>
+<span class="co">##   from  to offset delta                       refsys point values    </span>
+<span class="co">## x    1 162 123829  5000 PROJCS["NAD83 / North Car... FALSE   NULL [x]</span>
+<span class="co">## y    1  61 318260 -5000 PROJCS["NAD83 / North Car... FALSE   NULL [y]</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">nc.st</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>deltax</code> and <code>deltay</code> parameters.</p>
+<p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
 </div>
 <div id="vectorizing-a-raster-object-to-an-sf-object" class="section level1">
 <h1 class="hasAnchor">
@@ -255,21 +255,21 @@
 <span class="no">nc.curv</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##  dens [1/km^2]  </span>
-<span class="co">##  Min.   : 0.25  </span>
-<span class="co">##  1st Qu.: 1.22  </span>
-<span class="co">##  Median : 1.93  </span>
-<span class="co">##  Mean   : 3.32  </span>
-<span class="co">##  3rd Qu.: 3.83  </span>
-<span class="co">##  Max.   :21.25  </span>
-<span class="co">##  NA's   :31717  </span>
+<span class="co">##  dens [1/km^2]   </span>
+<span class="co">##  Min.   : 0.255  </span>
+<span class="co">##  1st Qu.: 1.226  </span>
+<span class="co">##  Median : 1.932  </span>
+<span class="co">##  Mean   : 3.346  </span>
+<span class="co">##  3rd Qu.: 3.826  </span>
+<span class="co">##  Max.   :21.248  </span>
+<span class="co">##  NA's   :4808    </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##   from  to offset delta                       refsys point</span>
-<span class="co">## x    1 416     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
-<span class="co">## y    1 157     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
-<span class="co">##                            values    </span>
-<span class="co">## x [416x157] -2212729,...,-1371162 [x]</span>
-<span class="co">## y    [416x157] 88931.4,...,540012 [y]</span>
+<span class="co">## x    1 162     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
+<span class="co">## y    1  61     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
+<span class="co">##                           values    </span>
+<span class="co">## x [162x61] -2210936,...,-1371611 [x]</span>
+<span class="co">## y    [162x61] 90650.2,...,538204 [y]</span>
 <span class="co">## curvilinear grid</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">nc.curv</span>, <span class="kw">border</span> <span class="kw">=</span> <span class="fl">NA</span>, <span class="kw">graticule</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
@@ -288,12 +288,12 @@
 <span class="co">## attribute(s):</span>
 <span class="co">##  dens [1/km^2]  </span>
 <span class="co">##  Min.   : 0.25  </span>
-<span class="co">##  1st Qu.: 1.22  </span>
+<span class="co">##  1st Qu.: 1.23  </span>
 <span class="co">##  Median : 1.93  </span>
-<span class="co">##  Mean   : 3.32  </span>
+<span class="co">##  Mean   : 3.34  </span>
 <span class="co">##  3rd Qu.: 3.83  </span>
 <span class="co">##  Max.   :21.25  </span>
-<span class="co">##  NA's   :36136  </span>
+<span class="co">##  NA's   :36155  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##   from  to   offset    delta                       refsys point values    </span>
 <span class="co">## x    1 380 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</span>
