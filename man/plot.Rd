@@ -34,7 +34,8 @@
   attr = 1,
   asp = NULL,
   rgb = NULL,
-  maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
+  maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm =
+    TRUE)),
   xlab = if (!axes) "" else names(d)[1],
   ylab = if (!axes) "" else names(d)[2],
   xlim = st_bbox(x)$xlim,
