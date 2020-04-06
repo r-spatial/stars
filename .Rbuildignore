@@ -18,3 +18,4 @@ README.html
 ^\.Rproj\.user$
 images
 LICENSE
+vignettes.awk
