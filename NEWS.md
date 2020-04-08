@@ -1,3 +1,5 @@
+# version 0.4-2
+
 # version 0.4-1
 
 * `st_warp` (stars native) flips longitudes a full cycle; #256, #264, #269

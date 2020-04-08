@@ -1,7 +1,7 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.4-1
-Authors@R: 
+Version: 0.4-2
+Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
              role = c("aut", "cre"),
