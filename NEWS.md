@@ -1,5 +1,7 @@
 # version 0.4-2
 
+* `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
+
 # version 0.4-1
 
 * `st_warp` (stars native) flips longitudes a full cycle; #256, #264, #269

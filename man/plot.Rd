@@ -38,8 +38,8 @@
     TRUE)),
   xlab = if (!axes) "" else names(d)[1],
   ylab = if (!axes) "" else names(d)[2],
-  xlim = st_bbox(x)$xlim,
-  ylim = st_bbox(x)$ylim,
+  xlim = st_bbox(extent)$xlim,
+  ylim = st_bbox(extent)$ylim,
   text_values = FALSE,
   axes = FALSE,
   interpolate = FALSE,
@@ -50,7 +50,8 @@
   key.length = 0.618,
   add.geom = NULL,
   border = NA,
-  useRaster = dev.capabilities("rasterImage")$rasterImage == "yes"
+  useRaster = dev.capabilities("rasterImage")$rasterImage == "yes",
+  extent = x
 )
 
 \method{plot}{stars_proxy}(x, y, ..., downsample = get_downsample(dim(x)))
@@ -121,6 +122,8 @@
 \item{border}{color used for cell borders (only in case \code{x} is a curvilinear or rotated/sheared grid)}
 
 \item{useRaster}{logical; use the rasterImage capabilities of the graphics device?}
+
+\item{extent}{object which has a \code{st_bbox} method; sets the plotting extent}
 }
 \description{
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key

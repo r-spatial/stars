@@ -215,6 +215,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param add.geom object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image
 #' @param border color used for cell borders (only in case \code{x} is a curvilinear or rotated/sheared grid)
 #' @param useRaster logical; use the rasterImage capabilities of the graphics device?
+#' @param extent object which has a \code{st_bbox} method; sets the plotting extent
 #' @details use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 #' @export
 #' @examples
@@ -225,10 +226,10 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
-		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
+		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
 		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
-		useRaster = dev.capabilities("rasterImage")$rasterImage == "yes") {
+		useRaster = dev.capabilities("rasterImage")$rasterImage == "yes", extent = x) {
 
 	dots = list(...)
 
