@@ -20,7 +20,10 @@ st_mosaic = function(.x, ...) UseMethod("st_mosaic")
 
 #' @export
 #' @name st_mosaic
-st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext), options = c("-vrtnodata", "-9999"), file_ext = ".tif") {
+st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext), 
+		options = c("-vrtnodata", "-9999", "-srcnodata", "nan"),
+# -srcnodata "nan": see https://github.com/r-spatial/stars/issues/274
+		file_ext = ".tif") {
 	lst_write = function(obj) {
 		fname = tempfile(fileext = file_ext)
 		write_stars(obj, fname)

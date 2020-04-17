@@ -12,7 +12,7 @@ st_mosaic(.x, ...)
   .x,
   ...,
   dst = tempfile(fileext = file_ext),
-  options = c("-vrtnodata", "-9999"),
+  options = c("-vrtnodata", "-9999", "-srcnodata", "nan"),
   file_ext = ".tif"
 )
 
