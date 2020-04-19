@@ -14,7 +14,7 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 	if (all(raster::is.factor(.x))) {
 		l = as.character(raster::levels(.x)[[1]]$levels)
 		if (length(l) == 0) # get RAT:
-			l = factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]]
+			l = as.character(factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]])
 		v = structure(v, class = "factor", levels = l)
 		# FIXME: should handle levels for all layers here, or break on multiple different ones?
 	}
