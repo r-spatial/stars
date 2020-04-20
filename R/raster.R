@@ -1,6 +1,6 @@
 
 #' @name st_as_stars
-#' @param att see \link[raster]{factorValues}
+#' @param att see \link[raster]{factorValues}; column in the RasterLayer's attribute table
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1) {
     if (!requireNamespace("sp", quietly = TRUE))
@@ -12,17 +12,17 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 	v = raster::values(.x)
 	dim(v) = dim(.x)[c(2,1,3)]
 	if (all(raster::is.factor(.x))) {
-		l = as.character(raster::levels(.x)[[1]]$levels)
-		if (length(l) == 0) # get RAT:
-			l = as.character(factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]])
-		v = structure(v, class = "factor", levels = l)
-		# FIXME: should handle levels for all layers here, or break on multiple different ones?
+		l = raster::levels(.x)[[1]]$levels
+		if (length(l) == 0) # get the layer's RAT, column att:
+			l = raster::factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]]
+		v = structure(v, class = "factor", levels = as.character(l))
+		# FIXME: should we handle levels for all layers here, or break on multiple different ones?
 	}
 	dimensions = list(
 		x = create_dimension(from = 1, to = dim(v)[1], offset = e[1], 
-			delta = (e[2]-e[1])/dim(v)[1], refsys = sp::proj4string(.x)),
+			delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(raster::crs(.x))),
 		y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
-			delta = (e[3]-e[4])/dim(v)[2], refsys = sp::proj4string(.x)))
+			delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(raster::crs(.x))))
 	z = raster::getZ(.x)
 	dimensions$band = if (is.null(z))
 			create_dimension(values = names(.x))
