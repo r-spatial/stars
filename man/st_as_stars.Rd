@@ -40,7 +40,7 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
-\method{st_as_stars}{Raster}(.x, ...)
+\method{st_as_stars}{Raster}(.x, ..., att = 1)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 
@@ -90,6 +90,8 @@ st_as_stars(.x, ...)
 \item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely?}
 
 \item{name}{character; name for the geometry dimensions}
+
+\item{att}{see \link[raster]{factorValues}}
 
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object. 
 Must have same number of rows as timeseries instances.}
