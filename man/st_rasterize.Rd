@@ -4,9 +4,14 @@
 \alias{st_rasterize}
 \title{rasterize simple feature geometries}
 \usage{
-st_rasterize(sf, template = st_as_stars(st_bbox(sf), values = NA_real_,
-  ...), file = tempfile(), driver = "GTiff", options = character(0),
-  ...)
+st_rasterize(
+  sf,
+  template = st_as_stars(st_bbox(sf), values = NA_real_, ...),
+  file = tempfile(),
+  driver = "GTiff",
+  options = character(0),
+  ...
+)
 }
 \arguments{
 \item{sf}{object of class \code{sf}}

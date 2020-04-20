@@ -6,12 +6,18 @@
 \alias{st_as_sf.stars}
 \title{Convert stars object into an sf object}
 \usage{
-\method{st_as_sfc}{stars}(x, ..., as_points,
-  which = seq_len(prod(dim(x)[1:2])))
+\method{st_as_sfc}{stars}(x, ..., as_points, which = seq_len(prod(dim(x)[1:2])))
 
-\method{st_as_sf}{stars}(x, ..., as_points = FALSE, merge = FALSE,
-  na.rm = TRUE, use_integer = is.logical(x[[1]]) || is.integer(x[[1]]),
-  long = FALSE, connect8 = FALSE)
+\method{st_as_sf}{stars}(
+  x,
+  ...,
+  as_points = FALSE,
+  merge = FALSE,
+  na.rm = TRUE,
+  use_integer = is.logical(x[[1]]) || is.integer(x[[1]]),
+  long = FALSE,
+  connect8 = FALSE
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -36,7 +42,7 @@
 Convert stars object into an sf object
 }
 \details{
-If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[lwgeom]{st_make_valid} to create valid polygons out of them.
+If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf]{st_make_valid} to create valid polygons out of them.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

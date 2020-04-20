@@ -7,9 +7,12 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 	r = attr(st_dimensions(x), "raster")
 	gt = get_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
-	if (utils::packageVersion("sf") <= "0.7-2" && is_rectilinear(x))
-		stop("for converting rectilinear grids to sf, upgrade sf to a version > 0.7-2")
-	st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt) 
+	sfc = st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt) 
+	# swap axes?
+	if (st_axis_order() && isTRUE(st_crs(x, parameters = TRUE)$yx))
+		st_transform(sfc, pipeline = "+proj=pipeline +step +proj=axisswap +order=2,1")
+	else
+		sfc
 }
 
 
@@ -17,8 +20,8 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
 #' @param ... arguments passed on to \code{st_as_sfc}
-#' @param na.rm logical; remove cells with all missing values?
-#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points or square polygons
+#' @param na.rm logical; omit (remove) cells which are entirely missing valued (across other dimensions)?
+#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
 #' @export
 st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
@@ -32,9 +35,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
 	dxy = attr(d, "raster")$dimensions
 	xy_pos = match(dxy, names(d))
-	if (! all(xy_pos == 1:2)) # FIXME: better enforce this
-		stop("raster dimensions need to be first and second dimension")
-
+	stopifnot(all(xy_pos == 1:2))
 
 	# find which records are NA for all attributes:
 	a = abind(x, along = length(dim(x)) + 1)
@@ -80,7 +81,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled
 #' @param connect8 logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.
 #' @param ... ignored
-#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[lwgeom]{st_make_valid} to create valid polygons out of them.
+#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf]{st_make_valid} to create valid polygons out of them.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -120,7 +121,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			stop("merge not yet supported for the as_points=TRUE case")
 
 		if (has_raster(x))
-			x = st_xy2sfc(x, as_points = as_points, ..., na.rm = na.rm)
+			x = st_xy2sfc(st_upfront(x), as_points = as_points, ..., na.rm = na.rm)
 
 		if (! has_sfc(x))
 			stop("no feature geometry column found")
@@ -132,7 +133,12 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			if (length(ix) > 1)	
 				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
-			dfs = lapply(x, function(y) as.data.frame(y))
+			un_dim = function(x) { # remove a dim attribute from data.frame columns
+				for (i in seq_along(x))
+					x[[i]] = structure(x[[i]], dim = NULL)
+				x
+			}
+			dfs = lapply(x, function(y) un_dim(as.data.frame(y)))
 			nc = sapply(dfs, ncol)
 			df = do.call(cbind, dfs)
 	
@@ -152,7 +158,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	}
 }
 
-#' Compute contour lines or sets
+#' Compute or plot contour lines or sets
 #' 
 #' Compute contour lines or sets
 #' @param x object of class \code{stars}
@@ -160,7 +166,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 #' @param contour_lines logical; if \code{FALSE}, polygons are returned (contour sets), otherwise contour lines
 #' @param breaks numerical; values at which to "draw" contour levels
 #' @details this function requires GDAL >= 2.4.0
-#' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}
+#' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}; \link{contour} plots contour lines using R's native algorithm (which also plots contour levels)
 #' @export
 st_contour = function(x, na.rm = TRUE, contour_lines = FALSE, 
 		breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks) {

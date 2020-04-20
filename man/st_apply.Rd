@@ -5,8 +5,16 @@
 \alias{st_apply.stars}
 \title{st_apply apply a function to one or more array dimensions}
 \usage{
-\method{st_apply}{stars}(X, MARGIN, FUN, ..., CLUSTER = NULL,
-  PROGRESS = FALSE)
+\method{st_apply}{stars}(
+  X,
+  MARGIN,
+  FUN,
+  ...,
+  CLUSTER = NULL,
+  PROGRESS = FALSE,
+  FUTURE = FALSE,
+  rename = TRUE
+)
 }
 \arguments{
 \item{X}{object of class \code{stars}}
@@ -20,6 +28,10 @@
 \item{CLUSTER}{cluster to use for parallel apply; see \link[parallel]{makeCluster}}
 
 \item{PROGRESS}{logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar}
+
+\item{FUTURE}{logical;if \code{TRUE}, use \code{future.apply::future_apply}}
+
+\item{rename}{logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
@@ -35,4 +47,8 @@ st_apply(x, c("x", "y"), mean) # equivalent to the above
 st_apply(x, 3, mean)   # mean of all pixels for each band
 st_apply(x, "band", mean) # equivalent to the above
 st_apply(x, 1:2, range) # min and max band value for each pixel
+# to get a progress bar also in non-interactive mode, specify:
+if (require(pbapply)) { # install it, if FALSE
+  pboptions(type = "timer")
+}
 }

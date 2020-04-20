@@ -4,10 +4,21 @@
 \alias{read_stars}
 \title{read raster/array dataset from file or connection}
 \usage{
-read_stars(.x, ..., options = character(0), driver = character(0),
-  sub = TRUE, quiet = FALSE, NA_value = NA_real_,
-  along = NA_integer_, RasterIO = list(), proxy = FALSE,
-  curvilinear = character(0), normalize_path = TRUE)
+read_stars(
+  .x,
+  ...,
+  options = character(0),
+  driver = character(0),
+  sub = TRUE,
+  quiet = FALSE,
+  NA_value = NA_real_,
+  along = NA_integer_,
+  RasterIO = list(),
+  proxy = FALSE,
+  curvilinear = character(0),
+  normalize_path = TRUE,
+  RAT = character(0)
+)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
@@ -18,7 +29,7 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 
 \item{driver}{character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.}
 
-\item{sub}{integer or logical; sub-datasets to be read}
+\item{sub}{character, integer or logical; name, index or indicator of sub-dataset(s) to be read}
 
 \item{quiet}{logical; print progress output?}
 
@@ -33,6 +44,8 @@ read_stars(.x, ..., options = character(0), driver = character(0),
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 
 \item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}}
+
+\item{RAT}{character; raster attribute table column name to use as factor levels}
 }
 \value{
 object of class \code{stars}
@@ -43,12 +56,12 @@ read raster/array dataset from file or connection
 \details{
 In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 
-\code{RasterIO} is a list with zero or more of the following named arguments: 
-\code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1), 
+\code{RasterIO} is a list with zero or more of the following named arguments:
+\code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, code{resample}.
 see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
 \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
-Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image, 
+Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
 has to be one of: "nearest_neighbour" (the default),
 "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".
@@ -73,7 +86,7 @@ st
 tmp = tempfile(fileext = ".tif")
 write_stars(st, tmp)
 (red <- read_stars(tmp))
-read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12, 
+read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
    nBufXSize = 2, nBufYSize = 2))[[1]]
 (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
    nBufXSize = 2, nBufYSize = 2)))

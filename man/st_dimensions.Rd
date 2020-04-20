@@ -15,11 +15,24 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{array}(.x, ...)
 
-\method{st_dimensions}{default}(.x, ..., .raster, affine = c(0, 0),
-  cell_midpoints = FALSE, point = FALSE)
+\method{st_dimensions}{default}(
+  .x,
+  ...,
+  .raster,
+  affine = c(0, 0),
+  cell_midpoints = FALSE,
+  point = FALSE
+)
 
-st_set_dimensions(.x, which, values = NULL, point = NULL,
-  names = NULL, ...)
+st_set_dimensions(
+  .x,
+  which,
+  values = NULL,
+  point = NULL,
+  names = NULL,
+  xy,
+  ...
+)
 
 st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 }
@@ -41,6 +54,8 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 \item{values}{values for this dimension (e.g. \code{sfc} list-column)}
 
 \item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
+
+\item{xy}{length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions}
 
 \item{max}{logical; if \code{TRUE} return the end, rather than the beginning of an interval}
 

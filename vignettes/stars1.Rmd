@@ -78,9 +78,9 @@ For this particular dataset (and most other raster datasets), we see that offset
 
 `read_stars` reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.
 
-The data structure `stars` is a generalisation of the `tbl_cube` found in `dplyr`; we can convert to that by
-```{r}
-library(dplyr)
+The data structure `stars` is a generalisation of the `tbl_cube` found in `cubelyr`; we can convert to that by
+```{r eval=ev}
+library(cubelyr)
 as.tbl_cube(x)
 ```
 but this will cause a loss of certain properties (cell size,
@@ -212,6 +212,7 @@ file_list = system.file(paste0("netcdf/", x), package = "starsdata")
 
 Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (depth) dimension using `adrop`:
 ```{r eval=ev}
+library(dplyr)
 library(abind)
 z <- y %>% select(sst) %>% adrop()
 ```
@@ -253,10 +254,12 @@ prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
 ## remove NAs, zeros, and give a large number
 ## of breaks (used for validating in detail)
 qu_0_omit = function(x, ..., n = 22) {
-  x = na.omit(x)
+  if (inherits(x, "units"))
+    x = units::drop_units(na.omit(x))
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
-prec_slice = stars::slice.stars(prec, index = 17, along = "time")
+library(dplyr) # loads slice generic
+prec_slice = slice(prec, index = 17, along = "time")
 plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
@@ -298,7 +301,7 @@ traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
 ```
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
-```{r}
+```{r eval=ev}
 st %>% as.tbl_cube()
 ```
 

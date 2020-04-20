@@ -1,4 +1,90 @@
+# version 0.4-2
+
+* `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
+
+# version 0.4-1
+
+* `st_warp` (stars native) flips longitudes a full cycle; #256, #264, #269
+
+* handle axis order in `st_transform` (needs sf >= 0.9-1)
+
+* depend on sf 0.9-0 
+
+* adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; https://github.com/hadley/cubelyr/issues/2
+
+* add `droplevels` method
+
+* handle color tables, category tables and raster attribute tables read through GDAL; #128, #245; https://github.com/r-spatial/mapview/issues/208
+
+* handle dimension `crs` specially, for proxy objects now.
+
+* handle new-style `crs` objects from upcoming sf, moving away from proj4strings
+
+* handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string only
+
+* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
+
+* add `st_as_stars.OpenStreetMap` method; #241 by @mtennekes
+
+* add `st_flip` to flip arrays along one or more dimensions without changing dimension properties
+
+* add `as.owin` method to convert (2D raster) stars objects to spatstat `owin`; https://github.com/r-spatial/sf/issues/1233
+
+* for temporal aggregation, `aggregate.stars` now also takes `by` arguments like "week", "month", or "5 days" 
+
+* add `st_as_stars` method for `xts` objects; improve `as.xts` for `stars` objects
+
+* skip some tests on solaris
+
+# version 0.4-0
+
+* `plot` now uses all data to figure out breaks, in order to also find extremes; #216
+
+* `st_mosaic` creates mosaics from spatially disjoint rasters; #210
+
+* #205 large refactoring of `read_ncdf`, by David Blodgett and Mike Sumner, affecting #199, #89, #30, #86, #175
+
+* allow for funny units like `m s**-1`; #201
+
+* add `contour` method for `stars` objects; #196
+
+* plot uses `rasterImage` by default if available; #194
+
+* the `x` and `y` raster dimensions can be set and unset with `xy` argument in `st_set_dimensions`; #190
+
+* retain `factor` levels with dimension values when set in `st_set_dimensions`; #188
+
+* add conversion from `stars_proxy` to `Raster`: #193
+
+* make plotting of multiple curvilinear grids work
+
+* plot by default no cell borders in case of curvilinear, rotated or sheared grids
+
+* robustify handling of units
+
+* allow `read_ncdf` to ignore bounds
+
+* scale was applied wrongly on multi-band images; #189, this requires sf >= 0.7-5
+
+* `.nc` is now recognized correctly by `write_stars` and will write a NetCDF file; #186 
+
+* `[` subset now works correctly with negative or logical indices; #184, #185
+
+* `NA` values for float32 grids are now correctly detected; #182, this requires sf >= 0.7-5
+
+* cropping of a `stars_proxy` object now works; #179
+
+* `st_apply` can now loop over Raster layers; examples in #176
+
 # version 0.3-1
+
+* `st_as_stars.bbox` now has an `ncells` and `pretty` argument, to better choose default raster dimensions
+
+* `geom_stars` now works with `stars_proxy` objects, but needs `downsample` to be set; #21
+
+* `NA` values in Float32 rasters are now read correctly with `read_stars`; #182
+
+* handle bounds, when given, in `read_ncdf`
 
 * provide time parsing (POSIXct, PCICt) for `read_ncdf`; #115
 

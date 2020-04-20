@@ -1,12 +1,24 @@
+make_label = function(x, i = 1) {
+	dims = dim(x)
+	if ((length(dims) <= 2 || dims[3] == 1) && inherits(x[[i]], "units"))
+		make_unit_label(names(x)[i], units(x[[i]]))
+	else
+		names(x)[i]
+}
+	
+
+
 #' plot stars object, with subplots for each level of first non-spatial dimension
+#' 
+#' plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 #'
-#' @name plot.stars
+#' @name plot
 #' @param x object of class \code{stars}
 #' @param y ignored
 #' @param join_zlim logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @param axes logical; should axes and box be added to the plot?
-#' @param downsample logical; if \code{TRUE} will try to plot not many more pixels than actually are visibule.
+#' @param downsample logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the downsampling rate; see Details.
 #' @param nbreaks number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.
 #' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells
@@ -17,21 +29,25 @@
 #' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
+#' @param hook NULL or function; hook function that will be called on every sub-plot.
+#' @details 
+#' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on. 
 #' @export
-plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FALSE, 
+plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, 
-		reset = TRUE, box_col = grey(.8), center_time = FALSE) {
+		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL) {
 
 	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
 		dxy = attr(d, "raster")$dimensions
 		dims = dim(x)
+		nms = names(x)
 		x = x[[1]]
 		aux = setdiff(names(dims), dxy)
 		newdims = c(dims[dxy], prod(dims[aux]))
 		dim(x) = newdims
-		st_as_stars(list(x[,,i]), dimensions = d[dxy])
+		st_as_stars(setNames(list(x[,,i]), nms[1]), dimensions = d[dxy])
 	}
 	key.pos.missing = missing(key.pos)
 	if (missing(nbreaks) && !missing(col))
@@ -42,8 +58,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 	#if (any(dim(x) == 1))
 	#	x = adrop(x)
 
-	if (join_zlim) {
+	if (join_zlim && !is.character(x[[1]])) {
 		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
+		if (length(breaks) > 2)
+			breaks = unique(breaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
 	}
 
@@ -61,11 +79,17 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			else
 				rep(NA_real_, 2)
 		dims = dim(x)
-		if (downsample) {
-			n = dims * 0 + 1 # keep names
-			n[dxy] = get_downsample(dims)
-			x = st_downsample(x, n)
-		}
+		x = if (isTRUE(downsample)) {
+				n = dims * 0 + 1 # keep names
+				n[dxy] = get_downsample(dims)
+				st_downsample(x, n)
+			} else if (is.numeric(downsample))
+				st_downsample(x, downsample)
+		dims = dim(x) # may have changed by st_downsample
+
+		if (missing(col) && is.factor(x[[1]]) && !is.null(attr(x[[1]], "colors")))
+			col = attr(x[[1]], "colors")
+
 		if (length(dims) == 2 || dims[3] == 1 || (!is.null(dots$rgb) && is.numeric(dots$rgb))) { ## ONE IMAGE:
 			# set up key region
 			values = structure(x[[1]], dim = NULL) # array -> vector
@@ -119,9 +143,13 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 				if (!is.null(main)) {
 					if (length(main) == dims[3])
 						title(main[i])
-					else
+					else if (identical(main, names(x)[1])) # default value: omit on multi
+						title(paste(format(labels[i])))
+					else # user-defined
 						title(paste(main, format(labels[i])))
 				}
+				if (!is.null(hook) && is.function(hook))
+					hook()
 				box(col = box_col)
 			}
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:
@@ -137,9 +165,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 			}
 		}
 	} else if (has_sfc(x)) {
-		if (key.pos.missing)
-			key.pos = -1
-		plot(st_as_sf(x), ..., key.pos = key.pos, key.length = key.length, key.width = key.width, reset = reset, axes = axes)
+#		if (key.pos.missing)
+#			key.pos = -1
+		plot(st_as_sf(x), ..., key.pos = key.pos, key.length = key.length, key.width = key.width, 
+			reset = reset, axes = axes, main = main)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {
@@ -152,20 +181,24 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = names(x)[1], axes = FA
 get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 	if (is.character(breaks)) { # compute breaks from values in x:
 		pdx = prod(dim(x[[1]]))
-		# take a regular sample from x[[1]]:
-		values = as.numeric(structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))])
+		## take a regular sample from x[[1]]:
+		# values = structure(x[[1]], dim = NULL)[seq(1, pdx, length.out = min(pdx, 10000))]
+		values = structure(x[[1]], dim = NULL)
 		if (isTRUE(logz))
 			values = log10(values)
+		if (is.factor(values) || is.logical(values))
+			values = as.numeric(values)
 		n.unq = length(unique(na.omit(values)))
 		if (! all(is.na(values)) && n.unq > 1)
-			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, warnSmallN = FALSE)$brks
+			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks, 
+				warnSmallN = FALSE)$brks
 		else
 			range(values, na.rm = TRUE) # lowest and highest!
 	} else # breaks was given:
 		breaks
 }
 
-#' @name plot.stars
+#' @name plot
 #' @param band integer; which band (dimension) to plot
 #' @param attr integer; which attribute to plot
 #' @param asp numeric; aspect ratio of image
@@ -179,6 +212,10 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
+#' @param add.geom object of class \code{sfc}, or list with arguments to \code{plot}, that will be added to an image or sub-image
+#' @param border color used for cell borders (only in case \code{x} is a curvilinear or rotated/sheared grid)
+#' @param useRaster logical; use the rasterImage capabilities of the graphics device?
+#' @param extent object which has a \code{st_bbox} method; sets the plotting extent
 #' @details use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 #' @export
 #' @examples
@@ -189,9 +226,10 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
-		xlim = st_bbox(x)$xlim, ylim = st_bbox(x)$ylim, text_values = FALSE, axes = FALSE,
+		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
-		key.width = lcm(1.8), key.length = 0.618) {
+		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
+		useRaster = dev.capabilities("rasterImage")$rasterImage == "yes", extent = x) {
 
 	dots = list(...)
 
@@ -241,17 +279,32 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
 
+	# handle color table, if present:
+	co = attr(ar, "colors")
+	if (! is.null(co)) {
+		if (is.null(rgb))
+			rgb = TRUE
+		interpretation = attr(co, "interpretation")
+		if (!is.null(interpretation) && interpretation != 1)
+			warning("color interpretation is not RGB, but rgb is used nevertheless: colors will probably be wrong")
+	}
+
 	# rearrange ar:
 	others = setdiff(seq_along(dim(ar)), c(dimxn, dimyn))
 	ar = aperm(ar, c(dimxn, dimyn, others))
+	if (text_values)
+		ar_text = ar # keep original order for cell text labels
+	
+	if (is.null(rgb) && is.character(ar))
+		rgb = TRUE
 
 	if (! is.null(rgb)) {
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
-		if (!y_is_neg) # need to flip y?
+		if (! y_is_neg) # need to flip y?
 			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
-		if (dev.capabilities("rasterImage")$rasterImage != "yes")
+		if (!useRaster)
 			stop("rgb plotting not supported on this device")
 		if (! isTRUE(dots$add)) {
 			plot.new()
@@ -265,12 +318,19 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			mat[!nas] = ar
 			dim(mat) = xy
 		} else {
-			stopifnot(inherits(rgb, "data.frame"))
+			stopifnot(isTRUE(rgb) || inherits(rgb, "data.frame"))
 			# rgb has col 1: index, col 2: label, col 3-5: R, G, B
-			#ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
-			ar = as.vector(ar) # flattens x/y to 1-D index vector
-			rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
-			mat = structure(rgb, dim = xy)
+			# ar = as.vector(ar[ , , 1]) # flattens x/y to 1-D index vector
+			mat = if (isTRUE(rgb)) {
+					if (!is.null(co))
+						structure(co[as.vector(ar)], dim = dim(ar))
+					else
+						ar
+				} else {
+					ar = as.vector(ar) # flattens x/y to 1-D index vector
+					rgb = grDevices::rgb(rgb[match(ar, rgb[[1]]), 3:5], maxColorValue = maxColorValue)
+					structure(rgb, dim = xy)
+				}
 		}
 		myRasterImage = function(x, xmin, ymin, xmax, ymax, interpolate, ..., breaks, add, zlim) # absorbs breaks, add & zlim
 			rasterImage(x, xmin, ymin, xmax, ymax, interpolate = interpolate, ...)
@@ -284,20 +344,21 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 				plot(x, pal = col, ...) # need to swap arg names: FIXME:?
 		}
 		mplot(x, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, axes = axes, reset = FALSE, 
-			key.pos = key.pos, key.width = key.width, key.length = key.length, logz = logz, ...)
-	} else { # regular grid, no RGB:
+			key.pos = key.pos, key.width = key.width, key.length = key.length, logz = logz, 
+			border = border, ...)
+	} else { # regular & rectilinear grid, no RGB:
 		if (y_is_neg) { # need to flip y?
 			ar = if (length(dim(ar)) == 2)
-					ar[ , rev(seq_len(dim(ar)[2]))]
+					ar[ , rev(seq_len(dim(ar)[2])), drop = FALSE]
 				else
 					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab, 
-			xlim = xlim, ylim = ylim, axes = FALSE, ...)
+			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear(x), ...)
 	}
 	if (text_values) {
 		dims = expand_dimensions.stars(x, center = TRUE)
-		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar))) # xxx
+		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar_text))) # xxx
 	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
@@ -308,25 +369,41 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
             axis(2)
 		}
 	}
-}
-
-# reduce resolution of x, keeping (most of) extent
-st_downsample = function(x, n) {
-	stopifnot(all(n >= 0))
-	if (! all(n <= 1)) {
-		d = dim(x)
-		n = rep(n, length.out = length(d))
-		args = rep(list(rlang::missing_arg()), length(d)+1)
-		for (i in seq_along(d))
-			if (n[i] > 1)
-				args[[i+1]] = seq(1, d[i], n[i])
-		eval(rlang::expr(x[!!!args]))
-	} else
-		x
+	if (!is.null(add.geom)) {
+		if (inherits(add.geom, c("sf", "sfc")))
+			add.geom = list(add.geom)
+		do.call(plot, c(add.geom, add = TRUE))
+	}
 }
 
 # compute the degree of downsampling allowed to still have more than 
 # one cell per screen/device pixel:
 get_downsample = function(dims, px = dev.size("px")) { 
 	floor(sqrt(prod(dims) / prod(px)))
+}
+
+
+#' plot contours of a stars object
+#'
+#' plot contours of a stars object
+#' @param x object of class \code{stars}
+#' @param ... other parameters passed on to \link[graphics]{contour}
+#' @details this uses the R internal contour algorithm, which (by default) plots contours; \link{st_contour} uses the GDAL contour algorithm that returns contours as simple features.
+#' @export
+#' @examples
+#' d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
+#' r = st_as_stars(t(volcano))
+#' r = st_set_dimensions(r, 1, offset = 0, delta = 1)
+#' r = st_set_dimensions(r, 2, offset = 0, delta = -1)
+#' plot(r, reset = FALSE)
+#' contour(r, add = TRUE)
+contour.stars = function(x, ...) {
+	if (!(is_regular_grid(x) || is_rectilinear(x)))
+		stop("contour only works for regular or rectilinear grids")
+	x = st_upfront(adrop(x)) # drop singular dimensions, put x/y first
+	dx = dim(x)
+	if (length(dx) != 2)
+		stop("contour only supported for 2-D arrays") # nocov
+	e = expand_dimensions(x)
+	contour(z = x[[1]][,rev(seq_len(dx[2]))], x = e[[1]], y = rev(e[[2]]), ...)
 }

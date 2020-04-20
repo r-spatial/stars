@@ -3,6 +3,7 @@
 \name{as}
 \alias{as}
 \alias{coerce,stars,Raster-method}
+\alias{coerce,stars_proxy,Raster-method}
 \title{Coerce stars object into a Raster raster or brick}
 \arguments{
 \item{from}{object to coerce}

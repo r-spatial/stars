@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 
 s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
 if (s5p != "") {
@@ -17,6 +17,8 @@ nit.c0 = st_as_stars(nit, curvilinear = ll)
 # more direct method:
 nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
+if (inherits(nit.c[[1]], "units"))
+	nit.c[[1]] = units::drop_units(nit.c[[1]])
 nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 all.equal(nit.c0, nit.c)
 st_crs(nit.c) = 4326

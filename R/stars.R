@@ -9,7 +9,7 @@ split_strings = function(md, split = "=") {
 #' convert objects into a stars object
 #' @export
 #' @param .x object to convert
-#' @param ... ignored
+#' @param ... in case \code{.x} is of class \code{bbox}, arguments passed on to \link{pretty}
 st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 
 #' @name st_as_stars
@@ -103,8 +103,8 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	else {
 		dimensions = st_dimensions(.x)
 		xy = names(curvilinear)
-		dimensions[[ xy[1] ]]$values = curvilinear[[1]]
-		dimensions[[ xy[2] ]]$values = curvilinear[[2]]
+		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
+		dimensions[[ xy[2] ]]$values = structure(curvilinear[[2]], dim = setNames(dim(curvilinear[[1]]), xy))
 		# erase regular grid coefficients $offset and $delta:
 		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
 		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
@@ -113,51 +113,118 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	}
 }
 
-#' @param nx integer; number of cells in x direction
-#' @param ny integer; number of cells in y direction
-#' @param deltax numeric; cell size in x direction
-#' @param deltay numeric; cell size in y direction (negative)
+pretty_cut = function(lim, n, inside = FALSE, ...) {
+	stopifnot(n > 2)
+	p = pretty(x = lim, n = n, ...)
+	d = diff(p[1:2])
+	if (! inside)
+		lim = c(lim[1] - 0.5 * d, lim[2] + 0.5 * d) # extended limits half a cell
+	p[p >= lim[1] & p <= lim[2]]
+}
+
+#' @param nx integer; number of cells in x direction; see details
+#' @param ny integer; number of cells in y direction; see details
+#' @param dx numeric; cell size in x direction; see details
+#' @param dy numeric; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
 #' @param ylim length 2 numeric vector with extent (min, max) in y direction
 #' @param values value(s) to populate the raster values with
+#' @param n the (approximate) target number of grid cells
+#' @param pretty logical; should cell coordinates have \link{pretty} values?
+#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 #' @export
 #' @name st_as_stars
-st_as_stars.bbox = function(.x, ..., nx = 360, ny = 180, 
-		deltax = diff(xlim)/nx, deltay = -diff(ylim)/ny,
-		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], values = 0.) {
-	if (missing(nx) && !missing(deltax))
-		nx = ceiling(diff(xlim) / deltax)
-	if (missing(ny) && !missing(deltay)) {
-		if (deltay > 0)
-			deltay = -deltay
-		ny = ceiling(-diff(ylim) / deltay)
+st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
+		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE) {
+
+	if (xor(missing(nx), missing(ny)))
+		stop("either specify both nx and ny, or none of them")
+
+	adx = abs(diff(xlim))
+	ady = abs(diff(ylim))
+
+	if (missing(dx) && missing(dy)) {
+		if (missing(nx))
+			dx = dy = sqrt(adx * ady / n)
+		else {
+			dx = diff(xlim)/nx
+			dy = -diff(ylim)/ny
+		}
 	}
-	x = create_dimension(from = 1, to = nx, offset = xlim[1], delta = deltax, 
-		refsys = st_crs(.x))
-	y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = deltay, 
-		refsys = st_crs(.x))
-	st_as_stars(values = array(values, c(x = nx, y = ny)),
+
+	if (missing(nx))
+		nx = ifelse(inside, floor(diff(xlim) / dx), ceiling(diff(xlim) / dx))
+
+	if (missing(ny)) {
+		if (dy > 0)
+			dy = -dy
+		ny = ifelse(inside, floor(-diff(ylim) / dy), ceiling(-diff(ylim) / dy))
+	}
+
+	if (pretty) {
+		vx = pretty_cut(xlim, nx, inside, ...)
+		nx = length(vx)
+		x = create_dimension(values = vx, refsys = st_crs(.x))
+		vy = pretty_cut(ylim, ny, inside, ...)
+		ny = length(vy)
+		y = create_dimension(values = vy, refsys = st_crs(.x))
+	} else {
+		x = create_dimension(from = 1, to = nx, offset = xlim[1], delta = dx, 
+			refsys = st_crs(.x))
+		y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = dy, 
+			refsys = st_crs(.x))
+	}
+	st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
 		dims = create_dimensions(list(x = x, y = y), get_raster()))
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 
-xy_from_colrow = function(x, geotransform, inverse = FALSE) {
+xy_from_colrow = function(x, geotransform) {
 # http://www.gdal.org/classGDALDataset.html , search for geotransform:
 # 0-based indices:
 # Xp = geotransform[0] + P*geotransform[1] + L*geotransform[2];
 # Yp = geotransform[3] + P*geotransform[4] + L*geotransform[5];
-	if (inverse) {
-		geotransform = gdal_inv_geotransform(geotransform)
-		if (any(is.na(geotransform)))
-			stop("geotransform not invertible")
-	}
-	stopifnot(ncol(x) == 2)
+	stopifnot(ncol(x) == 2, length(geotransform) == 6, !any(is.na(geotransform)))
 	matrix(geotransform[c(1, 4)], nrow(x), 2, byrow = TRUE) + 
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-colrow_from_xy = function(x, geotransform) {
-	xy_from_colrow(x, geotransform, inverse = TRUE) # will return floating point col/row numbers!!
+colrow_from_xy = function(x, obj, NA_outside = FALSE) {
+	if (inherits(obj, "stars"))
+		obj = st_dimensions(obj)
+	xy = attr(obj, "raster")$dimensions
+	if (inherits(obj, "dimensions"))
+		gt = get_geotransform(obj)
+
+	if (isTRUE(st_is_longlat(st_crs(obj)))) {
+		bb = st_bbox(obj)
+		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
+		x[,1] = x[,1] + sign * 360.
+	}
+	if (!any(is.na(gt))) { # have geotransform
+		inv_gt = gdal_inv_geotransform(gt)
+		if (any(is.na(inv_gt)))
+			stop("geotransform not invertible")
+		ret = floor(xy_from_colrow(x, inv_gt) + 1.)# will return floating point col/row numbers!!
+		if (NA_outside)
+			ret[ ret[,1] < 1 | ret[,1] > obj[[ xy[1] ]]$to | ret[,2] < 1 | ret[,2] > obj[[ xy[2] ]]$to, ] = NA
+		ret
+	} else if (is_rectilinear(obj)) {
+		ix = obj[[ xy[1] ]]$values 
+		if (!inherits(ix, "intervals"))
+			ix = as_intervals(ix, add_last = length(ix) == dim(obj)[ xy[1] ])
+		cols = find_interval(x[,1], ix)
+		iy = obj[[ xy[2] ]]$values 
+		if (!inherits(iy, "intervals"))
+			iy = as_intervals(iy, add_last = length(iy) == dim(obj)[ xy[2] ])
+		rows = find_interval(x[,2], iy) # always NA_outside
+		cbind(cols, rows)
+	} else if (is_curvilinear(obj)) {
+		stop("colrow_from_xy not supported for curvilinear objects")
+	} else
+		stop("colrow_from_xy not supported for this object")
 }
 
 has_rotate_or_shear = function(x) {
@@ -175,7 +242,7 @@ has_raster = function(x) {
 	!is.null(r <- attr(x, "raster")) && all(r$dimensions %in% names(x))
 }
 
-is_regular = function(x) {
+is_regular_grid = function(x) {
 	has_raster(x) && !(has_rotate_or_shear(x) || is_rectilinear(x) || is_curvilinear(x))
 }
 
@@ -205,8 +272,8 @@ which_time = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
-		inherits(i$values, c("POSIXct", "Date", "PCICt")) || 
-		i$refsys %in% c("POSIXct", "Date", "PCICt")))
+		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
+		(is.character(i$refsys) && i$refsys %in% c("POSIXct", "Date", "PCICt"))))
 }
 
 has_sfc = function(x) {
@@ -218,15 +285,29 @@ has_sfc = function(x) {
 #' retrieve coordinates for raster or vector cube cells
 #' @param x object of class \code{stars}
 #' @param add_max logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value
+#' @param center logical; (only if \code{add_max} is FALSE): should grid cell center coordinates be returned (TRUE) or offset values (FALSE)? \code{center} can be a named logical vector or list to specify values for each dimension.
 #' @name st_coordinates
 #' @param ... ignored
 #' @export
-st_coordinates.stars = function(x, ..., add_max = FALSE) {
+st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 	dims = st_dimensions(x)
 	xy = attr(dims, "raster")$dimensions
-	if (has_rotate_or_shear(x)) {
+	if (is_curvilinear(x)) {
+		x = st_upfront(x) # x and y first...
+		cc = setNames(data.frame(as.vector(dims[[ xy[1] ]]$values), as.vector(dims[[ xy[2] ]]$values)), xy)
+		dims[ xy ] = NULL # remove
+		out = do.call(expand.grid, append(list(ix = seq_len(nrow(cc))), expand_dimensions(dims, center = center))) 
+			# cell offsets
+		ix = out$ix
+		out$ix = NULL
+		out = cbind(cc[[1]][ix], cc[[2]][ix], out)
+		names(out)[1:2] = xy
+		out
+	} else if (has_rotate_or_shear(x)) {
 		if (add_max)
 			stop("add_max will not work for rotated/shared rasters")
+		if (isTRUE(!center)) # center = FALSE
+			warning("center values are given for spatial coordinates")
 		d = dim(x)
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
@@ -240,19 +321,20 @@ st_coordinates.stars = function(x, ..., add_max = FALSE) {
 					paste0(xy, "_max"))
 			)
 		} else
-			do.call(expand.grid, expand_dimensions(x)) # cell centers for x/y if raster
+			do.call(expand.grid, expand_dimensions(x, center = center)) # cell centers for x/y if raster
 	}
 }
 
 #' @export
 st_coordinates.dimensions = function(x, ...) {
-	st_coordinates(st_as_stars(list(), dimensions = x))
+	st_coordinates(st_as_stars(list(), dimensions = x), ...)
 }
 
 #' @name st_coordinates
 #' @export
-as.data.frame.stars = function(x, ..., add_max = FALSE) {
-	data.frame(st_coordinates(x, add_max = add_max), lapply(x, function(y) structure(y, dim = NULL)))
+as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
+	data.frame(st_coordinates(x, add_max = add_max, center = center), 
+		lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 
@@ -284,15 +366,16 @@ aperm.stars = function(a, perm = NULL, ...) {
 		perm = rev(seq_along(dim(a)))
 	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
+	d = st_dimensions(a)
 	if (is.character(perm)) {
-		ns = names(st_dimensions(a))
+		ns = names(d)
 		for (i in seq_along(a)) { # every array 
 			if (is.null(dimnames(a[[i]])))
 				dimnames(a[[i]]) = lapply(as.list(dim(a)), seq_len)
 			dimnames(a[[i]]) = setNames(dimnames(a[[i]]), ns)
 		}
 	}
-	st_stars(lapply(a, aperm, perm = perm, ...), st_dimensions(a)[perm])
+	st_stars(lapply(a, aperm, perm = perm, ...), d[perm])
 }
 
 #' @export
@@ -380,9 +463,15 @@ c.stars = function(..., along = NA_integer_) {
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
-	if (length(drop) > 0)
-		st_as_stars(lapply(x, adrop, drop = drop, one.d.array = TRUE, ...), dimensions = st_dimensions(x)[-drop])
-	else 
+	if (is.logical(drop))
+		drop = which(drop)
+	if (any(dim(x) > 1) && length(drop) > 0) {
+		l = vector("list", length = length(x))
+		f = sapply(x, is.factor)
+		l[!f] = lapply(x[!f], adrop, drop = drop, one.d.array = TRUE, ...)
+		l[f] = lapply(x[f], function(x) structure(x, dim = dim(x)[-drop]))
+		st_as_stars(setNames(l, names(x)), dimensions = st_dimensions(x)[-drop])
+	} else 
 		x
 }
 
@@ -435,36 +524,43 @@ st_bbox.stars = function(obj, ...) {
 
 #' @export
 st_crs.stars = function(x, ...) {
-	d = st_dimensions(x)
-	xy = attr(d, "raster")$dimensions
+	st_crs(st_dimensions(x), ...)
+}
+
+#' @export
+st_crs.dimensions = function(x, ...) {
+	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy)))
-		st_crs(d[[ xy[1] ]]$refsys)
-	else if (has_sfc(d)) # search for simple features:
-		#st_crs(d[[ which_sfc(d)[1] ]]$refsys) # -> would (re)interpret proj4string
-		st_crs(d[[ which_sfc(d)[1] ]]$values)
+		st_crs(x[[ xy[1] ]]$refsys)
+	else if (has_sfc(x)) # search for simple features:
+		st_crs(x[[ which_sfc(x)[1] ]]$values)
 	else
-		st_crs(NA)
+		NA_crs_
 }
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
-	if (is.na(value))
-		value = NA_crs_
-	if (is.numeric(value))
-		value = st_crs(value)
-	if (inherits(value, "crs"))
-		value = value$proj4string
-	stopifnot(is.character(value))
+	value = if (is.na(value))
+			NA_crs_
+		else if (is.numeric(value) || is.character(value))
+			st_crs(value)
+		else if (inherits(value, "crs"))
+			value
+		else
+			stop(paste("crs of class", class(value), "not recognized"))
+
+	# set CRS in dimensions:
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
-	if (!all(is.na(xy))) {
+	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		d[[ xy[1] ]]$refsys = value
 		d[[ xy[2] ]]$refsys = value
 	}
-	# sfc's:
-	i = sapply(d, function(y) inherits(y$values, "sfc"))
-	for (j in which(i))
+
+	# set crs of sfc's, if any:
+	for (j in which_sfc(x))
 		d[[ j ]]$refsys = value
+
 	structure(x, dimensions = d)
 }
 
@@ -536,16 +632,22 @@ st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
 #' @export
 #' @name redimension
 #' @param x object of class \code{stars}
-#' @param new_dims target dimensions
+#' @param new_dims target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes
 #' @param along named list with new dimension name and values
 #' @param ... ignored
 st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
 	d = st_dimensions(x)
-	if (! identical(new_dims, d)) {
-		if (prod(dim(d)) != prod(dim(new_dims)))
+	if (inherits(new_dims, "dimensions")) {
+		di = dim(new_dims)
+	} else {
+		di = new_dims
+		new_dims = create_dimensions(di)
+	}
+	if (! identical(setNames(di, NULL), setNames(dim(x), NULL))) {
+		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
 		for (i in seq_along(x))
-			dim(x[[i]]) = dim(new_dims)
+			dim(x[[i]]) = di
 		st_stars(x, dimensions = new_dims)
 	} else { # collapse attributes into dimension
 		if (length(x) == 1) # only one attribute: do nothing
@@ -563,15 +665,27 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 
 #' @export
 "$<-.stars" = function(x, i, value) {
-	if (is.null(dim(value)))
-		dim(value) = dim(x)
+	if (!is.null(value)) {
+		if (prod(dim(x)) %% length(value) != 0) { # error:
+			if (is.null(dim(value)))
+				stop(paste("replacement has length", length(value), ", data has dim", paste(dim(x), collapse = ", ")))
+			else
+				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
+		}
+		value = if (inherits(value, c("factor", "POSIXct")))
+				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))
+			else if (!is.array(value) || !identical(dim(value), dim(x)))
+				array(value, dim(x))
+			else
+				value
+	}
 	NextMethod()
 }
 
-st_upfront = function(x, xy = attr(st_dimensions(x), "raster")$dimensions) {
-	if (!is.character(xy))
-		xy = names(st_dimensions(x))[xy]
-	aperm(x, c(xy, setdiff(names(st_dimensions(x)), xy)))
+st_upfront = function(x, first = attr(st_dimensions(x), "raster")$dimensions) {
+	if (!is.character(first))
+		first = names(st_dimensions(x))[first]
+	aperm(x, c(first, setdiff(names(st_dimensions(x)), first)))
 }
 
 #' @export
@@ -583,7 +697,7 @@ st_area.stars = function(x, ...) {
 	a = if (isTRUE(st_is_longlat(x)) || is_curvilinear(x))
 			st_area(st_as_sfc(x, as_points = FALSE)) # has units
 		else { 
-			a = if (is_regular(x))
+			a = if (is_regular_grid(x))
 					d[[1]]$delta * d[[2]]$delta
 				else { # rectilinear:
 					x = if (inherits(d[[1]]$values, "intervals"))
@@ -619,4 +733,59 @@ predict.stars = function(object, model, ...) {
 	if (!inherits(pr, "data.frame"))
 		pr = data.frame(prediction = pr)
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
+}
+
+#' create an array with dimension values
+#' 
+#' create an array with dimension values
+#' @param x object of class \code{stars}
+#' @param which integer; indices of the dimensions to address (default: all)
+#' @return \code{stars} object with dimension values as attributes
+#' @export
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x1 = read_stars(tif)
+#' (x = st_dim_to_attr(x1))
+#' plot(x)
+#' (x = st_dim_to_attr(x1, 2:3))
+#' plot(x)
+#' (x= st_dim_to_attr(x1, 3))
+#' plot(x)
+st_dim_to_attr = function(x, which = seq_along(dim(x))) {
+	d = dim(x)
+	l = vector("list", length = length(which))
+	e = expand_dimensions(x)
+	for (i in seq_along(which)) {
+		dp = c(which[i], setdiff(seq_along(dim(x)), which[i]))
+		l[[i]] = aperm(array(e[[ which[i] ]], d[dp]), order(dp))
+	}
+	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
+}
+
+#' @export
+st_interpolate_aw.stars = function(x, to, extensive, ...) {
+	x = st_as_sf(x)
+	NextMethod()
+}
+
+#' get the raster type (if any) of a stars object
+#' @param x object of class \code{stars}
+#' @return one of \code{NA} (if the object does not have raster dimensions), 
+#' \code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' st_raster_type(x)
+#' @export
+st_raster_type = function(x) {
+	if (!has_raster(x))
+		NA_character_
+	else if (is_curvilinear(x))
+		"curvilinear"
+	else if (is_rectilinear(x))
+		"rectilinear"
+	else if (has_rotate_or_shear(x))
+		"affine"
+	else
+		"regular"
 }

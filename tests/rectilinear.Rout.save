@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -30,8 +30,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to offset delta                       refsys point
-x       1 348     NA    NA +proj=utm +zone=25 +south... FALSE
-y       1 351     NA    NA +proj=utm +zone=25 +south... FALSE
+x       1 348     NA    NA UTM Zone 25, Southern Hem... FALSE
+y       1 351     NA    NA UTM Zone 25, Southern Hem... FALSE
 band    1   6     NA    NA                           NA    NA
                                       values    
 x    [288790.5,288819),...,[298708.5,298737) [x]
@@ -61,7 +61,7 @@ y    1  4      2     1     NA FALSE   NULL [y]
 > st = st_set_dimensions(st, 2, values = c(2,3,4,5,8))
 > try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
 Error in st_set_dimensions(st, 2, values = c(2, 3, 4, 5, 8, 20)) : 
-  length of values does not match dimension 2
+  length of values does not match dimension length 2
 > 
 > # $<-.stars:
 > st$foo = st$m * 2
@@ -90,4 +90,4 @@ y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.750   0.043   0.784 
+  0.838   0.037   0.866 

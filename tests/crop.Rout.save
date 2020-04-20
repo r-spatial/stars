@@ -1,6 +1,6 @@
 
-R version 3.5.1 (2018-07-02) -- "Feather Spray"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -37,8 +37,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x     158 268  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y     245 331 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x     158 268  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y     245 331 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > image(xx)
 > plot(st_as_sfc(bb), add = TRUE, col = NA)
@@ -62,4 +62,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  2.291   0.087   2.370 
+  1.551   0.063   1.612 

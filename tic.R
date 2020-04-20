@@ -1,14 +1,6 @@
-add_package_checks()
+do_package_checks()
 
 ###
 # deploy pkgdown site
 ###
-if (Sys.getenv("id_rsa") != "") {
-
-  get_stage("before_deploy") %>%
-    add_step(step_setup_ssh())
-
-  get_stage("deploy") %>%
-    add_step(step_build_pkgdown()) %>%
-    add_step(step_push_deploy(path = "docs", branch = "gh-pages"))
-}
+do_pkgdown(document = FALSE)

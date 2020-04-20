@@ -4,9 +4,19 @@
 \alias{st_warp}
 \title{Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system}
 \usage{
-st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
-  segments = 100, use_gdal = FALSE, options = character(0),
-  no_data_value = NA_real_, debug = FALSE, method = "near")
+st_warp(
+  src,
+  dest,
+  ...,
+  crs = NA_crs_,
+  cellsize = NA_real_,
+  segments = 100,
+  use_gdal = FALSE,
+  options = character(0),
+  no_data_value = NA_real_,
+  debug = FALSE,
+  method = "near"
+)
 }
 \arguments{
 \item{src}{object of class \code{stars} with source raster}
@@ -17,7 +27,7 @@ st_warp(src, dest, ..., crs = NA_crs_, cellsize = NA_real_,
 
 \item{crs}{coordinate reference system for destination grid, only used when \code{dest} is missing}
 
-\item{cellsize}{cellsize in target coordinate reference system}
+\item{cellsize}{length 1 or 2 numeric; cellsize in target coordinate reference system units}
 
 \item{segments}{(total) number of segments for segmentizing the bounding box before transforming to the new crs}
 
@@ -49,4 +59,9 @@ plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add
 image(y, add = TRUE, nbreaks = 6)
 plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
+# warp 0-360 raster to -180-180 raster:
+r = read_stars(system.file("nc/reduced.nc", package = "stars"))
+r \%>\% st_set_crs(4326) \%>\% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
+plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
+plot(s, axes = TRUE)
 }

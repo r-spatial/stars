@@ -1,7 +1,7 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.3-1
-Authors@R: 
+Version: 0.4-2
+Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
              role = c("aut", "cre"),
@@ -24,25 +24,29 @@ Description: Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in 'R', using 'GDAL'
     bindings provided by 'sf', and 'NetCDF' bindings by 'ncmeta' and 'RNetCDF'.
 License: Apache License
-URL: https://github.com/r-spatial/stars/
+URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Additional_repositories: http://pebesma.staff.ifgi.de
+Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 0.7-3)
+    sf (>= 0.9-0)
 Imports:
     methods,
-	parallel,
-    classInt (>= 0.2-2),
+    parallel,
+    classInt (>= 0.4-1),
+    lwgeom,
     rlang,
     units
 Suggests: 
     PCICt,
     RNetCDF (>= 1.8-2),
     covr,
+    digest,
     dplyr (>= 0.7-0),
     gdalcubes,
+	cubelyr,
+    future.apply,
     ggforce,
     ggplot2,
     ggthemes,
@@ -50,23 +54,24 @@ Suggests:
     httr,
     jsonlite,
     knitr,
-    lwgeom,
     maps,
+    ncdfgeom,
     ncmeta (>= 0.0.3),
-	pbapply,
+    pbapply,
     plm,
     raster,
     rmarkdown,
     sp,
     spacetime,
+    spatstat,
+    starsdata,
     testthat,
-	viridis,
-	zoo,
-	xts,
-	starsdata
+    viridis,
+    xts,
+    zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Collate: 
     'init.R'
     'stars.R'
@@ -92,3 +97,8 @@ Collate:
     'xts.R'
     'intervals.R'
     'cubes.R'
+    'geom.R'
+    'mosaic.R'
+    'spatstat.R'
+    'OpenStreetMap.R'
+    'sample.R'

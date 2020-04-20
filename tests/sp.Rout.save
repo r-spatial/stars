@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -51,11 +51,15 @@ Type 'q()' to quit R.
 > meuse.area = SpatialPolygons(list(Polygons(list(Polygon(meuse.area)), "area")))
 
 > proj4string(meuse.area) <- crs
+> # remove +init=xxx
+> meuse@proj4string = CRS(
++ "+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs"
++ )
+> meuse.grid@proj4string = CRS(
++ "+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs"
++ )
 > 
-> library(stars)
-Loading required package: abind
-Loading required package: sf
-Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> suppressPackageStartupMessages(library(stars))
 > (m = st_as_stars(meuse))
 stars object with 1 dimensions and 12 attributes
 attribute(s):
@@ -113,10 +117,8 @@ coords.x1 178605 181390
 coords.x2 329714 333611
 Is projected: TRUE 
 proj4string :
-[+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889
-+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel
-+towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812
-+units=m +no_defs]
+[+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889
++k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs]
 Number of points: 155
 Data attributes:
     cadmium           copper            lead            zinc       
@@ -148,17 +150,15 @@ Data attributes:
 Object of class SpatialGridDataFrame
 Coordinates:
      min    max
-  178440 181560
+x 178440 181560
 y 329600 333760
 Is projected: TRUE 
 proj4string :
-[+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889
-+k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel
-+towgs84=565.2369,50.0087,465.658,-0.406857,0.350733,-1.87035,4.0812
-+units=m +no_defs]
+[+proj=sterea +lat_0=52.1561605555556 +lon_0=5.38763888888889
++k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +no_defs]
 Grid attributes:
   cellcentre.offset cellsize cells.dim
-             178460       40        78
+x            178460       40        78
 y            329620       40       104
 Data attributes:
      part.a          part.b           dist         soil       ffreq     
@@ -176,23 +176,9 @@ Data attributes:
 > all.equal(meuse.grid, gr2, check.attributes = FALSE)
 [1] TRUE
 > 
-> all.equal(meuse, m2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 2 string mismatches > >"                   
-[2] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Modes: character, NULL > >"              
-[3] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: Lengths: 155, 0 > >"                     
-[4] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 1: target is character, current is NULL > >"
-[5] "Attributes: < Component \"coords\": Attributes: < Component \"dimnames\": Component 2: 2 string mismatches > >"                 
-[6] "Attributes: < Component \"coords.nrs\": Numeric: lengths (2, 0) differ >"                                                       
-[7] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": Modes: character, numeric > >"                         
-[8] "Attributes: < Component \"data\": Attributes: < Component \"row.names\": target is character, current is numeric > >"           
-[9] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"                           
-> all.equal(meuse.grid, gr2)
-[1] "Attributes: < Component \"bbox\": Attributes: < Component \"dimnames\": Component 1: 1 string mismatch > >"       
-[2] "Attributes: < Component \"grid\": Attributes: < Component \"cellcentre.offset\": Names: 1 string mismatch > >"    
-[3] "Attributes: < Component \"grid\": Attributes: < Component \"cells.dim\": names for target but not for current > >"
-[4] "Attributes: < Component \"grid\": Attributes: < Component \"cellsize\": names for target but not for current > >" 
-[5] "Attributes: < Component \"proj4string\": Attributes: < Component \"projargs\": 1 string mismatch > >"             
+> #all.equal(meuse, m2)
+> #all.equal(meuse.grid, gr2)
 > 
 > proc.time()
    user  system elapsed 
-  0.598   0.046   0.636 
+  0.703   0.059   0.767 

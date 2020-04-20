@@ -4,8 +4,17 @@
 \alias{read_ncdf}
 \title{Read NetCDF into stars object}
 \usage{
-read_ncdf(.x, ..., var = NULL, ncsub = NULL,
-  curvilinear = character(0), eps = 1e-12)
+read_ncdf(
+  .x,
+  ...,
+  var = NULL,
+  ncsub = NULL,
+  curvilinear = character(0),
+  eps = 1e-12,
+  ignore_bounds = FALSE,
+  make_time = TRUE,
+  make_units = TRUE
+)
 }
 \arguments{
 \item{.x}{NetCDF file or source}
@@ -16,9 +25,17 @@ read_ncdf(.x, ..., var = NULL, ncsub = NULL,
 
 \item{ncsub}{matrix of start, count columns (see Details)}
 
-\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
+\item{curvilinear}{length two character named vector with names of variables holding 
+longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
+curvilinear coordinates if they are not supplied.}
 
 \item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
+
+\item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
+
+\item{make_time}{if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable}
+
+\item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.
@@ -38,13 +55,11 @@ assumed that the coordinates are 2D and that they relate to the first two dimens
 that order.
 
 
-If `var` is not set the first set of variables on a shared grid is used.
-It's supposed to be the grid with the most dimensions, but there's no control
-yet (see `ncmeta::nc_grids(.x)` for the current assumption).
+If \code{var} is not set the first set of variables on a shared grid is used.
 
 \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
-and be valid index using `RNetCDF::var.get.nc` convention (start is 1-based). If the count value
-is `NA` then all steps are included. Axis order must match that of the variable/s being read.
+and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
+is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
@@ -55,13 +70,13 @@ read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 
 #' precipitation data in a curvilinear NetCDF
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
 
 ##plot(prec) ## gives error about unique breaks
 ## remove NAs, zeros, and give a large number
 ## of breaks (used for validating in detail)
 qu_0_omit = function(x, ..., n = 22) {
-  x = na.omit(x)
+  x = units::drop_units(na.omit(x))
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
 library(dplyr)

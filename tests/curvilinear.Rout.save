@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,10 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: abind
-Loading required package: sf
-Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
+> suppressPackageStartupMessages(library(stars))
 > 
 > s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
 > if (s5p != "") {
@@ -37,6 +34,8 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 + # more direct method:
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
++ if (inherits(nit.c[[1]], "units"))
++ 	nit.c[[1]] = units::drop_units(nit.c[[1]])
 + nit.c[[1]][nit.c[[1]] > 9e+36] = NA
 + all.equal(nit.c0, nit.c)
 + st_crs(nit.c) = 4326
@@ -68,10 +67,10 @@ Linking to GEOS 3.7.0, GDAL 2.3.2, PROJ 5.2.0
 + }
 + 
 + }
-//PRODUCT/longitude, 
-//PRODUCT/latitude, 
-//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
-stars object with 2 dimensions and 1 attribute
+/PRODUCT/longitude, 
+/PRODUCT/latitude, 
+/PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
+stars object with 3 dimensions and 1 attribute
 attribute(s):
  nitrogendioxide_summed_total_column 
  Min.   :0e+00                       
@@ -82,34 +81,35 @@ attribute(s):
  Max.   :5e-04                       
  NA's   :330                         
 dimension(s):
-  from  to offset delta                       refsys point
-x    1 450     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 278     NA    NA +proj=longlat +datum=WGS8...    NA
-                          values    
-x [450x278] -5.81066,...,30.9468 [x]
-y  [450x278] 28.3605,...,51.4686 [y]
+     from  to offset delta refsys point                                 values
+x       1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°]
+y       1 278     NA    NA WGS 84    NA  [450x278] 28.3605 [°],...,51.4686 [°]
+time    1   1     NA    NA     NA    NA                                   NULL
+        
+x    [x]
+y    [y]
+time    
 curvilinear grid
-stars object with 2 dimensions and 1 attribute
+stars object with 3 dimensions and 1 attribute
 attribute(s):
  nitrogendioxide_summed_total_column 
  Min.   :0.00005                     
- 1st Qu.:0.00007                     
+ 1st Qu.:0.00008                     
  Median :0.00008                     
  Mean   :0.00009                     
  3rd Qu.:0.00009                     
  Max.   :0.00023                     
- NA's   :36                          
+ NA's   :37                          
 dimension(s):
-  from to offset delta                       refsys point
-x    1 57     NA    NA +proj=longlat +datum=WGS8...    NA
-y    1 35     NA    NA +proj=longlat +datum=WGS8...    NA
-                        values    
-x [57x35] -5.59621,...,30.8488 [x]
-y  [57x35] 28.3605,...,51.1544 [y]
+     from to offset delta refsys point                               values    
+x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x]
+y       1 35     NA    NA WGS 84    NA  [57x35] 28.6622 [°],...,51.4679 [°] [y]
+time    1  1     NA    NA     NA    NA                                 NULL    
 curvilinear grid
 null device 
           1 
+There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.724   0.164   7.880 
+  6.893   0.108   6.990 

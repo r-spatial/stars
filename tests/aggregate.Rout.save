@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,17 +15,23 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> suppressPackageStartupMessages(library(stars))
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.8.0, GDAL 3.0.2, PROJ 6.2.1
 > 
 > library(spacetime)
 > data(air) # this loads several datasets in .GlobalEnv
 > dim(air)
 space  time 
    70  4383 
-> d = st_dimensions(station = st_as_sfc(stations), time = dates)
+> d = st_dimensions(station = st_set_crs(st_as_sfc(stations), 4326), time = dates)
+Warning message:
+st_crs<- : replacing crs does not reproject data; use st_transform for that 
 > 
 > blocks = st_make_grid(st_as_sfc("POLYGON ((5.871619 47.26986, 15.03811 47.26986, 15.03811 55.05653, 5.871619 55.05653, 5.871619 47.26986))", crs = 4326),
 + 	n = c(3,3))
+although coordinates are longitude/latitude, st_relate_pattern assumes that they are planar
 > 
 > (aq = st_as_stars(list(PM10 = air), dimensions = d))
 stars object with 2 dimensions and 1 attribute
@@ -39,13 +45,14 @@ attribute(s):
  Max.   :274.33  
  NA's   :157659  
 dimension(s):
-        from   to     offset  delta                       refsys point
-station    1   70         NA     NA +proj=longlat +datum=WGS8...  TRUE
-time       1 4383 1998-01-01 1 days                         Date FALSE
+        from   to     offset  delta refsys point
+station    1   70         NA     NA WGS 84  TRUE
+time       1 4383 1998-01-01 1 days   Date FALSE
                                                          values
 station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
 time                                                       NULL
 > (a = aggregate(aq, blocks, mean, na.rm = TRUE))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -58,9 +65,9 @@ attribute(s):
  Max.   :183.27  
  NA's   :8429    
 dimension(s):
-         from   to     offset  delta                       refsys point
-geometry    1    9         NA     NA +proj=longlat +datum=WGS8... FALSE
-time        1 4383 1998-01-01 1 days                         Date FALSE
+         from   to     offset  delta refsys point
+geometry    1    9         NA     NA WGS 84 FALSE
+time        1 4383 1998-01-01 1 days   Date FALSE
                                                                     values
 geometry POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
 time                                                                  NULL
@@ -80,21 +87,22 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- file43883882144b.tif 
- Min.   : 33.0        
- 1st Qu.:199.2        
- Median :365.5        
- Mean   :365.5        
- 3rd Qu.:531.8        
- Max.   :698.0        
+ file15163cefa82.tif 
+ Min.   : 33.0       
+ 1st Qu.:199.2       
+ Median :365.5       
+ Mean   :365.5       
+ 3rd Qu.:531.8       
+ Max.   :698.0       
 dimension(s):
-     from to offset delta                       refsys point values    
-x       1  2      0     5 +proj=longlat +datum=WGS8... FALSE   NULL [x]
-y       1  2     12    -6 +proj=longlat +datum=WGS8... FALSE   NULL [y]
-band    1  6     NA    NA                           NA    NA   NULL    
+     from to offset delta refsys point values    
+x       1  2      0     5 WGS 84 FALSE   NULL [x]
+y       1  2     12    -6 WGS 84 FALSE   NULL [y]
+band    1  6     NA    NA     NA    NA   NULL    
 > 
-> sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), 4326)
+> sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 > (a = aggregate(st, sfc, mean))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -106,9 +114,9 @@ attribute(s):
  3rd Qu.:526.8  
  Max.   :693.0  
 dimension(s):
-         from to     offset  delta                       refsys point
-geometry    1  4         NA     NA +proj=longlat +datum=WGS8... FALSE
-t           1  6 2019-02-20 1 days                         Date FALSE
+         from to     offset  delta refsys point
+geometry    1  4         NA     NA WGS 84 FALSE
+t           1  6 2019-02-20 1 days   Date FALSE
                                                                     values
 geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POLYGON ((5 6, 10 6, 10 0, ...
 t                                                                     NULL
@@ -134,10 +142,10 @@ attribute(s):
  Max.   :720.0  
  NA's   :480    
 dimension(s):
-     from to     offset  delta                       refsys point values    
-time    1 10 2019-02-18 1 days                         Date    NA   NULL    
-x       1 10          0      1 +proj=longlat +datum=WGS8... FALSE   NULL [x]
-y       1 12         12     -1 +proj=longlat +datum=WGS8... FALSE   NULL [y]
+     from to     offset  delta refsys point values    
+time    1 10 2019-02-18 1 days   Date    NA   NULL    
+x       1 10          0      1 WGS 84 FALSE   NULL [x]
+y       1 12         12     -1 WGS 84 FALSE   NULL [y]
 > 
 > # with "by" geometry not overlapping x
 > pt = st_point(c(-10,-10))
@@ -146,8 +154,7 @@ Geometry set for 5 features
 geometry type:  GEOMETRY
 dimension:      XY
 bbox:           xmin: -10 ymin: -10 xmax: 10 ymax: 12
-epsg (SRID):    4326
-proj4string:    +proj=longlat +datum=WGS84 +no_defs
+geographic CRS: WGS 84
 POLYGON ((0 12, 5 12, 5 6, 0 6, 0 12))
 POLYGON ((5 12, 10 12, 10 6, 5 6, 5 12))
 POLYGON ((0 6, 5 6, 5 0, 0 0, 0 6))
@@ -166,14 +173,15 @@ attribute(s):
  Max.   :693.0  
  NA's   :6      
 dimension(s):
-         from to     offset  delta                       refsys point
-geometry    1  5         NA     NA +proj=longlat +datum=WGS8... FALSE
-t           1  6 2019-02-20 1 days                         Date FALSE
+         from to     offset  delta refsys point
+geometry    1  5         NA     NA WGS 84 FALSE
+t           1  6 2019-02-20 1 days   Date FALSE
                                                      values
 geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POINT (-10 -10)
 t                                                      NULL
 > 
 > (a = aggregate(st, st, mean))
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -185,13 +193,13 @@ attribute(s):
  3rd Qu.:540.2  
  Max.   :720.0  
 dimension(s):
-         from  to     offset  delta                       refsys point
-geometry    1 120         NA     NA +proj=longlat +datum=WGS8... FALSE
-t           1   6 2019-02-20 1 days                         Date FALSE
+         from  to     offset  delta refsys point
+geometry    1 120         NA     NA WGS 84 FALSE
+t           1   6 2019-02-20 1 days   Date FALSE
                                                                     values
 geometry POLYGON ((0 12, 1 12, 1 11,...,...,POLYGON ((9 1, 10 1, 10 0, ...
 t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.889   0.048   0.928 
+  1.100   0.053   1.143 

@@ -9,16 +9,24 @@
 \usage{
 st_redimension(x, new_dims, along, ...)
 
-\method{st_redimension}{stars}(x, new_dims = st_dimensions(x),
-  along = list(new_dim = names(x)), ...)
+\method{st_redimension}{stars}(
+  x,
+  new_dims = st_dimensions(x),
+  along = list(new_dim = names(x)),
+  ...
+)
 
-\method{st_redimension}{stars_proxy}(x, new_dims = st_dimensions(x),
-  along = list(new_dim = names(x)), ...)
+\method{st_redimension}{stars_proxy}(
+  x,
+  new_dims = st_dimensions(x),
+  along = list(new_dim = names(x)),
+  ...
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{new_dims}{target dimensions}
+\item{new_dims}{target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes}
 
 \item{along}{named list with new dimension name and values}
 

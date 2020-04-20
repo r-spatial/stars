@@ -1,0 +1,5 @@
+# lc.tif and lc.tif.aux.xml were generated from
+# https://github.com/mtennekes/tmap/issues/368#issuecomment-595727166
+# https://s3-us-west-2.amazonaws.com/mrlc/PR_landcover_wimperv_10-28-08_se5.zip
+# with:
+gdalwarp -tr 3000 -3000 pr_landcover_wimperv_10-28-08_se5.img lc.tif

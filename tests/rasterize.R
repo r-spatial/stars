@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 demo(nc, echo = FALSE, ask = FALSE)
 (x = st_rasterize(nc)) # default grid:
 plot(x, axes = TRUE)

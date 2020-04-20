@@ -2,10 +2,14 @@
 % Please edit documentation in R/sf.R
 \name{st_contour}
 \alias{st_contour}
-\title{Compute contour lines or sets}
+\title{Compute or plot contour lines or sets}
 \usage{
-st_contour(x, na.rm = TRUE, contour_lines = FALSE,
-  breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks)
+st_contour(
+  x,
+  na.rm = TRUE,
+  contour_lines = FALSE,
+  breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -23,5 +27,5 @@ Compute contour lines or sets
 this function requires GDAL >= 2.4.0
 }
 \seealso{
-for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}
+for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}; \link{contour} plots contour lines using R's native algorithm (which also plots contour levels)
 }

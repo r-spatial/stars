@@ -1,10 +1,10 @@
-setAs("stars", "Spatial", function(from) { 
+stars_to_Spatial = function(from) { 
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") #nocov
 	geom = if (has_raster(from)) {
 		if (length(dim(from)) > 2)
 			stop("stars object must have two (raster: x, y) dimensions")
-		if (!is_regular(from))
+		if (!is_regular_grid(from))
 			stop("only regular rasters can be converted to Spatial")
 		d = st_dimensions(from)
 		xy = attr(d, "raster")$dimensions
@@ -17,8 +17,8 @@ setAs("stars", "Spatial", function(from) {
 			stop("negative x cell size not supported")
 		if (delta[2] > 0)
 			stop("only negative y delta supported")
-		cellcentre.offset = c(offset[1] + 0.5 * delta[1],
-			offset[2] + (cells.dim[2] - 0.5) * delta[2])
+		cellcentre.offset = setNames(c(offset[1] + 0.5 * delta[1],
+			offset[2] + (cells.dim[2] - 0.5) * delta[2]), xy)
 		gt = sp::GridTopology(cellcentre.offset, abs(delta), cells.dim)
 		sp::SpatialGrid(gt, sp::CRS(st_crs(d[[ 1 ]]$refsys)$proj4string))
 	} else {
@@ -27,7 +27,9 @@ setAs("stars", "Spatial", function(from) {
 		as(st_dimensions(from)[[1]]$values, "Spatial")
 	}
 	sp::addAttrToGeom(geom, as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
-})
+}
+setAs("stars", "Spatial", stars_to_Spatial)
+
 
 #' @export
 st_as_stars.Spatial = function(.x, ...) {

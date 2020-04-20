@@ -17,19 +17,34 @@ to_curvilinear = function(x) {
 }
 
 transform_curvilinear = function(x, crs, ...) {
-	if(is.numeric(crs))
+	if (is.numeric(crs))
 		crs = st_crs(crs)  	 # nocov
-	
-	if(inherits(crs, "crs"))
-		crs = crs$proj4string	
+
+	to = crs
+	from = if (sf_extSoftVersion()["proj.4"] < "5.0.0") {
+			if (inherits(crs, "crs"))
+				to = crs$proj4string
+			else
+				stopifnot(is.character(crs))
+			st_crs(x)$proj4string
+		} else
+			st_crs(x)
+
+	get_yx = function(x) isTRUE(st_crs(st_sfc(st_point(), crs = x), parameters=TRUE)$yx)
 
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
-	pts = sf_project(from = d[[ xy[1] ]]$refsys, to = crs, pts = cc)
-	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = crs
+	pts = sf_project(from, to, cc)
+	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = st_crs(crs)
 	d[[ xy[1] ]]$values = matrix(pts[,1], dim(x)[xy])
 	d[[ xy[2] ]]$values = matrix(pts[,2], dim(x)[xy])
+	if (st_axis_order() && get_yx(st_crs(from)) != get_yx(st_crs(crs))) {
+		message("swapping [x] and [y] roles")
+		attr(d, "raster")$dimensions = rev(attr(d, "raster")$dimensions)
+		d[[ xy[1] ]]$values = t(d[[ xy[1] ]]$values)
+		d[[ xy[2] ]]$values = t(d[[ xy[2] ]]$values)
+	}
 	st_stars(x, d)
 }
 
@@ -54,6 +69,9 @@ transform_curvilinear = function(x, crs, ...) {
 #' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
 #' @export
 st_transform.stars =  function(x, crs, ...) {
+
+	stopifnot(!is.na(crs), !is.na(st_crs(x)))
+
 	if (has_sfc(x)) {
 		if (!inherits(crs, "crs") && !inherits(crs, "stars"))
 			crs = st_crs(crs) # needed for GDAL's transform of features
@@ -76,6 +94,8 @@ st_transform.stars =  function(x, crs, ...) {
 #' @name st_transform
 #' @export
 st_transform_proj.stars =  function(x, crs, ...) {
+
+	stopifnot(!is.na(crs), !is.na(st_crs(x)))
 
 	if (inherits(crs, "crs"))
 		crs = crs$proj4string

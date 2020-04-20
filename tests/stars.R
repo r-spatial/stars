@@ -36,8 +36,19 @@ st_coordinates(x)[1:10,]
 
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
-st_as_stars(st_bbox(x))
-st_as_stars(st_bbox(x), deltax = 20, deltay = 20)
+st_bbox(x)
+s = st_as_stars(st_bbox(x))
+st_bbox(s)
+s = st_as_stars(st_bbox(x), inside = TRUE)
+st_bbox(s)
+(s = st_as_stars(st_bbox(x), dy = 1))
+st_bbox(s)
+identical(st_as_stars(st_bbox(x), dx = 1), st_as_stars(st_bbox(x), dy = 1))
+s = st_as_stars(st_bbox(x), dx = 10)
+st_bbox(s)
+s = st_as_stars(st_bbox(x), dx = 20)
+st_bbox(s)
+
 df = as.data.frame(x)
 units::drop_units(x)
 
@@ -95,8 +106,8 @@ if (f != "") {
   print(ret)
   ret = adrop(c(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") + 0:2)))
   print(ret)
-  ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
-  print(ret)
+  #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
+  #print(ret)
 }
 
 st_dimensions(list(matrix(1, 4, 4))) # st_dimensions.default

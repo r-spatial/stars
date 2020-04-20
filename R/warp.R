@@ -1,13 +1,27 @@
+has_global_longitude = function(x) {
+	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x)$xlim), c(-180.,180.)))
+}
+
+cut_latitude_to_3857 = function(bb) { # Pseudomercator does not have global coverage:
+	bb["ymin"] = max(bb["ymin"], -85.06)
+	bb["ymax"] = min(bb["ymax"],  85.06)
+	bb
+}
+
 # create a target grid from x and crs, determining cellsize if unknown
 # return a dimensions object
 default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	bb_x = st_bbox(x)
+	if (st_is_longlat(x) && crs == st_crs(3857)) # common case:
+		bb_x = cut_latitude_to_3857(bb_x)
 	envelope = st_as_sfc(bb_x)
-	if (! is.na(segments))
+	# global adjustment: needed to have st_segmentize span global extent
+	# https://github.com/r-spatial/mapview/issues/256
+	if (!is.na(segments) && !has_global_longitude(x))
 		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
-	if (is.na(cellsize)) {
+	if (any(is.na(cellsize))) {
 		area = if (st_is_longlat(crs)) # we need a cell size in degree lon lat
 				diff(bb[c("xmin", "xmax")]) * diff(bb[c("ymin", "ymax")])
 			else 
@@ -28,15 +42,35 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	p4s = crs$proj4string
 	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
+	if (has_global_longitude(x)) { # if global coverage, don't cross the boundaries:
+		cellsize[1] = diff(bb[c("xmin", "xmax")])/nx
+		cellsize[2] = diff(bb[c("ymin", "ymax")])/ny
+	}
 	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = p4s)
 	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = p4s)
 	create_dimensions(list(x = x, y = y), get_raster())
 }
 
+rename_xy_dimensions = function(x, dims) {
+	#stopifnot(inherits(x, "stars"), inherits(dims, "dimensions"))
+	dx = st_dimensions(x)
+	xxy = attr(dx, "raster")$dimensions
+	dimsxy = attr(dims, "raster")$dimensions
+	if (all(xxy == dimsxy))
+		x
+	else {
+		na = names(dx)
+		names(dx)[match(xxy, na)] = dimsxy
+		attr(dx, "raster")$dimensions = dimsxy
+		structure(x, dimensions = dx)
+	}
+}
+
 # transform grid x to dimensions target
 # x is a stars object, target is a dimensions object
 transform_grid_grid = function(x, target) {
-	stopifnot(inherits(target, "dimensions"))
+	stopifnot(inherits(x, "stars"), inherits(target, "dimensions"))
+	x = rename_xy_dimensions(x, target) # so we can match by name
 	xy_names = attr(target, "raster")$dimensions
 	new_pts = st_coordinates(target[xy_names])
 	dxy = attr(target, "raster")$dimensions
@@ -52,18 +86,15 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = ceiling(colrow_from_xy(pts, get_geotransform(x)))
-	xy[ xy[,1] < 1 | xy[,1] > d[[ dxy[1] ]]$to | xy[,2] < 1 | xy[,2] > d[[ dxy[2] ]]$to, ] = NA
-
-	from = x[[1]] #[,,1]
+	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
 	dims = dim(x)
-	index = matrix(1:prod(dims[dxy]), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
+	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	if (length(dims) > 2) {
 		remaining_dims = dims[setdiff(names(dims), dxy)]
 		newdim = c(prod(dims[dxy]), prod(remaining_dims))
 		for (i in seq_along(x)) {
 			dim(x[[i]]) = newdim
-			x[[i]] = x[[i]][index,]
+			x[[i]] = x[[i]][index,] # FIXME: won't work for dims > 3?
 			dim(x[[i]]) = c(dim(target)[dxy], remaining_dims)
 		}
 	} else {
@@ -82,7 +113,7 @@ transform_grid_grid = function(x, target) {
 #' @param src object of class \code{stars} with source raster
 #' @param dest object of class \code{stars} with target raster geometry
 #' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing 
-#' @param cellsize cellsize in target coordinate reference system
+#' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
@@ -101,17 +132,29 @@ transform_grid_grid = function(x, target) {
 #' image(y, add = TRUE, nbreaks = 6)
 #' plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
+#' # warp 0-360 raster to -180-180 raster:
+#' r = read_stars(system.file("nc/reduced.nc", package = "stars"))
+#' r %>% st_set_crs(4326) %>% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
+#' plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
+#' plot(s, axes = TRUE)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100, 
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
 		method = "near") {
 
+	if (!inherits(src, "stars_proxy"))
+		src = st_normalize(src)
+
 	if (!is.na(crs))
 		crs = st_crs(crs)
 
 	if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
+		if (all(!is.na(cellsize))) {
+			cellsize = rep(abs(cellsize), length.out = 2)
+			options = c(options, "-ts", cellsize[1], cellsize[2])
+		}
 		if (! inherits(src, "stars_proxy")) {
 			src = st_as_stars_proxy(src, NA_value = no_data_value)
 			if (debug)
@@ -132,10 +175,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 					delete = FALSE
 					dest[[1]] # the file name of the stars_proxy, not to be deleted
 				}
-			if (utils::packageVersion("sf") <= "0.7-2")
-				sf::gdal_utils("warp", src[[1]], dest, options = options)
-			else 
-				sf::gdal_utils("warper", src[[1]], dest, options = method) # not "warp"!
+			sf::gdal_utils("warper", src[[1]], dest, options = method) # not "warp"!
 		}
 		if (debug)
 			cat("Writing result to: ", dest, "\n")
@@ -143,6 +183,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			on.exit(unlink(dest)) # a temp file
 		read_stars(dest)
 	} else {
+		if (method != "near")
+			stop("methods other than \"near\" are only supported if use_gdal=TRUE")
 		if (missing(dest)) {
 			if (is.na(crs))
 				stop("either dest or crs should be specified")

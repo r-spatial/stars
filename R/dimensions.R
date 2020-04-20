@@ -68,6 +68,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' @param which integer or character; index or name of the dimension to be changed
 #' @param values values for this dimension (e.g. \code{sfc} list-column)
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
+#' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
 #' @examples
 #' x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
@@ -82,7 +83,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #'    names = "bandwidth_midpoint", point = TRUE))
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
-st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, ...) {
+st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
 	d = st_dimensions(.x)
 	if (! is.null(values)) {
 		if (is.character(which))
@@ -93,7 +94,7 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 			if (dim(.x)[which] == length(values) - 1)
 				values = as_intervals(values)
 			else
-				stop(paste("length of values does not match dimension", which))
+				stop(paste("length of values does not match dimension length", which))
 		}
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		if (! is.null(names) && length(names) == 1)
@@ -110,8 +111,13 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 			attr(d, "raster") = r
 		}
 		if (length(d) != length(names))
-			stop("length of names should match number of dimension")
+			stop("length of names should match number of dimensions")
 		base::names(d) = names
+	} else if (! missing(xy)) {
+		stopifnot(length(xy) == 2)
+		r = attr(d, "raster")
+		r$dimensions = as.character(xy)
+		attr(d, "raster") = r
 	} else
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
 	if (inherits(.x, "stars_proxy"))
@@ -154,7 +160,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 				else
 					return(FALSE)
 			}
-		diff(range(ud)) / mean(ud) < epsilon
+		abs(diff(range(ud)) / mean(ud)) < epsilon
 	}
 }
 
@@ -166,9 +172,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 	if (! is.null(values)) { # figure out from values whether we have sth regular:
 		from = 1
 		to = length(values)
-		if (is.character(values) || is.factor(values))
-			values = as.character(values)
-		else if (is.atomic(values)) { 
+		if (!(is.character(values) || is.factor(values)) && is.atomic(values)) { 
 			if (! all(is.finite(values)))
 				warning("dimension value(s) non-finite")
 			else {
@@ -202,7 +206,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		if (inherits(values, "sfc")) {
 			point = inherits(values, "sfc_POINT")
 			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
-				refsys = st_crs(values)$proj4string
+				refsys = st_crs(values)
 		}
 		if (is.numeric(values) && (is.na(point) || !point)) {
 			values = if (is_raster)
@@ -230,6 +234,19 @@ create_dimensions = function(lst, raster = NULL) {
 	structure(lst, raster = raster, class = "dimensions")
 }
 
+get_crs = function(pr) {
+	if (!is.null(pr$crs))
+		pr$crs
+	else if (!is.null(pr$proj4string)) # older sf
+		st_crs(pr$proj4string)
+	else if (!is.null(pr$wkt)) # newer sf, but GDAL < 3.0.0
+		st_crs(pr$wkt)
+	else if (!is.null(pr$proj_wkt))
+		st_crs(pr$proj_wkt)
+	else 
+		st_crs(NA)
+}
+
 create_dimensions_from_gdal_meta = function(dims, pr) {
 	#if (all(is.na(pr$geotransform)))
 	#	pr$geotransform = c(0.0,  1.0,  0.0,  0.0,  0.0, -1.0) # some GTiffs...
@@ -241,14 +258,13 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 				offset = pr$geotransform[1], 
 				delta = pr$geotransform[2],
 				point = pr$point,
-				refsys = if (is.null(pr$proj4string)) NA_character_ 
-					else pr$proj4string),
+				refsys = get_crs(pr)),
 			y = create_dimension(from = pr$rows[1], to = pr$rows[2], 
 				offset = pr$geotransform[4],
 				delta = pr$geotransform[6],
 				point = pr$point,
-				refsys = if (is.null(pr$proj4string)) NA_character_ 
-					else pr$proj4string),
+				refsys = get_crs(pr)),
+			# default:
 			create_dimension(from = 1, to = dims[i]) # time? depth+units? To be filled in later...
 		)
 	}
@@ -349,11 +365,17 @@ parse_netcdf_meta = function(pr, name) {
 					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
 						origin = 0:1
 						units(origin) = try_as_units(u)
-						delta = as.numeric(set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard"))
+						delta = if (grepl("months", u)) {
+								if (cal == "360_day")
+									set_units(30 * 24 * 3600, "s", mode = "standard")
+								else
+									set_units((365/12) * 24 * 3600, "s", mode = "standard")
+							} else
+								set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
 						origin_txt = as.character(as.POSIXct(origin[1]))
     					if (!requireNamespace("PCICt", quietly = TRUE))
         					stop("package PCICt required, please install it first") # nocov
-						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * delta, cal, origin_txt)
+						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
 					} else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
 						if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
@@ -370,7 +392,11 @@ parse_netcdf_meta = function(pr, name) {
 }
 
 try_as_units = function(u) {
-	un = try(as_units(u), silent = TRUE)
+	un = try(suppressWarnings(as_units(u)), silent = TRUE)
+	if (inherits(un, "try-error")) # try without ^:
+		un = try(suppressWarnings(as_units(gsub("^", "", u, fixed = TRUE))), silent = TRUE)
+	if (inherits(un, "try-error")) # try without **
+		un = try(suppressWarnings(as_units(gsub("**", "", u, fixed = TRUE))), silent = TRUE)
 	if (inherits(un, "try-error")) {
 		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
 		NULL
@@ -400,31 +426,49 @@ expand_dimensions.stars = function(x, ...) {
 #   add_max = TRUE: add in addition to x and y start values an x_max and y_max end values
 expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 
-	if (isTRUE(max) && isTRUE(center))
+	if (length(center) == 1)
+		center = setNames(rep(center, length(x)), names(x))
+	if (length(max) == 1)
+		max = setNames(rep(max, length(x)), names(x))
+
+	if (is.list(max))
+		max = unlist(max)
+	if (is.list(center))
+		center = unlist(center)
+
+	if (any(max & center, na.rm = TRUE))
 		stop("only one of max and center can be TRUE, not both")
 
-	where = if (max) 
-			1.0
-		else if (isTRUE(center))
-			0.5
-		else
-			0.0
+	where = setNames(rep(0.0, length(x)), names(x)) # offset
+	for (i in seq_along(x)) {
+		if (max[i])
+			where[i] = 1.0
+		if (isTRUE(center[i]))
+			where[i] = 0.5
+	}
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions
 	gt = get_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
-	if (! is.null(xy) && all(!is.na(xy))) { # we have raster:
-		if (!max && (is.na(center) || center))
-			where = 0.5
+	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
+		where[xy] = ifelse(!max[xy] & (is.na(center[xy]) | center[xy]), 0.5, where[xy])
+#		where_xy = if (!max && (is.na(center) || center))
+#				0.5
+#			else
+#				where
 		if (xy[1] %in% names(lst)) # x
-			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where, gt, "x")
+			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where[[ xy[1] ]], gt, "x")
 		if (xy[2] %in% names(lst))  # y
-			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where, gt, "y")
+			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where[[ xy[2] ]], gt, "y")
 	}
-	for (nm in setdiff(names(lst), xy)) # non-xy dimensions
-		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where, NA, NA)
+
+	if ("crs" %in% names(lst))
+		lst[[ "crs" ]] = dimensions[[ "crs" ]]$values
+
+	for (nm in setdiff(names(lst), c(xy, "crs"))) # non-xy, non-crs dimensions
+		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where[[nm]], NA, NA)
 
 	lst
 }
@@ -447,16 +491,16 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 
 							format(max(y$values), digits = digits))
+					else if (inherits(y$values[[1]], "crs"))
+						paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
 					else
 						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
 			}
-			nc = if (inherits(y$refsys, "crs"))
-					nchar(y$refsys$proj4string)
-				else
-					nchar(y$refsys)
-			if (!is.na(y$refsys) && nc > 28)
-				y$refsys = paste0(substr(y$refsys, 1L, 25),"...")
+			if (is.na(y$refsys))
+				y$refsys = NA_character_
+			else if (nchar(tail(format(y$refsys), 1)) > 28)
+				y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, 25),"...")
 			y
 		}
 	)
@@ -477,6 +521,7 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	}
 	print(ret)
 	print(attr(x, "raster"))
+	invisible(ret)
 }
 
 identical_dimensions = function(lst) {
@@ -488,9 +533,14 @@ identical_dimensions = function(lst) {
 	TRUE
 }
 
-combine_dimensions = function(dots, along) {
-	dims = attr(dots[[1]], "dimensions")
+combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
+	dims = st_dimensions(dots[[1]])
 	if (along > length(dims)) {
+		if (length(dots) > 1 && check_dims_identical) {
+			for (i in 2:length(dots))
+				if (!identical(dims, st_dimensions(dots[[i]])))
+					stop(paste("dimensions of element", 1, "and", i, "are not identical"))
+		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
 		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
@@ -520,8 +570,14 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 			x$values = x$values[i]
 		if (!is.na(x$from)) {
 			rang = x$from:x$to # valid range
+			if (max(i) > -1 && min(i) < 0)
+				stop("cannot mix positive and negative indexes")
+			if (is.logical(i))
+				i = which(i)
+			else if (all(i < 0))
+				i = setdiff(rang, abs(i)) # subtract
 			if (all(diff(i) == 1)) {
-				if (min(i) < 1 || max(i) > length(rang))
+				if (max(i) > length(rang))
 					stop("invalid range selected")
 				sel = rang[i]
 				x$from = min(sel)

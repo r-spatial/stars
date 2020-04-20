@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -30,9 +30,10 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
+> st_crs(x) = st_crs(x) # cleans trailing space
 > model = lm(x~L7_ETMs.tif, head(as.data.frame(x), 50))
 > x = predict(x, model)
 > 
@@ -43,26 +44,51 @@ $L7_ETMs.tif
 
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-> (y = predict(y, model))
+> (yp = predict(y, model))
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
 [1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
 
 dimension(s):
      from  to  offset delta                       refsys point values    
-x       1 349  288776  28.5 +proj=utm +zone=25 +south... FALSE   NULL [x]
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south... FALSE   NULL [y]
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 call list:
 [[1]]
 predict(object = object, model = model)
 
-> all.equal(x, st_as_stars(y))
+> all.equal(x, st_as_stars(yp))
 [1] TRUE
+> 
+> yy = st_set_dimensions(y, 3, values = paste0("band", 1:6))
+> (y_spl = split(yy, 3))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point          values
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
+band    1   6      NA    NA                           NA    NA band1,...,band6
+        
+x    [x]
+y    [y]
+band    
+call list:
+[[1]]
+split(x = x, 3)
+
+> as.data.frame(st_as_stars(split(yy, 3)))[1:3,]
+         x       y band1 band2 band3 band4 band5 band6
+1 288790.5 9120747    69    56    46    79    86    46
+2 288819.0 9120747    69    57    49    75    88    49
+3 288847.5 9120747    63    52    45    66    75    41
 > 
 > proc.time()
    user  system elapsed 
-  1.774   0.065   1.838 
+  1.818   0.093   1.907 

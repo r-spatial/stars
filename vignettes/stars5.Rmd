@@ -32,7 +32,7 @@ system.file("gpkg/nc.gpkg", package = "sf") %>%
   read_sf() %>%
   st_transform(32119) -> nc
 nc$dens = nc$BIR79 / units::set_units(st_area(nc), km^2)
-(nc.st = st_rasterize(nc["dens"], deltax = 5000, deltay = 5000))
+(nc.st = st_rasterize(nc["dens"], dx = 5000, dy = 5000))
 plot(nc.st)
 ```
 
@@ -40,7 +40,7 @@ The algorithm used is the GDAL `rasterize` utility, all options of
 this utility can be passed to `st_rasterize`. The geometry of the
 final raster can be controlled by passing a target bounding box and
 either the raster dimensions `nx` and `ny`, or pixel size by the
-`deltax` and `deltay` parameters.
+`dx` and `dy` parameters.
 
 # Vectorizing a raster object to an `sf` object
 
@@ -60,12 +60,12 @@ x[[1]] = round(x[[1]]/5)
 ## Polygonizing
 
 In case raster cells reflect point values and we want to get
-a vector representatoin of the whole field, we can draw contour
+a vector representation of the whole field, we can draw contour
 lines and export the contour sets (only available when the 
 GDAL version is at least 2.4.0):
 ```{r eval=ev}
-#p = st_as_sf(x, as_points = TRUE, merge = TRUE)
-#plot(p)
+l =  st_contour(x,contour_lines=TRUE, breaks = 8:14)
+plot(l, key.pos = 1, pal = sf.colors(6), lwd = 2, key.length = 0.8)
 ```
 
 ## Exporting to points

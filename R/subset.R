@@ -61,9 +61,12 @@
 			mc[-(1:2)]
 		else
 			mc[-(1:3)]
+
 	do_select = FALSE
 	for (i in seq_along(mc)) { 
-		if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+		if ((is.call(mc[[i]]) || is.name(mc[[i]])) && !identical(as.character(mc[[i]]), "")) # try to "get" it:
+			mc[[i]] = eval(mc[[i]], parent.frame())
+		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = mc[[i]]
 			do_select = TRUE
 		}
@@ -73,7 +76,7 @@
 		args_xy = rep(list(rlang::missing_arg()), 2)
 		xy = attr(d, "raster")$dimensions
 		for (i in seq_along(mc)) {
-			if (is.numeric(mc[[i]]) || is.call(mc[[i]])) { # FIXME: or something else?
+			if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
 				if (names(d)[i] == xy[1])
 					args_xy[[1]] = mc[[i]]
 				if (names(d)[i] == xy[2])
@@ -85,7 +88,8 @@
 	# subset arrays:
 	args[["drop"]] = FALSE
 	for (i in names(x))
-		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"))
+		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"),
+			colors = attr(x[[i]], "colors"))
 
 	# now do dimensions:
 	if (do_select) {
@@ -104,7 +108,7 @@
 			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
 					all(argi[[1]] != rlang::missing_arg()) && 
 					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
-				d[[i]]$values = if(isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
 						ed[[i]]
 					else
 						as_intervals(ed[[i]], add_last = TRUE)
@@ -138,6 +142,7 @@
 #' @param x object of class \code{stars}
 #' @param y object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.
 #' @param epsilon numeric; shrink the bounding box of \code{y} to its center with this factor.
+#' @param as_points logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
 #' @details for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
@@ -190,13 +195,14 @@
 #' plot(l7[,1:13,1:13,1], reset = FALSE)
 #' image(l7[bb,,,1], add = TRUE, col = sf.colors())
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
-st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
+st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0, 
+		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
-	if (st_crs(x) != st_crs(y))
+	if (inherits(y, c("stars", "sf", "sfc", "bbox")) && st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
-	if (crop && (is_regular(x) || has_rotate_or_shear(x))) {
+	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]
@@ -204,11 +210,13 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 				st_bbox(y)
 			else
 				y
+		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
+			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = round(colrow_from_xy(matrix(bb, 2, byrow=TRUE), get_geotransform(dm)) + 0.5)
-		cr[1,] = cr[1,] - dm[[xd]]$from + 1
-		cr[2,] = cr[2,] - dm[[yd]]$from + 1
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm)
+		cr[,1] = cr[,1] - dm[[xd]]$from + 1
+		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {
 			if (names(d[i]) == xd)
 				args[[i+1]] = seq(max(1, cr[1, 1]), min(d[xd], cr[2, 1]))
@@ -225,14 +233,51 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0) {
 	if (inherits(y, "bbox"))
 		y = st_as_sfc(y)
 	dxy = attr(dm, "raster")$dimensions
-	as_points = all(st_dimension(y) == 2, na.rm = TRUE) # for points/lines: make polygons, otherwise: make points
-	xy_grd = if (is_curvilinear(x) || !as_points)
-			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points)
+	xy_grd = if (is_curvilinear(x) || !as_points) # FIXME: for curvilinear as_points should work too!
+			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
 		else
 			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 	inside = st_intersects(st_union(y), xy_grd)[[1]]
 	d = dim(x) # cropped x
-	mask = rep(NA_real_, prod(d[dxy]))
-	mask[inside] = 1
-	x * array(mask, d) # replicates over secondary dims
+	mask = rep(TRUE, prod(d[dxy]))
+	mask[inside] = FALSE
+	mask = array(mask, d) # replicates over secondary dims
+	for (i in seq_along(x))
+		x[[i]][mask] = NA
+	x
+}
+
+#' @export
+st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
+	stopifnot(all(domain == c(0,0,1,1)))
+	x = st_upfront(x)
+	d = st_dimensions(x)
+	if (d[[1]]$from != 1) {
+		d[[1]]$offset = d[[1]]$offset + (d[[1]]$from - 1) * d[[1]]$delta
+		d[[1]]$to = d[[1]]$to - d[[1]]$from + 1
+		d[[1]]$from = 1
+	}
+	if (d[[2]]$from != 1) {
+		d[[2]]$offset = d[[2]]$offset + (d[[2]]$from - 1) * d[[2]]$delta
+		d[[2]]$to = d[[2]]$to - d[[2]]$from + 1
+		d[[2]]$from = 1
+	}
+	st_stars(x, dimensions = d)
+}
+
+#' @name stars_subset
+#' @param which character or integer; dimension(s) to be flipped
+#' @export
+#' @return \code{st_flip} flips (reverts) the array values along the chosen dimension 
+#' without(s) changing the dimension properties
+st_flip = function(x, which = 1) {
+	if (is.character(which))
+		which = match(which, names(dim(x)))
+	stopifnot(all(which %in% seq_along(dim(x))))
+	dims = lapply(dim(x), seq_len)
+	for (i in which)
+		dims[[ which[i] ]] = rev(dims[[ which[i] ]])
+	for (i in seq_along(x))
+		x[[i]] = do.call(`[`, c(list(x[[i]]), dims))
+	x
 }

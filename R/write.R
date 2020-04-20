@@ -1,3 +1,23 @@
+# reset the offset when x is a sub-raster (i.e, starts at index larger than 1)
+reset_sub = function(x) {
+	d = st_dimensions(x)
+	xy = attr(d, "raster")$dimensions
+	if (all(is.na(xy)))
+		return(x)
+	
+	for (i in xy) {
+		if (d[[ i ]]$from > 1) {
+			if (!is_regular_grid(x))
+				stop("can only write sub-rasters for regular grids")
+			ioff = d[[ i ]]$from - 1
+			d[[ i ]]$offset = d[[ i ]]$offset + ioff * d[[ i ]]$delta
+			d[[ i ]]$to = d[[ i ]]$to - ioff
+			d[[ i ]]$from = 1
+		}
+	}
+	structure(x, dimensions = d)
+}
+
 st_write.stars = function(obj, dsn, layer, ...) {
 	.Deprecated("read_stars") # nocov
 }
@@ -18,15 +38,19 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param options character vector with options
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
+#' @param update logical; if \code{TRUE}, an existing file is being updated
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
-		options = character(0), type = "Float32", NA_value = NA_real_) {
+		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE) {
 	if (length(obj) > 1 && missing(layer))
 		warning("all but first attribute are ignored")
 	obj = st_upfront(obj[layer])
+	if (! update) # new file: should not be a sub-array
+		obj = reset_sub(obj)
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
-		type = type, NA_value = NA_value, geotransform = get_geotransform(obj))
+		type = type, NA_value = NA_value, geotransform = get_geotransform(obj), 
+		update = update)
 	invisible(obj)
 }
 
@@ -46,20 +70,28 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		setTxtProgressBar(pb, 0)
 	}
 
+	dim_obj = dim(obj)
+	if (prod(chunk_size) > prod(dim_obj[1:2])) {
+		write_stars(st_as_stars(obj), dsn, layer, ..., driver = driver, options = options,
+			type = type, NA_value = NA_value)
+		return(invisible(obj))
+	}
+
 	# write chunks:
-	d = dim(obj)
 	di = st_dimensions(obj)
+	if (di[[1]]$from > 1 || di[[2]]$from > 1)
+		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
 
 	created = FALSE
 
-	ncol = ceiling(d[1] / chunk_size[1])
-	nrow = ceiling(d[2] / chunk_size[2])
+	ncol = ceiling(dim_obj[1] / chunk_size[1])
+	nrow = ceiling(dim_obj[2] / chunk_size[2])
 	for (col in 1:ncol) { 
 		di[[1]]$from = 1 + (col - 1) * chunk_size[1]
-		di[[1]]$to   = min(col * chunk_size[1], d[1])
+		di[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
 		for (row in 1:nrow) {
 			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
-			di[[2]]$to   = min(row * chunk_size[2], d[2])
+			di[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
 			chunk = st_as_stars(structure(obj, dimensions = di))
 			if (! created) { # create:
 				d = st_dimensions(chunk)
@@ -94,7 +126,7 @@ detect.driver = function(filename) {
 		if (ext == 'tif' | ext == 'tiff') { return('GTiff')
 		} else if (ext == 'grd') { return('raster')
 		} else if (ext == 'asc') { return('ascii')
-		} else if (ext == 'nc' | ext == 'cdf' | ext == 'ncdf') { return('CDF')
+		} else if (ext == 'nc' || ext == 'cdf' || ext == 'ncdf') { return('netcdf')
 		} else if (ext == 'kml') { return('KML')
 		} else if (ext == 'kmz') { return('KML')		
 		} else if (ext == 'big') { return('big.matrix')

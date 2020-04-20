@@ -6,9 +6,16 @@
 \alias{st_crop.stars}
 \title{crop a stars object}
 \usage{
-\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 0)
+\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 0, collect = TRUE)
 
-\method{st_crop}{stars}(x, y, ..., crop = TRUE, epsilon = 0)
+\method{st_crop}{stars}(
+  x,
+  y,
+  ...,
+  crop = TRUE,
+  epsilon = 0,
+  as_points = all(st_dimension(y) == 2, na.rm = TRUE)
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -20,6 +27,10 @@
 \item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.}
 
 \item{epsilon}{numeric; shrink the bounding box of \code{y} to its center with this factor.}
+
+\item{collect}{logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read}
+
+\item{as_points}{logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}}
 }
 \description{
 crop a stars object
