@@ -1,10 +1,10 @@
 has_global_longitude = function(x) {
-	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x))[c(1,3)], c(-180,180)))
+	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x)$xlim), c(-180.,180.)))
 }
 
 cut_latitude_to_3857 = function(bb) { # Pseudomercator does not have global coverage:
-	bb[2] = max(bb[2], -85.06)
-	bb[4] = min(bb[4],  85.06)
+	bb["ymin"] = max(bb["ymin"], -85.06)
+	bb["ymax"] = min(bb["ymax"],  85.06)
 	bb
 }
 
@@ -21,7 +21,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
-	if (is.na(cellsize)) {
+	if (any(is.na(cellsize))) {
 		area = if (st_is_longlat(crs)) # we need a cell size in degree lon lat
 				diff(bb[c("xmin", "xmax")]) * diff(bb[c("ymin", "ymax")])
 			else 
@@ -113,7 +113,7 @@ transform_grid_grid = function(x, target) {
 #' @param src object of class \code{stars} with source raster
 #' @param dest object of class \code{stars} with target raster geometry
 #' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing 
-#' @param cellsize cellsize in target coordinate reference system
+#' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
@@ -151,6 +151,10 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 
 	if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
+		if (all(!is.na(cellsize))) {
+			cellsize = rep(abs(cellsize), length.out = 2)
+			options = c(options, "-ts", cellsize[1], cellsize[2])
+		}
 		if (! inherits(src, "stars_proxy")) {
 			src = st_as_stars_proxy(src, NA_value = no_data_value)
 			if (debug)

@@ -27,7 +27,7 @@ st_warp(
 
 \item{crs}{coordinate reference system for destination grid, only used when \code{dest} is missing}
 
-\item{cellsize}{cellsize in target coordinate reference system}
+\item{cellsize}{length 1 or 2 numeric; cellsize in target coordinate reference system units}
 
 \item{segments}{(total) number of segments for segmentizing the bounding box before transforming to the new crs}
 
