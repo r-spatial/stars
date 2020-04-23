@@ -153,7 +153,7 @@
   <span class='no'>y</span>,
   <span class='no'>...</span>,
   <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>.Machine</span>$<span class='no'>double.eps</span>),
   <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='fu'>st_dimension</span>(<span class='no'>y</span>) <span class='kw'>==</span> <span class='fl'>2</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 )</pre>
 
@@ -178,7 +178,7 @@
     </tr>
     <tr>
       <th>epsilon</th>
-      <td><p>numeric; shrink the bounding box of <code>y</code> to its center with this factor.</p></td>
+      <td><p>numeric; factor to shrink the bounding box of <code>y</code> towards its center before cropping.</p></td>
     </tr>
     <tr>
       <th>collect</th>
@@ -214,11 +214,10 @@
 #&gt;  Mean   : 56.37  
 #&gt;  3rd Qu.: 65.00  
 #&gt;  Max.   :111.00  
-#&gt;  NA's   :102     
 #&gt; dimension(s):
 #&gt;      from to  offset delta                       refsys point values    
-#&gt; x       3 11  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       4 12 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       3 10  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       4 11 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  6      NA    NA                           NA    NA   NULL    </div><div class='input'>
 <span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>l7</span>[,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>], <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>l7</span>[<span class='no'>bb</span>,,,<span class='fl'>1</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sf.colors</span>())</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='st_crop-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># slightly smaller bbox:</span>
