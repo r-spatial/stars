@@ -13,7 +13,7 @@
   y,
   ...,
   crop = TRUE,
-  epsilon = 0,
+  epsilon = sqrt(.Machine$double.eps),
   as_points = all(st_dimension(y) == 2, na.rm = TRUE)
 )
 }
@@ -26,7 +26,7 @@
 
 \item{crop}{logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.}
 
-\item{epsilon}{numeric; shrink the bounding box of \code{y} to its center with this factor.}
+\item{epsilon}{numeric; factor to shrink the bounding box of \code{y} towards its center before cropping.}
 
 \item{collect}{logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read}
 

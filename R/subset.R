@@ -141,7 +141,7 @@
 #' @export
 #' @param x object of class \code{stars}
 #' @param y object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.
-#' @param epsilon numeric; shrink the bounding box of \code{y} to its center with this factor.
+#' @param epsilon numeric; factor to shrink the bounding box of \code{y} towards its center before cropping.
 #' @param as_points logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
@@ -195,7 +195,7 @@
 #' plot(l7[,1:13,1:13,1], reset = FALSE)
 #' image(l7[bb,,,1], add = TRUE, col = sf.colors())
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
-st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = 0, 
+st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), 
 		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
 	d = dim(x)
 	dm = st_dimensions(x)
