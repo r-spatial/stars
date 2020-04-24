@@ -18,7 +18,7 @@ st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	if (length(.x)) {
 		for (i in seq_along(.x)[-1])
-			if (!identical(dim(.x[[1]]), dim(.x[[i]])))
+			if (!all(dim(.x[[1]]) == dim(.x[[i]])))
 				stop("dim attributes not identical")
 		if (!is.null(names(.x)))
 			names(.x) = make.names(names(.x), unique = TRUE)
@@ -51,6 +51,8 @@ st_stars = function(x, dimensions) {
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
 	stopifnot(!is.null(attr(dimensions, "raster")))
+#	for (i in seq_along(x))
+#		names(dim(x[[i]])) = names(dimensions)
 	structure(x, dimensions = dimensions, class = "stars")
 }
 

@@ -15,7 +15,12 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 		l = raster::levels(.x)[[1]]$levels
 		if (length(l) == 0) # get the layer's RAT, column att:
 			l = raster::factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]]
-		v = structure(v, class = "factor", levels = as.character(l))
+		colors = try(.x@legend@colortable, silent = TRUE)
+		if (inherits(colors, "try-error"))
+			colors = NULL
+		else
+			colors = colors[-1]
+		v = structure(v, class = "factor", levels = as.character(l), colors = colors)
 		# FIXME: should we handle levels for all layers here, or break on multiple different ones?
 	}
 	dimensions = list(
