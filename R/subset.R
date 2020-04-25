@@ -214,16 +214,16 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm)
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = TRUE)
 		cr[,1] = cr[,1] - dm[[xd]]$from + 1
 		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {
 			if (names(d[i]) == xd)
-				args[[i+1]] = seq(max(1, cr[1, 1]), min(d[xd], cr[2, 1]))
+				args[[i+1]] = seq(max(1, cr[1, 1], na.rm = TRUE), min(d[xd], cr[2, 1], na.rm = TRUE))
 			if (names(d[i]) == yd) {
 				if (dm[[ yd ]]$delta < 0)
 					cr[1:2, 2] = cr[2:1, 2]
-				args[[i+1]] = seq(max(1, cr[1, 2]), min(d[yd], cr[2, 2]))
+				args[[i+1]] = seq(max(1, cr[1, 2], na.rm = TRUE), min(d[yd], cr[2, 2], na.rm = TRUE))
 			}
 		}
 		x = eval(rlang::expr(x[!!!args]))
