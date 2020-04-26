@@ -143,9 +143,9 @@
 <a href="#version-0-4-2" class="anchor"></a>version 0.4-2<small> Unreleased </small>
 </h1>
 <ul>
-<li>
-<code>image.stars</code> (and hence <code>plot.stars</code>) gains an <code>extent</code> argument for setting the extent of a plot; <a href="https://github.com/r-spatial/sf/issues/1193" class="uri">https://github.com/r-spatial/sf/issues/1193</a>
-</li>
+<li><p><code>st_crop</code> now works with bounding boxes larger than the downsampled bounding box; <a href='https://github.com/r-spatial/stars/issues/276'>#276</a></p></li>
+<li><p><code>st_crop</code> now has a non-zero default for <code>epsilon</code> (bounding box shrinkage); <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>
+<li><p><code>image.stars</code> (and hence <code>plot.stars</code>) gains an <code>extent</code> argument for setting the extent of a plot; <a href="https://github.com/r-spatial/sf/issues/1193" class="uri">https://github.com/r-spatial/sf/issues/1193</a></p></li>
 </ul>
 </div>
     <div id="version-0-4-1" class="section level1">
@@ -154,9 +154,9 @@
 </h1>
 <ul>
 <li><p><code>st_warp</code> (stars native) flips longitudes a full cycle; <a href='https://github.com/r-spatial/stars/issues/256'>#256</a>, <a href='https://github.com/r-spatial/stars/issues/264'>#264</a>, <a href='https://github.com/r-spatial/stars/issues/269'>#269</a></p></li>
-<li><p>handle axis order in <code>st_transform</code> (needs sf &gt;= 0.9-1)</p></li>
+<li><p>handle axis order in <code>st_transform</code> (requires sf &gt;= 0.9-1)</p></li>
 <li><p>depend on sf 0.9-0</p></li>
-<li><p>adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; <a href="https://github.com/hadley/cubelyr/issues/2" class="uri">https://github.com/hadley/cubelyr/issues/2</a></p></li>
+<li><p>adapt to cubelyr split-off from dplyr; add cubelyr to Suggests:; <a href="https://github.com/hadley/cubelyr/issues/2" class="uri">https://github.com/hadley/cubelyr/issues/2</a></p></li>
 <li><p>add <code>droplevels</code> method</p></li>
 <li><p>handle color tables, category tables and raster attribute tables read through GDAL; <a href='https://github.com/r-spatial/stars/issues/128'>#128</a>, <a href='https://github.com/r-spatial/stars/issues/245'>#245</a>; <a href="https://github.com/r-spatial/mapview/issues/208" class="uri">https://github.com/r-spatial/mapview/issues/208</a></p></li>
 <li><p>handle dimension <code>crs</code> specially, for proxy objects now.</p></li>
