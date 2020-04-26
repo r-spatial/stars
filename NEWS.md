@@ -1,16 +1,20 @@
 # version 0.4-2
 
+* `st_crop` now works with bounding boxes larger than the downsampled bounding box; #276
+
+* `st_crop` now has a non-zero default for `epsilon` (bounding box shrinkage); #275
+
 * `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
 
 # version 0.4-1
 
 * `st_warp` (stars native) flips longitudes a full cycle; #256, #264, #269
 
-* handle axis order in `st_transform` (needs sf >= 0.9-1)
+* handle axis order in `st_transform` (requires sf >= 0.9-1)
 
 * depend on sf 0.9-0 
 
-* adapt to cubelyr split-off from dplyr; add cubelyr to Suggests; https://github.com/hadley/cubelyr/issues/2
+* adapt to cubelyr split-off from dplyr; add cubelyr to Suggests:; https://github.com/hadley/cubelyr/issues/2
 
 * add `droplevels` method
 
