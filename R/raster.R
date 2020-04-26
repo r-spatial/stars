@@ -67,12 +67,12 @@ st_as_raster = function(x, ...) {
 	if (length(dim(x)) == 2) {
     	raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], 
-            crs = st_crs(x)$proj4string, vals = values) 
+            crs = as(st_crs(x), "CRS"), vals = values) 
 	} else {
 		third = setdiff(names(d), dxy)
 		b = raster::brick(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], nl = dim(x)[third],
-            crs = st_crs(x)$proj4string)
+            crs = as(st_crs(x), "CRS"))
 		raster::values(b) = values
 		z = seq(d[[third]])
 		if (all(!is.na(z)))
