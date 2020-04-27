@@ -94,7 +94,7 @@ transform_grid_grid = function(x, target) {
 		newdim = c(prod(dims[dxy]), prod(remaining_dims))
 		for (i in seq_along(x)) {
 			dim(x[[i]]) = newdim
-			x[[i]] = x[[i]][index,] # FIXME: won't work for dims > 3?
+			x[[i]] = x[[i]][index,]
 			dim(x[[i]]) = c(dim(target)[dxy], remaining_dims)
 		}
 	} else {
@@ -148,8 +148,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 
 	if (!is.na(crs))
 		crs = st_crs(crs)
-
-	if (use_gdal) {
+	
+	ret = if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
 		if (all(!is.na(cellsize))) {
 			cellsize = rep(abs(cellsize), length.out = 2)
@@ -193,4 +193,14 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			stop("dest should be a stars object, or a dimensions object")
 		transform_grid_grid(st_as_stars(src), st_dimensions(dest))
 	}
+	# restore attributes?
+	if (method %in% c("near", "mode")) {
+		a = lapply(src, attributes)
+		for (i in seq_along(ret))
+			ret[[i]] = structure(ret[[i]], 
+				levels = attr(ret[[i]], "levels") %||% a[[i]]$levels, 
+				colors = attr(ret[[i]], "colors") %||% a[[i]]$colors, 
+				class =  attr(ret[[i]], "class")  %||% a[[i]]$class)
+	}
+	ret
 }
