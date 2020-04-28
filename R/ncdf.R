@@ -134,7 +134,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                    var_names = meta$variable$name,
                                    curvilinear,
                                    eps = eps,
-                                   ignore_bounds = ignore_bounds)
+                                   ignore_bounds = ignore_bounds,
+                                   atts = meta$attribute)
   dimensions <- .get_nc_time(dimensions, make_time,
                             coord_var, rep_var, meta)
 
@@ -216,8 +217,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
     if(nrow(rep_coord_var) == 0) rep_coord_var[1, ] <- NA
 
-    c_v_units <- .get_attributes(atts, "units", rep_coord_var$X)$value[[1]]
-    if(!is.null(c_v_units) && grepl("degrees", c_v_units, ignore.case = TRUE)) {
+
+    if(.is_degrees(atts, rep_coord_var$X)) {
       message(paste("No projection information found in nc file. \n",
                     "Coordinate variable units found to be degrees, \n",
                     "assuming WGS84 Lat/Lon."))
@@ -234,6 +235,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       return(ret)
     }
   }
+}
+
+.is_degrees <- function(atts, var) {
+  units <- .get_attributes(atts, "units", var)$value[[1]]
+  !is.null(units) && grepl("degrees", units, ignore.case = TRUE)
 }
 
 .clean_coord_var <- function(c_v, var, meta, prj, curvilinear) {
@@ -507,7 +513,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 }
 
 .get_nc_dimensions <- function(dimensions, coord_var, coords, nc, dims,
-                               var_names, curvilinear, eps, ignore_bounds) {
+                               var_names, curvilinear, eps, ignore_bounds,
+                               atts) {
 
   to_rectilinear = FALSE
 
@@ -516,6 +523,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     lon_coord <- coord_var$X[lon_coord][1]
     lons <- coords[[lon_coord]]
     if (!is.null(lons) && !regular_intervals(lons, epsilon = eps) &&
+        .is_degrees(atts, lon_coord) &&
         lons[1L] > 180 && min(lons) > 0) {
       coords[[lon_coord]] <- ((coords[[lon_coord]] + 180) %% 360) - 180
     }
