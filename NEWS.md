@@ -1,8 +1,10 @@
 # version 0.4-2
 
+* `st_warp` now preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
+
 * `st_crop` now works with bounding boxes larger than the downsampled bounding box; #276
 
-* `st_crop` now has a non-zero default for `epsilon` (bounding box shrinkage); #275
+* `st_crop` now has a non-zero default for `epsilon` (bounding box shrinkage) to exclude cells touching the crop bounding box; #275
 
 * `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
 

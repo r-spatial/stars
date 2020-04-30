@@ -50,3 +50,8 @@ droplevels.stars = function(x, ...) {
 	}
 	x
 }
+
+#' @export
+droplevels.stars_proxy = function(x, ...) {
+	collect(x, match.call(), "droplevels")
+}
