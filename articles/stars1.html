@@ -366,6 +366,7 @@
 <p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"nc/bcsd_obs_1999.nc"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>) <span class="kw">%&gt;%</span>
     <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="st">"data/full_data_daily_2013.nc"</span>) <span class="kw">-&gt;</span> <span class="no">w</span>
+<span class="co">## pr, tas, </span>
 <span class="co">## pr, tas,</span></pre></body></html></div>
 <p>We see that</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">w</span>
@@ -434,6 +435,15 @@
 <span class="co"># install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") </span>
 <span class="no">file_list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"netcdf/"</span>, <span class="no">x</span>), <span class="kw">package</span> <span class="kw">=</span> <span class="st">"starsdata"</span>)
 (<span class="no">y</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">file_list</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice, </span>
+<span class="co">## sst, anom, err, ice,</span>
 <span class="co">## stars object with 4 dimensions and 4 attributes</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
 <span class="co">##    sst [°*C]       anom [°*C]      err [°*C]     ice [percent]  </span>
@@ -558,9 +568,9 @@
 <span class="co">##  Min.   : 0.000  </span>
 <span class="co">##  1st Qu.: 8.000  </span>
 <span class="co">##  Median :10.000  </span>
-<span class="co">##  Mean   : 9.995  </span>
+<span class="co">##  Mean   : 9.998  </span>
 <span class="co">##  3rd Qu.:12.000  </span>
-<span class="co">##  Max.   :27.000  </span>
+<span class="co">##  Max.   :26.000  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
@@ -581,14 +591,7 @@
 <span class="co">## day                                                                      NULL</span>
 <span class="co">## hour                                                                     NULL</span></pre></body></html></div>
 <p>This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a <code>tbl_cube</code>, the simple feature geometry dimensions need to be replaced by indexes:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">st</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/as.tbl_cube.html">as.tbl_cube</a></span>()
-<span class="co">## Source: local array [72,000,000 x 5]</span>
-<span class="co">## D: origin [int, 100]</span>
-<span class="co">## D: destination [int, 100]</span>
-<span class="co">## D: mode [chr, 3]</span>
-<span class="co">## D: day [[(days since 2015-01-01)], 100]</span>
-<span class="co">## D: hour [[h], 24]</span>
-<span class="co">## M: traffic [int[,100,3,100,24]]</span></pre></body></html></div>
+<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="no">st</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/as.tbl_cube.html">as.tbl_cube</a></span>()</pre></body></html></div>
 <p>The following demonstrates how <code>dplyr</code> can filter bike travel, and compute mean bike traffic by hour of day:</p>
 <div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="no">b</span> <span class="kw">&lt;-</span> <span class="no">st</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/as.tbl_cube.html">as.tbl_cube</a></span>() <span class="kw">%&gt;%</span>
@@ -597,10 +600,8 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">traffic</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">traffic</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">ggforce</span>) <span class="co"># for plotting a units variable</span>
-<span class="co">## Loading required package: ggforce</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">b</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">hour</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">traffic</span>))</pre></body></html></div>
-<p><img src="stars1_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 </div>
 </div>
   </div>

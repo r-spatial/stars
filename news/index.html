@@ -143,8 +143,9 @@
 <a href="#version-0-4-2" class="anchor"></a>version 0.4-2<small> Unreleased </small>
 </h1>
 <ul>
+<li><p><code>st_warp</code> now preserves levels and colors; <a href="https://github.com/mtennekes/tmap/issues/429" class="uri">https://github.com/mtennekes/tmap/issues/429</a></p></li>
 <li><p><code>st_crop</code> now works with bounding boxes larger than the downsampled bounding box; <a href='https://github.com/r-spatial/stars/issues/276'>#276</a></p></li>
-<li><p><code>st_crop</code> now has a non-zero default for <code>epsilon</code> (bounding box shrinkage); <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>
+<li><p><code>st_crop</code> now has a non-zero default for <code>epsilon</code> (bounding box shrinkage) to exclude cells touching the crop bounding box; <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>
 <li><p><code>image.stars</code> (and hence <code>plot.stars</code>) gains an <code>extent</code> argument for setting the extent of a plot; <a href="https://github.com/r-spatial/sf/issues/1193" class="uri">https://github.com/r-spatial/sf/issues/1193</a></p></li>
 </ul>
 </div>

@@ -154,7 +154,7 @@
   <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
   <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>,
   <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>proxy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>proxy</span> <span class='kw'>=</span> !<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>curvilinear</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'>is_big</span>(<span class='no'>.x</span>, <span class='no'>...</span>),
   <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
   <span class='kw'>normalize_path</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>RAT</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>)
@@ -201,7 +201,10 @@
     </tr>
     <tr>
       <th>proxy</th>
-      <td><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array metadata only; if <code>FALSE</code> the full array data is read in memory.</p></td>
+      <td><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array 
+metadata only; if <code>FALSE</code> the full array data is read in memory. Always <code>FALSE</code> for curvilinear girds. 
+If not set, defaults to <code>TRUE</code> when the number of cells to be read is larger than <code>options(stars.n_proxy</code>,
+or to 1e8 if that option was not set.</p></td>
     </tr>
     <tr>
       <th>curvilinear</th>
@@ -339,7 +342,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='fu'><a href='write_stars.html'>write_stars</a></span>(<span class='no'>st</span>, <span class='no'>tmp</span>)
 (<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file535a4e69b98c.tif 
+#&gt;  file55bb2e924d0a.tif 
 #&gt;  Min.   :  1.00       
 #&gt;  1st Qu.: 30.75       
 #&gt;  Median : 60.50       
@@ -355,7 +358,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; [2,]   38   98</div><div class='input'>(<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
    <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>)))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file535a4e69b98c.tif 
+#&gt;  file55bb2e924d0a.tif 
 #&gt;  Min.   :33.00        
 #&gt;  1st Qu.:36.75        
 #&gt;  Median :65.50        
