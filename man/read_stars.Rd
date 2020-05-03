@@ -14,7 +14,7 @@ read_stars(
   NA_value = NA_real_,
   along = NA_integer_,
   RasterIO = list(),
-  proxy = FALSE,
+  proxy = !length(curvilinear) && is_big(.x, ...),
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0)
@@ -39,7 +39,10 @@ read_stars(
 
 \item{RasterIO}{list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.}
 
-\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.}
+\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array 
+metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds. 
+If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
+or to 1e8 if that option was not set.}
 
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
 
