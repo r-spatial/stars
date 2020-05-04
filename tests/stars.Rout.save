@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -440,6 +440,7 @@ y    1 180     90    -1 WGS 84    NA   NULL [y]
 > nc_red = system.file("nc/reduced.nc", package = "stars")
 > red = read_stars(nc_red)
 sst, anom, err, ice, 
+sst, anom, err, ice, 
 > red
 stars object with 4 dimensions and 4 attributes
 attribute(s):
@@ -616,14 +617,23 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 +   #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
 +   #print(ret)
 + }
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
+sst, anom, err, ice, 
 sst, anom, 
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
@@ -692,4 +702,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.842   0.324   5.173 
+  6.054   0.368   6.427 

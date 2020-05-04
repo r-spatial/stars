@@ -262,6 +262,13 @@ merge.stars_proxy = function(x, y, ...) {
 
 #' @export
 "[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
+	get_range = function(expr) {
+		v = try(eval(expr))
+		if (is.numeric(v) && all(diff(v) == 1))
+			range(v)
+		else
+			NA
+	}
 	mc = match.call()
 	lst = as.list(mc)
 	if (length(lst) < 3)
@@ -271,6 +278,13 @@ merge.stars_proxy = function(x, y, ...) {
 	if (inherits(i, c("character", "logical", "numeric"))) {
 		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
 		lst[["i"]] = TRUE # this one has been handled now
+		for (ix in 1:3) { # FIXME: further than 3?
+			if (length(lst) >= 4 && !any(is.na(r <- get_range(lst[[4]])))) {
+				attr(x, "dimensions")[[ix]]$from = r[1]
+				attr(x, "dimensions")[[ix]]$to = r[2]
+				lst[[4]] = NULL # remove
+			}
+		}
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
 		if (inherits(i, c("stars", "bbox")))
@@ -297,7 +311,7 @@ bb_shrink = function(bb, e) {
 #' @name st_crop
 #' @param collect logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read
 #' @export
-st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0, collect = TRUE) {
+st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), collect = TRUE) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	if (st_crs(x) != st_crs(y))
@@ -316,14 +330,14 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0, collect = TR
 		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
 		for (i in seq_along(dm)) {
 			if (names(d[i]) == xd) {
-				dm[[ xd ]]$from = max(1, cr[1, 1])
-				dm[[ xd ]]$to = min(d[xd], cr[2, 1])
+				dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
+				dm[[ xd ]]$to = min(d[xd], cr[2, 1], na.rm = TRUE)
 			}
 			if (names(d[i]) == yd) {
 				if (dm[[ yd ]]$delta < 0)
 					cr[1:2, 2] = cr[2:1, 2]
-				dm[[ yd ]]$from = max(1, cr[1, 2])
-				dm[[ yd ]]$to = min(d[yd], cr[2, 2])
+				dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
+				dm[[ yd ]]$to = min(d[yd], cr[2, 2], na.rm = TRUE)
 			}
 		}
 	}

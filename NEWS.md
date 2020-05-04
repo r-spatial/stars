@@ -1,5 +1,9 @@
 # version 0.4-2
 
+* `read_stars` now chooses a value for `proxy` depending on the data dimensions; #281
+
+* x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
+
 * `st_warp` now preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
 
 * `st_crop` now works with bounding boxes larger than the downsampled bounding box; #276

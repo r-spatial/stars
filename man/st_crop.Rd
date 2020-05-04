@@ -6,7 +6,14 @@
 \alias{st_crop.stars}
 \title{crop a stars object}
 \usage{
-\method{st_crop}{stars_proxy}(x, y, ..., crop = TRUE, epsilon = 0, collect = TRUE)
+\method{st_crop}{stars_proxy}(
+  x,
+  y,
+  ...,
+  crop = TRUE,
+  epsilon = sqrt(.Machine$double.eps),
+  collect = TRUE
+)
 
 \method{st_crop}{stars}(
   x,
