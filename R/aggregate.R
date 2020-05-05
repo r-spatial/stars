@@ -163,10 +163,14 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 #' Extract cell values at point locations
 #'
 #' Extract cell values at point locations, possibly using interpolation
+#' @name st_extract
 #' @export
+#' @returns object of class \code{stars} with POINT geometries; 
+#' use \link{st_as_sf} or \link{as.data.frame} to convert this to other classes
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @export
+#' @name st_extract
 st_extract.stars = function(x, ...) {
 	st_extract(st_as_stars_proxy(x), ...)
 }
@@ -175,6 +179,8 @@ st_extract.stars = function(x, ...) {
 #' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
 #' @param method interpolation method, see \link{st_warp}
 #' @param cellsize numeric; cellsize chosen for the sampling cell.
+#' @param as_sf logical; if \code{TRUE} return an object of class \code{sf}, otherwise of class \code{stars}
+#' @name st_extract
 #' @export
 st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7) {
 	stopifnot(inherits(pts, c("sf", "sfc")))
@@ -184,7 +190,7 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 	lst = vector("list", length(pts))
 	tmp = tempfile(fileext = ".tif")
 	on.exit(unlink(tmp))
-	nz = ifelse(length(dim(x)) == 2, 1, dim(x)[3])
+	nz = ifelse(length(dim(x)) == 2, 1, prod(dim(x)[-(1:2)])) # FIXME:? assumes x/y = 1&2
 	halfcellsize = cellsize / 2
 	for (i in seq_along(pts)) {
 		# write pt
@@ -199,10 +205,8 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 		# read result, add:
 		lst[[i]] = read_stars(tmp)
 	}
-	df = as.data.frame(t(sapply(lst, function(x) x[[1]])))
-	df.names = if (nz == 1)
-			names(x[[1]])
-		else 
-			st_dimensions(x)[[3]]$values %||% paste0(names(st_dimensions(x)[3]), seq_len(nz))
-	st_set_geometry(setNames(df, df.names), pts)
+	m = t(sapply(lst, function(x) x[[1]]))
+	d = create_dimensions(append(list(sfc = create_dimension(values = pts)),
+		st_dimensions(x)[-(1:2)]))
+	st_as_stars(setNames(list(m), names(x)), dimensions = d)
 }

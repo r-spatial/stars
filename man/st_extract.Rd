@@ -2,9 +2,30 @@
 % Please edit documentation in R/aggregate.R
 \name{st_extract}
 \alias{st_extract}
+\alias{st_extract.stars}
+\alias{st_extract.stars_proxy}
 \title{Extract cell values at point locations}
 \usage{
 st_extract(x, ...)
+
+\method{st_extract}{stars}(x, ...)
+
+\method{st_extract}{stars_proxy}(x, pts, ..., method = "near", cellsize = 1e-07)
+}
+\arguments{
+\item{x}{object of class \code{stars} or \code{stars_proxy}}
+
+\item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
+
+\item{method}{interpolation method, see \link{st_warp}}
+
+\item{cellsize}{numeric; cellsize chosen for the sampling cell.}
+
+\item{as_sf}{logical; if \code{TRUE} return an object of class \code{sf}, otherwise of class \code{stars}}
+}
+\value{
+object of class \code{stars} with POINT geometries; 
+use \link{st_as_sf} or \link{as.data.frame} to convert this to other classes
 }
 \description{
 Extract cell values at point locations, possibly using interpolation
