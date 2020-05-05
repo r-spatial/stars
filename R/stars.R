@@ -139,7 +139,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = FALSE) {
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz) {
 
 	if (xor(missing(nx), missing(ny)))
 		stop("either specify both nx and ny, or none of them")
@@ -178,8 +178,14 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		y = create_dimension(from = 1, to = ny, offset = unname(ylim[2]),
 			delta = unname(dy), refsys = st_crs(.x))
 	}
-	st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
-		dims = create_dimensions(list(x = x, y = y), get_raster()))
+	if (missing(nz)) # 2D:
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y), get_raster()))
+	else {
+		z = create_dimension(from = 1, to = nz[[1]])
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
+	}
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 

@@ -159,3 +159,38 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 	l = lapply(seq_along(by), function(i) aggregate(st_as_stars(x[by[i]]), by[i], FUN, ...))
 	do.call(c, c(l, along = list(which_sfc(l[[1]]))))
 }
+
+#' Extract cell values at point locations
+#'
+#' Extract cell values at point locations, possibly using interpolation
+#' @export
+st_extract = function(x, ...) UseMethod("st_extract")
+
+#' @export
+#' @param x object of class \code{stars} or \code{stars_proxy}
+#' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
+st_extract.stars = function(x, ...) {
+	st_extract(st_as_stars_proxy(x), ...)
+}
+
+#' @export
+st_extract.stars_proxy = function(x, pts, method = 'near') {
+	stopifnot(inherits(pts, c("sf", "sfc")))
+	stopifnot(all(st_dimension(pts) == 0))
+	
+	pts = st_geometry(pts)
+	lst = vector("list", length(pts))
+	tmp = tempfile(fileext = ".tif")
+	nz = ifelse(length(dim(x)) == 2, 1, dim(x)[3])
+	for (i in seq_along(pts)) {
+		# write pt
+		s = st_as_stars(st_bbox(pts[i]), nx = 1, ny = 1, dx = 1, dy = 1, nz = nz)
+		write_stars(s, tmp)
+		# warp x to pt
+		# read result
+		sf::gdal_utils("warper", x[[1]], tmp, method)
+		lst[[i]] = read_stars(tmp)
+		# add
+	}
+	st_set_geometry(as.data.frame(t(sapply(lst, function(x) x[[1]]))), pts)
+}
