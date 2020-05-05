@@ -174,7 +174,7 @@ st_extract.stars = function(x, ...) {
 }
 
 #' @export
-st_extract.stars_proxy = function(x, pts, method = 'near') {
+st_extract.stars_proxy = function(x, pts, method = 'near', cellsize = 1e-9) {
 	stopifnot(inherits(pts, c("sf", "sfc")))
 	stopifnot(all(st_dimension(pts) == 0))
 	
@@ -184,7 +184,7 @@ st_extract.stars_proxy = function(x, pts, method = 'near') {
 	nz = ifelse(length(dim(x)) == 2, 1, dim(x)[3])
 	for (i in seq_along(pts)) {
 		# write pt
-		s = st_as_stars(st_bbox(pts[i]), nx = 1, ny = 1, dx = 1, dy = 1, nz = nz)
+		s = st_as_stars(st_bbox(pts[i]), nx = 1, ny = 1, dx = cellsize, dy = cellsize, nz = nz)
 		write_stars(s, tmp)
 		# warp x to pt
 		# read result
