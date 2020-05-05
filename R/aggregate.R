@@ -165,8 +165,10 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 #' Extract cell values at point locations, possibly using interpolation
 #' @name st_extract
 #' @export
-#' @returns object of class \code{stars} with POINT geometries; 
-#' use \link{st_as_sf} or \link{as.data.frame} to convert this to other classes
+#' @returns if \code{x} has more dimensions than only x and y (raster), an 
+#' object of class \code{stars} with POINT geometries replacing x and y raster
+#' dimensions; otherwise an object of \class{st}.
+#' @details works on the first attribute only
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @export
@@ -206,7 +208,14 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 		lst[[i]] = read_stars(tmp)
 	}
 	m = t(sapply(lst, function(x) x[[1]]))
-	d = create_dimensions(append(list(sfc = create_dimension(values = pts)),
-		st_dimensions(x)[-(1:2)]))
-	st_as_stars(setNames(list(m), names(x)), dimensions = d)
+	if (inherits(x[[1]], "factor"))
+		m = structure(m, levels = levels(x[[1]]), colors = attr(x[[1]], "colors"), class = "factor")
+	if (nz == 1) # single band:
+		st_set_geometry(setNames(as.data.frame(t(m)), names(x)), pts)
+	else { # multi-dimensional: return stars
+		dim(m) = c(length(pts), dim(x)[-(1:2)])
+		d = create_dimensions(append(list(sfc = create_dimension(values = pts)),
+			st_dimensions(x)[-(1:2)]))
+		st_as_stars(setNames(list(m), names(x)), dimensions = d)
+	}
 }

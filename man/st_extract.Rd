@@ -24,9 +24,13 @@ st_extract(x, ...)
 \item{as_sf}{logical; if \code{TRUE} return an object of class \code{sf}, otherwise of class \code{stars}}
 }
 \value{
-object of class \code{stars} with POINT geometries; 
-use \link{st_as_sf} or \link{as.data.frame} to convert this to other classes
+if \code{x} has more dimensions than only x and y (raster), an 
+object of class \code{stars} with POINT geometries replacing x and y raster
+dimensions; otherwise an object of \class{st}.
 }
 \description{
 Extract cell values at point locations, possibly using interpolation
+}
+\details{
+works on the first attribute only
 }
