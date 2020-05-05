@@ -199,5 +199,10 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 		# read result, add:
 		lst[[i]] = read_stars(tmp)
 	}
-	st_set_geometry(as.data.frame(t(sapply(lst, function(x) x[[1]]))), st_geometry(pts))
+	df = as.data.frame(t(sapply(lst, function(x) x[[1]])))
+	df.names = if (nz == 1)
+			names(x[[1]])
+		else 
+			st_dimensions(x)[[3]]$values %||% paste0(names(st_dimensions(x)[3]), seq_len(nz))
+	st_set_geometry(setNames(df, df.names), pts)
 }
