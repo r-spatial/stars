@@ -15,18 +15,18 @@ st_extract(x, ...)
 \arguments{
 \item{x}{object of class \code{stars} or \code{stars_proxy}}
 
+\item{...}{passed on to next method}
+
 \item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
 
 \item{method}{interpolation method, see \link{st_warp}}
 
 \item{cellsize}{numeric; cellsize chosen for the sampling cell.}
-
-\item{as_sf}{logical; if \code{TRUE} return an object of class \code{sf}, otherwise of class \code{stars}}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
-dimensions; otherwise an object of \class{st}.
+dimensions; otherwise an object of \code{sf}.
 }
 \description{
 Extract cell values at point locations, possibly using interpolation

@@ -167,12 +167,13 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 #' @export
 #' @returns if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
-#' dimensions; otherwise an object of \class{st}.
+#' dimensions; otherwise an object of \code{sf}.
 #' @details works on the first attribute only
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @export
 #' @name st_extract
+#' @param ... passed on to next method
 st_extract.stars = function(x, ...) {
 	st_extract(st_as_stars_proxy(x), ...)
 }
@@ -181,7 +182,6 @@ st_extract.stars = function(x, ...) {
 #' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
 #' @param method interpolation method, see \link{st_warp}
 #' @param cellsize numeric; cellsize chosen for the sampling cell.
-#' @param as_sf logical; if \code{TRUE} return an object of class \code{sf}, otherwise of class \code{stars}
 #' @name st_extract
 #' @export
 st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7) {
@@ -189,6 +189,8 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 	stopifnot(all(st_dimension(pts) == 0))
 	
 	pts = st_geometry(pts)
+	if (st_crs(pts) != st_crs(x))
+		pts = st_transform(pts, st_crs(x))
 	lst = vector("list", length(pts))
 	tmp = tempfile(fileext = ".tif")
 	on.exit(unlink(tmp))
@@ -198,8 +200,7 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 		# write pt
 		pt = pts[[i]]
 		bb = st_bbox(setNames(c(pt[1] - halfcellsize, pt[2] - halfcellsize, 
-			pt[1] + halfcellsize, pt[2] + halfcellsize), c("xmin", "ymin", "xmax", "ymax")),
-			crs = st_crs(pts))
+			pt[1] + halfcellsize, pt[2] + halfcellsize), c("xmin", "ymin", "xmax", "ymax")))
 		s = st_as_stars(bb, nx = 1, ny = 1, nz = nz)
 		write_stars(s, tmp)
 		# warp x to pt
