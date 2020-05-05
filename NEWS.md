@@ -1,5 +1,7 @@
 # version 0.4-2
 
+* add `st_extract` to extract e.g. time series from grids at point locations; #279
+
 * `read_stars` now chooses a value for `proxy` depending on the data dimensions; #281
 
 * x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
