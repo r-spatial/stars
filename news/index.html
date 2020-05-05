@@ -143,6 +143,8 @@
 <a href="#version-0-4-2" class="anchor"></a>version 0.4-2<small> Unreleased </small>
 </h1>
 <ul>
+<li><p><code>read_stars</code> now chooses a value for <code>proxy</code> depending on the data dimensions; <a href='https://github.com/r-spatial/stars/issues/281'>#281</a></p></li>
+<li><p>x/y range subsetting of <code>stars_proxy</code> objects now only reads that range, similar to how crop already did this.</p></li>
 <li><p><code>st_warp</code> now preserves levels and colors; <a href="https://github.com/mtennekes/tmap/issues/429" class="uri">https://github.com/mtennekes/tmap/issues/429</a></p></li>
 <li><p><code>st_crop</code> now works with bounding boxes larger than the downsampled bounding box; <a href='https://github.com/r-spatial/stars/issues/276'>#276</a></p></li>
 <li><p><code>st_crop</code> now has a non-zero default for <code>epsilon</code> (bounding box shrinkage) to exclude cells touching the crop bounding box; <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>

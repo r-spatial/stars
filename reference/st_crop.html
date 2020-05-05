@@ -145,7 +145,14 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_crop</span>(<span class='no'>x</span>, <span class='no'>y</span>, <span class='no'>...</span>, <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>collect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>st_crop</span>(
+  <span class='no'>x</span>,
+  <span class='no'>y</span>,
+  <span class='no'>...</span>,
+  <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>.Machine</span>$<span class='no'>double.eps</span>),
+  <span class='kw'>collect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_crop</span>(
