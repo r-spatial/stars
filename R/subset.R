@@ -272,7 +272,7 @@ st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
 #' without(s) changing the dimension properties
 #' @examples
 #' lc = read_stars(system.file("tif/lc.tif", package = "stars"))
-#' x = ( orig = lc, 
+#' x = c(orig = lc, 
 #'       flip_x = st_flip(lc, "x"), 
 #'       flip_y = st_flip(lc, "y"), 
 #'       flip_xy = st_flip(lc, c("x", "y")), 
