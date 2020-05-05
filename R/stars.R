@@ -126,6 +126,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 
 #' @param nx integer; number of cells in x direction; see details
 #' @param ny integer; number of cells in y direction; see details
+#' @param nz integer; number of cells in z direction; if missing no z-dimension is created.
 #' @param dx numeric; cell size in x direction; see details
 #' @param dy numeric; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
@@ -134,7 +135,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
