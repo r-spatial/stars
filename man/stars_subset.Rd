@@ -66,4 +66,11 @@ image(x[buf])
 plot(buf, add = TRUE, col = NA)
 image(x[buf, crop=FALSE])
 plot(buf, add = TRUE, col = NA)
+lc = read_stars(system.file("tif/lc.tif", package = "stars"))
+x = c(orig = lc, 
+      flip_x = st_flip(lc, "x"), 
+      flip_y = st_flip(lc, "y"), 
+      flip_xy = st_flip(lc, c("x", "y")), 
+      along = 3)
+plot(x)
 }
