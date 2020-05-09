@@ -212,7 +212,7 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE
 	write_stars(x, fname, NA_value = NA_value)
 	if (!quiet)
 		cat(paste("writing to", fname, "\n"))
-	st_stars_proxy(list(fname), st_dimensions(x), NA_value = NA_value)
+	st_stars_proxy(setNames(list(fname), names(x)[1]), st_dimensions(x), NA_value = NA_value)
 }
 
 # execute the call list on a stars object

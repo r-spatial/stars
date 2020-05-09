@@ -35,7 +35,8 @@ st_as_stars(.x, ...)
   values = 0,
   n = 64800,
   pretty = FALSE,
-  inside = FALSE
+  inside = FALSE,
+  nz
 )
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
@@ -89,6 +90,8 @@ st_as_stars(.x, ...)
 
 \item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely?}
 
+\item{nz}{integer; number of cells in z direction; if missing no z-dimension is created.}
+
 \item{name}{character; name for the geometry dimensions}
 
 \item{att}{see \link[raster]{factorValues}; column in the RasterLayer's attribute table}
@@ -110,7 +113,7 @@ convert objects into a stars object
 \details{
 if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 
-For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 
 For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.
 

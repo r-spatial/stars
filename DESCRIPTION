@@ -100,3 +100,4 @@ Collate:
     'spatstat.R'
     'OpenStreetMap.R'
     'sample.R'
+    'extract.R'
