@@ -16,7 +16,7 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 		if (length(l) == 0) # get the layer's RAT, column att:
 			l = raster::factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]]
 		colors = try(.x@legend@colortable, silent = TRUE)
-		if (inherits(colors, "try-error"))
+		if (inherits(colors, "try-error") || length(colors) == 0)
 			colors = NULL
 		else
 			colors = colors[-1]
