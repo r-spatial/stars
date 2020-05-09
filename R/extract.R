@@ -21,9 +21,10 @@ st_extract.stars = function(x, ...) {
 #' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
 #' @param method interpolation method, see \link{st_warp}
 #' @param cellsize numeric; cellsize chosen for the sampling cell.
+#' @param debug logical; if \code{TRUE}, do not remove the destination grid file and print its name;
 #' @name st_extract
 #' @export
-st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7) {
+st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7, debug = FALSE) {
 	stopifnot(inherits(pts, c("sf", "sfc")))
 	stopifnot(all(st_dimension(pts) == 0))
 	
@@ -32,7 +33,10 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7)
 		pts = st_transform(pts, st_crs(x))
 	lst = vector("list", length(pts))
 	tmp = tempfile(fileext = ".tif")
-	on.exit(unlink(tmp))
+	if (debug)
+		print(tmp)
+	else
+		on.exit(unlink(tmp))
 	nz = ifelse(length(dim(x)) == 2, 1, prod(dim(x)[-(1:2)])) # FIXME:? assumes x/y = 1&2
 	halfcellsize = cellsize / 2
 	for (i in seq_along(pts)) {
