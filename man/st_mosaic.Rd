@@ -4,6 +4,7 @@
 \alias{st_mosaic}
 \alias{st_mosaic.stars}
 \alias{st_mosaic.character}
+\alias{st_mosaic.stars_proxy}
 \title{build mosaic (composite) of several spatially disjoint stars objects}
 \usage{
 st_mosaic(.x, ...)
@@ -17,6 +18,14 @@ st_mosaic(.x, ...)
 )
 
 \method{st_mosaic}{character}(
+  .x,
+  ...,
+  dst = tempfile(fileext = file_ext),
+  options = c("-vrtnodata", "-9999"),
+  file_ext = ".tif"
+)
+
+\method{st_mosaic}{stars_proxy}(
   .x,
   ...,
   dst = tempfile(fileext = file_ext),
