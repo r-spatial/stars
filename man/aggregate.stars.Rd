@@ -13,7 +13,8 @@
   join = st_intersects,
   as_points = any(st_dimension(by) == 2, na.rm = TRUE),
   rightmost.closed = FALSE,
-  left.open = FALSE
+  left.open = FALSE,
+  exact = FALSE
 )
 }
 \arguments{
@@ -27,13 +28,15 @@
 
 \item{drop}{logical; ignored}
 
-\item{join}{join function to find matches of x to by}
+\item{join}{function; function used to find matches of \code{x} to \code{by}}
 
 \item{as_points}{see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?}
 
 \item{rightmost.closed}{see \link{findInterval}}
 
 \item{left.open}{logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}}
+
+\item{exact}{logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells}
 }
 \description{
 spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution

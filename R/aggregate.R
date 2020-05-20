@@ -6,10 +6,11 @@
 #' @param FUN aggregation function, such as \code{mean}
 #' @param ... arguments passed on to \code{FUN}, such as \code{na.rm=TRUE}
 #' @param drop logical; ignored
-#' @param join join function to find matches of x to by
+#' @param join function; function used to find matches of \code{x} to \code{by}
 #' @param rightmost.closed see \link{findInterval}
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
+#' @param exact logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells
 #' @export
 #' @examples
 #' # aggregate time dimension in format Date
@@ -38,7 +39,7 @@
 #' aggregate(x, "2 days", mean)
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
-		left.open = FALSE) {
+		left.open = FALSE, exact = FALSE) {
 
 	if (inherits(by, "stars"))
 		by = st_as_sfc(by, as_points = FALSE)
@@ -47,6 +48,32 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	if (!inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
 			paste(classes, collapse= ", "), "supported"))
+
+	if (missing(FUN))
+		stop("missing FUN argument")
+	if (exact && inherits(by, c("sf", "sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
+    	if (!requireNamespace("raster", quietly = TRUE))
+        	stop("package raster required, please install it first") # nocov
+    	if (!requireNamespace("exactextractr", quietly = TRUE))
+        	stop("package exactextractr required, please install it first") # nocov
+		x = st_upfront(x)
+		d = st_dimensions(x)[1:2]
+		r = st_as_stars(list(array(1, dim = dim(d))), dimensions = d)
+		e = exactextractr::coverage_fraction(as(r, "Raster"), by)
+		st = do.call(raster::stack, e)
+		m = raster::getValues(st)
+		if (identical(FUN, mean))
+			m = sweep(m, 2, colSums(m), "/")
+		else if (!identical(FUN, sum))
+			stop("for exact=TRUE, FUN should either be mean or sum")
+		new_dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)]))
+		out_dim = c(ncol(m), dim(x)[-(1:2)])
+		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
+		ret = st_as_stars(agg, dimensions = 
+			create_dimensions(append(list(sfc = create_dimension(values = by)),
+			st_dimensions(x)[-(1:2)])))
+		return(ret)
+	}
 
 	geom = "geometry"
 	drop_y = FALSE
@@ -67,14 +94,14 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	
 			# find groups:
 			x_geoms = if (has_raster(x)) {
-					if (identical(join, st_intersection))
-						x_geoms
+					if (identical(join, st_intersects))
+						x
 					else
 						st_as_sfc(x, as_points = as_points)
 				} else
 					st_dimensions(x)[[ which_sfc(x) ]]$values
 			
-			# unlist(join(x_geoms, by)) -> this would miss the empty groups, 
+			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups, 
 			#      and may have multiple if geometries in by overlap, hence:
 			sapply(join(x_geoms, by), function(x) if (length(x)) x[1] else NA)
 		} else { # time: by is POSIXct/Date or character
