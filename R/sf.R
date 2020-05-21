@@ -100,6 +100,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE, connect8 = FALSE) { 
 
 	crs = st_crs(x)
+	d = st_dimensions(x)
 	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
 		mask = if (na.rm) {
 				mask = x[1]
@@ -116,7 +117,6 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
 		st_set_crs(ret, crs)
 	} else {
-
 		if (merge)
 			stop("merge not yet supported for the as_points=TRUE case")
 
@@ -132,7 +132,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			ix = which_sfc(x)
 			if (length(ix) > 1)	
 				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
+			other_dim = setdiff(seq_along(dim(x)), ix[1])
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
+			other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			un_dim = function(x) { # remove a dim attribute from data.frame columns
 				for (i in seq_along(x))
 					x[[i]] = structure(x[[i]], dim = NULL)
@@ -144,6 +146,8 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	
 			if (length(dim(x)) == 1) # one-dimensional cube...
 				names(df) = names(x)
+			else if (!is.null(other_values) && length(other_values) == ncol(df))
+				names(df) = other_values
 			else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
 				names(df) = names(dfs)
 			else { # another exception... time as second dimension

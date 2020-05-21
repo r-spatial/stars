@@ -14,6 +14,8 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @name st_extract
 #' @param ... passed on to next method
 st_extract.stars = function(x, ...) {
+	if (length(x) > 1)
+		x = merge(x)
 	st_extract(st_as_stars_proxy(x), ...)
 }
 
@@ -37,6 +39,16 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7,
 		print(tmp)
 	else
 		on.exit(unlink(tmp))
+
+	# prepare input imagery:
+	if (length(x) > 1) # merge:
+		x = merge(x)
+	if (length(x[[1]]) > 1) { # merge into a single file:
+		out_file = tempfile(fileext = ".tif")
+		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
+		x[[1]] = out_file
+	}
+
 	nz = ifelse(length(dim(x)) == 2, 1, prod(dim(x)[-(1:2)])) # FIXME:? assumes x/y = 1&2
 	halfcellsize = cellsize / 2
 	for (i in seq_along(pts)) {

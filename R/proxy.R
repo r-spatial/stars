@@ -256,7 +256,17 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 
 #' @export
 merge.stars_proxy = function(x, y, ...) {
-	collect(x, match.call(), "merge")
+	if (!missing(y))
+		stop("argument y needs to be missing: merging attributes of x")
+	#collect(x, match.call(), "merge")
+	if (length(x) > 1) { 
+		x[[1]] = unlist(x)
+		for (i in 2:length(x))
+			x[[i]] = NULL
+	}
+	st_stars_proxy(x, dimensions = create_dimensions(append(st_dimensions(x), 
+		list(band = create_dimension(values = names(x[[1]])))), 
+		raster = attr(st_dimensions(x), "raster")))
 }
 
 
