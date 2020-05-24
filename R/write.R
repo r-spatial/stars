@@ -89,30 +89,39 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	}
 
 	# write chunks:
-	di = st_dimensions(obj)
-	if (di[[1]]$from > 1 || di[[2]]$from > 1)
-		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
+	di_write = di_read = st_dimensions(obj)
+        di_from = c(di_read[[1]]$from, di_read[[2]]$from)
+        # di_offset = c(di_read[[1]]$offset, di_read[[2]]$offset)
+	# if (di_from[1] > 1 || di_from[2] > 1)
+	# 	message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
 
 	created = FALSE
 
 	ncol = ceiling(dim_obj[1] / chunk_size[1])
 	nrow = ceiling(dim_obj[2] / chunk_size[2])
-	for (col in 1:ncol) { 
-		di[[1]]$from = 1 + (col - 1) * chunk_size[1]
-		di[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
+	for (col in 1:ncol) {
+		di_write[[1]]$from = 1 + (col - 1) * chunk_size[1]
+		di_write[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
+		di_read[[1]]$from = di_write[[1]]$from + di_from[1] - 1
+		di_read[[1]]$to   = di_write[[1]]$to + di_from[1] - 1
+                di_write[[1]]$offset = with(di_read[[1]], offset + delta * (from - 1))
 		for (row in 1:nrow) {
-			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
-			di[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
-			chunk = st_as_stars(structure(obj, dimensions = di))
+			di_write[[2]]$from = 1 + (row - 1) * chunk_size[2]
+			di_write[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
+                        di_read[[2]]$from = di_write[[2]]$from + di_from[2] - 1
+                        di_read[[2]]$to   = di_write[[2]]$to + di_from[2] -1
+                        di_write[[2]]$offset = with(di_read[[2]], offset + delta * (from - 1))
+			chunk = st_as_stars(structure(obj, dimensions = di_read))
+                        attr(chunk, "dimensions") <- di_write
 			if (! created) { # create:
 				d = st_dimensions(chunk)
 				d_obj = st_dimensions(obj)
 				d[[1]]$from = d[[2]]$from = 1
-				d[[1]]$to = d_obj[[1]]$to
-				d[[2]]$to = d_obj[[2]]$to
+				d[[1]]$to = d[[1]]$from + dim_obj[1] - 1
+				d[[2]]$to = d[[2]]$from + dim_obj[2] - 1
 				# reset dimensions 1/2 to original:
-				sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options, 
-					type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+				sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options,
+					type = type, NA_value = NA_value, geotransform = get_geotransform(structure(obj, dimensions = d))) # branches on stars_proxy
 			}
 			created = TRUE
 			write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
