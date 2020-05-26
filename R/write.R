@@ -43,7 +43,7 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE) {
-	if (length(obj) > 1 && missing(layer))
+	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
 	obj = st_upfront(obj[layer])
 	if (! update) # new file: should not be a sub-array
@@ -63,8 +63,15 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		options = character(0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
-	if (length(obj) > 1 && missing(layer))
+	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
+	if (layer != 1)
+		stop("only first attribute of a stars_proxy object can be written; consider using merge")
+	if (length(obj[[1]]) > 1) { # collapse bands:
+		out_file = tempfile(fileext = ".vrt")
+		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
+		x[[1]] = out_file
+	}
 	if (progress) {
 		pb = txtProgressBar()
 		setTxtProgressBar(pb, 0)
@@ -115,8 +122,13 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	invisible(obj)
 }
 
-#nocov start
-detect.driver = function(filename) {
+#' @name write_stars
+#' @export
+#' @param filename character; used for guessing driver short name based on file 
+#' extension; see examples
+#' @examples 
+#' detect.driver("L7_ETMs.tif")
+detect.driver = function(filename) { #nocov start
 	# from raster::.getFormat:
 	ext <- tolower(tools::file_ext(filename))
 	if (nchar(ext) < 2) {
