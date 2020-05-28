@@ -3,10 +3,17 @@
 #' @param att see \link[raster]{factorValues}; column in the RasterLayer's attribute table
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1) {
-    if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
+
+	if (.x@file@name != "") {
+		r = try(read_stars(.x@file@name, proxy = TRUE), silent = TRUE)
+		if (!inherits(r, "try-error"))
+			return(r)
+	}
+
+    if (!requireNamespace("sp", quietly = TRUE))
+        stop("package sp required, please install it first") # nocov
 	#0 360 -90  90
 	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
 	v = raster::values(.x)

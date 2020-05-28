@@ -33,6 +33,3 @@ dimensions; otherwise an object of \code{sf}.
 \description{
 Extract cell values at point locations, possibly using interpolation
 }
-\details{
-works on the first attribute only
-}

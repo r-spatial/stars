@@ -1,10 +1,27 @@
+shorten_names = function(x, n) {
+	x = head(x ,n)
+	bn = basename(x)
+	here = paste0(normalizePath("."), .Platform$file.sep, bn)
+	clean = gsub("\"", "", bn)
+	if (any(x != here))
+		paste0("[...]", .Platform$file.sep, clean)
+	else
+		clean
+}
+
 #' @export
-print.stars_proxy = function(x, ..., n = 1e5) {
+print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	cat("stars_proxy object with", length(x), 
 		if (length(x) > 1) "attributes" else "attribute",
-		"in",
-		if (sum(lengths(x)) > 1) "files:\n" else "file:\n")
-	print(structure(unclass(x), dimensions = NULL, call_list = NULL, NA_value = NULL))
+		"in", if (sum(lengths(x)) > 1) "files" else "file")
+	if (length(x[[1]]) > nfiles)
+		cat("; showing the first", min(length(x[[1]]), nfiles), "filenames\n")
+	else
+		cat(":\n")
+	if (simplify)
+		print(lapply(x, shorten_names, n = nfiles))
+	else
+		print(lapply(x, head, n = nfiles))
 	if (!is.null(attr(x, "NA_value")) && !is.na(attr(x, "NA_value")))
 		cat("NA_value: ", attr(x, "NA_value"), "\n")
 	cat("dimension(s):\n")
@@ -258,7 +275,7 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 merge.stars_proxy = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
-	#collect(x, match.call(), "merge")
+	# collect(x, match.call(), "merge")
 	if (length(x) > 1) { 
 		x[[1]] = unlist(x)
 		for (i in 2:length(x))

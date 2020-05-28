@@ -7,7 +7,6 @@
 #' @returns if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
 #' dimensions; otherwise an object of \code{sf}.
-#' @details works on the first attribute only
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @export
@@ -44,7 +43,7 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7,
 	if (length(x) > 1) # merge:
 		x = merge(x)
 	if (length(x[[1]]) > 1) { # merge into a single file:
-		out_file = tempfile(fileext = ".tif")
+		out_file = tempfile(fileext = ".vrt")
 		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
 		x[[1]] = out_file
 	}
