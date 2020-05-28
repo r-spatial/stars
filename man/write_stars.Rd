@@ -18,7 +18,8 @@ write_stars(obj, dsn, layer, ...)
   options = character(0),
   type = "Float32",
   NA_value = NA_real_,
-  update = FALSE
+  update = FALSE,
+  normalize_path = TRUE
 )
 
 \method{write_stars}{stars_proxy}(
@@ -54,6 +55,8 @@ detect.driver(filename)
 \item{NA_value}{non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.}
 
 \item{update}{logical; if \code{TRUE}, an existing file is being updated}
+
+\item{normalize_path}{logical; see \link{read_stars}}
 
 \item{chunk_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
 
