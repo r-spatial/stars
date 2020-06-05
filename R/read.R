@@ -7,10 +7,6 @@ maybe_normalizePath = function(.x, np = FALSE) {
 		normalizePath(.x, mustWork = FALSE)
 }
 
-is_big = function(x, ..., n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
-	prod(dim(read_stars(x, ..., proxy = TRUE))) > n_proxy
-}
-
 
 #' read raster/array dataset from file or connection
 #'
@@ -77,7 +73,7 @@ is_big = function(x, ..., n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, ...), 
+		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, ...), 
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0)) {
 
 	x = if (is.list(.x)) {
@@ -129,7 +125,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
 
-		driver = if (is.null(driver)) # to override auto-detection:
+		driver = if (is.null(driver) || data$driver[1] == "HDF5") # to override auto-detection:
 				character(0)
 			else
 				data$driver[1]
@@ -223,6 +219,15 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		else
 			ret
 	}
+}
+
+#' @export
+#' @name read_stars
+#' @param x object to be read with \link{read_stars}
+#' @param n_proxy integer; number of cells above which .x will be read as stars 
+#' proxy object, i.e. not as in-memory arrays but left on disk
+is_big = function(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
+	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE))) > n_proxy
 }
 
 get_data_units = function(data) {

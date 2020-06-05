@@ -160,7 +160,8 @@ regular_intervals = function(x, epsilon = 1e-10) {
 				else
 					return(FALSE)
 			}
-		abs(diff(range(ud)) / mean(ud)) < epsilon
+		isTRUE(abs(diff(range(ud)) / mean(ud)) < epsilon)
+		#isTRUE(abs(diff(range(ud)) / mean(abs(x))) < epsilon)
 	}
 }
 

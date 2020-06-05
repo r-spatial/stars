@@ -2,6 +2,7 @@
 % Please edit documentation in R/read.R
 \name{read_stars}
 \alias{read_stars}
+\alias{is_big}
 \title{read raster/array dataset from file or connection}
 \usage{
 read_stars(
@@ -14,11 +15,13 @@ read_stars(
   NA_value = NA_real_,
   along = NA_integer_,
   RasterIO = list(),
-  proxy = !length(curvilinear) && is_big(.x, ...),
+  proxy = !length(curvilinear) && is_big(.x, sub = sub, ...),
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0)
 )
+
+is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
@@ -49,6 +52,11 @@ or to 1e8 if that option was not set.}
 \item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}}
 
 \item{RAT}{character; raster attribute table column name to use as factor levels}
+
+\item{x}{object to be read with \link{read_stars}}
+
+\item{n_proxy}{integer; number of cells above which .x will be read as stars 
+proxy object, i.e. not as in-memory arrays but left on disk}
 }
 \value{
 object of class \code{stars}
