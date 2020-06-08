@@ -1,6 +1,8 @@
 # version 0.4-2
 
-* `st_as_stars.Raster` tries to read from disk, if the raster object is on disk.
+* make copying over of dimensions somewhat easier; #295
+
+* `st_as_stars.Raster` tries to read from file if the raster object is not an in-memory object.
 
 * `write_stars` normalizes path, as `read_stars` already did; #293
 

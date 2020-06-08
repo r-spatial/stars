@@ -3,6 +3,9 @@
 \name{st_dimensions}
 \alias{st_dimensions}
 \alias{st_dimensions.stars}
+\alias{st_dimensions<-}
+\alias{st_dimensions<-.stars}
+\alias{st_dimensions<-.list}
 \alias{st_dimensions.array}
 \alias{st_dimensions.default}
 \alias{st_set_dimensions}
@@ -12,6 +15,12 @@
 st_dimensions(.x, ...)
 
 \method{st_dimensions}{stars}(.x, ...)
+
+st_dimensions(x, ...) <- value
+
+\method{st_dimensions}{stars}(x, ...) <- value
+
+\method{st_dimensions}{list}(x, ...) <- value
 
 \method{st_dimensions}{array}(.x, ...)
 
@@ -40,6 +49,8 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 \item{.x}{object to retrieve dimensions information from}
 
 \item{...}{further arguments}
+
+\item{value}{new object of class \code{dimensions}, with matching dimensions}
 
 \item{.raster}{length 2 character array with names (if any) of the raster dimensions}
 

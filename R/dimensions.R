@@ -1,7 +1,9 @@
 #' get dimensions from stars object
+#' @name st_dimensions
 #' @export
 #' @param .x object to retrieve dimensions information from 
 #' @param ... further arguments
+#' @param value new object of class \code{dimensions}, with matching dimensions
 #' @return the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
 st_dimensions = function(.x, ...) UseMethod("st_dimensions")
 
@@ -11,6 +13,23 @@ st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 st_dimensions.dimensions = function(.x, ...) .x
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-` = function(x, value, ...) UseMethod("st_dimensions<-")
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-.stars` = function(x, value, ...) {
+	stopifnot(inherits(value, "dimensions"), all(dim(x[[1]]) == dim(value)))
+	st_stars(x, value)
+}
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-.list` = function(x, value, ...) {
+	st_as_stars(x, ..., dimensions = value)
+}
 
 
 #' @export
@@ -563,7 +582,6 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 	get_dimension_values(from, where = ifelse(center, 0.5, 0.0), NA, what = NA_character_)
 }
 
-
 #' @export
 `[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
@@ -591,6 +609,12 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 		}
 	}
 	x
+}
+
+#' @export
+`[<-.dimensions` = function(x, i, value) {
+	stopifnot(length(i) == length(value))
+	create_dimensions(NextMethod(), raster = attr(x, "raster"))
 }
 
 #' @export

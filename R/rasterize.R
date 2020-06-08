@@ -19,7 +19,7 @@
 #'    st_linestring(rbind(c(0, 0.05), c(1, 0.05))))))
 #' (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0, 1.0), ylim = c(0, 1),
 #'    values = NA_real_))
-#' # the following two plots suggests a half-gridcell-shift problem:
+#' # Only the left-top corner is part of the grid cell:
 #' sf_extSoftVersion()["GDAL"]
 #' plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE; 
 #' plot(ls, add = TRUE, col = "red")
