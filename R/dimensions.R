@@ -20,6 +20,7 @@ st_dimensions.dimensions = function(.x, ...) .x
 
 #' @export
 #' @name st_dimensions
+#' @param x object of class \code{dimensions}
 `st_dimensions<-.stars` = function(x, value, ...) {
 	stopifnot(inherits(value, "dimensions"), all(dim(x[[1]]) == dim(value)))
 	st_stars(x, value)
@@ -613,8 +614,11 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 
 #' @export
 `[<-.dimensions` = function(x, i, value) {
-	stopifnot(length(i) == length(value))
-	create_dimensions(NextMethod(), raster = attr(x, "raster"))
+	# stopifnot(length(i) == length(value))
+	if (!is.null(value))
+		create_dimensions(NextMethod(), raster = attr(x, "raster"))
+	else
+		NextMethod()
 }
 
 #' @export

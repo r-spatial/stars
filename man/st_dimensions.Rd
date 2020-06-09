@@ -50,6 +50,8 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 
 \item{...}{further arguments}
 
+\item{x}{object of class \code{dimensions}}
+
 \item{value}{new object of class \code{dimensions}, with matching dimensions}
 
 \item{.raster}{length 2 character array with names (if any) of the raster dimensions}
