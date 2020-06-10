@@ -59,7 +59,9 @@ st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
 }
 
 #' @export
-c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE) {
+#' @param along_crs logical; if \code{TRUE}, combine arrays along a CRS dimension
+#' @name c.stars
+c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, nms = names(list(...))) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
@@ -73,9 +75,22 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE) {
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
-			if (is.na(along))
+			if (!is.na(along))
+				do.call(c, c(dots, along = along))
+			else if (!try_hard)
 				stop("don't know how to merge arrays: please specify parameter along")
-			do.call(c, c(dots, along = along))
+			else {
+				d = lapply(dots, st_dimensions)
+				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
+				if (!all(ident))
+					warning(paste(
+					"ignored subdataset(s) with dimensions different from first subdataset:", 
+					paste(which(!ident), collapse = ", "), 
+					"\nuse gdal_subdatasets() to find all subdataset names"))
+				setNames(st_stars_proxy(do.call(c, 
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						nms[ident])
+			}
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified

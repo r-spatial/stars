@@ -16,11 +16,11 @@ st_dimensions(.x, ...)
 
 \method{st_dimensions}{stars}(.x, ...)
 
-st_dimensions(x, ...) <- value
+st_dimensions(x) <- value
 
-\method{st_dimensions}{stars}(x, ...) <- value
+\method{st_dimensions}{stars}(x) <- value
 
-\method{st_dimensions}{list}(x, ...) <- value
+\method{st_dimensions}{list}(x) <- value
 
 \method{st_dimensions}{array}(.x, ...)
 
@@ -64,7 +64,7 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 
 \item{which}{integer or character; index or name of the dimension to be changed}
 
-\item{values}{values for this dimension (e.g. \code{sfc} list-column)}
+\item{values}{values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object}
 
 \item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
 

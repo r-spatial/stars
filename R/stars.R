@@ -391,7 +391,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
-		lengths(expand_dimensions(d))
+		dim(d)
 	else {
 		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))
@@ -410,6 +410,9 @@ propagate_units = function(new, old) {
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.
 #' @param along integer; see \link{read_stars}
+#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, 
+#' combine those that dimensions matching to the first array
+#' @param nms character; vector with array names
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -417,7 +420,7 @@ propagate_units = function(new, old) {
 #' (new = c(x, x))
 #' c(new) # collapses two arrays into one with an additional dimension
 #' c(x, x, along = 3)
-c.stars = function(..., along = NA_integer_) {
+c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...))) {
 	dots = list(...)
 	if (length(dots) == 1) {
 		if (!missing(along))
@@ -431,9 +434,22 @@ c.stars = function(..., along = NA_integer_) {
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
-			if (is.na(along))
+			if (!is.na(along))
+				do.call(c, c(dots, along = along))
+			else if (!try_hard)
 				stop("don't know how to merge arrays: please specify parameter along")
-			do.call(c, c(dots, along = along))
+			else {
+				d = lapply(dots, st_dimensions)
+				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
+				if (!all(ident))
+					warning(paste(
+					"ignored subdataset(s) with dimensions different from first subdataset:", 
+					paste(which(!ident), collapse = ", "), 
+					"\nuse gdal_subdatasets() to find all subdataset names"))
+				setNames(st_as_stars(do.call(c, 
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						nms[ident])
+			}
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified

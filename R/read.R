@@ -94,7 +94,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_)
-		# dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
@@ -137,8 +136,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# return:
 		if (length(ret) == 1)
 			ret[[1]]
-		else
-			structure(do.call(c, ret), names = nms)
+		else {
+			ret = do.call(c, append(ret, list(try_hard = TRUE, nms = nms)))
+			if (length(nms) == length(ret)) # lost my ability to solve this here...
+				setNames(ret, nms)
+			else
+				ret
+		}
 	} else { # we have one single array:
 		if (!isTRUE(sub))
 			warning("only one array present: argument 'sub' will be ignored")
@@ -204,8 +208,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			} else
 				NULL
 
-		### WAS: tail(strsplit(x, .Platform$file.sep)[[1]], 1)
-
 		# return:
 		ret = if (proxy) # no data present, subclass of "stars":
 			st_stars_proxy(setNames(list(.x), tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
@@ -227,7 +229,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 #' @param n_proxy integer; number of cells above which .x will be read as stars 
 #' proxy object, i.e. not as in-memory arrays but left on disk
 is_big = function(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
-	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE))) > n_proxy
+	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE, quiet = TRUE))) > n_proxy
 }
 
 get_data_units = function(data) {

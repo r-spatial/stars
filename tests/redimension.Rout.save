@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -21,14 +21,8 @@ Type 'q()' to quit R.
 > (xx = st_redimension(r, along = list(foo = 1:4)))
 stars_proxy object with 1 attribute in files:
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+[1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[4] "[...]/L7_ETMs.tif"
 
 dimension(s):
      from  to  offset delta                       refsys point values    
@@ -39,24 +33,12 @@ foo     1   4       1     1                           NA    NA   NULL
 > (rr = c(xx, xx))
 stars_proxy object with 2 attributes in files:
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+[1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[4] "[...]/L7_ETMs.tif"
 
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       a.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-                                       b.L7_ETMs.tif 
-"/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+[1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[4] "[...]/L7_ETMs.tif"
 
 dimension(s):
      from  to  offset delta                       refsys point values    
@@ -90,22 +72,9 @@ foo     1   4       1     1                           NA    NA   NULL
 > (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
 stars_proxy object with 1 attribute in files:
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
-                 "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif" 
+[1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[4] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[7] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
 
 dimension(s):
      from  to     offset    delta                       refsys point values    
@@ -164,4 +133,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.183   0.125   1.297 
+  2.178   0.167   2.339 
