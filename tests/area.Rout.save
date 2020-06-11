@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -68,8 +68,7 @@ x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
 y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > plot(a, axes = TRUE)
 > 
-> (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
-[1] "/tmp/RtmpAhMJFm/RLIBS_13181fa468c5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
+> s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
 > if (s5p != "") {
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
@@ -101,4 +100,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  6.874   0.101   6.974 
+  7.959   0.090   8.048 

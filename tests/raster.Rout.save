@@ -44,10 +44,6 @@ names      : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6
 min values :      47,      32,      21,       9,       1,       1 
 max values :     255,     255,     255,     255,     255,     255 
 
-Warning message:
-In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
-  Discarded datum Unknown based on GRS80 ellipsoid in CRS definition,
- but +towgs84= values preserved
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -71,15 +67,8 @@ band layer.1,...,layer.6
 > library(abind)
 > x = adrop(x[,,,1]) # 1 band
 > r = as(x, "Raster")
-Warning messages:
-1: In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
-  Discarded datum Unknown based on GRS80 ellipsoid in CRS definition,
- but +towgs84= values preserved
-2: In showSRID(uprojargs, format = "PROJ", multiline = "NO") :
-  Discarded datum Unknown based on GRS80 ellipsoid in CRS definition,
- but +towgs84= values preserved
 > y = st_as_stars(r)
 > 
 > proc.time()
    user  system elapsed 
-  1.917   0.107   2.015 
+  1.783   0.088   1.864 
