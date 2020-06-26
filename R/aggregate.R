@@ -53,7 +53,6 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	if (missing(FUN))
 		stop("missing FUN argument")
-	x = st_normalize(x)
 	if (exact && inherits(by, c("sf", "sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
     	if (!requireNamespace("raster", quietly = TRUE))
         	stop("package raster required, please install it first") # nocov
@@ -96,18 +95,18 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			}
 	
 			# find groups:
-			x_geoms = if (has_raster(x)) {
-					if (identical(join, st_intersects))
-						x
-					else
-						st_as_sfc(x, as_points = as_points)
-				} else
-					st_dimensions(x)[[ which_sfc(x) ]]$values
-			
 			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups, 
 			#      and may have multiple if geometries in by overlap, hence:
-			sapply(join(x_geoms, by, as_points = as_points),
+			if (identical(join, st_intersects) && has_raster(x))
+				sapply(join(x, by, as_points = as_points),
 					function(x) if (length(x)) x[1] else NA)
+			else {
+				x_geoms = if (has_raster(x))
+						st_as_sfc(x, as_points = as_points)
+					else
+						st_dimensions(x)[[ which_sfc(x) ]]$values
+				sapply(join(x_geoms, by), function(x) if (length(x)) x[1] else NA)
+			}
 		} else { # time: by is POSIXct/Date or character
 			ndims = 1
 			x = st_upfront(x, which_time(x))
