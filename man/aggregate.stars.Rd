@@ -66,4 +66,12 @@ x_agg_posix = aggregate(x, by = by_t, FUN = max)
 st_get_dimension_values(x_agg_posix, "time")
 x_agg_time - x_agg_posix
 aggregate(x, "2 days", mean)
+# Spatial aggregation, see https://github.com/r-spatial/stars/issues/299
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+prec_slice = dplyr::slice(prec, index = 17, along = "time")
+nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
+nc = st_transform(nc, st_crs(prec_slice))
+agg = aggregate(prec_slice, st_geometry(nc), mean)
+plot(agg)
 }
