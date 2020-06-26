@@ -41,8 +41,10 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
 
-	if (inherits(by, "stars"))
+	if (inherits(by, "stars")) {
 		by = st_as_sfc(by, as_points = FALSE)
+		# and if not, then use st_normalize(by)
+	}
 
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character")
 	if (!inherits(by, classes))
@@ -51,6 +53,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	if (missing(FUN))
 		stop("missing FUN argument")
+	x = st_normalize(x)
 	if (exact && inherits(by, c("sf", "sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
     	if (!requireNamespace("raster", quietly = TRUE))
         	stop("package raster required, please install it first") # nocov
@@ -103,7 +106,8 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			
 			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups, 
 			#      and may have multiple if geometries in by overlap, hence:
-			sapply(join(x_geoms, by), function(x) if (length(x)) x[1] else NA)
+			sapply(join(x_geoms, by, as_points = as_points),
+					function(x) if (length(x)) x[1] else NA)
 		} else { # time: by is POSIXct/Date or character
 			ndims = 1
 			x = st_upfront(x, which_time(x))

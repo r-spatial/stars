@@ -1,5 +1,7 @@
 # version 0.4-2
 
+* aggregate.stars handles arrays with NA values now correctly; illustrated in #299 by Thorsten Simon
+
 * `aggregate.stars` gains an argument `exact` which, if `TRUE`, calls `exactextractr` for polygonal aggregation; #289 
 
 * `read_stars` reads all subdatasets with dimensions equal to first, and warns when ignoring others; #296
