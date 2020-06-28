@@ -400,6 +400,8 @@ get_downsample = function(dims, px = dev.size("px")) {
 contour.stars = function(x, ...) {
 	if (!(is_regular_grid(x) || is_rectilinear(x)))
 		stop("contour only works for regular or rectilinear grids")
+	if (inherits(x[[1]], "units"))
+		x[[1]] = units::drop_units(x[[1]])
 	x = st_upfront(adrop(x)) # drop singular dimensions, put x/y first
 	dx = dim(x)
 	if (length(dx) != 2)
