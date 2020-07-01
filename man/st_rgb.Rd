@@ -2,21 +2,21 @@
 % Please edit documentation in R/plot.R
 \name{st_rgb}
 \alias{st_rgb}
-\title{collapse dimension into rgb (alpha) hex values}
+\title{reduce dimension to rgb (alpha) hex values}
 \usage{
 st_rgb(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{dimension}{dimension name or number to work on}
+\item{dimension}{dimension name or number to reduce}
 
 \item{use_alpha}{logical; if TRUE, the fourth band will be used as alpha values}
 
 \item{maxColorValue}{integer; maximum value for colors}
 }
 \description{
-collapse dimension into rgb (alpha) hex values
+reduce dimension to rgb (alpha) hex values
 }
 \details{
 the dimension's bands are mapped to red, green, blue, alpha; if a different 

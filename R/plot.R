@@ -410,11 +410,11 @@ contour.stars = function(x, ...) {
 	contour(z = x[[1]][,rev(seq_len(dx[2]))], x = e[[1]], y = rev(e[[2]]), ...)
 }
 
-#' collapse dimension into rgb (alpha) hex values
+#' reduce dimension to rgb (alpha) hex values
 #' 
 #' @export
 #' @param x object of class \code{stars}
-#' @param dimension dimension name or number to work on
+#' @param dimension dimension name or number to reduce
 #' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
 #' @param maxColorValue integer; maximum value for colors
 #' @seealso \link[grDevices]{rgb}
@@ -430,7 +430,7 @@ contour.stars = function(x, ...) {
 #' }
 st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255) {
 	if (is.character(dimension))
-		match(dimension, names(dim(x)))
+		dimension = match(dimension, names(dim(x)))
 	dims = setdiff(seq_along(dim(x)), dimension)
 	if (use_alpha)
 		st_apply(x, dims, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue=maxColorValue))
