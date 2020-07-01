@@ -1,7 +1,9 @@
 #' get dimensions from stars object
+#' @name st_dimensions
 #' @export
 #' @param .x object to retrieve dimensions information from 
 #' @param ... further arguments
+#' @param value new object of class \code{dimensions}, with matching dimensions
 #' @return the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
 st_dimensions = function(.x, ...) UseMethod("st_dimensions")
 
@@ -11,6 +13,24 @@ st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 st_dimensions.dimensions = function(.x, ...) .x
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-` = function(x, value) UseMethod("st_dimensions<-")
+
+#' @export
+#' @name st_dimensions
+#' @param x object of class \code{dimensions}
+`st_dimensions<-.stars` = function(x, value) {
+	stopifnot(inherits(value, "dimensions"), length(x) && all(dim(x[[1]]) == dim(value)))
+	st_stars(x, value)
+}
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-.list` = function(x, value) {
+	st_as_stars(x, dimensions = value)
+}
 
 
 #' @export
@@ -66,7 +86,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 
 #' @name st_dimensions
 #' @param which integer or character; index or name of the dimension to be changed
-#' @param values values for this dimension (e.g. \code{sfc} list-column)
+#' @param values values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object
 #' @param names character; new names vector for (all) dimensions, ignoring \code{which}
 #' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
@@ -90,8 +110,13 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 			which = match(which, base::names(d))
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
-		if (dim(.x)[which] != length(values)) {
-			if (dim(.x)[which] == length(values) - 1)
+		if (inherits(values, "dimensions")) {
+			if (is.null(names))
+				names <- names(values)
+			values <- values[[1]]$values
+		}
+		if (!inherits(values, "intervals") && dim(.x)[which] != length(values)) {
+			if (dim(.x)[which] == length(values) - 1) # create intervals:
 				values = as_intervals(values)
 			else
 				stop(paste("length of values does not match dimension length", which))
@@ -160,7 +185,8 @@ regular_intervals = function(x, epsilon = 1e-10) {
 				else
 					return(FALSE)
 			}
-		abs(diff(range(ud)) / mean(ud)) < epsilon
+		isTRUE(abs(diff(range(ud)) / mean(ud)) < epsilon)
+		#isTRUE(abs(diff(range(ud)) / mean(abs(x))) < epsilon)
 	}
 }
 
@@ -222,7 +248,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 create_dimensions = function(lst, raster = NULL) {
 	if (is.numeric(lst)) # when called with a dim(array) argument:
 		lst = setNames(lapply(seq_along(lst), function(i) create_dimension(from = 1, to = lst[i])), 
-		               names(lst))
+					names(lst))
 	if (is.null(names(lst)))
 		names(lst) = make.names(seq_along(lst))
 	if (any(names(lst) == "")) {
@@ -373,8 +399,8 @@ parse_netcdf_meta = function(pr, name) {
 							} else
 								set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
 						origin_txt = as.character(as.POSIXct(origin[1]))
-    					if (!requireNamespace("PCICt", quietly = TRUE))
-        					stop("package PCICt required, please install it first") # nocov
+						if (!requireNamespace("PCICt", quietly = TRUE))
+							stop("package PCICt required, please install it first") # nocov
 						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
 					} else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
@@ -562,7 +588,6 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 	get_dimension_values(from, where = ifelse(center, 0.5, 0.0), NA, what = NA_character_)
 }
 
-
 #' @export
 `[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
@@ -590,6 +615,15 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 		}
 	}
 	x
+}
+
+#' @export
+`[<-.dimensions` = function(x, i, value) {
+	# stopifnot(length(i) == length(value))
+	if (!is.null(value))
+		create_dimensions(NextMethod(), raster = attr(x, "raster"))
+	else
+		NextMethod()
 }
 
 #' @export

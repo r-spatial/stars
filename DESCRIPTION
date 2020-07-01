@@ -42,9 +42,10 @@ Suggests:
     PCICt,
     RNetCDF (>= 1.8-2),
     covr,
+	cubelyr,
     digest,
     dplyr (>= 0.7-0),
-	cubelyr,
+    exactextractr,
     future.apply,
     ggforce,
     ggplot2,
@@ -100,3 +101,4 @@ Collate:
     'spatstat.R'
     'OpenStreetMap.R'
     'sample.R'
+    'extract.R'

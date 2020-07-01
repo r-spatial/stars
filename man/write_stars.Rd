@@ -4,6 +4,7 @@
 \alias{write_stars}
 \alias{write_stars.stars}
 \alias{write_stars.stars_proxy}
+\alias{detect.driver}
 \title{write stars object to gdal dataset (typically: to file)}
 \usage{
 write_stars(obj, dsn, layer, ...)
@@ -17,7 +18,8 @@ write_stars(obj, dsn, layer, ...)
   options = character(0),
   type = "Float32",
   NA_value = NA_real_,
-  update = FALSE
+  update = FALSE,
+  normalize_path = TRUE
 )
 
 \method{write_stars}{stars_proxy}(
@@ -32,6 +34,8 @@ write_stars(obj, dsn, layer, ...)
   chunk_size = c(dim(obj)[1], floor(2.5e+07/dim(obj)[1])),
   progress = TRUE
 )
+
+detect.driver(filename)
 }
 \arguments{
 \item{obj}{object of class \code{stars}}
@@ -52,13 +56,21 @@ write_stars(obj, dsn, layer, ...)
 
 \item{update}{logical; if \code{TRUE}, an existing file is being updated}
 
+\item{normalize_path}{logical; see \link{read_stars}}
+
 \item{chunk_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
 
 \item{progress}{logical; if \code{TRUE}, a progress bar is shown}
+
+\item{filename}{character; used for guessing driver short name based on file 
+extension; see examples}
 }
 \description{
 write stars object to gdal dataset (typically: to file)
 }
 \details{
 \code{write_stars} first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
+}
+\examples{
+detect.driver("L7_ETMs.tif")
 }

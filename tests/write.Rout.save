@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -41,7 +41,7 @@ band    1   6      NA    NA                           NA    NA   NULL
 > (x = read_stars(tif, proxy = TRUE))
 stars_proxy object with 1 attribute in file:
 $L7_ETMs.tif
-[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+[1] "[...]/L7_ETMs.tif"
 
 dimension(s):
      from  to  offset delta                       refsys point values    
@@ -52,4 +52,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.705   0.057   0.751 
+  1.064   0.055   1.112 

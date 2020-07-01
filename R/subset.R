@@ -270,13 +270,21 @@ st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
 #' @export
 #' @return \code{st_flip} flips (reverts) the array values along the chosen dimension 
 #' without(s) changing the dimension properties
+#' @examples
+#' lc = read_stars(system.file("tif/lc.tif", package = "stars"))
+#' x = c(orig = lc, 
+#'       flip_x = st_flip(lc, "x"), 
+#'       flip_y = st_flip(lc, "y"), 
+#'       flip_xy = st_flip(lc, c("x", "y")), 
+#'       along = 3)
+#' plot(x)
 st_flip = function(x, which = 1) {
 	if (is.character(which))
 		which = match(which, names(dim(x)))
 	stopifnot(all(which %in% seq_along(dim(x))))
 	dims = lapply(dim(x), seq_len)
 	for (i in which)
-		dims[[ which[i] ]] = rev(dims[[ which[i] ]])
+	  dims[[ i ]] = rev(dims[[ i ]])
 	for (i in seq_along(x))
 		x[[i]] = do.call(`[`, c(list(x[[i]]), dims))
 	x

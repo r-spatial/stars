@@ -1,10 +1,27 @@
+shorten_names = function(x, n) {
+	x = head(x ,n)
+	bn = basename(x)
+	here = paste0(normalizePath("."), .Platform$file.sep, bn)
+	clean = gsub("\"", "", bn)
+	if (any(x != here))
+		paste0("[...]", .Platform$file.sep, clean)
+	else
+		clean
+}
+
 #' @export
-print.stars_proxy = function(x, ..., n = 1e5) {
+print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	cat("stars_proxy object with", length(x), 
 		if (length(x) > 1) "attributes" else "attribute",
-		"in",
-		if (sum(lengths(x)) > 1) "files:\n" else "file:\n")
-	print(structure(unclass(x), dimensions = NULL, call_list = NULL, NA_value = NULL))
+		"in", if (sum(lengths(x)) > 1) "files" else "file")
+	if (length(x[[1]]) > nfiles)
+		cat("; showing the first", min(length(x[[1]]), nfiles), "filenames\n")
+	else
+		cat(":\n")
+	if (simplify)
+		print(lapply(x, shorten_names, n = nfiles))
+	else
+		print(lapply(x, head, n = nfiles))
 	if (!is.null(attr(x, "NA_value")) && !is.na(attr(x, "NA_value")))
 		cat("NA_value: ", attr(x, "NA_value"), "\n")
 	cat("dimension(s):\n")
@@ -42,7 +59,9 @@ st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
 }
 
 #' @export
-c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE) {
+#' @param along_crs logical; if \code{TRUE}, combine arrays along a CRS dimension
+#' @name c.stars
+c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, nms = names(list(...))) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
@@ -56,9 +75,22 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE) {
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
-			if (is.na(along))
+			if (!is.na(along))
+				do.call(c, c(dots, along = along))
+			else if (!try_hard)
 				stop("don't know how to merge arrays: please specify parameter along")
-			do.call(c, c(dots, along = along))
+			else {
+				d = lapply(dots, st_dimensions)
+				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
+				if (!all(ident))
+					warning(paste(
+					"ignored subdataset(s) with dimensions different from first subdataset:", 
+					paste(which(!ident), collapse = ", "), 
+					"\nuse gdal_subdatasets() to find all subdataset names"))
+				setNames(st_stars_proxy(do.call(c, 
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						nms[ident])
+			}
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
@@ -141,7 +173,8 @@ fetch = function(x, downsample = 0, ...) {
 
 	# do it:
 	ret = lapply(x, read_stars, RasterIO = rasterio, 
-		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE, ...)
+		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE, 
+		proxy = FALSE, ...)
 
 	along = if (length(dim(x)) > 3)
 			setNames(list(st_get_dimension_values(x, 4)), tail(names(st_dimensions(x)), 1))
@@ -211,7 +244,7 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE
 	write_stars(x, fname, NA_value = NA_value)
 	if (!quiet)
 		cat(paste("writing to", fname, "\n"))
-	st_stars_proxy(list(fname), st_dimensions(x), NA_value = NA_value)
+	st_stars_proxy(setNames(list(fname), names(x)[1]), st_dimensions(x), NA_value = NA_value)
 }
 
 # execute the call list on a stars object
@@ -255,12 +288,29 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 
 #' @export
 merge.stars_proxy = function(x, y, ...) {
-	collect(x, match.call(), "merge")
+	if (!missing(y))
+		stop("argument y needs to be missing: merging attributes of x")
+	# collect(x, match.call(), "merge")
+	if (length(x) > 1) { 
+		x[[1]] = unlist(x)
+		for (i in 2:length(x))
+			x[[i]] = NULL
+	}
+	st_stars_proxy(x, dimensions = create_dimensions(append(st_dimensions(x), 
+		list(band = create_dimension(values = names(x[[1]])))), 
+		raster = attr(st_dimensions(x), "raster")))
 }
 
 
 #' @export
 "[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
+	get_range = function(expr) {
+		v = try(eval(expr), silent = TRUE)
+		if (is.numeric(v) && all(diff(v) == 1))
+			range(v)
+		else
+			NA
+	}
 	mc = match.call()
 	lst = as.list(mc)
 	if (length(lst) < 3)
@@ -270,6 +320,13 @@ merge.stars_proxy = function(x, y, ...) {
 	if (inherits(i, c("character", "logical", "numeric"))) {
 		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
 		lst[["i"]] = TRUE # this one has been handled now
+		for (ix in 1:3) { # FIXME: further than 3?
+			if (length(lst) >= 4 && !any(is.na(r <- get_range(lst[[4]])))) {
+				attr(x, "dimensions")[[ix]]$from = r[1]
+				attr(x, "dimensions")[[ix]]$to = r[2]
+				lst[[4]] = NULL # remove
+			}
+		}
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
 		if (inherits(i, c("stars", "bbox")))
@@ -296,7 +353,7 @@ bb_shrink = function(bb, e) {
 #' @name st_crop
 #' @param collect logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read
 #' @export
-st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0, collect = TRUE) {
+st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), collect = TRUE) {
 	d = dim(x)
 	dm = st_dimensions(x)
 	if (st_crs(x) != st_crs(y))
@@ -315,14 +372,14 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = 0, collect = TR
 		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
 		for (i in seq_along(dm)) {
 			if (names(d[i]) == xd) {
-				dm[[ xd ]]$from = max(1, cr[1, 1])
-				dm[[ xd ]]$to = min(d[xd], cr[2, 1])
+				dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
+				dm[[ xd ]]$to = min(d[xd], cr[2, 1], na.rm = TRUE)
 			}
 			if (names(d[i]) == yd) {
 				if (dm[[ yd ]]$delta < 0)
 					cr[1:2, 2] = cr[2:1, 2]
-				dm[[ yd ]]$from = max(1, cr[1, 2])
-				dm[[ yd ]]$to = min(d[yd], cr[2, 2])
+				dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
+				dm[[ yd ]]$to = min(d[yd], cr[2, 2], na.rm = TRUE)
 			}
 		}
 	}

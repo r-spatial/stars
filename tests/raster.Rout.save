@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -56,8 +56,8 @@ attribute(s):
  Max.   :255.00  
 dimension(s):
      from  to  offset delta                       refsys point
-x       1 349  288776  28.5 +proj=utm +zone=25 +south...    NA
-y       1 352 9120761 -28.5 +proj=utm +zone=25 +south...    NA
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA
 band    1   6      NA    NA                           NA    NA
                   values    
 x                   NULL [x]
@@ -71,4 +71,4 @@ band layer.1,...,layer.6
 > 
 > proc.time()
    user  system elapsed 
-  1.367   0.120   1.481 
+  1.783   0.088   1.864 

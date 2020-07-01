@@ -1,8 +1,32 @@
 # version 0.4-2
 
-* `st_crop` now works with bounding boxes larger than the downsampled bounding box; #276
+* aggregate.stars handles arrays with NA values now correctly; illustrated in #299 by Thorsten Simon
 
-* `st_crop` now has a non-zero default for `epsilon` (bounding box shrinkage); #275
+* `aggregate.stars` gains an argument `exact` which, if `TRUE`, calls `exactextractr` for polygonal aggregation; #289 
+
+* `read_stars` reads all subdatasets with dimensions equal to first, and warns when ignoring others; #296
+
+* make copying over of dimensions somewhat easier; #295
+
+* `st_as_stars.Raster` tries to read from file if the raster object is not an in-memory object.
+
+* `write_stars` normalizes path, as `read_stars` already did; #293
+
+* `merge` for proxy objects acts, and is no longer lazy; #290
+
+* `st_as_stars.Raster` returns a proxy object if the raster layer is on disk
+
+* add `st_extract` to extract e.g. time series from grids at point locations; #279; #290
+
+* `read_stars` chooses a value for `proxy` that depends on the data dimensions; #281
+
+* x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
+
+* `st_warp` preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
+
+* `st_crop` works with bounding boxes larger than the downsampled bounding box; #276
+
+* `st_crop` has a non-zero default for `epsilon` (bounding box shrinkage) to exclude cells touching the crop bounding box; #275
 
 * `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
 

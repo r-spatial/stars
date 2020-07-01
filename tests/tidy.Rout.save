@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -79,8 +79,8 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-> x %>% pull(L7_ETMs.tif) %>% head
-[1] 69 69 63 60 61 61
+> x %>% pull(L7_ETMs.tif) %>% class()
+[1] "array"
 > x %>% filter(x > 289900)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -120,4 +120,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.446   0.134   4.572 
+  5.161   0.187   5.337 

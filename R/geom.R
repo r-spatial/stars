@@ -24,7 +24,7 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
 		} else
 			as_points = p
 	}
-	if (has_raster(x) && !is_curvilinear(x) &&
+	ret = if (has_raster(x) && !is_curvilinear(x) &&
 			inherits(y, "sfc_POINT") && 
 			!as_points) {
 
@@ -40,17 +40,15 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
        		class = "sgbp")
 		if (! sparse)
 			ret = as.matrix(ret)
-
 		if (! transpose) 
 			t(ret)
 		else
 			ret
-		
-	} else { # curvilinear:
-		ret = st_intersects(st_as_sf(x, as_points = as_points), y, sparse = sparse, ...)
+	} else { # curvilinear or !as_points:
+		ret = st_intersects(st_as_sf(x, as_points = as_points, na.rm = FALSE), y, 
+			sparse = sparse, ...)
 		if (! sparse)
 			ret = as.matrix(ret)
-
 		if (transpose) 
 			t(ret)
 		else

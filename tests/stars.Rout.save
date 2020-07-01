@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -692,4 +692,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.842   0.324   5.173 
+  7.167   0.439   7.603 

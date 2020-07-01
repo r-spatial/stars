@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.1 (2020-06-06) -- "See Things Now"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -17,13 +17,7 @@ Type 'q()' to quit R.
 
 > # examples with the sf::nc polygon dataset NOT ABOUT NETCDF's, see e.g. stars.R netcdf.R
 > suppressPackageStartupMessages(library(sf))
-> nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
-Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/sf/gpkg/nc.gpkg' using driver `GPKG'
-Simple feature collection with 100 features and 14 fields
-geometry type:  MULTIPOLYGON
-dimension:      XY
-bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-geographic CRS: NAD27
+> nc = read_sf(system.file("gpkg/nc.gpkg", package="sf"))
 > m = st_set_geometry(nc, NULL)
 > n = as.matrix(m[c("BIR74", "SID74", "NWBIR74", "BIR79", "SID79", "NWBIR79")])
 > dim(n) = c(county = 100, var = 3, year = 2)
@@ -280,4 +274,4 @@ year                                                        1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  0.665   0.043   0.698 
+  1.047   0.033   1.071 

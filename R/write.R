@@ -39,15 +39,19 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
 #' @param update logical; if \code{TRUE}, an existing file is being updated
+#' @param normalize_path logical; see \link{read_stars}
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
-		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE) {
-	if (length(obj) > 1 && missing(layer))
+		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE,
+		normalize_path = TRUE) {
+	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
 	obj = st_upfront(obj[layer])
 	if (! update) # new file: should not be a sub-array
 		obj = reset_sub(obj)
+	if (normalize_path)
+		dsn = enc2utf8(maybe_normalizePath(dsn, TRUE))
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, NA_value = NA_value, geotransform = get_geotransform(obj), 
 		update = update)
@@ -63,8 +67,15 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		options = character(0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
-	if (length(obj) > 1 && missing(layer))
+	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
+	if (layer != 1)
+		stop("only first attribute of a stars_proxy object can be written; consider using merge")
+	if (length(obj[[1]]) > 1) { # collapse bands:
+		out_file = tempfile(fileext = ".vrt")
+		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
+		x[[1]] = out_file
+	}
 	if (progress) {
 		pb = txtProgressBar()
 		setTxtProgressBar(pb, 0)
@@ -115,8 +126,13 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	invisible(obj)
 }
 
-#nocov start
-detect.driver = function(filename) {
+#' @name write_stars
+#' @export
+#' @param filename character; used for guessing driver short name based on file 
+#' extension; see examples
+#' @examples 
+#' detect.driver("L7_ETMs.tif")
+detect.driver = function(filename) { #nocov start
 	# from raster::.getFormat:
 	ext <- tolower(tools::file_ext(filename))
 	if (nchar(ext) < 2) {

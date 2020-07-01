@@ -126,6 +126,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 
 #' @param nx integer; number of cells in x direction; see details
 #' @param ny integer; number of cells in y direction; see details
+#' @param nz integer; number of cells in z direction; if missing no z-dimension is created.
 #' @param dx numeric; cell size in x direction; see details
 #' @param dy numeric; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
@@ -134,12 +135,12 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = FALSE) {
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz) {
 
 	if (xor(missing(nx), missing(ny)))
 		stop("either specify both nx and ny, or none of them")
@@ -173,13 +174,19 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		ny = length(vy)
 		y = create_dimension(values = vy, refsys = st_crs(.x))
 	} else {
-		x = create_dimension(from = 1, to = nx, offset = xlim[1], delta = dx, 
-			refsys = st_crs(.x))
-		y = create_dimension(from = 1, to = ny, offset = ylim[2], delta = dy, 
-			refsys = st_crs(.x))
+		x = create_dimension(from = 1, to = nx, offset = unname(xlim[1]), 
+			delta = unname(dx), refsys = st_crs(.x))
+		y = create_dimension(from = 1, to = ny, offset = unname(ylim[2]),
+			delta = unname(dy), refsys = st_crs(.x))
 	}
-	st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
-		dims = create_dimensions(list(x = x, y = y), get_raster()))
+	if (missing(nz)) # 2D:
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y), get_raster()))
+	else {
+		z = create_dimension(from = 1, to = nz[[1]])
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
+	}
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 
@@ -384,7 +391,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
-		lengths(expand_dimensions(d))
+		dim(d)
 	else {
 		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))
@@ -403,6 +410,9 @@ propagate_units = function(new, old) {
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.
 #' @param along integer; see \link{read_stars}
+#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, 
+#' combine those that dimensions matching to the first array
+#' @param nms character; vector with array names
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -410,7 +420,7 @@ propagate_units = function(new, old) {
 #' (new = c(x, x))
 #' c(new) # collapses two arrays into one with an additional dimension
 #' c(x, x, along = 3)
-c.stars = function(..., along = NA_integer_) {
+c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...))) {
 	dots = list(...)
 	if (length(dots) == 1) {
 		if (!missing(along))
@@ -424,9 +434,22 @@ c.stars = function(..., along = NA_integer_) {
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
-			if (is.na(along))
+			if (!is.na(along))
+				do.call(c, c(dots, along = along))
+			else if (!try_hard)
 				stop("don't know how to merge arrays: please specify parameter along")
-			do.call(c, c(dots, along = along))
+			else {
+				d = lapply(dots, st_dimensions)
+				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
+				if (!all(ident))
+					warning(paste(
+					"ignored subdataset(s) with dimensions different from first subdataset:", 
+					paste(which(!ident), collapse = ", "), 
+					"\nuse gdal_subdatasets() to find all subdataset names"))
+				setNames(st_as_stars(do.call(c, 
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						nms[ident])
+			}
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified

@@ -19,7 +19,10 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
 #' @param RasterIO list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.
-#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array metadata only; if \code{FALSE} the full array data is read in memory.
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array 
+#' metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds. 
+#' If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
+#' or to 1e8 if that option was not set.
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
 #' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param RAT character; raster attribute table column name to use as factor levels
@@ -70,8 +73,8 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = FALSE, curvilinear = character(0),
-		normalize_path = TRUE, RAT = character(0)) {
+		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, ...), 
+		curvilinear = character(0), normalize_path = TRUE, RAT = character(0)) {
 
 	x = if (is.list(.x)) {
 			f = function(y, np) enc2utf8(maybe_normalizePath(y, np))
@@ -81,9 +84,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, ...))
+			RasterIO = RasterIO, proxy = FALSE, ...))
 		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, ...))
+			RasterIO = RasterIO, proxy = FALSE, ...))
 		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
 	}
 
@@ -91,7 +94,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_)
-		# dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
@@ -122,7 +124,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
 
-		driver = if (is.null(driver)) # to override auto-detection:
+		driver = if (is.null(driver) || data$driver[1] == "HDF5") # to override auto-detection:
 				character(0)
 			else
 				data$driver[1]
@@ -134,8 +136,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# return:
 		if (length(ret) == 1)
 			ret[[1]]
-		else
-			structure(do.call(c, ret), names = nms)
+		else {
+			ret = do.call(c, append(ret, list(try_hard = TRUE, nms = nms)))
+			if (length(nms) == length(ret)) # lost my ability to solve this here...
+				setNames(ret, nms)
+			else
+				ret
+		}
 	} else { # we have one single array:
 		if (!isTRUE(sub))
 			warning("only one array present: argument 'sub' will be ignored")
@@ -201,8 +208,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			} else
 				NULL
 
-		### WAS: tail(strsplit(x, .Platform$file.sep)[[1]], 1)
-
 		# return:
 		ret = if (proxy) # no data present, subclass of "stars":
 			st_stars_proxy(setNames(list(.x), tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
@@ -216,6 +221,15 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		else
 			ret
 	}
+}
+
+#' @export
+#' @name read_stars
+#' @param x object to be read with \link{read_stars}
+#' @param n_proxy integer; number of cells above which .x will be read as stars 
+#' proxy object, i.e. not as in-memory arrays but left on disk
+is_big = function(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
+	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE, quiet = TRUE))) > n_proxy
 }
 
 get_data_units = function(data) {

@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.0 (2020-04-24) -- "Arbor Day"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -249,8 +249,8 @@ STFDF> stfdf[["values"]]
 STFDF> stfdf[["newVal"]] <- rnorm(12)
 
 STFDF> stfdf$ID
- [1] ID 1  ID 2  ID 3  ID 4  ID 5  ID 6  ID 7  ID 8  ID 9  ID 10 ID 11 ID 12
-Levels: ID 1 ID 10 ID 11 ID 12 ID 2 ID 3 ID 4 ID 5 ID 6 ID 7 ID 8 ID 9
+ [1] "ID 1"  "ID 2"  "ID 3"  "ID 4"  "ID 5"  "ID 6"  "ID 7"  "ID 8"  "ID 9" 
+[10] "ID 10" "ID 11" "ID 12"
 
 STFDF> stfdf$ID = paste("OldIDs", 1:12, sep="")
 
@@ -299,12 +299,7 @@ STFDF> all.equal(x, stfdf[1:2,])
 [1] TRUE
 
 STFDF> all.equal(stfdf, stfdf[stfdf,]) # converts character to factor...
-[1] "Attributes: < Component \"data\": Component \"ID\": Modes: character, numeric >"                         
-[2] "Attributes: < Component \"data\": Component \"ID\": Attributes: < target is NULL, current is list > >"   
-[3] "Attributes: < Component \"data\": Component \"ID\": target is character, current is factor >"            
-[4] "Attributes: < Component \"data\": Component \"NewID\": Modes: character, numeric >"                      
-[5] "Attributes: < Component \"data\": Component \"NewID\": Attributes: < target is NULL, current is list > >"
-[6] "Attributes: < Component \"data\": Component \"NewID\": target is character, current is factor >"         
+[1] TRUE
 > 
 > x = st_as_stars(stfdf)
 > xx = as(x, "STFDF")
@@ -368,4 +363,4 @@ time                        NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.984   0.058   1.051 
+  1.121   0.037   1.147 

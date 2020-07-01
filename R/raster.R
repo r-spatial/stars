@@ -3,10 +3,17 @@
 #' @param att see \link[raster]{factorValues}; column in the RasterLayer's attribute table
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1) {
-    if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
+
+	if (.x@file@name != "") {
+		r = try(read_stars(.x@file@name, proxy = TRUE), silent = TRUE)
+		if (!inherits(r, "try-error"))
+			return(r)
+	}
+
+    if (!requireNamespace("sp", quietly = TRUE))
+        stop("package sp required, please install it first") # nocov
 	#0 360 -90  90
 	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
 	v = raster::values(.x)
@@ -16,7 +23,7 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 		if (length(l) == 0) # get the layer's RAT, column att:
 			l = raster::factorValues(.x, seq_len(max(v, na.rm = TRUE)), att = att)[[1]]
 		colors = try(.x@legend@colortable, silent = TRUE)
-		if (inherits(colors, "try-error"))
+		if (inherits(colors, "try-error") || length(colors) == 0)
 			colors = NULL
 		else
 			colors = colors[-1]
