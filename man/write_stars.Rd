@@ -44,7 +44,7 @@ detect.driver(filename)
 
 \item{layer}{attribute name; if missing, the first attribute is written}
 
-\item{...}{passed on to \link[sf]{gdal_write}}
+\item{...}{passed on to \link[sf:gdal]{gdal_write}}
 
 \item{driver}{driver driver name; see \link[sf]{st_drivers}}
 

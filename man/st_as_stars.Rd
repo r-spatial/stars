@@ -94,7 +94,7 @@ st_as_stars(.x, ...)
 
 \item{name}{character; name for the geometry dimensions}
 
-\item{att}{see \link[raster]{factorValues}; column in the RasterLayer's attribute table}
+\item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object. 
 Must have same number of rows as timeseries instances.}

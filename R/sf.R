@@ -81,7 +81,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled
 #' @param connect8 logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.
 #' @param ... ignored
-#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf]{st_make_valid} to create valid polygons out of them.
+#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf:valid]{st_make_valid} to create valid polygons out of them.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")

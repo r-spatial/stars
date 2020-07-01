@@ -42,7 +42,7 @@
 Convert stars object into an sf object
 }
 \details{
-If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf]{st_make_valid} to create valid polygons out of them.
+If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf:valid]{st_make_valid} to create valid polygons out of them.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

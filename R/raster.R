@@ -1,6 +1,6 @@
 
 #' @name st_as_stars
-#' @param att see \link[raster]{factorValues}; column in the RasterLayer's attribute table
+#' @param att see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1) {
     if (!requireNamespace("raster", quietly = TRUE))

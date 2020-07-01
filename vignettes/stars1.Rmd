@@ -189,7 +189,9 @@ which doesn't convert time values in a proper R time format.
 
 ## Reading datasets from multiple files
 
-Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
+Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2.highres/); the subset from 1981 used below
+was downloaded from a NOAA ftp site that is no longer available in this form.
+(ftp site used to be eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 
 We read the data by giving `read_stars` a vector with character names:
 ```{r eval=ev}

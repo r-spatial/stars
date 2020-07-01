@@ -33,7 +33,7 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param obj object of class \code{stars}
 #' @param dsn gdal dataset (file) name
 #' @param layer attribute name; if missing, the first attribute is written
-#' @param ... passed on to \link[sf]{gdal_write}
+#' @param ... passed on to \link[sf:gdal]{gdal_write}
 #' @param driver driver driver name; see \link[sf]{st_drivers}
 #' @param options character vector with options
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
