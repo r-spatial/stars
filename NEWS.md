@@ -1,3 +1,7 @@
+# version 0.4-3
+
+* `st_rgb` collapses a dimension into rgb hex values; #302
+
 # version 0.4-2
 
 * aggregate.stars handles arrays with NA values now correctly; brought up in #299 by Thorsten Simon

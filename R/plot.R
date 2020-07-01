@@ -409,3 +409,31 @@ contour.stars = function(x, ...) {
 	e = expand_dimensions(x)
 	contour(z = x[[1]][,rev(seq_len(dx[2]))], x = e[[1]], y = rev(e[[2]]), ...)
 }
+
+#' collapse dimension into rgb (alpha) hex values
+#' 
+#' @export
+#' @param x object of class \code{stars}
+#' @param dimension dimension name or number to work on
+#' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
+#' @param maxColorValue integer; maximum value for colors
+#' @seealso \link[grDevices]{rgb}
+#' @details the dimension's bands are mapped to red, green, blue, alpha; if a different 
+#' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' x = read_stars(tif)
+#' st_rgb(x, 3)
+#' r = st_rgb(x[,,,c(6,5,4,3)], 3, use_alpha=TRUE) # now R=6,G=5,B=4,alpha=3
+#' if (require(ggplot2)) {
+#'  ggplot() + geom_stars(data = r) + scale_fill_identity()
+#' }
+st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255) {
+	if (is.character(dimension))
+		match(dimension, names(dim(x)))
+	dims = setdiff(seq_along(dim(x)), dimension)
+	if (use_alpha)
+		st_apply(x, dims, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue=maxColorValue))
+	else 
+		st_apply(x, dims, function(x) rgb(x[1], x[2], x[3], maxColorValue=maxColorValue))
+}
