@@ -32,5 +32,5 @@ if (require(ggplot2)) {
 }
 }
 \seealso{
-\link[grDevices]{rgb}
+\link{st_apply}, \link[grDevices]{rgb}
 }

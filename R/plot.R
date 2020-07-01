@@ -49,6 +49,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		dim(x) = newdims
 		st_as_stars(setNames(list(x[,,i]), nms[1]), dimensions = d[dxy])
 	}
+	if (is.character(x[[1]])) # rgb values
+		key.pos = NULL
 	key.pos.missing = missing(key.pos)
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
@@ -417,7 +419,7 @@ contour.stars = function(x, ...) {
 #' @param dimension dimension name or number to reduce
 #' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
 #' @param maxColorValue integer; maximum value for colors
-#' @seealso \link[grDevices]{rgb}
+#' @seealso \link{st_apply}, \link[grDevices]{rgb}
 #' @details the dimension's bands are mapped to red, green, blue, alpha; if a different 
 #' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
 #' @examples
