@@ -304,8 +304,12 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		if (is_curvilinear(x))
 			warning("when using rgb, curvilinear grid is plotted as regular grid")
 		xy = dim(ar)[1:2]
-		if (! y_is_neg) # need to flip y?
-			ar = ar[ , rev(seq_len(dim(ar)[2])), ]
+		if (! y_is_neg) { # need to flip y?
+			ar = if (length(dim(ar)) == 3)
+					ar[ , rev(seq_len(dim(ar)[2])), ]
+				else
+					ar[ , rev(seq_len(dim(ar)[2]))]
+		}
 		if (!useRaster)
 			stop("rgb plotting not supported on this device")
 		if (! isTRUE(dots$add)) {
@@ -433,9 +437,12 @@ contour.stars = function(x, ...) {
 st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255) {
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
+	stopifnot(is.numeric(dimension), length(dimension)==1)
 	dims = setdiff(seq_along(dim(x)), dimension)
+	rgb4 = function(x, ...) if (any(is.na(x[1:4]))) NA_character_ else rgb(x[1], x[2], x[3], x[4], ...)
+	rgb3 = function(x, ...) if (any(is.na(x[1:3]))) NA_character_ else rgb(x[1], x[2], x[3], ...)
 	if (use_alpha)
-		st_apply(x, dims, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue=maxColorValue))
+		st_apply(x, dims, rgb4, maxColorValue = maxColorValue)
 	else 
-		st_apply(x, dims, function(x) rgb(x[1], x[2], x[3], maxColorValue=maxColorValue))
+		st_apply(x, dims, rgb3, maxColorValue = maxColorValue)
 }

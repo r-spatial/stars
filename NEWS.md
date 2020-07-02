@@ -1,6 +1,6 @@
 # version 0.4-3
 
-* `st_rgb` collapses a dimension into rgb hex values; #302
+* `st_rgb` collapses (reduces) a dimension into rgb hex values; #302
 
 # version 0.4-2
 
