@@ -183,3 +183,16 @@ test_that("lon cross 360", {
   expect_true(head(st_dimensions(nc)$longitude$values, 1) < 0 &
                 tail(st_dimensions(nc)$longitude$values, 1) > 0)
 })
+
+test_that("4d not 4d", {
+  f <- system.file("nc/sub.nc", package = "stars")
+
+  nc <- read_ncdf(f)
+
+  dim <- st_dimensions(nc)
+
+  expect_equal(dim$time$to, setNames(10, "time"))
+
+  expect_equal(dim$level$to, setNames(2, "level"))
+
+})
