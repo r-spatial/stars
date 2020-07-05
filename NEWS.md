@@ -1,6 +1,10 @@
 # version 0.4-3
 
-* `st_rgb` collapses (reduces) a dimension into rgb hex values; #302
+* fix bug in `st_as_stars.Raster`
+
+* add `s2` to Suggests:
+
+* `st_rgb` collapses (reduces) a dimension to rgb hex value; #302
 
 # version 0.4-2
 

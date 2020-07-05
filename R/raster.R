@@ -6,7 +6,13 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
 
-	if (.x@file@name != "") {
+	file = if ("file" %in% slotNames(.x))
+			.x@file@name
+		else if ("filename" %in% slotNames(.x))
+			.x@filename
+		else 
+			""
+	if (file != "") {
 		r = try(read_stars(.x@file@name, proxy = TRUE), silent = TRUE)
 		if (!inherits(r, "try-error"))
 			return(r)

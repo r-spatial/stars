@@ -61,6 +61,7 @@ Suggests:
     plm,
     raster,
     rmarkdown,
+	s2 (>= 1.0.0),
     sp,
     spacetime,
     spatstat,
