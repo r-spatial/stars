@@ -41,7 +41,7 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
-\method{st_as_stars}{Raster}(.x, ..., att = 1)
+\method{st_as_stars}{Raster}(.x, ..., att = 1, ignore_file = FALSE)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 

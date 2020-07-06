@@ -1,8 +1,8 @@
-
 #' @name st_as_stars
 #' @param att see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table
+#' @ignore_file logical; if \code{TRUE}, ignore the Raster object file name
 #' @export
-st_as_stars.Raster = function(.x, ..., att = 1) {
+st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
 
@@ -12,8 +12,8 @@ st_as_stars.Raster = function(.x, ..., att = 1) {
 			.x@filename
 		else 
 			""
-	if (file != "") {
-		r = try(read_stars(.x@file@name, proxy = TRUE), silent = TRUE)
+	if (!ignore_file && file != "") {
+		r = try(read_stars(file, ...), silent = TRUE)
 		if (!inherits(r, "try-error"))
 			return(r)
 	}
