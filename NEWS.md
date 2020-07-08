@@ -1,10 +1,10 @@
 # version 0.4-3
 
-* fix bug in `st_as_stars.Raster`
+* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/mtennekes/tmap/issues/471
 
 * add `s2` to Suggests:
 
-* `st_rgb` collapses (reduces) a dimension to rgb hex value; #302
+* new function `st_rgb` collapses (reduces) a dimension to rgb hex value; #302
 
 # version 0.4-2
 
