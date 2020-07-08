@@ -96,6 +96,8 @@ st_as_stars(.x, ...)
 
 \item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 
+\item{ignore_file}{logical; if \code{TRUE}, ignore the Raster object file name}
+
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.}
 

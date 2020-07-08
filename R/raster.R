@@ -6,16 +6,18 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
 
-	file = if ("file" %in% slotNames(.x))
-			.x@file@name
-		else if ("filename" %in% slotNames(.x))
-			.x@filename
-		else 
-			""
-	if (!ignore_file && file != "") {
-		r = try(read_stars(file, ...), silent = TRUE)
-		if (!inherits(r, "try-error"))
-			return(st_set_crs(r, st_crs(raster::crs(.x))))
+	if (!ignore_file) {
+		file = if ("file" %in% slotNames(.x))
+				.x@file@name
+			else if ("filename" %in% slotNames(.x))
+				.x@filename
+			else 
+				""
+		if (file != "") {
+			r = try(read_stars(file, ...), silent = TRUE)
+			if (!inherits(r, "try-error"))
+				return(st_set_crs(r, st_crs(raster::crs(.x))))
+		}
 	}
 
     if (!requireNamespace("sp", quietly = TRUE))
