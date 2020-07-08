@@ -1,6 +1,6 @@
 #' @name st_as_stars
 #' @param att see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table
-#' @ignore_file logical; if \code{TRUE}, ignore the Raster object file name
+#' @param ignore_file logical; if \code{TRUE}, ignore the Raster object file name
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
     if (!requireNamespace("raster", quietly = TRUE))
