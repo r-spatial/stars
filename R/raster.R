@@ -15,7 +15,7 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 	if (!ignore_file && file != "") {
 		r = try(read_stars(file, ...), silent = TRUE)
 		if (!inherits(r, "try-error"))
-			return(r)
+			return(st_set_crs(r, st_crs(raster::crs(.x))))
 	}
 
     if (!requireNamespace("sp", quietly = TRUE))
