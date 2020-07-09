@@ -6,24 +6,56 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
 
+	#0 360 -90  90
+	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
+
 	if (!ignore_file) {
 		file = if ("file" %in% slotNames(.x))
 				.x@file@name
 			else if ("filename" %in% slotNames(.x))
 				.x@filename
-			else 
+			else
 				""
 		if (file != "") {
 			r = try(read_stars(file, ...), silent = TRUE)
-			if (!inherits(r, "try-error"))
-				return(st_set_crs(r, st_crs(raster::crs(.x))))
+			if (!inherits(r, "try-error")) {
+				r = st_set_crs(r, st_crs(raster::crs(.x)))
+
+				rdims = attr(r, "dimensions")
+				dxy = attr(rdims, "raster")$dimensions
+				dimx = rdims[[dxy[1]]]
+				dimy = rdims[[dxy[2]]]
+
+				xrev = dimx$delta < 0
+				yrev = dimy$delta < 0
+
+				if (xrev) {
+					dimx$offset = e[2]
+					dimx$delta = (e[1] - e[2]) / (dimx$to - dimx$from + 1)
+				} else {
+					dimx$offset = e[1]
+					dimx$delta = (e[2] - e[1]) / (dimx$to - dimx$from + 1)
+				}
+
+				if (yrev) {
+					dimy$offset = e[4]
+					dimy$delta = (e[3] - e[4]) / (dimy$to - dimy$from + 1)
+				} else {
+					dimy$offset = e[3]
+					dimy$delta = (e[4] - e[3]) / (dimy$to - dimy$from + 1)
+				}
+
+				attr(r, "dimensions")[[dxy[1]]] = dimx
+				attr(r, "dimensions")[[dxy[2]]] = dimy
+
+				return(r)
+			}
+
 		}
 	}
 
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") # nocov
-	#0 360 -90  90
-	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
 	v = raster::values(.x)
 	dim(v) = dim(.x)[c(2,1,3)]
 	if (all(raster::is.factor(.x))) {
@@ -39,7 +71,7 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 		# FIXME: should we handle levels for all layers here, or break on multiple different ones?
 	}
 	dimensions = list(
-		x = create_dimension(from = 1, to = dim(v)[1], offset = e[1], 
+		x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
 			delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(raster::crs(.x))),
 		y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
 			delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(raster::crs(.x))))
@@ -81,8 +113,8 @@ st_as_raster = function(x, ...) {
 			as.vector(x[[1]]) # would convert factor into character
 	if (length(dim(x)) == 2) {
     	raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
-			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], 
-            crs = as(st_crs(x), "CRS"), vals = values) 
+			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4],
+            crs = as(st_crs(x), "CRS"), vals = values)
 	} else {
 		third = setdiff(names(d), dxy)
 		b = raster::brick(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
@@ -97,14 +129,14 @@ st_as_raster = function(x, ...) {
 }
 
 #' Coerce stars object into a Raster raster or brick
-#' 
+#'
 #' Coerce stars object into a Raster raster or brick
 #' @param from object to coerce
 #' @name as
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Raster-method
 #' @aliases coerce,stars_proxy,Raster-method
-setAs("stars", "Raster", function(from) { 
+setAs("stars", "Raster", function(from) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") # nocov
     if (!requireNamespace("raster", quietly = TRUE))
@@ -114,7 +146,7 @@ setAs("stars", "Raster", function(from) {
 	st_as_raster(from)
 })
 
-setAs("stars_proxy", "Raster", function(from) { 
+setAs("stars_proxy", "Raster", function(from) {
     if (!requireNamespace("raster", quietly = TRUE))
         stop("package raster required, please install it first") # nocov
 	if (!is_regular_grid(from))
