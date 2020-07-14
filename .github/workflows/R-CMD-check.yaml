@@ -104,16 +104,3 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
-
-      - name: Install package
-        run: R CMD INSTALL .
-
-      - name: Deploy package
-        if: runner.os == 'ubuntu-latest'
-        run: pkgdown::deploy_to_branch(new_process = FALSE)
-        shell: Rscript {0}
-
-      - name: Test coverage
-        if: runner.os == 'ubuntu-latest'
-        run: covr::codecov()
-        shell: Rscript {0}
