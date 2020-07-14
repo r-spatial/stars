@@ -17,7 +17,6 @@
 #' all.equal(x * 10, 10 * x)
 #' @export
 Ops.stars <- function(e1, e2) {
-	#ret = if (is.array(e2))
 	ret = if (missing(e2))
 			lapply(e1, .Generic)
 		else if (!inherits(e2, "stars"))
@@ -29,6 +28,8 @@ Ops.stars <- function(e1, e2) {
 			} else
 				mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
 		}
+	if (any(sapply(ret, function(x) is.null(dim(x))))) # happens if e1[[1]] is a factor; #304
+		ret = lapply(ret, function(x) { dim(x) = dim(e1); x })
 	if (! inherits(e1, "stars"))
 		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
 	else
