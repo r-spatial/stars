@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'release'}
-          - {os: macOS-latest, r: 'release'}
-          - {os: macOS-latest, r: 'devel'}
+          #- {os: windows-latest, r: 'release'}
+          #- {os: macOS-latest, r: 'release'}
+          #- {os: macOS-latest, r: 'devel'}
           - {os: ubuntu-16.04, r: 'oldrel', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
           - {os: ubuntu-16.04, r: 'release', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
           - {os: ubuntu-latest, r: 'release'}
@@ -104,3 +104,16 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+
+      - name: Install package
+        run: R CMD INSTALL .
+
+      - name: Deploy package
+        if: runner.os == 'ubuntu-latest'
+        run: pkgdown::deploy_to_branch(new_process = FALSE)
+        shell: Rscript {0}
+
+      - name: Test coverage
+        if: runner.os == 'ubuntu-latest'
+        run: covr::codecov()
+        shell: Rscript {0}
