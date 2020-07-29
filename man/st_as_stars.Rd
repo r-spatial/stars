@@ -66,7 +66,7 @@ st_as_stars(.x, ...)
 
 \item{raster}{character; the names of the dimensions that denote raster dimensions}
 
-\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced}
+\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to}
 
 \item{crs}{object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details}
 

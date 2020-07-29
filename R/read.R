@@ -23,7 +23,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds. 
 #' If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
 #' or to 1e8 if that option was not set.
-#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
+#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param RAT character; raster attribute table column name to use as factor levels
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set

@@ -94,7 +94,7 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param crs object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details
 #' @details if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 #' @export

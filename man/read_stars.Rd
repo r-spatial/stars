@@ -47,7 +47,7 @@ metadata only; if \code{FALSE} the full array data is read in memory. Always \co
 If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
 or to 1e8 if that option was not set.}
 
-\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.}
+\item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to}
 
 \item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}}
 
