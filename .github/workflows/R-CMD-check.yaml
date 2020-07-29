@@ -24,7 +24,7 @@ jobs:
           #- {os: macOS-latest, r: 'devel'}
           - {os: ubuntu-16.04, r: 'oldrel', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
           - {os: ubuntu-16.04, r: 'release', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          - {os: ubuntu-latest, r: 'release'}
+          # - {os: ubuntu-latest, r: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -96,6 +96,14 @@ jobs:
 
       - name: Check
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "${{ matrix.config.args }}"), error_on = "warning", check_dir = "check", build_args = "${{ matrix.config.build_args }}")
+        shell: Rscript {0}
+
+      - name: Install package
+        run: R CMD INSTALL .
+
+      - name: Deploy package
+        if: runner.os == 'Linux'
+        run: pkgdown::deploy_to_branch(new_process = FALSE)
         shell: Rscript {0}
 
       - name: Upload check results
