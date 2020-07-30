@@ -102,6 +102,8 @@ jobs:
         run: R CMD INSTALL .
 
       - name: Deploy package
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         if: runner.os == 'Linux'
         run: |
           install.packages("pkgdown")
