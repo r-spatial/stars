@@ -536,14 +536,14 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 		else
 			format(x, digits = digits, ...) 
 	}
-	lst = lapply(lst, function(x) lapply(x, mformat, digits = digits))
+	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")
 	if (!any(is.na(r$dimensions))) {
 		ret$raster = rep("", nrow(ret))
 		ret[r$dimensions[1], "raster"] = "[x]"
 		ret[r$dimensions[2], "raster"] = "[y]"
-		names(ret) = c(names(lst[[1]]), "")
+		names(ret) = c(names(lst[[1]]), "x/y")
 	}
 	print(ret)
 	print(attr(x, "raster"))

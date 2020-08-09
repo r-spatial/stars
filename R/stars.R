@@ -103,6 +103,11 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	if (is.null(curvilinear))
 		.x
 	else {
+		stopifnot(is.list(curvilinear), names(curvilinear) %in% names(dim(.x)))
+		if (inherits(curvilinear[[1]], "stars"))
+			curvilinear[[1]] = curvilinear[[1]][[1]]
+		if (inherits(curvilinear[[2]], "stars"))
+			curvilinear[[2]] = curvilinear[[2]][[1]]
 		dimensions = st_dimensions(.x)
 		xy = names(curvilinear)
 		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
@@ -619,8 +624,9 @@ merge.stars = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	#out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
 	out = do.call(abind, st_redimension(x))
+	if (is.factor(x[[1]]) && is.character(out))
+		out = structure(factor(as.vector(out), levels = levels(x[[1]])), dim = dim(out))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -696,6 +702,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 				stop(paste("replacement has length", length(value), ", data has dim", paste(dim(x), collapse = ", ")))
 			else
 				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
+		}
+		if (inherits(value, "stars")) {
+			stopifnot(length(value) == 1)
+			value = value[[1]]
 		}
 		value = if (inherits(value, c("factor", "POSIXct")))
 				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))

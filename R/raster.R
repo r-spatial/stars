@@ -94,6 +94,8 @@ st_as_raster = function(x, ...) {
 		warning("folding all higher dimensions into the third dimension") # nocov
 		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect") # nocov
 	}
+	if (length(dim(x)) == 2 && length(x) > 1)
+		x = merge(x)
 	d = st_dimensions(x)
 	if (d[[2]]$delta > 0) { # swap:
 		ny = dim(x)[2]
@@ -122,8 +124,12 @@ st_as_raster = function(x, ...) {
             crs = as(st_crs(x), "CRS"))
 		raster::values(b) = values
 		z = seq(d[[third]])
-		if (all(!is.na(z)))
-			raster::setZ(b, z)
+		if (!any(is.na(z))) {
+			if (is.character(z))
+				names(b) = z
+			else
+				b = raster::setZ(b, z)
+		}
 		b
 	}
 }
@@ -136,6 +142,8 @@ st_as_raster = function(x, ...) {
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Raster-method
 #' @aliases coerce,stars_proxy,Raster-method
+#' @returns RasterLayer or RasterBrick
+#' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick.
 setAs("stars", "Raster", function(from) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") # nocov

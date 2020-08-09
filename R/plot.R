@@ -423,6 +423,7 @@ contour.stars = function(x, ...) {
 #' @param dimension dimension name or number to reduce
 #' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
 #' @param maxColorValue integer; maximum value for colors
+#' @param quantiles quantile values to cut off data range; overrides \code{maxColorValue}
 #' @seealso \link{st_apply}, \link[grDevices]{rgb}
 #' @details the dimension's bands are mapped to red, green, blue, alpha; if a different 
 #' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
@@ -434,11 +435,20 @@ contour.stars = function(x, ...) {
 #' if (require(ggplot2)) {
 #'  ggplot() + geom_stars(data = r) + scale_fill_identity()
 #' }
-st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255) {
+st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, probs = c(0., 1.)) {
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
 	stopifnot(is.numeric(dimension), length(dimension)==1)
 	dims = setdiff(seq_along(dim(x)), dimension)
+	cutoff = function(x, probs) {
+		qs = quantile(x, probs, na.rm = TRUE)
+		x = (x - qs[1])/(qs[2] - qs[1])
+		x[x > 1] = 1
+		x[x < 0] = 0
+		x * maxColorValue
+	}
+	if (any(probs != c(0.,1.)))
+		x = st_apply(x, dimension, cutoff, probs = probs)
 	rgb4 = function(x, ...) if (any(is.na(x[1:4]))) NA_character_ else rgb(x[1], x[2], x[3], x[4], ...)
 	rgb3 = function(x, ...) if (any(is.na(x[1:3]))) NA_character_ else rgb(x[1], x[2], x[3], ...)
 	if (use_alpha)

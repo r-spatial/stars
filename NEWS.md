@@ -1,3 +1,11 @@
+# version 0.4-4
+
+* dimension tables are now simpler, and will now more often show in Rstudio
+
+* `st_rgb` gains a `probs` argument, to cut off and stretch based on quantiles
+
+* `as(x, "Raster")` will now merge multiple attributes before converting to raster brick
+
 # version 0.4-3
 
 * fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/mtennekes/tmap/issues/471

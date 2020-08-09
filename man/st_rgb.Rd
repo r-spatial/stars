@@ -4,7 +4,13 @@
 \alias{st_rgb}
 \title{reduce dimension to rgb (alpha) hex values}
 \usage{
-st_rgb(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255)
+st_rgb(
+  x,
+  dimension = 3,
+  use_alpha = FALSE,
+  maxColorValue = 255L,
+  probs = c(0, 1)
+)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -14,6 +20,8 @@ st_rgb(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255)
 \item{use_alpha}{logical; if TRUE, the fourth band will be used as alpha values}
 
 \item{maxColorValue}{integer; maximum value for colors}
+
+\item{quantiles}{quantile values to cut off data range; overrides \code{maxColorValue}}
 }
 \description{
 reduce dimension to rgb (alpha) hex values
