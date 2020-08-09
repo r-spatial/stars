@@ -423,7 +423,7 @@ contour.stars = function(x, ...) {
 #' @param dimension dimension name or number to reduce
 #' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
 #' @param maxColorValue integer; maximum value for colors
-#' @param quantiles quantile values to cut off data range; overrides \code{maxColorValue}
+#' @param probs probability values for quantiles to cut off data range; overrides \code{maxColorValue}
 #' @seealso \link{st_apply}, \link[grDevices]{rgb}
 #' @details the dimension's bands are mapped to red, green, blue, alpha; if a different 
 #' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples

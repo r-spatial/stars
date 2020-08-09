@@ -21,7 +21,7 @@ st_rgb(
 
 \item{maxColorValue}{integer; maximum value for colors}
 
-\item{quantiles}{quantile values to cut off data range; overrides \code{maxColorValue}}
+\item{probs}{probability values for quantiles to cut off data range; overrides \code{maxColorValue}}
 }
 \description{
 reduce dimension to rgb (alpha) hex values
