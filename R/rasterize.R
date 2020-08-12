@@ -51,41 +51,59 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 
 
 #' @export
-# points -> raster
+#' @param dims the column names or indexes that form the cube dimensions
+#' @param xy the x and y raster dimensions
+#' @param y_decreasing logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)
+#' @name st_as_stars
+#' @examples
+#' data(Produc, package = "plm")
+#' st_as_stars(Produc, y_decreasing = FALSE)
 st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreasing = TRUE) {
 	if (is.character(xy))
 		xy = match(names(.x), xy)
 
 	index = NULL
 	dimensions = list()
-	for (i in dims) {
-		v = .x[[i]]
-		if (inherits(v, "sfc")) {
-    		if (!requireNamespace("digest", quietly = TRUE))
-        		stop("package digest required, please install it first") # nocov
-			dig = sapply(v, digest::digest)
-			uv = unique(dig) # don't sort
-			ix = match(dig, uv)
-		} else {
-			suv = sort(unique(v), decreasing = length(xy) == 2 && i == xy[2])
-			ix = match(v, suv)
+	if (length(dims) >= 2) {
+		for (i in dims) {
+			v = .x[[i]]
+			if (inherits(v, "sfc")) {
+    			if (!requireNamespace("digest", quietly = TRUE))
+        			stop("package digest required, please install it first") # nocov
+				dig = sapply(v, digest::digest)
+				uv = unique(dig) # don't sort
+				ix = match(dig, uv)
+			} else {
+				suv = sort(unique(v), decreasing = length(xy) == 2 && i == xy[2])
+				ix = match(v, suv)
+			}
+			index = cbind(index, ix)
+			dimensions[[i]] = if (inherits(v, "sfc")) 
+					create_dimension(values = v[match(uv, dig)])
+				else
+					create_dimension(values = suv)
 		}
-		index = cbind(index, ix)
-		dimensions[[i]] = if (inherits(v, "sfc")) 
-				create_dimension(values = v[match(uv, dig)])
-			else
-				create_dimension(values = suv)
+		names(dimensions) = names(.x)[dims]
+	
+		raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
+		d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
+		l = lapply(.x[-dims], function(x) {
+				m = array(NA, dim = dim(d))
+				m[index] = x # match order
+				m 
+			}
+		)
+	} else {
+		l = lapply(.x, as.array)
+		dimensions[[1]] = if (length(dims) == 0 || dims < 1)
+				create_dimension(values = row.names(.x))
+			else {
+				l[[dims]] = NULL
+				create_dimension(values = .x[[dims]])
+			}
+		names(dimensions) = "rows"
+		d = create_dimensions(dimensions)
 	}
-	names(dimensions) = names(.x)[dims]
-
-	raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
-	d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
-	l = lapply(.x[-dims], function(x) {
-			m = array(NA, dim = dim(d))
-			m[index] = x # match order
-			m 
-		}
-	)
 	st_stars(l, d)
 }
 

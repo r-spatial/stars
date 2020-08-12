@@ -312,6 +312,9 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		}
 		lst[["band"]] = NULL
 	}
+	# handle band descriptions, if present:
+	if (!is.null(lst$band) && !is.null(pr$descriptions) && all(pr$descriptions != ""))
+		lst$band$values = pr$descriptions
 	# set up raster:
 	raster = get_raster(affine = pr$geotransform[c(3,5)], dimensions = c("x", "y"), curvilinear = FALSE)
 	create_dimensions(lst, raster)

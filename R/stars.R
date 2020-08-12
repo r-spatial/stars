@@ -602,9 +602,13 @@ st_geometry.stars = function(obj,...) {
 	d[[ which_sfc(obj) ]]$values
 }
 
-
+#' @name merge
+#' @param f the name or index of the dimension to split; by default the last dimension
+#' @param drop ignored
+#' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
 #' @export
-split.stars = function(x, f, drop = TRUE, ...) {
+split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
+	stopifnot(length(x) == 1)
 	d = st_dimensions(x)
 	if (is.character(f))
 		f = which(names(d) == f)
@@ -618,8 +622,16 @@ split.stars = function(x, f, drop = TRUE, ...) {
 	spl
 }
 
+#' merge or split stars object
+#' 
+#' merge attributes into a dimension, or split a dimension over attributes
+#' @param x object of class \code{stars}
+#' @param y needs to be missing
+#' @param ... if defined, the first unnamed argument is used for dimension values, if not defined, attribute names are used for dimension values
+#' @returns merge merges attributes of a stars object into a new dimension; split splits a dimension over attributes
+#' @name merge
 #' @export
-merge.stars = function(x, y, ...) {
+merge.stars = function(x, y, ..., name = "attributes") {
 	dots = list(...)
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
@@ -631,7 +643,8 @@ merge.stars = function(x, y, ...) {
 			create_dimension(values = dots[[1]])
 		else
 			create_dimension(values = names(x))
-	d = create_dimensions(c(old_dim, list(new_dim)), raster = attr(old_dim, "raster"))
+	dims = setNames(c(old_dim, list(new_dim)), make.unique(c(names(old_dim), name)))
+	d = create_dimensions(dims, raster = attr(old_dim, "raster"))
 	if (!is.null(names(dots)))
 		names(d)[length(d)] = names(dots)
 	st_as_stars(out, dimensions = d)

@@ -1,10 +1,16 @@
 # version 0.4-4
 
+* `read_stars` now sets the `BANDNAME` or band description as band dimension values
+
+* `st_as_stars.data.frame` reads simple tables (non-raster data) if `dims` has length less than 2
+
+* band descriptions are now in the band dimension values (requires sf >= 0.9-6)
+
 * dimension tables are now simpler, and will now more often show in Rstudio
 
 * `st_rgb` gains a `probs` argument, to cut off and stretch based on quantiles
 
-* `as(x, "Raster")` will now merge multiple attributes before converting to raster brick
+* `as(x, "Raster")` merges multiple attributes before converting to raster brick
 
 # version 0.4-3
 
