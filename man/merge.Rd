@@ -3,6 +3,7 @@
 \name{merge}
 \alias{merge}
 \alias{split.stars}
+\alias{split}
 \alias{merge.stars}
 \title{merge or split stars object}
 \usage{
@@ -20,6 +21,8 @@
 \item{...}{if defined, the first unnamed argument is used for dimension values, if not defined, attribute names are used for dimension values}
 
 \item{y}{needs to be missing}
+
+\item{name}{name for the new dimension}
 }
 \value{
 merge merges attributes of a stars object into a new dimension; split splits a dimension over attributes

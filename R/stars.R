@@ -603,6 +603,7 @@ st_geometry.stars = function(obj,...) {
 }
 
 #' @name merge
+#' @aliases split
 #' @param f the name or index of the dimension to split; by default the last dimension
 #' @param drop ignored
 #' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
@@ -627,6 +628,7 @@ split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
 #' merge attributes into a dimension, or split a dimension over attributes
 #' @param x object of class \code{stars}
 #' @param y needs to be missing
+#' @param name name for the new dimension
 #' @param ... if defined, the first unnamed argument is used for dimension values, if not defined, attribute names are used for dimension values
 #' @returns merge merges attributes of a stars object into a new dimension; split splits a dimension over attributes
 #' @name merge
