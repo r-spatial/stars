@@ -109,8 +109,8 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			} else
 				NULL
 
-		ret = gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
-				use_contours = FALSE, connect8 = connect8, ...)
+		ret = gdal_polygonize(st_normalize(x), mask, use_integer = use_integer,
+				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels")))
