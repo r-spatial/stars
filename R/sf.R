@@ -100,6 +100,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE, connect8 = FALSE) { 
 
 	crs = st_crs(x)
+	x = st_normalize(x)
 	d = st_dimensions(x)
 	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
 		mask = if (na.rm) {
@@ -109,7 +110,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			} else
 				NULL
 
-		ret = gdal_polygonize(st_normalize(x), mask, use_integer = use_integer,
+		ret = gdal_polygonize(x, mask, use_integer = use_integer,
 				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
