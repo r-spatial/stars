@@ -169,8 +169,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	} else if (has_sfc(x)) {
 #		if (key.pos.missing)
 #			key.pos = -1
-		plot(st_as_sf(x), ..., key.pos = key.pos, key.length = key.length, key.width = key.width, 
-			reset = reset, axes = axes, main = main)
+		plot(st_as_sf(x), ..., breaks = breaks, key.pos = key.pos, key.length = key.length, 
+			key.width = key.width, reset = reset, axes = axes, main = main)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset) {

@@ -515,7 +515,7 @@ dim.dimensions = function(x) {
 #' @export
 print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	lst = lapply(x, function(y) {
-			if (length(y$values) > 2) {
+			if (length(y$values) > 3) {
 				y$values = if (is.array(y$values))
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 
