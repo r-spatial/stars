@@ -79,7 +79,7 @@ st_transform.stars =  function(x, crs, ...) {
 		ix = which_sfc(x)
 		for (j in ix) {
 			d[[j]]$values = st_transform(d[[j]]$values, crs, ...)
-			d[[j]]$refsys = crs$proj4string
+			d[[j]]$refsys = crs
 		}
 		structure(x, dimensions = d)
 	} else {
@@ -97,15 +97,22 @@ st_transform_proj.stars =  function(x, crs, ...) {
 
 	stopifnot(!is.na(crs), !is.na(st_crs(x)))
 
-	if (inherits(crs, "crs"))
-		crs = crs$proj4string
 	if (has_sfc(x)) {
     	if (!requireNamespace("lwgeom", quietly = TRUE))
         	stop("package lwgeom required, please install it first") # nocov
+		try_proj = function(x, crs) {
+			ret = try(st_transform(x, crs), silent = TRUE)
+			if (inherits(ret, "try-error")) {
+				if (inherits(crs, "crs"))
+					crs = crs$proj4string
+				ret = lwgeom::st_transform_proj(x, crs)
+			}
+			ret
+		}
 		d = st_dimensions(x)
 		ix = which_sfc(x)
 		for (j in ix) {
-			d[[j]]$values = lwgeom::st_transform_proj(d[[j]]$values, crs, ...)
+			d[[j]]$values = try_proj(d[[j]]$values, crs)
 			d[[j]]$refsys = crs
 		}
 		structure(x, dimensions = d)

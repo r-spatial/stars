@@ -39,15 +39,14 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 		# TODO: divide by st_area(evelope_new)/st_area(envelope) ?
 	}
 	cellsize = rep(abs(cellsize), length.out = 2)
-	p4s = crs$proj4string
 	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
 	if (has_global_longitude(x)) { # if global coverage, don't cross the boundaries:
 		cellsize[1] = diff(bb[c("xmin", "xmax")])/nx
 		cellsize[2] = diff(bb[c("ymin", "ymax")])/ny
 	}
-	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = p4s)
-	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = p4s)
+	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = crs)
+	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = crs)
 	create_dimensions(list(x = x, y = y), get_raster())
 }
 
@@ -75,12 +74,8 @@ transform_grid_grid = function(x, target) {
 	new_pts = st_coordinates(target[xy_names])
 	dxy = attr(target, "raster")$dimensions
 
-	from = if (inherits(target[[ dxy[1] ]]$refsys, "crs")) # FIXME: drop support for this?
-			target[[ dxy[1] ]]$refsys$proj4string
-		else
-			target[[ dxy[1] ]]$refsys
-
-	pts = sf_project(from = from, to = st_crs(x)$proj4string, pts = new_pts)
+	from = st_crs(target)
+	pts = sf_project(from = from, to = st_crs(x), pts = new_pts)
 
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
