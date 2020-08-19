@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* get rid of more `proj4string`s for representing coordinate reference systems; #312
+
 * as(x, "Spatial") correctly handles `from` dimension values different from one
 
 * `read_stars` now sets the `BANDNAME` or band description as band dimension values
