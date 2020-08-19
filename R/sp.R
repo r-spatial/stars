@@ -2,6 +2,7 @@ stars_to_Spatial = function(from) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") #nocov
 	geom = if (has_raster(from)) {
+		from = st_normalize(from)
 		if (length(dim(from)) > 2)
 			stop("stars object must have two (raster: x, y) dimensions")
 		if (!is_regular_grid(from))

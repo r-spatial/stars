@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* as(x, "Spatial") correctly handles `from` dimension values different from one
+
 * `read_stars` now sets the `BANDNAME` or band description as band dimension values
 
 * `st_as_stars.data.frame` reads simple tables (non-raster data) if `dims` has length less than 2
