@@ -4,7 +4,7 @@ Spatiotemporal Arrays: Raster and Vector Datacubes
 
 <!-- badges: start -->
 
-[![tic](https://github.com/pat-s/stars/workflows/tic/badge.svg?branch=master)](https://github.com/pat-s/stars/actions)
+[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master)](https://github.com/r-spatial/stars/actions)
 [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
