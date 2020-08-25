@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="stars3_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3. stars tidyverse methods</h1>
@@ -110,7 +110,7 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stars</span>)
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
-<span class="co">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</span>
+<span class="co">## Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="co">## </span>
 <span class="co">## Attaching package: 'dplyr'</span>
@@ -124,16 +124,16 @@
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"stars"</span>)
 <span class="co">##  [1] [                 [&lt;-               $&lt;-               adrop            </span>
 <span class="co">##  [5] aggregate         aperm             as_tibble         as.data.frame    </span>
-<span class="co">##  [9] as.tbl_cube       c                 coerce            contour          </span>
-<span class="co">## [13] cut               dim               dimnames          dimnames&lt;-       </span>
-<span class="co">## [17] droplevels        filter            image             initialize       </span>
-<span class="co">## [21] is.na             Math              merge             mutate           </span>
-<span class="co">## [25] Ops               plot              predict           print            </span>
-<span class="co">## [29] pull              select            show              slice            </span>
-<span class="co">## [33] slotsFromS3       split             st_apply          st_area          </span>
-<span class="co">## [37] st_as_sf          st_as_sfc         st_as_stars       st_bbox          </span>
-<span class="co">## [41] st_coordinates    st_crop           st_crs            st_crs&lt;-         </span>
-<span class="co">## [45] st_dimensions     st_extract        st_geometry       st_interpolate_aw</span>
+<span class="co">##  [9] c                 coerce            contour           cut              </span>
+<span class="co">## [13] dim               dimnames          dimnames&lt;-        droplevels       </span>
+<span class="co">## [17] filter            image             initialize        is.na            </span>
+<span class="co">## [21] Math              merge             mutate            Ops              </span>
+<span class="co">## [25] plot              predict           print             pull             </span>
+<span class="co">## [29] select            show              slice             slotsFromS3      </span>
+<span class="co">## [33] split             st_apply          st_area           st_as_sf         </span>
+<span class="co">## [37] st_as_sfc         st_as_stars       st_bbox           st_coordinates   </span>
+<span class="co">## [41] st_crop           st_crs            st_crs&lt;-          st_dimensions    </span>
+<span class="co">## [45] st_dimensions&lt;-   st_extract        st_geometry       st_interpolate_aw</span>
 <span class="co">## [49] st_intersects     st_join           st_mosaic         st_normalize     </span>
 <span class="co">## [53] st_redimension    st_sample         st_transform_proj st_transform     </span>
 <span class="co">## [57] write_stars      </span>
@@ -152,7 +152,7 @@
 <span class="co">##  3rd Qu.: 86.00  </span>
 <span class="co">##  Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
@@ -173,7 +173,7 @@
 <span class="co">##  3rd Qu.: 88.00  </span>
 <span class="co">##  Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from  to  offset delta                       refsys point values    </span>
+<span class="co">##   from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span></pre></body></html></div>
 <p>It returns a lower-dimensional array if a single element is selected along the slice dimension.</p>
@@ -184,22 +184,6 @@
 </h2>
 <p>Similar to <code>slice</code>, <code>filter</code> selects on dimensions but evaluates their values rather than their index: in</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">x</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">289000</span>, <span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">291000</span>, <span class="no">band</span> <span class="kw">&gt;</span> <span class="fl">3</span>) <span class="kw">-&gt;</span> <span class="no">x7</span>
-<span class="co">## Registered S3 methods overwritten by 'cubelyr':</span>
-<span class="co">##   method                 from </span>
-<span class="co">##   as.data.frame.tbl_cube dplyr</span>
-<span class="co">##   as.table.tbl_cube      dplyr</span>
-<span class="co">##   as_tibble.tbl_cube     dplyr</span>
-<span class="co">##   auto_copy.tbl_cube     dplyr</span>
-<span class="co">##   dim.tbl_cube           dplyr</span>
-<span class="co">##   group_by.tbl_cube      dplyr</span>
-<span class="co">##   group_vars.tbl_cube    dplyr</span>
-<span class="co">##   groups.tbl_cube        dplyr</span>
-<span class="co">##   print.tbl_cube         dplyr</span>
-<span class="co">##   rename.tbl_cube        dplyr</span>
-<span class="co">##   same_src.tbl_cube      dplyr</span>
-<span class="co">##   select.tbl_cube        dplyr</span>
-<span class="co">##   summarise.tbl_cube     dplyr</span>
-<span class="co">##   tbl_vars.tbl_cube      dplyr</span>
 <span class="no">x7</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -211,7 +195,7 @@
 <span class="co">##  3rd Qu.: 88.00  </span>
 <span class="co">##  Max.   :252.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1  70  289004  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   3       4     1                           NA    NA   NULL</span></pre></body></html></div>
@@ -246,7 +230,7 @@
 <span class="co">##  3rd Qu.: 86.00   3rd Qu.:172.0  </span>
 <span class="co">##  Max.   :255.00   Max.   :510.0  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
@@ -268,7 +252,7 @@
 <span class="co">##  3rd Qu.:172.0  </span>
 <span class="co">##  Max.   :510.0  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>

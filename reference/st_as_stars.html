@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>convert objects into a stars object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/stars.R'><code>R/stars.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/sf.R'><code>R/sf.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/raster.R'><code>R/raster.R</code></a>, and 4 more</small>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/stars.R'><code>R/stars.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/sf.R'><code>R/sf.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/raster.R'><code>R/raster.R</code></a>, and 5 more</small>
     <div class="hidden name"><code>st_as_stars.Rd</code></div>
     </div>
 
@@ -176,7 +176,7 @@
 <span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>.x</span>, <span class='st'>"sf_column"</span>))
 
 <span class='co'># S3 method for Raster</span>
-<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>att</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>att</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ignore_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># S3 method for ncdfgeom</span>
 <span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>sf_geometry</span> <span class='kw'>=</span> <span class='fl'>NA</span>)
@@ -189,6 +189,9 @@
   <span class='kw'>url</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>.x</span>, <span class='st'>"url"</span>),
   <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>()
 )
+
+<span class='co'># S3 method for data.frame</span>
+<span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='kw'>dims</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>xy</span> <span class='kw'>=</span> <span class='no'>dims</span>[<span class='fl'>1</span>:<span class='fl'>2</span>], <span class='kw'>y_decreasing</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># S3 method for xts</span>
 <span class='fu'>st_as_stars</span>(<span class='no'>.x</span>, <span class='no'>...</span>, <span class='no'>dimensions</span>)
@@ -217,7 +220,7 @@
     </tr>
     <tr>
       <th>curvilinear</th>
-      <td><p>only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced</p></td>
+      <td><p>only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to</p></td>
     </tr>
     <tr>
       <th>crs</th>
@@ -273,11 +276,15 @@
     </tr>
     <tr>
       <th>att</th>
-      <td><p>see <a href='https://rdrr.io/pkg/raster/man/factor.html'>factorValues</a>; column in the RasterLayer's attribute table</p></td>
+      <td><p>see factorValues; column in the RasterLayer's attribute table</p></td>
+    </tr>
+    <tr>
+      <th>ignore_file</th>
+      <td><p>logical; if <code>TRUE</code>, ignore the Raster object file name</p></td>
     </tr>
     <tr>
       <th>sf_geometry</th>
-      <td><p>sf data.frame with geometry and attributes to be added to stars object. 
+      <td><p>sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.</p></td>
     </tr>
     <tr>
@@ -293,6 +300,18 @@ Must have same number of rows as timeseries instances.</p></td>
       <td><p>environment to resolve objects in</p></td>
     </tr>
     <tr>
+      <th>dims</th>
+      <td><p>the column names or indexes that form the cube dimensions</p></td>
+    </tr>
+    <tr>
+      <th>xy</th>
+      <td><p>the x and y raster dimensions</p></td>
+    </tr>
+    <tr>
+      <th>y_decreasing</th>
+      <td><p>logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)</p></td>
+    </tr>
+    <tr>
       <th>as_col</th>
       <td><p>logical; return rgb numbers (FALSE) or (character) color values (TRUE)?</p></td>
     </tr>
@@ -305,6 +324,35 @@ Must have same number of rows as timeseries instances.</p></td>
 <p>For the <code>ncdfgeom</code> method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the <code>sf_geometry</code> parameter. See <span class="pkg">ncdfgeom</span> for more about this NetCDF-based format for geometry and timeseries.</p>
 <p>for the <code>xts</code> methods, if <code>dimensions</code> are provided, time has to be the first dimension.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>Produc</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"plm"</span>)
+<span class='fu'>st_as_stars</span>(<span class='no'>Produc</span>, <span class='kw'>y_decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; stars object with 2 dimensions and 9 attributes
+#&gt; attribute(s):
+#&gt;     region           pcap              hwy            water        
+#&gt;  Min.   :1.000   Min.   :  2627   Min.   : 1827   Min.   :  228.5  
+#&gt;  1st Qu.:3.000   1st Qu.:  7097   1st Qu.: 3858   1st Qu.:  764.5  
+#&gt;  Median :5.000   Median : 17572   Median : 7556   Median : 2266.5  
+#&gt;  Mean   :4.958   Mean   : 25037   Mean   :10218   Mean   : 3618.8  
+#&gt;  3rd Qu.:7.000   3rd Qu.: 27692   3rd Qu.:11267   3rd Qu.: 4318.7  
+#&gt;  Max.   :9.000   Max.   :140217   Max.   :47699   Max.   :24592.3  
+#&gt;      util               pc               gsp              emp         
+#&gt;  Min.   :  538.5   Min.   :  4053   Min.   :  4354   Min.   :  108.3  
+#&gt;  1st Qu.: 2488.3   1st Qu.: 21651   1st Qu.: 16502   1st Qu.:  475.0  
+#&gt;  Median : 7008.8   Median : 40671   Median : 39987   Median : 1164.8  
+#&gt;  Mean   :11199.5   Mean   : 58188   Mean   : 61014   Mean   : 1747.1  
+#&gt;  3rd Qu.:11598.5   3rd Qu.: 64796   3rd Qu.: 68126   3rd Qu.: 2114.1  
+#&gt;  Max.   :80728.1   Max.   :375342   Max.   :464550   Max.   :11258.0  
+#&gt;      unemp       
+#&gt;  Min.   : 2.800  
+#&gt;  1st Qu.: 5.000  
+#&gt;  Median : 6.200  
+#&gt;  Mean   : 6.602  
+#&gt;  3rd Qu.: 7.900  
+#&gt;  Max.   :18.000  
+#&gt; dimension(s):
+#&gt;       from to offset delta refsys point              values x/y
+#&gt; state    1 48     NA    NA     NA    NA ALABAMA,...,WYOMING [x]
+#&gt; year     1 17   1986    -1     NA    NA                NULL [y]</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

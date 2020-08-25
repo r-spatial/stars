@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -166,7 +166,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="c.stars.html">c(<i>&lt;stars&gt;</i>)</a></code> </p>
+          <p><code><a href="c.stars.html">c(<i>&lt;stars&gt;</i>)</a></code> <code><a href="c.stars.html">c(<i>&lt;stars_proxy&gt;</i>)</a></code> </p>
         </td>
         <td><p>combine multiple stars objects, or combine multiple attributes in a single stars object into a single array</p></td>
       </tr><tr>
@@ -208,6 +208,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="merge.html">split(<i>&lt;stars&gt;</i>)</a></code> <code><a href="merge.html">merge(<i>&lt;stars&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>merge or split stars object</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="ops_stars.html">Ops(<i>&lt;stars&gt;</i>)</a></code> <code><a href="ops_stars.html">Math(<i>&lt;stars&gt;</i>)</a></code> <code><a href="ops_stars.html">Ops(<i>&lt;stars_proxy&gt;</i>)</a></code> <code><a href="ops_stars.html">Math(<i>&lt;stars_proxy&gt;</i>)</a></code> </p>
         </td>
         <td><p>S3 Ops Group Generic Functions for stars objects</p></td>
@@ -226,7 +232,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="read_stars.html">read_stars()</a></code> </p>
+          <p><code><a href="read_stars.html">read_stars()</a></code> <code><a href="read_stars.html">is_big()</a></code> </p>
         </td>
         <td><p>read raster/array dataset from file or connection</p></td>
       </tr><tr>
@@ -280,7 +286,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="st_dimensions.html">st_dimensions()</a></code> <code><a href="st_dimensions.html">st_set_dimensions()</a></code> <code><a href="st_dimensions.html">st_get_dimension_values()</a></code> </p>
+          <p><code><a href="st_dimensions.html">st_dimensions()</a></code> <code><a href="st_dimensions.html">`st_dimensions&lt;-`()</a></code> <code><a href="st_dimensions.html">st_set_dimensions()</a></code> <code><a href="st_dimensions.html">st_get_dimension_values()</a></code> </p>
         </td>
         <td><p>get dimensions from stars object</p></td>
       </tr><tr>
@@ -322,6 +328,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="st_rgb.html">st_rgb()</a></code> </p>
+        </td>
+        <td><p>reduce dimension to rgb (alpha) hex values</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="st_sfc2xy.html">st_sfc2xy()</a></code> </p>
         </td>
         <td><p>replace POINT simple feature geometry list with an x y raster</p></td>
@@ -352,7 +364,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="write_stars.html">write_stars()</a></code> </p>
+          <p><code><a href="write_stars.html">write_stars()</a></code> <code><a href="write_stars.html">detect.driver()</a></code> </p>
         </td>
         <td><p>write stars object to gdal dataset (typically: to file)</p></td>
       </tr>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -184,7 +184,7 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/demo.html'>demo</a></span>(<span class='no'>nc</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; Reading layer `nc.gpkg' from data source `/home/travis/R/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/demo.html'>demo</a></span>(<span class='no'>nc</span>, <span class='kw'>echo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ask</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; Reading layer `nc.gpkg' from data source `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
 #&gt; Simple feature collection with 100 features and 14 fields
 #&gt; Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
 #&gt; geometry type:  MULTIPOLYGON
@@ -201,7 +201,7 @@
 #&gt;  Max.   :0.241  
 #&gt;  NA's   :30904  
 #&gt; dimension(s):
-#&gt;   from  to   offset      delta                       refsys point values    
+#&gt;   from  to   offset      delta                       refsys point values x/y
 #&gt; x    1 461 -84.3239  0.0192484 GEOGCS["NAD27",DATUM["Nor... FALSE   NULL [x]
 #&gt; y    1 141  36.5896 -0.0192484 GEOGCS["NAD27",DATUM["Nor... FALSE   NULL [y]</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='st_rasterize-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># a bit more customized grid:</span>
 (<span class='no'>x</span> <span class='kw'>=</span> <span class='fu'>st_rasterize</span>(<span class='no'>nc</span>, <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'>st_bbox</span>(<span class='no'>nc</span>), <span class='kw'>nx</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ny</span> <span class='kw'>=</span> <span class='fl'>50</span>, <span class='kw'>values</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>)))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
@@ -215,7 +215,7 @@
 #&gt;  Max.   :0.2410  
 #&gt;  NA's   :2373    
 #&gt; dimension(s):
-#&gt;   from  to   offset      delta                       refsys point values    
+#&gt;   from  to   offset      delta                       refsys point values x/y
 #&gt; x    1 100 -84.3239  0.0886687 GEOGCS["NAD27",DATUM["Nor... FALSE   NULL [x]
 #&gt; y    1  50  36.5896 -0.0541531 GEOGCS["NAD27",DATUM["Nor... FALSE   NULL [y]</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='st_rasterize-2.png' alt='' width='700' height='433' /></div><div class='input'>(<span class='no'>ls</span> <span class='kw'>=</span> <span class='fu'>st_sf</span>(<span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='fu'>st_sfc</span>(<span class='fu'>st_linestring</span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>0</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.1</span>, <span class='fl'>1</span>))),
    <span class='fu'>st_linestring</span>(<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.05</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.05</span>))))))</div><div class='output co'>#&gt; Simple feature collection with 2 features and 1 field
@@ -240,11 +240,11 @@
 #&gt;  Max.   : NA  
 #&gt;  NA's   :100  
 #&gt; dimension(s):
-#&gt;   from to offset delta refsys point values    
+#&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0   0.1     NA    NA   NULL [x]
-#&gt; y    1 10      1  -0.1     NA    NA   NULL [y]</div><div class='input'><span class='co'># the following two plots suggests a half-gridcell-shift problem:</span>
+#&gt; y    1 10      1  -0.1     NA    NA   NULL [y]</div><div class='input'><span class='co'># Only the left-top corner is part of the grid cell:</span>
 <span class='fu'>sf_extSoftVersion</span>()[<span class='st'>"GDAL"</span>]</div><div class='output co'>#&gt;    GDAL 
-#&gt; "2.2.2" </div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_rasterize</span>(<span class='no'>ls</span>, <span class='no'>grd</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># ALL_TOUCHED=FALSE; </span></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>ls</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='st_rasterize-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_rasterize</span>(<span class='no'>ls</span>, <span class='no'>grd</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"ALL_TOUCHED=TRUE"</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>ls</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='st_rasterize-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># add lines to existing 0 values, summing values in case of multiple lines:</span>
+#&gt; "2.2.3" </div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_rasterize</span>(<span class='no'>ls</span>, <span class='no'>grd</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># ALL_TOUCHED=FALSE; </span></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>ls</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='st_rasterize-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_rasterize</span>(<span class='no'>ls</span>, <span class='no'>grd</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"ALL_TOUCHED=TRUE"</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>ls</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='st_rasterize-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># add lines to existing 0 values, summing values in case of multiple lines:</span>
 (<span class='no'>grd</span> <span class='kw'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'>st_bbox</span>(<span class='no'>ls</span>), <span class='kw'>nx</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>ny</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1.0</span>), <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>), <span class='kw'>values</span> <span class='kw'>=</span> <span class='fl'>0</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;     values  
@@ -255,7 +255,7 @@
 #&gt;  3rd Qu.:0  
 #&gt;  Max.   :0  
 #&gt; dimension(s):
-#&gt;   from to offset delta refsys point values    
+#&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0   0.1     NA    NA   NULL [x]
 #&gt; y    1 10      1  -0.1     NA    NA   NULL [y]</div><div class='input'><span class='no'>r</span> <span class='kw'>=</span> <span class='fu'>st_rasterize</span>(<span class='no'>ls</span>, <span class='no'>grd</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MERGE_ALG=ADD"</span>, <span class='st'>"ALL_TOUCHED=TRUE"</span>))
 <span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>r</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>ls</span>, <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='st_rasterize-5.png' alt='' width='700' height='433' /></div></pre>

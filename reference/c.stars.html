@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -136,7 +136,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>combine multiple stars objects, or combine multiple attributes in a single stars object into a single array</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/stars.R'><code>R/stars.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/stars.R'><code>R/stars.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/proxy.R'><code>R/proxy.R</code></a></small>
     <div class="hidden name"><code>c.stars.Rd</code></div>
     </div>
 
@@ -145,7 +145,16 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>...</span>, <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>...</span>, <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>, <span class='kw'>try_hard</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>nms</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>...</span>)))
+
+<span class='co'># S3 method for stars_proxy</span>
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+  <span class='no'>...</span>,
+  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>,
+  <span class='kw'>along_crs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>try_hard</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>nms</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>...</span>))
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,6 +166,19 @@
     <tr>
       <th>along</th>
       <td><p>integer; see <a href='read_stars.html'>read_stars</a></p></td>
+    </tr>
+    <tr>
+      <th>try_hard</th>
+      <td><p>logical; if <code>TRUE</code> and some arrays have different dimensions, 
+combine those that dimensions matching to the first array</p></td>
+    </tr>
+    <tr>
+      <th>nms</th>
+      <td><p>character; vector with array names</p></td>
+    </tr>
+    <tr>
+      <th>along_crs</th>
+      <td><p>logical; if <code>TRUE</code>, combine arrays along a CRS dimension</p></td>
     </tr>
     </table>
 
@@ -174,7 +196,7 @@
 #&gt;  3rd Qu.: 86.00   3rd Qu.: 86.00  
 #&gt;  Max.   :255.00   Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>new</span>) <span class='co'># collapses two arrays into one with an additional dimension</span></div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
@@ -187,7 +209,7 @@
 #&gt;  3rd Qu.: 86.00   3rd Qu.: 86.00  
 #&gt;  Max.   :255.00   Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>x</span>, <span class='no'>x</span>, <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
@@ -200,7 +222,7 @@
 #&gt;  3rd Qu.: 87.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  12      NA    NA                           NA    NA   NULL    </div></pre>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="stars2_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>2. stars proxy objects</h1>
@@ -110,7 +110,7 @@
 <h1 class="hasAnchor">
 <a href="#preamble-the-starsdata-package" class="anchor"></a>Preamble: the starsdata package</h1>
 <p>To run all of the examples in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the <code>stars</code> package. They are in a <a href="https://github.com/eddelbuettel/drat">drat repo</a>, installation is done by</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"starsdata"</span>, <span class="kw">repos</span> <span class="kw">=</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"source"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"starsdata"</span>, <span class="kw">repos</span> <span class="kw">=</span> <span class="st">"http://gis-bigdata.uni-muenster.de"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"source"</span>)</pre></body></html></div>
 </div>
 <div id="reading-chunks-change-resolution-select-bands" class="section level1">
 <h1 class="hasAnchor">
@@ -125,7 +125,7 @@
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stars</span>)
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
-<span class="co">## Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</span>
+<span class="co">## Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span>
 <span class="no">tif</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"stars"</span>)
 <span class="no">rasterio</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">nXOff</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">nYOff</span> <span class="kw">=</span> <span class="fl">6</span>, <span class="kw">nXSize</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">nYSize</span> <span class="kw">=</span> <span class="fl">100</span>, <span class="kw">bands</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span>))
 (<span class="no">x</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">tif</span>, <span class="kw">RasterIO</span> <span class="kw">=</span> <span class="no">rasterio</span>))
@@ -139,7 +139,7 @@
 <span class="co">##  3rd Qu.: 73.25  </span>
 <span class="co">##  Max.   :235.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       6 105  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       6 105 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   3      NA    NA                           NA    NA   NULL</span>
@@ -148,7 +148,7 @@
 <span class="co">##  100  100    3</span></pre></body></html></div>
 <p>Compare this to</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">tif</span>))
-<span class="co">##      from  to  offset delta                       refsys point values    </span>
+<span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></body></html></div>
@@ -179,7 +179,7 @@
 <span class="co">##  3rd Qu.: 73.00  </span>
 <span class="co">##  Max.   :107.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from to  offset  delta                       refsys point values    </span>
+<span class="co">##      from to  offset  delta                       refsys point values x/y</span>
 <span class="co">## x       2 21  288776  142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       2 21 9120761 -142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1  3      NA     NA                           NA    NA   NULL</span></pre></body></html></div>
@@ -265,10 +265,10 @@
 (<span class="no">p</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">s2</span>, <span class="kw">proxy</span> <span class="kw">=</span> <span class="fl">TRUE</span>))
 <span class="co">## stars_proxy object with 1 attribute in file:</span>
 <span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
-<span class="co">## [1] "SENTINEL2_L1C:/vsizip//home/travis/R/Library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
+<span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point values    </span>
+<span class="co">##      from    to offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA   NULL [x]</span>
 <span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA   NULL [y]</span>
 <span class="co">## band    1     4     NA    NA                           NA    NA   NULL</span></pre></body></html></div>
@@ -276,7 +276,7 @@
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">p</span>))</pre></body></html></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.532   0.628   1.382</code></pre>
+##   1.290   0.156   1.049</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">s2</span>, <span class="kw">proxy</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -285,11 +285,11 @@
 <a href="#methods-for-stars-proxy-objects" class="anchor"></a>Methods for stars proxy objects</h2>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(<span class="kw">class</span> <span class="kw">=</span> <span class="st">"stars_proxy"</span>)
 <span class="co">##  [1] [              adrop          aggregate      aperm          as.data.frame </span>
-<span class="co">##  [6] c              coerce         dim            droplevels     initialize    </span>
-<span class="co">## [11] Math           merge          Ops            plot           predict       </span>
-<span class="co">## [16] print          show           slotsFromS3    split          st_apply      </span>
-<span class="co">## [21] st_as_stars    st_crop        st_extract     st_mosaic      st_redimension</span>
-<span class="co">## [26] st_sample      write_stars   </span>
+<span class="co">##  [6] c              coerce         dim            droplevels     filter        </span>
+<span class="co">## [11] initialize     Math           merge          Ops            plot          </span>
+<span class="co">## [16] predict        print          show           slotsFromS3    split         </span>
+<span class="co">## [21] st_apply       st_as_stars    st_crop        st_extract     st_mosaic     </span>
+<span class="co">## [26] st_redimension st_sample      write_stars   </span>
 <span class="co">## see '?methods' for accessing help and source code</span></pre></body></html></div>
 </div>
 <div id="select-attributes" class="section level2">
@@ -312,18 +312,14 @@
 <span class="no">y</span>[<span class="st">"sst"</span>]
 <span class="co">## stars_proxy object with 1 attribute in files:</span>
 <span class="co">## $sst</span>
-<span class="co">## [1] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810901.nc\":sst"</span>
-<span class="co">## [2] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810902.nc\":sst"</span>
-<span class="co">## [3] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810903.nc\":sst"</span>
-<span class="co">## [4] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810904.nc\":sst"</span>
-<span class="co">## [5] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810905.nc\":sst"</span>
-<span class="co">## [6] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810906.nc\":sst"</span>
-<span class="co">## [7] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810907.nc\":sst"</span>
-<span class="co">## [8] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810908.nc\":sst"</span>
-<span class="co">## [9] "NETCDF:\"/home/travis/R/Library/starsdata/netcdf/avhrr-only-v2.19810909.nc\":sst"</span>
+<span class="co">## [1] "[...]/avhrr-only-v2.19810901.nc:sst" "[...]/avhrr-only-v2.19810902.nc:sst"</span>
+<span class="co">## [3] "[...]/avhrr-only-v2.19810903.nc:sst" "[...]/avhrr-only-v2.19810904.nc:sst"</span>
+<span class="co">## [5] "[...]/avhrr-only-v2.19810905.nc:sst" "[...]/avhrr-only-v2.19810906.nc:sst"</span>
+<span class="co">## [7] "[...]/avhrr-only-v2.19810907.nc:sst" "[...]/avhrr-only-v2.19810908.nc:sst"</span>
+<span class="co">## [9] "[...]/avhrr-only-v2.19810909.nc:sst"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from   to         offset  delta  refsys point values    </span>
+<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
@@ -337,7 +333,7 @@
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">bb</span> <span class="kw">=</span> <span class="fu">st_bbox</span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">xmin</span> <span class="kw">=</span> <span class="fl">10.125</span>, <span class="kw">ymin</span> <span class="kw">=</span> <span class="fl">0.125</span>, <span class="kw">xmax</span> <span class="kw">=</span> <span class="fl">70.125</span>, <span class="kw">ymax</span> <span class="kw">=</span> <span class="fl">70.125</span>))
 <span class="no">ysub</span> <span class="kw">=</span> <span class="no">y</span>[<span class="no">bb</span>]
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="no">ysub</span>)
-<span class="co">##      from  to         offset  delta  refsys point values    </span>
+<span class="co">##      from  to         offset  delta  refsys point values x/y</span>
 <span class="co">## x      41 281              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y      80 360             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1   1          0 [m]     NA      NA    NA   NULL    </span>
@@ -354,11 +350,10 @@
 <p>Some other actions can be carried out on <code>stars_proxy</code> objects, but their effect is delayed until the data are actually needed (<code>plot</code>, <code>write_stars</code>). For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called <code>call_list</code>:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">yy</span> <span class="kw">=</span> <span class="fu">adrop</span>(<span class="no">y</span>)
 <span class="no">yyy</span> <span class="kw">=</span> <span class="no">yy</span>[,<span class="fl">1</span>:<span class="fl">10</span>,<span class="fl">1</span>:<span class="fl">10</span>,]
-<span class="co">## Error in eval(expr) : argument is missing, with no default</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">yyy</span>) <span class="co"># still no data</span>
 <span class="co">## [1] "stars_proxy" "stars"</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="no">yyy</span>) <span class="co"># and dimensions not adjusted</span>
-<span class="co">##      from to         offset  delta  refsys point values    </span>
+<span class="co">##      from to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
@@ -388,7 +383,7 @@
 <span class="co">##  3rd Qu.:-1.060   3rd Qu.:0.720   3rd Qu.:0.3   3rd Qu.:0.8200  </span>
 <span class="co">##  Max.   :-0.950   Max.   :0.770   Max.   :0.3   Max.   :0.8500  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from to         offset  delta  refsys point values    </span>
+<span class="co">##      from to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
@@ -404,10 +399,10 @@
 (<span class="no">s2.ndvi</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_apply.html">st_apply</a></span>(<span class="no">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), <span class="no">ndvi</span>))
 <span class="co">## stars_proxy object with 1 attribute in file:</span>
 <span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
-<span class="co">## [1] "SENTINEL2_L1C:/vsizip//home/travis/R/Library/starsdata/sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
+<span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point values    </span>
+<span class="co">##      from    to offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA   NULL [x]</span>
 <span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA   NULL [y]</span>
 <span class="co">## band    1     4     NA    NA                           NA    NA   NULL    </span>
@@ -417,7 +412,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">s2.ndvi</span>)) <span class="co"># read - compute ndvi - plot </span></pre></body></html></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.920   0.588   1.677</code></pre>
+##   1.486   0.169   1.266</code></pre>
 </div>
 </div>
 </div>

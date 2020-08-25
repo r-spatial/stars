@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -207,7 +207,7 @@ without(s) changing the dimension properties</p>
 #&gt;  3rd Qu.: 83.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   3      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='no'>x</span>[,<span class='fl'>1</span>:<span class='fl'>100</span>,<span class='fl'>100</span>:<span class='fl'>200</span>,] <span class='co'># select x and y by range</span></div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
@@ -220,7 +220,7 @@ without(s) changing the dimension properties</p>
 #&gt;  3rd Qu.: 77.00  
 #&gt;  Max.   :252.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 100  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y     100 200 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='no'>x</span>[<span class='st'>"L7_ETMs.tif"</span>] <span class='co'># select attribute</span></div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
@@ -233,7 +233,7 @@ without(s) changing the dimension properties</p>
 #&gt;  3rd Qu.: 86.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='no'>xy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/structure.html'>structure</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>293253.999046018</span>, <span class='fl'>296400.196497684</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>9113801.64775462</span>,
@@ -250,7 +250,7 @@ without(s) changing the dimension properties</p>
 #&gt;  3rd Qu.: 89.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x     158 268  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y     245 331 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>xx</span>)</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</div><div class='img'><img src='stars_subset-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>x</span>)</div><div class='input'><span class='no'>pt</span> <span class='kw'>=</span> <span class='fu'>st_point</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>290462.103109179</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>9114202.32594085</span>))

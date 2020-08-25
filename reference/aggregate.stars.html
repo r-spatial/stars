@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -154,7 +154,8 @@
   <span class='kw'>join</span> <span class='kw'>=</span> <span class='no'>st_intersects</span>,
   <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span>(<span class='fu'>st_dimension</span>(<span class='no'>by</span>) <span class='kw'>==</span> <span class='fl'>2</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>rightmost.closed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>left.open</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>left.open</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>exact</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -182,7 +183,7 @@
     </tr>
     <tr>
       <th>join</th>
-      <td><p>join function to find matches of x to by</p></td>
+      <td><p>function; function used to find matches of <code>x</code> to <code>by</code></p></td>
     </tr>
     <tr>
       <th>as_points</th>
@@ -195,6 +196,10 @@
     <tr>
       <th>left.open</th>
       <td><p>logical; used for time intervals, see <a href='https://rdrr.io/r/base/findInterval.html'>findInterval</a> and <a href='https://rdrr.io/r/base/cut.POSIXt.html'>cut.POSIXt</a></p></td>
+    </tr>
+    <tr>
+      <th>exact</th>
+      <td><p>logical; if <code>TRUE</code>, use <a href='https://rdrr.io/pkg/exactextractr/man/coverage_fraction.html'>coverage_fraction</a> to compute exact overlap fractions of polygons with raster cells</p></td>
     </tr>
     </table>
 
@@ -220,7 +225,7 @@
 #&gt;  Max.   :  90.000  
 #&gt;  NA's   :5400      
 #&gt; dimension(s):
-#&gt;      from to     offset  delta                       refsys point values    
+#&gt;      from to     offset  delta                       refsys point values x/y
 #&gt; time    1  3 2018-07-31 2 days                         Date    NA   NULL    
 #&gt; x       1 30     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 30    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
@@ -244,7 +249,7 @@
 #&gt;  Max.   :  90.000  
 #&gt;  NA's   :10800     
 #&gt; dimension(s):
-#&gt;      from to     offset  delta                       refsys point values    
+#&gt;      from to     offset  delta                       refsys point values x/y
 #&gt; time    1  3 2018-07-31 2 days                         Date    NA   NULL    
 #&gt; x       1 30     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 30    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
@@ -263,11 +268,19 @@
 #&gt; x       1 30         288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
 #&gt; y       1 30        9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
 #&gt; band    1  6             NA     NA                           NA    NA   NULL
-#&gt;         
+#&gt;      x/y
 #&gt; time    
 #&gt; x    [x]
 #&gt; y    [y]
-#&gt; band    </div></pre>
+#&gt; band    </div><div class='input'><span class='co'># Spatial aggregation, see https://github.com/r-spatial/stars/issues/299</span>
+<span class='no'>prec_file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/test_stageiv_xyt.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
+<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'><a href='read_ncdf.html'>read_ncdf</a></span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>))</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
+#&gt; <span class='message'> time_bounds, lon, lat, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
+#&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
+#&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: bounds for time seem to be reversed; reverting them</span></div><div class='input'><span class='no'>prec_slice</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span>(<span class='no'>prec</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
+<span class='no'>nc</span> <span class='kw'>=</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/sf/man/st_read.html'>read_sf</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"gpkg/nc.gpkg"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sf"</span>), <span class='st'>"nc.gpkg"</span>)
+<span class='no'>nc</span> <span class='kw'>=</span> <span class='fu'><a href='st_transform.html'>st_transform</a></span>(<span class='no'>nc</span>, <span class='fu'>st_crs</span>(<span class='no'>prec_slice</span>))
+<span class='no'>agg</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span>(<span class='no'>prec_slice</span>, <span class='fu'>st_geometry</span>(<span class='no'>nc</span>), <span class='no'>mean</span>)</div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></div><div class='output co'>#&gt; <span class='message'>although coordinates are longitude/latitude, st_intersects assumes that they are planar</span></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>agg</span>)</div><div class='img'><img src='aggregate.stars-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

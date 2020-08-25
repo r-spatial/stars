@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -154,11 +154,13 @@
   <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
   <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>,
   <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>proxy</span> <span class='kw'>=</span> !<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>curvilinear</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'>is_big</span>(<span class='no'>.x</span>, <span class='no'>...</span>),
+  <span class='kw'>proxy</span> <span class='kw'>=</span> !<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>curvilinear</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'>is_big</span>(<span class='no'>.x</span>, <span class='kw'>sub</span> <span class='kw'>=</span> <span class='no'>sub</span>, <span class='no'>...</span>),
   <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
   <span class='kw'>normalize_path</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>RAT</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>)
-)</pre>
+)
+
+<span class='fu'>is_big</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>sub</span> <span class='kw'>=</span> <span class='no'>sub</span>, <span class='kw'>n_proxy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='st'>"stars.n_proxy"</span>)<span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>%||%</span> <span class='fl'>1e+08</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,7 +210,7 @@ or to 1e8 if that option was not set.</p></td>
     </tr>
     <tr>
       <th>curvilinear</th>
-      <td><p>length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.</p></td>
+      <td><p>length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to</p></td>
     </tr>
     <tr>
       <th>normalize_path</th>
@@ -217,6 +219,15 @@ or to 1e8 if that option was not set.</p></td>
     <tr>
       <th>RAT</th>
       <td><p>character; raster attribute table column name to use as factor levels</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>object to be read with read_stars</p></td>
+    </tr>
+    <tr>
+      <th>n_proxy</th>
+      <td><p>integer; number of cells above which .x will be read as stars 
+proxy object, i.e. not as in-memory arrays but left on disk</p></td>
     </tr>
     </table>
 
@@ -248,7 +259,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 86.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x2</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>)))</div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
@@ -261,7 +272,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 86.00   3rd Qu.: 86.00  
 #&gt;  Max.   :255.00   Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x3</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>), <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"band"</span>))</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
@@ -274,7 +285,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 87.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values    
+#&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  12      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x4</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>), <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"new_dimensions"</span>)) <span class='co'># create 4-dimensional array</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
@@ -292,7 +303,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; y                 1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
 #&gt; band              1   6      NA    NA                           NA    NA   NULL
 #&gt; new_dimensions    1   2      NA    NA                           NA    NA   NULL
-#&gt;                   
+#&gt;                x/y
 #&gt; x              [x]
 #&gt; y              [y]
 #&gt; band              
@@ -315,7 +326,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; band    1   6         NA     NA                           NA    NA       NULL
 #&gt; foo     1   2         NA     NA                           NA    NA bar1, bar2
 #&gt; time    1   2 2018-07-31 2 days                         Date    NA       NULL
-#&gt;         
+#&gt;      x/y
 #&gt; x    [x]
 #&gt; y    [y]
 #&gt; band    
@@ -336,13 +347,13 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 90.25  
 #&gt;  Max.   :120.00  
 #&gt; dimension(s):
-#&gt;   from to offset delta refsys point values    
+#&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA FALSE   NULL [x]
 #&gt; y    1 12     12    -1     NA FALSE   NULL [y]</div><div class='input'><span class='no'>tmp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>)
 <span class='fu'><a href='write_stars.html'>write_stars</a></span>(<span class='no'>st</span>, <span class='no'>tmp</span>)
 (<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file5588774ac000.tif 
+#&gt;  file4cda23da8357.tif 
 #&gt;  Min.   :  1.00       
 #&gt;  1st Qu.: 30.75       
 #&gt;  Median : 60.50       
@@ -350,7 +361,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 90.25       
 #&gt;  Max.   :120.00       
 #&gt; dimension(s):
-#&gt;   from to offset delta refsys point values    
+#&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
 #&gt; y    1 12     12    -1     NA    NA   NULL [y]</div><div class='input'><span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
    <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;      [,1] [,2]
@@ -358,7 +369,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; [2,]   38   98</div><div class='input'>(<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
    <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>)))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file5588774ac000.tif 
+#&gt;  file4cda23da8357.tif 
 #&gt;  Min.   :33.00        
 #&gt;  1st Qu.:36.75        
 #&gt;  Median :65.50        
@@ -366,7 +377,7 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.:94.25        
 #&gt;  Max.   :98.00        
 #&gt; dimension(s):
-#&gt;   from to offset delta refsys point values    
+#&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
 #&gt; y    1  2     12    -6     NA    NA   NULL [y]</div><div class='input'><span class='no'>red</span><span class='kw'>[[</span><span class='fl'>1</span>]] <span class='co'># cell values of subsample grid:</span></div><div class='output co'>#&gt;      [,1] [,2]
 #&gt; [1,]   33   93

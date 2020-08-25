@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -156,7 +156,8 @@
   <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
   <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"Float32"</span>,
   <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
-  <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>normalize_path</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )
 
 <span class='co'># S3 method for stars_proxy</span>
@@ -171,7 +172,9 @@
   <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
   <span class='kw'>chunk_size</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>obj</span>)[<span class='fl'>1</span>], <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>floor</a></span>(<span class='fl'>2.5e+07</span>/<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>obj</span>)[<span class='fl'>1</span>])),
   <span class='kw'>progress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
-)</pre>
+)
+
+<span class='fu'>detect.driver</span>(<span class='no'>filename</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,6 +216,10 @@
       <td><p>logical; if <code>TRUE</code>, an existing file is being updated</p></td>
     </tr>
     <tr>
+      <th>normalize_path</th>
+      <td><p>logical; see <a href='read_stars.html'>read_stars</a></p></td>
+    </tr>
+    <tr>
       <th>chunk_size</th>
       <td><p>length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.</p></td>
     </tr>
@@ -220,12 +227,19 @@
       <th>progress</th>
       <td><p>logical; if <code>TRUE</code>, a progress bar is shown</p></td>
     </tr>
+    <tr>
+      <th>filename</th>
+      <td><p>character; used for guessing driver short name based on file 
+extension; see examples</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>write_stars</code> first creates the target file, then updates it sequentially by writing blocks of <code>chunk_size</code>.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>detect.driver</span>(<span class='st'>"L7_ETMs.tif"</span>)</div><div class='output co'>#&gt; [1] "GTiff"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

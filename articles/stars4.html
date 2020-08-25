@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="stars4_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>4. stars data model</h1>
@@ -174,7 +174,7 @@
 <span class="co">##  3rd Qu.:15.25  </span>
 <span class="co">##  Max.   :20.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point values    </span>
+<span class="co">##   from to offset delta refsys point values x/y</span>
 <span class="co">## x    1  5      0     1     NA FALSE   NULL [x]</span>
 <span class="co">## y    1  4      0     1     NA FALSE   NULL [y]</span></pre></body></html></div>
 <p>we see that</p>
@@ -261,7 +261,7 @@
 <span class="co">##  3rd Qu.:15.25  </span>
 <span class="co">##  Max.   :20.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point                values    </span>
+<span class="co">##   from to offset delta refsys point                values x/y</span>
 <span class="co">## x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]</span>
 <span class="co">## y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]</span>
 <span class="fu">st_bbox</span>(<span class="no">r</span>)
@@ -283,7 +283,7 @@
 <span class="co">##  3rd Qu.:15.25  </span>
 <span class="co">##  Max.   :20.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point              values    </span>
+<span class="co">##   from to offset delta refsys point              values x/y</span>
 <span class="co">## x    1  5     NA    NA     NA FALSE   [0,0.5),...,[4,6) [x]</span>
 <span class="co">## y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,3) [y]</span>
 <span class="fu">st_bbox</span>(<span class="no">r</span>)
@@ -303,7 +303,7 @@
 <span class="co">##  3rd Qu.:15.25  </span>
 <span class="co">##  Max.   :20.00  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point values    </span>
+<span class="co">##   from to offset delta refsys point values x/y</span>
 <span class="co">## x    1  5      0     1     NA FALSE   NULL [x]</span>
 <span class="co">## y    1  4    0.5   0.5     NA FALSE   NULL [y]</span>
 <span class="fu">st_bbox</span>(<span class="no">r</span>)
@@ -322,7 +322,7 @@
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"starsdata"</span>, <span class="kw">repos</span> <span class="kw">=</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, <span class="kw">type</span> <span class="kw">=</span> <span class="st">"source"</span>)</pre></body></html></div>
 <p>The dataset is found here:</p>
 <div class="sourceCode" id="cb16"><html><body><pre class="r">(<span class="no">s5p</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"starsdata"</span>))
-<span class="co">## [1] "/home/travis/R/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></pre></body></html></div>
+<span class="co">## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></pre></body></html></div>
 <p>We can construct the curvilinear <code>stars</code> raster by calling <code>st_as_stars</code> on three arrays, with data, longitude and latitudes:</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">nit.c</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">s5p</span>, <span class="kw">sub</span> <span class="kw">=</span> <span class="st">"//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column"</span>,
     <span class="kw">curvilinear</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"//PRODUCT/longitude"</span>, <span class="st">"//PRODUCT/latitude"</span>), <span class="kw">driver</span> <span class="kw">=</span> <span class="kw">NULL</span>)
@@ -348,7 +348,7 @@
 <span class="co">##  Max.   :5e-04                       </span>
 <span class="co">##  NA's   :330                         </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset delta    refsys point                         values    </span>
+<span class="co">##   from  to offset delta    refsys point                         values x/y</span>
 <span class="co">## x    1 450     NA    NA EPSG:4326    NA [450x278] -5.81066,...,30.9468 [x]</span>
 <span class="co">## y    1 278     NA    NA EPSG:4326    NA  [450x278] 28.3605,...,51.4686 [y]</span>
 <span class="co">## curvilinear grid</span></pre></body></html></div>
@@ -373,7 +373,7 @@
 <span class="co">##  Max.   :0.00023                     </span>
 <span class="co">##  NA's   :36                          </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta    refsys point                       values    </span>
+<span class="co">##   from to offset delta    refsys point                       values x/y</span>
 <span class="co">## x    1 57     NA    NA EPSG:4326    NA [57x35] -5.59621,...,30.8488 [x]</span>
 <span class="co">## y    1 35     NA    NA EPSG:4326    NA  [57x35] 28.3605,...,51.1544 [y]</span>
 <span class="co">## curvilinear grid</span>

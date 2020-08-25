@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -149,6 +149,14 @@
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
 
+<span class='fu'>st_dimensions</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+
+<span class='co'># S3 method for stars</span>
+<span class='fu'>st_dimensions</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+
+<span class='co'># S3 method for list</span>
+<span class='fu'>st_dimensions</span>(<span class='no'>x</span>) <span class='kw'>&lt;-</span> <span class='no'>value</span>
+
 <span class='co'># S3 method for array</span>
 <span class='fu'>st_dimensions</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
 
@@ -186,6 +194,14 @@
       <td><p>further arguments</p></td>
     </tr>
     <tr>
+      <th>x</th>
+      <td><p>object of class <code>dimensions</code></p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>new object of class <code>dimensions</code>, with matching dimensions</p></td>
+    </tr>
+    <tr>
       <th>.raster</th>
       <td><p>length 2 character array with names (if any) of the raster dimensions</p></td>
     </tr>
@@ -207,7 +223,7 @@
     </tr>
     <tr>
       <th>values</th>
-      <td><p>values for this dimension (e.g. <code>sfc</code> list-column)</p></td>
+      <td><p>values for this dimension (e.g. <code>sfc</code> list-column), or length-1 <code>dimensions</code> object</p></td>
     </tr>
     <tr>
       <th>names</th>
@@ -252,7 +268,7 @@
 #&gt; x              1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE    NULL
 #&gt; y              1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE    NULL
 #&gt; band_number    1   6      NA    NA                           NA  TRUE 1,...,7
-#&gt;                
+#&gt;             x/y
 #&gt; x           [x]
 #&gt; y           [y]
 #&gt; band_number    </div><div class='input'><span class='co'># set band values as bandwidth</span>
@@ -274,7 +290,7 @@
 #&gt; x                     1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
 #&gt; y                     1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
 #&gt; bandwidth_midpoint    1   6      NA    NA                      udunits  TRUE
-#&gt;                                        values    
+#&gt;                                        values x/y
 #&gt; x                                        NULL [x]
 #&gt; y                                        NULL [y]
 #&gt; bandwidth_midpoint 0.4825 [um],...,2.215 [um]    </div><div class='input'><span class='co'># set bandwidth intervals:</span>
@@ -292,7 +308,7 @@
 #&gt; x            1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
 #&gt; y            1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
 #&gt; bandwidth    1   6      NA    NA                      udunits    NA
-#&gt;                                           values    
+#&gt;                                           values x/y
 #&gt; x                                           NULL [x]
 #&gt; y                                           NULL [y]
 #&gt; bandwidth [0.45,0.515) [um],...,[2.08,2.35) [um]    </div></pre>

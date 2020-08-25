@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -138,23 +138,57 @@
       <small>Source: <a href='https://github.com/r-spatial/stars/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="version-0-4-2" class="section level1">
-<h1 class="page-header" data-toc-text="0.4-2">
-<a href="#version-0-4-2" class="anchor"></a>version 0.4-2<small> Unreleased </small>
+    <div id="version-04-4" class="section level1">
+<h1 class="page-header" data-toc-text="0.4-4">
+<a href="#version-04-4" class="anchor"></a>version 0.4-4<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>add <code>st_extract</code> to extract e.g. time series from grids at point locations; <a href='https://github.com/r-spatial/stars/issues/279'>#279</a></p></li>
-<li><p><code>read_stars</code> now chooses a value for <code>proxy</code> depending on the data dimensions; <a href='https://github.com/r-spatial/stars/issues/281'>#281</a></p></li>
+<li><p>set up tic, with great help from <a href='https://github.com/pat-s'>@pat-s</a>, <a href='https://github.com/r-spatial/stars/issues/313'>#313</a></p></li>
+<li><p>get rid of more <code>proj4string</code>s for representing coordinate reference systems; <a href='https://github.com/r-spatial/stars/issues/312'>#312</a></p></li>
+<li><p>as(x, “Spatial”) correctly handles <code>from</code> dimension values different from one</p></li>
+<li><p><code>read_stars</code> now sets the <code>BANDNAME</code> or band description as band dimension values</p></li>
+<li><p><code>st_as_stars.data.frame</code> reads simple tables (non-raster data) if <code>dims</code> has length less than 2</p></li>
+<li><p>band descriptions are now in the band dimension values (requires sf &gt;= 0.9-6)</p></li>
+<li><p>dimension tables are now simpler, and will now more often show in Rstudio</p></li>
+<li><p><code>st_rgb</code> gains a <code>probs</code> argument, to cut off and stretch based on quantiles</p></li>
+<li><p><code><a href="../reference/coerce-methods.html">as(x, "Raster")</a></code> merges multiple attributes before converting to raster brick</p></li>
+</ul>
+</div>
+    <div id="version-04-3" class="section level1">
+<h1 class="page-header" data-toc-text="0.4-3">
+<a href="#version-04-3" class="anchor"></a>version 0.4-3<small> 2020-07-08 </small>
+</h1>
+<ul>
+<li><p>fix bug in <code>st_as_stars.Raster</code>; set crs to the one assigned by raster; <a href="https://github.com/mtennekes/tmap/issues/471" class="uri">https://github.com/mtennekes/tmap/issues/471</a></p></li>
+<li><p>add <code>s2</code> to Suggests:</p></li>
+<li><p>new function <code>st_rgb</code> collapses (reduces) a dimension to rgb hex value; <a href='https://github.com/r-spatial/stars/issues/302'>#302</a></p></li>
+</ul>
+</div>
+    <div id="version-04-2" class="section level1">
+<h1 class="page-header" data-toc-text="0.4-2">
+<a href="#version-04-2" class="anchor"></a>version 0.4-2<small> 2020-07-01 </small>
+</h1>
+<ul>
+<li><p>aggregate.stars handles arrays with NA values now correctly; brought up in <a href='https://github.com/r-spatial/stars/issues/299'>#299</a> by Thorsten Simon</p></li>
+<li><p><code>aggregate.stars</code> gains an argument <code>exact</code> which, if <code>TRUE</code>, calls <code>exactextractr</code> for polygonal aggregation; <a href='https://github.com/r-spatial/stars/issues/289'>#289</a></p></li>
+<li><p><code>read_stars</code> reads all subdatasets with dimensions equal to first, and warns when ignoring others; <a href='https://github.com/r-spatial/stars/issues/296'>#296</a></p></li>
+<li><p>make copying over of dimensions somewhat easier; <a href='https://github.com/r-spatial/stars/issues/295'>#295</a></p></li>
+<li><p><code>st_as_stars.Raster</code> tries to read from file if the raster object is not an in-memory object.</p></li>
+<li><p><code>write_stars</code> normalizes path, as <code>read_stars</code> already did; <a href='https://github.com/r-spatial/stars/issues/293'>#293</a></p></li>
+<li><p><code>merge</code> for proxy objects acts, and is no longer lazy; <a href='https://github.com/r-spatial/stars/issues/290'>#290</a></p></li>
+<li><p><code>st_as_stars.Raster</code> returns a proxy object if the raster layer is on disk</p></li>
+<li><p>add <code>st_extract</code> to extract e.g. time series from grids at point locations; <a href='https://github.com/r-spatial/stars/issues/279'>#279</a>; <a href='https://github.com/r-spatial/stars/issues/290'>#290</a></p></li>
+<li><p><code>read_stars</code> chooses a value for <code>proxy</code> that depends on the data dimensions; <a href='https://github.com/r-spatial/stars/issues/281'>#281</a></p></li>
 <li><p>x/y range subsetting of <code>stars_proxy</code> objects now only reads that range, similar to how crop already did this.</p></li>
-<li><p><code>st_warp</code> now preserves levels and colors; <a href="https://github.com/mtennekes/tmap/issues/429" class="uri">https://github.com/mtennekes/tmap/issues/429</a></p></li>
-<li><p><code>st_crop</code> now works with bounding boxes larger than the downsampled bounding box; <a href='https://github.com/r-spatial/stars/issues/276'>#276</a></p></li>
-<li><p><code>st_crop</code> now has a non-zero default for <code>epsilon</code> (bounding box shrinkage) to exclude cells touching the crop bounding box; <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>
+<li><p><code>st_warp</code> preserves levels and colors; <a href="https://github.com/mtennekes/tmap/issues/429" class="uri">https://github.com/mtennekes/tmap/issues/429</a></p></li>
+<li><p><code>st_crop</code> works with bounding boxes larger than the downsampled bounding box; <a href='https://github.com/r-spatial/stars/issues/276'>#276</a></p></li>
+<li><p><code>st_crop</code> has a non-zero default for <code>epsilon</code> (bounding box shrinkage) to exclude cells touching the crop bounding box; <a href='https://github.com/r-spatial/stars/issues/275'>#275</a></p></li>
 <li><p><code>image.stars</code> (and hence <code>plot.stars</code>) gains an <code>extent</code> argument for setting the extent of a plot; <a href="https://github.com/r-spatial/sf/issues/1193" class="uri">https://github.com/r-spatial/sf/issues/1193</a></p></li>
 </ul>
 </div>
-    <div id="version-0-4-1" class="section level1">
+    <div id="version-04-1" class="section level1">
 <h1 class="page-header" data-toc-text="0.4-1">
-<a href="#version-0-4-1" class="anchor"></a>version 0.4-1<small> 2020-04-07 </small>
+<a href="#version-04-1" class="anchor"></a>version 0.4-1<small> 2020-04-07 </small>
 </h1>
 <ul>
 <li><p><code>st_warp</code> (stars native) flips longitudes a full cycle; <a href='https://github.com/r-spatial/stars/issues/256'>#256</a>, <a href='https://github.com/r-spatial/stars/issues/264'>#264</a>, <a href='https://github.com/r-spatial/stars/issues/269'>#269</a></p></li>
@@ -175,9 +209,9 @@
 <li><p>skip some tests on solaris</p></li>
 </ul>
 </div>
-    <div id="version-0-4-0" class="section level1">
+    <div id="version-04-0" class="section level1">
 <h1 class="page-header" data-toc-text="0.4-0">
-<a href="#version-0-4-0" class="anchor"></a>version 0.4-0<small> 2019-10-10 </small>
+<a href="#version-04-0" class="anchor"></a>version 0.4-0<small> 2019-10-10 </small>
 </h1>
 <ul>
 <li><p><code>plot</code> now uses all data to figure out breaks, in order to also find extremes; <a href='https://github.com/r-spatial/stars/issues/216'>#216</a></p></li>
@@ -201,9 +235,9 @@
 <li><p><code>st_apply</code> can now loop over Raster layers; examples in <a href='https://github.com/r-spatial/stars/issues/176'>#176</a></p></li>
 </ul>
 </div>
-    <div id="version-0-3-1" class="section level1">
+    <div id="version-03-1" class="section level1">
 <h1 class="page-header" data-toc-text="0.3-1">
-<a href="#version-0-3-1" class="anchor"></a>version 0.3-1<small> 2019-04-23 </small>
+<a href="#version-03-1" class="anchor"></a>version 0.3-1<small> 2019-04-23 </small>
 </h1>
 <ul>
 <li><p><code>st_as_stars.bbox</code> now has an <code>ncells</code> and <code>pretty</code> argument, to better choose default raster dimensions</p></li>
@@ -213,9 +247,9 @@
 <li><p>provide time parsing (POSIXct, PCICt) for <code>read_ncdf</code>; <a href='https://github.com/r-spatial/stars/issues/115'>#115</a></p></li>
 </ul>
 </div>
-    <div id="version-0-3-0" class="section level1">
+    <div id="version-03-0" class="section level1">
 <h1 class="page-header" data-toc-text="0.3-0">
-<a href="#version-0-3-0" class="anchor"></a>version 0.3-0<small> 2019-02-24 </small>
+<a href="#version-03-0" class="anchor"></a>version 0.3-0<small> 2019-02-24 </small>
 </h1>
 <ul>
 <li><p>add <code>st_area</code> method to return raster grid cell sizes; <a href='https://github.com/r-spatial/stars/issues/99'>#99</a></p></li>
@@ -237,9 +271,9 @@
 <li><p>add logz support for log-scale keys to <code>plot</code> and <code>image</code></p></li>
 </ul>
 </div>
-    <div id="version-0-2-0" class="section level1">
+    <div id="version-02-0" class="section level1">
 <h1 class="page-header" data-toc-text="0.2-0">
-<a href="#version-0-2-0" class="anchor"></a>version 0.2-0<small> 2018-10-25 </small>
+<a href="#version-02-0" class="anchor"></a>version 0.2-0<small> 2018-10-25 </small>
 </h1>
 <ul>
 <li><p>vignettes now use an external package, <code>starsdata</code>, for larger dataset examples</p></li>
@@ -255,18 +289,18 @@
 <li><p>fold all higher dimensions into the third dimension before coercing to <code>Raster</code>; <a href='https://github.com/r-spatial/stars/issues/40'>#40</a></p></li>
 </ul>
 </div>
-    <div id="version-0-1-1" class="section level1">
+    <div id="version-01-1" class="section level1">
 <h1 class="page-header" data-toc-text="0.1-1">
-<a href="#version-0-1-1" class="anchor"></a>version 0.1-1<small> 2018-07-25 </small>
+<a href="#version-01-1" class="anchor"></a>version 0.1-1<small> 2018-07-25 </small>
 </h1>
 <ul>
 <li>add meta data reader to <code>read_stars</code>
 </li>
 </ul>
 </div>
-    <div id="version-0-1-0" class="section level1">
+    <div id="version-01-0" class="section level1">
 <h1 class="page-header" data-toc-text="0.1-0">
-<a href="#version-0-1-0" class="anchor"></a>version 0.1-0<small> Unreleased </small>
+<a href="#version-01-0" class="anchor"></a>version 0.1-0<small> Unreleased </small>
 </h1>
 <ul>
 <li><p>add <code>merge</code> (merge attributes into array dimension) and <code>split</code> (split dimension over attributes)</p></li>
@@ -283,9 +317,9 @@
 <li><p><code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> array-like subsetting works; first index is attribute selector</p></li>
 </ul>
 </div>
-    <div id="version-0-0" class="section level1">
+    <div id="version-00" class="section level1">
 <h1 class="page-header" data-toc-text="0.0">
-<a href="#version-0-0" class="anchor"></a>version 0.0<small> Unreleased </small>
+<a href="#version-00" class="anchor"></a>version 0.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>interface the 9 C++ gdal utils through <code>gdal_utils()</code> (now part of <code>sf</code>)</li>

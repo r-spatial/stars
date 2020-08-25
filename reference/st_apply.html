@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
       </span>
     </div>
 
@@ -210,7 +210,7 @@
 #&gt;  3rd Qu.: 82.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;   from  to  offset delta                       refsys point values    
+#&gt;   from  to  offset delta                       refsys point values x/y
 #&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>), <span class='no'>mean</span>) <span class='co'># equivalent to the above</span></div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -222,7 +222,7 @@
 #&gt;  3rd Qu.: 82.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;   from  to  offset delta                       refsys point values    
+#&gt;   from  to  offset delta                       refsys point values x/y
 #&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='fl'>3</span>, <span class='no'>mean</span>)   <span class='co'># mean of all pixels for each band</span></div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -234,8 +234,8 @@
 #&gt;  3rd Qu.:76.25  
 #&gt;  Max.   :83.18  
 #&gt; dimension(s):
-#&gt;      from to offset delta refsys point values
-#&gt; band    1  6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='st'>"band"</span>, <span class='no'>mean</span>) <span class='co'># equivalent to the above</span></div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
+#&gt;      from to.band offset delta refsys point values
+#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='st'>"band"</span>, <span class='no'>mean</span>) <span class='co'># equivalent to the above</span></div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean       
 #&gt;  Min.   :59.24  
@@ -245,8 +245,8 @@
 #&gt;  3rd Qu.:76.25  
 #&gt;  Max.   :83.18  
 #&gt; dimension(s):
-#&gt;      from to offset delta refsys point values
-#&gt; band    1  6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='no'>range</span>) <span class='co'># min and max band value for each pixel</span></div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+#&gt;      from to.band offset delta refsys point values
+#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='no'>x</span>, <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='no'>range</span>) <span class='co'># min and max band value for each pixel</span></div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   :  1.00  
@@ -256,7 +256,7 @@
 #&gt;  3rd Qu.: 96.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;       from  to  offset delta                       refsys point values    
+#&gt;       from  to  offset delta                       refsys point values x/y
 #&gt; range    1   2      NA    NA                           NA    NA   NULL    
 #&gt; x        1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y        1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
