@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* set up tic, with great help from @pat-s, #313
+
 * get rid of more `proj4string`s for representing coordinate reference systems; #312
 
 * as(x, "Spatial") correctly handles `from` dimension values different from one
