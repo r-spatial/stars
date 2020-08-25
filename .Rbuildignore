@@ -20,3 +20,6 @@ images
 LICENSE
 vignettes.awk
 .github
+^\.ccache$
+^\.github$
+^tic\.R$
