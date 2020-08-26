@@ -276,7 +276,7 @@
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">p</span>))</pre></body></html></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.290   0.156   1.049</code></pre>
+##   1.050   0.156   0.879</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">p</span> <span class="kw">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="no">s2</span>, <span class="kw">proxy</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
@@ -412,7 +412,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="no">s2.ndvi</span>)) <span class="co"># read - compute ndvi - plot </span></pre></body></html></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.486   0.169   1.266</code></pre>
+##   1.166   0.144   0.989</code></pre>
 </div>
 </div>
 </div>
