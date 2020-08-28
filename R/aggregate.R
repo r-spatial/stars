@@ -73,11 +73,13 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		st = do.call(raster::stack, e)
 		m = raster::getValues(st)
 		if (identical(FUN, mean))
-			m = sweep(m, 2, colSums(m), "/")
+			m = sweep(m, 2, colSums(m), "/") # mean: divide weights by the sum of weights
 		else if (!identical(FUN, sum))
 			stop("for exact=TRUE, FUN should either be mean or sum")
 		new_dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)]))
 		out_dim = c(ncol(m), dim(x)[-(1:2)])
+		if (isTRUE(list(...)$na.rm))
+			x = lapply(x, function(y) { y[is.na(y)] = 0.0; y })
 		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
 		ret = st_as_stars(agg, dimensions = 
 			create_dimensions(append(list(sfc = create_dimension(values = by)),
