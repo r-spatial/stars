@@ -305,7 +305,7 @@ merge.stars_proxy = function(x, y, ...) {
 #' @export
 "[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {
 	get_range = function(expr) {
-		v = try(eval(expr), silent = TRUE)
+		v = try(eval(expr, parent.frame(2)), silent = TRUE)
 		if (is.numeric(v) && all(diff(v) == 1))
 			range(v)
 		else
