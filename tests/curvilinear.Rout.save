@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -85,7 +85,7 @@ dimension(s):
 x       1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°]
 y       1 278     NA    NA WGS 84    NA  [450x278] 28.3605 [°],...,51.4686 [°]
 time    1   1     NA    NA     NA    NA                                   NULL
-        
+     x/y
 x    [x]
 y    [y]
 time    
@@ -101,7 +101,7 @@ attribute(s):
  Max.   :0.00023                     
  NA's   :37                          
 dimension(s):
-     from to offset delta refsys point                               values    
+     from to offset delta refsys point                               values x/y
 x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x]
 y       1 35     NA    NA WGS 84    NA  [57x35] 28.6622 [°],...,51.4679 [°] [y]
 time    1  1     NA    NA     NA    NA                                 NULL    
@@ -112,4 +112,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  6.893   0.108   6.990 
+  7.340   0.172   7.507 

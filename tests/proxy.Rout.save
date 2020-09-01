@@ -1,5 +1,5 @@
 
-R version 4.0.1 (2020-06-06) -- "See Things Now"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -25,7 +25,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -39,7 +39,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -53,7 +53,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -72,7 +72,7 @@ attribute(s):
  3rd Qu.: 0.68326  
  Max.   : 0.99991  
 dimension(s):
-     from  to  offset    delta                       refsys point values    
+     from  to  offset    delta                       refsys point values x/y
 x       1 116  288776  85.7457 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 117 9120761 -85.7436 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA       NA                           NA    NA   NULL    
@@ -82,7 +82,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -100,7 +100,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -115,7 +115,7 @@ x          1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
 y          1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 band       1   6      NA    NA                           NA    NA
 new_dim    1   2      NA    NA                           NA    NA
-                          values    
+                          values x/y
 x                           NULL [x]
 y                           NULL [y]
 band                        NULL    
@@ -131,7 +131,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -141,7 +141,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -160,7 +160,7 @@ attribute(s):
  3rd Qu.:111.0  
  Max.   :255.0  
 dimension(s):
-  from  to  offset   delta                       refsys point values    
+  from  to  offset   delta                       refsys point values x/y
 x    1 174  288776 57.1638 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y    1 176 9120761     -57 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > (y = adrop(st_apply(r, c("x", "y"), max)))
@@ -169,7 +169,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -191,7 +191,7 @@ attribute(s):
  3rd Qu.:111.0  
  Max.   :255.0  
 dimension(s):
-  from  to  offset   delta                       refsys point values    
+  from  to  offset   delta                       refsys point values x/y
 x    1 174  288776 57.1638 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y    1 176 9120761     -57 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > plot(yy)
@@ -201,7 +201,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -240,7 +240,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -251,7 +251,7 @@ $a
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -322,7 +322,7 @@ $anom
 [9] "[...]/avhrr-only-v2.19810909.nc:anom"
 
 dimension(s):
-     from   to         offset  delta  refsys point values    
+     from   to         offset  delta  refsys point values x/y
 x       1 1440              0   0.25      NA    NA   NULL [x]
 y       1  720             90  -0.25      NA    NA   NULL [y]
 zlev    1    1          0 [m]     NA      NA    NA   NULL    
@@ -347,7 +347,7 @@ attribute(s), summary of first 1e+05 cells:
  Max.   : 9.36   Max.   : 3.70  
  NA's   :13360   NA's   :13360  
 dimension(s):
-     from   to         offset  delta  refsys point values    
+     from   to         offset  delta  refsys point values x/y
 x       1 1440              0   0.25      NA    NA   NULL [x]
 y       1  720             90  -0.25      NA    NA   NULL [y]
 zlev    1    1          0 [m]     NA      NA    NA   NULL    
@@ -363,7 +363,7 @@ attribute(s), summary of first 1e+05 cells:
  Max.   : 9.36  
  NA's   :13360  
 dimension(s):
-        from   to         offset  delta  refsys point     values    
+        from   to         offset  delta  refsys point     values x/y
 x          1 1440              0   0.25      NA    NA       NULL [x]
 y          1  720             90  -0.25      NA    NA       NULL [y]
 zlev       1    1          0 [m]     NA      NA    NA       NULL    
@@ -377,7 +377,7 @@ $sst.anom
 [2] "[...]/avhrr-only-v2.19810901.nc:anom"
 
 dimension(s):
-      from   to         offset  delta  refsys point values    
+      from   to         offset  delta  refsys point values x/y
 x        1 1440              0   0.25      NA    NA   NULL [x]
 y        1  720             90  -0.25      NA    NA   NULL [y]
 zlev     1    1          0 [m]     NA      NA    NA   NULL    
@@ -386,4 +386,4 @@ times    1    2     1981-09-01 1 days    Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  3.868   0.390   4.249 
+  3.698   0.396   4.087 

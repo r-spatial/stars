@@ -1,5 +1,5 @@
 
-R version 4.0.1 (2020-06-06) -- "See Things Now"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ attribute(s):
  Max.   :0.241  
  NA's   :30904  
 dimension(s):
-  from  to   offset      delta refsys point values    
+  from  to   offset      delta refsys point values x/y
 x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
 y    1 141  36.5896 -0.0192484  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
@@ -46,7 +46,7 @@ attribute(s):
  Max.   :0.2410  
  NA's   :2373    
 dimension(s):
-  from  to   offset      delta refsys point values    
+  from  to   offset      delta refsys point values x/y
 x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
 y    1  50  36.5896 -0.0541531  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
@@ -74,7 +74,7 @@ attribute(s):
  Max.   : NA  
  NA's   :100  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
 y    1 10      1  -0.1     NA    NA   NULL [y]
 > # the following two plots confirm that (only) the
@@ -99,7 +99,7 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
 y    1 10      1  -0.1     NA    NA   NULL [y]
 > r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
@@ -108,4 +108,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.880   0.069   0.939 
+  0.821   0.053   0.865 

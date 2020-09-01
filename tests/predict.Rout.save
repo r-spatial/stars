@@ -1,5 +1,5 @@
 
-R version 4.0.1 (2020-06-06) -- "See Things Now"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -43,7 +43,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -53,7 +53,7 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -75,7 +75,7 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1   6      NA    NA                           NA    NA band1,...,band6
-        
+     x/y
 x    [x]
 y    [y]
 band    
@@ -91,4 +91,4 @@ split(x = x, 3)
 > 
 > proc.time()
    user  system elapsed 
-  2.671   0.144   2.804 
+  2.489   0.126   2.606 

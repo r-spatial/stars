@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -36,7 +36,7 @@ attribute(s):
  3rd Qu.: 89.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x     158 268  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y     245 331 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -62,4 +62,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  1.551   0.063   1.612 
+  2.021   0.091   2.104 

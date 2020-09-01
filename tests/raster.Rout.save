@@ -1,5 +1,5 @@
 
-R version 4.0.1 (2020-06-06) -- "See Things Now"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -43,6 +43,7 @@ source     : memory
 names      : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
 min values :      47,      32,      21,       9,       1,       1 
 max values :     255,     255,     255,     255,     255,     255 
+time       : 1, 2, 3, 4, 5, 6 
 
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
@@ -55,14 +56,10 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA
-band    1   6      NA    NA                           NA    NA
-                  values    
-x                   NULL [x]
-y                   NULL [y]
-band layer.1,...,layer.6    
+     from  to  offset delta                       refsys point values x/y
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA   NULL [y]
+band    1   6       1     1                           NA    NA   NULL    
 > 
 > library(abind)
 > x = adrop(x[,,,1]) # 1 band
@@ -71,4 +68,4 @@ band layer.1,...,layer.6
 > 
 > proc.time()
    user  system elapsed 
-  1.783   0.088   1.864 
+  1.676   0.096   1.765 
