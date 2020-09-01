@@ -126,7 +126,8 @@
 <span class="co">## [37] st_crs            st_crs&lt;-          st_dimensions     st_dimensions&lt;-  </span>
 <span class="co">## [41] st_extract        st_geometry       st_interpolate_aw st_intersects    </span>
 <span class="co">## [45] st_join           st_mosaic         st_normalize      st_redimension   </span>
-<span class="co">## [49] st_sample         st_transform_proj st_transform      write_stars      </span>
+<span class="co">## [49] st_sample         st_set_bbox       st_transform_proj st_transform     </span>
+<span class="co">## [53] write_stars      </span>
 <span class="co">## see '?methods' for accessing help and source code</span></pre></body></html></div>
 <p>(tidyverse methods are only visible after loading package <code>tidyverse</code>).</p>
 <div id="reading-a-satellite-image" class="section level1">
@@ -543,13 +544,13 @@
 (<span class="no">st</span> <span class="kw">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">traffic</span> <span class="kw">=</span> <span class="no">traffic</span>),  <span class="kw">dimensions</span> <span class="kw">=</span> <span class="no">dims</span>))
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##     traffic     </span>
-<span class="co">##  Min.   : 0.00  </span>
-<span class="co">##  1st Qu.: 8.00  </span>
-<span class="co">##  Median :10.00  </span>
-<span class="co">##  Mean   : 9.99  </span>
-<span class="co">##  3rd Qu.:12.00  </span>
-<span class="co">##  Max.   :26.00  </span>
+<span class="co">##     traffic      </span>
+<span class="co">##  Min.   : 0.000  </span>
+<span class="co">##  1st Qu.: 8.000  </span>
+<span class="co">##  Median :10.000  </span>
+<span class="co">##  Mean   : 9.996  </span>
+<span class="co">##  3rd Qu.:12.000  </span>
+<span class="co">##  Max.   :27.000  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
