@@ -552,6 +552,42 @@ st_bbox.stars = function(obj, ...) {
 	st_bbox(st_dimensions(obj), ...)
 }
 
+#' set bounding box parameters of regular grid
+#' @param x object of class dimensions, stars or stars_proxy
+#' @param value object of class bbox
+#' @param ... ignored
+#' @export
+st_set_bbox = function(x, value, ...) UseMethod("st_set_bbox")
+
+#' @export
+st_set_bbox.dimensions = function(x, value, ...) {
+	stopifnot(inherits(value, "bbox"), is_regular_grid(x))
+	xy = attr(x, "raster")$dimensions
+	if (x[[ xy[1] ]]$from != 1 || x[[ xy[2] ]]$from != 1)
+		stop("use st_normalize first so that dimensions start at index 1")
+	d = dim(x)
+	xsign = sign(x[[ xy[1] ]]$delta)
+	ysign = sign(x[[ xy[2] ]]$delta)
+	x[[ xy[1] ]]$offset = ifelse(xsign < 0, value["xmax"], value["xmin"])
+	x[[ xy[2] ]]$offset = ifelse(ysign < 0, value["ymax"], value["ymin"])
+	x[[ xy[1] ]]$delta = xsign * (value["xmax"] - value["xmin"]) / d[ xy[1] ]
+	x[[ xy[2] ]]$delta = ysign * (value["ymax"] - value["ymin"]) / d[ xy[2] ]
+	if (!is.na(st_crs(value)))
+		st_crs(x) = st_crs(value)
+	x
+}
+
+#' @export
+st_set_bbox.stars = function(x, value, ...) {
+	structure(x, dimensions = st_set_bbox(st_dimensions(x), value))
+}
+
+#' @export
+st_set_bbox.stars_proxy = function(x, value, ...) {
+	structure(x, dimensions = st_set_bbox(st_dimensions(x), value))
+}
+
+
 #' @export
 st_crs.stars = function(x, ...) {
 	st_crs(st_dimensions(x), ...)
@@ -570,6 +606,11 @@ st_crs.dimensions = function(x, ...) {
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
+	structure(x, dimensions = st_set_crs(st_dimensions(x), value))
+}
+
+#' @export
+`st_crs<-.dimensions` = function(x, value) {
 	value = if (is.na(value))
 			NA_crs_
 		else if (is.numeric(value) || is.character(value))
@@ -580,19 +621,18 @@ st_crs.dimensions = function(x, ...) {
 			stop(paste("crs of class", class(value), "not recognized"))
 
 	# set CRS in dimensions:
-	d = st_dimensions(x)
-	xy = attr(d, "raster")$dimensions
+	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
-		d[[ xy[1] ]]$refsys = value
-		d[[ xy[2] ]]$refsys = value
+		x[[ xy[1] ]]$refsys = value
+		x[[ xy[2] ]]$refsys = value
 	}
 
 	# set crs of sfc's, if any:
 	for (j in which_sfc(x))
-		d[[ j ]]$refsys = value
-
-	structure(x, dimensions = d)
+		x[[ j ]]$refsys = value
+	x
 }
+
 
 #' @export
 st_geometry.stars = function(obj,...) {
