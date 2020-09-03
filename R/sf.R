@@ -68,6 +68,12 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	structure(x, dimensions = d)
 }
 
+st_as_sf.dimensions = function(x) {
+	ix = which_sfc(x)[1]
+	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x))
+}
+
+
 #' Convert stars object into an sf object
 #' 
 #' Convert stars object into an sf object
@@ -98,6 +104,10 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' # plot(p, axes = TRUE)
 st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE, 
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE, connect8 = FALSE) { 
+
+	if (length(x) == 0)
+		return(st_as_sf.dimensions(st_dimensions(st_xy2sfc(x, as_points = as_points, 
+			na.rm = FALSE))))
 
 	crs = st_crs(x)
 	d = st_dimensions(x)

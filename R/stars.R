@@ -360,16 +360,18 @@ print.stars = function(x, ..., n = 1e5) {
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
 		length(x), if (length(x) != 1) "attributes\n" else "attribute\n")
-	cat("attribute(s)")
-	df = if (prod(dim(x)) > 10 * n) {
-		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
-		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
-	} else {
-		cat(":\n")
-		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
+	if (length(x)) {
+		cat("attribute(s)")
+		df = if (prod(dim(x)) > 10 * n) {
+			cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
+			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
+		} else {
+			cat(":\n")
+			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
+		}
+		names(df) = add_units(x)
+		print(summary(df))
 	}
-	names(df) = add_units(x)
-	print(summary(df))
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
 }
