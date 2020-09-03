@@ -253,15 +253,15 @@ process_call_list = function(x, cl, envir = new.env()) {
 		if (is.character(cl[[i]]))
 			cl[[i]] = parse(text = cl[[i]])[[1]]
 		stopifnot(is.call(cl[[i]]))
-		lst = as.list(cl[[i]]) 
-		envir [[ names(lst)[[2]] ]] = x
-		x = eval(cl[[i]], envir = envir, enclos = parent.frame())
+		#lst = as.list(cl[[i]]) 
+		#envir [[ names(lst)[[2]] ]] = x
+		x = eval(cl[[i]], envir = environment(cl[[i]]))
 	}
 	x
 }
 
 # add a call to the call list, possibly replacing function name (fn) and first arg name
-collect = function(x, call, fn, first_arg = "x") {
+collect = function(x, call, fn, first_arg = "x", env = parent.frame(2)) {
 	call_list = attr(x, "call_list")
 	if (is.null(call_list))
 		call_list = list()
@@ -271,6 +271,7 @@ collect = function(x, call, fn, first_arg = "x") {
 	lst[[2]] = as.name(first_arg)
 	names(lst)[[2]] = first_arg
 	call = as.call(lst)
+	environment(call) = env
 	# append:
 	structure(x, call_list = c(call_list, call))
 }
@@ -331,6 +332,8 @@ merge.stars_proxy = function(x, y, ...) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
 		if (inherits(i, c("stars", "bbox")))
 			lst[["i"]] = TRUE # this one has been handled now
+		else
+			return(st_as_stars(x[i]))
 	}
 
 	# return:
