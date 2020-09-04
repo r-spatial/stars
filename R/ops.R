@@ -60,13 +60,13 @@ Math.stars = function(x, ...) {
 Ops.stars_proxy <- function(e1, e2) {
 	if (!inherits(e1, "stars_proxy"))
 		stop("first argument in expression needs to be the stars_proxy object") # FIXME: needed?? #nocov
-	collect(e1, match.call(), .Generic, "e1")
+	collect(e1, match.call(), .Generic, "e1", env = environment())
 }
 
 #' @name ops_stars
 #' @export
 Math.stars_proxy = function(x, ...) {
-	collect(x, match.call(), .Generic)
+	collect(x, match.call(), .Generic, env = environment())
 }
 
 

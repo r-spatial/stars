@@ -253,37 +253,38 @@ process_call_list = function(x, cl, envir = new.env()) {
 		if (is.character(cl[[i]]))
 			cl[[i]] = parse(text = cl[[i]])[[1]]
 		stopifnot(is.call(cl[[i]]))
-		#lst = as.list(cl[[i]]) 
-		#envir [[ names(lst)[[2]] ]] = x
-		x = eval(cl[[i]], envir = environment(cl[[i]]))
+		env = environment(cl[[i]])
+		env [[ names(cl[[i]])[2] ]] = x
+		x = eval(cl[[i]], env, parent.frame())
 	}
 	x
 }
 
 # add a call to the call list, possibly replacing function name (fn) and first arg name
-collect = function(x, call, fn, first_arg = "x", env = parent.frame(2)) {
-	call_list = attr(x, "call_list")
-	if (is.null(call_list))
-		call_list = list()
+collect = function(x, call, fn, args = "x", env) {
+	call_list = attr(x, "call_list") %||% list()
+	# set function to call:
 	lst = as.list(call)
 	if (!missing(fn))
 		lst[[1]] = as.name(fn)
-	lst[[2]] = as.name(first_arg)
-	names(lst)[[2]] = first_arg
+	# set first argument name:
+	for (i in seq_along(args)) {
+		lst[[i+1]] = as.name(args[i])
+		names(lst)[[i+1]] = args[i]
+	}
 	call = as.call(lst)
 	environment(call) = env
-	# append:
 	structure(x, call_list = c(call_list, call))
 }
 
 #' @export
 adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
-	collect(x, match.call(), "adrop")
+	collect(x, match.call(), "adrop", env = environment())
 }
 
 #' @export
 aperm.stars_proxy = function(a, perm = NULL, ...) {
-	collect(a, match.call(), "aperm", "a")
+	collect(a, match.call(), "aperm", "a", env = environment())
 }
 
 
@@ -332,15 +333,13 @@ merge.stars_proxy = function(x, y, ...) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
 		if (inherits(i, c("stars", "bbox")))
 			lst[["i"]] = TRUE # this one has been handled now
-		else
-			return(st_as_stars(x[i]))
 	}
 
 	# return:
 	if (length(lst) == 3 && isTRUE(lst[["i"]])) 
 		x
 	else # still processing the geometries inside the bbox:
-		collect(x, as.call(lst), "[") # postpone every arguments > 3 to after reading cells
+		collect(x, as.call(lst), "[", env = environment()) # postpone every arguments > 3 to after reading cells
 }
 
 # shrink bbox with e * width in each direction
@@ -388,24 +387,24 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 	}
 	x = st_stars_proxy(x, dm) # crop to bb
 	if (collect)
-		collect(x, match.call(), "st_crop") # crops further when realised
+		collect(x, match.call(), "st_crop", c("x", "y"), env = environment()) # crops further when realised
 	else
 		x
 }
 
 #' @export
 st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
-	collect(X, match.call(), "st_apply", "X")
+	collect(X, match.call(), "st_apply", "X", env = environment())
 }
 
 #' @export
 predict.stars_proxy = function(object, model, ...) {
-	collect(object, match.call(), "predict", "object")
+	collect(object, match.call(), "predict", "object", env = environment())
 }
 
 #' @export
 split.stars_proxy = function(x, ...) {
-	collect(x, match.call(), "split")
+	collect(x, match.call(), "split", env = environment())
 }
 
 #nocov start
