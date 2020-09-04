@@ -60,7 +60,10 @@ Math.stars = function(x, ...) {
 Ops.stars_proxy <- function(e1, e2) {
 	if (!inherits(e1, "stars_proxy"))
 		stop("first argument in expression needs to be the stars_proxy object") # FIXME: needed?? #nocov
-	collect(e1, match.call(), .Generic, "e1", env = environment())
+	if (missing(e2))
+		collect(e1, match.call(), .Generic, "e1", env = environment())
+	else
+		collect(e1, match.call(), .Generic, c("e1", "e2"), env = environment())
 }
 
 #' @name ops_stars
@@ -85,6 +88,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
 #' @param FUTURE logical;if \code{TRUE}, use \code{future.apply::future_apply} 
 #' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name
+#' @param .fname function name
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -99,8 +103,10 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #'   pboptions(type = "timer")
 #' }
 #' @export
-st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, FUTURE = FALSE, rename = TRUE) {
-	fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
+st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, FUTURE = FALSE, 
+		rename = TRUE, .fname) {
+	if (missing(.fname))
+		.fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
 		MARGIN = match(MARGIN, names(dim(X)))
 	dX = dim(X)[MARGIN]
@@ -132,8 +138,8 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 	ret = lapply(X, fn, ...) 
 	dim_ret = dim(ret[[1]])
 	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
-			if (length(ret) == 1 && rename && make.names(fname) == fname)
-				ret = setNames(ret, fname)
+			if (length(ret) == 1 && rename && make.names(.fname) == .fname)
+				ret = setNames(ret, .fname)
 			st_stars(ret, st_dimensions(X)[MARGIN])
 		} else { # FUN returned multiple values: need to set dimension name & values
 			dim_no_margin = dim(X)[-MARGIN]
@@ -148,7 +154,7 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			} else {
 				orig = st_dimensions(X)[MARGIN]
 				r = attr(orig, "raster")
-				dims = c(structure(list(list()), names = fname), orig)
+				dims = c(structure(list(list()), names = .fname), orig)
 				dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
 						create_dimension(values = dimnames(ret[[1]])[[1]])
 					else

@@ -13,7 +13,8 @@
   CLUSTER = NULL,
   PROGRESS = FALSE,
   FUTURE = FALSE,
-  rename = TRUE
+  rename = TRUE,
+  .fname
 )
 }
 \arguments{
@@ -32,6 +33,8 @@
 \item{FUTURE}{logical;if \code{TRUE}, use \code{future.apply::future_apply}}
 
 \item{rename}{logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name}
+
+\item{.fname}{function name}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.

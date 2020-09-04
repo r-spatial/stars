@@ -199,7 +199,9 @@ check_xy_warn = function(call, dimensions) {
 		# check dims
 		MARGIN = as.list(call)$MARGIN
 		if (inherits(MARGIN, "call"))
-			MARGIN = eval(MARGIN)
+			MARGIN = eval(MARGIN, environment(call))
+		if (inherits(MARGIN, "name"))
+			MARGIN = get("MARGIN", environment(call))
 		xy = attr(dimensions, "raster")$dimensions
 		ok = if (is.numeric(MARGIN))
 				all(which(names(dimensions) %in% xy) %in% MARGIN)
@@ -279,12 +281,12 @@ collect = function(x, call, fn, args = "x", env) {
 
 #' @export
 adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
-	collect(x, match.call(), "adrop", env = environment())
+	collect(x, match.call(), "adrop", c("x", "drop"), env = environment())
 }
 
 #' @export
 aperm.stars_proxy = function(a, perm = NULL, ...) {
-	collect(a, match.call(), "aperm", "a", env = environment())
+	collect(a, match.call(), "aperm", c("a", "perm"), env = environment())
 }
 
 
@@ -339,7 +341,8 @@ merge.stars_proxy = function(x, y, ...) {
 	if (length(lst) == 3 && isTRUE(lst[["i"]])) 
 		x
 	else # still processing the geometries inside the bbox:
-		collect(x, as.call(lst), "[", env = environment()) # postpone every arguments > 3 to after reading cells
+		collect(x, as.call(lst), "[", c("x", "i", "drop", "crop"), 
+			env = environment()) # postpone every arguments > 3 to after reading cells
 }
 
 # shrink bbox with e * width in each direction
@@ -387,19 +390,23 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 	}
 	x = st_stars_proxy(x, dm) # crop to bb
 	if (collect)
-		collect(x, match.call(), "st_crop", c("x", "y"), env = environment()) # crops further when realised
+		collect(x, match.call(), "st_crop", c("x", "y", "crop", "epsilon"),
+			env = environment()) # crops further when realised
 	else
 		x
 }
 
 #' @export
-st_apply.stars_proxy = function(X, MARGIN, FUN, ...) {
-	collect(X, match.call(), "st_apply", "X", env = environment())
+st_apply.stars_proxy = function(X, MARGIN, FUN, ..., .fname) {
+	mc = match.call()
+	if (missing(.fname))
+		.fname = as.character(mc[["FUN"]])
+	collect(X, mc, "st_apply", c("X", "MARGIN", "FUN", ".fname"), env = environment())
 }
 
 #' @export
 predict.stars_proxy = function(object, model, ...) {
-	collect(object, match.call(), "predict", "object", env = environment())
+	collect(object, match.call(), "predict", c("object", "model"), env = environment())
 }
 
 #' @export

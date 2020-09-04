@@ -42,7 +42,7 @@ filter.stars <- function(.data, ...) {
 
 #' @name dplyr
 filter.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "filter", ".data")
+	collect(.data, match.call(), "filter", ".data", env = environment())
 }
 
 
@@ -54,7 +54,7 @@ mutate.stars <- function(.data, ...) {
 
 #' @name dplyr
 mutate.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "mutate", ".data")
+	collect(.data, match.call(), "mutate", ".data", env = environment())
 }
 
 
@@ -69,7 +69,7 @@ select.stars <- function(.data, ...) {
 
 #' @name dplyr
 select.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "select", ".data")
+	collect(.data, match.call(), "select", ".data", env = environment())
 }
 
 #' @param var see \link[dplyr]{pull}
@@ -85,7 +85,7 @@ pull.stars = function (.data, var = -1) {
 
 #' @name dplyr
 pull.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "pull", ".data")
+	collect(.data, match.call(), "pull", ".data", env = environment())
 }
 
 #' @name dplyr
@@ -131,7 +131,7 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 
 #' @name dplyr
 slice.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "slice", ".data")
+	collect(.data, match.call(), "slice", ".data", env = environment())
 }
 
 #' @name st_coordinates
