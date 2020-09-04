@@ -202,6 +202,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (inherits(y, c("stars", "sf", "sfc", "bbox")) && st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
+	if (inherits(y, "stars")) {
+		as_points = TRUE
+		y = st_as_sfc(st_bbox(y))
+	}
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]

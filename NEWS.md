@@ -1,6 +1,8 @@
 # version 0.4-4
 
-* add `st_set_bbox` generic, to set raster extent #315
+* `st_as_sf.stars` copes with zero attribute stars objects
+
+* add `st_set_bbox` generic, to set raster extent, motivated by #315
 
 * set up tic, with great help from @pat-s, #313
 
