@@ -153,7 +153,8 @@
   <span class='kw'>CLUSTER</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>PROGRESS</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>FUTURE</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>rename</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>rename</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>.fname</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -190,6 +191,10 @@
     <tr>
       <th>rename</th>
       <td><p>logical; if <code>TRUE</code> and <code>X</code> has only one attribute and <code>FUN</code> is a simple function name, rename the attribute of the returned object to the function name</p></td>
+    </tr>
+    <tr>
+      <th>.fname</th>
+      <td><p>function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of <code>FUN</code> is used</p></td>
     </tr>
     </table>
 
