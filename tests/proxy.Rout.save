@@ -43,9 +43,11 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-x[i = TRUE, , , 2:3]
+x[i = i, drop = drop, crop = crop, 2:3]
+attr(,".Environment")
+<environment: 0x55f652e72a30>
 
 > r+r
 stars_proxy object with 1 attribute in file:
@@ -57,9 +59,11 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-e1 + r
+e1 + e2
+attr(,".Environment")
+<environment: 0x55f654c83cd0>
 
 > st_as_stars(sin(r), downsample = 2)
 stars object with 3 dimensions and 1 attribute
@@ -86,9 +90,11 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-aperm(a = a, perm = c(3, 2, 1))
+aperm(a = a, perm = perm)
+attr(,".Environment")
+<environment: 0x55f654044c98>
 
 > plot(r)
 > (xx = c(r,r))
@@ -145,9 +151,11 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-st_apply(X = X, MARGIN = 1:2, FUN = max)
+st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)
+attr(,".Environment")
+<environment: 0x55f6558b0e68>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -173,12 +181,16 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-st_apply(X = X, MARGIN = c("x", "y"), FUN = max)
+st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)
+attr(,".Environment")
+<environment: 0x55f6547a4540>
 
 [[2]]
-adrop(x = x)
+adrop(x = x, drop = drop)
+attr(,".Environment")
+<environment: 0x55f6547ab490>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -205,12 +217,16 @@ dimension(s):
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
-call list:
+call_list:
 [[1]]
-st_apply(X = X, MARGIN = c("x", "band"), FUN = max)
+st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)
+attr(,".Environment")
+<environment: 0x55f6533d08f0>
 
 [[2]]
-adrop(x = x)
+adrop(x = x, drop = drop)
+attr(,".Environment")
+<environment: 0x55f6533c63b0>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -384,6 +400,46 @@ zlev     1    1          0 [m]     NA      NA    NA   NULL
 time     1    1 1981-09-01 UTC     NA POSIXct    NA   NULL    
 times    1    2     1981-09-01 1 days    Date    NA   NULL    
 > 
+> # demonstrate that environments work:
+> x = read_stars(tif, proxy = TRUE)
+> f = function(x) {
++ 	g = function(xx) {
++ 		ndvi = function(z) (z[2]-z[1])/(z[2]+z[1])
++ 		st_apply(xx, 1:2, ndvi)
++ 	}
++ 	g(x)
++ }
+> (x = f(x))
+stars_proxy object with 1 attribute in file:
+$L7_ETMs.tif
+[1] "[...]/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values x/y
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+call_list:
+[[1]]
+st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)
+attr(,".Environment")
+<environment: 0x55f6554fc778>
+
+> st_as_stars(x)
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+     ndvi          
+ Min.   :-0.28283  
+ 1st Qu.:-0.10811  
+ Median :-0.08287  
+ Mean   :-0.08465  
+ 3rd Qu.:-0.05882  
+ Max.   : 0.09259  
+dimension(s):
+  from  to  offset delta                       refsys point values x/y
+x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+> 
 > proc.time()
    user  system elapsed 
-  3.698   0.396   4.087 
+  4.621   0.372   4.984 

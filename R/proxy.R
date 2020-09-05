@@ -27,7 +27,7 @@ print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
 	if (!is.null(attr(x, "call_list"))) {
-		cat("call list:\n")
+		cat("call_list:\n")
 		print(unlist(attr(x, "call_list")))
 	}
 }
