@@ -88,7 +88,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
 #' @param FUTURE logical;if \code{TRUE}, use \code{future.apply::future_apply} 
 #' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name
-#' @param .fname function name
+#' @param .fname function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of \code{FUN} is used
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")

@@ -34,7 +34,7 @@
 
 \item{rename}{logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name}
 
-\item{.fname}{function name}
+\item{.fname}{function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of \code{FUN} is used}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
