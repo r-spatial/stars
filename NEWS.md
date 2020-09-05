@@ -1,5 +1,9 @@
 # version 0.4-4
 
+* add `rgdal` to Suggests:
+
+* each `call_list` entry of a `stars_proxy` object now carries its calling environment; #309
+
 * `st_as_sf.stars` copes with zero attribute stars objects
 
 * add `st_set_bbox` generic, to set raster extent, motivated by #315
