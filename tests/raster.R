@@ -1,3 +1,4 @@
+options(rgdal_show_exportToProj4_warnings = "none")
 suppressPackageStartupMessages(library(stars))
 
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -5,7 +6,12 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (r = as(x, "Raster"))
 (y = st_as_stars(r))
 
-library(abind)
-x = adrop(x[,,,1]) # 1 band
+# single band:
+x = adrop(x[,,,1]) 
 r = as(x, "Raster")
-y = st_as_stars(r)
+(y = st_as_stars(r))
+
+# proxy:
+(x = read_stars(tif, proxy = TRUE))
+(r = as(x, "Raster"))
+(y = st_as_stars(r))

@@ -15,6 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> options(rgdal_show_exportToProj4_warnings = "none")
 > library(sp)
 > demo(meuse)
 
@@ -181,4 +182,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  0.910   0.079   0.980 
+  0.970   0.081   1.043 

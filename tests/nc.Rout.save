@@ -252,6 +252,7 @@ GEOGCRS["NAD27",
 > 
 > # subset vector cube:
 > foo[nc[1]]
+although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 3 dimensions and 1 attribute
 attribute(s):
       pop       
@@ -273,4 +274,4 @@ year                                                        1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  1.000   0.068   1.060 
+  1.003   0.037   1.029 

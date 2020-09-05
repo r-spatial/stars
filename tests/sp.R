@@ -1,3 +1,4 @@
+options(rgdal_show_exportToProj4_warnings = "none")
 library(sp)
 demo(meuse)
 # remove +init=xxx

@@ -19,7 +19,9 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 		if (file != "") {
 			r = try(read_stars(file, ...), silent = TRUE)
 			if (!inherits(r, "try-error")) {
-				r = st_set_crs(r, st_crs(raster::crs(.x)))
+
+				if (is.na(st_crs(r)))
+					r = st_set_crs(r, st_crs(raster::crs(.x)))
 
 				rdims = attr(r, "dimensions")
 				dxy = attr(rdims, "raster")$dimensions
