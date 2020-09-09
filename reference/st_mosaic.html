@@ -144,33 +144,33 @@
     <p>build mosaic (composite) of several spatially disjoint stars objects</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_mosaic</span>(<span class='no'>.x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>st_mosaic</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_mosaic</span>(
-  <span class='no'>.x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>dst</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='no'>file_ext</span>),
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>, <span class='st'>"-srcnodata"</span>, <span class='st'>"nan"</span>),
-  <span class='kw'>file_ext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>
+  <span class='kw'>.x</span>,
+  <span class='kw'>...</span>,
+  dst = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='kw'>file_ext</span>),
+  options = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>, <span class='st'>"-srcnodata"</span>, <span class='st'>"nan"</span>),
+  file_ext = <span class='st'>".tif"</span>
 )
 
 <span class='co'># S3 method for character</span>
 <span class='fu'>st_mosaic</span>(
-  <span class='no'>.x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>dst</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='no'>file_ext</span>),
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>),
-  <span class='kw'>file_ext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>
+  <span class='kw'>.x</span>,
+  <span class='kw'>...</span>,
+  dst = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='kw'>file_ext</span>),
+  options = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>),
+  file_ext = <span class='st'>".tif"</span>
 )
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'>st_mosaic</span>(
-  <span class='no'>.x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>dst</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='no'>file_ext</span>),
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>),
-  <span class='kw'>file_ext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>
+  <span class='kw'>.x</span>,
+  <span class='kw'>...</span>,
+  dst = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='kw'>file_ext</span>),
+  options = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-vrtnodata"</span>, <span class='st'>"-9999"</span>),
+  file_ext = <span class='st'>".tif"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -207,10 +207,11 @@
 <p>uses <a href='https://rdrr.io/pkg/sf/man/gdal_utils.html'>gdal_utils</a> to internally call <code>buildvrt</code>; no executables external to R are called.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>))
-<span class='no'>x1</span> <span class='kw'>=</span> <span class='no'>x</span>[,<span class='fl'>100</span>:<span class='fl'>200</span>,<span class='fl'>100</span>:<span class='fl'>200</span>,]
-<span class='no'>x2</span> <span class='kw'>=</span> <span class='no'>x</span>[,<span class='fl'>150</span>:<span class='fl'>300</span>,<span class='fl'>150</span>:<span class='fl'>300</span>,]
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_mosaic</span>(<span class='no'>x1</span>, <span class='no'>x2</span>))</div><div class='img'><img src='st_mosaic-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>))
+<span class='kw'>x1</span> <span class='op'>=</span> <span class='kw'>x</span>[,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,]
+<span class='kw'>x2</span> <span class='op'>=</span> <span class='kw'>x</span>[,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,]
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_mosaic</span>(<span class='kw'>x1</span>, <span class='kw'>x2</span>))
+</div><div class='img'><img src='st_mosaic-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -226,7 +227,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -145,22 +145,22 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_stars</span>(
-  <span class='no'>.x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>driver</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>sub</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>NA_value</span> <span class='kw'>=</span> <span class='fl'>NA_real_</span>,
-  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fl'>NA_integer_</span>,
-  <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>proxy</span> <span class='kw'>=</span> !<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>curvilinear</span>) <span class='kw'>&amp;&amp;</span> <span class='fu'>is_big</span>(<span class='no'>.x</span>, <span class='kw'>sub</span> <span class='kw'>=</span> <span class='no'>sub</span>, <span class='no'>...</span>),
-  <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>normalize_path</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>RAT</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>)
+  <span class='kw'>.x</span>,
+  <span class='kw'>...</span>,
+  options = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  driver = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  sub = <span class='fl'>TRUE</span>,
+  quiet = <span class='fl'>FALSE</span>,
+  NA_value = <span class='fl'>NA_real_</span>,
+  along = <span class='fl'>NA_integer_</span>,
+  RasterIO = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  proxy = <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>curvilinear</span>) <span class='op'>&amp;&amp;</span> <span class='fu'>is_big</span>(<span class='kw'>.x</span>, sub = <span class='kw'>sub</span>, <span class='kw'>...</span>),
+  curvilinear = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  normalize_path = <span class='fl'>TRUE</span>,
+  RAT = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>)
 )
 
-<span class='fu'>is_big</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>sub</span> <span class='kw'>=</span> <span class='no'>sub</span>, <span class='kw'>n_proxy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='st'>"stars.n_proxy"</span>)<span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>%||%</span> <span class='fl'>1e+08</span>)</pre>
+<span class='fu'>is_big</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, sub = <span class='kw'>sub</span>, n_proxy = <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span>(<span class='st'>"stars.n_proxy"</span>)[[<span class='fl'>1</span>]] <span class='op'>%||%</span> <span class='fl'>1e+08</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -248,8 +248,9 @@ has to be one of: "nearest_neighbour" (the default),
 "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>tif</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-(<span class='no'>x1</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='no'>tif</span>))</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+    <pre class="examples"><div class='input'><span class='kw'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>)
+(<span class='kw'>x1</span> <span class='op'>=</span> <span class='fu'>read_stars</span>(<span class='kw'>tif</span>))
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   :  1.00  
@@ -262,7 +263,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
-#&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x2</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>)))</div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
+#&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='kw'>x2</span> <span class='op'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>tif</span>, <span class='kw'>tif</span>)))
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif     L7_ETMs.tif.1   
 #&gt;  Min.   :  1.00   Min.   :  1.00  
@@ -275,7 +277,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
-#&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x3</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>), <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"band"</span>))</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+#&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='kw'>x3</span> <span class='op'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>tif</span>, <span class='kw'>tif</span>), along = <span class='st'>"band"</span>))
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 47.00  
@@ -288,7 +291,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
-#&gt; band    1  12      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='no'>x4</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>), <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"new_dimensions"</span>)) <span class='co'># create 4-dimensional array</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
+#&gt; band    1  12      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='kw'>x4</span> <span class='op'>=</span> <span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>tif</span>, <span class='kw'>tif</span>), along = <span class='st'>"new_dimensions"</span>)) <span class='co'># create 4-dimensional array</span>
+</div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 47.00  
@@ -307,10 +311,11 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; x              [x]
 #&gt; y              [y]
 #&gt; band              
-#&gt; new_dimensions    </div><div class='input'><span class='no'>x1o</span> <span class='kw'>=</span> <span class='fu'>read_stars</span>(<span class='no'>tif</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"OVERVIEW_LEVEL=1"</span>)
-<span class='no'>t1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span>(<span class='st'>"2018-07-31"</span>)
+#&gt; new_dimensions    </div><div class='input'><span class='kw'>x1o</span> <span class='op'>=</span> <span class='fu'>read_stars</span>(<span class='kw'>tif</span>, options = <span class='st'>"OVERVIEW_LEVEL=1"</span>)
+<span class='kw'>t1</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span>(<span class='st'>"2018-07-31"</span>)
 <span class='co'># along is a named list indicating two dimensions:</span>
-<span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>tif</span>, <span class='no'>tif</span>, <span class='no'>tif</span>, <span class='no'>tif</span>), <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>foo</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bar1"</span>, <span class='st'>"bar2"</span>), <span class='kw'>time</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>t1</span>, <span class='no'>t1</span>+<span class='fl'>2</span>)))</div><div class='output co'>#&gt; stars object with 5 dimensions and 1 attribute
+<span class='fu'>read_stars</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>tif</span>, <span class='kw'>tif</span>, <span class='kw'>tif</span>, <span class='kw'>tif</span>), along = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(foo = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"bar1"</span>, <span class='st'>"bar2"</span>), time = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>t1</span>, <span class='kw'>t1</span><span class='op'>+</span><span class='fl'>2</span>)))
+</div><div class='output co'>#&gt; stars object with 5 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 47.00  
@@ -332,12 +337,13 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; band    
 #&gt; foo     
 #&gt; time    </div><div class='input'>
-<span class='no'>m</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>120</span>, <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>m</span>) <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>12</span>) <span class='co'># named dim</span>
-<span class='no'>st</span> <span class='kw'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='no'>m</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>st</span>, <span class='st'>"dimensions"</span>)$<span class='no'>y</span>$<span class='no'>delta</span> <span class='kw'>=</span> -<span class='fl'>1</span>
-<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>st</span>, <span class='st'>"dimensions"</span>)$<span class='no'>y</span>$<span class='no'>offset</span> <span class='kw'>=</span> <span class='fl'>12</span>
-<span class='no'>st</span></div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+<span class='kw'>m</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fl'>1</span><span class='op'>:</span><span class='fl'>120</span>, nrow = <span class='fl'>12</span>, ncol = <span class='fl'>10</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>m</span>) <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(x = <span class='fl'>10</span>, y = <span class='fl'>12</span>) <span class='co'># named dim</span>
+<span class='kw'>st</span> <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='kw'>m</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='kw'>st</span>, <span class='st'>"dimensions"</span>)<span class='op'>$</span><span class='kw'>y</span><span class='op'>$</span><span class='kw'>delta</span> <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>
+<span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='kw'>st</span>, <span class='st'>"dimensions"</span>)<span class='op'>$</span><span class='kw'>y</span><span class='op'>$</span><span class='kw'>offset</span> <span class='op'>=</span> <span class='fl'>12</span>
+<span class='kw'>st</span>
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;       A1         
 #&gt;  Min.   :  1.00  
@@ -349,11 +355,12 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA FALSE   NULL [x]
-#&gt; y    1 12     12    -1     NA FALSE   NULL [y]</div><div class='input'><span class='no'>tmp</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".tif"</span>)
-<span class='fu'><a href='write_stars.html'>write_stars</a></span>(<span class='no'>st</span>, <span class='no'>tmp</span>)
-(<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+#&gt; y    1 12     12    -1     NA FALSE   NULL [y]</div><div class='input'><span class='kw'>tmp</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='st'>".tif"</span>)
+<span class='fu'><a href='write_stars.html'>write_stars</a></span>(<span class='kw'>st</span>, <span class='kw'>tmp</span>)
+(<span class='kw'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='kw'>tmp</span>))
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file614817fcd6a3.tif 
+#&gt;  file486a645c6856.tif 
 #&gt;  Min.   :  1.00       
 #&gt;  1st Qu.: 30.75       
 #&gt;  Median : 60.50       
@@ -363,13 +370,15 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
-#&gt; y    1 12     12    -1     NA    NA   NULL [y]</div><div class='input'><span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
-   <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>))<span class='kw'>[[</span><span class='fl'>1</span>]]</div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; y    1 12     12    -1     NA    NA   NULL [y]</div><div class='input'><span class='fu'>read_stars</span>(<span class='kw'>tmp</span>, RasterIO = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(nXOff = <span class='fl'>1</span>, nYOff = <span class='fl'>1</span>, nXsize = <span class='fl'>10</span>, nYSize = <span class='fl'>12</span>,
+   nBufXSize = <span class='fl'>2</span>, nBufYSize = <span class='fl'>2</span>))[[<span class='fl'>1</span>]]
+</div><div class='output co'>#&gt;      [,1] [,2]
 #&gt; [1,]   33   93
-#&gt; [2,]   38   98</div><div class='input'>(<span class='no'>red</span> <span class='kw'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='no'>tmp</span>, <span class='kw'>RasterIO</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>nXOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nYOff</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>nXsize</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>nYSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
-   <span class='kw'>nBufXSize</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>nBufYSize</span> <span class='kw'>=</span> <span class='fl'>2</span>)))</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+#&gt; [2,]   38   98</div><div class='input'>(<span class='kw'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span>(<span class='kw'>tmp</span>, RasterIO = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(nXOff = <span class='fl'>1</span>, nYOff = <span class='fl'>1</span>, nXsize = <span class='fl'>10</span>, nYSize = <span class='fl'>12</span>,
+   nBufXSize = <span class='fl'>2</span>, nBufYSize = <span class='fl'>2</span>)))
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file614817fcd6a3.tif 
+#&gt;  file486a645c6856.tif 
 #&gt;  Min.   :33.00        
 #&gt;  1st Qu.:36.75        
 #&gt;  Median :65.50        
@@ -379,16 +388,18 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
-#&gt; y    1  2     12    -6     NA    NA   NULL [y]</div><div class='input'><span class='no'>red</span><span class='kw'>[[</span><span class='fl'>1</span>]] <span class='co'># cell values of subsample grid:</span></div><div class='output co'>#&gt;      [,1] [,2]
+#&gt; y    1  2     12    -6     NA    NA   NULL [y]</div><div class='input'><span class='kw'>red</span>[[<span class='fl'>1</span>]] <span class='co'># cell values of subsample grid:</span>
+</div><div class='output co'>#&gt;      [,1] [,2]
 #&gt; [1,]   33   93
-#&gt; [2,]   38   98</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>st</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>.1</span>,<span class='fl'>12.1</span>), <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>.1</span>,<span class='fl'>10.1</span>),
-    <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"nBufXSize &amp; nBufYSize demo"</span>, <span class='kw'>text_values</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>red</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>'red'</span>, <span class='kw'>pch</span> <span class='kw'>=</span> <span class='fl'>16</span>)
-  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='no'>st</span>), <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'grey'</span>)
-  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>red</span>, <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)
+#&gt; [2,]   38   98</div><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>st</span>, reset = <span class='fl'>FALSE</span>, axes = <span class='fl'>TRUE</span>, ylim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>.1</span>,<span class='fl'>12.1</span>), xlim = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>.1</span>,<span class='fl'>10.1</span>),
+    main = <span class='st'>"nBufXSize &amp; nBufYSize demo"</span>, text_values = <span class='fl'>TRUE</span>)
+  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>red</span>, as_points = <span class='fl'>TRUE</span>), add = <span class='fl'>TRUE</span>, col = <span class='st'>'red'</span>, pch = <span class='fl'>16</span>)
+  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='kw'>st</span>), as_points = <span class='fl'>FALSE</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'grey'</span>)
+  <span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>red</span>, as_points = <span class='fl'>FALSE</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'green'</span>, lwd = <span class='fl'>2</span>)
 }
-<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>tmp</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='kw'>tmp</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -404,7 +415,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

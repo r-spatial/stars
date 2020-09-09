@@ -145,15 +145,15 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_ncdf</span>(
-  <span class='no'>.x</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ncsub</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  <span class='kw'>eps</span> <span class='kw'>=</span> <span class='fl'>1e-12</span>,
-  <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>make_time</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>make_units</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>.x</span>,
+  <span class='kw'>...</span>,
+  var = <span class='kw'>NULL</span>,
+  ncsub = <span class='kw'>NULL</span>,
+  curvilinear = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
+  eps = <span class='fl'>1e-12</span>,
+  ignore_bounds = <span class='fl'>FALSE</span>,
+  make_time = <span class='fl'>TRUE</span>,
+  make_units = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -218,8 +218,9 @@ and be valid index using <code><a href='https://rdrr.io/pkg/RNetCDF/man/var.get.
 is <code>NA</code> then all steps are included. Axis order must match that of the variable/s being read.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/reduced.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='fu'>read_ncdf</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
+    <pre class="examples"><div class='input'><span class='kw'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/reduced.nc"</span>, package = <span class='st'>"stars"</span>)
+<span class='fu'>read_ncdf</span>(<span class='kw'>f</span>)
+</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
 #&gt; <span class='message'> lon, lat, zlev, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
 #&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 4 attributes
@@ -237,7 +238,8 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt; lon     1    180     -1     2 EPSG:4326    NA           NULL [x]
 #&gt; lat     1     90    -90     2 EPSG:4326    NA           NULL [y]
 #&gt; zlev    1      1     NA    NA        NA    NA              0    
-#&gt; time    1      1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span>(<span class='no'>f</span>, <span class='kw'>var</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"anom"</span>))</div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
+#&gt; time    1      1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span>(<span class='kw'>f</span>, var = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"anom"</span>))
+</div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
 #&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -254,7 +256,8 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt; lon     1    180     -1     2 EPSG:4326    NA           NULL [x]
 #&gt; lat     1     90    -90     2 EPSG:4326    NA           NULL [y]
 #&gt; zlev    1      1     NA    NA        NA    NA              0    
-#&gt; time    1      1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span>(<span class='no'>f</span>, <span class='kw'>ncsub</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(<span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), <span class='kw'>count</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)))</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
+#&gt; time    1      1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span>(<span class='kw'>f</span>, ncsub = <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span>(start = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), count = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span>)))
+</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
 #&gt; <span class='message'> lon, lat, zlev, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
 #&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 4 attributes
@@ -275,22 +278,25 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt; time    1      1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'>
 
 <span class='co'>#' precipitation data in a curvilinear NetCDF</span>
-<span class='no'>prec_file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/test_stageiv_xyt.nc"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>)
-<span class='no'>prec</span> <span class='kw'>=</span> <span class='fu'>read_ncdf</span>(<span class='no'>prec_file</span>, <span class='kw'>curvilinear</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>), <span class='kw'>ignore_bounds</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
+<span class='kw'>prec_file</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/test_stageiv_xyt.nc"</span>, package = <span class='st'>"stars"</span>)
+<span class='kw'>prec</span> <span class='op'>=</span> <span class='fu'>read_ncdf</span>(<span class='kw'>prec_file</span>, curvilinear = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"lon"</span>, <span class='st'>"lat"</span>), ignore_bounds = <span class='fl'>TRUE</span>)
+</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
 #&gt; <span class='message'> time_bounds, lon, lat, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
 #&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='input'>
 <span class='co'>##plot(prec) ## gives error about unique breaks</span>
 <span class='co'>## remove NAs, zeros, and give a large number</span>
 <span class='co'>## of breaks (used for validating in detail)</span>
-<span class='no'>qu_0_omit</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>n</span> <span class='kw'>=</span> <span class='fl'>22</span>) {
-  <span class='no'>x</span> <span class='kw'>=</span> <span class='kw pkg'>units</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/drop_units.html'>drop_units</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='no'>x</span>))
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span>(<span class='no'>x</span>[<span class='no'>x</span> <span class='kw'>&gt;</span> <span class='fl'>0</span>], <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>n</span>)))
+<span class='kw'>qu_0_omit</span> <span class='op'>=</span> <span class='fu'>function</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, <span class='kw'>n</span> = <span class='fl'>22</span>) {
+  <span class='kw'>x</span> <span class='op'>=</span> <span class='kw'>units</span>::<span class='fu'><a href='https://rdrr.io/pkg/units/man/drop_units.html'>drop_units</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='kw'>x</span>))
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span>(<span class='kw'>x</span>[<span class='kw'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span>], <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, length.out = <span class='kw'>n</span>)))
 }
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>prec_slice</span> <span class='kw'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span>(<span class='no'>prec</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='kw'>along</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>prec_slice</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>breaks</span> <span class='kw'>=</span> <span class='fu'>qu_0_omit</span>(<span class='no'>prec_slice</span><span class='kw'>[[</span><span class='fl'>1</span>]]), <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='no'>nc</span> <span class='kw'>=</span> <span class='kw pkg'>sf</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/sf/man/st_read.html'>read_sf</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"gpkg/nc.gpkg"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"sf"</span>), <span class='st'>"nc.gpkg"</span>)
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_geometry</span>(<span class='no'>nc</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</div><div class='img'><img src='read_ncdf-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>prec_slice</span> <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span>(<span class='kw'>prec</span>, index = <span class='fl'>17</span>, along = <span class='st'>"time"</span>)
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>prec_slice</span>, border = <span class='fl'>NA</span>, breaks = <span class='fu'>qu_0_omit</span>(<span class='kw'>prec_slice</span>[[<span class='fl'>1</span>]]), reset = <span class='fl'>FALSE</span>)
+</div><div class='input'><span class='kw'>nc</span> <span class='op'>=</span> <span class='kw'>sf</span>::<span class='fu'><a href='https://rdrr.io/pkg/sf/man/st_read.html'>read_sf</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"gpkg/nc.gpkg"</span>, package = <span class='st'>"sf"</span>), <span class='st'>"nc.gpkg"</span>)
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_geometry</span>(<span class='kw'>nc</span>), add = <span class='fl'>TRUE</span>, reset = <span class='fl'>FALSE</span>, col = <span class='fl'>NA</span>)
+</div><div class='img'><img src='read_ncdf-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -306,7 +312,7 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

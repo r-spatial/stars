@@ -146,22 +146,22 @@
 
     <pre class="usage"><span class='co'># S3 method for stars_proxy</span>
 <span class='fu'>st_crop</span>(
-  <span class='no'>x</span>,
-  <span class='no'>y</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>.Machine</span>$<span class='no'>double.eps</span>),
-  <span class='kw'>collect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  <span class='kw'>...</span>,
+  crop = <span class='fl'>TRUE</span>,
+  epsilon = <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='kw'>.Machine</span><span class='op'>$</span><span class='kw'>double.eps</span>),
+  collect = <span class='fl'>TRUE</span>
 )
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_crop</span>(
-  <span class='no'>x</span>,
-  <span class='no'>y</span>,
-  <span class='no'>...</span>,
-  <span class='kw'>crop</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>epsilon</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='no'>.Machine</span>$<span class='no'>double.eps</span>),
-  <span class='kw'>as_points</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='fu'>st_dimension</span>(<span class='no'>y</span>) <span class='kw'>==</span> <span class='fl'>2</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  <span class='kw'>...</span>,
+  crop = <span class='fl'>TRUE</span>,
+  epsilon = <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span>(<span class='kw'>.Machine</span><span class='op'>$</span><span class='kw'>double.eps</span>),
+  as_points = <span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='fu'>st_dimension</span>(<span class='kw'>y</span>) <span class='op'>==</span> <span class='fl'>2</span>, na.rm = <span class='fl'>TRUE</span>)
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -202,17 +202,18 @@
     <p>for raster <code>x</code>, <code>st_crop</code> selects cells for which the cell centre is inside the bounding box; see the examples below.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>l7</span> <span class='kw'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"stars"</span>))
-<span class='no'>d</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>l7</span>)
+    <pre class="examples"><div class='input'><span class='kw'>l7</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>))
+<span class='kw'>d</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='kw'>l7</span>)
 
 <span class='co'># area around cells 3:10 (x) and 4:11 (y):</span>
-<span class='no'>offset</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>d</span><span class='kw'>[[</span><span class='st'>"x"</span>]]$<span class='no'>offset</span>, <span class='no'>d</span><span class='kw'>[[</span><span class='st'>"y"</span>]]$<span class='no'>offset</span>)
-<span class='no'>res</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>d</span><span class='kw'>[[</span><span class='st'>"x"</span>]]$<span class='no'>delta</span>, <span class='no'>d</span><span class='kw'>[[</span><span class='st'>"y"</span>]]$<span class='no'>delta</span>)
-<span class='no'>bb</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>2</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] + <span class='fl'>11</span> * <span class='no'>res</span>[<span class='fl'>2</span>],
-        <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>10</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] +  <span class='fl'>3</span> * <span class='no'>res</span>[<span class='fl'>2</span>]), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fu'>st_crs</span>(<span class='no'>l7</span>))
-<span class='no'>l7</span>[<span class='no'>bb</span>]</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+<span class='kw'>offset</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>d</span>[[<span class='st'>"x"</span>]]<span class='op'>$</span><span class='kw'>offset</span>, <span class='kw'>d</span>[[<span class='st'>"y"</span>]]<span class='op'>$</span><span class='kw'>offset</span>)
+<span class='kw'>res</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>d</span>[[<span class='st'>"x"</span>]]<span class='op'>$</span><span class='kw'>delta</span>, <span class='kw'>d</span>[[<span class='st'>"y"</span>]]<span class='op'>$</span><span class='kw'>delta</span>)
+<span class='kw'>bb</span> <span class='op'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(xmin = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>2</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymin = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span> <span class='fl'>11</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>],
+  xmax = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>10</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymax = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span>  <span class='fl'>3</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>]), crs = <span class='fu'>st_crs</span>(<span class='kw'>l7</span>))
+<span class='kw'>l7</span>[<span class='kw'>bb</span>]
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 17.00  
@@ -226,13 +227,17 @@
 #&gt; x       3 10  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       4 11 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  6      NA    NA                           NA    NA   NULL    </div><div class='input'>
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>l7</span>[,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>], <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>l7</span>[<span class='no'>bb</span>,,,<span class='fl'>1</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sf.colors</span>())</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='st_crop-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>l7</span>[,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span>], reset = <span class='fl'>FALSE</span>)
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='kw'>l7</span>[<span class='kw'>bb</span>,,,<span class='fl'>1</span>], add = <span class='fl'>TRUE</span>, col = <span class='fu'>sf.colors</span>())
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>bb</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'green'</span>, lwd = <span class='fl'>2</span>)
+</div><div class='img'><img src='st_crop-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># slightly smaller bbox:</span>
-<span class='no'>bb</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>2.1</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] + <span class='fl'>10.9</span> * <span class='no'>res</span>[<span class='fl'>2</span>],
-        <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] +  <span class='fl'>9.9</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] +  <span class='fl'>3.1</span> * <span class='no'>res</span>[<span class='fl'>2</span>]), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fu'>st_crs</span>(<span class='no'>l7</span>))
-<span class='no'>l7</span>[<span class='no'>bb</span>]</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+<span class='kw'>bb</span> <span class='op'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(xmin = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>2.1</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymin = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span> <span class='fl'>10.9</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>],
+  xmax = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span>  <span class='fl'>9.9</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymax = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span>  <span class='fl'>3.1</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>]), crs = <span class='fu'>st_crs</span>(<span class='kw'>l7</span>))
+<span class='kw'>l7</span>[<span class='kw'>bb</span>]
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 17.00  
@@ -246,13 +251,17 @@
 #&gt; x       3 10  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       4 11 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  6      NA    NA                           NA    NA   NULL    </div><div class='input'>
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>l7</span>[,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>], <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>l7</span>[<span class='no'>bb</span>,,,<span class='fl'>1</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sf.colors</span>())</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='st_crop-2.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>l7</span>[,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span>], reset = <span class='fl'>FALSE</span>)
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='kw'>l7</span>[<span class='kw'>bb</span>,,,<span class='fl'>1</span>], add = <span class='fl'>TRUE</span>, col = <span class='fu'>sf.colors</span>())
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>bb</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'green'</span>, lwd = <span class='fl'>2</span>)
+</div><div class='img'><img src='st_crop-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># slightly larger bbox:</span>
-<span class='no'>bb</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>1.9</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] + <span class='fl'>11.1</span> * <span class='no'>res</span>[<span class='fl'>2</span>],
-        <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>10.1</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] +  <span class='fl'>2.9</span> * <span class='no'>res</span>[<span class='fl'>2</span>]), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fu'>st_crs</span>(<span class='no'>l7</span>))
-<span class='no'>l7</span>[<span class='no'>bb</span>]</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+<span class='kw'>bb</span> <span class='op'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(xmin = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>1.9</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymin = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span> <span class='fl'>11.1</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>],
+  xmax = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>10.1</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymax = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span>  <span class='fl'>2.9</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>]), crs = <span class='fu'>st_crs</span>(<span class='kw'>l7</span>))
+<span class='kw'>l7</span>[<span class='kw'>bb</span>]
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 17.00  
@@ -267,13 +276,17 @@
 #&gt; x       2 11  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       3 12 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  6      NA    NA                           NA    NA   NULL    </div><div class='input'>
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>l7</span>[,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>], <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>l7</span>[<span class='no'>bb</span>,,,<span class='fl'>1</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sf.colors</span>())</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='st_crop-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>l7</span>[,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span>], reset = <span class='fl'>FALSE</span>)
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='kw'>l7</span>[<span class='kw'>bb</span>,,,<span class='fl'>1</span>], add = <span class='fl'>TRUE</span>, col = <span class='fu'>sf.colors</span>())
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>bb</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'green'</span>, lwd = <span class='fl'>2</span>)
+</div><div class='img'><img src='st_crop-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># half a cell size larger bbox:</span>
-<span class='no'>bb</span> <span class='kw'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>1.49</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymin</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] + <span class='fl'>11.51</span> * <span class='no'>res</span>[<span class='fl'>2</span>],
-        <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>1</span>] + <span class='fl'>10.51</span> * <span class='no'>res</span>[<span class='fl'>1</span>],
-        <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='no'>offset</span>[<span class='fl'>2</span>] +  <span class='fl'>2.49</span> * <span class='no'>res</span>[<span class='fl'>2</span>]), <span class='kw'>crs</span> <span class='kw'>=</span> <span class='fu'>st_crs</span>(<span class='no'>l7</span>))
-<span class='no'>l7</span>[<span class='no'>bb</span>]</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+<span class='kw'>bb</span> <span class='op'>=</span> <span class='fu'>st_bbox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(xmin = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>1.49</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymin = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span> <span class='fl'>11.51</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>],
+  xmax = <span class='kw'>offset</span>[<span class='fl'>1</span>] <span class='op'>+</span> <span class='fl'>10.51</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>1</span>],
+  ymax = <span class='kw'>offset</span>[<span class='fl'>2</span>] <span class='op'>+</span>  <span class='fl'>2.49</span> <span class='op'>*</span> <span class='kw'>res</span>[<span class='fl'>2</span>]), crs = <span class='fu'>st_crs</span>(<span class='kw'>l7</span>))
+<span class='kw'>l7</span>[<span class='kw'>bb</span>]
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
 #&gt;  Min.   : 17.00  
@@ -287,7 +300,10 @@
 #&gt; x       2 11  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       3 12 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1  6      NA    NA                           NA    NA   NULL    </div><div class='input'>
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='no'>l7</span>[,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>:<span class='fl'>13</span>,<span class='fl'>1</span>], <span class='kw'>reset</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='no'>l7</span>[<span class='no'>bb</span>,,,<span class='fl'>1</span>], <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>sf.colors</span>())</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='no'>bb</span>), <span class='kw'>add</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>border</span> <span class='kw'>=</span> <span class='st'>'green'</span>, <span class='kw'>lwd</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='img'><img src='st_crop-4.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>l7</span>[,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>13</span>,<span class='fl'>1</span>], reset = <span class='fl'>FALSE</span>)
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='kw'>l7</span>[<span class='kw'>bb</span>,,,<span class='fl'>1</span>], add = <span class='fl'>TRUE</span>, col = <span class='fu'>sf.colors</span>())
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>bb</span>), add = <span class='fl'>TRUE</span>, border = <span class='st'>'green'</span>, lwd = <span class='fl'>2</span>)
+</div><div class='img'><img src='st_crop-4.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -303,7 +319,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

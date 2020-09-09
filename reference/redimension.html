@@ -144,22 +144,22 @@
     <p>redimension array, or collapse attributes into a new dimension</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_redimension</span>(<span class='no'>x</span>, <span class='no'>new_dims</span>, <span class='no'>along</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>st_redimension</span>(<span class='kw'>x</span>, <span class='kw'>new_dims</span>, <span class='kw'>along</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_redimension</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
-  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)),
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  new_dims = <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='kw'>x</span>),
+  along = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(new_dim = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)),
+  <span class='kw'>...</span>
 )
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'>st_redimension</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>new_dims</span> <span class='kw'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='no'>x</span>),
-  <span class='kw'>along</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>new_dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)),
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  new_dims = <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='kw'>x</span>),
+  along = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(new_dim = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)),
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -199,7 +199,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
