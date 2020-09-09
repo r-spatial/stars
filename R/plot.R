@@ -231,7 +231,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE, axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
 		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
-		useRaster = dev.capabilities("rasterImage")$rasterImage == "yes", extent = x) {
+		useRaster = isTRUE(dev.capabilities("rasterImage")$rasterImage == "yes"), extent = x) {
 
 	dots = list(...)
 
