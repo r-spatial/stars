@@ -281,10 +281,10 @@
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA   NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA   NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                           NA    NA   NULL</span>
+<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
+<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
+<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
+<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8</span>
 </pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
@@ -292,7 +292,7 @@
 </pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.155   0.152   1.960</code></pre>
+##   2.417   0.168   2.201</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="kw">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">s2</span>, proxy = <span class="fl">FALSE</span>)
@@ -387,7 +387,7 @@
 <span class="co">## [[1]]</span>
 <span class="co">## x[i = i, drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55c41bd8af78&gt;</span>
+<span class="co">## &lt;environment: 0x557e6244bd08&gt;</span>
 </pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
@@ -435,20 +435,20 @@
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA   NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA   NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                           NA    NA   NULL    </span>
+<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
+<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
+<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
+<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8    </span>
 <span class="co">## call_list:</span>
 <span class="co">## [[1]]</span>
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55c41b4e5190&gt;</span>
+<span class="co">## &lt;environment: 0x557e618c1398&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">s2.ndvi</span>)) <span class="co"># read - compute ndvi - plot </span>
 </pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.477   0.132   1.269</code></pre>
+##   1.721   0.124   1.463</code></pre>
 </div>
 </div>
 </div>
