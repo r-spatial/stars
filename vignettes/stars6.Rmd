@@ -1,5 +1,5 @@
 ---
-title: "7. How `raster` functions map to `stars` functions"
+title: "6. How `raster` functions map to `stars` functions"
 author: "Sébastien Rochette, Adriano Fantini, Edzer Pebesma"
 output:
   html_document:
