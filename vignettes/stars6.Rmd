@@ -54,7 +54,7 @@ tribble(
 tribble(
   ~raster, ~stars, ~`Note/comment`,
   "merge", "c", "#, currently only works for adjacent objects",
-  "mosaic", "st_mosaic", "",
+  "mosaic", "st_mosaic", "these are not identical, read the docs carefully",
   "crop", "filter, st_crop", "",
   "setExtent", "", "# maybe use st_warp?",
   "trim", "", "#",
@@ -80,7 +80,7 @@ tribble(
   "mask", "[ ] <-", "",
   "cut", "cut", "",
   "subs", "", "",
-  "reclassify", "", "* forcats::fct_recode ?",
+  "reclassify", "mutate with case_when", "or forcats::fct_recode ?",
   "init", "[ ] <-", "",
   "stackApply", "{[ ] , slice, filter} %>% st_apply", "",
   "stackSelect", "", "",
