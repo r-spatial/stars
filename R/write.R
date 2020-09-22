@@ -19,7 +19,7 @@ reset_sub = function(x) {
 }
 
 st_write.stars = function(obj, dsn, layer, ...) {
-	.Deprecated("read_stars") # nocov
+	.Deprecated("write_stars") # nocov
 }
 
 
