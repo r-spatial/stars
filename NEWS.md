@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* added vignette: "How `raster` functions map to `stars` functions", by Sebastien Rochette; #122, #325
+
 * fix bug in dimension `values` field when downsampling; #324
 
 * `write_stars` now also write band names; #323
