@@ -1,7 +1,6 @@
 ---
-title: "How `raster` functions map to `stars` functions"
+title: "7. How `raster` functions map to `stars` functions"
 author: "Sébastien Rochette, Adriano Fantini, Edzer Pebesma"
-date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
@@ -16,11 +15,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(echo = FALSE, collapse = TRUE, comment = "#>")
 
 suppressPackageStartupMessages(library(dplyr))
 ```
