@@ -59,7 +59,7 @@ tribble(
 tribble(
   ~raster, ~stars, ~`Note/comment`,
   "merge", "c", "#, currently only works for adjacent objects",
-  "mosaic", "", "?",
+  "mosaic", "st_mosaic", "",
   "crop", "filter, st_crop", "",
   "setExtent", "", "# maybe use st_warp?",
   "trim", "", "#",
