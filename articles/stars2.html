@@ -292,7 +292,7 @@
 </pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.946   0.120   1.732</code></pre>
+##   2.468   0.239   2.303</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="kw">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">s2</span>, proxy = <span class="fl">FALSE</span>)
@@ -387,7 +387,7 @@
 <span class="co">## [[1]]</span>
 <span class="co">## x[i = i, drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x5619a6b51dc0&gt;</span>
+<span class="co">## &lt;environment: 0x561c7c3511e8&gt;</span>
 </pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
@@ -443,12 +443,12 @@
 <span class="co">## [[1]]</span>
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x5619a8a13d60&gt;</span>
+<span class="co">## &lt;environment: 0x561c7bf04700&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">s2.ndvi</span>)) <span class="co"># read - compute ndvi - plot </span>
 </pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.420   0.128   1.222</code></pre>
+##   1.854   0.136   1.592</code></pre>
 </div>
 </div>
 </div>
