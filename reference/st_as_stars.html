@@ -147,60 +147,60 @@
     <p>convert objects into a stars object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, dimensions = <span class='kw'>NULL</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, dimensions <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>st_as_stars</span>(.x = <span class='kw'>NULL</span>, <span class='kw'>...</span>, raster = <span class='kw'>NULL</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span>.x <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span>, raster <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, curvilinear = <span class='kw'>NULL</span>, crs = <span class='fu'>st_crs</span>(<span class='fl'>4326</span>))
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, curvilinear <span class='op'>=</span> <span class='cn'>NULL</span>, crs <span class='op'>=</span> <span class='fu'>st_crs</span><span class='op'>(</span><span class='fl'>4326</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># S3 method for bbox</span>
-<span class='fu'>st_as_stars</span>(
-  <span class='kw'>.x</span>,
-  <span class='kw'>...</span>,
-  <span class='kw'>nx</span>,
-  <span class='kw'>ny</span>,
-  dx = <span class='kw'>dy</span>,
-  dy = <span class='kw'>dx</span>,
-  xlim = <span class='kw'>.x</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"xmin"</span>, <span class='st'>"xmax"</span>)],
-  ylim = <span class='kw'>.x</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ymin"</span>, <span class='st'>"ymax"</span>)],
-  values = <span class='fl'>0</span>,
-  n = <span class='fl'>64800</span>,
-  pretty = <span class='fl'>FALSE</span>,
-  inside = <span class='fl'>FALSE</span>,
-  <span class='kw'>nz</span>
-)
+<span class='fu'>st_as_stars</span><span class='op'>(</span>
+  <span class='va'>.x</span>,
+  <span class='va'>...</span>,
+  <span class='va'>nx</span>,
+  <span class='va'>ny</span>,
+  dx <span class='op'>=</span> <span class='va'>dy</span>,
+  dy <span class='op'>=</span> <span class='va'>dx</span>,
+  xlim <span class='op'>=</span> <span class='va'>.x</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"xmin"</span>, <span class='st'>"xmax"</span><span class='op'>)</span><span class='op'>]</span>,
+  ylim <span class='op'>=</span> <span class='va'>.x</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ymin"</span>, <span class='st'>"ymax"</span><span class='op'>)</span><span class='op'>]</span>,
+  values <span class='op'>=</span> <span class='fl'>0</span>,
+  n <span class='op'>=</span> <span class='fl'>64800</span>,
+  pretty <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  inside <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>nz</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for sf</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, name = <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='kw'>.x</span>, <span class='st'>"sf_column"</span>))
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>.x</span>, <span class='st'>"sf_column"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># S3 method for Raster</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, att = <span class='fl'>1</span>, ignore_file = <span class='fl'>FALSE</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, att <span class='op'>=</span> <span class='fl'>1</span>, ignore_file <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for ncdfgeom</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, sf_geometry = <span class='fl'>NA</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, sf_geometry <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_as_stars</span>(
-  <span class='kw'>.x</span>,
-  <span class='kw'>...</span>,
-  downsample = <span class='fl'>0</span>,
-  url = <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='kw'>.x</span>, <span class='st'>"url"</span>),
-  envir = <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>()
-)
+<span class='fu'>st_as_stars</span><span class='op'>(</span>
+  <span class='va'>.x</span>,
+  <span class='va'>...</span>,
+  downsample <span class='op'>=</span> <span class='fl'>0</span>,
+  url <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>.x</span>, <span class='st'>"url"</span><span class='op'>)</span>,
+  envir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, dims = <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, xy = <span class='kw'>dims</span>[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>], y_decreasing = <span class='fl'>TRUE</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, dims <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, xy <span class='op'>=</span> <span class='va'>dims</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>, y_decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for xts</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, <span class='kw'>dimensions</span>)
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, <span class='va'>dimensions</span><span class='op'>)</span>
 
 <span class='co'># S3 method for OpenStreetMap</span>
-<span class='fu'>st_as_stars</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>, as_col = <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, as_col <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -328,8 +328,8 @@ Must have same number of rows as timeseries instances.</p></td>
 <p>for the <code>xts</code> methods, if <code>dimensions</code> are provided, time has to be the first dimension.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='kw'>Produc</span>, package = <span class='st'>"plm"</span>)
-<span class='fu'>st_as_stars</span>(<span class='kw'>Produc</span>, y_decreasing = <span class='fl'>FALSE</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>Produc</span>, package <span class='op'>=</span> <span class='st'>"plm"</span><span class='op'>)</span>
+<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>Produc</span>, y_decreasing <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 9 attributes
 #&gt; attribute(s):
 #&gt;     region           pcap              hwy            water        

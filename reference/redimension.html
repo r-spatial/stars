@@ -147,23 +147,23 @@
     <p>redimension array, or collapse attributes into a new dimension</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_redimension</span>(<span class='kw'>x</span>, <span class='kw'>new_dims</span>, <span class='kw'>along</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>st_redimension</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>new_dims</span>, <span class='va'>along</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_redimension</span>(
-  <span class='kw'>x</span>,
-  new_dims = <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='kw'>x</span>),
-  along = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(new_dim = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)),
-  <span class='kw'>...</span>
-)
+<span class='fu'>st_redimension</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  new_dims <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  along <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>new_dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_redimension</span>(
-  <span class='kw'>x</span>,
-  new_dims = <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(<span class='kw'>x</span>),
-  along = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(new_dim = <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)),
-  <span class='kw'>...</span>
-)</pre>
+<span class='fu'>st_redimension</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  new_dims <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>,
+  along <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>new_dim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

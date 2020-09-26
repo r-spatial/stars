@@ -147,43 +147,43 @@
     <p>get dimensions from stars object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_dimensions</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_dimensions</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>)
+<span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>st_dimensions</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
+<span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_dimensions</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
+<span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>st_dimensions</span>(<span class='kw'>x</span>) <span class='op'>&lt;-</span> <span class='kw'>value</span>
+<span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
 
 <span class='co'># S3 method for array</span>
-<span class='fu'>st_dimensions</span>(<span class='kw'>.x</span>, <span class='kw'>...</span>)
+<span class='fu'>st_dimensions</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>st_dimensions</span>(
-  <span class='kw'>.x</span>,
-  <span class='kw'>...</span>,
-  <span class='kw'>.raster</span>,
-  affine = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>),
-  cell_midpoints = <span class='fl'>FALSE</span>,
-  point = <span class='fl'>FALSE</span>
-)
+<span class='fu'>st_dimensions</span><span class='op'>(</span>
+  <span class='va'>.x</span>,
+  <span class='va'>...</span>,
+  <span class='va'>.raster</span>,
+  affine <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>,
+  cell_midpoints <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  point <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 
-<span class='fu'>st_set_dimensions</span>(
-  <span class='kw'>.x</span>,
-  <span class='kw'>which</span>,
-  values = <span class='kw'>NULL</span>,
-  point = <span class='kw'>NULL</span>,
-  names = <span class='kw'>NULL</span>,
-  <span class='kw'>xy</span>,
-  <span class='kw'>...</span>
-)
+<span class='fu'>st_set_dimensions</span><span class='op'>(</span>
+  <span class='va'>.x</span>,
+  <span class='va'>which</span>,
+  values <span class='op'>=</span> <span class='cn'>NULL</span>,
+  point <span class='op'>=</span> <span class='cn'>NULL</span>,
+  names <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>xy</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>st_get_dimension_values</span>(<span class='kw'>.x</span>, <span class='kw'>which</span>, <span class='kw'>...</span>, max = <span class='fl'>FALSE</span>, center = <span class='fl'>NA</span>)</pre>
+<span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>which</span>, <span class='va'>...</span>, max <span class='op'>=</span> <span class='cn'>FALSE</span>, center <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -254,10 +254,10 @@
     <p>dimensions can be specified in two ways. The simplest is to pass a vector with numeric values for a numeric dimension, or character values for a categorical dimension. Parameter <code>cell_midpoints</code> is used to specify whether numeric values refer to the offset (start) of a dimension interval (default), or to the center; the center case is only available for regular dimensions. For rectilinear numeric dimensions, one can specify either a vector with cell borders (start values), or a data.frame with two columns named "start" and "end", with the respective interval start and end values. In the first case, the end values are computed from the start values by assuming the last two intervals have equal width.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>))
+    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='co'># Landsat 7 ETM+ band semantics: https://landsat.gsfc.nasa.gov/the-enhanced-thematic-mapper-plus/</span>
 <span class='co'># set bands to values 1,2,3,4,5,7:</span>
-(<span class='kw'>x1</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span>(<span class='kw'>x</span>, <span class='st'>"band"</span>, values = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span>,<span class='fl'>7</span>), names = <span class='st'>"band_number"</span>, point = <span class='fl'>TRUE</span>))
+<span class='op'>(</span><span class='va'>x1</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"band"</span>, values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span>,<span class='fl'>7</span><span class='op'>)</span>, names <span class='op'>=</span> <span class='st'>"band_number"</span>, point <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
@@ -276,11 +276,11 @@
 #&gt; x           [x]
 #&gt; y           [y]
 #&gt; band_number    </div><div class='input'><span class='co'># set band values as bandwidth</span>
-<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.45</span>,<span class='fl'>0.515</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.525</span>,<span class='fl'>0.605</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.63</span>,<span class='fl'>0.69</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.775</span>,<span class='fl'>0.90</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.55</span>,<span class='fl'>1.75</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2.08</span>,<span class='fl'>2.35</span>)) <span class='op'>%&gt;%</span>
-  <span class='kw'>units</span>::<span class='fu'><a href='https://rdrr.io/pkg/units/man/set_units.html'>set_units</a></span>(<span class='st'>"um"</span>) <span class='op'>-&gt;</span> <span class='kw'>bw</span> <span class='co'># or: units::set_units(µm) -&gt; bw</span>
+<span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.45</span>,<span class='fl'>0.515</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.525</span>,<span class='fl'>0.605</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.63</span>,<span class='fl'>0.69</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.775</span>,<span class='fl'>0.90</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.55</span>,<span class='fl'>1.75</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.08</span>,<span class='fl'>2.35</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>units</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/set_units.html'>set_units</a></span><span class='op'>(</span><span class='st'>"um"</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>bw</span> <span class='co'># or: units::set_units(µm) -&gt; bw</span>
 <span class='co'># set bandwidth midpoint:</span>
-(<span class='kw'>x2</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span>(<span class='kw'>x</span>, <span class='st'>"band"</span>, values = <span class='fl'>0.5</span> <span class='op'>*</span> (<span class='kw'>bw</span>[,<span class='fl'>1</span>]<span class='op'>+</span><span class='kw'>bw</span>[,<span class='fl'>2</span>]), 
-   names = <span class='st'>"bandwidth_midpoint"</span>, point = <span class='fl'>TRUE</span>))
+<span class='op'>(</span><span class='va'>x2</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"band"</span>, values <span class='op'>=</span> <span class='fl'>0.5</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>bw</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>+</span><span class='va'>bw</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>, 
+   names <span class='op'>=</span> <span class='st'>"bandwidth_midpoint"</span>, point <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
@@ -299,7 +299,7 @@
 #&gt; x                                        NULL [x]
 #&gt; y                                        NULL [y]
 #&gt; bandwidth_midpoint 0.4825 [um],...,2.215 [um]    </div><div class='input'><span class='co'># set bandwidth intervals:</span>
-(<span class='kw'>x3</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span>(<span class='kw'>x</span>, <span class='st'>"band"</span>, values = <span class='fu'><a href='make_intervals.html'>make_intervals</a></span>(<span class='kw'>bw</span>), names = <span class='st'>"bandwidth"</span>))
+<span class='op'>(</span><span class='va'>x3</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"band"</span>, values <span class='op'>=</span> <span class='fu'><a href='make_intervals.html'>make_intervals</a></span><span class='op'>(</span><span class='va'>bw</span><span class='op'>)</span>, names <span class='op'>=</span> <span class='st'>"bandwidth"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    

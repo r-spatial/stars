@@ -147,12 +147,12 @@
     <p>Compute contour lines or sets</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_contour</span>(
-  <span class='kw'>x</span>,
-  na.rm = <span class='fl'>TRUE</span>,
-  contour_lines = <span class='fl'>FALSE</span>,
-  breaks = <span class='kw'>classInt</span>::<span class='fu'><a href='https://rdrr.io/pkg/classInt/man/classIntervals.html'>classIntervals</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span>(<span class='kw'>x</span>[[<span class='fl'>1</span>]])))<span class='op'>$</span><span class='kw'>brks</span>
-)</pre>
+    <pre class="usage"><span class='fu'>st_contour</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  contour_lines <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  breaks <span class='op'>=</span> <span class='fu'>classInt</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/classInt/reference/classIntervals.html'>classIntervals</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>$</span><span class='va'>brks</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

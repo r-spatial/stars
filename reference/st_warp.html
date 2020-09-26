@@ -147,19 +147,19 @@
     <p>Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_warp</span>(
-  <span class='kw'>src</span>,
-  <span class='kw'>dest</span>,
-  <span class='kw'>...</span>,
-  crs = <span class='kw'>NA_crs_</span>,
-  cellsize = <span class='fl'>NA_real_</span>,
-  segments = <span class='fl'>100</span>,
-  use_gdal = <span class='fl'>FALSE</span>,
-  options = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  no_data_value = <span class='fl'>NA_real_</span>,
-  debug = <span class='fl'>FALSE</span>,
-  method = <span class='st'>"near"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>st_warp</span><span class='op'>(</span>
+  <span class='va'>src</span>,
+  <span class='va'>dest</span>,
+  <span class='va'>...</span>,
+  crs <span class='op'>=</span> <span class='va'>NA_crs_</span>,
+  cellsize <span class='op'>=</span> <span class='cn'>NA_real_</span>,
+  segments <span class='op'>=</span> <span class='fl'>100</span>,
+  use_gdal <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
+  no_data_value <span class='op'>=</span> <span class='cn'>NA_real_</span>,
+  debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  method <span class='op'>=</span> <span class='st'>"near"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,7 +190,7 @@
     </tr>
     <tr>
       <th>use_gdal</th>
-      <td><p>logical; if <code>TRUE</code>, use gdalwarp, through <a href='https://rdrr.io/pkg/sf/man/gdal_utils.html'>gdal_utils</a></p></td>
+      <td><p>logical; if <code>TRUE</code>, use gdalwarp, through <a href='https://r-spatial.github.io/sf/reference/gdal_utils.html'>gdal_utils</a></p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -216,8 +216,8 @@
 <p>For gridded spatial data (dimensions <code>x</code> and <code>y</code>), see figure; the existing grid is transformed into a regular grid defined by <code>dest</code>, possibly in a new coordinate reference system. If <code>dest</code> is not specified, but <code>crs</code> is, the procedure used to choose a target grid is similar to that of <a href='https://rdrr.io/pkg/raster/man/projectRaster.html'>projectRaster</a> (currently only with <code>method='ngb'</code>). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of <code>src</code>, with an extent that at least covers <code>x</code>; (iii) for each cell center of this new grid, the matching grid cell of <code>x</code> is used; if there is no match, an <code>NA</code> value is used.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>geomatrix</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/geomatrix.tif"</span>, package = <span class='st'>"stars"</span>)
-(<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='kw'>geomatrix</span>))
+    <pre class="examples"><div class='input'><span class='va'>geomatrix</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/geomatrix.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
+<span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>geomatrix</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;  geomatrix.tif  
@@ -231,18 +231,18 @@
 #&gt;   from to  offset delta                       refsys point values x/y
 #&gt; x    1 20 1841002   1.5 PROJCS["WGS 84 / UTM zone...  TRUE   NULL [x]
 #&gt; y    1 20 1144003  -1.5 PROJCS["WGS 84 / UTM zone...  TRUE   NULL [y]
-#&gt; sheared raster with parameters: -5 -5 </div><div class='input'><span class='kw'>new_crs</span> <span class='op'>=</span> <span class='fu'>st_crs</span>(<span class='fl'>4326</span>)
-<span class='kw'>y</span> <span class='op'>=</span> <span class='fu'>st_warp</span>(<span class='kw'>x</span>, crs = <span class='kw'>new_crs</span>)
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'><a href='st_transform.html'>st_transform</a></span>(<span class='fu'>st_as_sfc</span>(<span class='fu'>st_bbox</span>(<span class='kw'>x</span>)), <span class='kw'>new_crs</span>), col = <span class='fl'>NA</span>, border = <span class='st'>'red'</span>)
-</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>y</span>, as_points=<span class='fl'>FALSE</span>), col = <span class='fl'>NA</span>, border = <span class='st'>'green'</span>, axes = <span class='fl'>TRUE</span>, add = <span class='fl'>TRUE</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span>(<span class='kw'>y</span>, add = <span class='fl'>TRUE</span>, nbreaks = <span class='fl'>6</span>)
-</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>y</span>, as_points=<span class='fl'>TRUE</span>), pch=<span class='fl'>3</span>, cex=<span class='fl'>.5</span>, col = <span class='st'>'blue'</span>, add = <span class='fl'>TRUE</span>)
-</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='fu'><a href='st_transform.html'>st_transform</a></span>(<span class='fu'>st_as_sfc</span>(<span class='kw'>x</span>, as_points=<span class='fl'>FALSE</span>), <span class='kw'>new_crs</span>), add = <span class='fl'>TRUE</span>)
+#&gt; sheared raster with parameters: -5 -5 </div><div class='input'><span class='va'>new_crs</span> <span class='op'>=</span> <span class='fu'>st_crs</span><span class='op'>(</span><span class='fl'>4326</span><span class='op'>)</span>
+<span class='va'>y</span> <span class='op'>=</span> <span class='fu'>st_warp</span><span class='op'>(</span><span class='va'>x</span>, crs <span class='op'>=</span> <span class='va'>new_crs</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='st_transform.html'>st_transform</a></span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>new_crs</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='cn'>NA</span>, border <span class='op'>=</span> <span class='st'>'red'</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='va'>y</span>, as_points<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, col <span class='op'>=</span> <span class='cn'>NA</span>, border <span class='op'>=</span> <span class='st'>'green'</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span><span class='op'>(</span><span class='va'>y</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span>, nbreaks <span class='op'>=</span> <span class='fl'>6</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='va'>y</span>, as_points<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>, pch<span class='op'>=</span><span class='fl'>3</span>, cex<span class='op'>=</span><span class='fl'>.5</span>, col <span class='op'>=</span> <span class='st'>'blue'</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='st_transform.html'>st_transform</a></span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='va'>x</span>, as_points<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>, <span class='va'>new_crs</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='st_warp-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># warp 0-360 raster to -180-180 raster:</span>
-<span class='kw'>r</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"nc/reduced.nc"</span>, package = <span class='st'>"stars"</span>))
-</div><div class='output co'>#&gt; sst, anom, err, ice, </div><div class='input'><span class='kw'>r</span> <span class='op'>%&gt;%</span> <span class='fu'>st_set_crs</span>(<span class='fl'>4326</span>) <span class='op'>%&gt;%</span> <span class='fu'>st_warp</span>(<span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'>st_bbox</span>(), dx = <span class='fl'>2</span>)) <span class='op'>-&gt;</span> <span class='kw'>s</span>
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>r</span>, axes = <span class='fl'>TRUE</span>) <span class='co'># no CRS set, so no degree symbols in labels</span>
-</div><div class='img'><img src='st_warp-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>s</span>, axes = <span class='fl'>TRUE</span>)
+<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/reduced.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; sst, anom, err, ice, </div><div class='input'><span class='va'>r</span> <span class='op'>%&gt;%</span> <span class='fu'>st_set_crs</span><span class='op'>(</span><span class='fl'>4326</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>st_warp</span><span class='op'>(</span><span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='op'>)</span>, dx <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>s</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>r</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='co'># no CRS set, so no degree symbols in labels</span>
+</div><div class='img'><img src='st_warp-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>s</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='st_warp-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

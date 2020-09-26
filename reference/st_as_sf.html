@@ -148,19 +148,19 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'>st_as_sfc</span>(<span class='kw'>x</span>, <span class='kw'>...</span>, <span class='kw'>as_points</span>, which = <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)[<span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>])))
+<span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>as_points</span>, which <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_as_sf</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>...</span>,
-  as_points = <span class='fl'>FALSE</span>,
-  merge = <span class='fl'>FALSE</span>,
-  na.rm = <span class='fl'>TRUE</span>,
-  use_integer = <span class='fu'><a href='https://rdrr.io/r/base/logical.html'>is.logical</a></span>(<span class='kw'>x</span>[[<span class='fl'>1</span>]]) <span class='op'>||</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span>(<span class='kw'>x</span>[[<span class='fl'>1</span>]]),
-  long = <span class='fl'>FALSE</span>,
-  connect8 = <span class='fl'>FALSE</span>
-)</pre>
+<span class='fu'>st_as_sf</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>...</span>,
+  as_points <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  merge <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  na.rm <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  use_integer <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/logical.html'>is.logical</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>||</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,
+  long <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  connect8 <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,15 +205,15 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If <code>merge</code> is <code>TRUE</code>, only the first attribute is converted into an <code>sf</code> object. If <code>na.rm</code> is <code>FALSE</code>, areas with <code>NA</code> values are also written out as polygons. Note that the resulting polygons are typically invalid, and use <a href='https://rdrr.io/pkg/sf/man/valid.html'>st_make_valid</a> to create valid polygons out of them.</p>
+    <p>If <code>merge</code> is <code>TRUE</code>, only the first attribute is converted into an <code>sf</code> object. If <code>na.rm</code> is <code>FALSE</code>, areas with <code>NA</code> values are also written out as polygons. Note that the resulting polygons are typically invalid, and use <a href='https://r-spatial.github.io/sf/reference/valid.html'>st_make_valid</a> to create valid polygons out of them.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>)
-<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='kw'>tif</span>)
-<span class='kw'>x</span> <span class='op'>=</span> <span class='kw'>x</span>[,,,<span class='fl'>6</span>] <span class='co'># a band with lower values in it</span>
-<span class='kw'>x</span>[[<span class='fl'>1</span>]][<span class='kw'>x</span>[[<span class='fl'>1</span>]] <span class='op'>&lt;</span> <span class='fl'>30</span>] <span class='op'>=</span> <span class='fl'>NA</span> <span class='co'># set lower values to NA</span>
-<span class='kw'>x</span>[[<span class='fl'>1</span>]] <span class='op'>=</span> <span class='kw'>x</span>[[<span class='fl'>1</span>]] <span class='op'>&lt;</span> <span class='fl'>100</span> <span class='co'># make the rest binary</span>
-<span class='kw'>x</span>
+    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>6</span><span class='op'>]</span> <span class='co'># a band with lower values in it</span>
+<span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>30</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span> <span class='co'># set lower values to NA</span>
+<span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>100</span> <span class='co'># make the rest binary</span>
+<span class='va'>x</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;  L7_ETMs.tif    
@@ -225,7 +225,7 @@
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
-#&gt; band    6   6      NA    NA                           NA    NA   NULL    </div><div class='input'>(<span class='kw'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span>(<span class='kw'>x</span>)) <span class='co'># removes NA areas</span>
+#&gt; band    6   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># removes NA areas</span>
 </div><div class='output co'>#&gt; Simple feature collection with 95248 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
@@ -242,7 +242,7 @@
 #&gt; 7  TRUE POLYGON ((288947.3 9120761,...
 #&gt; 8  TRUE POLYGON ((288975.8 9120761,...
 #&gt; 9  TRUE POLYGON ((289004.3 9120761,...
-#&gt; 10 TRUE POLYGON ((289032.8 9120761,...</div><div class='input'>(<span class='kw'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span>(<span class='kw'>x</span>[,,,<span class='fl'>1</span>], merge = <span class='fl'>TRUE</span>)) <span class='co'># glues polygons together</span>
+#&gt; 10 TRUE POLYGON ((289032.8 9120761,...</div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># glues polygons together</span>
 </div><div class='output co'>#&gt; Simple feature collection with 2949 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
@@ -259,9 +259,9 @@
 #&gt; 7            1 POLYGON ((291569.3 9120761,...
 #&gt; 8            0 POLYGON ((291911.3 9120761,...
 #&gt; 9            1 POLYGON ((292053.8 9120761,...
-#&gt; 10           0 POLYGON ((293136.8 9120761,...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='fu'>st_is_valid</span>(<span class='kw'>p</span>)) <span class='co'># not all valid, see details</span>
+#&gt; 10           0 POLYGON ((293136.8 9120761,...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'>st_is_valid</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># not all valid, see details</span>
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># plot(p, axes = TRUE)</span>
-(<span class='kw'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span>(<span class='kw'>x</span>, na.rm = <span class='fl'>FALSE</span>, merge = <span class='fl'>TRUE</span>)) <span class='co'># includes polygons with NA values</span>
+<span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span>
 </div><div class='output co'>#&gt; Simple feature collection with 4101 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY

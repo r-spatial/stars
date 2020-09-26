@@ -147,37 +147,37 @@
     <p>write stars object to gdal dataset (typically: to file)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>write_stars</span>(<span class='kw'>obj</span>, <span class='kw'>dsn</span>, <span class='kw'>layer</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>write_stars</span><span class='op'>(</span><span class='va'>obj</span>, <span class='va'>dsn</span>, <span class='va'>layer</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>write_stars</span>(
-  <span class='kw'>obj</span>,
-  <span class='kw'>dsn</span>,
-  layer = <span class='fl'>1</span>,
-  <span class='kw'>...</span>,
-  driver = <span class='fu'>detect.driver</span>(<span class='kw'>dsn</span>),
-  options = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  type = <span class='st'>"Float32"</span>,
-  NA_value = <span class='fl'>NA_real_</span>,
-  update = <span class='fl'>FALSE</span>,
-  normalize_path = <span class='fl'>TRUE</span>
-)
+<span class='fu'>write_stars</span><span class='op'>(</span>
+  <span class='va'>obj</span>,
+  <span class='va'>dsn</span>,
+  layer <span class='op'>=</span> <span class='fl'>1</span>,
+  <span class='va'>...</span>,
+  driver <span class='op'>=</span> <span class='fu'>detect.driver</span><span class='op'>(</span><span class='va'>dsn</span><span class='op'>)</span>,
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
+  type <span class='op'>=</span> <span class='st'>"Float32"</span>,
+  NA_value <span class='op'>=</span> <span class='cn'>NA_real_</span>,
+  update <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  normalize_path <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>write_stars</span>(
-  <span class='kw'>obj</span>,
-  <span class='kw'>dsn</span>,
-  layer = <span class='fl'>1</span>,
-  <span class='kw'>...</span>,
-  driver = <span class='fu'>detect.driver</span>(<span class='kw'>dsn</span>),
-  options = <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span>(<span class='fl'>0</span>),
-  type = <span class='st'>"Float32"</span>,
-  NA_value = <span class='fl'>NA_real_</span>,
-  chunk_size = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>obj</span>)[<span class='fl'>1</span>], <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>floor</a></span>(<span class='fl'>2.5e+07</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>obj</span>)[<span class='fl'>1</span>])),
-  progress = <span class='fl'>TRUE</span>
-)
+<span class='fu'>write_stars</span><span class='op'>(</span>
+  <span class='va'>obj</span>,
+  <span class='va'>dsn</span>,
+  layer <span class='op'>=</span> <span class='fl'>1</span>,
+  <span class='va'>...</span>,
+  driver <span class='op'>=</span> <span class='fu'>detect.driver</span><span class='op'>(</span><span class='va'>dsn</span><span class='op'>)</span>,
+  options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
+  type <span class='op'>=</span> <span class='st'>"Float32"</span>,
+  NA_value <span class='op'>=</span> <span class='cn'>NA_real_</span>,
+  chunk_size <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>obj</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>floor</a></span><span class='op'>(</span><span class='fl'>2.5e+07</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>obj</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>,
+  progress <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
 
-<span class='fu'>detect.driver</span>(<span class='kw'>filename</span>)</pre>
+<span class='fu'>detect.driver</span><span class='op'>(</span><span class='va'>filename</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -196,11 +196,11 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed on to <a href='https://rdrr.io/pkg/sf/man/gdal.html'>gdal_write</a></p></td>
+      <td><p>passed on to <a href='https://r-spatial.github.io/sf/reference/gdal.html'>gdal_write</a></p></td>
     </tr>
     <tr>
       <th>driver</th>
-      <td><p>driver driver name; see <a href='https://rdrr.io/pkg/sf/man/st_drivers.html'>st_drivers</a></p></td>
+      <td><p>driver driver name; see <a href='https://r-spatial.github.io/sf/reference/st_drivers.html'>st_drivers</a></p></td>
     </tr>
     <tr>
       <th>options</th>
@@ -242,7 +242,7 @@ extension; see examples</p></td>
     <p><code>write_stars</code> first creates the target file, then updates it sequentially by writing blocks of <code>chunk_size</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>detect.driver</span>(<span class='st'>"L7_ETMs.tif"</span>)
+    <pre class="examples"><div class='input'><span class='fu'>detect.driver</span><span class='op'>(</span><span class='st'>"L7_ETMs.tif"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "GTiff"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

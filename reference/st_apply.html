@@ -148,17 +148,17 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'>st_apply</span>(
-  <span class='kw'>X</span>,
-  <span class='kw'>MARGIN</span>,
-  <span class='kw'>FUN</span>,
-  <span class='kw'>...</span>,
-  CLUSTER = <span class='kw'>NULL</span>,
-  PROGRESS = <span class='fl'>FALSE</span>,
-  FUTURE = <span class='fl'>FALSE</span>,
-  rename = <span class='fl'>TRUE</span>,
-  <span class='kw'>.fname</span>
-)</pre>
+<span class='fu'>st_apply</span><span class='op'>(</span>
+  <span class='va'>X</span>,
+  <span class='va'>MARGIN</span>,
+  <span class='va'>FUN</span>,
+  <span class='va'>...</span>,
+  CLUSTER <span class='op'>=</span> <span class='cn'>NULL</span>,
+  PROGRESS <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  FUTURE <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  rename <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>.fname</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,9 +206,9 @@
     <p>object of class <code>stars</code> with accordingly reduced number of dimensions; in case <code>FUN</code> returns more than one value, a new dimension is created carrying the name of the function used; see the examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>)
-<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='kw'>tif</span>)
-<span class='fu'>st_apply</span>(<span class='kw'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='kw'>mean</span>) <span class='co'># mean band value for each pixel</span>
+    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
+<span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># mean band value for each pixel</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean        
@@ -221,7 +221,7 @@
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
 #&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span>(<span class='kw'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>), <span class='kw'>mean</span>) <span class='co'># equivalent to the above</span>
+#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean        
@@ -234,7 +234,7 @@
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
 #&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span>(<span class='kw'>x</span>, <span class='fl'>3</span>, <span class='kw'>mean</span>)   <span class='co'># mean of all pixels for each band</span>
+#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='va'>mean</span><span class='op'>)</span>   <span class='co'># mean of all pixels for each band</span>
 </div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean       
@@ -246,7 +246,7 @@
 #&gt;  Max.   :83.18  
 #&gt; dimension(s):
 #&gt;      from to.band offset delta refsys point values
-#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='kw'>x</span>, <span class='st'>"band"</span>, <span class='kw'>mean</span>) <span class='co'># equivalent to the above</span>
+#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"band"</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
 </div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean       
@@ -258,7 +258,7 @@
 #&gt;  Max.   :83.18  
 #&gt; dimension(s):
 #&gt;      from to.band offset delta refsys point values
-#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span>(<span class='kw'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='kw'>range</span>) <span class='co'># min and max band value for each pixel</span>
+#&gt; band    1       6     NA    NA     NA    NA   NULL</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>range</span><span class='op'>)</span> <span class='co'># min and max band value for each pixel</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
@@ -273,9 +273,9 @@
 #&gt; range    1   2      NA    NA                           NA    NA   NULL    
 #&gt; x        1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
 #&gt; y        1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
-<span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='kw'><a href='https://github.com/psolymos/pbapply'>pbapply</a></span>)) { <span class='co'># install it, if FALSE</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/pbapply/man/pboptions.html'>pboptions</a></span>(type = <span class='st'>"timer"</span>)
-}
+<span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/psolymos/pbapply'>pbapply</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># install it, if FALSE</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/pbapply/man/pboptions.html'>pboptions</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"timer"</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div><div class='output co'>#&gt; <span class='message'>Loading required package: pbapply</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

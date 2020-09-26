@@ -114,8 +114,7 @@
 <a href="#preamble-the-starsdata-package" class="anchor"></a>Preamble: the starsdata package</h1>
 <p>To run all of the examples in this vignette, you must install a package with datasets that are too large (1 Gb) to be held in the <code>stars</code> package. They are in a <a href="https://github.com/eddelbuettel/drat">drat repo</a>, installation is done by</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"starsdata"</span>, repos = <span class="st">"http://gis-bigdata.uni-muenster.de"</span>, type = <span class="st">"source"</span>) 
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"starsdata"</span>, repos <span class="op">=</span> <span class="st">"http://gis-bigdata.uni-muenster.de"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span> </pre></div>
 </div>
 <div id="reading-chunks-change-resolution-select-bands" class="section level1">
 <h1 class="hasAnchor">
@@ -128,13 +127,13 @@
 <!-- We can read a (spatially) rectangular chunk of data by -->
 <p>An example of using <code>RasterIO</code> is</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://r-spatial.github.io/stars">stars</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
 <span class="co">## Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span>
-<span class="kw">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"tif/L7_ETMs.tif"</span>, package = <span class="st">"stars"</span>)
-<span class="kw">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(nXOff = <span class="fl">6</span>, nYOff = <span class="fl">6</span>, nXSize = <span class="fl">100</span>, nYSize = <span class="fl">100</span>, bands = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span>))
-(<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">tif</span>, RasterIO = <span class="kw">rasterio</span>))
+<span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">100</span>, nYSize <span class="op">=</span> <span class="fl">100</span>, bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
 <span class="co">##   L7_ETMs.tif    </span>
@@ -149,18 +148,16 @@
 <span class="co">## x       6 105  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       6 105 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   3      NA    NA                           NA    NA   NULL</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">x</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">##    x    y band </span>
-<span class="co">##  100  100    3</span>
-</pre></div>
+<span class="co">##  100  100    3</span></pre></div>
 <p>Compare this to</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">tif</span>))
+<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
-<span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span>
-</pre></div>
+<span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></pre></div>
 <p>and we see that</p>
 <ul>
 <li>the <code>delta</code> values remain the same,</li>
@@ -176,9 +173,9 @@
 <a href="#reading-at-a-different-resolution" class="anchor"></a>Reading at a different resolution</h2>
 <p>Reading datasets at a lower (but also higher!) resolution can be done by setting <code>nBufXSize</code> and <code>nBufYSize</code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(nXOff = <span class="fl">6</span>, nYOff = <span class="fl">6</span>, nXSize = <span class="fl">100</span>, nYSize = <span class="fl">100</span>,
-                nBufXSize = <span class="fl">20</span>, nBufYSize = <span class="fl">20</span>, bands = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span>))
-(<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">tif</span>, RasterIO = <span class="kw">rasterio</span>))
+<span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">100</span>, nYSize <span class="op">=</span> <span class="fl">100</span>,
+                nBufXSize <span class="op">=</span> <span class="fl">20</span>, nBufYSize <span class="op">=</span> <span class="fl">20</span>, bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
 <span class="co">##   L7_ETMs.tif    </span>
@@ -192,8 +189,7 @@
 <span class="co">##      from to  offset  delta                       refsys point values x/y</span>
 <span class="co">## x       2 21  288776  142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
 <span class="co">## y       2 21 9120761 -142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
-<span class="co">## band    1  3      NA     NA                           NA    NA   NULL</span>
-</pre></div>
+<span class="co">## band    1  3      NA     NA                           NA    NA   NULL</span></pre></div>
 <p>and we see that in addition:</p>
 <ul>
 <li>the <code>delta</code> (raster cell size) values have increased a factor 5, because <code>nBufXSize</code> and <code>nBufYSize</code> were set to values a factor 5 smaller than <code>nXSize</code> and <code>nYSize</code>
@@ -203,25 +199,23 @@
 </ul>
 <p>We can also read at higher resolution; here we read a 3 x 3 area and blow it up to 100 x 100:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(nXOff = <span class="fl">6</span>, nYOff = <span class="fl">6</span>, nXSize = <span class="fl">3</span>, nYSize = <span class="fl">3</span>,
-   nBufXSize = <span class="fl">100</span>, nBufYSize = <span class="fl">100</span>, bands = <span class="fl">1</span>)
-<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">tif</span>, RasterIO = <span class="kw">rasterio</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">x</span>)
+<span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">3</span>, nYSize <span class="op">=</span> <span class="fl">3</span>,
+   nBufXSize <span class="op">=</span> <span class="fl">100</span>, nBufYSize <span class="op">=</span> <span class="fl">100</span>, bands <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">##   x   y </span>
 <span class="co">## 100 100</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">x</span>)
-</pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The reason we “see” only three grid cells is that the default sampling method is “nearest neighbour”. We can modify this by</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(nXOff = <span class="fl">6</span>, nYOff = <span class="fl">6</span>, nXSize = <span class="fl">3</span>, nYSize = <span class="fl">3</span>,
-   nBufXSize = <span class="fl">100</span>, nBufYSize = <span class="fl">100</span>, bands = <span class="fl">1</span>, resample = <span class="st">"cubic_spline"</span>)
-<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">tif</span>, RasterIO = <span class="kw">rasterio</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(<span class="kw">x</span>)
+<span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">3</span>, nYSize <span class="op">=</span> <span class="fl">3</span>,
+   nBufXSize <span class="op">=</span> <span class="fl">100</span>, nBufYSize <span class="op">=</span> <span class="fl">100</span>, bands <span class="op">=</span> <span class="fl">1</span>, resample <span class="op">=</span> <span class="st">"cubic_spline"</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">##   x   y </span>
 <span class="co">## 100 100</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">x</span>)
-</pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The following methods are allowed for parameter <code>resample</code>:</p>
 <table class="table">
@@ -276,9 +270,9 @@
 <a href="#stars-proxy-objects" class="anchor"></a>Stars proxy objects</h1>
 <p>Stars proxy objects take another approach: upon creation they contain no data at all, but only pointers to where the data can be read. Data is only read when it is needed, and only as much as is needed: if we plot a proxy objects, the data are read at the resolution of pixels on the screen, rather than at the native resolution, so that if we have e.g. a 10000 x 10000 Sentinel 2 (level 1C) image, we can open it by</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">granule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, package = <span class="st">"starsdata"</span>)
-<span class="kw">s2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"SENTINEL2_L1C:/vsizip/"</span>, <span class="kw">granule</span>, <span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span>)
-(<span class="kw">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">s2</span>, proxy = <span class="fl">TRUE</span>))
+<span class="va">granule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
+<span class="va">s2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"SENTINEL2_L1C:/vsizip/"</span>, <span class="va">granule</span>, <span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span><span class="op">)</span>
+<span class="op">(</span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars_proxy object with 1 attribute in file:</span>
 <span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
@@ -287,40 +281,36 @@
 <span class="co">##      from    to offset delta                       refsys point    values x/y</span>
 <span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
 <span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8</span>
-</pre></div>
+<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8</span></pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">p</span>))
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.144   0.128   1.947</code></pre>
+##   2.419   0.144   2.198</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="kw">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">s2</span>, proxy = <span class="fl">FALSE</span>)
-</pre></div>
+<span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
 <div id="methods-for-stars-proxy-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#methods-for-stars-proxy-objects" class="anchor"></a>Methods for stars proxy objects</h2>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span>(class = <span class="st">"stars_proxy"</span>)
+<span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span>
 <span class="co">##  [1] [              adrop          aggregate      aperm          as.data.frame </span>
 <span class="co">##  [6] c              coerce         dim            droplevels     filter        </span>
 <span class="co">## [11] initialize     Math           merge          Ops            plot          </span>
 <span class="co">## [16] predict        print          show           slotsFromS3    split         </span>
 <span class="co">## [21] st_apply       st_as_stars    st_crop        st_extract     st_mosaic     </span>
 <span class="co">## [26] st_redimension st_sample      st_set_bbox    write_stars   </span>
-<span class="co">## see '?methods' for accessing help and source code</span>
-</pre></div>
+<span class="co">## see '?methods' for accessing help and source code</span></pre></div>
 </div>
 <div id="select-attributes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#select-attributes" class="anchor"></a>Select attributes</h2>
 <p>We can select attributes as with regular <code>stars</code> objects, by using the first argument to <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"avhrr-only-v2.19810901.nc"</span>,
+<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"avhrr-only-v2.19810901.nc"</span>,
 <span class="st">"avhrr-only-v2.19810902.nc"</span>,
 <span class="st">"avhrr-only-v2.19810903.nc"</span>,
 <span class="st">"avhrr-only-v2.19810904.nc"</span>,
@@ -328,12 +318,12 @@
 <span class="st">"avhrr-only-v2.19810906.nc"</span>,
 <span class="st">"avhrr-only-v2.19810907.nc"</span>,
 <span class="st">"avhrr-only-v2.19810908.nc"</span>,
-<span class="st">"avhrr-only-v2.19810909.nc"</span>)
-<span class="kw">file_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"netcdf/"</span>, <span class="kw">x</span>), package = <span class="st">"starsdata"</span>)
-<span class="kw">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span>(<span class="kw">file_list</span>, quiet = <span class="fl">TRUE</span>, proxy = <span class="fl">TRUE</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span>(<span class="kw">y</span>)
+<span class="st">"avhrr-only-v2.19810909.nc"</span><span class="op">)</span>
+<span class="va">file_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"netcdf/"</span>, <span class="va">x</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
+<span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
 <span class="co">## [1] "sst"  "anom" "err"  "ice"</span>
-<span class="kw">y</span>[<span class="st">"sst"</span>]
+<span class="va">y</span><span class="op">[</span><span class="st">"sst"</span><span class="op">]</span>
 <span class="co">## stars_proxy object with 1 attribute in files:</span>
 <span class="co">## $sst</span>
 <span class="co">## [1] "[...]/avhrr-only-v2.19810901.nc:sst" "[...]/avhrr-only-v2.19810902.nc:sst"</span>
@@ -347,8 +337,7 @@
 <span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
-</pre></div>
+<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></pre></div>
 <p>Note that this selection limits the reading from 4 to 1 subdataset from all 9 NetCDF files.</p>
 </div>
 <div id="select-an-area" class="section level2">
@@ -356,19 +345,18 @@
 <a href="#select-an-area" class="anchor"></a>Select an area</h2>
 <p>Another possibility is to crop, or select a rectangular region based on a spatial object. This can be done by passing a <code>bbox</code> object, or an <code>sf</code>, <code>sfc</code> or <code>stars</code> object from which the bounding box will be taken. An example:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="kw">bb</span> <span class="op">=</span> <span class="fu">st_bbox</span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(xmin = <span class="fl">10.125</span>, ymin = <span class="fl">0.125</span>, xmax = <span class="fl">70.125</span>, ymax = <span class="fl">70.125</span>))
-<span class="kw">ysub</span> <span class="op">=</span> <span class="kw">y</span>[<span class="kw">bb</span>]
-<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="kw">ysub</span>)
+<span class="va">bb</span> <span class="op">=</span> <span class="fu">st_bbox</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">10.125</span>, ymin <span class="op">=</span> <span class="fl">0.125</span>, xmax <span class="op">=</span> <span class="fl">70.125</span>, ymax <span class="op">=</span> <span class="fl">70.125</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ysub</span> <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="va">bb</span><span class="op">]</span>
+<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span>
 <span class="co">##      from  to         offset  delta  refsys point values x/y</span>
 <span class="co">## x      41 281              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y      80 360             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1   1          0 [m]     NA      NA    NA   NULL    </span>
 <span class="co">## time    1   9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">ysub</span>) <span class="co"># still no data here!!</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span> <span class="co"># still no data here!!</span>
 <span class="co">## [1] "stars_proxy" "stars"</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">ysub</span>, reset = <span class="fl">FALSE</span>) <span class="co"># plot reads the data, at resolution that is relevant</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="fu">st_as_sfc</span>(<span class="kw">bb</span>), add = <span class="fl">TRUE</span>, lwd = <span class="fl">.5</span>, border = <span class="st">'red'</span>)
-</pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">ysub</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># plot reads the data, at resolution that is relevant</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu">st_as_sfc</span><span class="op">(</span><span class="va">bb</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, lwd <span class="op">=</span> <span class="fl">.5</span>, border <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div id="lazy-evaluation-changing-evaluation-order" class="section level2">
@@ -376,37 +364,35 @@
 <a href="#lazy-evaluation-changing-evaluation-order" class="anchor"></a>Lazy evaluation, changing evaluation order</h2>
 <p>Some other actions can be carried out on <code>stars_proxy</code> objects, but their effect is delayed until the data are actually needed (<code>plot</code>, <code>write_stars</code>). For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called <code>call_list</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="kw">yy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html">adrop</a></span>(<span class="kw">y</span>)
-<span class="kw">yyy</span> <span class="op">=</span> <span class="kw">yy</span>[,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,]
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">yyy</span>) <span class="co"># still no data</span>
+<span class="va">yy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html">adrop</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
+<span class="va">yyy</span> <span class="op">=</span> <span class="va">yy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># still no data</span>
 <span class="co">## [1] "stars_proxy" "stars"</span>
-<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span>(<span class="kw">yyy</span>) <span class="co"># and dimensions not adjusted</span>
+<span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># and dimensions not adjusted</span>
 <span class="co">##      from to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
 <span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span>(<span class="kw">yyy</span>, <span class="st">"call_list"</span>) <span class="co"># the name of object in the call (y) is replaced with x:</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">yyy</span>, <span class="st">"call_list"</span><span class="op">)</span> <span class="co"># the name of object in the call (y) is replaced with x:</span>
 <span class="co">## [[1]]</span>
 <span class="co">## x[i = i, drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x5557d02ed1d8&gt;</span>
-</pre></div>
+<span class="co">## &lt;environment: 0x555758e39738&gt;</span></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
 <li>If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="fu"><a href="../reference/st_apply.html">st_apply</a></span>(<span class="kw">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), <span class="kw">range</span>))
-</pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">range</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>the order of evaluation needs to be reversed: only <code>plot</code> knows which pixels are going to be shown, so that should be in control of how <code>x</code> is subsampled <em>before</em> <code>st_apply</code> is carried out on this subsample.</p>
 <div id="fetching-the-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fetching-the-data" class="anchor"></a>Fetching the data</h3>
 <p>Fetching the data now involves reading the whole array and then evaluating the <code>call_list</code> on it, sequentially:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
-(<span class="kw">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span>(<span class="kw">yyy</span>)) <span class="co"># read, adrop, subset</span>
+<span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span><span class="op">)</span> <span class="co"># read, adrop, subset</span>
 <span class="co">## stars object with 4 dimensions and 4 attributes</span>
 <span class="co">## attribute(s):</span>
 <span class="co">##    sst [°*C]        anom [°*C]      err [°*C]   ice [percent]   </span>
@@ -421,8 +407,7 @@
 <span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
 <span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
 <span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
-</pre></div>
+<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></pre></div>
 </div>
 <div id="plotting-with-changed-evaluation-order" class="section level3">
 <h3 class="hasAnchor">
@@ -430,9 +415,9 @@
 <p>For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="co"># S2 10m: band 4: near infrared, band 1: red.</span>
-<span class="kw">ndvi</span> <span class="op">=</span> <span class="fu">function</span>(<span class="kw">x</span>) (<span class="kw">x</span>[<span class="fl">4</span>] <span class="op">-</span> <span class="kw">x</span>[<span class="fl">1</span>])<span class="op">/</span>(<span class="kw">x</span>[<span class="fl">4</span>] <span class="op">+</span> <span class="kw">x</span>[<span class="fl">1</span>])
-<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span>(<span class="kw">x</span>)
-(<span class="kw">s2.ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_apply.html">st_apply</a></span>(<span class="kw">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x"</span>, <span class="st">"y"</span>), <span class="kw">ndvi</span>))
+<span class="va">ndvi</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<span class="op">(</span><span class="va">s2.ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">ndvi</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars_proxy object with 1 attribute in file:</span>
 <span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
@@ -446,12 +431,11 @@
 <span class="co">## [[1]]</span>
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x5557d0ac02c0&gt;</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="fu"><a href="../reference/plot.html">plot</a></span>(<span class="kw">s2.ndvi</span>)) <span class="co"># read - compute ndvi - plot </span>
-</pre></div>
+<span class="co">## &lt;environment: 0x5557587f8840&gt;</span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.476   0.148   1.293</code></pre>
+##   1.727   0.128   1.490</code></pre>
 </div>
 </div>
 </div>

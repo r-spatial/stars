@@ -147,9 +147,9 @@
     <p>ggplot geom for stars objects</p>
     </div>
 
-    <pre class="usage"><span class='fu'>geom_stars</span>(mapping = <span class='kw'>NULL</span>, data = <span class='kw'>NULL</span>, <span class='kw'>...</span>, downsample = <span class='fl'>0</span>, sf = <span class='fl'>FALSE</span>)
+    <pre class="usage"><span class='fu'>geom_stars</span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='cn'>NULL</span>, data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span>, downsample <span class='op'>=</span> <span class='fl'>0</span>, sf <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='fu'>theme_stars</span>(<span class='kw'>...</span>)</pre>
+<span class='fu'>theme_stars</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,14 +181,14 @@
     <p><code>geom_stars</code> returns (a call to) either <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_raster</a>, <a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a>, or <a href='https://ggplot2.tidyverse.org/reference/ggsf.html'>geom_sf</a>, depending on the raster or vector geometry; for the first to, an <a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a> call is constructed with the raster dimension names and the first array as fill variable. Further calls to <a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_equal</a> and <a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a> are needed to control aspect ratio and the layers to be plotted; see examples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>) <span class='op'>%&gt;%</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>() <span class='op'>-&gt;</span> <span class='kw'>x</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>() <span class='op'>+</span> <span class='fu'>geom_stars</span>(data = <span class='kw'>x</span>) <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_equal</a></span>() <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span>(<span class='op'>~</span><span class='kw'>band</span>) <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_void</a></span>() <span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_x_discrete</a></span>(expand=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))<span class='op'>+</span>
-    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_y_discrete</a></span>(expand=<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>0</span>))
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>x</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>geom_stars</span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_fixed.html'>coord_equal</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>band</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_void</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_x_discrete</a></span><span class='op'>(</span>expand<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_y_discrete</a></span><span class='op'>(</span>expand<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='geom_stars-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

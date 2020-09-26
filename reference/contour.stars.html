@@ -148,7 +148,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,12 +168,12 @@
     <p>this uses the R internal contour algorithm, which (by default) plots contours; <a href='st_contour.html'>st_contour</a> uses the GDAL contour algorithm that returns contours as simple features.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>d</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span>(x = <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>volcano</span>), y = <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='kw'>volcano</span>))
-<span class='kw'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span>(<span class='kw'>volcano</span>))
-<span class='kw'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_set_dimensions</a></span>(<span class='kw'>r</span>, <span class='fl'>1</span>, offset = <span class='fl'>0</span>, delta = <span class='fl'>1</span>)
-<span class='kw'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_set_dimensions</a></span>(<span class='kw'>r</span>, <span class='fl'>2</span>, offset = <span class='fl'>0</span>, delta = <span class='op'>-</span><span class='fl'>1</span>)
-<span class='fu'><a href='plot.html'>plot</a></span>(<span class='kw'>r</span>, reset = <span class='fl'>FALSE</span>)
-</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span>(<span class='kw'>r</span>, add = <span class='fl'>TRUE</span>)
+    <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_dimensions</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>volcano</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>volcano</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>volcano</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_set_dimensions</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fl'>1</span>, offset <span class='op'>=</span> <span class='fl'>0</span>, delta <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_set_dimensions</a></span><span class='op'>(</span><span class='va'>r</span>, <span class='fl'>2</span>, offset <span class='op'>=</span> <span class='fl'>0</span>, delta <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>r</span>, reset <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/contour.html'>contour</a></span><span class='op'>(</span><span class='va'>r</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='contour.stars-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

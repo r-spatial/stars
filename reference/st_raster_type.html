@@ -147,7 +147,7 @@
     <p>get the raster type (if any) of a stars object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_raster_type</span>(<span class='kw'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,9 +164,9 @@
 <code>"curvilinear"</code>, <code>"rectilinear"</code>, <code>"affine"</code>, or <code>"regular"</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"tif/L7_ETMs.tif"</span>, package = <span class='st'>"stars"</span>)
-<span class='kw'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span>(<span class='kw'>tif</span>)
-<span class='fu'>st_raster_type</span>(<span class='kw'>x</span>)
+    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
+<span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "regular"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
