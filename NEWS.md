@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* add faster `st_extract` method for `stars`; #322
+
 * added vignette: "How `raster` functions map to `stars` functions", by Sebastien Rochette; #122, #325
 
 * fix bug in dimension `values` field when downsampling; #324

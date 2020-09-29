@@ -12,10 +12,32 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @export
 #' @name st_extract
 #' @param ... passed on to next method
-st_extract.stars = function(x, ...) {
+st_extract.stars = function(x, pts, ...) {
+	stopifnot(inherits(pts, c("sf", "sfc")))
+	sf_column = attr(pts, "sf_column") %||% "geometry"
+	stopifnot(all(st_dimension(pts) == 0))
 	if (length(x) > 1)
 		x = merge(x)
-	st_extract(st_as_stars_proxy(x), ...)
+	#st_extract(st_as_stars_proxy(x), ...)
+	attr_name = names(x)
+	x = st_upfront(x)
+	ar = array(x[[1]], dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))
+	cr = colrow_from_xy(st_coordinates(pts), x)
+	i = (cr[,2] - 1) * dim(x)[1] + cr[,1]
+	res = ar[i, , drop=FALSE]
+	if (ncol(res) > 1) {
+		res = array(res, c(nrow(res), dim(x)[-(1:2)]))
+		d = structure(st_dimensions(x),
+			raster = get_raster(dimensions = rep(NA_character_,2)))
+		d[[1]] = create_dimension(values = st_geometry(pts))
+		d[[2]] = NULL
+		names(d)[1] = sf_column
+		setNames(st_as_stars(res, d), attr_name)
+	} else {
+		df = setNames(data.frame(as.vector(res)), attr_name)
+		df[[sf_column]] = st_geometry(pts)
+		st_as_sf(df)
+	}
 }
 
 #' @param x object of class \code{stars} or \code{stars_proxy}

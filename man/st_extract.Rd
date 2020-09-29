@@ -8,7 +8,7 @@
 \usage{
 st_extract(x, ...)
 
-\method{st_extract}{stars}(x, ...)
+\method{st_extract}{stars}(x, pts, ...)
 
 \method{st_extract}{stars_proxy}(x, pts, ..., method = "near", cellsize = 1e-07, debug = FALSE)
 }
