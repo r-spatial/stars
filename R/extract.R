@@ -6,12 +6,19 @@
 #' @export
 #' @returns if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
-#' dimensions; otherwise an object of \code{sf}.
+#' dimensions; otherwise an object of \code{sf} with extracted values.
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @export
 #' @name st_extract
 #' @param ... passed on to next method
+#' @examples
+#' tif = system.file("tif/L7_ETMs.tif", package = "stars")
+#' r = read_stars(tif)
+#' pnt = st_sample(st_as_sfc(st_bbox(r)), 10)
+#' st_extract(r, pnt)
+#' st_extract(r, pnt) %>% st_as_sf()
+#' st_extract(r[,,,1], pnt)
 st_extract.stars = function(x, pts, ...) {
 	stopifnot(inherits(pts, c("sf", "sfc")))
 	sf_column = attr(pts, "sf_column") %||% "geometry"

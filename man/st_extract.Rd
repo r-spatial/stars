@@ -28,8 +28,16 @@ st_extract(x, ...)
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
-dimensions; otherwise an object of \code{sf}.
+dimensions; otherwise an object of \code{sf} with extracted values.
 }
 \description{
 Extract cell values at point locations, possibly using interpolation
+}
+\examples{
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+r = read_stars(tif)
+pnt = st_sample(st_as_sfc(st_bbox(r)), 10)
+st_extract(r, pnt)
+st_extract(r, pnt) \%>\% st_as_sf()
+st_extract(r[,,,1], pnt)
 }
