@@ -188,8 +188,72 @@
 
     <p>if <code>x</code> has more dimensions than only x and y (raster), an 
 object of class <code>stars</code> with POINT geometries replacing x and y raster
-dimensions; otherwise an object of <code>sf</code>.</p>
+dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
+<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
+<span class='va'>pnt</span> <span class='op'>=</span> <span class='fu'>st_sample</span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span>
+<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;   L7_ETMs.tif    
+#&gt;  Min.   : 12.00  
+#&gt;  1st Qu.: 41.75  
+#&gt;  Median : 59.50  
+#&gt;  Mean   : 59.45  
+#&gt;  3rd Qu.: 76.50  
+#&gt;  Max.   :133.00  
+#&gt; dimension(s):
+#&gt;          from to offset delta                       refsys point
+#&gt; geometry    1 10     NA    NA PROJCS["UTM Zone 25, Sout...  TRUE
+#&gt; band        1  6     NA    NA                           NA    NA
+#&gt;                                                         values
+#&gt; geometry POINT (289579.4 9119503),...,POINT (296460.1 9120515)
+#&gt; band                                                      NULL</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Simple feature collection with 10 features and 6 fields
+#&gt; geometry type:  POINT
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]
+#&gt;    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5
+#&gt; 1              57             40             30             53             42
+#&gt; 2              97             93             78             15             14
+#&gt; 3              85             76             55             12             14
+#&gt; 4              72             56             59             47             91
+#&gt; 5              65             53             45             76             72
+#&gt; 6              80             65             71             53            120
+#&gt; 7              92             80             90             62            133
+#&gt; 8              81             66             64             50             82
+#&gt; 9              60             43             32             70             49
+#&gt; 10             69             50             48             41             36
+#&gt;    L7_ETMs.tif.V6                 geometry
+#&gt; 1              24 POINT (289579.4 9119503)
+#&gt; 2              13 POINT (297074.9 9112484)
+#&gt; 3              14 POINT (294751.7 9111072)
+#&gt; 4              72 POINT (290339.9 9113943)
+#&gt; 5              40 POINT (288849.8 9114765)
+#&gt; 6             100 POINT (293415.2 9112692)
+#&gt; 7             113 POINT (293727.4 9114777)
+#&gt; 8              64 POINT (291658.4 9111367)
+#&gt; 9              25 POINT (296065.9 9114628)
+#&gt; 10             18 POINT (296460.1 9120515)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Simple feature collection with 10 features and 1 field
+#&gt; geometry type:  POINT
+#&gt; dimension:      XY
+#&gt; bbox:           xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]
+#&gt;    L7_ETMs.tif                 geometry
+#&gt; 1           57 POINT (289579.4 9119503)
+#&gt; 2           97 POINT (297074.9 9112484)
+#&gt; 3           85 POINT (294751.7 9111072)
+#&gt; 4           72 POINT (290339.9 9113943)
+#&gt; 5           65 POINT (288849.8 9114765)
+#&gt; 6           80 POINT (293415.2 9112692)
+#&gt; 7           92 POINT (293727.4 9114777)
+#&gt; 8           81 POINT (291658.4 9111367)
+#&gt; 9           60 POINT (296065.9 9114628)
+#&gt; 10          69 POINT (296460.1 9120515)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
