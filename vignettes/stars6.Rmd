@@ -251,4 +251,4 @@ tribble(
 ```
 
 
-The format of this table follows the `raster-package` entry in the [raster manual](https://cran.r-project.org/web/packages/raster/raster.pdf).
+The format of this table follows the `raster-package` entry in the raster manual, found at `https://cran.r-project.org/web/packages/raster/raster.pdf`.
