@@ -359,8 +359,8 @@ bb_shrink = function(bb, e) {
 #' @param collect logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read
 #' @export
 st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), collect = TRUE) {
-	d = dim(x)
 	dm = st_dimensions(x)
+	d_max = dim(x) + sapply(dm, function(x) x$from) - 1
 	if (st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects has to be identical")
 	if (crop && has_raster(x)) {
@@ -375,19 +375,14 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 			bb = bb_shrink(bb, epsilon)
 		# FIXME: document how EXACTLY cropping works; https://github.com/hypertidy/tidync/issues/73
 		cr = colrow_from_xy(matrix(bb, 2, byrow=TRUE), dm)
-		d = d + c(dm[[xd]]$from, dm[[yd]]$from) - 1
-		for (i in seq_along(dm)) {
-			if (names(d[i]) == xd) {
-				dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
-				dm[[ xd ]]$to = min(d[xd], cr[2, 1], na.rm = TRUE)
-			}
-			if (names(d[i]) == yd) {
-				if (dm[[ yd ]]$delta < 0)
-					cr[1:2, 2] = cr[2:1, 2]
-				dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
-				dm[[ yd ]]$to = min(d[yd], cr[2, 2], na.rm = TRUE)
-			}
-		}
+		# crop x:
+		dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
+		dm[[ xd ]]$to = min(d_max[xd], cr[2, 1], na.rm = TRUE)
+		# crop y:
+		if (dm[[ yd ]]$delta < 0)
+			cr[1:2, 2] = cr[2:1, 2]
+		dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
+		dm[[ yd ]]$to = min(d_max[yd], cr[2, 2], na.rm = TRUE)
 	}
 	x = st_stars_proxy(x, dm) # crop to bb
 	if (collect)
