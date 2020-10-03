@@ -1,0 +1,80 @@
+
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Create 'stars' object
+> set.seed(1331)
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
+> volcano = rbind(volcano, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA) # add NA rows
+> d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
+> (r = st_as_stars(t(volcano)))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+      A1        
+ Min.   : 94.0  
+ 1st Qu.:108.0  
+ Median :124.0  
+ Mean   :130.2  
+ 3rd Qu.:150.0  
+ Max.   :195.0  
+ NA's   :732    
+dimension(s):
+   from to offset delta refsys point values x/y
+X1    1 61      0     1     NA FALSE   NULL [x]
+X2    1 99      0     1     NA FALSE   NULL [y]
+> r = st_set_dimensions(r, 1, offset = 0, delta = 1)
+> r = st_set_dimensions(r, 2, offset = nrow(volcano), delta = -1)
+> 
+> # Create points
+> pnt = st_sample(st_as_sfc(st_bbox(r)), 100)
+> pnt = st_as_sf(pnt)
+> 
+> # Extract - 'st_join'
+> x = st_join(pnt, st_as_sf(r))
+> 
+> # Extract - 'st_extract'
+> y = st_extract(r, pnt)
+> 
+> # check there are NA's:
+> any(is.na(x))
+[1] TRUE
+> # Compare
+> all.equal(x$A1, y[[1]])
+[1] TRUE
+> 
+> ## tic: segfaults
+> # check equal results with stars_proxy:
+> #x = st_extract(stars:::st_as_stars_proxy(r), pnt)
+> #all.equal(x$A1, y[[1]])
+> #all.equal(x, y)
+> 
+> r = c(r, 2*r, 10*r)
+> x = st_join(pnt, st_as_sf(r))
+> y = st_as_sf(st_extract(r, pnt))
+> all.equal(x, y)
+[1] "Names: 1 string mismatch"                                  
+[2] "Attributes: < Component \"sf_column\": 1 string mismatch >"
+> 
+> ## tic: segfaults
+> #x = st_extract(stars:::st_as_stars_proxy(merge(r)), pnt)
+> #all.equal(st_as_sf(x), y)
+> 
+> proc.time()
+   user  system elapsed 
+  1.048   0.196   0.929 
