@@ -165,7 +165,8 @@
   reset <span class='op'>=</span> <span class='cn'>TRUE</span>,
   box_col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grDevices/gray.html'>grey</a></span><span class='op'>(</span><span class='fl'>0.8</span><span class='op'>)</span>,
   center_time <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  hook <span class='op'>=</span> <span class='cn'>NULL</span>
+  hook <span class='op'>=</span> <span class='cn'>NULL</span>,
+  mfrow <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
@@ -269,6 +270,10 @@
     <tr>
       <th>hook</th>
       <td><p>NULL or function; hook function that will be called on every sub-plot.</p></td>
+    </tr>
+    <tr>
+      <th>mfrow</th>
+      <td><p>length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout</p></td>
     </tr>
     <tr>
       <th>band</th>

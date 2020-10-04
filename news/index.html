@@ -146,6 +146,9 @@
 <a href="#version-04-4" class="anchor"></a>version 0.4-4<small> Unreleased </small>
 </h1>
 <ul>
+<li><p>better handle categorical rasters that do not start at value 1; <a href='https://github.com/r-spatial/stars/issues/329'>#329</a></p></li>
+<li><p>plot layout can be controlled with <code>mfrow = c(nr, nc)</code> argument; this requires sf &gt;= 0.9-7</p></li>
+<li><p><code>stars_proxy</code> objects have a normalized path; <a href='https://github.com/r-spatial/stars/issues/331'>#331</a></p></li>
 <li><p>cropping or selecting with <code>bbox</code> treats cells always as small polygons; <a href='https://github.com/r-spatial/stars/issues/330'>#330</a></p></li>
 <li><p>add faster <code>st_extract</code> method for <code>stars</code> objects; <a href='https://github.com/r-spatial/stars/issues/322'>#322</a></p></li>
 <li><p>added vignette: “How <code>raster</code> functions map to <code>stars</code> functions”, by Sebastien Rochette; <a href='https://github.com/r-spatial/stars/issues/122'>#122</a>, <a href='https://github.com/r-spatial/stars/issues/325'>#325</a></p></li>
