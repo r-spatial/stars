@@ -1,5 +1,9 @@
 # version 0.4-4
 
+* plot layout can be controlled with `mfrow = c(nr, nc)` argument; this requires sf >= 0.9-7
+
+* `stars_proxy` objects have a normalized path; #331
+
 * cropping or selecting with `bbox` treats cells always as small polygons; #330
 
 * add faster `st_extract` method for `stars` objects; #322

@@ -173,7 +173,7 @@ fetch = function(x, downsample = 0, ...) {
 
 	# do it:
 	ret = lapply(x, read_stars, RasterIO = rasterio, 
-		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE, 
+		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
 		proxy = FALSE, ...)
 
 	along = if (length(dim(x)) > 3)

@@ -30,13 +30,14 @@ make_label = function(x, i = 1) {
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
 #' @param hook NULL or function; hook function that will be called on every sub-plot.
+#' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details 
 #' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on. 
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, 
-		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL) {
+		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, mfrow = NULL) {
 
 	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
@@ -125,8 +126,12 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			draw.key = !is.null(key.pos) && join_zlim
 			if (! draw.key)
 				key.pos = NULL
-			lt = .get_layout(st_bbox(x), dims[3], par("din"),
-				if (join_zlim && key.pos.missing) -1 else key.pos, key.width)
+			lt = if (utils::packageVersion("sf") >= "0.9-7") # FIXME: remove after requiring this
+					.get_layout(st_bbox(x), dims[3], par("din"),
+						if (join_zlim && key.pos.missing) -1 else key.pos, key.width, mfrow = mfrow)
+				else
+					.get_layout(st_bbox(x), dims[3], par("din"),
+						if (join_zlim && key.pos.missing) -1 else key.pos, key.width)
 			title_size = if (is.null(main)) 
 					0
 				else
