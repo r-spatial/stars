@@ -24,7 +24,8 @@
   reset = TRUE,
   box_col = grey(0.8),
   center_time = FALSE,
-  hook = NULL
+  hook = NULL,
+  mfrow = NULL
 )
 
 \method{image}{stars}(
@@ -90,6 +91,8 @@
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
 
 \item{hook}{NULL or function; hook function that will be called on every sub-plot.}
+
+\item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
 
 \item{band}{integer; which band (dimension) to plot}
 

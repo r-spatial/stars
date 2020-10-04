@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* better handle categorical rasters that do not start at value 1; #329
+
 * plot layout can be controlled with `mfrow = c(nr, nc)` argument; this requires sf >= 0.9-7
 
 * `stars_proxy` objects have a normalized path; #331
