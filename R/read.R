@@ -212,7 +212,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 		# return:
 		ret = if (proxy) # no data present, subclass of "stars":
-			st_stars_proxy(setNames(list(.x), tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
+			st_stars_proxy(setNames(list(x), tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
 				create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value)
 		else
 			st_stars(setNames(list(data), tail(strsplit(x, '[\\\\/:]+')[[1]], 1)),
