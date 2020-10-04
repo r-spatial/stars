@@ -100,6 +100,6 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7,
 		dim(m) = c(length(pts), dim(x)[-(1:2)])
 		d = create_dimensions(append(list(sfc = create_dimension(values = pts)),
 			st_dimensions(x)[-(1:2)]))
-		st_as_stars(setNames(list(m), names(x)), dimensions = d)
+		st_as_stars(setNames(list(m), names(x)[1]), dimensions = d)
 	}
 }
