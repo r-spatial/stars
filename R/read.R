@@ -181,8 +181,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
 				if (min_value > 0)
 					co = co[-seq_len(min_value)] # removes [0,...,(min_value-1)]
-				lev = seq(min_value, length.out = length(co))
-				f = factor(as.vector(data), levels = lev, labels = as.character(lev)) 
+				f = factor(as.vector(data), levels = seq(min_value, length.out = length(co)))
 				data = structure(f, dim = dim(data), colors = co, class = "factor")
 			}
 			if (any(lengths(at) > 0)) {
