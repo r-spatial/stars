@@ -25,11 +25,10 @@ st_extract.stars = function(x, pts, ...) {
 	stopifnot(all(st_dimension(pts) == 0))
 	if (length(x) > 1)
 		x = merge(x)
-	#st_extract(st_as_stars_proxy(x), ...)
 	attr_name = names(x)
 	x = st_upfront(x)
 	ar = array(x[[1]], dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))
-	cr = colrow_from_xy(st_coordinates(pts), x)
+	cr = colrow_from_xy(st_coordinates(pts), x, NA_outside = TRUE)
 	i = (cr[,2] - 1) * dim(x)[1] + cr[,1]
 	res = ar[i, , drop=FALSE]
 	if (ncol(res) > 1) {
