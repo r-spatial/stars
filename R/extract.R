@@ -69,7 +69,7 @@ st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7,
 	if (length(x) > 1)
 		x = merge(x)
 
-	m = sf::gdal_extract(x[[1]], st_coordinates(pts))
+	m = gdal_extract(x[[1]], st_coordinates(pts))
 
 	if (inherits(x[[1]], "factor"))
 		m = structure(m, levels = levels(x[[1]]), colors = attr(x[[1]], "colors"), class = "factor")
