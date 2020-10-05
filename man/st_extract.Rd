@@ -33,6 +33,9 @@ dimensions; otherwise an object of \code{sf} with extracted values.
 \description{
 Extract cell values at point locations, possibly using interpolation
 }
+\details{
+points outside the raster are returned with zero values for \code{stars_proxy} objects, and as NA for \code{stars} objects.
+}
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 r = read_stars(tif)
