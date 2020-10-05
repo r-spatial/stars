@@ -36,3 +36,14 @@ all.equal(x, y)
 ## tic: segfaults
 #x = st_extract(stars:::st_as_stars_proxy(merge(r)), pnt)
 #all.equal(st_as_sf(x), y)
+
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+xp = read_stars(tif, proxy = TRUE)
+xm = read_stars(tif, proxy = FALSE)
+pts = st_sample(st_as_sfc(st_bbox(xp)), 10)
+pts = c(pts, st_as_sfc("POINT(0 0)"), pts)
+em = st_extract(xm, pts)
+if (utils::packageVersion("sf") >= "0.9-7") {
+	ep = st_extract(xp, pts)
+	print(all.equal(ep, em, check.attributes = FALSE))
+}

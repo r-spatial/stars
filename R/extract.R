@@ -55,50 +55,30 @@ st_extract.stars = function(x, pts, ...) {
 #' @name st_extract
 #' @export
 st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7, debug = FALSE) {
+
+	if (utils::packageVersion("sf") < "0.9-7")
+		stop("sf >= 0.9-7 required")
+
 	stopifnot(inherits(pts, c("sf", "sfc")))
 	stopifnot(all(st_dimension(pts) == 0))
 	
 	pts = st_geometry(pts)
 	if (st_crs(pts) != st_crs(x))
 		pts = st_transform(pts, st_crs(x))
-	lst = vector("list", length(pts))
-	tmp = tempfile(fileext = ".tif")
-	if (debug)
-		print(tmp)
-	else
-		on.exit(unlink(tmp))
 
-	# prepare input imagery:
-	if (length(x) > 1) # merge:
+	if (length(x) > 1)
 		x = merge(x)
-	if (length(x[[1]]) > 1) { # merge into a single file:
-		out_file = tempfile(fileext = ".vrt")
-		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
-		x[[1]] = out_file
-	}
 
-	nz = ifelse(length(dim(x)) == 2, 1, prod(dim(x)[-(1:2)])) # FIXME:? assumes x/y = 1&2
-	halfcellsize = cellsize / 2
-	for (i in seq_along(pts)) {
-		# write pt
-		pt = pts[[i]]
-		bb = st_bbox(setNames(c(pt[1] - halfcellsize, pt[2] - halfcellsize, 
-			pt[1] + halfcellsize, pt[2] + halfcellsize), c("xmin", "ymin", "xmax", "ymax")))
-		s = st_as_stars(bb, nx = 1, ny = 1, nz = nz)
-		write_stars(s, tmp)
-		# warp x to pt
-		sf::gdal_utils("warper", x[[1]], tmp, method)
-		# read result, add:
-		lst[[i]] = read_stars(tmp)
-	}
-	m = t(sapply(lst, function(x) x[[1]]))
+	m = sf::gdal_extract(x[[1]], st_coordinates(pts))
+
 	if (inherits(x[[1]], "factor"))
 		m = structure(m, levels = levels(x[[1]]), colors = attr(x[[1]], "colors"), class = "factor")
-	if (nz == 1) # single band:
+
+	if (ncol(m) == 1)
 		st_set_geometry(setNames(as.data.frame(t(m)), names(x)), pts)
 	else { # multi-dimensional: return stars
 		dim(m) = c(length(pts), dim(x)[-(1:2)])
-		d = create_dimensions(append(list(sfc = create_dimension(values = pts)),
+		d = create_dimensions(append(list(geometry = create_dimension(values = pts)),
 			st_dimensions(x)[-(1:2)]))
 		st_as_stars(setNames(list(m), names(x)[1]), dimensions = d)
 	}
