@@ -51,6 +51,7 @@ st_extract.stars = function(x, pts, ...) {
 #' @param method interpolation method, see \link{st_warp}
 #' @param cellsize numeric; cellsize chosen for the sampling cell.
 #' @param debug logical; if \code{TRUE}, do not remove the destination grid file and print its name;
+#' @details points outside the raster are returned with zero values for \code{stars_proxy} objects, and as NA for \code{stars} objects.
 #' @name st_extract
 #' @export
 st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7, debug = FALSE) {
