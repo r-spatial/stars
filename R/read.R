@@ -150,7 +150,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			warning("only one array present: argument 'sub' will be ignored")
 		meta_data = structure(data, data = NULL) # take meta_data only
 		data = if (proxy)
-				.x # names only
+				.x
 			else
 				get_data_units(attr(data, "data")) # extract data array; sets units if present
 		if (meta_data$driver[1] == "netCDF")

@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* improve `st_extract` method for both `stars` and `stars_proxy` objects, drop interpolation option; #322, #279, #290
+
 * better handle categorical rasters that do not start at value 1; #329
 
 * plot layout can be controlled with `mfrow = c(nr, nc)` argument; this requires sf >= 0.9-7

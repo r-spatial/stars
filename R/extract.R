@@ -1,17 +1,19 @@
-
 #' Extract cell values at point locations
 #'
-#' Extract cell values at point locations, possibly using interpolation
+#' Extract cell values at point locations
 #' @name st_extract
 #' @export
 #' @returns if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
 #' dimensions; otherwise an object of \code{sf} with extracted values.
+#' @details points outside the raster are returned as \code{NA} values.
 st_extract = function(x, ...) UseMethod("st_extract")
 
-#' @export
 #' @name st_extract
-#' @param ... passed on to next method
+#' @param x object of class \code{stars} or \code{stars_proxy}
+#' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
+#' @param ... ignored
+#' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' r = read_stars(tif)
@@ -20,66 +22,48 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' st_extract(r, pnt) %>% st_as_sf()
 #' st_extract(r[,,,1], pnt)
 st_extract.stars = function(x, pts, ...) {
-	stopifnot(inherits(pts, c("sf", "sfc")))
+
+	stopifnot(inherits(pts, c("sf", "sfc")), st_crs(pts) == st_crs(x), 
+		all(st_dimension(pts) == 0))
+
 	sf_column = attr(pts, "sf_column") %||% "geometry"
-	stopifnot(all(st_dimension(pts) == 0))
-	if (length(x) > 1)
-		x = merge(x)
-	attr_name = names(x)
-	x = st_upfront(x)
-	ar = array(x[[1]], dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))
-	cr = colrow_from_xy(st_coordinates(pts), x, NA_outside = TRUE)
-	i = (cr[,2] - 1) * dim(x)[1] + cr[,1]
-	res = ar[i, , drop=FALSE]
-	if (ncol(res) > 1) {
-		res = array(res, c(nrow(res), dim(x)[-(1:2)]))
-		d = structure(st_dimensions(x),
-			raster = get_raster(dimensions = rep(NA_character_,2)))
-		d[[1]] = create_dimension(values = st_geometry(pts))
-		d[[2]] = NULL
-		names(d)[1] = sf_column
-		setNames(st_as_stars(res, d), attr_name)
-	} else {
-		df = setNames(data.frame(as.vector(res)), attr_name)
-		df[[sf_column]] = st_geometry(pts)
-		st_as_sf(df)
-	}
-}
+	pts = st_geometry(pts)
 
-#' @param x object of class \code{stars} or \code{stars_proxy}
-#' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
-#' @param method interpolation method, see \link{st_warp}
-#' @param cellsize numeric; cellsize chosen for the sampling cell.
-#' @param debug logical; if \code{TRUE}, do not remove the destination grid file and print its name;
-#' @details points outside the raster are returned with zero values for \code{stars_proxy} objects, and as NA for \code{stars} objects.
-#' @name st_extract
-#' @export
-st_extract.stars_proxy = function(x, pts, ..., method = 'near', cellsize = 1e-7, debug = FALSE) {
-
-	if (utils::packageVersion("sf") < "0.9-7")
+	if (inherits(x, "stars_proxy") && utils::packageVersion("sf") < "0.9-7")
 		stop("sf >= 0.9-7 required")
 
-	stopifnot(inherits(pts, c("sf", "sfc")))
-	stopifnot(all(st_dimension(pts) == 0))
-	
-	pts = st_geometry(pts)
-	if (st_crs(pts) != st_crs(x))
-		pts = st_transform(pts, st_crs(x))
-
-	if (length(x) > 1)
-		x = merge(x)
-
-	m = gdal_extract(x[[1]], st_coordinates(pts))
-
-	if (inherits(x[[1]], "factor"))
-		m = structure(m, levels = levels(x[[1]]), colors = attr(x[[1]], "colors"), class = "factor")
-
-	if (ncol(m) == 1)
-		st_set_geometry(setNames(as.data.frame(t(m)), names(x)), pts)
-	else { # multi-dimensional: return stars
-		dim(m) = c(length(pts), dim(x)[-(1:2)])
-		d = create_dimensions(append(list(geometry = create_dimension(values = pts)),
-			st_dimensions(x)[-(1:2)]))
-		st_as_stars(setNames(list(m), names(x)[1]), dimensions = d)
+	m = if (inherits(x, "stars_proxy")) {
+			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
+			lapply(x, function(y) do.call(abind, lapply(y, gdal_extract, pts = st_coordinates(pts))))
+		} else {
+			x = st_upfront(x)
+			cr = colrow_from_xy(st_coordinates(pts), x, NA_outside = TRUE)
+			ix = (cr[,2] - 1) * dim(x)[1] + cr[,1]
+			lapply(x, function(y) 
+				array(y, dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))[ix, , drop = FALSE])
+		}
+	# reset factors & units attributes:
+	for (i in seq_along(m)) {
+		if (inherits(x[[i]], "factor"))
+			m[[i]] = structure(m[[i]], levels = levels(x[[i]]), 
+					colors = attr(x[[i]], "colors"), class = "factor")
+		else if (inherits(x[[i]], "units"))
+			units(m[[i]]) = units(x[[i]])
+		else if (inherits(x, "stars_proxy") && !inherits(try_result, "try-error") && inherits(x0[[i]], "units"))
+			units(m[[i]]) = units(x0[[i]])
+	}
+	if (length(x) > 1 || ncol(m[[1]]) > 1) { # return stars:
+		for (i in seq_along(x))
+			dim(m[[i]]) = c(length(pts), dim(x)[-(1:2)])
+		d = structure(st_dimensions(x),
+			raster = get_raster(dimensions = rep(NA_character_,2)))
+		d[[1]] = create_dimension(values = pts)
+		d[[2]] = NULL
+		names(d)[1] = sf_column
+		setNames(st_as_stars(m, dimensions = d), names(x))
+	} else { # return sf:
+		df = setNames(as.data.frame(as.vector(m[[1]])), names(x))
+		df[[sf_column]] = st_geometry(pts)
+		st_as_sf(df)
 	}
 }

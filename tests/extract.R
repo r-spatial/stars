@@ -47,3 +47,50 @@ if (utils::packageVersion("sf") >= "0.9-7") {
 	ep = st_extract(xp, pts)
 	print(all.equal(ep, em, check.attributes = FALSE))
 }
+
+# two-attribute objects:
+library(stars)
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+xp = read_stars(c(tif, tif), proxy = TRUE)
+xm = read_stars(c(tif, tif), proxy = FALSE)
+pts = st_sample(st_as_sfc(st_bbox(xp)), 10)
+pts = c(pts, st_as_sfc("POINT(0 0)"), pts)
+ep = st_extract(xp, pts)
+em = st_extract(xm, pts)
+all.equal(ep, em, check.attributes = TRUE)
+ep
+em
+
+# single-attribute, single raster objects:
+tif1 = paste0(tempfile(), ".tif")
+write_stars(xm[1,,,1], "x.tif")
+xp = read_stars("x.tif", proxy = TRUE)
+xm = read_stars("x.tif", proxy = FALSE)
+em = st_extract(xm, pts)
+ep = st_extract(xp, pts)
+all.equal(ep, em, check.attributes = TRUE)
+ep
+
+# multiple-file attributes:
+x = c(
+"avhrr-only-v2.19810901.nc",
+"avhrr-only-v2.19810902.nc",
+"avhrr-only-v2.19810903.nc",
+"avhrr-only-v2.19810904.nc",
+"avhrr-only-v2.19810905.nc",
+"avhrr-only-v2.19810906.nc",
+"avhrr-only-v2.19810907.nc",
+"avhrr-only-v2.19810908.nc",
+"avhrr-only-v2.19810909.nc"
+)
+file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+(y = read_stars(file_list, quiet = TRUE))
+st_crs(y) = "OGC:CRS84"
+pts = st_sample(st_as_sfc(st_bbox(y)), 10)
+em = st_extract(y, pts)
+
+(y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
+st_crs(y) = "OGC:CRS84"
+ep = st_extract(y, pts)
+all.equal(em, ep)
+

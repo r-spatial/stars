@@ -3,27 +3,18 @@
 \name{st_extract}
 \alias{st_extract}
 \alias{st_extract.stars}
-\alias{st_extract.stars_proxy}
 \title{Extract cell values at point locations}
 \usage{
 st_extract(x, ...)
 
 \method{st_extract}{stars}(x, pts, ...)
-
-\method{st_extract}{stars_proxy}(x, pts, ..., method = "near", cellsize = 1e-07, debug = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars} or \code{stars_proxy}}
 
-\item{...}{passed on to next method}
+\item{...}{ignored}
 
 \item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
-
-\item{method}{interpolation method, see \link{st_warp}}
-
-\item{cellsize}{numeric; cellsize chosen for the sampling cell.}
-
-\item{debug}{logical; if \code{TRUE}, do not remove the destination grid file and print its name;}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
@@ -31,10 +22,10 @@ object of class \code{stars} with POINT geometries replacing x and y raster
 dimensions; otherwise an object of \code{sf} with extracted values.
 }
 \description{
-Extract cell values at point locations, possibly using interpolation
+Extract cell values at point locations
 }
 \details{
-points outside the raster are returned with zero values for \code{stars_proxy} objects, and as NA for \code{stars} objects.
+points outside the raster are returned as \code{NA} values.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
