@@ -45,7 +45,7 @@ pts = c(pts, st_as_sfc("POINT(0 0)"), pts)
 em = st_extract(xm, pts)
 if (utils::packageVersion("sf") >= "0.9-7") {
 	ep = st_extract(xp, pts)
-	print(all.equal(ep, em, check.attributes = FALSE))
+	print(all.equal(ep, em, check.attributes = TRUE))
 }
 
 # two-attribute objects:
@@ -55,11 +55,11 @@ xp = read_stars(c(tif, tif), proxy = TRUE)
 xm = read_stars(c(tif, tif), proxy = FALSE)
 pts = st_sample(st_as_sfc(st_bbox(xp)), 10)
 pts = c(pts, st_as_sfc("POINT(0 0)"), pts)
-ep = st_extract(xp, pts)
 em = st_extract(xm, pts)
-all.equal(ep, em, check.attributes = TRUE)
-ep
-em
+if (utils::packageVersion("sf") >= "0.9-7") {
+	ep = st_extract(xp, pts)
+	print(all.equal(ep, em, check.attributes = TRUE))
+}
 
 # single-attribute, single raster objects:
 tif1 = paste0(tempfile(), ".tif")
@@ -67,9 +67,10 @@ write_stars(xm[1,,,1], "x.tif")
 xp = read_stars("x.tif", proxy = TRUE)
 xm = read_stars("x.tif", proxy = FALSE)
 em = st_extract(xm, pts)
-ep = st_extract(xp, pts)
-all.equal(ep, em, check.attributes = TRUE)
-ep
+if (utils::packageVersion("sf") >= "0.9-7") {
+	ep = st_extract(xp, pts)
+	print(all.equal(ep, em, check.attributes = TRUE))
+}
 
 # multiple-file attributes:
 x = c(
@@ -91,6 +92,7 @@ em = st_extract(y, pts)
 
 (y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
 st_crs(y) = "OGC:CRS84"
-ep = st_extract(y, pts)
-all.equal(em, ep)
-
+if (utils::packageVersion("sf") >= "0.9-7") {
+	ep = st_extract(y, pts)
+	print(all.equal(em, ep))
+}
