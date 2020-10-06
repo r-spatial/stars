@@ -36,7 +36,7 @@ st_extract.stars = function(x, pts, ...) {
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(y, gdal_extract, pts = st_coordinates(pts))))
 		} else {
-			x = st_upfront(x)
+			x = st_normalize(st_upfront(x))
 			cr = colrow_from_xy(st_coordinates(pts), x, NA_outside = TRUE)
 			ix = (cr[,2] - 1) * dim(x)[1] + cr[,1]
 			lapply(x, function(y) 
