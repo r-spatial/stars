@@ -96,3 +96,15 @@ if (utils::packageVersion("sf") >= "0.9-7") {
 	ep = st_extract(y, pts)
 	print(all.equal(em, ep))
 }
+
+# nearest & bilinear comparison:
+if (utils::packageVersion("sf") >= "0.9-7") {
+  set.seed(12331)
+  s = st_as_stars(matrix(rnorm(16), 4))
+  pts = st_sample(st_as_sfc(st_bbox(s)), 10000, type = "regular")
+  s1 = st_extract(s, pts, bilinear = FALSE)
+  s2 = st_extract(s, pts, bilinear = TRUE)
+  s1$s2 = s2[[1]]
+  names(s1)[c(1,3)] = c("nearest", "bilinear")
+  plot(s1, pch = 16, nbreaks = 25, key.pos = 1)
+}

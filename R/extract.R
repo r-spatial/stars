@@ -21,7 +21,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' st_extract(r, pnt)
 #' st_extract(r, pnt) %>% st_as_sf()
 #' st_extract(r[,,,1], pnt)
-st_extract.stars = function(x, pts, ...) {
+st_extract.stars = function(x, pts, ..., bilinear = FALSE) {
 
 	stopifnot(inherits(pts, c("sf", "sfc")), st_crs(pts) == st_crs(x), 
 		all(st_dimension(pts) == 0))
@@ -29,12 +29,16 @@ st_extract.stars = function(x, pts, ...) {
 	sf_column = attr(pts, "sf_column") %||% "geometry"
 	pts = st_geometry(pts)
 
+	if (bilinear && !inherits(x, "stars_proxy"))
+		x = st_as_stars_proxy(x)
+
 	if (inherits(x, "stars_proxy") && utils::packageVersion("sf") < "0.9-7")
 		stop("sf >= 0.9-7 required")
 
 	m = if (inherits(x, "stars_proxy")) {
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
-			lapply(x, function(y) do.call(abind, lapply(y, gdal_extract, pts = st_coordinates(pts))))
+			lapply(x, function(y) do.call(abind, lapply(y, 
+				gdal_extract, pts = st_coordinates(pts), bilinear = bilinear)))
 		} else {
 			x = st_normalize(st_upfront(x))
 			cr = colrow_from_xy(st_coordinates(pts), x, NA_outside = TRUE)
