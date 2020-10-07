@@ -12,6 +12,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @name st_extract
 #' @param x object of class \code{stars} or \code{stars_proxy}
 #' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
+#' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
 #' @param ... ignored
 #' @export
 #' @examples

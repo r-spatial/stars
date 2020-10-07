@@ -106,5 +106,5 @@ if (utils::packageVersion("sf") >= "0.9-7") {
   s2 = st_extract(s, pts, bilinear = TRUE)
   s1$s2 = s2[[1]]
   names(s1)[c(1,3)] = c("nearest", "bilinear")
-  plot(s1, pch = 16, nbreaks = 25, key.pos = 1)
+  print(s1[sample(10000, 5),])
 }

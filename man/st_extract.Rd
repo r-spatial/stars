@@ -7,7 +7,7 @@
 \usage{
 st_extract(x, ...)
 
-\method{st_extract}{stars}(x, pts, ...)
+\method{st_extract}{stars}(x, pts, ..., bilinear = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{stars} or \code{stars_proxy}}
@@ -15,6 +15,8 @@ st_extract(x, ...)
 \item{...}{ignored}
 
 \item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
+
+\item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
