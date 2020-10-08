@@ -49,7 +49,7 @@ transform_curvilinear = function(x, crs, ...) {
 }
 
 
-#' transform features, or warp/resample grids in stars objects to a new coordinate reference system
+#' transform geometries in stars objects to a new coordinate reference system, without warping
 #'
 #' @name st_transform
 #' @param x object of class \code{stars}, with either raster or simple feature geometries
@@ -66,7 +66,7 @@ transform_curvilinear = function(x, crs, ...) {
 #' plot(st_as_sfc(y, as_points=TRUE), pch=3, cex=.5, col = 'blue', add = TRUE)
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 #' @seealso \link{st_warp}
-#' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
+#' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp} (which is in general lossy).
 #' @export
 st_transform.stars =  function(x, crs, ...) {
 

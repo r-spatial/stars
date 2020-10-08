@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* `read_stars` reads `NaN`s as `NA`; #333
+
 * improve `st_extract` method for both `stars` and `stars_proxy` objects; interpolation option reduced to bilinear; #322, #279, #290
 
 * better handle categorical rasters that do not start at value 1; #329
