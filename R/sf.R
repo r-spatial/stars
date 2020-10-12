@@ -92,16 +92,16 @@ st_as_sf.dimensions = function(x) {
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
-#' x = x[,,,6] # a band with lower values in it
+#' x = x[,1:100,1:100,6] # subset of a band with lower values in it
 #' x[[1]][x[[1]] < 30] = NA # set lower values to NA
 #' x[[1]] = x[[1]] < 100 # make the rest binary
 #' x
 #' (p = st_as_sf(x)) # removes NA areas
 #' (p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 #' all(st_is_valid(p)) # not all valid, see details
-#' # plot(p, axes = TRUE)
+#' plot(p, axes = TRUE)
 #' (p = st_as_sf(x, na.rm = FALSE, merge = TRUE)) # includes polygons with NA values
-#' # plot(p, axes = TRUE)
+#' plot(p, axes = TRUE)
 st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE, 
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE, connect8 = FALSE) { 
 
