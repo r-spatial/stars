@@ -50,10 +50,10 @@ We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the pack
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
-plot(x)
+plot(x, axes = TRUE)
 ```
 
-We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions called `x`, `y` and `band`, and has one attribute.
+We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions called `x`, `y` and `band`, and has one attribute:
 ```{r}
 x
 ```
