@@ -75,7 +75,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, ...), 
+		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, driver=driver, ...), 
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0)) {
 
 	x = if (is.list(.x)) {
