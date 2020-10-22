@@ -454,8 +454,8 @@ st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, pro
 		x[x < 0] = 0
 		x * maxColorValue
 	}
-	if (any(probs != c(0.,1.)))
-		x = st_apply(x, dimension, cutoff, probs = probs)
+	y = st_apply(x, dimension, cutoff, probs = probs)
+	x = aperm(y, sapply(names(dim(x)), function(z) which(names(dim(y))==z)))
 	rgb4 = function(x, ...) if (any(is.na(x[1:4]))) NA_character_ else rgb(x[1], x[2], x[3], x[4], ...)
 	rgb3 = function(x, ...) if (any(is.na(x[1:3]))) NA_character_ else rgb(x[1], x[2], x[3], ...)
 	if (use_alpha)
