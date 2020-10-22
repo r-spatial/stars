@@ -60,6 +60,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 
 	#if (any(dim(x) == 1))
 	#	x = adrop(x)
+	if (is.factor(x[[1]]) && any(is.na(levels(x[[1]]))))
+		x = droplevels(x) # https://github.com/r-spatial/stars/issues/339
 
 	if (join_zlim && !is.character(x[[1]])) {
 		breaks = get_breaks(x, breaks, nbreaks, dots$logz)

@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* `plot.stars` calls `droplevels` if a factor array has any `NA` levels; #339
+
 * `read_stars` reads `NaN`s as `NA`; #333
 
 * improve `st_extract` method for both `stars` and `stars_proxy` objects; interpolation option reduced to bilinear; #322, #279, #290
