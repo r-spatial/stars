@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -20,7 +20,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.8.0, GDAL 3.1.3, PROJ 7.1.1
+Linking to GEOS 3.8.1, GDAL 3.1.3, PROJ 7.1.1
 > volcano = rbind(volcano, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA) # add NA rows
 > d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
 > (r = st_as_stars(t(volcano)))
@@ -113,20 +113,35 @@ X2    1 99      0     1     NA FALSE   NULL [y]
 + }
 [1] TRUE
 > 
-> # multiple-file attributes:
-> x = c(
-+ "avhrr-only-v2.19810901.nc",
-+ "avhrr-only-v2.19810902.nc",
-+ "avhrr-only-v2.19810903.nc",
-+ "avhrr-only-v2.19810904.nc",
-+ "avhrr-only-v2.19810905.nc",
-+ "avhrr-only-v2.19810906.nc",
-+ "avhrr-only-v2.19810907.nc",
-+ "avhrr-only-v2.19810908.nc",
-+ "avhrr-only-v2.19810909.nc"
-+ )
-> file_list = system.file(paste0("netcdf/", x), package = "starsdata")
-> (y = read_stars(file_list, quiet = TRUE))
+> if (require(starsdata)) {
++   # multiple-file attributes:
++   x = c(
++   "avhrr-only-v2.19810901.nc",
++   "avhrr-only-v2.19810902.nc",
++   "avhrr-only-v2.19810903.nc",
++   "avhrr-only-v2.19810904.nc",
++   "avhrr-only-v2.19810905.nc",
++   "avhrr-only-v2.19810906.nc",
++   "avhrr-only-v2.19810907.nc",
++   "avhrr-only-v2.19810908.nc",
++   "avhrr-only-v2.19810909.nc"
++   )
++   file_list = system.file(paste0("netcdf/", x), package = "starsdata")
++   y = read_stars(file_list, quiet = TRUE)
++   print(y)
++   st_crs(y) = "OGC:CRS84"
++   pts = st_sample(st_as_sfc(st_bbox(y)), 10)
++   em = st_extract(y, pts)
++ 
++   (y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
++   print(y)
++   st_crs(y) = "OGC:CRS84"
++   if (utils::packageVersion("sf") >= "0.9-7") {
++ 	  ep = st_extract(y, pts)
++ 	  print(all.equal(em, ep))
++   }
++ }
+Loading required package: starsdata
 stars object with 4 dimensions and 4 attributes
 attribute(s), summary of first 1e+05 cells:
    sst [C*°]       anom [C*°]      err [C*°]     ice [percent]  
@@ -143,13 +158,8 @@ x       1 1440                        0   0.25      NA    NA   NULL [x]
 y       1  720                       90  -0.25      NA    NA   NULL [y]
 zlev    1    1                    0 [m]     NA      NA    NA   NULL    
 time    1    9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL    
-> st_crs(y) = "OGC:CRS84"
-> pts = st_sample(st_as_sfc(st_bbox(y)), 10)
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
-> em = st_extract(y, pts)
-> 
-> (y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
 stars_proxy object with 4 attributes in files:
 $sst
 [1] "[...]/avhrr-only-v2.19810901.nc:sst" "[...]/avhrr-only-v2.19810902.nc:sst"
@@ -189,11 +199,6 @@ x       1 1440                        0   0.25      NA    NA   NULL [x]
 y       1  720                       90  -0.25      NA    NA   NULL [y]
 zlev    1    1                    0 [m]     NA      NA    NA   NULL    
 time    1    9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL    
-> st_crs(y) = "OGC:CRS84"
-> if (utils::packageVersion("sf") >= "0.9-7") {
-+ 	ep = st_extract(y, pts)
-+ 	print(all.equal(em, ep))
-+ }
 [1] TRUE
 > 
 > # nearest & bilinear comparison:
@@ -221,4 +226,4 @@ CRS:            NA
 > 
 > proc.time()
    user  system elapsed 
-  4.217   0.770   4.718 
+  3.634   0.710   4.102 

@@ -72,29 +72,33 @@ if (utils::packageVersion("sf") >= "0.9-7") {
 	print(all.equal(ep, em, check.attributes = TRUE))
 }
 
-# multiple-file attributes:
-x = c(
-"avhrr-only-v2.19810901.nc",
-"avhrr-only-v2.19810902.nc",
-"avhrr-only-v2.19810903.nc",
-"avhrr-only-v2.19810904.nc",
-"avhrr-only-v2.19810905.nc",
-"avhrr-only-v2.19810906.nc",
-"avhrr-only-v2.19810907.nc",
-"avhrr-only-v2.19810908.nc",
-"avhrr-only-v2.19810909.nc"
-)
-file_list = system.file(paste0("netcdf/", x), package = "starsdata")
-(y = read_stars(file_list, quiet = TRUE))
-st_crs(y) = "OGC:CRS84"
-pts = st_sample(st_as_sfc(st_bbox(y)), 10)
-em = st_extract(y, pts)
+if (require(starsdata)) {
+  # multiple-file attributes:
+  x = c(
+  "avhrr-only-v2.19810901.nc",
+  "avhrr-only-v2.19810902.nc",
+  "avhrr-only-v2.19810903.nc",
+  "avhrr-only-v2.19810904.nc",
+  "avhrr-only-v2.19810905.nc",
+  "avhrr-only-v2.19810906.nc",
+  "avhrr-only-v2.19810907.nc",
+  "avhrr-only-v2.19810908.nc",
+  "avhrr-only-v2.19810909.nc"
+  )
+  file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+  y = read_stars(file_list, quiet = TRUE)
+  print(y)
+  st_crs(y) = "OGC:CRS84"
+  pts = st_sample(st_as_sfc(st_bbox(y)), 10)
+  em = st_extract(y, pts)
 
-(y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
-st_crs(y) = "OGC:CRS84"
-if (utils::packageVersion("sf") >= "0.9-7") {
-	ep = st_extract(y, pts)
-	print(all.equal(em, ep))
+  (y = read_stars(file_list, quiet = TRUE, proxy = TRUE))
+  print(y)
+  st_crs(y) = "OGC:CRS84"
+  if (utils::packageVersion("sf") >= "0.9-7") {
+	  ep = st_extract(y, pts)
+	  print(all.equal(em, ep))
+  }
 }
 
 # nearest & bilinear comparison:
