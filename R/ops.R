@@ -147,10 +147,14 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			if (length(no_margin) > 1 && dim(ret[[1]])[1] == prod(dim_no_margin)) {
 				r = attr(st_dimensions(X), "raster")
 				new_dim = c(dim_no_margin, dim(ret[[1]])[-1])
-				for (i in seq_along(ret))
+				perm_dim = sort(c(no_margin, MARGIN), index.return = TRUE)$ix
+				for (i in seq_along(ret)){
 					dim(ret[[i]]) = new_dim
+					# permute back to original dimensions
+					ret[[i]] = aperm(ret[[i]], perm_dim)
+				}
 				# set dims:
-				dims = st_dimensions(X)[c(no_margin, MARGIN)]
+				dims = st_dimensions(X)
 			} else {
 				orig = st_dimensions(X)[MARGIN]
 				r = attr(orig, "raster")
