@@ -15,7 +15,7 @@ read_stars(
   NA_value = NA_real_,
   along = NA_integer_,
   RasterIO = list(),
-  proxy = !length(curvilinear) && is_big(.x, sub = sub, ...),
+  proxy = !length(curvilinear) && is_big(.x, sub = sub, driver = driver, ...),
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0)
