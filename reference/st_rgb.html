@@ -152,7 +152,8 @@
   dimension <span class='op'>=</span> <span class='fl'>3</span>,
   use_alpha <span class='op'>=</span> <span class='cn'>FALSE</span>,
   maxColorValue <span class='op'>=</span> <span class='fl'>255L</span>,
-  probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>
+  probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  stretch <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -176,7 +177,11 @@
     </tr>
     <tr>
       <th>probs</th>
-      <td><p>probability values for quantiles to cut off data range; overrides <code>maxColorValue</code></p></td>
+      <td><p>probability values for quantiles used for stretching</p></td>
+    </tr>
+    <tr>
+      <th>stretch</th>
+      <td><p>logical; if <code>TRUE</code>, each band is stretched to 0 ... <code>maxColorValue</code></p></td>
     </tr>
     </table>
 
