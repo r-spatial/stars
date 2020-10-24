@@ -9,7 +9,8 @@ st_rgb(
   dimension = 3,
   use_alpha = FALSE,
   maxColorValue = 255L,
-  probs = c(0, 1)
+  probs = c(0, 1),
+  stretch = FALSE
 )
 }
 \arguments{
@@ -21,7 +22,9 @@ st_rgb(
 
 \item{maxColorValue}{integer; maximum value for colors}
 
-\item{probs}{probability values for quantiles to cut off data range; overrides \code{maxColorValue}}
+\item{probs}{probability values for quantiles used for stretching}
+
+\item{stretch}{logical; if \code{TRUE}, each band is stretched to 0 ... \code{maxColorValue}}
 }
 \description{
 reduce dimension to rgb (alpha) hex values
