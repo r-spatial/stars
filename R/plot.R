@@ -442,20 +442,25 @@ contour.stars = function(x, ...) {
 #' if (require(ggplot2)) {
 #'  ggplot() + geom_stars(data = r) + scale_fill_identity()
 #' }
-st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, probs = c(0., 1.)) {
+st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, stretch = FALSE, probs = c(0., 1.)) {
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
 	stopifnot(is.numeric(dimension), length(dimension)==1)
 	dims = setdiff(seq_along(dim(x)), dimension)
-	cutoff = function(x, probs) {
-		qs = quantile(x, probs, na.rm = TRUE)
-		x = (x - qs[1])/(qs[2] - qs[1])
-		x[x > 1] = 1
+	cutoff = function(x, maxColorValue, stretch, probs) {
+		if(stretch){
+			qs = quantile(x, probs, na.rm = TRUE)
+			x = (x - qs[1])/(qs[2] - qs[1])
+			x * maxColorValue
+		}
+		x[x > maxColorValue] = maxColorValue
 		x[x < 0] = 0
-		x * maxColorValue
+
 	}
-	y = st_apply(x, dimension, cutoff, probs = probs)
+	
+	y = st_apply(x, dimension, cutoff, maxColorValue = maxColorValue, stretch = stretch, probs = probs)
 	x = aperm(y, sapply(names(dim(x)), function(z) which(names(dim(y))==z)))
+		
 	rgb4 = function(x, ...) if (any(is.na(x[1:4]))) NA_character_ else rgb(x[1], x[2], x[3], x[4], ...)
 	rgb3 = function(x, ...) if (any(is.na(x[1:3]))) NA_character_ else rgb(x[1], x[2], x[3], ...)
 	if (use_alpha)
