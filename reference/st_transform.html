@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>transform features, or warp/resample grids in stars objects to a new coordinate reference system — st_transform • stars</title>
+<title>transform geometries in stars objects to a new coordinate reference system, without warping — st_transform • stars</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="transform features, or warp/resample grids in stars objects to a new coordinate reference system — st_transform" />
-<meta property="og:description" content="transform features, or warp/resample grids in stars objects to a new coordinate reference system" />
+<meta property="og:title" content="transform geometries in stars objects to a new coordinate reference system, without warping — st_transform" />
+<meta property="og:description" content="transform geometries in stars objects to a new coordinate reference system, without warping" />
 
 
 
@@ -138,13 +138,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>transform features, or warp/resample grids in stars objects to a new coordinate reference system</h1>
+    <h1>transform geometries in stars objects to a new coordinate reference system, without warping</h1>
     <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/transform.R'><code>R/transform.R</code></a></small>
     <div class="hidden name"><code>st_transform.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>transform features, or warp/resample grids in stars objects to a new coordinate reference system</p>
+    <p>transform geometries in stars objects to a new coordinate reference system, without warping</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
@@ -172,7 +172,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For simple feature dimensions, <a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a> is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new <code>CRS</code>, use <a href='st_warp.html'>st_warp</a>.</p>
+    <p>For simple feature dimensions, <a href='https://r-spatial.github.io/sf/reference/st_transform.html'>st_transform</a> is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new <code>CRS</code>, use <a href='st_warp.html'>st_warp</a> (which is in general lossy).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='st_warp.html'>st_warp</a></p></div>

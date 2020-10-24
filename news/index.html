@@ -146,6 +146,9 @@
 <a href="#version-04-4" class="anchor"></a>version 0.4-4<small> Unreleased </small>
 </h1>
 <ul>
+<li><p><code>plot.stars</code> calls <code>droplevels</code> if a factor array has any <code>NA</code> levels; <a href='https://github.com/r-spatial/stars/issues/339'>#339</a></p></li>
+<li><p><code>read_stars</code> reads <code>NaN</code>s as <code>NA</code>; <a href='https://github.com/r-spatial/stars/issues/333'>#333</a></p></li>
+<li><p>improve <code>st_extract</code> method for both <code>stars</code> and <code>stars_proxy</code> objects; interpolation option reduced to bilinear; <a href='https://github.com/r-spatial/stars/issues/322'>#322</a>, <a href='https://github.com/r-spatial/stars/issues/279'>#279</a>, <a href='https://github.com/r-spatial/stars/issues/290'>#290</a></p></li>
 <li><p>better handle categorical rasters that do not start at value 1; <a href='https://github.com/r-spatial/stars/issues/329'>#329</a></p></li>
 <li><p>plot layout can be controlled with <code>mfrow = c(nr, nc)</code> argument; this requires sf &gt;= 0.9-7</p></li>
 <li><p><code>stars_proxy</code> objects have a normalized path; <a href='https://github.com/r-spatial/stars/issues/331'>#331</a></p></li>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Extract cell values at point locations — st_extract" />
-<meta property="og:description" content="Extract cell values at point locations, possibly using interpolation" />
+<meta property="og:description" content="Extract cell values at point locations" />
 
 
 
@@ -144,16 +144,13 @@
     </div>
 
     <div class="ref-description">
-    <p>Extract cell values at point locations, possibly using interpolation</p>
+    <p>Extract cell values at point locations</p>
     </div>
 
     <pre class="usage"><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pts</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for stars_proxy</span>
-<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pts</span>, <span class='va'>...</span>, method <span class='op'>=</span> <span class='st'>"near"</span>, cellsize <span class='op'>=</span> <span class='fl'>1e-07</span>, debug <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pts</span>, <span class='va'>...</span>, bilinear <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -164,23 +161,15 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed on to next method</p></td>
+      <td><p>ignored</p></td>
     </tr>
     <tr>
       <th>pts</th>
       <td><p>object of class <code>sf</code> or <code>sfc</code> with POINT geometries</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>interpolation method, see <a href='st_warp.html'>st_warp</a></p></td>
-    </tr>
-    <tr>
-      <th>cellsize</th>
-      <td><p>numeric; cellsize chosen for the sampling cell.</p></td>
-    </tr>
-    <tr>
-      <th>debug</th>
-      <td><p>logical; if <code>TRUE</code>, do not remove the destination grid file and print its name;</p></td>
+      <th>bilinear</th>
+      <td><p>logical; use bilinear interpolation rather than nearest neighbour?</p></td>
     </tr>
     </table>
 
@@ -189,6 +178,9 @@
     <p>if <code>x</code> has more dimensions than only x and y (raster), an 
 object of class <code>stars</code> with POINT geometries replacing x and y raster
 dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>points outside the raster are returned as <code>NA</code> values.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>

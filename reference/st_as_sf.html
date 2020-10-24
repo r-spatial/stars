@@ -210,7 +210,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
 <span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
-<span class='va'>x</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>6</span><span class='op'>]</span> <span class='co'># a band with lower values in it</span>
+<span class='va'>x</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>6</span><span class='op'>]</span> <span class='co'># subset of a band with lower values in it</span>
 <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>30</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span> <span class='co'># set lower values to NA</span>
 <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>100</span> <span class='co'># make the rest binary</span>
 <span class='va'>x</span>
@@ -218,18 +218,18 @@
 #&gt; attribute(s):
 #&gt;  L7_ETMs.tif    
 #&gt;  Mode :logical  
-#&gt;  FALSE:16452    
-#&gt;  TRUE :78796    
-#&gt;  NA's :27600    
+#&gt;  FALSE:525      
+#&gt;  TRUE :7665     
+#&gt;  NA's :1810     
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 100  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 100 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    6   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># removes NA areas</span>
-</div><div class='output co'>#&gt; Simple feature collection with 95248 features and 1 field
+</div><div class='output co'>#&gt; Simple feature collection with 8190 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
+#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
 #&gt; CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]
 #&gt; First 10 features:
 #&gt;      V1                       geometry
@@ -243,10 +243,10 @@
 #&gt; 8  TRUE POLYGON ((288975.8 9120761,...
 #&gt; 9  TRUE POLYGON ((289004.3 9120761,...
 #&gt; 10 TRUE POLYGON ((289032.8 9120761,...</div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># glues polygons together</span>
-</div><div class='output co'>#&gt; Simple feature collection with 2949 features and 1 field
+</div><div class='output co'>#&gt; Simple feature collection with 155 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
+#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
 #&gt; CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]
 #&gt; First 10 features:
 #&gt;    L7_ETMs.tif                       geometry
@@ -257,15 +257,15 @@
 #&gt; 5            0 POLYGON ((291341.3 9120761,...
 #&gt; 6            1 POLYGON ((291455.3 9120761,...
 #&gt; 7            1 POLYGON ((291569.3 9120761,...
-#&gt; 8            0 POLYGON ((291911.3 9120761,...
-#&gt; 9            1 POLYGON ((292053.8 9120761,...
-#&gt; 10           0 POLYGON ((293136.8 9120761,...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'>st_is_valid</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># not all valid, see details</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># plot(p, axes = TRUE)</span>
-<span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span>
-</div><div class='output co'>#&gt; Simple feature collection with 4101 features and 1 field
+#&gt; 8            0 POLYGON ((290372.3 9120732,...
+#&gt; 9            1 POLYGON ((290628.8 9120732,...
+#&gt; 10           1 POLYGON ((290771.3 9120732,...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'>st_is_valid</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># not all valid, see details</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='st_as_sf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span>
+</div><div class='output co'>#&gt; Simple feature collection with 380 features and 1 field
 #&gt; geometry type:  POLYGON
 #&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9110729 xmax: 298722.8 ymax: 9120761
+#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
 #&gt; CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]
 #&gt; First 10 features:
 #&gt;    L7_ETMs.tif                       geometry
@@ -276,10 +276,10 @@
 #&gt; 5            0 POLYGON ((291341.3 9120761,...
 #&gt; 6            1 POLYGON ((291455.3 9120761,...
 #&gt; 7            1 POLYGON ((291569.3 9120761,...
-#&gt; 8           NA POLYGON ((291768.8 9120761,...
-#&gt; 9            0 POLYGON ((291911.3 9120761,...
-#&gt; 10          NA POLYGON ((291968.3 9120761,...</div><div class='input'><span class='co'># plot(p, axes = TRUE)</span>
-</div></pre>
+#&gt; 8           NA POLYGON ((289745.3 9120732,...
+#&gt; 9           NA POLYGON ((289830.8 9120732,...
+#&gt; 10           0 POLYGON ((290372.3 9120732,...</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='st_as_sf-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

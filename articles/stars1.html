@@ -94,7 +94,8 @@
 
       
 
-      </header><script src="stars1_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="stars1_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="stars1_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="stars1_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. introduction</h1>
@@ -142,9 +143,9 @@
 <div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (<code>x</code>) has three dimensions called <code>x</code>, <code>y</code> and <code>band</code>, and has one attribute.</p>
+<p>We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (<code>x</code>) has three dimensions called <code>x</code>, <code>y</code> and <code>band</code>, and has one attribute:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="va">x</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
@@ -568,13 +569,13 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##     traffic  </span>
-<span class="co">##  Min.   : 0  </span>
-<span class="co">##  1st Qu.: 8  </span>
-<span class="co">##  Median :10  </span>
-<span class="co">##  Mean   :10  </span>
-<span class="co">##  3rd Qu.:12  </span>
-<span class="co">##  Max.   :25  </span>
+<span class="co">##     traffic     </span>
+<span class="co">##  Min.   : 0.00  </span>
+<span class="co">##  1st Qu.: 8.00  </span>
+<span class="co">##  Median :10.00  </span>
+<span class="co">##  Mean   :10.01  </span>
+<span class="co">##  3rd Qu.:12.00  </span>
+<span class="co">##  Max.   :26.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
