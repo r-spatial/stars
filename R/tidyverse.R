@@ -57,6 +57,17 @@ mutate.stars_proxy = function(.data, ...) {
 	collect(.data, match.call(), "mutate", ".data", env = environment())
 }
 
+#' @name dplyr
+transmute.stars <- function(.data, ...) {
+	ret = dplyr::transmute(to_df(.data), ...)
+	st_as_stars(set_dim(ret, dim(.data)), dimensions = st_dimensions(.data))
+}
+
+#' @name dplyr
+transmute.stars_proxy = function(.data, ...) {
+	collect(.data, match.call(), "transmute", ".data", env = environment())
+}
+
 
 #' @name dplyr
 select.stars <- function(.data, ...) {
@@ -238,6 +249,8 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "pull", "stars_proxy")
 	register_s3_method("dplyr", "slice", "stars")
 	register_s3_method("dplyr", "slice", "stars_proxy")
+	register_s3_method("dplyr", "transmute", "stars")
+	register_s3_method("dplyr", "transmute", "stars_proxy")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("sf", "st_join", "stars")
 	register_s3_method("spatstat", "as.owin", "stars")

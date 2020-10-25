@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* add `transmute` methods
+
 * `plot.stars` calls `droplevels` if a factor array has any `NA` levels; #339
 
 * `read_stars` reads `NaN`s as `NA`; #333
