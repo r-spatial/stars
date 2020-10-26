@@ -327,14 +327,6 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 		ny = d[ xy[2] ]
 		setNames(as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
 			get_geotransform(x))), xy) # gives cell centers
-#	} else 
-#	if (has_sfc(x)) {
-#		sfc = st_geometry(st_as_sf(x))
-#		if (!inherits(sfc, "sfc_POINT")) {
-#			warning("returning centroids of geometries")
-#			sfc = st_centroid(sfc)
-#		}
-#		data.frame(st_coordinates(sfc))
 	} else {
 		if (add_max) {
 			cbind(
