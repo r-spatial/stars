@@ -34,7 +34,7 @@
 
 \item{use_integer}{(relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).}
 
-\item{long}{logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled}
+\item{long}{logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensions recycled}
 
 \item{connect8}{logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.}
 }

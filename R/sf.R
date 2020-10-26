@@ -84,7 +84,7 @@ st_as_sf.dimensions = function(x) {
 #' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
 #' @param merge logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details
 #' @param use_integer (relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).
-#' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled
+#' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensions recycled
 #' @param connect8 logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.
 #' @param ... ignored
 #' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf:valid]{st_make_valid} to create valid polygons out of them.

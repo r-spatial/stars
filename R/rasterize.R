@@ -71,8 +71,8 @@ st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreas
     			if (!requireNamespace("digest", quietly = TRUE))
         			stop("package digest required, please install it first") # nocov
 				dig = sapply(v, digest::digest)
-				uv = unique(dig) # don't sort
-				ix = match(dig, uv)
+				uv = unique(dig) # no need to sort
+				ix = match(dig, uv) # but look up "hash collision"
 			} else {
 				suv = sort(unique(v), decreasing = length(xy) == 2 && i == xy[2])
 				ix = match(v, suv)
@@ -81,7 +81,7 @@ st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreas
 			dimensions[[i]] = if (inherits(v, "sfc")) 
 					create_dimension(values = v[match(uv, dig)])
 				else
-					create_dimension(values = suv)
+					create_dimension(values = suv, is_raster = TRUE)
 		}
 		names(dimensions) = names(.x)[dims]
 	
@@ -116,5 +116,11 @@ st_sfc2xy = function(x, ...) {
 	if (inherits(x, "sf"))
 		x = st_as_stars(x)
 	i = which_sfc(x)
-	st_as_stars(as.data.frame(x, ...)) # too simplistic?!
+	d = st_dimensions(x)
+	if (!inherits(d[[i]]$values, "sfc_POINT"))
+		stop("point geometries expected")
+	cc = st_coordinates(d[[i]]$values)
+	df = as.data.frame(x)
+	df$geometry = NULL
+	st_as_stars(cbind(cc, df))
 }
