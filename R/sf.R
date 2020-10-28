@@ -129,7 +129,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 		st_set_crs(ret, crs)
 	} else {
 		if (merge)
-			stop("merge not yet supported for the as_points=TRUE case")
+			stop("merge=TRUE and as_points=TRUE unsupported; consider using st_contour for generating contour lines")
 
 		if (has_raster(x))
 			x = st_xy2sfc(st_upfront(x), as_points = as_points, ..., na.rm = na.rm)
