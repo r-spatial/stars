@@ -3,8 +3,8 @@
 #' @param ignore_file logical; if \code{TRUE}, ignore the Raster object file name
 #' @export
 st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
-    if (!requireNamespace("raster", quietly = TRUE))
-        stop("package raster required, please install it first") # nocov
+	if (!requireNamespace("raster", quietly = TRUE))
+		stop("package raster required, please install it first") # nocov
 
 	#0 360 -90  90
 	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
@@ -56,8 +56,8 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 		}
 	}
 
-    if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first") # nocov
+	if (!requireNamespace("sp", quietly = TRUE))
+		stop("package sp required, please install it first") # nocov
 	v = raster::values(.x)
 	dim(v) = dim(.x)[c(2,1,3)]
 	if (all(raster::is.factor(.x))) {
@@ -116,14 +116,14 @@ st_as_raster = function(x, ...) {
 		else
 			as.vector(x[[1]]) # would convert factor into character
 	if (length(dim(x)) == 2) {
-    	raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
+		raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4],
-            crs = as(st_crs(x), "CRS"), vals = values)
+			crs = as(st_crs(x), "CRS"), vals = values)
 	} else {
 		third = setdiff(names(d), dxy)
 		b = raster::brick(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], nl = dim(x)[third],
-            crs = as(st_crs(x), "CRS"))
+			crs = as(st_crs(x), "CRS"))
 		raster::values(b) = values
 		z = seq(d[[third]])
 		if (!any(is.na(z))) {
@@ -147,18 +147,18 @@ st_as_raster = function(x, ...) {
 #' @returns RasterLayer or RasterBrick
 #' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick.
 setAs("stars", "Raster", function(from) {
-    if (!requireNamespace("sp", quietly = TRUE))
-        stop("package sp required, please install it first") # nocov
-    if (!requireNamespace("raster", quietly = TRUE))
-        stop("package raster required, please install it first") # nocov
+	if (!requireNamespace("sp", quietly = TRUE))
+		stop("package sp required, please install it first") # nocov
+	if (!requireNamespace("raster", quietly = TRUE))
+		stop("package raster required, please install it first") # nocov
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to Raster* objects")
 	st_as_raster(from)
 })
 
 setAs("stars_proxy", "Raster", function(from) {
-    if (!requireNamespace("raster", quietly = TRUE))
-        stop("package raster required, please install it first") # nocov
+	if (!requireNamespace("raster", quietly = TRUE))
+		stop("package raster required, please install it first") # nocov
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to Raster* objects")
 	if (length(attr(from, "call_list"))) {
