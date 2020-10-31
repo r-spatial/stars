@@ -5,8 +5,6 @@ make_label = function(x, i = 1) {
 	else
 		names(x)[i]
 }
-	
-
 
 #' plot stars object, with subplots for each level of first non-spatial dimension
 #' 
