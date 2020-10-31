@@ -20,7 +20,7 @@ st_apply(foo, c(1,3), frac2)
 st_apply(foo, c(1,3), frac2an)
 library(abind)
 (x = aperm(st_apply(foo, c(1,3), frac2), c(2,3,1)))
-y = aperm(st_apply(foo, c(1,3), frac2), c("sfc","year","frac2"))
+y = aperm(st_apply(foo, c(1,3), frac2), c("county","year","frac2"))
 all.equal(st_dimensions(x), st_dimensions(y))
 
 split(foo, 2)
