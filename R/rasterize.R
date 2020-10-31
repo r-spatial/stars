@@ -122,5 +122,6 @@ st_sfc2xy = function(x, ...) {
 	cc = st_coordinates(d[[i]]$values)
 	df = as.data.frame(x)
 	df$geometry = NULL
-	st_as_stars(cbind(cc, df))
+	s = st_as_stars(cbind(cc, df))
+	st_set_crs(s, st_crs(d))
 }
