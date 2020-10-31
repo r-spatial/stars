@@ -124,8 +124,8 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		if (! is.null(names) && length(names) == 1)
 			base::names(d)[which] = names
-		else if (inherits(values, "sfc"))
-			base::names(d)[which] = "sfc"
+#		else if (inherits(values, "sfc"))
+#			base::names(d)[which] = "sfc"
 	} else if (!is.null(point) && is.logical(point)) {
 		d[[which]]$point = point
 	} else if (!missing(names)) {
