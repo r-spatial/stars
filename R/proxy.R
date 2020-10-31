@@ -322,7 +322,7 @@ merge.stars_proxy = function(x, y, ...) {
 	if (missing(i)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
 	if (inherits(i, c("character", "logical", "numeric"))) {
-		x = st_stars_proxy(unclass(x)[ lst[[3]] ], st_dimensions(x))
+		x = st_stars_proxy(unclass(x)[i], st_dimensions(x))
 		lst[["i"]] = TRUE # this one has been handled now
 		for (ix in 1:3) { # FIXME: further than 3?
 			if (length(lst) >= 4 && !any(is.na(r <- get_range(lst[[4]])))) {
