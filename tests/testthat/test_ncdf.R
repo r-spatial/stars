@@ -21,8 +21,8 @@ test_that("domain subsetting", {
   nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
                                    count = c(10, 12, 1, 1)))
   st_dim <- st_dimensions(nc)
-  expect_equal(st_dim$lon$to - st_dim$lon$from, c("lon" = 9))
-  expect_equal(st_dim$lat$to - st_dim$lat$from, c("lat" = 11))
+  expect_equal(st_dim$lon$to - st_dim$lon$from, 9)
+  expect_equal(st_dim$lat$to - st_dim$lat$from, 11)
 
   expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
                                    count = c(200, 12, 1, 1))),
@@ -56,8 +56,8 @@ test_that("non canonical axis order is handled right", {
                                              package = "stars")),
                  "Non-canonical axis order found, attempting to correct.")
   expect_equal(names(st_dimensions(nc)), c("lon", "lat"))
-  expect_equal(st_dimensions(nc)[[1]]$to, c(lon = 4L))
-  expect_equal(st_dimensions(nc)[[2]]$to, c(lat = 5L))
+  expect_equal(st_dimensions(nc)[[1]]$to, 4L)
+  expect_equal(st_dimensions(nc)[[2]]$to, 5L)
 })
 
 
@@ -191,8 +191,8 @@ test_that("4d not 4d", {
 
   dim <- st_dimensions(nc)
 
-  expect_equal(dim$time$to, setNames(10, "time"))
+  expect_equal(dim$time$to, 10)
 
-  expect_equal(dim$level$to, setNames(2, "level"))
+  expect_equal(dim$level$to, 2)
 
 })

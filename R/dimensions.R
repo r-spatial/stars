@@ -241,8 +241,9 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 					set_dimension_values(start = values)
 		}
 	}
-	structure(list(from = from, to = to, offset = offset, delta = delta, 
-		refsys = refsys, point = point, values = values), class = "dimension")
+	structure(list(from = unname(from), to = unname(to), offset = unname(offset), 
+		delta = unname(delta), refsys = refsys, point = unname(point), values = values), 
+		class = "dimension")
 }
 
 create_dimensions = function(lst, raster = NULL) {
