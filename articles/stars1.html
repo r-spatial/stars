@@ -416,14 +416,10 @@
 <span class="co">##  Max.   :848.55   Max.   :29.386  </span>
 <span class="co">##  NA's   :7116     NA's   :7116    </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##           from to.longitude offset delta    refsys point</span>
-<span class="co">## longitude    1           81    -85 0.125 EPSG:4326    NA</span>
-<span class="co">## latitude     1           33     33 0.125 EPSG:4326    NA</span>
-<span class="co">## time         1           12     NA    NA   POSIXct    NA</span>
-<span class="co">##                              values x/y</span>
-<span class="co">## longitude                      NULL [x]</span>
-<span class="co">## latitude                       NULL [y]</span>
-<span class="co">## time      1999-01-31,...,1999-12-31</span></pre></div>
+<span class="co">##           from to offset delta    refsys point                    values x/y</span>
+<span class="co">## longitude    1 81    -85 0.125 EPSG:4326    NA                      NULL [x]</span>
+<span class="co">## latitude     1 33     33 0.125 EPSG:4326    NA                      NULL [y]</span>
+<span class="co">## time         1 12     NA    NA   POSIXct    NA 1999-01-31,...,1999-12-31</span></pre></div>
 <p>which doesn’t convert time values in a proper R time format.</p>
 <div id="reading-datasets-from-multiple-files" class="section level2">
 <h2 class="hasAnchor">
@@ -569,13 +565,13 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##     traffic      </span>
-<span class="co">##  Min.   : 0.000  </span>
-<span class="co">##  1st Qu.: 8.000  </span>
-<span class="co">##  Median :10.000  </span>
-<span class="co">##  Mean   : 9.984  </span>
-<span class="co">##  3rd Qu.:12.000  </span>
-<span class="co">##  Max.   :26.000  </span>
+<span class="co">##     traffic  </span>
+<span class="co">##  Min.   : 0  </span>
+<span class="co">##  1st Qu.: 8  </span>
+<span class="co">##  Median :10  </span>
+<span class="co">##  Mean   :10  </span>
+<span class="co">##  3rd Qu.:12  </span>
+<span class="co">##  Max.   :25  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
