@@ -177,16 +177,15 @@ regular_intervals = function(x, epsilon = 1e-10) {
 	if (length(x) <= 1)
 		FALSE
 	else {
-		ud = if (is.atomic(x))
+		ud = if (is.atomic(x) && is.numeric(x))
 				unique(diff(x))
 			else {
-				if (identical(tail(x$end, -1), head(x$start, -1)))
+				if (inherits(x, "intervals") && identical(tail(x$end, -1), head(x$start, -1)))
 					x$end - x$start
 				else
 					return(FALSE)
 			}
 		isTRUE(abs(diff(range(ud)) / mean(ud)) < epsilon)
-		#isTRUE(abs(diff(range(ud)) / mean(abs(x))) < epsilon)
 	}
 }
 

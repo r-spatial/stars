@@ -59,12 +59,18 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 #' data(Produc, package = "plm")
 #' st_as_stars(Produc, y_decreasing = FALSE)
 st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreasing = TRUE) {
+
+	if (missing(dims) && !missing(xy))
+		stop("parameter xy only takes effect when the cube dimensions are set with dims")
 	if (is.character(xy))
 		xy = match(names(.x), xy)
+	if (any(is.na(xy)))
+		stop("xy coordinates not found in data")
 
 	index = NULL
 	dimensions = list()
 	if (length(dims) >= 2) {
+		this_dim = 1
 		for (i in dims) {
 			v = .x[[i]]
 			if (inherits(v, "sfc")) {
@@ -74,14 +80,15 @@ st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreas
 				uv = unique(dig) # no need to sort
 				ix = match(dig, uv) # but look up "hash collision"
 			} else {
-				suv = sort(unique(v), decreasing = length(xy) == 2 && i == xy[2])
+				suv = sort(unique(v), decreasing = y_decreasing && i == xy[2])
 				ix = match(v, suv)
 			}
 			index = cbind(index, ix)
-			dimensions[[i]] = if (inherits(v, "sfc")) 
+			dimensions[[this_dim]] = if (inherits(v, "sfc"))
 					create_dimension(values = v[match(uv, dig)])
 				else
 					create_dimension(values = suv, is_raster = TRUE)
+			this_dim = this_dim + 1
 		}
 		names(dimensions) = names(.x)[dims]
 	
