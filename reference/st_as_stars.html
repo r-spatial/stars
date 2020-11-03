@@ -332,13 +332,14 @@ Must have same number of rows as timeseries instances.</p></td>
 <span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>Produc</span>, y_decreasing <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 9 attributes
 #&gt; attribute(s):
-#&gt;     region           pcap              hwy            water        
-#&gt;  Min.   :1.000   Min.   :  2627   Min.   : 1827   Min.   :  228.5  
-#&gt;  1st Qu.:3.000   1st Qu.:  7097   1st Qu.: 3858   1st Qu.:  764.5  
-#&gt;  Median :5.000   Median : 17572   Median : 7556   Median : 2266.5  
-#&gt;  Mean   :4.958   Mean   : 25037   Mean   :10218   Mean   : 3618.8  
-#&gt;  3rd Qu.:7.000   3rd Qu.: 27692   3rd Qu.:11267   3rd Qu.: 4318.7  
-#&gt;  Max.   :9.000   Max.   :140217   Max.   :47699   Max.   :24592.3  
+#&gt;     region         pcap              hwy            water        
+#&gt;  5      :136   Min.   :  2627   Min.   : 1827   Min.   :  228.5  
+#&gt;  8      :136   1st Qu.:  7097   1st Qu.: 3858   1st Qu.:  764.5  
+#&gt;  4      :119   Median : 17572   Median : 7556   Median : 2266.5  
+#&gt;  1      :102   Mean   : 25037   Mean   :10218   Mean   : 3618.8  
+#&gt;  3      : 85   3rd Qu.: 27692   3rd Qu.:11267   3rd Qu.: 4318.7  
+#&gt;  6      : 68   Max.   :140217   Max.   :47699   Max.   :24592.3  
+#&gt;  (Other):170                                                     
 #&gt;      util               pc               gsp              emp         
 #&gt;  Min.   :  538.5   Min.   :  4053   Min.   :  4354   Min.   :  108.3  
 #&gt;  1st Qu.: 2488.3   1st Qu.: 21651   1st Qu.: 16502   1st Qu.:  475.0  
@@ -346,6 +347,7 @@ Must have same number of rows as timeseries instances.</p></td>
 #&gt;  Mean   :11199.5   Mean   : 58188   Mean   : 61014   Mean   : 1747.1  
 #&gt;  3rd Qu.:11598.5   3rd Qu.: 64796   3rd Qu.: 68126   3rd Qu.: 2114.1  
 #&gt;  Max.   :80728.1   Max.   :375342   Max.   :464550   Max.   :11258.0  
+#&gt;                                                                       
 #&gt;      unemp       
 #&gt;  Min.   : 2.800  
 #&gt;  1st Qu.: 5.000  
@@ -353,6 +355,7 @@ Must have same number of rows as timeseries instances.</p></td>
 #&gt;  Mean   : 6.602  
 #&gt;  3rd Qu.: 7.900  
 #&gt;  Max.   :18.000  
+#&gt;                  
 #&gt; dimension(s):
 #&gt;       from to offset delta refsys point              values x/y
 #&gt; state    1 48     NA    NA     NA    NA ALABAMA,...,WYOMING [x]
