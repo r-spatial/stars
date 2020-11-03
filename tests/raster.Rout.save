@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -39,7 +39,7 @@ class      : RasterBrick
 dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
 resolution : 28.5, 28.5  (x, y)
 extent     : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-crs        : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+crs        : +proj=utm +zone=25 +south +ellps=GRS80 +units=m +no_defs 
 source     : memory
 names      : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
 min values :      47,      32,      21,       9,       1,       1 
@@ -96,7 +96,7 @@ class      : RasterBrick
 dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
 resolution : 28.5, 28.5  (x, y)
 extent     : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-crs        : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
+crs        : +proj=utm +zone=25 +south +ellps=GRS80 +units=m +no_defs 
 source     : /home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif 
 names      : L7_ETMs.1, L7_ETMs.2, L7_ETMs.3, L7_ETMs.4, L7_ETMs.5, L7_ETMs.6 
 min values :         0,         0,         0,         0,         0,         0 
@@ -120,4 +120,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.108   0.075   2.175 
+  2.242   0.216   2.141 

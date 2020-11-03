@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -294,8 +294,8 @@ attribute(s):
  3rd Qu.:29.25  
  Max.   :47.00  
 dimension(s):
-     from to.band offset delta refsys point values
-band    1       6     NA    NA     NA    NA   NULL
+     from to offset delta refsys point values
+band    1  6     NA    NA     NA    NA   NULL
 > st_apply(x, 1:2, max)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -696,4 +696,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  5.820   0.340   6.148 
+  6.731   0.460   6.868 
