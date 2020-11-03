@@ -328,18 +328,18 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  3rd Qu.: 87.00  
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
-#&gt;      from  to     offset  delta                       refsys point     values
-#&gt; x       1 349     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE       NULL
-#&gt; y       1 352    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE       NULL
-#&gt; band    1   6         NA     NA                           NA    NA       NULL
-#&gt; foo     1   2         NA     NA                           NA    NA bar1, bar2
-#&gt; time    1   2 2018-07-31 2 days                         Date    NA       NULL
-#&gt;      x/y
-#&gt; x    [x]
-#&gt; y    [y]
-#&gt; band    
-#&gt; foo     
-#&gt; time    </div><div class='input'>
+#&gt;      from  to  offset delta                       refsys point
+#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
+#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
+#&gt; band    1   6      NA    NA                           NA    NA
+#&gt; foo     1   2      NA    NA                           NA    NA
+#&gt; time    1   2      NA    NA                         Date    NA
+#&gt;                      values x/y
+#&gt; x                      NULL [x]
+#&gt; y                      NULL [y]
+#&gt; band                   NULL    
+#&gt; foo              bar1, bar2    
+#&gt; time 2018-07-31, 2018-08-02    </div><div class='input'>
 <span class='va'>m</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>120</span>, nrow <span class='op'>=</span> <span class='fl'>12</span>, ncol <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>10</span>, y <span class='op'>=</span> <span class='fl'>12</span><span class='op'>)</span> <span class='co'># named dim</span>
 <span class='va'>st</span> <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
@@ -363,13 +363,13 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file451f6fa78b88.tif 
-#&gt;  Min.   :  1.00       
-#&gt;  1st Qu.: 30.75       
-#&gt;  Median : 60.50       
-#&gt;  Mean   : 60.50       
-#&gt;  3rd Qu.: 90.25       
-#&gt;  Max.   :120.00       
+#&gt;  file44d45ac804b.tif 
+#&gt;  Min.   :  1.00      
+#&gt;  1st Qu.: 30.75      
+#&gt;  Median : 60.50      
+#&gt;  Mean   : 60.50      
+#&gt;  3rd Qu.: 90.25      
+#&gt;  Max.   :120.00      
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
@@ -381,13 +381,13 @@ has to be one of: "nearest_neighbour" (the default),
    nBufXSize <span class='op'>=</span> <span class='fl'>2</span>, nBufYSize <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file451f6fa78b88.tif 
-#&gt;  Min.   :33.00        
-#&gt;  1st Qu.:36.75        
-#&gt;  Median :65.50        
-#&gt;  Mean   :65.50        
-#&gt;  3rd Qu.:94.25        
-#&gt;  Max.   :98.00        
+#&gt;  file44d45ac804b.tif 
+#&gt;  Min.   :33.00       
+#&gt;  1st Qu.:36.75       
+#&gt;  Median :65.50       
+#&gt;  Mean   :65.50       
+#&gt;  3rd Qu.:94.25       
+#&gt;  Max.   :98.00       
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
