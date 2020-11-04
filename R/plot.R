@@ -114,7 +114,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			}
 
 			# map panel:
-			par(mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0))
+			mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0)
+			if (!is.null(key.pos) && key.pos %in% 1:4)
+				mar[key.pos] = mar[key.pos] + .5
+			par(mar = mar)
 
 			# plot the map:
 			image(x, ..., axes = axes, breaks = breaks, col = col, key.pos = key.pos, 
