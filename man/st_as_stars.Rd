@@ -110,9 +110,9 @@ Must have same number of rows as timeseries instances.}
 
 \item{envir}{environment to resolve objects in}
 
-\item{dims}{the column names or indexes that form the cube dimensions}
+\item{dims}{the column names or indices that form the cube dimensions}
 
-\item{xy}{the x and y raster dimensions}
+\item{xy}{the x and y raster dimension names or indices; only takes effect after dims has been specified}
 
 \item{y_decreasing}{logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)}
 

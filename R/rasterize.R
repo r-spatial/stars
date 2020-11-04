@@ -51,8 +51,8 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 
 
 #' @export
-#' @param dims the column names or indexes that form the cube dimensions
-#' @param xy the x and y raster dimensions
+#' @param dims the column names or indices that form the cube dimensions
+#' @param xy the x and y raster dimension names or indices; only takes effect after dims has been specified
 #' @param y_decreasing logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)
 #' @name st_as_stars
 #' @examples
