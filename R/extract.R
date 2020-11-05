@@ -51,10 +51,12 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE) {
 		}
 	# reset factors & units attributes:
 	for (i in seq_along(m)) {
-		if (inherits(x[[i]], "factor"))
-			m[[i]] = structure(as.factor(m[[i]]), levels = levels(x[[i]]), 
-				colors = attr(x[[i]],"colors"), class = "factor", dim = dim(m[[i]]))
-		else if (inherits(x[[i]], "units"))
+		if (inherits(x[[i]], "factor")) {
+			if (is.character(m[[i]]))
+				m[[i]] = structure(as.factor(m[[i]]), dim = dim(m[[i]]))
+			m[[i]] = structure(m[[i]], levels = levels(x[[i]]), 
+				colors = attr(x[[i]], "colors"), class = "factor")
+		} else if (inherits(x[[i]], "units"))
 			units(m[[i]]) = units(x[[i]])
 		else if (inherits(x, "stars_proxy") && !inherits(try_result, "try-error") && inherits(x0[[i]], "units"))
 			units(m[[i]]) = units(x0[[i]])
