@@ -164,8 +164,8 @@
 <h3 class="hasAnchor">
 <a href="#regular-grids" class="anchor"></a>Regular grids</h3>
 <p>With a very simple file created from a <span class="math inline">\(4 \times 5\)</span> matrix</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span><span class="op">)</span>
 <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, nrow <span class="op">=</span> <span class="fl">5</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">5</span>, y <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="co"># named dim</span>
 <span class="op">(</span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span>
@@ -181,48 +181,48 @@
 <span class="co">## dimension(s):</span>
 <span class="co">##   from to offset delta refsys point values x/y</span>
 <span class="co">## x    1  5      0     1     NA FALSE   NULL [x]</span>
-<span class="co">## y    1  4      0     1     NA FALSE   NULL [y]</span></pre></div>
+<span class="co">## y    1  4      0     1     NA FALSE   NULL [y]</span></code></pre></div>
 <p>we see that</p>
 <ul>
 <li>the rows (5) are mapped to the first dimension, the x-coordinate</li>
 <li>the columns (4) are mapped to the second dimension, the y-coordinate</li>
 <li>the <code>from</code> and <code>to</code> fields of each dimension define a range that corresponds to the array dimension:</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co">## x y </span>
-<span class="co">## 5 4</span></pre></div>
+<span class="co">## 5 4</span></code></pre></div>
 <ul>
 <li>offset and delta specify how increasing row and column index maps to x and y coordinate values respectively.</li>
 </ul>
 <p>When we plot this object, using the <code>image</code> method for <code>stars</code> objects,</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-3-1.png" width="432"></p>
 <p>we see that <span class="math inline">\((0,0)\)</span> is the origin of the grid (grid corner), and <span class="math inline">\(1\)</span> the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are <strong>regular</strong>: grid cell size is constant everywhere.</p>
 <p>Many actual grid datasets have y coordinates (grid rows) going from North to South (top to bottom); this is realised with a negative value for <code>delta</code>. We see that the grid origing <span class="math inline">\((0,0)\)</span> did not change:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-4-1.png" width="432"></p>
 <p>An example is the GeoTIFF carried in the package, which, as probably all data sources read through GDAL, has a negative <code>delta</code> for the <code>y</code>-coordinate:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">"y"</span><span class="op">]</span>
 <span class="co">##   from  to  offset delta                       refsys point values</span>
-<span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL</span></pre></div>
+<span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL</span></code></pre></div>
 </div>
 <div id="raster-attributes-rotated-and-sheared-grids" class="section level3">
 <h3 class="hasAnchor">
 <a href="#raster-attributes-rotated-and-sheared-grids" class="anchor"></a>Raster attributes, rotated and sheared grids</h3>
 <p>Dimension tables of <code>stars</code> objects carry a <code>raster</code> attribute:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## List of 3</span>
 <span class="co">##  $ affine     : num [1:2] 0 0</span>
 <span class="co">##  $ dimensions : chr [1:2] "x" "y"</span>
 <span class="co">##  $ curvilinear: logi FALSE</span>
-<span class="co">##  - attr(*, "class")= chr "stars_raster"</span></pre></div>
+<span class="co">##  - attr(*, "class")= chr "stars_raster"</span></code></pre></div>
 <p>which is a list that holds</p>
 <ul>
 <li>
@@ -238,23 +238,23 @@
 <p><span class="math display">\[y = o_y + (i-1) a_2 + (j-1) d_y\]</span> Clearly, when <span class="math inline">\(a_1=a_2=0\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are entirely derived from their respective index, offset and cellsize.</p>
 <p>Note that for integer indexes, the coordinates are that of the starting edge of a grid cell; to get the grid cell center of the top left grid cell (in case of a negative <span class="math inline">\(d_y\)</span>), use <span class="math inline">\(i=1.5\)</span> and <span class="math inline">\(j=1.5\)</span>.</p>
 <p>We can rotate grids by setting <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span> to a non-zero value:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>The rotation angle, in degrees, is</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Trig.html">atan2</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span>
-<span class="co">## [1] 5.710593</span></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">atan2</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span>
+<span class="co">## [1] 5.710593</span></code></pre></div>
 <p>Sheared grids are obtained when the two rotation coefficients, <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>, are unequal:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>Now, the y-axis and x-axis have different rotation in degrees of respectively</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Trig.html">atan2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span>
-<span class="co">## [1]  5.710593 11.309932</span></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">atan2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span>
+<span class="co">## [1]  5.710593 11.309932</span></code></pre></div>
 </div>
 </div>
 <div id="rectilinear-grids" class="section level2">
@@ -262,8 +262,8 @@
 <a href="#rectilinear-grids" class="anchor"></a>Rectilinear grids</h2>
 <p><a href="https://en.wikipedia.org/wiki/Regular_grid">Rectilinear grids</a> have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axis has its own irregular subdivision.</p>
 <p>We can define a rectilinear grid by specifying the cell <em>boundaries</em>, meaning for every dimension we specify <em>one more</em> value than the dimension size:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>  <span class="co"># 6 numbers: boundaries!</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>  <span class="co"># 6 numbers: boundaries!</span>
 <span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2.2</span><span class="op">)</span> <span class="co"># 5 numbers: boundaries!</span>
 <span class="op">(</span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span><span class="op">)</span>, dimensions <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
@@ -282,11 +282,11 @@
 <span class="fu">st_bbox</span><span class="op">(</span><span class="va">r</span><span class="op">)</span>
 <span class="co">## xmin ymin xmax ymax </span>
 <span class="co">##  0.0  0.3  5.0  2.2</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">r</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">/</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/image.html">image</a></span><span class="op">(</span><span class="va">r</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">/</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>Would we leave out the last value, than <code>stars</code> may come up with a <em>different</em> cell boundary for the last cell, as this is now derived from the width of the one-but-last cell:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span>
 <span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>   <span class="co"># 4 numbers: offsets only!</span>
 <span class="op">(</span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span><span class="op">)</span>, dimensions <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
@@ -304,10 +304,10 @@
 <span class="co">## y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,3) [y]</span>
 <span class="fu">st_bbox</span><span class="op">(</span><span class="va">r</span><span class="op">)</span>
 <span class="co">## xmin ymin xmax ymax </span>
-<span class="co">##  0.0  0.3  6.0  3.0</span></pre></div>
+<span class="co">##  0.0  0.3  6.0  3.0</span></code></pre></div>
 <p>This is not problematic if cells have a constant width, in which case the boundaries are reduced to an <code>offset</code> and <code>delta</code> value, irrespective whether an upper boundary is given:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span>
 <span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">2</span><span class="op">)</span>   <span class="co"># 4 numbers: offsets only!</span>
 <span class="op">(</span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span><span class="op">)</span>, dimensions <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
@@ -325,11 +325,11 @@
 <span class="co">## y    1  4    0.5   0.5     NA FALSE   NULL [y]</span>
 <span class="fu">st_bbox</span><span class="op">(</span><span class="va">r</span><span class="op">)</span>
 <span class="co">## xmin ymin xmax ymax </span>
-<span class="co">##  0.0  0.5  5.0  2.5</span></pre></div>
+<span class="co">##  0.0  0.5  5.0  2.5</span></code></pre></div>
 <p>Alternatively, one can also set the <em>cell midpoints</em> by specifying arguments <code>cell_midpoints</code> to the <code>st_dimensions</code> call:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>, 
-                <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">10</span><span class="op">)</span>, cell_midpoints <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>, 
+                <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">10</span><span class="op">)</span>, cell_midpoints <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>When the dimension is regular, this results in <code>offset</code> being shifted back with half a <code>delta</code>, or else in intervals derived from the distances between cell centers. This should obviously not be done when cell boundaries are specified.</p>
 </div>
 <div id="curvilinear-grids" class="section level2">
@@ -337,15 +337,15 @@
 <a href="#curvilinear-grids" class="anchor"></a>Curvilinear grids</h2>
 <p>Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or NetCDF) files in which they are found have two raster layers, one with the latitudes and one with the longitudes for every grid cell. Using the GDAL interface, we need to compose a <code>stars</code> object from the array and a long and lat matrix. The matrices with longitude and latitude values are stored in the <code>values</code> field of their respective dimensions.</p>
 <p>As an example, we will use a Sentinel 5P dataset available from package <code>starsdata</code>; this package can be installed with</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"starsdata"</span>, repos <span class="op">=</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span> </pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"starsdata"</span>, repos <span class="op">=</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span> </code></pre></div>
 <p>The dataset is found here:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="op">(</span><span class="va">s5p</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="va">s5p</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></code></pre></div>
 <p>We can construct the curvilinear <code>stars</code> raster by calling <code>st_as_stars</code> on three arrays, with data, longitude and latitudes:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="va">nit.c</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s5p</span>, sub <span class="op">=</span> <span class="st">"//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column"</span>,
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nit.c</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s5p</span>, sub <span class="op">=</span> <span class="st">"//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column"</span>,
     curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"//PRODUCT/longitude"</span>, <span class="st">"//PRODUCT/latitude"</span><span class="op">)</span>, driver <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 <span class="co">## //PRODUCT/longitude, </span>
 <span class="co">## //PRODUCT/latitude, </span>
@@ -372,20 +372,20 @@
 <span class="co">##   from  to offset delta    refsys point                         values x/y</span>
 <span class="co">## x    1 450     NA    NA EPSG:4326    NA [450x278] -5.81066,...,30.9468 [x]</span>
 <span class="co">## y    1 278     NA    NA EPSG:4326    NA  [450x278] 28.3605,...,51.4686 [y]</span>
-<span class="co">## curvilinear grid</span></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, 
+<span class="co">## curvilinear grid</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, 
          pch <span class="op">=</span> <span class="fl">16</span>,  logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></pre></div>
+<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, 
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, 
          border <span class="op">=</span> <span class="cn">NA</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></pre></div>
+<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>We can downsample the data by</p>
-<div class="sourceCode" id="cb20"><pre class="downlit">
-<span class="op">(</span><span class="va">nit.c</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">:::</span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">nit.c</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="va">nit.c</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">:::</span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">nit.c</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
 <span class="co">##  nitrogendioxide_summed_total_column </span>
@@ -403,13 +403,13 @@
 <span class="co">## curvilinear grid</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, 
          pch <span class="op">=</span> <span class="fl">16</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></pre></div>
+<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <p>which doesn’t look nice, but plotting the cells as polygons looks better:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, 
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, 
          border <span class="op">=</span> <span class="cn">NA</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></pre></div>
+<span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 </div>
   </div>
