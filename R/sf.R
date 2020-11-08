@@ -54,6 +54,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	d[[ dxy[2] ]] = NULL
 	attr(d, "raster") = get_raster(dimensions = rep(NA_character_, 2))
 	# flatten arrays:
+	x = unclass(x) # to omit using [[<-.stars method:
 	for (i in seq_along(x))
 		dim(x[[i]]) = c(geometry = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
@@ -65,7 +66,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 			x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), 
 				levels = attr(x[[i]], "levels"))
 	}
-	structure(x, dimensions = d)
+	st_stars(x, dimensions = d)
 }
 
 st_as_sf.dimensions = function(x) {

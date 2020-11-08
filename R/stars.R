@@ -758,6 +758,12 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 
 #' @export
 "$<-.stars" = function(x, i, value) {
+	x[[i]] = value
+	x
+}
+
+#' @export
+"[[<-.stars" = function(x, i, value) {
 	if (!is.null(value)) {
 		if (prod(dim(x)) %% length(value) != 0) { # error:
 			if (is.null(dim(value)))

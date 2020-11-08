@@ -84,6 +84,7 @@ transform_grid_grid = function(x, target) {
 	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
 	dims = dim(x)
 	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
+	x = unclass(x) # avoid using [[<-.stars:
 	if (length(dims) > 2) {
 		remaining_dims = dims[setdiff(names(dims), dxy)]
 		newdim = c(prod(dims[dxy]), prod(remaining_dims))
