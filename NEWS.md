@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* add `[[<-.stars` method, which is now called by `$<-.stars`
+
 * add `transmute` methods
 
 * `plot.stars` calls `droplevels` if a factor array has any `NA` levels; #339
