@@ -120,20 +120,20 @@
 <p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
-<span class="co">##  [1] [                 [&lt;-               $&lt;-               adrop            </span>
-<span class="co">##  [5] aggregate         aperm             as.data.frame     c                </span>
-<span class="co">##  [9] coerce            contour           cut               dim              </span>
-<span class="co">## [13] dimnames          dimnames&lt;-        droplevels        filter           </span>
-<span class="co">## [17] image             initialize        is.na             Math             </span>
-<span class="co">## [21] merge             Ops               plot              predict          </span>
-<span class="co">## [25] print             show              slotsFromS3       split            </span>
-<span class="co">## [29] st_apply          st_area           st_as_sf          st_as_sfc        </span>
-<span class="co">## [33] st_as_stars       st_bbox           st_coordinates    st_crop          </span>
-<span class="co">## [37] st_crs            st_crs&lt;-          st_dimensions     st_dimensions&lt;-  </span>
-<span class="co">## [41] st_extract        st_geometry       st_interpolate_aw st_intersects    </span>
-<span class="co">## [45] st_join           st_mosaic         st_normalize      st_redimension   </span>
-<span class="co">## [49] st_sample         st_set_bbox       st_transform_proj st_transform     </span>
-<span class="co">## [53] write_stars      </span>
+<span class="co">##  [1] [                 [[&lt;-              [&lt;-               $&lt;-              </span>
+<span class="co">##  [5] adrop             aggregate         aperm             as.data.frame    </span>
+<span class="co">##  [9] c                 coerce            contour           cut              </span>
+<span class="co">## [13] dim               dimnames          dimnames&lt;-        droplevels       </span>
+<span class="co">## [17] filter            image             initialize        is.na            </span>
+<span class="co">## [21] Math              merge             Ops               plot             </span>
+<span class="co">## [25] predict           print             show              slotsFromS3      </span>
+<span class="co">## [29] split             st_apply          st_area           st_as_sf         </span>
+<span class="co">## [33] st_as_sfc         st_as_stars       st_bbox           st_coordinates   </span>
+<span class="co">## [37] st_crop           st_crs            st_crs&lt;-          st_dimensions    </span>
+<span class="co">## [41] st_dimensions&lt;-   st_extract        st_geometry       st_interpolate_aw</span>
+<span class="co">## [45] st_intersects     st_join           st_mosaic         st_normalize     </span>
+<span class="co">## [49] st_redimension    st_sample         st_set_bbox       st_transform_proj</span>
+<span class="co">## [53] st_transform      write_stars      </span>
 <span class="co">## see '?methods' for accessing help and source code</span></code></pre></div>
 <p>(tidyverse methods are only visible after loading package <code>tidyverse</code>).</p>
 <div id="reading-a-satellite-image" class="section level1">
@@ -453,11 +453,11 @@
 <span class="co">##  Max.   : 9.36   Max.   : 3.70   Max.   :0.480   Max.   :1.000  </span>
 <span class="co">##  NA's   :13360   NA's   :13360   NA's   :13360   NA's   :27377  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from   to offset delta  refsys point                    values x/y</span>
-<span class="co">## x       1 1440      0  0.25      NA    NA                      NULL [x]</span>
-<span class="co">## y       1  720     90 -0.25      NA    NA                      NULL [y]</span>
-<span class="co">## zlev    1    1  0 [m]    NA      NA    NA                      NULL    </span>
-<span class="co">## time    1    9     NA    NA POSIXct    NA 1981-09-01,...,1981-09-09</span></code></pre></div>
+<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
+<span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
@@ -565,13 +565,13 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##     traffic      </span>
-<span class="co">##  Min.   : 0.000  </span>
-<span class="co">##  1st Qu.: 8.000  </span>
-<span class="co">##  Median :10.000  </span>
-<span class="co">##  Mean   : 9.994  </span>
-<span class="co">##  3rd Qu.:12.000  </span>
-<span class="co">##  Max.   :25.000  </span>
+<span class="co">##     traffic     </span>
+<span class="co">##  Min.   : 0.00  </span>
+<span class="co">##  1st Qu.: 8.00  </span>
+<span class="co">##  Median :10.00  </span>
+<span class="co">##  Mean   :10.02  </span>
+<span class="co">##  3rd Qu.:12.00  </span>
+<span class="co">##  Max.   :27.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>

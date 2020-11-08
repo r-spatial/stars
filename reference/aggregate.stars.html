@@ -231,16 +231,11 @@
 #&gt;  Max.   :  90.000  
 #&gt;  NA's   :5400      
 #&gt; dimension(s):
-#&gt;      from to  offset delta                       refsys point
-#&gt; time    1  3      NA    NA                         Date    NA
-#&gt; x       1 30  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; y       1 30 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; band    1  6      NA    NA                           NA    NA
-#&gt;                                  values x/y
-#&gt; time 2018-07-31, 2018-08-02, 2018-08-04    
-#&gt; x                                  NULL [x]
-#&gt; y                                  NULL [y]
-#&gt; band                               NULL    </div><div class='input'>
+#&gt;      from to     offset  delta                       refsys point values x/y
+#&gt; time    1  3 2018-07-31 2 days                         Date    NA   NULL    
+#&gt; x       1 30     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 30    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; band    1  6         NA     NA                           NA    NA   NULL    </div><div class='input'>
 <span class='co'># aggregate time dimension in format POSIXct</span>
 <span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='st_dimensions.html'>st_set_dimensions</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>4</span>, values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXct</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"2018-07-31"</span>, 
                                                   <span class='st'>"2018-08-01"</span>, 
@@ -262,16 +257,11 @@
 #&gt;  Max.   :  90.000  
 #&gt;  NA's   :10800     
 #&gt; dimension(s):
-#&gt;      from to  offset delta                       refsys point
-#&gt; time    1  3      NA    NA                         Date    NA
-#&gt; x       1 30  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; y       1 30 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; band    1  6      NA    NA                           NA    NA
-#&gt;                                  values x/y
-#&gt; time 2018-07-31, 2018-08-02, 2018-08-04    
-#&gt; x                                  NULL [x]
-#&gt; y                                  NULL [y]
-#&gt; band                               NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"2 days"</span>, <span class='va'>mean</span><span class='op'>)</span>
+#&gt;      from to     offset  delta                       refsys point values x/y
+#&gt; time    1  3 2018-07-31 2 days                         Date    NA   NULL    
+#&gt; x       1 30     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 30    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; band    1  6         NA     NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/aggregate.html'>aggregate</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"2 days"</span>, <span class='va'>mean</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;   L7_ETMs.tif    
@@ -282,16 +272,16 @@
 #&gt;  3rd Qu.: 70.00  
 #&gt;  Max.   :145.00  
 #&gt; dimension(s):
-#&gt;      from to  offset delta                       refsys point
-#&gt; time    1  2      NA    NA                      POSIXct    NA
-#&gt; x       1 30  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; y       1 30 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; band    1  6      NA    NA                           NA    NA
-#&gt;                              values x/y
-#&gt; time 2018-07-31 UTC, 2018-08-02 UTC    
-#&gt; x                              NULL [x]
-#&gt; y                              NULL [y]
-#&gt; band                           NULL    </div><div class='input'><span class='co'># Spatial aggregation, see https://github.com/r-spatial/stars/issues/299</span>
+#&gt;      from to         offset  delta                       refsys point values
+#&gt; time    1  2 2018-07-31 UTC 2 days                      POSIXct    NA   NULL
+#&gt; x       1 30         288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
+#&gt; y       1 30        9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
+#&gt; band    1  6             NA     NA                           NA    NA   NULL
+#&gt;      x/y
+#&gt; time    
+#&gt; x    [x]
+#&gt; y    [y]
+#&gt; band    </div><div class='input'><span class='co'># Spatial aggregation, see https://github.com/r-spatial/stars/issues/299</span>
 <span class='va'>prec_file</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/test_stageiv_xyt.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
 <span class='va'>prec</span> <span class='op'>=</span> <span class='fu'><a href='read_ncdf.html'>read_ncdf</a></span><span class='op'>(</span><span class='va'>prec_file</span>, curvilinear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lon"</span>, <span class='st'>"lat"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
