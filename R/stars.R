@@ -536,7 +536,10 @@ st_bbox.dimensions = function(obj, ...) {
 					c(xmin = x$from - 0.5, ymin = y$from - 0.5, xmax = x$to + 0.5, ymax = y$to + 0.5)
 			} else {
 				if (is_curvilinear(obj))
-					c(xmin = min(x$values), ymin = min(y$values), xmax = max(x$values), ymax = max(y$values))
+					c(xmin = min(x$values, na.rm = TRUE),
+						ymin = min(y$values, na.rm = TRUE),
+						xmax = max(x$values, na.rm = TRUE),
+						ymax = max(y$values, na.rm = TRUE))
 				else {
 					rx = range(x) # dispatches into range.dimension
 					ry = range(y)
