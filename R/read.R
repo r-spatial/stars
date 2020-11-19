@@ -86,9 +86,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, proxy = FALSE, ...))
+			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
 		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, proxy = FALSE, ...))
+			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
 		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
 	}
 
@@ -146,8 +146,16 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				ret
 		}
 	} else { # we have one single array:
-		if (!isTRUE(sub))
-			warning("only one array present: argument 'sub' will be ignored")
+		if (!isTRUE(sub)) {
+			sub_required = if (is.null(list(...)$sub_required))
+					FALSE
+				else
+					list(...)$sub_required
+			if (sub_required)
+				stop(paste("only one array present in", .x, ": cannot resolve subdataset", sub))
+			else
+				warning("only one array present: argument 'sub' will be ignored")
+		}
 		meta_data = structure(data, data = NULL) # take meta_data only
 		data = if (proxy)
 				.x
