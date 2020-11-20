@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* `st_extract` extracts space-time points if `time_column` is specified; #352
+
 * add `[[<-.stars` method, which is now called by `$<-.stars`
 
 * add `transmute` methods

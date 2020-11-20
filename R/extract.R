@@ -71,7 +71,7 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = attr(pt
 		if (is.na(tm))
 			stop("cannot match times: x does not have a dimension called 'time'")
 		tm_cube = st_get_dimension_values(x, "time")
-		tm_ix = match_time(tm_pts, tm_cube)
+		tm_ix = match_time(tm_pts, tm_cube, !st_dimensions(x)$time$point)
 		m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
 	}
 	if (NCOL(m[[1]]) > 1) { # return stars:
@@ -86,17 +86,28 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = attr(pt
 	} else { # return sf:
 		df = setNames(as.data.frame(lapply(m, function(i) structure(i, dim = NULL))), names(x))
 		df[[sf_column]] = st_geometry(pts)
-		if (!is.null(time_column))
+		if (!is.null(time_column)) {
 			df$time = tm_cube[tm_ix]
+			df[[time_column]] = tm_pts
+			# return(sftime::st_sf_time(df, st_tc(tm_pts)))
+		}
 		st_as_sf(df)
 	}
 }
 
-match_time = function(a, b) {
+match_time = function(a, b, intervals = FALSE) {
 	if (inherits(a, "POSIXct") && inherits(b, "Date"))
 		a = as.Date(a)
 	if (inherits(b, "POSIXct") && inherits(a, "Date"))
 		b = as.Date(b)
 	stopifnot(inherits(a, class(b)))
-	match(a, b)
+	m = if (inherits(b, "intervals")) {
+			find_interval(a, b)
+		} else if (isTRUE(intervals)) {
+			m = findInterval(a, b)
+			m[ m == 0 | m == length(b) ] = NA
+			m
+		} else
+			match(a, b)
+	m
 }
