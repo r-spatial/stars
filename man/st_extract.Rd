@@ -7,7 +7,13 @@
 \usage{
 st_extract(x, ...)
 
-\method{st_extract}{stars}(x, pts, ..., bilinear = FALSE)
+\method{st_extract}{stars}(
+  x,
+  pts,
+  ...,
+  bilinear = FALSE,
+  time_column = attr(pts, "time_column")
+)
 }
 \arguments{
 \item{x}{object of class \code{stars} or \code{stars_proxy}}
@@ -17,6 +23,8 @@ st_extract(x, ...)
 \item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
+
+\item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
