@@ -150,7 +150,13 @@
     <pre class="usage"><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
-<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>pts</span>, <span class='va'>...</span>, bilinear <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+<span class='fu'>st_extract</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>pts</span>,
+  <span class='va'>...</span>,
+  bilinear <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  time_column <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>pts</span>, <span class='st'>"time_column"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,6 +176,10 @@
     <tr>
       <th>bilinear</th>
       <td><p>logical; use bilinear interpolation rather than nearest neighbour?</p></td>
+    </tr>
+    <tr>
+      <th>time_column</th>
+      <td><p>character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in <code>x</code>, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .</p></td>
     </tr>
     </table>
 
