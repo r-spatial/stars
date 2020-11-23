@@ -58,7 +58,7 @@ test_that("st_as_stars.Raster", {
   tif = system.file("tif/L7_ETMs.tif", package = "stars")
   x = raster::raster(tif)
   stars_obj <- st_as_stars(x)
-  expect_s3_class(st_as_stars(x), "stars")
+  expect_s3_class(stars_obj, "stars")
   expect_equal(names(stars_obj), names(x))
 
   # change the name of the attribute
