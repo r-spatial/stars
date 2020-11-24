@@ -50,7 +50,9 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 				attr(r, "dimensions")[[dxy[1]]] = dimx
 				attr(r, "dimensions")[[dxy[2]]] = dimy
 
-				names(r) <- names(.x)
+				if (inherits(.x, "RasterLayer"))
+					names(r) <- names(.x)
+
 				return(r)
 			}
 
