@@ -119,7 +119,8 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 			if (dim(.x)[which] == length(values) - 1) # create intervals:
 				values = as_intervals(values)
 			else
-				stop(paste("length of values does not match dimension length", which))
+				stop(paste("length of values (", length(values), 
+					") does not match length of dimension", which, "(", dim(.x)[which], ")"))
 		}
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		if (! is.null(names) && length(names) == 1)

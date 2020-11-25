@@ -2,7 +2,7 @@
 
 * `st_extract` extracts space-time points if `time_column` is specified; #352
 
-* add `[[<-.stars` method, which is now called by `$<-.stars`
+* add `[[<-.stars` method, which is now called by `$<-.stars`, so that array names can be set programmatically
 
 * add `transmute` methods
 

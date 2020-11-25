@@ -14,6 +14,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @param pts object of class \code{sf} or \code{sfc} with POINT geometries
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
 #' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
+#' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.
 #' @param ... ignored
 #' @export
 #' @examples
@@ -23,7 +24,9 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' st_extract(r, pnt)
 #' st_extract(r, pnt) %>% st_as_sf()
 #' st_extract(r[,,,1], pnt)
-st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = attr(pts, "time_column")) {
+st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = 
+		attr(pts, "time_column") %||% attr(pts, "time_col"),
+		interpolate_time = bilinear) {
 
 	stopifnot(inherits(pts, c("sf", "sfc")), st_crs(pts) == st_crs(x), 
 		all(st_dimension(pts) == 0))
@@ -66,13 +69,19 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = attr(pt
 		else if (inherits(x, "stars_proxy") && !inherits(try_result, "try-error") && inherits(x0[[i]], "units"))
 			units(m[[i]]) = units(x0[[i]])
 	}
+	# match times:
 	if (!is.null(time_column)) {
 		tm = match("time", names(st_dimensions(x)))
 		if (is.na(tm))
 			stop("cannot match times: x does not have a dimension called 'time'")
 		tm_cube = st_get_dimension_values(x, "time")
-		tm_ix = match_time(tm_pts, tm_cube, !st_dimensions(x)$time$point)
-		m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
+		tm_ix = match_time(tm_pts, tm_cube, !st_dimensions(x)$time$point, interpolate_time)
+		if (!interpolate_time)
+			m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
+		else {
+			int = function(x, ix) { i = floor(ix); di = ix-i; (1-di)*x[i]+di*x[i+1] }
+			m = lapply(m, function(n) mapply(int, asplit(n, 1), tm_ix))
+		}
 	}
 	if (NCOL(m[[1]]) > 1) { # return stars:
 		for (i in seq_along(x))
@@ -86,28 +95,36 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column = attr(pt
 	} else { # return sf:
 		df = setNames(as.data.frame(lapply(m, function(i) structure(i, dim = NULL))), names(x))
 		df[[sf_column]] = st_geometry(pts)
-		if (!is.null(time_column)) {
+		if (!is.null(time_column)) { # add time columns of both cube and pts:
 			df$time = tm_cube[tm_ix]
 			df[[time_column]] = tm_pts
-			# return(sftime::st_sf_time(df, st_tc(tm_pts)))
 		}
 		st_as_sf(df)
 	}
 }
 
-match_time = function(a, b, intervals = FALSE) {
+# match the times in a to those of b:
+# if interpolate = FALSE, returns an integer in 1...length(b) or NA if outside
+# if interpolate = TRUE, returns a continuous index in 1...length(b) or NA if outside
+match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
 	if (inherits(a, "POSIXct") && inherits(b, "Date"))
 		a = as.Date(a)
 	if (inherits(b, "POSIXct") && inherits(a, "Date"))
 		b = as.Date(b)
 	stopifnot(inherits(a, class(b)))
-	m = if (inherits(b, "intervals")) {
+	m = if (inherits(b, "intervals"))
 			find_interval(a, b)
-		} else if (isTRUE(intervals)) {
+		else if (isTRUE(intervals) || interpolate) {
 			m = findInterval(a, b)
 			m[ m == 0 | m == length(b) ] = NA
 			m
 		} else
 			match(a, b)
-	m
+	if (interpolate && !isTRUE(intervals) && !inherits(b, "intervals")) {
+		b = as.numeric(b)
+		a = as.numeric(a)
+		b = c(b, tail(b, 1))
+		m + (b[m] - a)/(diff(b)[m])
+	} else
+		m
 }
