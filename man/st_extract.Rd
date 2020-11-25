@@ -12,7 +12,8 @@ st_extract(x, ...)
   pts,
   ...,
   bilinear = FALSE,
-  time_column = attr(pts, "time_column")
+  time_column = attr(pts, "time_column") \%||\% attr(pts, "time_col"),
+  interpolate_time = bilinear
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ st_extract(x, ...)
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
 \item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
+
+\item{interpolate_time}{logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
