@@ -155,7 +155,8 @@
   <span class='va'>pts</span>,
   <span class='va'>...</span>,
   bilinear <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  time_column <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>pts</span>, <span class='st'>"time_column"</span><span class='op'>)</span>
+  time_column <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>pts</span>, <span class='st'>"time_column"</span><span class='op'>)</span> <span class='op'>%||%</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>pts</span>, <span class='st'>"time_col"</span><span class='op'>)</span>,
+  interpolate_time <span class='op'>=</span> <span class='va'>bilinear</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -180,6 +181,10 @@
     <tr>
       <th>time_column</th>
       <td><p>character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in <code>x</code>, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .</p></td>
+    </tr>
+    <tr>
+      <th>interpolate_time</th>
+      <td><p>logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.</p></td>
     </tr>
     </table>
 
