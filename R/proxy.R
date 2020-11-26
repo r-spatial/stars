@@ -239,14 +239,16 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 	}
 }
 
-st_as_stars_proxy = function(x, fname = tempfile(fileext = ".tif"), quiet = TRUE, NA_value = NA_real_) {
+st_as_stars_proxy = function(x, fname = tempfile(fileext = rep_len(".tif", length(x))),
+		quiet = TRUE, NA_value = NA_real_) {
 	stopifnot(inherits(x, "stars"))
 	if (inherits(x, "stars_proxy"))
 		return(x)
-	write_stars(x, fname, NA_value = NA_value)
+	for (i in seq_along(x))
+		write_stars(x[i], fname[i], NA_value = NA_value)
 	if (!quiet)
 		cat(paste("writing to", fname, "\n"))
-	st_stars_proxy(setNames(list(fname), names(x)[1]), st_dimensions(x), NA_value = NA_value)
+	st_stars_proxy(setNames(as.list(fname), names(x)), st_dimensions(x), NA_value = NA_value)
 }
 
 # execute the call list on a stars object
