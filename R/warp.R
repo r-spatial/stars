@@ -17,8 +17,14 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	envelope = st_as_sfc(bb_x)
 	# global adjustment: needed to have st_segmentize span global extent
 	# https://github.com/r-spatial/mapview/issues/256
-	if (!is.na(segments) && !has_global_longitude(x))
-		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
+	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
+				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
+			else {
+				# https://github.com/mtennekes/tmap/issues/526 : 
+				old_crs = st_crs(envelope)
+				st_crs(envelope) = NA_crs_
+				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
+			}
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
 	if (any(is.na(cellsize))) {
