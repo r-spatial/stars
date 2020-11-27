@@ -1,6 +1,8 @@
 # version 0.4-4
 
-* `st_extract` extracts space-time points if `time_column` is specified; #352
+* `plot` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
+
+* `st_extract` extracts space-time points if `time_column` is specified, and handles time intervals; #352
 
 * add `[[<-.stars` method, which is now called by `$<-.stars`, so that array names can be set programmatically
 
