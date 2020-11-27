@@ -146,7 +146,8 @@
 <a href="#version-04-4" class="anchor"></a>version 0.4-4<small> Unreleased </small>
 </h1>
 <ul>
-<li><p><code>st_extract</code> extracts space-time points if <code>time_column</code> is specified; <a href='https://github.com/r-spatial/stars/issues/352'>#352</a></p></li>
+<li><p><code>plot</code> defaults to a categorical color scale when plotting a factor variable; <a href="https://github.com/mtennekes/tmap/issues/526" class="uri">https://github.com/mtennekes/tmap/issues/526</a></p></li>
+<li><p><code>st_extract</code> extracts space-time points if <code>time_column</code> is specified, and handles time intervals; <a href='https://github.com/r-spatial/stars/issues/352'>#352</a></p></li>
 <li><p>add <code>[[&lt;-.stars</code> method, which is now called by <code>$&lt;-.stars</code>, so that array names can be set programmatically</p></li>
 <li><p>add <code>transmute</code> methods</p></li>
 <li><p><code>plot.stars</code> calls <code>droplevels</code> if a factor array has any <code>NA</code> levels; <a href='https://github.com/r-spatial/stars/issues/339'>#339</a></p></li>
