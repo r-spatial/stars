@@ -71,10 +71,10 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 	}
 	# match times:
 	if (!is.null(time_column)) {
-		tm = match("time", names(st_dimensions(x)))
+		tm = match("time", names(st_dimensions(x))) # FIXME: select based on refsys in time classes
 		if (is.na(tm))
 			stop("cannot match times: x does not have a dimension called 'time'")
-		tm_cube = st_get_dimension_values(x, "time")
+		tm_cube = st_dimensions(x)$time$values %||% st_get_dimension_values(x, "time")
 		tm_ix = match_time(tm_pts, tm_cube, !st_dimensions(x)$time$point, interpolate_time)
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
@@ -96,6 +96,8 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 		df = setNames(as.data.frame(lapply(m, function(i) structure(i, dim = NULL))), names(x))
 		df[[sf_column]] = st_geometry(pts)
 		if (!is.null(time_column)) { # add time columns of both cube and pts:
+			if (inherits(tm_cube, "intervals"))
+				tm_cube = as.list(tm_cube)
 			df$time = tm_cube[tm_ix]
 			df[[time_column]] = tm_pts
 		}
@@ -111,7 +113,6 @@ match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
 		a = as.Date(a)
 	if (inherits(b, "POSIXct") && inherits(a, "Date"))
 		b = as.Date(b)
-	stopifnot(inherits(a, class(b)))
 	m = if (inherits(b, "intervals"))
 			find_interval(a, b)
 		else if (isTRUE(intervals) || interpolate) {

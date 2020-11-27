@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -61,7 +61,7 @@ y    1  4      2     1     NA FALSE   NULL [y]
 > st = st_set_dimensions(st, 2, values = c(2,3,4,5,8))
 > try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
 Error in st_set_dimensions(st, 2, values = c(2, 3, 4, 5, 8, 20)) : 
-  length of values does not match dimension length 2
+  length of values ( 6 ) does not match length of dimension 2 ( 4 )
 > 
 > # $<-.stars:
 > st$foo = st$m * 2
@@ -90,4 +90,4 @@ y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.130   0.089   1.210 
+  1.299   0.225   1.211 
