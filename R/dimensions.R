@@ -87,7 +87,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' @name st_dimensions
 #' @param which integer or character; index or name of the dimension to be changed
 #' @param values values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object
-#' @param names character; new names vector for (all) dimensions, ignoring \code{which}
+#' @param names character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}
 #' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
 #' @examples
@@ -136,9 +136,16 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 			r$dimensions = names[match(r$dimensions, names(d))]
 			attr(d, "raster") = r
 		}
-		if (length(d) != length(names))
+		if (length(d) != length(names) && length(names) != 1)
 			stop("length of names should match number of dimensions")
-		base::names(d) = names
+		new_names = if (length(d) == length(names))
+				names
+			else { # replace the name of dimension `which`, #354
+				new_names = names(d)
+				new_names[which] = names
+				new_names
+			}
+		base::names(d) = new_names
 	} else if (! missing(xy)) {
 		stopifnot(length(xy) == 2)
 		r = attr(d, "raster")

@@ -66,7 +66,7 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 
 \item{values}{values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object}
 
-\item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
+\item{names}{character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}}
 
 \item{xy}{length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions}
 
