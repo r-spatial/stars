@@ -105,9 +105,9 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
 	d = st_dimensions(.x)
+	if (is.character(which))
+		which = match(which, base::names(d))
 	if (! is.null(values)) {
-		if (is.character(which))
-			which = match(which, base::names(d))
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
 		if (inherits(values, "dimensions")) {
