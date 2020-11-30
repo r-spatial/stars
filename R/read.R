@@ -89,7 +89,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
 		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value,
 			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
-		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
+		curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
+			st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
 	}
 
 	if (length(x) > 1) { # loop over data sources:
