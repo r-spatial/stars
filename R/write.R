@@ -116,7 +116,7 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 			}
 			created = TRUE
 			write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
-				options = options, type = type, update = TRUE)
+				options = options, type = type, update = TRUE, NA_value = NA_value)
 			if (progress)
 				setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))
 		}
