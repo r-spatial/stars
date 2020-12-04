@@ -67,14 +67,19 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 		options = character(0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
-	if (missing(layer) && length(obj) > 1)
-		warning("all but first attribute are ignored")
-	if (layer != 1)
-		stop("only first attribute of a stars_proxy object can be written; consider using merge")
+	if (missing(layer)) {
+		if (length(obj) > 1)
+			warning("all but first attribute are ignored")
+	} else {
+		warning("specifying layer may not work in write_stars()")
+		obj = obj[layer]
+	}
 	if (length(obj[[1]]) > 1) { # collapse bands:
 		out_file = tempfile(fileext = ".vrt")
-		gdal_utils("buildvrt", x[[1]], out_file, options = "-separate")
-		x[[1]] = out_file
+		gdal_utils("buildvrt", obj[[1]], out_file, options = "-separate")
+		obj = unclass(obj)
+		obj[[1]] = out_file
+		obj = structure(obj, class = c("stars_proxy", "stars"))
 	}
 	if (progress) {
 		pb = txtProgressBar()
@@ -124,8 +129,7 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	if (progress)
 		close(pb)
 	invisible(obj)
-}
-
+} 
 #' @name write_stars
 #' @export
 #' @param filename character; used for guessing driver short name based on file 
