@@ -206,8 +206,8 @@
     </tr>
     <tr>
       <th>proxy</th>
-      <td><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array 
-metadata only; if <code>FALSE</code> the full array data is read in memory. Always <code>FALSE</code> for curvilinear girds. 
+      <td><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array
+metadata only; if <code>FALSE</code> the full array data is read in memory. Always <code>FALSE</code> for curvilinear girds.
 If not set, defaults to <code>TRUE</code> when the number of cells to be read is larger than <code>options(stars.n_proxy</code>,
 or to 1e8 if that option was not set.</p></td>
     </tr>
@@ -229,7 +229,7 @@ or to 1e8 if that option was not set.</p></td>
     </tr>
     <tr>
       <th>n_proxy</th>
-      <td><p>integer; number of cells above which .x will be read as stars 
+      <td><p>integer; number of cells above which .x will be read as stars
 proxy object, i.e. not as in-memory arrays but left on disk</p></td>
     </tr>
     </table>
@@ -363,31 +363,31 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file5c7b6c0e6a5b.tif 
-#&gt;  Min.   :  1.00       
-#&gt;  1st Qu.: 30.75       
-#&gt;  Median : 60.50       
-#&gt;  Mean   : 60.50       
-#&gt;  3rd Qu.: 90.25       
-#&gt;  Max.   :120.00       
+#&gt;  file429641a5e34.tif 
+#&gt;  Min.   :  1.00      
+#&gt;  1st Qu.: 30.75      
+#&gt;  Median : 60.50      
+#&gt;  Mean   : 60.50      
+#&gt;  3rd Qu.: 90.25      
+#&gt;  Max.   :120.00      
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
-#&gt; y    1 12     12    -1     NA    NA   NULL [y]</div><div class='input'><span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span>, RasterIO <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nXOff <span class='op'>=</span> <span class='fl'>1</span>, nYOff <span class='op'>=</span> <span class='fl'>1</span>, nXsize <span class='op'>=</span> <span class='fl'>10</span>, nYSize <span class='op'>=</span> <span class='fl'>12</span>,
+#&gt; y    1 12     12    -1     NA    NA   NULL [y]</div><div class='input'><span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span>, RasterIO <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nXOff <span class='op'>=</span> <span class='fl'>1</span>, nYOff <span class='op'>=</span> <span class='fl'>1</span>, nXSize <span class='op'>=</span> <span class='fl'>10</span>, nYSize <span class='op'>=</span> <span class='fl'>12</span>,
    nBufXSize <span class='op'>=</span> <span class='fl'>2</span>, nBufYSize <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
 </div><div class='output co'>#&gt;      [,1] [,2]
 #&gt; [1,]   33   93
-#&gt; [2,]   38   98</div><div class='input'><span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span>, RasterIO <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nXOff <span class='op'>=</span> <span class='fl'>1</span>, nYOff <span class='op'>=</span> <span class='fl'>1</span>, nXsize <span class='op'>=</span> <span class='fl'>10</span>, nYSize <span class='op'>=</span> <span class='fl'>12</span>,
+#&gt; [2,]   38   98</div><div class='input'><span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span>, RasterIO <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>nXOff <span class='op'>=</span> <span class='fl'>1</span>, nYOff <span class='op'>=</span> <span class='fl'>1</span>, nXSize <span class='op'>=</span> <span class='fl'>10</span>, nYSize <span class='op'>=</span> <span class='fl'>12</span>,
    nBufXSize <span class='op'>=</span> <span class='fl'>2</span>, nBufYSize <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file5c7b6c0e6a5b.tif 
-#&gt;  Min.   :33.00        
-#&gt;  1st Qu.:36.75        
-#&gt;  Median :65.50        
-#&gt;  Mean   :65.50        
-#&gt;  3rd Qu.:94.25        
-#&gt;  Max.   :98.00        
+#&gt;  file429641a5e34.tif 
+#&gt;  Min.   :33.00       
+#&gt;  1st Qu.:36.75       
+#&gt;  Median :65.50       
+#&gt;  Mean   :65.50       
+#&gt;  3rd Qu.:94.25       
+#&gt;  Max.   :98.00       
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
