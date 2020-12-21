@@ -833,6 +833,7 @@ drop_units.stars = function(x) {
 	st_stars(lapply(x, drop_units), dimensions = st_dimensions(x))
 }
 
+#' Predict values, given a model object, for a stars or stars_proxy object
 #' @export
 #' @name predict.stars
 #' @param object object of class `stars`

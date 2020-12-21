@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ Geometry set for 70 features
 geometry type:  POINT
 dimension:      XY
 bbox:           xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
-CRS:            +proj=longlat +datum=WGS84
+CRS:            +proj=longlat +datum=WGS84 +no_defs
 First 5 geometries:
 POINT (9.585911 53.67057)
 POINT (9.68503 53.52418)
@@ -51,4 +51,4 @@ POINT (13.29635 52.65315)
 > 
 > proc.time()
    user  system elapsed 
-  2.131   0.078   2.199 
+  3.468   0.141   3.605 

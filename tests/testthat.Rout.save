@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -21,9 +21,7 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-══ testthat results  ═══════════════════════════════════════════════════════════
-[ OK: 97 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
 > 
 > proc.time()
    user  system elapsed 
-  6.505   0.088   6.559 
+  7.462   0.137   7.531 
