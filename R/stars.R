@@ -834,6 +834,12 @@ drop_units.stars = function(x) {
 }
 
 #' @export
+#' @name predict.stars
+#' @param object object of class `stars`
+#' @param model model object of a class that has a predict method; check with `methods(class = class(object))`
+#' @param ... arguments passed on to this predict method
+#' @details separate predictors in object need to be separate attributes in object; 
+#' in case they are e.g. in a band dimension, use `split(object)`
 predict.stars = function(object, model, ...) {
 	pr = predict(model, as.data.frame(st_as_stars(object)), ...)
 	if (!inherits(pr, "data.frame"))

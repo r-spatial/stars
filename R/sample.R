@@ -44,14 +44,12 @@ st_sample.stars = function(x, size, ..., type = "random", replace = FALSE) {
 
 #' @export
 st_sample.stars_proxy = function(x, size, ..., type = "regular", quiet = TRUE) {
-	if (length(x) > 1)
-		warning("only sampling the first attribute")
 	if (type != "regular")
 		warning("only type 'regular' for stars_proxy objects supported")
 	d = dim(x)
-	downsampling_rate = round(d / sqrt(size)) # right for x,y-only, oversamples in case of others
+	downsampling_rate = c(floor(d[1:2] / sqrt(size)), d[-(1:2)])
 	if (!quiet)
 		print(downsampling_rate) # nocov
-	st = fetch(x, downsampling_rate)
-	st_sample(st, size, ...)
+	fetch(x, downsampling_rate)
+	# st_sample(st, size, ...)
 }

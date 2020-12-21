@@ -403,6 +403,7 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ..., .fname) {
 }
 
 #' @export
+#' @name predict.stars
 predict.stars_proxy = function(object, model, ...) {
 	collect(object, match.call(), "predict", c("object", "model"), env = environment())
 }
