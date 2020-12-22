@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Coerce stars object into a Raster raster or brick — as • stars</title>
+<title>Predict values, given a model object, for a stars or stars_proxy object — predict.stars • stars</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Coerce stars object into a Raster raster or brick — as" />
-<meta property="og:description" content="Coerce stars object into a Raster raster or brick" />
+<meta property="og:title" content="Predict values, given a model object, for a stars or stars_proxy object — predict.stars" />
+<meta property="og:description" content="Predict values, given a model object, for a stars or stars_proxy object" />
 
 
 
@@ -138,31 +138,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Coerce stars object into a Raster raster or brick</h1>
-    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/raster.R'><code>R/raster.R</code></a></small>
-    <div class="hidden name"><code>coerce-methods.Rd</code></div>
+    <h1>Predict values, given a model object, for a stars or stars_proxy object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/r-spatial/stars/blob/master/R/stars.R'><code>R/stars.R</code></a>, <a href='https://github.com/r-spatial/stars/blob/master/R/proxy.R'><code>R/proxy.R</code></a></small>
+    <div class="hidden name"><code>predict.stars.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Coerce stars object into a Raster raster or brick</p>
+    <p>Predict values, given a model object, for a stars or stars_proxy object</p>
     </div>
 
+    <pre class="usage"><span class='co'># S3 method for stars</span>
+<span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for stars_proxy</span>
+<span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>from</th>
-      <td><p>object to coerce</p></td>
+      <th>object</th>
+      <td><p>object of class `stars`</p></td>
+    </tr>
+    <tr>
+      <th>model</th>
+      <td><p>model object of a class that has a predict method; check with `methods(class = class(object))`</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>arguments passed on to this predict method</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>RasterLayer or RasterBrick</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick.</p>
+    <p>separate predictors in object need to be separate attributes in object; 
+in case they are e.g. in a band dimension, use `split(object)`</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
