@@ -1,0 +1,152 @@
+---
+title: "7. Statistical models with stars objects"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{7-models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+suppressPackageStartupMessages(library(dplyr))
+```
+
+## Pixel-wise models
+
+We can run models in many different ways on array data.
+One way is to run a single model to all pixels, where the model operates
+e.g. on the spectral (band) or temporal dimension. An example was given
+[in vignette 2](https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order), where NDVI was computed from the red and near infrared band.
+
+### Linear regression on pixel time series
+
+We can read in the avhrr dataset, containing only 9 days:
+```{r}
+library(stars)
+x = c("avhrr-only-v2.19810901.nc",
+"avhrr-only-v2.19810902.nc",
+"avhrr-only-v2.19810903.nc",
+"avhrr-only-v2.19810904.nc",
+"avhrr-only-v2.19810905.nc",
+"avhrr-only-v2.19810906.nc",
+"avhrr-only-v2.19810907.nc",
+"avhrr-only-v2.19810908.nc",
+"avhrr-only-v2.19810909.nc")
+file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+y = read_stars(file_list, sub = "sst", quiet = TRUE, proxy = TRUE)
+(t = st_get_dimension_values(y, 4))
+```
+
+We will use a function that computes the slope of the regression
+line for temperature with time. We get temperatures as a vector in
+the first argument of the function supplied to `st_apply`, and have
+`t` already defined. The function could look like
+
+```{r}
+slope = function(x) {
+  if (any(is.na(x)))
+  	NA_real_
+  else
+	coeffients(lm(x~t))[2]
+}
+```
+
+but we will optimize this a bit, using `anyNA` and `lm.fit`
+rather than `lm`:
+
+```{r}
+slope = function(x) {
+  if (anyNA(x))
+  	NA_real_
+  else
+    lm.fit(cbind(1, t), x)$coefficients[2]
+}
+```
+
+The result is lazily defined by
+
+```{r}
+out = st_apply(adrop(y), c(1,2), slope)
+```
+
+but only _obtained_ by the following command, where the
+computations are restricted to the pixels plotted:
+
+```{r}
+plot(out, breaks = "equal", main = "9-day time tend")
+```
+
+## Unsupervised learners
+
+### Principal components
+
+In the first example, we build principal components on the entire data set,
+because it is rather small.
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+r = split(read_stars(tif))
+pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
+out = predict(r, pc)
+plot(merge(out), breaks = "equal")
+```
+
+In the second example, we build principal components from a sample
+of the entire data set, because the entire dataset is rather large.
+We apply it, using `predict`, to pixels shown in the plot (which is a
+small subset of all pixels).
+
+```{r}
+granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", 
+   package = "starsdata")
+s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
+"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632")
+(p = split(read_stars(s2, proxy = TRUE)))
+r = split(st_sample(p, 1000)) # TODO: !!split should not be needed
+pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
+out = predict(p, pc)
+plot(merge(out))
+```
+
+### K-means clustering
+
+```{r}
+library(clue)
+predict.kmeans = function(object, newdata, ...) {
+	unclass(clue::cl_predict(object, newdata[, -c(1:2)], ...))
+}
+```
+
+For a small dataset:
+
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+i = read_stars(tif, proxy = TRUE) %>%
+	split()
+nclus = 5
+
+sam = st_sample(i, 1000)
+k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
+out = predict(i, k)
+plot(out, col = sf.colors(ncl, categorical=TRUE))
+```
+
+For a large dataset:
+
+```{r}
+i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+	split()
+sam = st_sample(i, 1000)
+if (length(sam) == 1) # FIXME: needs work
+	sam = split(sam)
+k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
+out = predict(i, k)
+plot(out, col = sf.colors(ncl, categorical=TRUE))
+```
