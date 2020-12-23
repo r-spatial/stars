@@ -30,7 +30,8 @@
 #' r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
 #' plot(r, axes = TRUE, reset = FALSE)
 #' plot(ls, add = TRUE, col = "red")
-st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real_, ...), 
+st_rasterize = function(sf, template = guess_raster(sf, ...) %||% 
+			st_as_stars(st_bbox(sf), values = NA_real_, ...), 
 		file = tempfile(), driver = "GTiff", options = character(0), ...) {
 	template = st_normalize(template)
 	isn = sapply(sf, is.numeric)
@@ -47,6 +48,39 @@ st_rasterize = function(sf, template = st_as_stars(st_bbox(sf), values = NA_real
 			units(ret[[i]]) = units(sf[[i]])
 	}
 	setNames(ret, names(sf)[1])
+}
+
+guess_raster = function(x, ...) {
+	if (length(list(...)))
+		return(NULL)
+	if (all(st_dimension(x) == 0)) { # POINT
+		cc = st_coordinates(x)
+		ux = sort(unique(cc[,1]))
+		uy = sort(unique(cc[,2]))
+		dux = unique(diff(ux))
+		if (length(dux) > 1) {
+			if (var(dux)/mean(dux) < 1e-8)
+				dux = mean(dux)
+			else
+				return(NULL)
+		}
+		duy = unique(diff(uy))
+		if (length(duy) > 1) {
+			if (var(duy)/mean(duy) < 1e-8)
+				duy = mean(dux)
+			else
+				return(NULL)
+		}
+		if (length(ux) * length(uy) <= 2 * nrow(cc)) {
+			bb = st_bbox(x)
+			bb = st_bbox(setNames(c(bb["xmin"] - 0.5 * dux, 
+				bb["ymin"] - 0.5 * duy, 
+				bb["xmax"] + 0.5 * dux, 
+				bb["ymax"] + 0.5 * duy), c("xmin", "ymin", "xmax", "ymax")), crs = st_crs(x))
+			return(st_as_stars(bb, dx = dux, dy = duy))
+		}
+	}
+	NULL
 }
 
 
