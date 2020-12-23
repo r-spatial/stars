@@ -109,11 +109,10 @@ granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_201
 s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632")
 (p = split(read_stars(s2, proxy = TRUE)))
-r = split(st_sample(p, 1000)) # TODO: !!split should not be needed
+r = st_sample(p, 1000)
 pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
 out = predict(p, pc)
 plot(merge(out))
-```
 
 ### K-means clustering
 
@@ -135,7 +134,7 @@ nclus = 5
 sam = st_sample(i, 1000)
 k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
 out = predict(i, k)
-plot(out, col = sf.colors(ncl, categorical=TRUE))
+plot(out, col = sf.colors(nclus, categorical=TRUE))
 ```
 
 For a large dataset:
@@ -144,9 +143,7 @@ For a large dataset:
 i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
 	split()
 sam = st_sample(i, 1000)
-if (length(sam) == 1) # FIXME: needs work
-	sam = split(sam)
 k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
 out = predict(i, k)
-plot(out, col = sf.colors(ncl, categorical=TRUE))
+plot(out, col = sf.colors(nclus, categorical=TRUE))
 ```
