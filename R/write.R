@@ -141,7 +141,7 @@ detect.driver = function(filename) { #nocov start
 	ext <- tolower(tools::file_ext(filename))
 	if (nchar(ext) < 2) {
 		warning("file without extension, using driver GTiff", call. = FALSE)
-		return("GTiff")
+		'GTiff'
 	} else {
 		switch(ext, 
 			tif  = ,
@@ -171,7 +171,7 @@ detect.driver = function(filename) { #nocov start
 			flt  = 'EHdr',
 			gpkg = 'GPKG',
 			{
-				warning('extension ', ext, ' is unknown. Using default driver GTiff.')
+				warning("extension ", ext, " is unknown. Using default driver GTiff.")
 				'GTiff'
 			}
 		)
