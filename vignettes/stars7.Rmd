@@ -19,6 +19,11 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 suppressPackageStartupMessages(library(dplyr))
 ```
 
+We will first fix the random number seed, to get identical results for procedures that involve random sampling:
+```{r}
+set.seed(1331)
+```
+
 ## Pixel-wise models
 
 We can run models in many different ways on array data.
