@@ -141,34 +141,41 @@ detect.driver = function(filename) { #nocov start
 	ext <- tolower(tools::file_ext(filename))
 	if (nchar(ext) < 2) {
 		warning("file without extension, using driver GTiff", call. = FALSE)
-		"GTiff"
+		'GTiff'
 	} else {
-		if (ext == 'tif' | ext == 'tiff') { return('GTiff')
-		} else if (ext == 'grd') { return('raster')
-		} else if (ext == 'asc') { return('ascii')
-		} else if (ext == 'nc' || ext == 'cdf' || ext == 'ncdf') { return('netcdf')
-		} else if (ext == 'kml') { return('KML')
-		} else if (ext == 'kmz') { return('KML')		
-		} else if (ext == 'big') { return('big.matrix')
-		} else if (ext == 'sgrd') { return('SAGA')
-		} else if (ext == 'sdat') { return('SAGA')
-		} else if (ext == 'bil') { return('BIL')
-		} else if (ext == 'bsq') { return('BSQ')
-		} else if (ext == 'bip') { return('BIP')
-		} else if (ext == 'bmp') { return('BMP') 
-		} else if (ext == 'gen') { return('ADRG') 
-		} else if (ext == 'bt') { return('BT') 
-		} else if (ext == 'envi') { return('ENVI')
-		} else if (ext == 'ers') { return('ERS') 
-		} else if (ext == 'img') { return( 'HFA') 
-		} else if (ext == 'rst') { return('RST') 
-		} else if (ext == 'mpr') { return('ILWIS')
-		} else if (ext == 'rsw') { return('RMF')
-		} else if (ext == 'flt') { return('EHdr')
-		} else { 
-			warning('extension ', ext, ' is unknown. Using default driver GTiff.')
-			return('GTiff') 
+		switch(ext, 
+			tif  = ,
+			tiff = 'GTiff',
+			grd  = 'raster',
+			asc  = 'ascii',
+			nc   = ,
+			cdf  = ,
+			ncdf = 'netcdf',
+			kml  = ,
+			kmz  = 'KML',
+			big  = 'big.matrix',
+			sgrd = ,
+			sdat = 'SAGA',
+			bil  = 'BIL',
+			bsq  = 'BSQ',
+			bip  = 'BIP',
+			bmp  = 'BMP',
+			gen  = 'ADRG',
+			bt   = 'BT',
+			envi = 'ENVI',
+			ers  = 'ERS',
+			img  = 'HFA',
+			rst  = 'RST',
+			mpr  = 'ILWIS',
+			rsw  = 'RMF',
+			flt  = 'EHdr',
+			gpkg = 'GPKG',
+			{
+				warning("extension ", ext, " is unknown. Using default driver GTiff.")
+				'GTiff'
+			}
+		)
 		}
-	}
 }
 #nocov end
+
