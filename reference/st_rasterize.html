@@ -112,6 +112,9 @@
     <li>
       <a href="../articles/stars6.html">6. How `raster` functions map to `stars` functions</a>
     </li>
+    <li>
+      <a href="../articles/stars7.html">7. Statistical modelling with stars objects</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -149,7 +152,8 @@
 
     <pre class="usage"><span class='fu'>st_rasterize</span><span class='op'>(</span>
   <span class='va'>sf</span>,
-  template <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>sf</span><span class='op'>)</span>, values <span class='op'>=</span> <span class='cn'>NA_real_</span>, <span class='va'>...</span><span class='op'>)</span>,
+  template <span class='op'>=</span> <span class='fu'>guess_raster</span><span class='op'>(</span><span class='va'>sf</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%||%</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>sf</span><span class='op'>)</span>, values <span class='op'>=</span> <span class='cn'>NA_real_</span>,
+    <span class='va'>...</span><span class='op'>)</span>,
   file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>,
   driver <span class='op'>=</span> <span class='st'>"GTiff"</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
