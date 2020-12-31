@@ -6,7 +6,8 @@
 \usage{
 st_rasterize(
   sf,
-  template = st_as_stars(st_bbox(sf), values = NA_real_, ...),
+  template = guess_raster(sf, ...) \%||\% st_as_stars(st_bbox(sf), values = NA_real_,
+    ...),
   file = tempfile(),
   driver = "GTiff",
   options = character(0),

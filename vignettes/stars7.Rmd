@@ -1,0 +1,251 @@
+---
+title: "7. Statistical modelling with stars objects"
+author: "Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{7-models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+suppressPackageStartupMessages(library(dplyr))
+```
+
+We will first fix the random number seed, to get identical results for procedures that involve random sampling. Remove this command if you want the random effect in outcomes.
+```{r}
+set.seed(131)
+```
+
+## Training and prediction with stars objects
+
+The usual way of statistical modelling in R uses `data.frame`s (or tibbles), and proceeds like
+```{r eval=FALSE}
+m = model(formula, data)
+pr = predict(m, newdata)
+```
+where `model` is a function like `lm`, `glm`, `randomForest` etc. that returns a classed object, such that the `predict` generic can choose the right prediction function based on that class. `formula` looks like `y ~ x1+x2` and specifies the dependent variable (`y`) and predictors (`x1`, `x2`), which are found as columns in `data`. `newdata` needs to have the predictors in its columns, and returns the predicted values for `y` at these values for predictors.
+
+### stars objects as data.frames
+
+The analogy of stars objects to `data.frame` is this:
+
+* each attribute (array) becomes a single column
+* dimensions become added (index) columns
+
+To see how this works with the 6-band example dataset, consider this:
+
+```{r}
+library(stars)
+l7 = system.file("tif/L7_ETMs.tif", package = "stars") %>%
+  read_stars()
+l7
+as.data.frame(l7) %>% head()
+```
+
+We see that we get **one** single variable with the object (array) name, and
+added columns with the dimension values (x, y, band). In a typical case, we
+would like to have the six bands distributed over six variables, and have
+a single observation (row) for each x/y pair.
+For this, we _could_ use e.g. `utils::unstack` or `dplyr::pivot_wider` on this data.frame, but
+a more efficient way is to use the dedicated `split` method for `stars` objects,
+which resolves a dimension and splits it over attributes, one for each dimension value:
+
+```{r}
+(l7.spl = split(l7, "band"))
+as.data.frame(l7.spl) %>% head()
+```
+
+### Predict for `stars` objects
+
+The pattern to obtain predictions for all pixels of a `stars` objects is:
+
+* use the full dataset or a sample of it to train the model, using `as.data.frame()` (possibly after a `split`)
+* use `predict(star_object, model)` to predict for all pixels of `stars_object`, using the stars-wrapper of the `predict` method for `model`.
+* if there is no `predict` method for `model`, provide one (see the `kmeans` example below)
+
+This works both for `stars` objects (in-memory) as `stars_proxy` objects (out-of memory). For plotting `stars_proxy` objects, downsampling is done _before_ prediction (predicting only the pixels that are shown), full rasters can be written to disk with `write_stars()`, which will carry out predictions on chunks being read and written.
+
+The reason that `split` is more efficient than the mentioned alternatives is that (i) `split` does not have to match records based on dimensions (x/y), and (ii) it works for out-of-memory (stars_proxy) arrays, in the chunked process/write loop of `write_stars()`.
+
+## Pixel-wise models
+
+We can run models in many different ways on array data.
+One way is to run a single model to all pixels, where the model operates
+e.g. on the spectral (band) or temporal dimension. An example was given
+[in vignette 2](https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order), where NDVI was computed from the red and near infrared band.
+
+Another example would be to calibrate a model on each pixel time series, and output one or more model coefficients for each pixel; this is shown here.
+
+### Linear regression on pixel time series
+
+We can read in the avhrr dataset, containing only 9 days:
+```{r}
+library(stars)
+x = c("avhrr-only-v2.19810901.nc",
+"avhrr-only-v2.19810902.nc",
+"avhrr-only-v2.19810903.nc",
+"avhrr-only-v2.19810904.nc",
+"avhrr-only-v2.19810905.nc",
+"avhrr-only-v2.19810906.nc",
+"avhrr-only-v2.19810907.nc",
+"avhrr-only-v2.19810908.nc",
+"avhrr-only-v2.19810909.nc")
+file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+y = read_stars(file_list, sub = "sst", quiet = TRUE, proxy = TRUE)
+(t = st_get_dimension_values(y, 4))
+```
+
+We will use a function that computes the slope of the regression
+line for temperature with time. We get temperatures as a vector in
+the first argument of the function supplied to `st_apply`, and have
+`t` already defined. The function could look like
+
+```{r}
+slope = function(x) {
+  if (any(is.na(x)))
+  	NA_real_
+  else
+	coeffients(lm(x~t))[2]
+}
+```
+
+but we will optimize this a bit, using `anyNA` and `lm.fit`
+rather than `lm`:
+
+```{r}
+slope = function(x) {
+  if (anyNA(x))
+  	NA_real_
+  else
+    lm.fit(cbind(1, t), x)$coefficients[2]
+}
+```
+
+The result is lazily defined by (`adrop` drops the singular dimension)
+
+```{r}
+out = st_apply(adrop(y), c(1,2), slope)
+```
+
+but only _computed_ by the following command, where the
+computations are restricted to the pixels plotted:
+
+```{r}
+plot(out, breaks = "equal", main = "9-day time trend (slope)")
+```
+
+## Unsupervised learners
+
+### Principal components
+
+In the first example, we build principal components on the entire data set,
+because it is rather small.
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+r = split(read_stars(tif))
+pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
+out = predict(r, pc)
+plot(merge(out), breaks = "equal")
+```
+
+In the second example, we build principal components from a sample
+of the entire data set, because the entire dataset is rather large.
+We apply it, using `predict`, to pixels shown in the plot (which is a
+small subset of all pixels).
+
+```{r}
+granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", 
+   package = "starsdata")
+s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
+"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632")
+(p = split(read_stars(s2, proxy = TRUE)))
+r = st_sample(p, 1000)
+pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
+out = predict(p, pc)
+plot(merge(out))
+```
+
+### K-means clustering
+
+```{r}
+library(clue)
+predict.kmeans = function(object, newdata, ...) {
+	unclass(clue::cl_predict(object, newdata[, -c(1:2)], ...))
+}
+```
+
+For a small dataset:
+
+```{r}
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+i = read_stars(tif, proxy = TRUE) %>%
+	split()
+nclus = 5
+
+sam = st_sample(i, 1000)
+k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
+out = predict(i, k)
+plot(out, col = sf.colors(nclus, categorical=TRUE))
+```
+
+For a large dataset:
+
+```{r}
+i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+	split()
+sam = st_sample(i, 1000)
+k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
+out = predict(i, k)
+plot(out, col = sf.colors(nclus, categorical=TRUE))
+```
+
+### Random Forest land use classification
+
+The following example is purely for educational purposes; the classified "land use" is just a rough approximation from what seems to be easily visible on the image: sea, land, and areas with both but partially covered by clouds. We opted therefore for four classes: sea, land, clouds over sea, clouds over land.
+
+We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
+```{r}
+r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+	split() %>%
+  st_as_stars(downsample = c(30,30))
+cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) %>%
+  st_transform(st_crs(r))
+plot(r, reset = FALSE)
+plot(cl, add = TRUE)
+```
+
+Next, we need points, sampled inside these polygons, for which we need to extract the satellite spectral data
+```{r}
+pts = st_sample(cl, 1000, "regular") %>%
+    st_as_sf() %>%
+    st_intersection(cl)
+train = st_extract(r, pts)
+train$use = as.factor(pts$use) # no need for join, since the order did not change
+train
+```
+
+```{r}
+library(randomForest)
+rf = randomForest(use~B4+B3+B2+B8, train)
+pr = predict(r, rf)
+plot(pr, key.width = lcm(5), reset = FALSE)
+# add country outline
+bb = st_bbox(r) %>% 
+  st_as_sfc() %>%
+  st_transform(4326) %>%
+  st_bbox()
+library(maps)
+library(mapdata)
+m = map("worldHires", xlim = bb[c(1,3)], ylim = bb[c(2,4)], plot=F,fill=TRUE) %>%
+  st_as_sfc()
+m %>% st_transform(st_crs(r)) %>%
+  plot(add = TRUE)
+```

@@ -45,11 +45,11 @@ st_sample.stars = function(x, size, ..., type = "random", replace = FALSE) {
 #' @export
 st_sample.stars_proxy = function(x, size, ..., type = "regular", quiet = TRUE) {
 	if (type != "regular")
-		warning("only type 'regular' for stars_proxy objects supported")
+		stop("only type 'regular' for stars_proxy objects supported") # FIXME: tbd
 	d = dim(x)
 	downsampling_rate = c(floor(d[1:2] / sqrt(size)), d[-(1:2)])
 	if (!quiet)
 		print(downsampling_rate) # nocov
-	fetch(x, downsampling_rate)
+	st_as_stars(x, downsample = downsampling_rate)
 	# st_sample(st, size, ...)
 }
