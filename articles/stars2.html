@@ -272,30 +272,18 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">granule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
 <span class="va">s2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"SENTINEL2_L1C:/vsizip/"</span>, <span class="va">granule</span>, <span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## stars_proxy object with 1 attribute in file:</span>
-<span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
-<span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8</span></code></pre></div>
+<span class="op">(</span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<pre><code>##    user  system elapsed 
-##   2.107   0.120   1.888</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>then only the reading would take over a minute, and require 5 Gb memory.</p>
 <div id="methods-for-stars-proxy-objects" class="section level2">
 <h2 class="hasAnchor">
 <a href="#methods-for-stars-proxy-objects" class="anchor"></a>Methods for stars proxy objects</h2>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span>
 <span class="co">##  [1] [              adrop          aggregate      aperm          as.data.frame </span>
 <span class="co">##  [6] c              coerce         dim            droplevels     filter        </span>
@@ -309,7 +297,7 @@
 <h2 class="hasAnchor">
 <a href="#select-attributes" class="anchor"></a>Select attributes</h2>
 <p>We can select attributes as with regular <code>stars</code> objects, by using the first argument to <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"avhrr-only-v2.19810901.nc"</span>,
 <span class="st">"avhrr-only-v2.19810902.nc"</span>,
 <span class="st">"avhrr-only-v2.19810903.nc"</span>,
@@ -322,120 +310,56 @@
 <span class="va">file_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"netcdf/"</span>, <span class="va">x</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
 <span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
-<span class="co">## [1] "sst"  "anom" "err"  "ice"</span>
-<span class="va">y</span><span class="op">[</span><span class="st">"sst"</span><span class="op">]</span>
-<span class="co">## stars_proxy object with 1 attribute in files:</span>
-<span class="co">## $sst</span>
-<span class="co">## [1] "[...]/avhrr-only-v2.19810901.nc:sst" "[...]/avhrr-only-v2.19810902.nc:sst"</span>
-<span class="co">## [3] "[...]/avhrr-only-v2.19810903.nc:sst" "[...]/avhrr-only-v2.19810904.nc:sst"</span>
-<span class="co">## [5] "[...]/avhrr-only-v2.19810905.nc:sst" "[...]/avhrr-only-v2.19810906.nc:sst"</span>
-<span class="co">## [7] "[...]/avhrr-only-v2.19810907.nc:sst" "[...]/avhrr-only-v2.19810908.nc:sst"</span>
-<span class="co">## [9] "[...]/avhrr-only-v2.19810909.nc:sst"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
+<span class="va">y</span><span class="op">[</span><span class="st">"sst"</span><span class="op">]</span></code></pre></div>
 <p>Note that this selection limits the reading from 4 to 1 subdataset from all 9 NetCDF files.</p>
 </div>
 <div id="select-an-area" class="section level2">
 <h2 class="hasAnchor">
 <a href="#select-an-area" class="anchor"></a>Select an area</h2>
 <p>Another possibility is to crop, or select a rectangular region based on a spatial object. This can be done by passing a <code>bbox</code> object, or an <code>sf</code>, <code>sfc</code> or <code>stars</code> object from which the bounding box will be taken. An example:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bb</span> <span class="op">=</span> <span class="fu">st_bbox</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">10.125</span>, ymin <span class="op">=</span> <span class="fl">0.125</span>, xmax <span class="op">=</span> <span class="fl">70.125</span>, ymax <span class="op">=</span> <span class="fl">70.125</span><span class="op">)</span><span class="op">)</span>
 <span class="va">ysub</span> <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="va">bb</span><span class="op">]</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span>
-<span class="co">##      from  to         offset  delta  refsys point values x/y</span>
-<span class="co">## x      41 281              0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y      80 360             90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1   1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1   9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span> <span class="co"># still no data here!!</span>
-<span class="co">## [1] "stars_proxy" "stars"</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">ysub</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># plot reads the data, at resolution that is relevant</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu">st_as_sfc</span><span class="op">(</span><span class="va">bb</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, lwd <span class="op">=</span> <span class="fl">.5</span>, border <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div id="lazy-evaluation-changing-evaluation-order" class="section level2">
 <h2 class="hasAnchor">
 <a href="#lazy-evaluation-changing-evaluation-order" class="anchor"></a>Lazy evaluation, changing evaluation order</h2>
 <p>Some other actions can be carried out on <code>stars_proxy</code> objects, but their effect is delayed until the data are actually needed (<code>plot</code>, <code>write_stars</code>). For instance, range selections on dimensions other than shown above first need data, and can only then be carried out. Such functions are added to the object, in an attribute called <code>call_list</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yy</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html">adrop</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>
 <span class="va">yyy</span> <span class="op">=</span> <span class="va">yy</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># still no data</span>
-<span class="co">## [1] "stars_proxy" "stars"</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># and dimensions not adjusted</span>
-<span class="co">##      from to         offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">yyy</span>, <span class="st">"call_list"</span><span class="op">)</span> <span class="co"># the name of object in the call (y) is replaced with x:</span>
-<span class="co">## [[1]]</span>
-<span class="co">## x[i = i, drop = drop, crop = crop]</span>
-<span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x557ad54456f0&gt;</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">yyy</span>, <span class="st">"call_list"</span><span class="op">)</span> <span class="co"># the name of object in the call (y) is replaced with x:</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
 <li>If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">range</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>the order of evaluation needs to be reversed: only <code>plot</code> knows which pixels are going to be shown, so that should be in control of how <code>x</code> is subsampled <em>before</em> <code>st_apply</code> is carried out on this subsample.</p>
 <div id="fetching-the-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fetching-the-data" class="anchor"></a>Fetching the data</h3>
 <p>Fetching the data now involves reading the whole array and then evaluating the <code>call_list</code> on it, sequentially:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span><span class="op">)</span> <span class="co"># read, adrop, subset</span>
-<span class="co">## stars object with 4 dimensions and 4 attributes</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##    sst [°*C]        anom [°*C]      err [°*C]   ice [percent]   </span>
-<span class="co">##  Min.   :-1.280   Min.   :0.480   Min.   :0.3   Min.   :0.7600  </span>
-<span class="co">##  1st Qu.:-1.170   1st Qu.:0.620   1st Qu.:0.3   1st Qu.:0.7900  </span>
-<span class="co">##  Median :-1.110   Median :0.690   Median :0.3   Median :0.8100  </span>
-<span class="co">##  Mean   :-1.116   Mean   :0.665   Mean   :0.3   Mean   :0.8063  </span>
-<span class="co">##  3rd Qu.:-1.060   3rd Qu.:0.720   3rd Qu.:0.3   3rd Qu.:0.8200  </span>
-<span class="co">##  Max.   :-0.950   Max.   :0.770   Max.   :0.3   Max.   :0.8500  </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from to         offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span><span class="op">)</span> <span class="co"># read, adrop, subset</span></code></pre></div>
 </div>
 <div id="plotting-with-changed-evaluation-order" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plotting-with-changed-evaluation-order" class="anchor"></a>Plotting with changed evaluation order</h3>
 <p>For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># S2 10m: band 4: near infrared, band 1: red.</span>
 <span class="va">ndvi</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">-</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="op">(</span><span class="va">s2.ndvi</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">p</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">ndvi</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## stars_proxy object with 1 attribute in file:</span>
-<span class="co">## $`MTD_MSIL1C.xml:10m:EPSG_32632`</span>
-<span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8    </span>
-<span class="co">## call_list:</span>
-<span class="co">## [[1]]</span>
-<span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, .fname = .fname)</span>
-<span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x557ad4ad9438&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
-<pre><code>##    user  system elapsed 
-##   1.525   0.124   1.312</code></pre>
 </div>
 </div>
 </div>
