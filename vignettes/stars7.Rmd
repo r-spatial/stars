@@ -59,10 +59,12 @@ a more efficient way is to use the dedicated `split` method for `stars` objects,
 which resolves a dimension and splits it over attributes, one for each dimension value:
 
 ```{r}
-(l7.spl = split(l7, "band"))
-as.data.frame(l7.spl) %>% head()
+l7 %>% split("band") %>%
+  as.data.frame() %>% 
+  head()
 ```
 
+The reason that `split` is more efficient than the mentioned alternatives is that (i) `split` does not have to match records based on dimensions (x/y), and (ii) it works for out-of-memory (stars_proxy) arrays, in the chunked process/write loop of `write_stars()`.
 ### Predict for `stars` objects
 
 The pattern to obtain predictions for all pixels of a `stars` objects is:
@@ -73,16 +75,14 @@ The pattern to obtain predictions for all pixels of a `stars` objects is:
 
 This works both for `stars` objects (in-memory) as `stars_proxy` objects (out-of memory). For plotting `stars_proxy` objects, downsampling is done _before_ prediction (predicting only the pixels that are shown), full rasters can be written to disk with `write_stars()`, which will carry out predictions on chunks being read and written.
 
-The reason that `split` is more efficient than the mentioned alternatives is that (i) `split` does not have to match records based on dimensions (x/y), and (ii) it works for out-of-memory (stars_proxy) arrays, in the chunked process/write loop of `write_stars()`.
-
-## Pixel-wise models
+## models fitted for every pixel
 
 We can run models in many different ways on array data.
 One way is to run a single model to all pixels, where the model operates
 e.g. on the spectral (band) or temporal dimension. An example was given
-[in vignette 2](https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order), where NDVI was computed from the red and near infrared band.
+[in vignette 2](https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order), where NDVI was computed from the red and near infrared band. NDVI does not involve estimating parameters, but reducing two bands to one.
 
-Another example would be to calibrate a model on each pixel time series, and output one or more model coefficients for each pixel; this is shown here.
+An example where we fit a model to every pixel would be fit a time series model to each pixel time series, and output one or more model coefficients for each pixel; this is shown next.
 
 ### Linear regression on pixel time series
 
@@ -142,6 +142,8 @@ computations are restricted to the pixels plotted:
 plot(out, breaks = "equal", main = "9-day time trend (slope)")
 ```
 
+An interisting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, _changes_ in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguis positive from negative trends.
+
 ## Unsupervised learners
 
 ### Principal components
@@ -153,13 +155,15 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 r = split(read_stars(tif))
 pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
 out = predict(r, pc)
-plot(merge(out), breaks = "equal")
+plot(merge(out), breaks = "equal", join_zlim = FALSE)
 ```
+
+We see, amongst others, that PC1 picks up the difference between sea (dark) and land, and PC2 and 3 structures in sea and coastal waters.
 
 In the second example, we build principal components from a sample
 of the entire data set, because the entire dataset is rather large.
-We apply it, using `predict`, to pixels shown in the plot (which is a
-small subset of all pixels).
+We apply it, using `predict`, to pixels shown in the plot (i.e. at 
+reduced rather than full resolution) 
 
 ```{r}
 granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", 
@@ -173,7 +177,7 @@ pc = prcomp(na.omit(as.data.frame(r))[,-(1:2)]) # based on all data
 out = predict(p, pc)
 ```
 
-Before plotting this, we'll add country borders that delineate sea:
+Before plotting this, we'll add country borders that delineate sea, obtained from the `mapdata` package:
 ```{r}
 bb = st_bbox(p) %>% 
   st_as_sfc() %>%
@@ -186,10 +190,18 @@ m = map("worldHires", xlim = bb[c(1,3)], ylim = bb[c(2,4)], plot=F,fill=TRUE) %>
   st_transform(st_crs(r))
 ```
 
+We plot the results with independent color ranges, so every PC is stretched over the entire grey scale.
 ```{r}
-plot(merge(out), hook = function() plot(m, border = 'orange', add = TRUE))
+plt_boundary = function() plot(m, border = 'orange', add = TRUE)
+plot(merge(out), hook = plt_boundary, join_zlim = FALSE)
 ```
-This suggests that PC1 picks up the difference between clouds and non-clouds, and PC2 the difference between sea and land areas.
+
+This suggests that PC1 picks up the difference cloud signal (difference between clouds and non-clouds), PC2 the difference between sea and land areas, and PC4 some sensor artefacts (striping in swath direction).
+
+To compute full resolution (10000 x 10000 pixels) results and write them to a file, use
+```{r eval=FALSE}
+write_stars(merge(out), "out.tif")
+```
 
 ### K-means clustering
 
@@ -213,8 +225,9 @@ k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
 out = predict(i, k)
 plot(out, col = sf.colors(nclus, categorical=TRUE))
 ```
+This seems to pick up a fair number of land cover classes: water (2), rural (3, 1), and densely populated (5, 4).
 
-For a large dataset:
+For the large(r) dataset:
 
 ```{r}
 i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
@@ -225,6 +238,8 @@ out = predict(i, k)
 plot(out, col = sf.colors(nclus, categorical=TRUE), reset = FALSE)
 plot(m, add = TRUE)
 ```
+
+we see that class 4 picks up the unclouded area, the other classes seem to mainly catch the cloud signal.
 
 ### Random Forest land use classification
 
@@ -257,6 +272,8 @@ library(randomForest)
 rf = randomForest(use~B4+B3+B2+B8, train)
 pr = predict(r, rf)
 plot(pr, key.width = lcm(5), reset = FALSE)
-# add country outline
+# add country outline:
 plot(m, add = TRUE)
 ```
+
+This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.
