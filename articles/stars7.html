@@ -163,28 +163,9 @@
 <span class="co">#&gt; 6 288933.0 9120747    1          61</span></code></pre></div>
 <p>We see that we get <strong>one</strong> single variable with the object (array) name, and added columns with the dimension values (x, y, band). In a typical case, we would like to have the six bands distributed over six variables, and have a single observation (row) for each x/y pair. For this, we <em>could</em> use e.g. <code><a href="https://rdrr.io/r/utils/stack.html">utils::unstack</a></code> or <code>dplyr::pivot_wider</code> on this data.frame, but a more efficient way is to use the dedicated <code>split</code> method for <code>stars</code> objects, which resolves a dimension and splits it over attributes, one for each dimension value:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">l7.spl</span> <span class="op">=</span> <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="va">l7</span>, <span class="st">"band"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; stars object with 2 dimensions and 6 attributes</span>
-<span class="co">#&gt; attribute(s):</span>
-<span class="co">#&gt;       X1               X2               X3               X4         </span>
-<span class="co">#&gt;  Min.   : 47.00   Min.   : 32.00   Min.   : 21.00   Min.   :  9.00  </span>
-<span class="co">#&gt;  1st Qu.: 67.00   1st Qu.: 55.00   1st Qu.: 49.00   1st Qu.: 52.00  </span>
-<span class="co">#&gt;  Median : 78.00   Median : 66.00   Median : 63.00   Median : 63.00  </span>
-<span class="co">#&gt;  Mean   : 79.15   Mean   : 67.57   Mean   : 64.36   Mean   : 59.24  </span>
-<span class="co">#&gt;  3rd Qu.: 89.00   3rd Qu.: 79.00   3rd Qu.: 77.00   3rd Qu.: 75.00  </span>
-<span class="co">#&gt;  Max.   :255.00   Max.   :255.00   Max.   :255.00   Max.   :255.00  </span>
-<span class="co">#&gt;       X5               X6         </span>
-<span class="co">#&gt;  Min.   :  1.00   Min.   :  1.00  </span>
-<span class="co">#&gt;  1st Qu.: 63.00   1st Qu.: 32.00  </span>
-<span class="co">#&gt;  Median : 89.00   Median : 60.00  </span>
-<span class="co">#&gt;  Mean   : 83.18   Mean   : 59.98  </span>
-<span class="co">#&gt;  3rd Qu.:112.00   3rd Qu.: 88.00  </span>
-<span class="co">#&gt;  Max.   :255.00   Max.   :255.00  </span>
-<span class="co">#&gt; dimension(s):</span>
-<span class="co">#&gt;   from  to  offset delta                       refsys point values x/y</span>
-<span class="co">#&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
-<span class="co">#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">l7.spl</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">l7</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="st">"band"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;          x       y X1 X2 X3 X4 X5 X6</span>
 <span class="co">#&gt; 1 288790.5 9120747 69 56 46 79 86 46</span>
 <span class="co">#&gt; 2 288819.0 9120747 69 57 49 75 88 49</span>
@@ -192,10 +173,7 @@
 <span class="co">#&gt; 4 288876.0 9120747 60 45 35 66 69 38</span>
 <span class="co">#&gt; 5 288904.5 9120747 61 52 44 76 92 60</span>
 <span class="co">#&gt; 6 288933.0 9120747 61 50 37 78 74 38</span></code></pre></div>
-</div>
-<div id="predict-for-stars-objects" class="section level3">
-<h3 class="hasAnchor">
-<a href="#predict-for-stars-objects" class="anchor"></a>Predict for <code>stars</code> objects</h3>
+<p>The reason that <code>split</code> is more efficient than the mentioned alternatives is that (i) <code>split</code> does not have to match records based on dimensions (x/y), and (ii) it works for out-of-memory (stars_proxy) arrays, in the chunked process/write loop of <code><a href="../reference/write_stars.html">write_stars()</a></code>. ### Predict for <code>stars</code> objects</p>
 <p>The pattern to obtain predictions for all pixels of a <code>stars</code> objects is:</p>
 <ul>
 <li>use the full dataset or a sample of it to train the model, using <code><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame()</a></code> (possibly after a <code>split</code>)</li>
@@ -203,14 +181,13 @@
 <li>if there is no <code>predict</code> method for <code>model</code>, provide one (see the <code>kmeans</code> example below)</li>
 </ul>
 <p>This works both for <code>stars</code> objects (in-memory) as <code>stars_proxy</code> objects (out-of memory). For plotting <code>stars_proxy</code> objects, downsampling is done <em>before</em> prediction (predicting only the pixels that are shown), full rasters can be written to disk with <code><a href="../reference/write_stars.html">write_stars()</a></code>, which will carry out predictions on chunks being read and written.</p>
-<p>The reason that <code>split</code> is more efficient than the mentioned alternatives is that (i) <code>split</code> does not have to match records based on dimensions (x/y), and (ii) it works for out-of-memory (stars_proxy) arrays, in the chunked process/write loop of <code><a href="../reference/write_stars.html">write_stars()</a></code>.</p>
 </div>
 </div>
-<div id="pixel-wise-models" class="section level2">
+<div id="models-fitted-for-every-pixel" class="section level2">
 <h2 class="hasAnchor">
-<a href="#pixel-wise-models" class="anchor"></a>Pixel-wise models</h2>
-<p>We can run models in many different ways on array data. One way is to run a single model to all pixels, where the model operates e.g. on the spectral (band) or temporal dimension. An example was given <a href="https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order">in vignette 2</a>, where NDVI was computed from the red and near infrared band.</p>
-<p>Another example would be to calibrate a model on each pixel time series, and output one or more model coefficients for each pixel; this is shown here.</p>
+<a href="#models-fitted-for-every-pixel" class="anchor"></a>models fitted for every pixel</h2>
+<p>We can run models in many different ways on array data. One way is to run a single model to all pixels, where the model operates e.g. on the spectral (band) or temporal dimension. An example was given <a href="https://r-spatial.github.io/stars/articles/stars2.html#plotting-with-changed-evaluation-order">in vignette 2</a>, where NDVI was computed from the red and near infrared band. NDVI does not involve estimating parameters, but reducing two bands to one.</p>
+<p>An example where we fit a model to every pixel would be fit a time series model to each pixel time series, and output one or more model coefficients for each pixel; this is shown next.</p>
 <div id="linear-regression-on-pixel-time-series" class="section level3">
 <h3 class="hasAnchor">
 <a href="#linear-regression-on-pixel-time-series" class="anchor"></a>Linear regression on pixel time series</h3>
@@ -255,6 +232,7 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, main <span class="op">=</span> <span class="st">"9-day time trend (slope)"</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p>An interisting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, <em>changes</em> in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguis positive from negative trends.</p>
 </div>
 </div>
 <div id="unsupervised-learners" class="section level2">
@@ -269,9 +247,10 @@
 <span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">[</span>,<span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># based on all data</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">pc</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="st">"equal"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, join_zlim <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>In the second example, we build principal components from a sample of the entire data set, because the entire dataset is rather large. We apply it, using <code>predict</code>, to pixels shown in the plot (which is a small subset of all pixels).</p>
+<p>We see, amongst others, that PC1 picks up the difference between sea (dark) and land, and PC2 and 3 structures in sea and coastal waters.</p>
+<p>In the second example, we build principal components from a sample of the entire data set, because the entire dataset is rather large. We apply it, using <code>predict</code>, to pixels shown in the plot (i.e. at reduced rather than full resolution)</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">granule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, 
    package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
@@ -282,7 +261,7 @@
 <span class="va">r</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">p</span>, <span class="fl">1000</span><span class="op">)</span>
 <span class="va">pc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>,<span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># based on all data</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">pc</span><span class="op">)</span></code></pre></div>
-<p>Before plotting this, we’ll add country borders that delineate sea:</p>
+<p>Before plotting this, we’ll add country borders that delineate sea, obtained from the <code>mapdata</code> package:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bb</span> <span class="op">=</span> <span class="fu">st_bbox</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">st_as_sfc</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -293,20 +272,26 @@
 <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html">map</a></span><span class="op">(</span><span class="st">"worldHires"</span>, xlim <span class="op">=</span> <span class="va">bb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">]</span>, ylim <span class="op">=</span> <span class="va">bb</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">4</span><span class="op">)</span><span class="op">]</span>, plot<span class="op">=</span><span class="cn">F</span>,fill<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">st_as_sfc</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu">st_crs</span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We plot the results with independent color ranges, so every PC is stretched over the entire grey scale.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, hook <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, border <span class="op">=</span> <span class="st">'orange'</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="stars7_files/figure-html/unnamed-chunk-14-1.png" width="700"> This suggests that PC1 picks up the difference between clouds and non-clouds, and PC2 the difference between sea and land areas.</p>
+<code class="sourceCode R"><span class="va">plt_boundary</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, border <span class="op">=</span> <span class="st">'orange'</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, hook <span class="op">=</span> <span class="va">plt_boundary</span>, join_zlim <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars7_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p>This suggests that PC1 picks up the difference cloud signal (difference between clouds and non-clouds), PC2 the difference between sea and land areas, and PC4 some sensor artefacts (striping in swath direction).</p>
+<p>To compute full resolution (10000 x 10000 pixels) results and write them to a file, use</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, <span class="st">"out.tif"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="k-means-clustering" class="section level3">
 <h3 class="hasAnchor">
 <a href="#k-means-clustering" class="anchor"></a>K-means clustering</h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">clue</span><span class="op">)</span>
 <span class="va">predict.kmeans</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/r/base/class.html">unclass</a></span><span class="op">(</span><span class="fu">clue</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/clue/man/cl_predict.html">cl_predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>For a small dataset:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">i</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span>
@@ -316,9 +301,9 @@
 <span class="va">k</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">sam</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, <span class="va">nclus</span><span class="op">)</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, col <span class="op">=</span> <span class="fu">sf.colors</span><span class="op">(</span><span class="va">nclus</span>, categorical<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="stars7_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
-<p>For a large dataset:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p><img src="stars7_files/figure-html/unnamed-chunk-17-1.png" width="700"> This seems to pick up a fair number of land cover classes: water (2), rural (3, 1), and densely populated (5, 4).</p>
+<p>For the large(r) dataset:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">i</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">sam</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">i</span>, <span class="fl">1000</span><span class="op">)</span>
@@ -326,24 +311,26 @@
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, col <span class="op">=</span> <span class="fu">sf.colors</span><span class="op">(</span><span class="va">nclus</span>, categorical<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars7_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p><img src="stars7_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p>we see that class 4 picks up the unclouded area, the other classes seem to mainly catch the cloud signal.</p>
 </div>
 <div id="random-forest-land-use-classification" class="section level3">
 <h3 class="hasAnchor">
 <a href="#random-forest-land-use-classification" class="anchor"></a>Random Forest land use classification</h3>
 <p>The following example is purely for educational purposes; the classified “land use” is just a rough approximation from what seems to be easily visible on the image: sea, land, and areas with both but partially covered by clouds. We opted therefore for four classes: sea, land, clouds over sea, clouds over land.</p>
 <p>We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found <a href="https://www.qgistutorials.com/en/docs/digitizing_basics.html">here</a>.)</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span>downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">30</span>,<span class="fl">30</span><span class="op">)</span><span class="op">)</span>
 <span class="va">cl</span> <span class="op">=</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"gpkg/s2.gpkg"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu">st_crs</span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">cl</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars7_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">cl</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, border <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
+<p><img src="stars7_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>Next, we need points, sampled inside these polygons, for which we need to extract the satellite spectral data</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pts</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">cl</span>, <span class="fl">1000</span>, <span class="st">"regular"</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">st_intersection</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span>
@@ -369,7 +356,7 @@
 <span class="co">#&gt; 8   970 1151 1428 2450 POINT (392185.2 5940074) land</span>
 <span class="co">#&gt; 9   847 1071 1371 2400 POINT (387142.8 5936359) land</span>
 <span class="co">#&gt; 10  937 1153 1380 2973 POINT (390877.6 5927178) land</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">randomForest</a></span><span class="op">)</span>
 <span class="co">#&gt; randomForest 4.6-14</span>
 <span class="co">#&gt; Type rfNews() to see new features/changes/bug fixes.</span>
@@ -381,9 +368,10 @@
 <span class="va">rf</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">use</span><span class="op">~</span><span class="va">B4</span><span class="op">+</span><span class="va">B3</span><span class="op">+</span><span class="va">B2</span><span class="op">+</span><span class="va">B8</span>, <span class="va">train</span><span class="op">)</span>
 <span class="va">pr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">rf</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pr</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html">lcm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co"># add country outline</span>
+<span class="co"># add country outline:</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars7_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<p><img src="stars7_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p>This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.</p>
 </div>
 </div>
   </div>
