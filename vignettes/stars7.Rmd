@@ -239,6 +239,7 @@ cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) %>%
   st_transform(st_crs(r))
 plot(r, reset = FALSE)
 plot(cl, add = TRUE)
+plot(m, add = TRUE, border = 'orange')
 ```
 
 Next, we need points, sampled inside these polygons, for which we need to extract the satellite spectral data
