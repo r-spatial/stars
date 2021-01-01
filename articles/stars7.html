@@ -291,7 +291,7 @@
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; split(x = x)</span>
 <span class="co">#&gt; attr(,".Environment")</span>
-<span class="co">#&gt; &lt;environment: 0x5623a8403670&gt;</span>
+<span class="co">#&gt; &lt;environment: 0x5572bdd311c8&gt;</span>
 <span class="va">r</span> <span class="op">=</span> <span class="fu">st_sample</span><span class="op">(</span><span class="va">p</span>, <span class="fl">1000</span><span class="op">)</span>
 <span class="va">pc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">[</span>,<span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># based on all data</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">pc</span><span class="op">)</span>
