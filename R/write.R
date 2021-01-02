@@ -87,43 +87,41 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	}
 
 	dim_obj = dim(obj)
-	if (prod(chunk_size) > prod(dim_obj[1:2])) {
+	if (prod(chunk_size) > prod(dim_obj[1:2]))
 		write_stars(st_as_stars(obj), dsn, layer, ..., driver = driver, options = options,
 			type = type, NA_value = NA_value)
-		return(invisible(obj))
-	}
+	else { # write chunked:
+		di = st_dimensions(obj)
+		if (di[[1]]$from > 1 || di[[2]]$from > 1)
+			message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
 
-	# write chunks:
-	di = st_dimensions(obj)
-	if (di[[1]]$from > 1 || di[[2]]$from > 1)
-		message("chunked writing may not work for subsetted rasters: in case of failure use write_stars(st_as_stars(object))")
+		created = FALSE
 
-	created = FALSE
-
-	ncol = ceiling(dim_obj[1] / chunk_size[1])
-	nrow = ceiling(dim_obj[2] / chunk_size[2])
-	for (col in 1:ncol) { 
-		di[[1]]$from = 1 + (col - 1) * chunk_size[1]
-		di[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
-		for (row in 1:nrow) {
-			di[[2]]$from = 1 + (row - 1) * chunk_size[2]
-			di[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
-			chunk = st_as_stars(structure(obj, dimensions = di))
-			if (! created) { # create:
-				d = st_dimensions(chunk)
-				d_obj = st_dimensions(obj)
-				d[[1]]$from = d[[2]]$from = 1
-				d[[1]]$to = d_obj[[1]]$to
-				d[[2]]$to = d_obj[[2]]$to
-				# reset dimensions 1/2 to original:
-				sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options, 
-					type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+		ncol = ceiling(dim_obj[1] / chunk_size[1])
+		nrow = ceiling(dim_obj[2] / chunk_size[2])
+		for (col in 1:ncol) {
+			di[[1]]$from = 1 + (col - 1) * chunk_size[1]
+			di[[1]]$to   = min(col * chunk_size[1], dim_obj[1])
+			for (row in 1:nrow) {
+				di[[2]]$from = 1 + (row - 1) * chunk_size[2]
+				di[[2]]$to   = min(row * chunk_size[2], dim_obj[2])
+				chunk = st_as_stars(structure(obj, dimensions = di))
+				if (! created) { # create:
+					d = st_dimensions(chunk)
+					d_obj = st_dimensions(obj)
+					d[[1]]$from = d[[2]]$from = 1
+					d[[1]]$to = d_obj[[1]]$to
+					d[[2]]$to = d_obj[[2]]$to
+					# reset dimensions 1/2 to original:
+					sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options, 
+						type = type, NA_value = NA_value, geotransform = get_geotransform(obj)) # branches on stars_proxy
+				}
+				created = TRUE
+				write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
+					options = options, type = type, update = TRUE, NA_value = NA_value)
+				if (progress)
+					setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))
 			}
-			created = TRUE
-			write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
-				options = options, type = type, update = TRUE, NA_value = NA_value)
-			if (progress)
-				setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))
 		}
 	}
 	if (progress)
