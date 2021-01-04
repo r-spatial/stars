@@ -242,15 +242,21 @@ plot(m, add = TRUE)
 
 we see that class 4 picks up the unclouded area, the other classes seem to mainly catch the cloud signal.
 
+## Supervised learners
+
 ### Random Forest land use classification
 
 The following example is purely for educational purposes; the classified "land use" is just a rough approximation from what seems to be easily visible on the image: sea, land, and areas with both but partially covered by clouds. We opted therefore for four classes: sea, land, clouds over sea, clouds over land.
 
 We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
 ```{r}
+# for all, multi-resolution, use:
+# bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
+bands = c("B04", "B03", "B02", "B08")
+s2 = paste0("/vsizip/", granule, 
+"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
 r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
-	split() %>%
-  st_as_stars(downsample = c(30,30))
+	setNames(bands) 
 cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) %>%
   st_transform(st_crs(r))
 plot(r, reset = FALSE)
@@ -270,11 +276,14 @@ train
 
 ```{r}
 library(randomForest)
-rf = randomForest(use~B4+B3+B2+B8, train)
+train = as.data.frame(train)
+train$x = NULL # remove geometry
+rf = randomForest(use ~ ., train) # ~ . : use all other attributes
 pr = predict(r, rf)
-plot(pr, key.width = lcm(5), reset = FALSE)
+plot(pr, key.width = lcm(5), reset = FALSE, key.pos = 4)
 # add country outline:
 plot(m, add = TRUE)
 ```
 
 This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.
+
