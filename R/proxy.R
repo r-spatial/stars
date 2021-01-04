@@ -11,6 +11,8 @@ shorten_names = function(x, n) {
 
 #' @export
 print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
+	if (!is.null(attr(x, "resolutions")))
+		cat("multi-resolution ")
 	cat("stars_proxy object with", length(x), 
 		if (length(x) > 1) "attributes" else "attribute",
 		"in", if (sum(lengths(x)) > 1) "files" else "file")
@@ -51,12 +53,25 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	plot(x, ..., downsample = 0)
 }
 
-st_stars_proxy = function(x, dimensions, NA_value = NA_real_) {
+st_stars_proxy = function(x, dimensions, NA_value = NA_real_, resolutions = NULL) {
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
-	structure(x, dimensions = dimensions, NA_value = NA_value,
+	structure(x, dimensions = dimensions, NA_value = NA_value, resolutions = resolutions,
 		class = c("stars_proxy", "stars"))
 }
+
+add_resolution = function(lst) {
+	n = length(lst)
+	resolutions = data.frame(x = numeric(n), y = numeric(n))
+	for (i in seq_along(lst)) {
+		d = st_dimensions(lst[[i]])
+		xy = attr(d, "raster")$dimensions
+		resolutions[i,] = c(d[[ xy[1] ]]$delta, d[[ xy[2] ]]$delta)
+	}
+	rownames(resolutions) = sapply(lst, names)
+	structure(lst, resolutions = resolutions)
+}
+
 
 #' @export
 #' @param along_crs logical; if \code{TRUE}, combine arrays along a CRS dimension
@@ -72,7 +87,11 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 	else if (identical(along, NA_integer_)) { 
 		if (identical_dimensions(dots))
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
-		else {
+		else if (identical_dimensions(dots, ignore_resolution = TRUE)) {
+			dots = add_resolution(dots)
+			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
+				resolutions = attr(dots, "resolutions"))
+		} else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
 			if (!is.na(along))
@@ -172,14 +191,25 @@ fetch = function(x, downsample = 0, ...) {
 		rasterio$bands = bands$values
 
 	# do it:
-	ret = lapply(x, read_stars, RasterIO = rasterio, 
-		NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
-		proxy = FALSE, ...)
+	ret = vector("list", length(x))
+	res <- attr(x, "resolutions")
+	for (i in seq_along(ret)) {
+		if (!is.null(res) && i > 1) {
+			mult = c(res[i,1] / res[1,1], res[i,2] / res[1,2])
+			rasterio$nXOff = ((dx$from - 1) %/% mult[1]) + 1
+			rasterio$nYOff = ((dy$from - 1) %/% mult[2]) + 1
+			rasterio$nXSize = floor(nXSize / mult[1])
+			rasterio$nYSize = floor(nXSize / mult[2])
+		}
+		ret[[i]] = read_stars(unclass(x)[[i]], RasterIO = rasterio, 
+			NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
+			proxy = FALSE, ...)
+	}
 
 	along = if (length(dim(x)) > 3)
 			setNames(list(st_get_dimension_values(x, 4)), tail(names(st_dimensions(x)), 1))
 		else
-			list(new_dim = names(ret))
+			list(new_dim = names(x))
 	
 	ret = if (length(ret) == 1)
 		st_redimension(ret[[1]], along = along)
@@ -296,7 +326,7 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 merge.stars_proxy = function(x, y, ...) {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
-	if (!is.null(attr(x, "call_list"))) # postpone:
+	if (!is.null(attr(x, "call_list")) || !is.null(attr(x, "resolutions"))) # postpone:
 		collect(x, match.call(), "merge", c("x"), env = environment())
 	else {
 		if (length(x) > 1) { 

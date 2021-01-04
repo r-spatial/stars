@@ -1,5 +1,7 @@
 # version 0.4-4
 
+* allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands)
+
 * `plot` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
 
 * `st_extract` extracts space-time points if `time_column` is specified, and handles time intervals; #352

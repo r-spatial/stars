@@ -561,11 +561,20 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	invisible(ret)
 }
 
-identical_dimensions = function(lst) {
+identical_dimensions = function(lst, ignore_resolution = FALSE) {
 	if (length(lst) > 1) {
-		for (i in 2:length(lst))
-			if (!identical(attr(lst[[1]], "dimensions"), attr(lst[[i]], "dimensions")))
+		d1 = attr(lst[[1]], "dimensions")
+		for (i in 2:length(lst)) {
+			di = attr(lst[[i]], "dimensions")
+			if (ignore_resolution) {
+				for (j in seq_along(d1))
+					d1[[j]]$delta = d1[[j]]$to = NA_real_
+				for (j in seq_along(di))
+					di[[j]]$delta = di[[j]]$to = NA_real_
+			}
+			if (! isTRUE(all.equal(d1, di)))
 				return(FALSE)
+		}
 	}
 	TRUE
 }
@@ -575,7 +584,7 @@ combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 	if (along > length(dims)) {
 		if (length(dots) > 1 && check_dims_identical) {
 			for (i in 2:length(dots))
-				if (!identical(dims, st_dimensions(dots[[i]])))
+				if (! isTRUE(all.equal(dims, st_dimensions(dots[[i]]))))
 					stop(paste("dimensions of element", 1, "and", i, "are not identical"))
 		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
