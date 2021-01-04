@@ -53,8 +53,10 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	plot(x, ..., downsample = 0)
 }
 
-st_stars_proxy = function(x, dimensions, NA_value, resolutions = NULL) {
+st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions) {
 	stopifnot(!missing(NA_value))
+	stopifnot(!missing(resolutions))
+	stopifnot(length(list(...)) == 0)
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
 	structure(x, dimensions = dimensions, NA_value = NA_value, resolutions = resolutions,
@@ -88,7 +90,7 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 	else if (identical(along, NA_integer_)) { 
 		if (identical_dimensions(dots))
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
-				NA_value = attr(dots[[1]], "NA_value"))
+				NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL)
 		else if (identical_dimensions(dots, ignore_resolution = TRUE)) {
 			dots = add_resolution(dots)
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
@@ -110,7 +112,8 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 					paste(which(!ident), collapse = ", "), 
 					"\nuse gdal_subdatasets() to find all subdataset names"))
 				setNames(st_stars_proxy(do.call(c, 
-						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]]),
+						NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL),
 						nms[ident])
 			}
 		}
@@ -139,22 +142,15 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 			dims = combine_dimensions(dots, along_dim)
 			if (along_dim == length(d) + 1)
 				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
-			st_stars_proxy(ret, dimensions = dims, NA_value = attr(dots[[1]], "NA_value"))
+			st_stars_proxy(ret, dimensions = dims, NA_value = attr(dots[[1]], "NA_value"),
+				resolutions = NULL)
 		}
 	}
 }
 
 combine_along_crs_proxy = function(dots) {
-	#crs = as.integer(sapply(l, function(x) st_crs(x)$epsg))
 	crs = lapply(l, st_crs)
-	# erase offset:
-	erase_offset = function(x) { 
-		d = st_dimensions(x)
-		# xy = attr(d, "raster")$dimensions
-		# d[[ xy[1] ]]$offset = d[[ xy[2] ]]$offset = NA
-		st_set_crs(st_stars_proxy(x, d), NA)
-	}
-	l = lapply(dots, erase_offset)
+	l = lapply(dots, st_set_crs, value = NA)
 	ret = do.call(c, c(l, along = "crs"))
 	st_set_dimensions(ret, "crs", values = crs, point = TRUE)
 }
@@ -170,7 +166,7 @@ st_redimension.stars_proxy = function(x, new_dims = st_dimensions(x), along = li
 	names(dims)[names(dims) == "new_dim"] = names(along)
 	ret = list(unlist(do.call(c, lapply(x, unclass))))
 	st_stars_proxy(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims,
-		NA_value = attr(x, "NA_value"))
+		NA_value = attr(x, "NA_value"), resolutions = attr(x, "resolutions"))
 }
 
 # fetch a stars object from a stars_proxy object, using downsampling
@@ -184,10 +180,10 @@ fetch = function(x, downsample = 0, ...) {
 	nBufYSize = nYSize = dy$to - dy$from + 1
 
 	downsample = rep(downsample, length.out = 2)
-	if (downsample[1] > 0) 
-		nBufXSize = nBufXSize / (downsample[1] + 1)
-	if (downsample[2] > 0) 
-		nBufYSize = nBufYSize / (downsample[2] + 1)
+	if (downsample[1] > 0)
+		nBufXSize = ceiling(nBufXSize / (downsample[1] + 1))
+	if (downsample[2] > 0)
+		nBufYSize = ceiling(nBufYSize / (downsample[2] + 1))
 
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
@@ -198,16 +194,33 @@ fetch = function(x, downsample = 0, ...) {
 	ret = vector("list", length(x))
 	res <- attr(x, "resolutions")
 	for (i in seq_along(ret)) {
-		if (!is.null(res) && i > 1) {
+		if (!is.null(res) && any(res[1,] != res[i,])) {
 			mult = c(res[i,1] / res[1,1], res[i,2] / res[1,2])
 			rasterio$nXOff = ((dx$from - 1) %/% mult[1]) + 1
 			rasterio$nYOff = ((dy$from - 1) %/% mult[2]) + 1
-			rasterio$nXSize = floor(nXSize / mult[1])
-			rasterio$nYSize = floor(nXSize / mult[2])
-		}
+			rasterio$nXSize = ceiling(nXSize / mult[1])
+			rasterio$nYSize = ceiling(nXSize / mult[2])
+			rasterio$nBufXSize = ceiling(rasterio$nXSize * mult[1] / (downsample[1] + 1))
+			rasterio$nBufYSize = ceiling(rasterio$nXSize * mult[2] / (downsample[2] + 1))
+			offset = c(((dx$from - 1) %% mult[1]) + 1, ((dy$from - 1) %% mult[2]) + 1)
+		} else
+			offset = c(1,1)
 		ret[[i]] = read_stars(unclass(x)[[i]], RasterIO = rasterio, 
 			NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
 			proxy = FALSE, ...)
+		if (i == 1)
+			dm1 = dim(ret[[1]])
+		else {
+			dmi = dim(ret[[i]])
+			xrange = seq_len(dm1[1])
+			if (dmi[1] > dm1[1])
+				xrange = xrange + offset[1] - 1
+			yrange = seq_len(dm1[2])
+			if (dmi[2] > dm1[2])
+				yrange = yrange + offset[2] - 1
+			ret[[i]] = ret[[i]] [ , xrange, yrange ]
+			st_dimensions(ret[[i]]) = st_dimensions(ret[[1]])
+		}
 	}
 
 	along = if (length(dim(x)) > 3)
@@ -282,7 +295,8 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = rep_len(".tif", lengt
 		write_stars(x[i], fname[i], NA_value = NA_value)
 	if (!quiet)
 		cat(paste("writing to", fname, "\n"))
-	st_stars_proxy(setNames(as.list(fname), names(x)), st_dimensions(x), NA_value = NA_value)
+	st_stars_proxy(setNames(as.list(fname), names(x)), st_dimensions(x), 
+		NA_value = NA_value, resolutions = NULL)
 }
 
 # execute the call list on a stars object
@@ -343,7 +357,8 @@ merge.stars_proxy = function(x, y, ...) {
 		st_stars_proxy(x, dimensions = create_dimensions(append(st_dimensions(x), 
 			list(band = create_dimension(values = names(x[[1]])))), 
 			raster = attr(st_dimensions(x), "raster")), 
-			NA_value = attr(x, "NA_value"))
+			NA_value = attr(x, "NA_value"),
+			resolutions = attr(x, "resolutions"))
 	}
 }
 
@@ -364,7 +379,10 @@ merge.stars_proxy = function(x, y, ...) {
 	if (missing(i)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
 	if (inherits(i, c("character", "logical", "numeric"))) {
-		x = st_stars_proxy(unclass(x)[i], st_dimensions(x), NA_value = attr(x, "NA_value"))
+		if (!is.null(resolutions <- attr(x, "resolutions")))
+			resolutions = resolutions[i, ]
+		x = st_stars_proxy(unclass(x)[i], st_dimensions(x), NA_value = attr(x, "NA_value"),
+			resolutions = resolutions)
 		lst[["i"]] = TRUE # this one has been handled now
 		for (ix in 1:3) { # FIXME: further than 3?
 			if (length(lst) >= 4 && !any(is.na(r <- get_range(lst[[4]])))) {
@@ -426,7 +444,7 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 		dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
 		dm[[ yd ]]$to = min(d_max[yd], cr[2, 2], na.rm = TRUE)
 	}
-	x = st_stars_proxy(x, dm, NA_value = attr(x, "NA_value")) # crop to bb
+	x = st_stars_proxy(x, dm, NA_value = attr(x, "NA_value"), resolutions = attr(x, "resolutions")) # crop to bb
 	if (collect)
 		collect(x, match.call(), "st_crop", c("x", "y", "crop", "epsilon"),
 			env = environment()) # crops further when realised
