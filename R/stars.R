@@ -842,14 +842,19 @@ drop_units.stars = function(x) {
 #' @details separate predictors in object need to be separate attributes in object; 
 #' in case they are e.g. in a band dimension, use `split(object)`
 predict.stars = function(object, model, ...) {
-	pr = predict(model, as.data.frame(st_as_stars(object)), ...)
+	obj_df = as.data.frame(st_as_stars(object))
+	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
+	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
+	pr = predict(model, obj_df, ...)
 	if (!inherits(pr, "data.frame"))
 		pr = if (is.null(colnames(pr)))
 				data.frame(prediction = pr)
 			else
 				as.data.frame(pr)
+	pr[unique(data.frame(na_ids)[,1]),1] = NA # Mask with original NA's
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
 }
+
 
 #' create an array with dimension values
 #' 
