@@ -30,7 +30,7 @@ Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 0.9-0)
+    sf (>= 0.9-7)
 Imports:
     methods,
     parallel,
