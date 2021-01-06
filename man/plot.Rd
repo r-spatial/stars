@@ -42,6 +42,7 @@
   xlim = st_bbox(extent)$xlim,
   ylim = st_bbox(extent)$ylim,
   text_values = FALSE,
+  text_color = "black",
   axes = FALSE,
   interpolate = FALSE,
   as_points = FALSE,
@@ -113,6 +114,8 @@
 \item{ylim}{y axis limits}
 
 \item{text_values}{logical; print values as text on image?}
+
+\item{text_color}{character; color for printed text values}
 
 \item{interpolate}{logical; when using \link{rasterImage} (rgb), should pixels be interpolated?}
 

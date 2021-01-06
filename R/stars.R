@@ -851,7 +851,7 @@ predict.stars = function(object, model, ...) {
 				data.frame(prediction = pr)
 			else
 				as.data.frame(pr)
-	pr[unique(data.frame(na_ids)[,1]),1] = NA # Mask with original NA's
+	pr[unique(data.frame(na_ids)[,1]), ] = NA # Mask with original NA's
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
 }
 
