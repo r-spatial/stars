@@ -251,8 +251,8 @@ The following example is purely for educational purposes; the classified "land u
 We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
 ```{r}
 # for all, multi-resolution, use:
-# bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
-bands = c("B04", "B03", "B02", "B08")
+bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
+# bands = c("B04", "B03", "B02", "B08")
 s2 = paste0("/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
 r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%

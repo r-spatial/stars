@@ -220,3 +220,94 @@ rm(x)
 (s2.ndvi = st_apply(p, c("x", "y"), ndvi))
 system.time(plot(s2.ndvi)) # read - compute ndvi - plot 
 ```
+
+# Multi-resolution proxy objects
+
+This sections shows some examples how `stars_proxy` objects deal with the situation where the different maps have dissimilar resolution. The assumptions here are:
+
+* all maps need to have the same origin coordinates (typically upper-left corner) and CRS.
+* the first map determines the "working" resolution, to which e.g. native or downsampled resolutions refer
+
+We'll create four maps with cells size 1, 2 and 3:
+```{r}
+library(stars)
+
+s1 = st_as_stars(matrix(1:16, 4))
+s2 = st_as_stars(matrix(1:16, 4))
+s3 = st_as_stars(matrix(1:16, 4))
+attr(s1, "dimensions")$X2$delta = -1
+attr(s2, "dimensions")$X1$delta =  2
+attr(s2, "dimensions")$X2$delta = -2
+attr(s3, "dimensions")$X1$delta =  3
+attr(s3, "dimensions")$X2$delta = -3
+plot(s1, axes = TRUE, text_values = TRUE, text_color = 'orange')
+plot(s2, axes = TRUE, text_values = TRUE, text_color = 'orange')
+plot(s3, axes = TRUE, text_values = TRUE, text_color = 'orange')
+```
+
+We created three rasters with identical cell values and dimensions, but different cell sizes, and hence extents. If we bind them in a single proxy object, with
+
+```{r}
+write_stars(s1, "s1.tif")
+write_stars(s2, "s2.tif")
+write_stars(s3, "s3.tif")
+(r1 = read_stars(c("s1.tif", "s2.tif", "s3.tif"), proxy = TRUE))
+```
+
+We see that **multi-resolution** is mentioned in the printed summary. When converting this to a `stars` object, the secondary rasters are resampled to the cellsize + extent of the first:
+
+```{r}
+st_as_stars(r1) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+```
+
+If we do this for a sub-range, defined for the object resolutions, we get:
+```{r}
+st_as_stars(r1[,2:4,2:4]) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+```
+
+We now create four maps, all over the same region ([0,4] x [0,4]), with different resolutions (cell size 1, 1/2 and 1/3): 
+```{r}
+s1 = st_as_stars(matrix(1: 16, 4))
+s2 = st_as_stars(matrix(1: 64, 8))
+s3 = st_as_stars(matrix(1:144,12))
+attr(s1, "dimensions")$X2$delta = -1
+attr(s2, "dimensions")$X1$delta =  1/2
+attr(s2, "dimensions")$X2$delta = -1/2
+attr(s3, "dimensions")$X1$delta =  1/3
+attr(s3, "dimensions")$X2$delta = -1/3
+plot(s1, axes = TRUE, text_values = TRUE, text_color = 'orange')
+plot(s2, axes = TRUE, text_values = TRUE, text_color = 'orange')
+plot(s3, axes = TRUE, text_values = TRUE, text_color = 'orange')
+```
+
+```{r}
+write_stars(s1, "s1.tif")
+write_stars(s2, "s2.tif")
+write_stars(s3, "s3.tif")
+(r2 = read_stars(c("s1.tif", "s2.tif", "s3.tif"), proxy = TRUE))
+
+st_as_stars(r2) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+st_as_stars(r2[,2:4,2:4]) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+```
+
+Finally, an example where the first raster has the higher resolution:
+
+```{r}
+(r3 = read_stars(c("s3.tif", "s2.tif", "s1.tif"), proxy = TRUE))
+
+st_as_stars(r3) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+st_as_stars(r3[,2:6,3:6]) %>%
+  merge() %>%
+  plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
+
+```

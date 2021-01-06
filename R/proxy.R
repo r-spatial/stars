@@ -196,28 +196,24 @@ fetch = function(x, downsample = 0, ...) {
 	for (i in seq_along(ret)) {
 		if (!is.null(res) && any(res[1,] != res[i,])) {
 			mult = c(res[i,1] / res[1,1], res[i,2] / res[1,2])
-			rasterio$nXOff = ((dx$from - 1) %/% mult[1]) + 1
-			rasterio$nYOff = ((dy$from - 1) %/% mult[2]) + 1
-			rasterio$nXSize = ceiling(nXSize / mult[1])
-			rasterio$nYSize = ceiling(nXSize / mult[2])
+			rasterio$nXOff = floor((dx$from - 1) / mult[1]) + 1
+			rasterio$nYOff = floor((dy$from - 1) / mult[2]) + 1
+			rasterio$nXSize = ceiling(dx$to / mult[1]) - floor((dx$from - 1) / mult[1])
+			rasterio$nYSize = ceiling(dy$to / mult[2]) - floor((dy$from - 1) / mult[2])
 			rasterio$nBufXSize = ceiling(rasterio$nXSize * mult[1] / (downsample[1] + 1))
 			rasterio$nBufYSize = ceiling(rasterio$nXSize * mult[2] / (downsample[2] + 1))
-			offset = c(((dx$from - 1) %% mult[1]) + 1, ((dy$from - 1) %% mult[2]) + 1)
+			mod = function(a, n) { a - n * floor(a/n) }
+			offset = round(c(mod(dx$from - 1, mult[1]), mod(dy$from - 1, mult[2])))
 		} else
-			offset = c(1,1)
+			offset = c(0,0)
 		ret[[i]] = read_stars(unclass(x)[[i]], RasterIO = rasterio, 
 			NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
 			proxy = FALSE, ...)
 		if (i == 1)
 			dm1 = dim(ret[[1]])
 		else {
-			dmi = dim(ret[[i]])
-			xrange = seq_len(dm1[1])
-			if (dmi[1] > dm1[1])
-				xrange = xrange + offset[1] - 1
-			yrange = seq_len(dm1[2])
-			if (dmi[2] > dm1[2])
-				yrange = yrange + offset[2] - 1
+			xrange = seq_len(dm1[1]) + offset[1]
+			yrange = seq_len(dm1[2]) + offset[2]
 			ret[[i]] = ret[[i]] [ , xrange, yrange ]
 			st_dimensions(ret[[i]]) = st_dimensions(ret[[1]])
 		}

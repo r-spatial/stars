@@ -221,6 +221,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' @param xlim x axis limits
 #' @param ylim y axis limits
 #' @param text_values logical; print values as text on image?
+#' @param text_color character; color for printed text values
 #' @param interpolate logical; when using \link{rasterImage} (rgb), should pixels be interpolated?
 #' @param as_points logical; for curvilinear or sheared grids: parameter passed on to \link{st_as_sf}, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)
 #' @param logz logical; if \code{TRUE}, use log10-scale for the attribute variable. In that case, \code{breaks} and \code{at} need to be given as log10-values; see examples.
@@ -238,7 +239,8 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL, 
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
-		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE, axes = FALSE,
+		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE, 
+		text_color = 'black', axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
 		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
 		useRaster = isTRUE(dev.capabilities("rasterImage")$rasterImage == "yes"), extent = x) {
@@ -374,7 +376,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 	if (text_values) {
 		dims = expand_dimensions.stars(x, center = TRUE)
-		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar_text))) # xxx
+		text(do.call(expand.grid, dims[1:2]), labels = as.character(as.vector(ar_text)),
+			col = text_color)
 	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
