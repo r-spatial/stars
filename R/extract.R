@@ -42,11 +42,6 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 		x = st_as_stars_proxy(x)
 
 	m = if (inherits(x, "stars_proxy")) {
-			if (utils::packageVersion("sf") < "0.9-7") {
-				stop("sf >= 0.9-7 required")
-				# remove this else clause when sf 0.9-7 has become a requirement:
-				gdal_extract = function(...) stop("sf >= 0.9-7 required for st_extract-ing a stars_proxy object")
-			}
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(y, 
 				gdal_extract, pts = st_coordinates(pts), bilinear = bilinear)))

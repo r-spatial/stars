@@ -131,12 +131,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			draw.key = !is.null(key.pos) && join_zlim
 			if (! draw.key)
 				key.pos = NULL
-			lt = if (utils::packageVersion("sf") >= "0.9-7") # FIXME: remove after requiring this
-					sf::.get_layout(st_bbox(x), dims[3], par("din"),
+			lt = sf::.get_layout(st_bbox(x), dims[3], par("din"),
 						if (join_zlim && key.pos.missing) -1 else key.pos, key.width, mfrow = mfrow)
-				else
-					sf::.get_layout(st_bbox(x), dims[3], par("din"),
-						if (join_zlim && key.pos.missing) -1 else key.pos, key.width)
 			title_size = if (is.null(main)) 
 					0
 				else
