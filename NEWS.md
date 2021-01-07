@@ -1,6 +1,8 @@
 # version 0.4-4
 
-* allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands)
+* add `st_bbox`, `st_crs` and `st_as_stars` methods for terra's `SpatRaster` objects; https://github.com/mtennekes/tmap/issues/536
+
+* allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.
 
 * `plot` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
 
