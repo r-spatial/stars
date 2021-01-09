@@ -1,4 +1,6 @@
-# version 0.4-4
+# version 0.5-0
+
+* add `st_bbox`, `st_crs` methods for terra's `SpatVector` objects; https://github.com/mtennekes/tmap/issues/536
 
 * add `st_bbox`, `st_crs` and `st_as_stars` methods for terra's `SpatRaster` objects; https://github.com/mtennekes/tmap/issues/536
 
@@ -16,11 +18,11 @@
 
 * `read_stars` reads `NaN`s as `NA`; #333
 
-* improve `st_extract` method for both `stars` and `stars_proxy` objects; interpolation option reduced to bilinear; #322, #279, #290
+* improve `st_extract` method for both `stars` and `stars_proxy` objects; interpolation options are reduced to bilinear; #322, #279, #290
 
 * better handle categorical rasters that do not start at value 1; #329
 
-* plot layout can be controlled with `mfrow = c(nr, nc)` argument; this requires sf >= 0.9-7
+* plot layout can be controlled with `mfrow = c(nr, nc)` argument
 
 * `stars_proxy` objects have a normalized path; #331
 
@@ -32,11 +34,11 @@
 
 * fix bug in dimension `values` field when downsampling; #324
 
-* `write_stars` now also write band names; #323
+* `write_stars` also writes out band names; #323
 
 * add `rgdal` to Suggests:
 
-* each `call_list` entry of a `stars_proxy` object now carries its calling environment; #309
+* each `call_list` entry of a `stars_proxy` object carries its proper calling environment; #309
 
 * `st_as_sf.stars` copes with zero attribute (empty) stars objects
 
@@ -48,13 +50,13 @@
 
 * as(x, "Spatial") correctly handles `from` dimension values different from one
 
-* `read_stars` now sets the `BANDNAME` or band description as band dimension values
+* `read_stars` now sets the `BANDNAME` GDAL metadata item, or else the band's GetDescription() as the band's dimension values
 
 * `st_as_stars.data.frame` reads simple tables (non-raster data) if `dims` has length less than 2
 
-* band descriptions are now in the band dimension values (requires sf >= 0.9-6)
+* band descriptions are in the band dimension values
 
-* dimension tables are now simpler, and will now more often show in Rstudio
+* dimension tables are simpler, and are shown properly in Rstudio
 
 * `st_rgb` gains a `probs` argument, to cut off and stretch based on quantiles
 

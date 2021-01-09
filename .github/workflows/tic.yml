@@ -84,15 +84,15 @@ jobs:
 
       - name: "[Stage] [Linux] Install curl"
         if: runner.os == 'Linux'
-        run: sudo apt install libcurl4-openssl-dev libgit2-dev
+        run: sudo apt-get install libcurl4-openssl-dev libgit2-dev
 
       - name: "[Custom] [Stage] [Linux] Install pkgdown system lib req"
         if: runner.os == 'Linux' && matrix.config.r == 'release'
-        run: sudo apt install libharfbuzz-dev libfribidi-dev libgit2-dev
+        run: sudo apt-get install libharfbuzz-dev libfribidi-dev libgit2-dev
 
       - name: "[Custom block] Install spatial libraries"
         if: runner.os == 'Linux'
-        run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev netcdf-bin
+        run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev netcdf-bin
 
       - name: "[Stage] Install"
         if: matrix.config.os != 'macOS-latest' || matrix.config.r != 'devel'

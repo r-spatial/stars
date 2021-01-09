@@ -17,6 +17,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 suppressPackageStartupMessages(library(dplyr))
+EVAL = suppressWarnings(require(starsdata, quietly = TRUE))
 ```
 
 We will first fix the random number seed, to get identical results for procedures that involve random sampling. Remove this command if you want the random effect in outcomes.
@@ -87,7 +88,7 @@ An example where we fit a model to every pixel would be fit a time series model 
 ### Linear regression on pixel time series
 
 We can read in the avhrr dataset, containing only 9 days:
-```{r}
+```{r eval=EVAL}
 library(stars)
 x = c("avhrr-only-v2.19810901.nc",
 "avhrr-only-v2.19810902.nc",
@@ -131,14 +132,14 @@ slope = function(x) {
 
 The result is lazily defined by (`adrop` drops the singular dimension)
 
-```{r}
+```{r eval=EVAL}
 out = st_apply(adrop(y), c(1,2), slope)
 ```
 
 but only _computed_ by the following command, where the
 computations are restricted to the pixels plotted:
 
-```{r}
+```{r eval=EVAL}
 plot(out, breaks = "equal", main = "9-day time trend (slope)")
 ```
 
@@ -165,7 +166,7 @@ of the entire data set, because the entire dataset is rather large.
 We apply it, using `predict`, to pixels shown in the plot (i.e. at 
 reduced rather than full resolution) 
 
-```{r}
+```{r eval=EVAL}
 granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", 
    package = "starsdata")
 s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
@@ -178,7 +179,7 @@ out = predict(p, pc)
 ```
 
 Before plotting this, we'll add country borders that delineate sea, obtained from the `mapdata` package:
-```{r}
+```{r eval=EVAL}
 bb = st_bbox(p) %>% 
   st_as_sfc() %>%
   st_transform(4326) %>%
@@ -191,7 +192,7 @@ m = map("worldHires", xlim = bb[c(1,3)], ylim = bb[c(2,4)], plot=F,fill=TRUE) %>
 ```
 
 We plot the results with independent color ranges, so every PC is stretched over the entire grey scale.
-```{r}
+```{r eval=EVAL}
 plt_boundary = function() plot(m, border = 'orange', add = TRUE)
 plot(merge(out), hook = plt_boundary, join_zlim = FALSE)
 ```
@@ -230,7 +231,7 @@ This seems to pick up a fair number of land cover classes: water (2), rural (3, 
 
 For the large(r) dataset:
 
-```{r}
+```{r eval=EVAL}
 i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
 	split()
 sam = st_sample(i, 1000)
@@ -249,7 +250,7 @@ we see that class 4 picks up the unclouded area, the other classes seem to mainl
 The following example is purely for educational purposes; the classified "land use" is just a rough approximation from what seems to be easily visible on the image: sea, land, and areas with both but partially covered by clouds. We opted therefore for four classes: sea, land, clouds over sea, clouds over land.
 
 We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
-```{r}
+```{r eval=EVAL}
 # for all, multi-resolution, use:
 bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
 # bands = c("B04", "B03", "B02", "B08")
@@ -265,7 +266,7 @@ plot(m, add = TRUE, border = 'orange')
 ```
 
 Next, we need points, sampled inside these polygons, for which we need to extract the satellite spectral data
-```{r}
+```{r eval=EVAL}
 pts = st_sample(cl, 1000, "regular") %>%
     st_as_sf() %>%
     st_intersection(cl)
@@ -274,7 +275,7 @@ train$use = as.factor(pts$use) # no need for join, since the order did not chang
 train
 ```
 
-```{r}
+```{r eval=EVAL}
 library(randomForest)
 train = as.data.frame(train)
 train$x = NULL # remove geometry
