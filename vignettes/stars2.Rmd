@@ -248,10 +248,13 @@ plot(s3, axes = TRUE, text_values = TRUE, text_color = 'orange')
 We created three rasters with identical cell values and dimensions, but different cell sizes, and hence extents. If we bind them in a single proxy object, with
 
 ```{r}
-write_stars(s1, "s1.tif")
-write_stars(s2, "s2.tif")
-write_stars(s3, "s3.tif")
-(r1 = read_stars(c("s1.tif", "s2.tif", "s3.tif"), proxy = TRUE))
+tmp1 = tempfile(fileext = ".tif")
+tmp2 = tempfile(fileext = ".tif")
+tmp3 = tempfile(fileext = ".tif")
+write_stars(s1, tmp1)
+write_stars(s2, tmp2)
+write_stars(s3, tmp3)
+(r1 = read_stars(c(tmp1, tmp2, tmp3), proxy = TRUE))
 ```
 
 We see that **multi-resolution** is mentioned in the printed summary. When converting this to a `stars` object, the secondary rasters are resampled to the cellsize + extent of the first:
