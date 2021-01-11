@@ -144,7 +144,7 @@ detect.driver = function(filename) { #nocov start
 		switch(ext, 
 			tif  = ,
 			tiff = 'GTiff',
-			grd  = 'raster',
+			grd  = 'rraster',
 			asc  = 'ascii',
 			nc   = ,
 			cdf  = ,
