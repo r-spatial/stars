@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -202,8 +202,8 @@
 #&gt;  Max.   :65025  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='va'>x</span> <span class='op'>/</span> <span class='va'>x</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -216,8 +216,8 @@
 #&gt;  Max.   :1    
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='va'>x</span> <span class='op'>+</span> <span class='va'>x</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -230,8 +230,8 @@
 #&gt;  Max.   :510.0  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>10</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -244,8 +244,8 @@
 #&gt;  Max.   :265.00  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>*</span> <span class='fl'>10</span>, <span class='fl'>10</span> <span class='op'>*</span> <span class='va'>x</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
 <span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
 
       
 
-      </header><script src="stars7_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>7. Statistical modelling with stars objects</h1>
@@ -135,7 +135,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: abind</span>
 <span class="co">#&gt; Loading required package: sf</span>
-<span class="co">#&gt; Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span>
+<span class="co">#&gt; Linking to GEOS 3.9.0, GDAL 3.2.0, PROJ 7.2.0</span>
 <span class="va">l7</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">l7</span>
@@ -150,8 +150,8 @@
 <span class="co">#&gt;  Max.   :255.00  </span>
 <span class="co">#&gt; dimension(s):</span>
 <span class="co">#&gt;      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
-<span class="co">#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
+<span class="co">#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
+<span class="co">#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
 <span class="co">#&gt; band    1   6      NA    NA                           NA    NA   NULL</span>
 <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">l7</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;          x       y band L7_ETMs.tif</span>
@@ -206,9 +206,11 @@
 <span class="va">file_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"netcdf/"</span>, <span class="va">x</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
 <span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, sub <span class="op">=</span> <span class="st">"sst"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="op">(</span><span class="va">t</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">y</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] "1981-09-01 UTC" "1981-09-02 UTC" "1981-09-03 UTC" "1981-09-04 UTC"</span>
-<span class="co">#&gt; [5] "1981-09-05 UTC" "1981-09-06 UTC" "1981-09-07 UTC" "1981-09-08 UTC"</span>
-<span class="co">#&gt; [9] "1981-09-09 UTC"</span></code></pre></div>
+<span class="co">#&gt; [1] "1981-09-01 02:00:00 CEST" "1981-09-02 02:00:00 CEST"</span>
+<span class="co">#&gt; [3] "1981-09-03 02:00:00 CEST" "1981-09-04 02:00:00 CEST"</span>
+<span class="co">#&gt; [5] "1981-09-05 02:00:00 CEST" "1981-09-06 02:00:00 CEST"</span>
+<span class="co">#&gt; [7] "1981-09-07 02:00:00 CEST" "1981-09-08 02:00:00 CEST"</span>
+<span class="co">#&gt; [9] "1981-09-09 02:00:00 CEST"</span></code></pre></div>
 <p>We will use a function that computes the slope of the regression line for temperature with time. We get temperatures as a vector in the first argument of the function supplied to <code>st_apply</code>, and have <code>t</code> already defined. The function could look like</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">slope</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -315,15 +317,23 @@
 <p><img src="stars7_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>we see that class 4 picks up the unclouded area, the other classes seem to mainly catch the cloud signal.</p>
 </div>
+</div>
+<div id="supervised-learners" class="section level2">
+<h2 class="hasAnchor">
+<a href="#supervised-learners" class="anchor"></a>Supervised learners</h2>
 <div id="random-forest-land-use-classification" class="section level3">
 <h3 class="hasAnchor">
 <a href="#random-forest-land-use-classification" class="anchor"></a>Random Forest land use classification</h3>
 <p>The following example is purely for educational purposes; the classified “land use” is just a rough approximation from what seems to be easily visible on the image: sea, land, and areas with both but partially covered by clouds. We opted therefore for four classes: sea, land, clouds over sea, clouds over land.</p>
 <p>We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found <a href="https://www.qgistutorials.com/en/docs/digitizing_basics.html">here</a>.)</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span>downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">30</span>,<span class="fl">30</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># for all, multi-resolution, use:</span>
+<span class="va">bands</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B04"</span>, <span class="st">"B03"</span>, <span class="st">"B02"</span>, <span class="st">"B08"</span>, <span class="st">"B01"</span>, <span class="st">"B05"</span>, <span class="st">"B06"</span>, <span class="st">"B07"</span>, <span class="st">"B8A"</span>, <span class="st">"B09"</span>, <span class="st">"B10"</span>, <span class="st">"B11"</span>, <span class="st">"B12"</span><span class="op">)</span>
+<span class="co"># bands = c("B04", "B03", "B02", "B08")</span>
+<span class="va">s2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"/vsizip/"</span>, <span class="va">granule</span>, 
+<span class="st">"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_"</span>, <span class="va">bands</span>, <span class="st">".jp2"</span><span class="op">)</span>
+<span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html">setNames</a></span><span class="op">(</span><span class="va">bands</span><span class="op">)</span> 
 <span class="va">cl</span> <span class="op">=</span> <span class="fu">read_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"gpkg/s2.gpkg"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu">st_crs</span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -340,23 +350,34 @@
 <span class="va">train</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_extract.html">st_extract</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">pts</span><span class="op">)</span>
 <span class="va">train</span><span class="op">$</span><span class="va">use</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">pts</span><span class="op">$</span><span class="va">use</span><span class="op">)</span> <span class="co"># no need for join, since the order did not change</span>
 <span class="va">train</span>
-<span class="co">#&gt; Simple feature collection with 1000 features and 5 fields</span>
+<span class="co">#&gt; Simple feature collection with 1000 features and 14 fields</span>
 <span class="co">#&gt; geometry type:  POINT</span>
 <span class="co">#&gt; dimension:      XY</span>
 <span class="co">#&gt; bbox:           xmin: 328195.1 ymin: 5909563 xmax: 407928.8 ymax: 5970391</span>
-<span class="co">#&gt; CRS:            PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",9],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32632"]]</span>
+<span class="co">#&gt; projected CRS:  WGS 84 / UTM zone 32N</span>
 <span class="co">#&gt; First 10 features:</span>
-<span class="co">#&gt;      B4   B3   B2   B8                        x  use</span>
-<span class="co">#&gt; 1   848 1113 1377 2792 POINT (394518.2 5940525) land</span>
-<span class="co">#&gt; 2   920 1120 1387 2588 POINT (390045.1 5931738) land</span>
-<span class="co">#&gt; 3   960 1034 1370 1241 POINT (390340.9 5929888) land</span>
-<span class="co">#&gt; 4  1052 1251 1473 3071   POINT (391254 5938829) land</span>
-<span class="co">#&gt; 5  1005 1208 1461 2805 POINT (391997.7 5937843) land</span>
-<span class="co">#&gt; 6  1227 1152 1445 1860 POINT (395680.9 5933296) land</span>
-<span class="co">#&gt; 7   993 1146 1419 2431 POINT (388792.2 5934807) land</span>
-<span class="co">#&gt; 8   970 1151 1428 2450 POINT (392185.2 5940074) land</span>
-<span class="co">#&gt; 9   847 1071 1371 2400 POINT (387142.8 5936359) land</span>
-<span class="co">#&gt; 10  937 1153 1380 2973 POINT (390877.6 5927178) land</span></code></pre></div>
+<span class="co">#&gt;     B04  B03  B02  B08  B01  B05  B06  B07  B8A  B09 B10  B11  B12</span>
+<span class="co">#&gt; 1   921 1139 1396 2375 1744 1180 1860 2099 2396 1006  15 1458  779</span>
+<span class="co">#&gt; 2   879 1136 1366 2935 1728 1246 2148 2537 2814  994  14 1669  887</span>
+<span class="co">#&gt; 3   870 1029 1338 1872 1694 1076 1567 1765 2042  824  14 1629  856</span>
+<span class="co">#&gt; 4  1016 1228 1439 3054 1789 1477 2655 3057 3427 1207  15 2220 1210</span>
+<span class="co">#&gt; 5  1010 1145 1449 2039 1782 1302 1724 1975 2144  860  10 1795  999</span>
+<span class="co">#&gt; 6  1344 1213 1475 1943 1770 1427 1684 1901 2143  863  14 2276 1365</span>
+<span class="co">#&gt; 7  1067 1204 1472 2348 1778 1369 2057 2306 2685 1032  17 2010 1179</span>
+<span class="co">#&gt; 8  1035 1144 1437 2289 1760 1299 1891 2246 2637 1042  11 1788  920</span>
+<span class="co">#&gt; 9   854 1047 1371 1902 1715 1146 1815 1941 2133  782  16 1568  949</span>
+<span class="co">#&gt; 10  941 1155 1379 2802 1689 1380 2268 2595 2976 1058  15 2012 1086</span>
+<span class="co">#&gt;                           x  use</span>
+<span class="co">#&gt; 1  POINT (394518.2 5940525) land</span>
+<span class="co">#&gt; 2  POINT (390045.1 5931738) land</span>
+<span class="co">#&gt; 3  POINT (390340.9 5929888) land</span>
+<span class="co">#&gt; 4    POINT (391254 5938829) land</span>
+<span class="co">#&gt; 5  POINT (391997.7 5937843) land</span>
+<span class="co">#&gt; 6  POINT (395680.9 5933296) land</span>
+<span class="co">#&gt; 7  POINT (388792.2 5934807) land</span>
+<span class="co">#&gt; 8  POINT (392185.2 5940074) land</span>
+<span class="co">#&gt; 9  POINT (387142.8 5936359) land</span>
+<span class="co">#&gt; 10 POINT (390877.6 5927178) land</span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">randomForest</a></span><span class="op">)</span>
 <span class="co">#&gt; randomForest 4.6-14</span>
@@ -366,9 +387,11 @@
 <span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     combine</span>
-<span class="va">rf</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">use</span><span class="op">~</span><span class="va">B4</span><span class="op">+</span><span class="va">B3</span><span class="op">+</span><span class="va">B2</span><span class="op">+</span><span class="va">B8</span>, <span class="va">train</span><span class="op">)</span>
+<span class="va">train</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span>
+<span class="va">train</span><span class="op">$</span><span class="va">x</span> <span class="op">=</span> <span class="cn">NULL</span> <span class="co"># remove geometry</span>
+<span class="va">rf</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">use</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train</span><span class="op">)</span> <span class="co"># ~ . : use all other attributes</span>
 <span class="va">pr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">rf</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pr</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html">lcm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pr</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html">lcm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, key.pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
 <span class="co"># add country outline:</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
 
       
 
-      </header><script src="stars4_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>4. stars data model</h1>
@@ -212,7 +212,7 @@
 <code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">"y"</span><span class="op">]</span>
 <span class="co">##   from  to  offset delta                       refsys point values</span>
-<span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL</span></code></pre></div>
+<span class="co">## y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL</span></code></pre></div>
 </div>
 <div id="raster-attributes-rotated-and-sheared-grids" class="section level3">
 <h3 class="hasAnchor">
@@ -344,36 +344,104 @@
 <p>The dataset is found here:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">s5p</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></code></pre></div>
+<span class="co">## [1] "/home/edzer/R/x86_64-pc-linux-gnu-library/4.0/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></code></pre></div>
 <p>We can construct the curvilinear <code>stars</code> raster by calling <code>st_as_stars</code> on three arrays, with data, longitude and latitudes:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nit.c</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s5p</span>, sub <span class="op">=</span> <span class="st">"//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column"</span>,
     curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"//PRODUCT/longitude"</span>, <span class="st">"//PRODUCT/latitude"</span><span class="op">)</span>, driver <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="co">## //PRODUCT/longitude, </span>
-<span class="co">## //PRODUCT/latitude, </span>
-<span class="co">## //PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column,</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## /PRODUCT/longitude,</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## /PRODUCT/latitude,</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## /PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column,</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: The dataset has several variables</span>
+<span class="co">## that could be identified as vector fields, but not all share the same primary</span>
+<span class="co">## dimension. Consequently they will be ignored.</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: dimension #2 (ground_pixel) is not a</span>
+<span class="co">## Longitude/X dimension.</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: dimension #1 (scanline) is not a</span>
+<span class="co">## Latitude/Y dimension.</span>
+<span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span>
+<span class="co">## as.character(driver), : GDAL Message 1: No 1D variable is indexed by dimension</span>
+<span class="co">## time</span>
 <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html">inherits</a></span><span class="op">(</span><span class="va">nit.c</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"units"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">threshold</span> <span class="op">=</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span><span class="op">(</span><span class="fl">9e+36</span>, <span class="va">mol</span><span class="op">/</span><span class="va">m</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
+    <span class="va">threshold</span> <span class="op">=</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="fl">9e+36</span>, <span class="va">mol</span><span class="op">/</span><span class="va">m</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
     <span class="va">threshold</span> <span class="op">=</span> <span class="fl">9e+36</span>
 <span class="op">}</span>
 <span class="va">nit.c</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">nit.c</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&gt;</span> <span class="va">threshold</span><span class="op">]</span> <span class="op">=</span> <span class="cn">NA</span>
 <span class="fu">st_crs</span><span class="op">(</span><span class="va">nit.c</span><span class="op">)</span> <span class="op">=</span> <span class="fl">4326</span>
 <span class="va">nit.c</span>
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##  nitrogendioxide_summed_total_column </span>
-<span class="co">##  Min.   :0e+00                       </span>
-<span class="co">##  1st Qu.:1e-04                       </span>
-<span class="co">##  Median :1e-04                       </span>
-<span class="co">##  Mean   :1e-04                       </span>
-<span class="co">##  3rd Qu.:1e-04                       </span>
-<span class="co">##  Max.   :5e-04                       </span>
-<span class="co">##  NA's   :330                         </span>
+<span class="co">##  nitrogendioxide_summed_total_column [mol/m^2]</span>
+<span class="co">##  Min.   :0e+00                                </span>
+<span class="co">##  1st Qu.:1e-04                                </span>
+<span class="co">##  Median :1e-04                                </span>
+<span class="co">##  Mean   :1e-04                                </span>
+<span class="co">##  3rd Qu.:1e-04                                </span>
+<span class="co">##  Max.   :5e-04                                </span>
+<span class="co">##  NA's   :330                                  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset delta    refsys point                         values x/y</span>
-<span class="co">## x    1 450     NA    NA EPSG:4326    NA [450x278] -5.81066,...,30.9468 [x]</span>
-<span class="co">## y    1 278     NA    NA EPSG:4326    NA  [450x278] 28.3605,...,51.4686 [y]</span>
+<span class="co">##      from  to offset delta refsys point                                 values</span>
+<span class="co">## x       1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°]</span>
+<span class="co">## y       1 278     NA    NA WGS 84    NA  [450x278] 28.3605 [°],...,51.4686 [°]</span>
+<span class="co">## time    1   1     NA    NA     NA    NA                                   NULL</span>
+<span class="co">##      x/y</span>
+<span class="co">## x    [x]</span>
+<span class="co">## y    [y]</span>
+<span class="co">## time    </span>
 <span class="co">## curvilinear grid</span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, 
@@ -388,20 +456,21 @@
 <p>We can downsample the data by</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">nit.c</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">:::</span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">nit.c</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
+<span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##  nitrogendioxide_summed_total_column </span>
-<span class="co">##  Min.   :0.00005                     </span>
-<span class="co">##  1st Qu.:0.00007                     </span>
-<span class="co">##  Median :0.00008                     </span>
-<span class="co">##  Mean   :0.00009                     </span>
-<span class="co">##  3rd Qu.:0.00009                     </span>
-<span class="co">##  Max.   :0.00023                     </span>
-<span class="co">##  NA's   :36                          </span>
+<span class="co">##  nitrogendioxide_summed_total_column [mol/m^2]</span>
+<span class="co">##  Min.   :0.00005                              </span>
+<span class="co">##  1st Qu.:0.00008                              </span>
+<span class="co">##  Median :0.00008                              </span>
+<span class="co">##  Mean   :0.00009                              </span>
+<span class="co">##  3rd Qu.:0.00009                              </span>
+<span class="co">##  Max.   :0.00023                              </span>
+<span class="co">##  NA's   :37                                   </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta    refsys point                       values x/y</span>
-<span class="co">## x    1 57     NA    NA EPSG:4326    NA [57x35] -5.59621,...,30.8488 [x]</span>
-<span class="co">## y    1 35     NA    NA EPSG:4326    NA  [57x35] 28.3605,...,51.1544 [y]</span>
+<span class="co">##      from to offset delta refsys point                               values x/y</span>
+<span class="co">## x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x]</span>
+<span class="co">## y       1 35     NA    NA WGS 84    NA  [57x35] 28.6622 [°],...,51.4679 [°] [y]</span>
+<span class="co">## time    1  1     NA    NA     NA    NA                                 NULL    </span>
 <span class="co">## curvilinear grid</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, 
          pch <span class="op">=</span> <span class="fl">16</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>

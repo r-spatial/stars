@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -144,38 +144,40 @@
       <small>Source: <a href='https://github.com/r-spatial/stars/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="version-04-4" class="section level1">
-<h1 class="page-header" data-toc-text="0.4-4">
-<a href="#version-04-4" class="anchor"></a>version 0.4-4<small> Unreleased </small>
+    <div id="version-05-0" class="section level1">
+<h1 class="page-header" data-toc-text="0.5-0">
+<a href="#version-05-0" class="anchor"></a>version 0.5-0<small> Unreleased </small>
 </h1>
 <ul>
-<li><p>allow for multi-resolution attributes in <code>stars_proxy</code> objects (e.g., all gray scale sentinel-2 bands)</p></li>
+<li><p>add <code>st_bbox</code>, <code>st_crs</code> methods for terra’s <code>SpatVector</code> objects; <a href="https://github.com/mtennekes/tmap/issues/536" class="uri">https://github.com/mtennekes/tmap/issues/536</a></p></li>
+<li><p>add <code>st_bbox</code>, <code>st_crs</code> and <code>st_as_stars</code> methods for terra’s <code>SpatRaster</code> objects; <a href="https://github.com/mtennekes/tmap/issues/536" class="uri">https://github.com/mtennekes/tmap/issues/536</a></p></li>
+<li><p>allow for multi-resolution attributes in <code>stars_proxy</code> objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.</p></li>
 <li><p><code>plot</code> defaults to a categorical color scale when plotting a factor variable; <a href="https://github.com/mtennekes/tmap/issues/526" class="uri">https://github.com/mtennekes/tmap/issues/526</a></p></li>
 <li><p><code>st_extract</code> extracts space-time points if <code>time_column</code> is specified, and handles time intervals; <a href='https://github.com/r-spatial/stars/issues/352'>#352</a></p></li>
 <li><p>add <code>[[&lt;-.stars</code> method, which is now called by <code>$&lt;-.stars</code>, so that array names can be set programmatically</p></li>
 <li><p>add <code>transmute</code> methods</p></li>
 <li><p><code>plot.stars</code> calls <code>droplevels</code> if a factor array has any <code>NA</code> levels; <a href='https://github.com/r-spatial/stars/issues/339'>#339</a></p></li>
 <li><p><code>read_stars</code> reads <code>NaN</code>s as <code>NA</code>; <a href='https://github.com/r-spatial/stars/issues/333'>#333</a></p></li>
-<li><p>improve <code>st_extract</code> method for both <code>stars</code> and <code>stars_proxy</code> objects; interpolation option reduced to bilinear; <a href='https://github.com/r-spatial/stars/issues/322'>#322</a>, <a href='https://github.com/r-spatial/stars/issues/279'>#279</a>, <a href='https://github.com/r-spatial/stars/issues/290'>#290</a></p></li>
+<li><p>improve <code>st_extract</code> method for both <code>stars</code> and <code>stars_proxy</code> objects; interpolation options are reduced to bilinear; <a href='https://github.com/r-spatial/stars/issues/322'>#322</a>, <a href='https://github.com/r-spatial/stars/issues/279'>#279</a>, <a href='https://github.com/r-spatial/stars/issues/290'>#290</a></p></li>
 <li><p>better handle categorical rasters that do not start at value 1; <a href='https://github.com/r-spatial/stars/issues/329'>#329</a></p></li>
-<li><p>plot layout can be controlled with <code>mfrow = c(nr, nc)</code> argument; this requires sf &gt;= 0.9-7</p></li>
+<li><p>plot layout can be controlled with <code>mfrow = c(nr, nc)</code> argument</p></li>
 <li><p><code>stars_proxy</code> objects have a normalized path; <a href='https://github.com/r-spatial/stars/issues/331'>#331</a></p></li>
 <li><p>cropping or selecting with <code>bbox</code> treats cells always as small polygons; <a href='https://github.com/r-spatial/stars/issues/330'>#330</a></p></li>
 <li><p>add faster <code>st_extract</code> method for <code>stars</code> objects; <a href='https://github.com/r-spatial/stars/issues/322'>#322</a></p></li>
 <li><p>added vignette: “How <code>raster</code> functions map to <code>stars</code> functions”, by Sebastien Rochette; <a href='https://github.com/r-spatial/stars/issues/122'>#122</a>, <a href='https://github.com/r-spatial/stars/issues/325'>#325</a></p></li>
 <li><p>fix bug in dimension <code>values</code> field when downsampling; <a href='https://github.com/r-spatial/stars/issues/324'>#324</a></p></li>
-<li><p><code>write_stars</code> now also write band names; <a href='https://github.com/r-spatial/stars/issues/323'>#323</a></p></li>
+<li><p><code>write_stars</code> also writes out band names; <a href='https://github.com/r-spatial/stars/issues/323'>#323</a></p></li>
 <li><p>add <code>rgdal</code> to Suggests:</p></li>
-<li><p>each <code>call_list</code> entry of a <code>stars_proxy</code> object now carries its calling environment; <a href='https://github.com/r-spatial/stars/issues/309'>#309</a></p></li>
+<li><p>each <code>call_list</code> entry of a <code>stars_proxy</code> object carries its proper calling environment; <a href='https://github.com/r-spatial/stars/issues/309'>#309</a></p></li>
 <li><p><code>st_as_sf.stars</code> copes with zero attribute (empty) stars objects</p></li>
 <li><p>add <code>st_set_bbox</code> generic, to set raster extent, motivated by <a href='https://github.com/r-spatial/stars/issues/315'>#315</a></p></li>
 <li><p>set up tic, with great help from <a href='https://github.com/pat-s'>@pat-s</a>, <a href='https://github.com/r-spatial/stars/issues/313'>#313</a></p></li>
 <li><p>get rid of more <code>proj4string</code>s for representing coordinate reference systems; <a href='https://github.com/r-spatial/stars/issues/312'>#312</a></p></li>
 <li><p>as(x, “Spatial”) correctly handles <code>from</code> dimension values different from one</p></li>
-<li><p><code>read_stars</code> now sets the <code>BANDNAME</code> or band description as band dimension values</p></li>
+<li><p><code>read_stars</code> now sets the <code>BANDNAME</code> GDAL metadata item, or else the band’s GetDescription() as the band’s dimension values</p></li>
 <li><p><code>st_as_stars.data.frame</code> reads simple tables (non-raster data) if <code>dims</code> has length less than 2</p></li>
-<li><p>band descriptions are now in the band dimension values (requires sf &gt;= 0.9-6)</p></li>
-<li><p>dimension tables are now simpler, and will now more often show in Rstudio</p></li>
+<li><p>band descriptions are in the band dimension values</p></li>
+<li><p>dimension tables are simpler, and are shown properly in Rstudio</p></li>
 <li><p><code>st_rgb</code> gains a <code>probs</code> argument, to cut off and stretch based on quantiles</p></li>
 <li><p><code><a href="../reference/as.html">as(x, "Raster")</a></code> merges multiple attributes before converting to raster brick</p></li>
 </ul>

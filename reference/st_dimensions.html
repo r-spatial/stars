@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -272,15 +272,15 @@
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;             from  to  offset delta                       refsys point  values
-#&gt; x              1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE    NULL
-#&gt; y              1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE    NULL
+#&gt; x              1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL
+#&gt; y              1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL
 #&gt; band_number    1   6      NA    NA                           NA  TRUE 1,...,7
 #&gt;             x/y
 #&gt; x           [x]
 #&gt; y           [y]
 #&gt; band_number    </div><div class='input'><span class='co'># set band values as bandwidth</span>
 <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.45</span>,<span class='fl'>0.515</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.525</span>,<span class='fl'>0.605</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.63</span>,<span class='fl'>0.69</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.775</span>,<span class='fl'>0.90</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.55</span>,<span class='fl'>1.75</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.08</span>,<span class='fl'>2.35</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>units</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/set_units.html'>set_units</a></span><span class='op'>(</span><span class='st'>"um"</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>bw</span> <span class='co'># or: units::set_units(µm) -&gt; bw</span>
+  <span class='fu'>units</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/units.html'>set_units</a></span><span class='op'>(</span><span class='st'>"um"</span><span class='op'>)</span> <span class='op'>-&gt;</span> <span class='va'>bw</span> <span class='co'># or: units::set_units(µm) -&gt; bw</span>
 <span class='co'># set bandwidth midpoint:</span>
 <span class='op'>(</span><span class='va'>x2</span> <span class='op'>=</span> <span class='fu'>st_set_dimensions</span><span class='op'>(</span><span class='va'>x</span>, <span class='st'>"band"</span>, values <span class='op'>=</span> <span class='fl'>0.5</span> <span class='op'>*</span> <span class='op'>(</span><span class='va'>bw</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>+</span><span class='va'>bw</span><span class='op'>[</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>, 
    names <span class='op'>=</span> <span class='st'>"bandwidth_midpoint"</span>, point <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
@@ -295,8 +295,8 @@
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;                    from  to  offset delta                       refsys point
-#&gt; x                     1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; y                     1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
+#&gt; x                     1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
+#&gt; y                     1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 #&gt; bandwidth_midpoint    1   6      NA    NA                      udunits  TRUE
 #&gt;                                        values x/y
 #&gt; x                                        NULL [x]
@@ -314,8 +314,8 @@
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;           from  to  offset delta                       refsys point
-#&gt; x            1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE
-#&gt; y            1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE
+#&gt; x            1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
+#&gt; y            1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 #&gt; bandwidth    1   6      NA    NA                      udunits    NA
 #&gt;                                           values x/y
 #&gt; x                                           NULL [x]

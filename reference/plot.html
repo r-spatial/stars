@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4-4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
       </span>
     </div>
 
@@ -187,6 +187,7 @@
   xlim <span class='op'>=</span> <span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>extent</span><span class='op'>)</span><span class='op'>$</span><span class='va'>xlim</span>,
   ylim <span class='op'>=</span> <span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>extent</span><span class='op'>)</span><span class='op'>$</span><span class='va'>ylim</span>,
   text_values <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  text_color <span class='op'>=</span> <span class='st'>"black"</span>,
   axes <span class='op'>=</span> <span class='cn'>FALSE</span>,
   interpolate <span class='op'>=</span> <span class='cn'>FALSE</span>,
   as_points <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -317,6 +318,10 @@
     <tr>
       <th>text_values</th>
       <td><p>logical; print values as text on image?</p></td>
+    </tr>
+    <tr>
+      <th>text_color</th>
+      <td><p>character; color for printed text values</p></td>
     </tr>
     <tr>
       <th>interpolate</th>
