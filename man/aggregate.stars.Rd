@@ -2,6 +2,7 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate.stars}
 \alias{aggregate.stars}
+\alias{aggregate}
 \title{spatially or temporally aggregate stars object}
 \usage{
 \method{aggregate}{stars}(
