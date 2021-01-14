@@ -35,6 +35,8 @@ This R package provides classes and methods for reading,
 manipulating, plotting and writing such data cubes, to the extent
 that there are proper formats for doing so.
 
+If your raster datasets are *not* data cubes but instead isolated raster layers use [`terra`](https://github.com/rspatial/terra). Please note that `terra` replaces the older `raster` package.
+
 ## Raster and vector data cubes
 
 The canonical data cube most of us have in mind is that where two
