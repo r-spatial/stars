@@ -97,7 +97,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="stars1_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. introduction</h1>
@@ -118,7 +118,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
-<span class="co">## Linking to GEOS 3.9.0, GDAL 3.2.0, PROJ 7.2.0</span></code></pre></div>
+<span class="co">## Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span></code></pre></div>
 <p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
@@ -161,8 +161,8 @@
 <span class="co">##  Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></code></pre></div>
 <p>Each dimension has a name; the meaning of the fields of a single dimension are:</p>
 <table class="table">
@@ -242,8 +242,8 @@
 <span class="co">##  Max.   :255.00   Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##   from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -256,8 +256,8 @@
 <span class="co">##  Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##            from  to  offset delta                       refsys point    values</span>
-<span class="co">## x             1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE      NULL</span>
-<span class="co">## y             1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE      NULL</span>
+<span class="co">## x             1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE      NULL</span>
+<span class="co">## y             1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE      NULL</span>
 <span class="co">## attributes    1   6      NA    NA                           NA    NA X1,...,X6</span>
 <span class="co">##            x/y</span>
 <span class="co">## x          [x]</span>
@@ -280,8 +280,8 @@
 <span class="co">##  Max.   :255.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point          values</span>
-<span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL</span>
-<span class="co">## y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL</span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE            NULL</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE            NULL</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA band1,...,band6</span>
 <span class="co">##      x/y</span>
 <span class="co">## x    [x]</span>
@@ -312,8 +312,8 @@
 <span class="co">##  Max.   :255.00   Max.   :510.0  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></code></pre></div>
 <p>At this level, we can work with <code>array</code> objects directly.</p>
 <p>The <code>stars</code> subset operator <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> works a bit different: its</p>
@@ -336,8 +336,8 @@
 <span class="co">##  Max.   :470.0  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x       1  10  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       1  10  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    2   4      NA    NA                           NA    NA   NULL</span></code></pre></div>
 <p>selects the second attribute, the first 10 columns (x-coordinate), all rows, and bands 2-4.</p>
 <p>Alternatively, when <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> is given a single argument of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> will work as a crop operator:</p>
@@ -418,10 +418,10 @@
 <span class="co">##  Max.   :848.55   Max.   :29.386  </span>
 <span class="co">##  NA's   :7116     NA's   :7116    </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##           from to offset delta  refsys point                    values x/y</span>
-<span class="co">## longitude    1 81    -85 0.125  WGS 84    NA                      NULL [x]</span>
-<span class="co">## latitude     1 33     33 0.125  WGS 84    NA                      NULL [y]</span>
-<span class="co">## time         1 12     NA    NA POSIXct    NA 1999-01-31,...,1999-12-31</span></code></pre></div>
+<span class="co">##           from to offset delta    refsys point                    values x/y</span>
+<span class="co">## longitude    1 81    -85 0.125 EPSG:4326    NA                      NULL [x]</span>
+<span class="co">## latitude     1 33     33 0.125 EPSG:4326    NA                      NULL [y]</span>
+<span class="co">## time         1 12     NA    NA   POSIXct    NA 1999-01-31,...,1999-12-31</span></code></pre></div>
 <p>which doesn’t convert time values in a proper R time format.</p>
 <div id="reading-datasets-from-multiple-files" class="section level2">
 <h2 class="hasAnchor">
@@ -455,11 +455,11 @@
 <span class="co">##  Max.   : 9.36   Max.   : 3.70   Max.   :0.480   Max.   :1.000  </span>
 <span class="co">##  NA's   :13360   NA's   :13360   NA's   :13360   NA's   :27377  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from   to                   offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 1440                        0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1  720                       90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1    1                    0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1    9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL</span></code></pre></div>
+<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
+<span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
@@ -547,19 +547,19 @@
 <p>We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patterns over the day, for a certain period.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">=</span> <span class="fu">st_read</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">## Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/4.0/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
+<span class="co">## Reading layer `nc.gpkg' from data source `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
 <span class="co">## Simple feature collection with 100 features and 14 fields</span>
 <span class="co">## geometry type:  MULTIPOLYGON</span>
 <span class="co">## dimension:      XY</span>
 <span class="co">## bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
-<span class="co">## geographic CRS: NAD27</span>
+<span class="co">## CRS:            4267</span>
 <span class="va">to</span> <span class="op">=</span> <span class="va">from</span> <span class="op">=</span> <span class="fu">st_geometry</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> <span class="co"># 100 polygons: O and D regions</span>
 <span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span><span class="op">)</span> <span class="co"># travel mode</span>
 <span class="va">day</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span> <span class="co"># arbitrary</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-quantities/units/">units</a></span><span class="op">)</span>
-<span class="co">## udunits database from /usr/share/xml/udunits/udunits2.xml</span>
-<span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">units</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">as_units</a></span><span class="op">(</span><span class="st">"days since 2015-01-01"</span><span class="op">)</span>
-<span class="va">hour</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">23</span>, <span class="va">h</span><span class="op">)</span> <span class="co"># hour of day</span>
+<span class="co">## udunits system database from /usr/share/xml/udunits</span>
+<span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">units</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/as_units.html">as_units</a></span><span class="op">(</span><span class="st">"days since 2015-01-01"</span><span class="op">)</span>
+<span class="va">hour</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/set_units.html">set_units</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">23</span>, <span class="va">h</span><span class="op">)</span> <span class="co"># hour of day</span>
 <span class="va">dims</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>origin <span class="op">=</span> <span class="va">from</span>, destination <span class="op">=</span> <span class="va">to</span>, mode <span class="op">=</span> <span class="va">mode</span>, day <span class="op">=</span> <span class="va">day</span>, hour <span class="op">=</span> <span class="va">hour</span><span class="op">)</span>
 <span class="op">(</span><span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">##      origin destination        mode         day        hour </span>
@@ -574,7 +574,7 @@
 <span class="co">##  Median :10.00  </span>
 <span class="co">##  Mean   :10.01  </span>
 <span class="co">##  3rd Qu.:12.00  </span>
-<span class="co">##  Max.   :26.00  </span>
+<span class="co">##  Max.   :29.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
@@ -583,8 +583,8 @@
 <span class="co">## day            1 100 1 [(days since 2015-01-01)] 1 [(days since 2015-01-01)]</span>
 <span class="co">## hour           1  24                       0 [h]                       1 [h]</span>
 <span class="co">##              refsys point</span>
-<span class="co">## origin        NAD27 FALSE</span>
-<span class="co">## destination   NAD27 FALSE</span>
+<span class="co">## origin         4267 FALSE</span>
+<span class="co">## destination    4267 FALSE</span>
 <span class="co">## mode             NA FALSE</span>
 <span class="co">## day         udunits FALSE</span>
 <span class="co">## hour        udunits FALSE</span>

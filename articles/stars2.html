@@ -97,7 +97,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="stars2_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>2. stars proxy objects</h1>
@@ -133,7 +133,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
-<span class="co">## Linking to GEOS 3.9.0, GDAL 3.2.0, PROJ 7.2.0</span>
+<span class="co">## Linking to GEOS 3.7.1, GDAL 2.2.3, PROJ 4.9.3</span>
 <span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">100</span>, nYSize <span class="op">=</span> <span class="fl">100</span>, bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
 <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span>
@@ -148,8 +148,8 @@
 <span class="co">##  Max.   :235.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x       6 105  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       6 105 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       6 105  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       6 105 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   3      NA    NA                           NA    NA   NULL</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="co">##    x    y band </span>
@@ -158,8 +158,8 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
-<span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                           NA    NA   NULL</span></code></pre></div>
 <p>and we see that</p>
 <ul>
@@ -190,8 +190,8 @@
 <span class="co">##  Max.   :107.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from to  offset  delta                       refsys point values x/y</span>
-<span class="co">## x       2 21  288776  142.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
-<span class="co">## y       2 21 9120761 -142.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class="co">## x       2 21  288776  142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]</span>
+<span class="co">## y       2 21 9120761 -142.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</span>
 <span class="co">## band    1  3      NA     NA                           NA    NA   NULL</span></code></pre></div>
 <p>and we see that in addition:</p>
 <ul>
@@ -281,16 +281,16 @@
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                refsys point    values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 WGS 84 / UTM zone 32N    NA      NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 WGS 84 / UTM zone 32N    NA      NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                    NA    NA B4,...,B8</span></code></pre></div>
+<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
+<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
+<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
+<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8</span></code></pre></div>
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.102   0.344   1.421</code></pre>
+##   2.536   0.176   2.319</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -336,11 +336,11 @@
 <span class="co">## [9] "[...]/avhrr-only-v2.19810909.nc:sst"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from   to                   offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 1440                        0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1  720                       90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1    1                    0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1    9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL</span></code></pre></div>
+<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
+<span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
 <p>Note that this selection limits the reading from 4 to 1 subdataset from all 9 NetCDF files.</p>
 </div>
 <div id="select-an-area" class="section level2">
@@ -351,11 +351,11 @@
 <code class="sourceCode R"><span class="va">bb</span> <span class="op">=</span> <span class="fu">st_bbox</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">10.125</span>, ymin <span class="op">=</span> <span class="fl">0.125</span>, xmax <span class="op">=</span> <span class="fl">70.125</span>, ymax <span class="op">=</span> <span class="fl">70.125</span><span class="op">)</span><span class="op">)</span>
 <span class="va">ysub</span> <span class="op">=</span> <span class="va">y</span><span class="op">[</span><span class="va">bb</span><span class="op">]</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span>
-<span class="co">##      from  to                   offset  delta  refsys point values x/y</span>
-<span class="co">## x      41 281                        0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y      80 360                       90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1   1                    0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1   9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL</span>
+<span class="co">##      from  to         offset  delta  refsys point values x/y</span>
+<span class="co">## x      41 281              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y      80 360             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1   1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1   9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">ysub</span><span class="op">)</span> <span class="co"># still no data here!!</span>
 <span class="co">## [1] "stars_proxy" "stars"</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">ysub</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># plot reads the data, at resolution that is relevant</span>
@@ -372,16 +372,16 @@
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># still no data</span>
 <span class="co">## [1] "stars_proxy" "stars"</span>
 <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span> <span class="co"># and dimensions not adjusted</span>
-<span class="co">##      from to                   offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 10                        0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1 10                       90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1  1                    0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1  9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL</span>
+<span class="co">##      from to         offset  delta  refsys point values x/y</span>
+<span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">yyy</span>, <span class="st">"call_list"</span><span class="op">)</span> <span class="co"># the name of object in the call (y) is replaced with x:</span>
 <span class="co">## [[1]]</span>
 <span class="co">## x[i = i, drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x560510b58350&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x558f4ed45ac8&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
@@ -406,11 +406,11 @@
 <span class="co">##  3rd Qu.:-1.060   3rd Qu.:0.720   3rd Qu.:0.3   3rd Qu.:0.8200  </span>
 <span class="co">##  Max.   :-0.950   Max.   :0.770   Max.   :0.3   Max.   :0.8500  </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from to                   offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 10                        0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1 10                       90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1  1                    0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1  9 1981-09-01 02:00:00 CEST 1 days POSIXct    NA   NULL</span></code></pre></div>
+<span class="co">##      from to         offset  delta  refsys point values x/y</span>
+<span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
+<span class="co">## y       1 10             90  -0.25      NA    NA   NULL [y]</span>
+<span class="co">## zlev    1  1          0 [m]     NA      NA    NA   NULL    </span>
+<span class="co">## time    1  9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
 </div>
 <div id="plotting-with-changed-evaluation-order" class="section level3">
 <h3 class="hasAnchor">
@@ -426,20 +426,20 @@
 <span class="co">## [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"</span>
 <span class="co">## </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##      from    to offset delta                refsys point    values x/y</span>
-<span class="co">## x       1 10980  3e+05    10 WGS 84 / UTM zone 32N    NA      NULL [x]</span>
-<span class="co">## y       1 10980  6e+06   -10 WGS 84 / UTM zone 32N    NA      NULL [y]</span>
-<span class="co">## band    1     4     NA    NA                    NA    NA B4,...,B8    </span>
+<span class="co">##      from    to offset delta                       refsys point    values x/y</span>
+<span class="co">## x       1 10980  3e+05    10 PROJCS["WGS 84 / UTM zone...    NA      NULL [x]</span>
+<span class="co">## y       1 10980  6e+06   -10 PROJCS["WGS 84 / UTM zone...    NA      NULL [y]</span>
+<span class="co">## band    1     4     NA    NA                           NA    NA B4,...,B8    </span>
 <span class="co">## call_list:</span>
 <span class="co">## [[1]]</span>
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x56051691e1f8&gt;</span>
+<span class="co">## &lt;environment: 0x558f53a5c438&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.897   0.343   1.127</code></pre>
+##   1.793   0.136   1.536</code></pre>
 </div>
 </div>
 </div>
@@ -476,33 +476,17 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"s1.tif"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"s2.tif"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"s3.tif"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">r1</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s1.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s3.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
-<span class="co">## $s1.tif</span>
-<span class="co">## [1] "s1.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s2.tif</span>
-<span class="co">## [1] "s2.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s3.tif</span>
-<span class="co">## [1] "s3.tif"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point values x/y</span>
-<span class="co">## x    1  4      0     1     NA    NA   NULL [x]</span>
-<span class="co">## y    1  4      0    -1     NA    NA   NULL [y]</span></code></pre></div>
+<span class="op">(</span><span class="va">r1</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s1.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s3.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We see that <strong>multi-resolution</strong> is mentioned in the printed summary. When converting this to a <code>stars</code> object, the secondary rasters are resampled to the cellsize + extent of the first:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>If we do this for a sub-range, defined for the object resolutions, we get:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>We now create four maps, all over the same region ([0,4] x [0,4]), with different resolutions (cell size 1, 1/2 and 1/3):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span> <span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
@@ -526,57 +510,23 @@
 <span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"s2.tif"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"s3.tif"</span><span class="op">)</span>
 <span class="op">(</span><span class="va">r2</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s1.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s3.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
-<span class="co">## $s1.tif</span>
-<span class="co">## [1] "s1.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s2.tif</span>
-<span class="co">## [1] "s2.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s3.tif</span>
-<span class="co">## [1] "s3.tif"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from to offset delta refsys point values x/y</span>
-<span class="co">## x    1  4      0     1     NA    NA   NULL [x]</span>
-<span class="co">## y    1  4      0    -1     NA    NA   NULL [y]</span>
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-22-2.png" width="700"></p>
 <p>Finally, an example where the first raster has the higher resolution:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">r3</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s3.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s1.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
-<span class="co">## $s3.tif</span>
-<span class="co">## [1] "s3.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s2.tif</span>
-<span class="co">## [1] "s2.tif"</span>
-<span class="co">## </span>
-<span class="co">## $s1.tif</span>
-<span class="co">## [1] "s1.tif"</span>
-<span class="co">## </span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from to offset     delta refsys point values x/y</span>
-<span class="co">## x    1 12      0  0.333333     NA    NA   NULL [x]</span>
-<span class="co">## y    1 12      0 -0.333333     NA    NA   NULL [y]</span>
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="stars2_files/figure-html/unnamed-chunk-23-2.png" width="700"></p>
 </div>
   </div>
 

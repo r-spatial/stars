@@ -223,8 +223,8 @@
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
-#&gt; x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
+#&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean        
@@ -236,8 +236,8 @@
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
-#&gt; x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='va'>mean</span><span class='op'>)</span>   <span class='co'># mean of all pixels for each band</span>
+#&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='va'>mean</span><span class='op'>)</span>   <span class='co'># mean of all pixels for each band</span>
 </div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean       
@@ -274,8 +274,8 @@
 #&gt; dimension(s):
 #&gt;       from  to  offset delta                       refsys point values x/y
 #&gt; range    1   2      NA    NA                           NA    NA   NULL    
-#&gt; x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
+#&gt; x        1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y        1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/psolymos/pbapply'>pbapply</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># install it, if FALSE</span>
   <span class='fu'><a href='https://rdrr.io/pkg/pbapply/man/pboptions.html'>pboptions</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"timer"</span><span class='op'>)</span>
 <span class='op'>}</span>

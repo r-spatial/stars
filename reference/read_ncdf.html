@@ -240,11 +240,11 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt;  Max.   :32.97   Max.   : 2.990   Max.   :0.840   Max.   :1.000  
 #&gt;  NA's   :4448    NA's   :4449     NA's   :4448    NA's   :13266  
 #&gt; dimension(s):
-#&gt;      from  to offset delta  refsys point         values x/y
-#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1   1     NA    NA      NA    NA              0    
-#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"anom"</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;      from  to offset delta    refsys point         values x/y
+#&gt; lon     1 180     -1     2 EPSG:4326    NA           NULL [x]
+#&gt; lat     1  90    -90     2 EPSG:4326    NA           NULL [y]
+#&gt; zlev    1   1     NA    NA        NA    NA              0    
+#&gt; time    1   1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"anom"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
 #&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
@@ -258,11 +258,11 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt;  Max.   : 2.990  
 #&gt;  NA's   :4449    
 #&gt; dimension(s):
-#&gt;      from  to offset delta  refsys point         values x/y
-#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1   1     NA    NA      NA    NA              0    
-#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, ncsub <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, count <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+#&gt;      from  to offset delta    refsys point         values x/y
+#&gt; lon     1 180     -1     2 EPSG:4326    NA           NULL [x]
+#&gt; lat     1  90    -90     2 EPSG:4326    NA           NULL [y]
+#&gt; zlev    1   1     NA    NA        NA    NA              0    
+#&gt; time    1   1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, ncsub <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, count <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
 #&gt; <span class='message'> lon, lat, zlev, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
 #&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
@@ -277,11 +277,11 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 #&gt;  Max.   : 0.030   Max.   : 0.92000   Max.   :0.320   Max.   :0.5200  
 #&gt;  NA's   :90       NA's   :90         NA's   :90      NA's   :104     
 #&gt; dimension(s):
-#&gt;      from to offset delta  refsys point         values x/y
-#&gt; lon     1 10     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1 12    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1  1     NA    NA      NA    NA              0    
-#&gt; time    1  1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'>
+#&gt;      from to offset delta    refsys point         values x/y
+#&gt; lon     1 10     -1     2 EPSG:4326    NA           NULL [x]
+#&gt; lat     1 12    -90     2 EPSG:4326    NA           NULL [y]
+#&gt; zlev    1  1     NA    NA        NA    NA              0    
+#&gt; time    1  1     NA    NA   POSIXct    NA 1981-12-31 UTC    </div><div class='input'>
 
 <span class='co'>#' precipitation data in a curvilinear NetCDF</span>
 <span class='va'>prec_file</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/test_stageiv_xyt.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>

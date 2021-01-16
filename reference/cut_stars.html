@@ -195,8 +195,8 @@
 #&gt;  (100,255]: 77264  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/cut.html'>cut</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>50</span>, <span class='fl'>100</span>, <span class='fl'>255</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
@@ -206,8 +206,8 @@
 #&gt;  (100,255]:  5713  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   1      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cut.html'>cut</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>50</span>, <span class='fl'>100</span>, <span class='fl'>255</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='cut_stars-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
 <span class='va'>x1</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
@@ -220,8 +220,8 @@
 #&gt;  (100,Inf]: 77264  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>x1_cut</span><span class='op'>[</span>,,,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>,<span class='fl'>6</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span> <span class='co'># propagates through [ and plot</span>
 </div><div class='img'><img src='cut_stars-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
