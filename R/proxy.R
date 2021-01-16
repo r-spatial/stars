@@ -309,8 +309,16 @@ process_call_list = function(x, cl, envir = new.env()) {
 }
 
 # add a call to the call list, possibly replacing function name (fn) and first arg name
-collect = function(x, call, fn, args = "x", env) {
+collect = function(x, call, fn, args = "x", env, ...) {
 	call_list = attr(x, "call_list") %||% list()
+	dots = list(...)
+	nd = names(dots)
+	# I would say now to do
+	# env = as.environment(append(as.list(env), dots)) -> but that didn't work.
+	# so we iterate over ... :
+	for (i in seq_along(dots))
+		env[[ nd[i] ]] = dots[[i]]
+	args = c(args, nd)
 	# set function to call:
 	lst = as.list(call)
 	if (!missing(fn))
@@ -327,21 +335,25 @@ collect = function(x, call, fn, args = "x", env) {
 
 #' @export
 adrop.stars_proxy = function(x, drop = which(dim(x) == 1), ...) {
-	collect(x, match.call(), "adrop", c("x", "drop"), env = environment())
+	collect(x, match.call(), "adrop", c("x", "drop"), env = environment(), ...)
 }
 
 #' @export
 aperm.stars_proxy = function(a, perm = NULL, ...) {
-	collect(a, match.call(), "aperm", c("a", "perm"), env = environment())
+	collect(a, match.call(), "aperm", c("a", "perm"), env = environment(), ...)
 }
 
+#' @export
+split.stars_proxy = function(x, ...) {
+	collect(x, match.call(), "split", env = environment())
+}
 
 #' @export
-merge.stars_proxy = function(x, y, ...) {
+merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	if (!is.null(attr(x, "call_list")) || !is.null(attr(x, "resolutions"))) # postpone:
-		collect(x, match.call(), "merge", c("x"), env = environment())
+		collect(x, match.call(), "merge", c("x", "y", "name"), env = environment(), ...)
 	else {
 		if (length(x) > 1) { 
 			cl = class(x)
@@ -443,7 +455,7 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 	x = st_stars_proxy(x, dm, NA_value = attr(x, "NA_value"), resolutions = attr(x, "resolutions")) # crop to bb
 	if (collect)
 		collect(x, match.call(), "st_crop", c("x", "y", "crop", "epsilon"),
-			env = environment()) # crops further when realised
+			env = environment(), ...) # crops further when realised
 	else
 		x
 }
@@ -455,18 +467,13 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = 
 	if (missing(.fname))
 		.fname = as.character(mc[["FUN"]])
 	collect(X, mc, "st_apply", c("X", "MARGIN", "FUN", "CLUSTER", "PROGRESS", "FUTURE", 
-		"rename", ".fname"), env = environment())
+		"rename", ".fname"), env = environment(), ...)
 }
 
 #' @export
 #' @name predict.stars
 predict.stars_proxy = function(object, model, ...) {
-	collect(object, match.call(), "predict", c("object", "model"), env = environment())
-}
-
-#' @export
-split.stars_proxy = function(x, ...) {
-	collect(x, match.call(), "split", env = environment())
+	collect(object, match.call(), "predict", c("object", "model"), env = environment(), ...)
 }
 
 #nocov start
