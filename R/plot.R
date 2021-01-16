@@ -51,7 +51,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	if (is.character(x[[1]])) # rgb values
 		key.pos = NULL
 	if (missing(col) && is.factor(x[[1]]))
-		col = sf.colors(length(levels(x[[1]])), categorical = TRUE)
+		col = attr(x[[1]], "colors") %||% sf.colors(length(levels(x[[1]])), categorical = TRUE)
 	key.pos.missing = missing(key.pos)
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
@@ -91,9 +91,6 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			} else if (is.numeric(downsample))
 				st_downsample(x, downsample)
 		dims = dim(x) # may have changed by st_downsample
-
-		if (missing(col) && is.factor(x[[1]]) && !is.null(attr(x[[1]], "colors")))
-			col = attr(x[[1]], "colors")
 
 		if (length(dims) == 2 || dims[3] == 1 || (!is.null(dots$rgb) && is.numeric(dots$rgb))) { ## ONE IMAGE:
 			# set up key region

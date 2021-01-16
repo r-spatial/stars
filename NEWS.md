@@ -1,5 +1,7 @@
 # version 0.5-0
 
+* fix handling of rasters with color tables; #375
+
 * `st_apply` and other methods for `stars_proxy` objects handle ... ; #374
 
 * add `st_bbox`, `st_crs` methods for terra's `SpatVector` objects; https://github.com/mtennekes/tmap/issues/536
