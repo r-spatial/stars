@@ -72,9 +72,8 @@ if (utils::packageVersion("sf") >= "0.9-7") {
 	print(all.equal(ep, em, check.attributes = TRUE))
 }
 
-if (require(starsdata)) {
-  # multiple-file attributes:
-  x = c(
+# multiple-file attributes:
+x = c(
   "avhrr-only-v2.19810901.nc",
   "avhrr-only-v2.19810902.nc",
   "avhrr-only-v2.19810903.nc",
@@ -84,8 +83,9 @@ if (require(starsdata)) {
   "avhrr-only-v2.19810907.nc",
   "avhrr-only-v2.19810908.nc",
   "avhrr-only-v2.19810909.nc"
-  )
-  file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+)
+file_list = system.file(paste0("netcdf/", x), package = "starsdata")
+if (!identical(file_list, "")) {
   y = read_stars(file_list, quiet = TRUE)
   print(y)
   st_crs(y) = "OGC:CRS84"
