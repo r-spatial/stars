@@ -22,6 +22,9 @@ any(is.na(x))
 # Compare
 all.equal(x$A1, y[[1]])
 
+################################################
+if (FALSE) {
+
 ## tic: segfaults
 # check equal results with stars_proxy:
 #x = st_extract(stars:::st_as_stars_proxy(r), pnt)
@@ -111,4 +114,5 @@ if (utils::packageVersion("sf") >= "0.9-7") {
   s1$s2 = s2[[1]]
   names(s1)[c(1,3)] = c("nearest", "bilinear")
   print(s1[sample(10000, 5),])
+}
 }
