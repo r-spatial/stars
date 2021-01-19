@@ -1,3 +1,5 @@
+# version 0.5-1
+
 # version 0.5-0
 
 * fix handling of rasters with color tables; #375

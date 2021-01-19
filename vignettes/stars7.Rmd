@@ -9,7 +9,7 @@ output:
       smooth_scroll: false
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{7-models}
+  %\VignetteIndexEntry{7. Statistical modelling with stars objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
