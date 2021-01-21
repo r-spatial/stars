@@ -20,7 +20,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
 				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 			else {
-				# https://github.com/mtennekes/tmap/issues/526 : 
+				# https://github.com/mtennekes/tmap/issues/526 :
 				old_crs = st_crs(envelope)
 				st_crs(envelope) = NA_crs_
 				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
@@ -30,7 +30,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	if (any(is.na(cellsize))) {
 		area = if (st_is_longlat(crs)) # we need a cell size in degree lon lat
 				diff(bb[c("xmin", "xmax")]) * diff(bb[c("ymin", "ymax")])
-			else 
+			else
 				st_area(envelope_new)
 		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
@@ -45,7 +45,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 		# TODO: divide by st_area(evelope_new)/st_area(envelope) ?
 	}
 	cellsize = rep(abs(cellsize), length.out = 2)
-	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
+	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1])
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
 	if (has_global_longitude(x)) { # if global coverage, don't cross the boundaries:
 		cellsize[1] = diff(bb[c("xmin", "xmax")])/nx
@@ -114,14 +114,14 @@ transform_grid_grid = function(x, target) {
 #'
 #' @param src object of class \code{stars} with source raster
 #' @param dest object of class \code{stars} with target raster geometry
-#' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing 
+#' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing
 #' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
-#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporaray file
+#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
-#' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE} 
+#' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}
 #' @param ... ignored
 #' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples
@@ -141,7 +141,7 @@ transform_grid_grid = function(x, target) {
 #' plot(s, axes = TRUE)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
-st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100, 
+st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
 		method = "near") {
 
@@ -150,7 +150,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 
 	if (!is.na(crs))
 		crs = st_crs(crs)
-	
+
 	ret = if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
 		if (all(!is.na(cellsize))) {
@@ -199,9 +199,9 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (method %in% c("near", "mode")) {
 		a = lapply(src, attributes)
 		for (i in seq_along(ret))
-			ret[[i]] = structure(ret[[i]], 
-				levels = attr(ret[[i]], "levels") %||% a[[i]]$levels, 
-				colors = attr(ret[[i]], "colors") %||% a[[i]]$colors, 
+			ret[[i]] = structure(ret[[i]],
+				levels = attr(ret[[i]], "levels") %||% a[[i]]$levels,
+				colors = attr(ret[[i]], "colors") %||% a[[i]]$colors,
 				class =  attr(ret[[i]], "class")  %||% a[[i]]$class)
 	}
 	ret
