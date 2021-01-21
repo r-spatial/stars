@@ -35,7 +35,7 @@ st_warp(
 
 \item{options}{character vector with options, passed on to gdalwarp}
 
-\item{no_data_value}{value used by gdalwarp for no_data (NA) when writing to temporaray file}
+\item{no_data_value}{value used by gdalwarp for no_data (NA) when writing to temporary file}
 
 \item{debug}{logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name}
 
