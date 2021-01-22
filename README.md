@@ -1,6 +1,5 @@
 
-Spatiotemporal Arrays: Raster and Vector Datacubes
-==================================================
+# Spatiotemporal Arrays: Raster and Vector Datacubes
 
 <!-- badges: start -->
 
@@ -16,19 +15,18 @@ checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/
 Spatiotemporal data often comes in the form of dense arrays, with space
 and time being array dimensions. Examples include
 
--   socio-economic or demographic data,
--   environmental variables monitored at fixed stations,
--   raster maps
--   time series of satellite images with multiple spectral bands,
--   spatial simulations, and
--   climate or weather model output.
+  - socio-economic or demographic data,
+  - environmental variables monitored at fixed stations,
+  - raster maps
+  - time series of satellite images with multiple spectral bands,
+  - spatial simulations, and
+  - climate or weather model output.
 
 This R package provides classes and methods for reading, manipulating,
 plotting and writing such data cubes, to the extent that there are
 proper formats for doing so.
 
-Raster and vector data cubes
-----------------------------
+## Raster and vector data cubes
 
 The canonical data cube most of us have in mind is that where two
 dimensions represent spatial raster dimensions, and the third time (or
@@ -44,15 +42,17 @@ spectral band and sensor form dimensions:
 
 or lower-dimensional cubes such as a raster image:
 
-    suppressPackageStartupMessages(library(dplyr))
-    library(stars)
-    # Loading required package: abind
-    # Loading required package: sf
-    # Linking to GEOS 3.8.1, GDAL 3.1.2, PROJ 7.1.0
-    tif = system.file("tif/L7_ETMs.tif", package = "stars")
-    read_stars(tif) %>%
-      slice(index = 1, along = "band") %>%
-      plot()
+``` r
+suppressPackageStartupMessages(library(dplyr))
+library(stars)
+# Loading required package: abind
+# Loading required package: sf
+# Linking to GEOS 3.9.0, GDAL 3.2.0, PROJ 7.2.0
+tif = system.file("tif/L7_ETMs.tif", package = "stars")
+read_stars(tif) %>%
+  slice(index = 1, along = "band") %>%
+  plot()
+```
 
 ![](man/figures/README-plot1-1.png)<!-- -->
 
@@ -63,8 +63,9 @@ package `stars` supports besides *regular* also *rotated*, *sheared*,
 ![](man/figures/README-plot2-1.png)<!-- -->
 
 Vector data cubes arise when we do not have two regularly discretized
-spatial dimensions, but a single dimension indicating spatial feature
-geometries, such as polygons (e.g. denoting administrative regions):
+spatial dimensions, but a single dimension that points to distinct
+spatial feature geometries, such as polygons (e.g. denoting
+administrative regions):
 
 <img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png" width="50%" />
 
@@ -72,8 +73,10 @@ or points (e.g. denoting sensor locations):
 
 <img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png" width="50%" />
 
-NetCDF, GDAL
-------------
+NetCDF’s CF-convention calls this a [discrete
+axis](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis).
+
+## NetCDF, GDAL
 
 `stars` provides two functions to read data: `read_ncdf` and
 `read_stars`, where the latter reads through GDAL. (In the future, both
@@ -87,8 +90,7 @@ routines available in GDAL and PROJ (e.g. `st_transform`, `rasterize`,
 [vector-raster conversions, reprojection,
 warping](https://r-spatial.github.io/stars/articles/stars5.html).
 
-Out-of-memory (on-disk) rasters
--------------------------------
+## Out-of-memory (on-disk) rasters
 
 Package `stars` provides `stars_proxy` objects (currently only when read
 through GDAL), which contain only the dimensions metadata and pointers
@@ -101,56 +103,60 @@ vignette](https://r-spatial.github.io/stars/articles/stars2.html).
 
 The following methods are currently available for `stars_proxy` objects:
 
-    methods(class = "stars_proxy")
-    #  [1] [              adrop          aggregate      aperm          as.data.frame 
-    #  [6] c              coerce         dim            droplevels     filter        
-    # [11] initialize     Math           merge          mutate         Ops           
-    # [16] plot           predict        print          pull           select        
-    # [21] show           slice          slotsFromS3    split          st_apply      
-    # [26] st_as_stars    st_crop        st_extract     st_mosaic      st_redimension
-    # [31] st_sample      write_stars   
-    # see '?methods' for accessing help and source code
+``` r
+methods(class = "stars_proxy")
+#  [1] [              adrop          aggregate      aperm          as.data.frame 
+#  [6] c              coerce         dim            droplevels     filter        
+# [11] initialize     Math           merge          mutate         Ops           
+# [16] plot           predict        print          pull           select        
+# [21] show           slice          slotsFromS3    split          st_apply      
+# [26] st_as_stars    st_crop        st_mosaic      st_redimension st_sample     
+# [31] st_set_bbox    transmute      write_stars   
+# see '?methods' for accessing help and source code
+```
 
-Raster and vector time series analysis example
-----------------------------------------------
+## Raster and vector time series analysis example
 
 In the following, a curvilinear grid with hourly precipitation values of
 a hurricane is imported and the first 12 time steps are plotted:
 
-    prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-    (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-    # no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation
-    # other available variables:
-    #  time_bounds, lon, lat, time
-    # No projection information found in nc file. 
-    #  Coordinate variable units found to be degrees, 
-    #  assuming WGS84 Lat/Lon.
-    # stars object with 3 dimensions and 1 attribute
-    # attribute(s):
-    #  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]
-    #  Min.   :  0.000                                         
-    #  1st Qu.:  0.000                                         
-    #  Median :  0.750                                         
-    #  Mean   :  4.143                                         
-    #  3rd Qu.:  4.630                                         
-    #  Max.   :163.750                                         
-    # dimension(s):
-    #      from  to                  offset   delta  refsys point
-    # x       1  87                      NA      NA  WGS 84    NA
-    # y       1 118                      NA      NA  WGS 84    NA
-    # time    1  23 2018-09-13 18:30:00 UTC 1 hours POSIXct    NA
-    #                              values    
-    # x    [87x118] -80.6113,...,-74.8822 [x]
-    # y      [87x118] 32.4413,...,37.6193 [y]
-    # time                           NULL    
-    # curvilinear grid
-    sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
-      st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
-    nc_outline = st_union(st_geometry(nc))
-    plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
-    prec %>%
-      slice(index = 1:12, along = "time") %>%
-      plot(downsample = c(5, 5, 1), hook = plot_hook)
+``` r
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+(prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
+# no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation
+# other available variables:
+#  time_bounds, lon, lat, time
+# No projection information found in nc file. 
+#  Coordinate variable units found to be degrees, 
+#  assuming WGS84 Lat/Lon.
+# stars object with 3 dimensions and 1 attribute
+# attribute(s):
+#  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]
+#  Min.   :  0.000                                         
+#  1st Qu.:  0.000                                         
+#  Median :  0.750                                         
+#  Mean   :  4.143                                         
+#  3rd Qu.:  4.630                                         
+#  Max.   :163.750                                         
+# dimension(s):
+#      from  to                  offset   delta  refsys point
+# x       1  87                      NA      NA  WGS 84    NA
+# y       1 118                      NA      NA  WGS 84    NA
+# time    1  23 2018-09-13 18:30:00 UTC 1 hours POSIXct    NA
+#                              values x/y
+# x    [87x118] -80.6113,...,-74.8822 [x]
+# y      [87x118] 32.4413,...,37.6193 [y]
+# time                           NULL    
+# curvilinear grid
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
+  st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
+nc_outline = st_union(st_geometry(nc))
+# although coordinates are longitude/latitude, st_union assumes that they are planar
+plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
+prec %>%
+  slice(index = 1:12, along = "time") %>%
+  plot(downsample = c(5, 5, 1), hook = plot_hook)
+```
 
 ![](man/figures/README-plot3-1.png)<!-- -->
 
@@ -158,10 +164,12 @@ and next, intersected with with the counties of North Carolina, where
 the maximum precipitation intensity was obtained per county, and
 plotted:
 
-    a = aggregate(prec, by = nc, FUN = max)
-    # although coordinates are longitude/latitude, st_intersects assumes that they are planar
-    # although coordinates are longitude/latitude, st_intersects assumes that they are planar
-    plot(a, max.plot = 23, border = 'grey', lwd = .5)
+``` r
+a = aggregate(prec, by = nc, FUN = max)
+# although coordinates are longitude/latitude, st_intersects assumes that they are planar
+# although coordinates are longitude/latitude, st_intersects assumes that they are planar
+plot(a, max.plot = 23, border = 'grey', lwd = .5)
+```
 
 ![](man/figures/README-plot4-1.png)<!-- -->
 
@@ -169,26 +177,27 @@ We can integrate over (reduce) time, for instance to find out *when* the
 maximum precipitation occurred. The following code finds the time index,
 and then the corresponding time value:
 
-    index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-    st_apply(a, "geom", index_max) %>%
-      mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
-      select(when) %>%
-      plot(key.pos = 1, main = "time of maximum precipitation")
+``` r
+index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
+st_apply(a, "geom", index_max) %>%
+  mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
+  select(when) %>%
+  plot(key.pos = 1, main = "time of maximum precipitation")
+```
 
 ![](man/figures/README-plot5-1.png)<!-- -->
 
-Other packages for data cubes
------------------------------
+## Other packages for data cubes
 
 ### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)
 
 Package `gdalcubes` can be used to create data cubes (or functions from
 them) from image collections, sets of multi-band images with varying
 
--   spatial resolution
--   spatial extent
--   coordinate reference systems (e.g., spread over multiple UTM zones)
--   observation times
+  - spatial resolution
+  - spatial extent
+  - coordinate reference systems (e.g., spread over multiple UTM zones)
+  - observation times
 
 and does this by resampling and/or aggregating over space and/or time.
 It reuses GDAL VRT’s and gdalwarp for spatial resampling and/or warping,
@@ -204,11 +213,11 @@ in a standards-compliant way.
 Package `raster` is a powerful package for handling raster maps and
 stacks of raster maps both in memory and on disk, but does not address
 
--   non-raster time series,
--   multi-attribute rasters time series
--   rasters with mixed type attributes (e.g., numeric, logical, factor,
+  - non-raster time series,
+  - multi-attribute rasters time series
+  - rasters with mixed type attributes (e.g., numeric, logical, factor,
     POSIXct)
--   rectilinear or curvilinear rasters
+  - rectilinear or curvilinear rasters
 
 A list of `stars` commands matching existing `raster` commands is found
 in this
@@ -216,19 +225,18 @@ in this
 A list of translations in the opposite direction (from `stars` to
 `raster`) still needs to be made.
 
-Other `stars` resources:
-------------------------
+## Other `stars` resources:
 
--   blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
+  - blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
     [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
     [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
--   vignettes:
+  - vignettes:
     [first](https://r-spatial.github.io/stars/articles/stars1.html),
     [second](https://r-spatial.github.io/stars/articles/stars2.html),
     [third](https://r-spatial.github.io/stars/articles/stars3.html),
     [fourth](https://r-spatial.github.io/stars/articles/stars4.html),
     [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
--   the original [R Consortium
+  - the original [R Consortium
     proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
 ### Acknowledgment

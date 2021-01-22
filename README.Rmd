@@ -101,7 +101,7 @@ plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
 plot(st_geometry((r5)), main = "curvilinear")
 ```
 
-Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
+Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension that points to distinct spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
 ```{r cube3,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png")
@@ -112,6 +112,8 @@ or points (e.g. denoting sensor locations):
 ```{r cube4,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png")
 ```
+
+NetCDF's CF-convention calls this a [discrete axis](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis).
 
 ## NetCDF, GDAL
 
