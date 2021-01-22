@@ -1,5 +1,5 @@
 maybe_normalizePath = function(.x, np = FALSE) {
-	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2")
+	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
 	if (!np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
