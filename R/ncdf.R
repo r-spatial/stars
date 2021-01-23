@@ -553,7 +553,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
         bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
         u = v
-
       }
 
       if (is_reg && abs(v - u) < eps) {
@@ -566,16 +565,24 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
           to_rectilinear = TRUE
       }
     } else if (regular[i]) {
-      dx <- diff(coords[[i]][1:2])
-      dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]] - dx/2
+      mdc = mean(diff(coords[[i]]))
+      coord_name = names(coords)[i]
+      t_dim = coord_var[coord_var$variable == coord_name,]$T
+      if (is.null(t_dim) || length(t_dim) == 0)
+        t_dim = NA_character_
+      # https://github.com/r-spatial/stars/issues/378
+      if (!is.na(t_dim) && names(coords)[i] == t_dim)
+        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]]
+      else
+        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]] - mdc/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
-      dimensions[[i]]$delta[1L]  = mean(diff(coords[[i]]))
+      dimensions[[i]]$delta[1L]  = mdc
     } else {
       dimensions[[i]]$values = coords[[i]]
       ## offset/delta for fall-back index (and for NA test )
       ## https://github.com/r-spatial/stars/blob/master/R/dimensions.R#L294-L303
-      dimensions[[i]]$offset[1L] = NA
-      dimensions[[i]]$delta[1L] = NA
+      dimensions[[i]]$offset[1L] = NA_real_
+      dimensions[[i]]$delta[1L] = NA_real_
     }
   }
   if (to_rectilinear)

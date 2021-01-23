@@ -1,5 +1,7 @@
 # version 0.5-1
 
+* `read_ncdf` does not take time as mid-points of regular intervals, but as starting points; #378
+
 # version 0.5-0
 
 * fix handling of rasters with color tables; #375
