@@ -3,6 +3,13 @@ library(stars)
 s1 = st_as_stars(matrix(1:16, 4))
 s2 = st_as_stars(matrix(1:16, 4))
 s3 = st_as_stars(matrix(1:16, 4))
+attr(s1, "dimensions")$X1$offset = 0
+attr(s1, "dimensions")$X2$offset = 4
+attr(s2, "dimensions")$X1$offset = 0
+attr(s2, "dimensions")$X2$offset = 4
+attr(s3, "dimensions")$X1$offset = 0
+attr(s3, "dimensions")$X2$offset = 4
+attr(s1, "dimensions")$X2$delta =  1
 attr(s1, "dimensions")$X2$delta = -1
 attr(s2, "dimensions")$X1$delta =  2
 attr(s2, "dimensions")$X2$delta = -2
