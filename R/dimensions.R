@@ -567,8 +567,6 @@ identical_dimensions = function(lst, ignore_resolution = FALSE) {
 		for (i in 2:length(lst)) {
 			di = attr(lst[[i]], "dimensions")
 			if (ignore_resolution) {
-				print(d1)
-				print(di)
 				for (j in seq_along(d1))
 					d1[[j]]$delta = d1[[j]]$to = NA_real_
 				for (j in seq_along(di))
