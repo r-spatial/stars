@@ -18,7 +18,10 @@ fn2 = paste0(tempdir(), .Platform$file.sep, "img2.tif")
 fn3 = paste0(tempdir(), .Platform$file.sep, "img3.tif")
 write_stars(s1, fn1)
 write_stars(s2, fn2)
-write_stars(s3, fn3) 
+write_stars(s3, fn3)
+gdal_utils("info", fn1)
+gdal_utils("info", fn2)
+gdal_utils("info", fn3)
 (r1 = read_stars(c(fn1, fn2, fn3), proxy = TRUE))
 
 # chunk3
