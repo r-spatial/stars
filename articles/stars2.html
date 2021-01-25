@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-1</span>
       </span>
     </div>
 
@@ -290,7 +290,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.150   0.160   1.983</code></pre>
+##   2.128   0.156   1.915</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -381,15 +381,15 @@
 <span class="co">## [[1]]</span>
 <span class="co">## x[i = i, drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x562774f9b3f8&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x55cdf9e58e80&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
-<li>If a time series function is applied to pixel time series and the result is plotted on a map, the time series function has only to be evaluated on the pixels actually plotted. This means that in</li>
+<li>If a time series function is applied to pixel time series and the result is plotted on a map, the time series function is only evaluated on the pixels actually plotted. This means that e.g. in</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">range</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>the order of evaluation needs to be reversed: only <code>plot</code> knows which pixels are going to be shown, so that should be in control of how <code>x</code> is subsampled <em>before</em> <code>st_apply</code> is carried out on this subsample.</p>
+<p>the order of evaluation is reversed: <code>plot</code> knows which pixels are going to be shown, and controls how <code>x</code> is downsampled <em>before</em> <code>st_apply</code> is carried out on this subset.</p>
 <div id="fetching-the-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fetching-the-data" class="anchor"></a>Fetching the data</h3>
@@ -435,11 +435,11 @@
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x56277981acc0&gt;</span>
+<span class="co">## &lt;environment: 0x55cdfd8e6f18&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.507   0.116   1.288</code></pre>
+##   1.391   0.160   1.222</code></pre>
 </div>
 </div>
 </div>
@@ -453,11 +453,16 @@
 </ul>
 <p>We’ll create four maps with cells size 1, 2 and 3:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
-
-<span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
 <span class="va">s2</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
 <span class="va">s3</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">2</span>
 <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>
@@ -473,60 +478,123 @@
 <p><img src="stars2_files/figure-html/unnamed-chunk-17-3.png" width="700"></p>
 <p>We created three rasters with identical cell values and dimensions, but different cell sizes, and hence extents. If we bind them in a single proxy object, with</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"s1.tif"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"s2.tif"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"s3.tif"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">r1</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s1.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s3.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">fn1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img1.tif"</span><span class="op">)</span>
+<span class="va">fn2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img2.tif"</span><span class="op">)</span>
+<span class="va">fn3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img3.tif"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">fn1</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">fn2</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s3</span>, <span class="va">fn3</span><span class="op">)</span> 
+<span class="op">(</span><span class="va">r1</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">fn1</span>, <span class="va">fn2</span>, <span class="va">fn3</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
+<span class="co">## $img1.tif</span>
+<span class="co">## [1] "[...]/img1.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img2.tif</span>
+<span class="co">## [1] "[...]/img2.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img3.tif</span>
+<span class="co">## [1] "[...]/img3.tif"</span>
+<span class="co">## </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from to offset delta refsys point values x/y</span>
+<span class="co">## x    1  4      0     1     NA    NA   NULL [x]</span>
+<span class="co">## y    1  4      4    -1     NA    NA   NULL [y]</span></code></pre></div>
 <p>We see that <strong>multi-resolution</strong> is mentioned in the printed summary. When converting this to a <code>stars</code> object, the secondary rasters are resampled to the cellsize + extent of the first:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>If we do this for a sub-range, defined for the object resolutions, we get:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>We now create four maps, all over the same region ([0,4] x [0,4]), with different resolutions (cell size 1, 1/2 and 1/3):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">s1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span> <span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
-<span class="va">s2</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span> <span class="fl">64</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
-<span class="va">s3</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">144</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">2</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>
-<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">3</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s1</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">s4</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span> <span class="fl">16</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<span class="va">s5</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span> <span class="fl">64</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span>
+<span class="va">s6</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">144</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s4</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s4</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s5</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s5</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s6</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">0</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s6</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">offset</span> <span class="op">=</span> <span class="fl">4</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s4</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s4</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s5</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span><span class="op">/</span><span class="fl">2</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s5</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">2</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s6</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X1</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span>  <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s6</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">$</span><span class="va">X2</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="fl">3</span>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s4</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s5</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-21-2.png" width="700"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s3</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s6</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-21-3.png" width="700"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s1</span>, <span class="st">"s1.tif"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s2</span>, <span class="st">"s2.tif"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s3</span>, <span class="st">"s3.tif"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">r2</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s1.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s3.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">fn4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img4.tif"</span><span class="op">)</span>
+<span class="va">fn5</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img5.tif"</span><span class="op">)</span>
+<span class="va">fn6</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">.Platform</span><span class="op">$</span><span class="va">file.sep</span>, <span class="st">"img6.tif"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s4</span>, <span class="va">fn4</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s5</span>, <span class="va">fn5</span><span class="op">)</span>
+<span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="va">s6</span>, <span class="va">fn6</span><span class="op">)</span> 
+<span class="op">(</span><span class="va">r2</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">fn4</span>, <span class="va">fn5</span>, <span class="va">fn6</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
+<span class="co">## $img4.tif</span>
+<span class="co">## [1] "[...]/img4.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img5.tif</span>
+<span class="co">## [1] "[...]/img5.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img6.tif</span>
+<span class="co">## [1] "[...]/img6.tif"</span>
+<span class="co">## </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from to offset delta refsys point values x/y</span>
+<span class="co">## x    1  4      0     1     NA    NA   NULL [x]</span>
+<span class="co">## y    1  4      4    -1     NA    NA   NULL [y]</span>
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-22-2.png" width="700"></p>
 <p>Finally, an example where the first raster has the higher resolution:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">r3</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s3.tif"</span>, <span class="st">"s2.tif"</span>, <span class="st">"s1.tif"</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="op">(</span><span class="va">r3</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">fn6</span>, <span class="va">fn5</span>, <span class="va">fn4</span><span class="op">)</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<span class="co">## multi-resolution stars_proxy object with 3 attributes in files:</span>
+<span class="co">## $img6.tif</span>
+<span class="co">## [1] "[...]/img6.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img5.tif</span>
+<span class="co">## [1] "[...]/img5.tif"</span>
+<span class="co">## </span>
+<span class="co">## $img4.tif</span>
+<span class="co">## [1] "[...]/img4.tif"</span>
+<span class="co">## </span>
+<span class="co">## dimension(s):</span>
+<span class="co">##   from to offset     delta refsys point values x/y</span>
+<span class="co">## x    1 12      0  0.333333     NA    NA   NULL [x]</span>
+<span class="co">## y    1 12      4 -0.333333     NA    NA   NULL [y]</span>
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="stars2_files/figure-html/unnamed-chunk-23-2.png" width="700"></p>
 </div>
   </div>
 
