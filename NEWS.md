@@ -1,5 +1,7 @@
 # version 0.5-1
 
+* fix weird GDAL-related bugs in stars2 vignette
+
 * `read_ncdf` does not take time as mid-points of regular intervals, but as starting points; #378
 
 # version 0.5-0
