@@ -196,7 +196,7 @@ attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 Doing this allows for optimizing the order in which operations are done. As an example, for `st_apply`, reading can be done sequentially over the dimensions over which the function is applied: 
 
 * If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed. 
-* If a time series function is applied to pixel time series and the result is plotted on a map, the time series function is only evaluated on the pixels actually plotted. This means that in
+* If a time series function is applied to pixel time series and the result is plotted on a map, the time series function is only evaluated on the pixels actually plotted. This means that e.g. in
 ```{r eval = FALSE}
 plot(st_apply(x, c("x", "y"), range))
 ```
@@ -247,7 +247,7 @@ plot(s3, axes = TRUE, text_values = TRUE, text_color = 'orange')
 
 We created three rasters with identical cell values and dimensions, but different cell sizes, and hence extents. If we bind them in a single proxy object, with
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 fn1 = paste0(tempdir(), .Platform$file.sep, "img1.tif")
 fn2 = paste0(tempdir(), .Platform$file.sep, "img2.tif")
 fn3 = paste0(tempdir(), .Platform$file.sep, "img3.tif")
@@ -259,7 +259,7 @@ write_stars(s3, fn3)
 
 We see that **multi-resolution** is mentioned in the printed summary. When converting this to a `stars` object, the secondary rasters are resampled to the cellsize + extent of the first:
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 st_as_stars(r1) %>%
   merge() %>%
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
@@ -287,7 +287,7 @@ plot(s5, axes = TRUE, text_values = TRUE, text_color = 'orange')
 plot(s6, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ```
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 fn4 = paste0(tempdir(), .Platform$file.sep, "img4.tif")
 fn5 = paste0(tempdir(), .Platform$file.sep, "img5.tif")
 fn6 = paste0(tempdir(), .Platform$file.sep, "img6.tif")
@@ -306,7 +306,7 @@ st_as_stars(r2[,2:4,2:4]) %>%
 
 Finally, an example where the first raster has the higher resolution:
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 (r3 = read_stars(c(fn6, fn5, fn4), proxy = TRUE))
 
 st_as_stars(r3) %>%
