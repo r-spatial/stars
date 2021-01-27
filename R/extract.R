@@ -74,17 +74,15 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
 		else {
-			int = function(x, ix) { 
+			interpolate = function(x, ix) { 
 				i = floor(ix)
 				di = ix - i
-				if (is.na(ix))
-					NA_real_
-				else if (di == 0)
+				if (is.na(ix) || di == 0)
 					x[i]
 				else 
 					(1 - di) * x[i] + di * x[i+1]
 			}
-			m = lapply(m, function(n) mapply(int, asplit(n, 1), tm_ix))
+			m = lapply(m, function(n) mapply(interpolate, asplit(n, 1), tm_ix))
 		}
 	}
 	if (NCOL(m[[1]]) > 1) { # return stars:
