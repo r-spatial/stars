@@ -22,6 +22,7 @@ jobs:
 
       - name: Query dependencies
         run: |
+          install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de", type = "source")
           install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
