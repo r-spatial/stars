@@ -74,7 +74,16 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(pts), tm_ix)])
 		else {
-			int = function(x, ix) { i = floor(ix); di = ix-i; (1-di)*x[i]+di*x[i+1] }
+			int = function(x, ix) { 
+				i = floor(ix)
+				di = ix - i
+				if (is.na(ix))
+					NA_real_
+				else if (di == 0)
+					x[i]
+				else 
+					(1 - di) * x[i] + di * x[i+1]
+			}
 			m = lapply(m, function(n) mapply(int, asplit(n, 1), tm_ix))
 		}
 	}
@@ -100,7 +109,7 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 	}
 }
 
-# match the times in a to those of b:
+# match the times in a to those of b, or interpolate:
 # if interpolate = FALSE, returns an integer in 1...length(b) or NA if outside
 # if interpolate = TRUE, returns a continuous index in 1...length(b) or NA if outside
 match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
@@ -111,7 +120,7 @@ match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
 	m = if (inherits(b, "intervals"))
 			find_interval(a, b)
 		else if (isTRUE(intervals) || interpolate) {
-			m = findInterval(a, b)
+			m = findInterval(a, b, rightmost.closed = TRUE)
 			m[ m == 0 | m == length(b) ] = NA
 			m
 		} else
@@ -120,7 +129,7 @@ match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
 		b = as.numeric(b)
 		a = as.numeric(a)
 		b = c(b, tail(b, 1))
-		m + (b[m] - a)/(diff(b)[m])
+		m + (a - b[m])/(diff(b)[m])
 	} else
 		m
 }
