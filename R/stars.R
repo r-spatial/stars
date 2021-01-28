@@ -725,7 +725,9 @@ st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
 #' @param new_dims target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes
 #' @param along named list with new dimension name and values
 #' @param ... ignored
-st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
+st_redimension.stars = function(x, new_dims = st_dimensions(x), 
+		along = list(new_dim = names(x)), ...) {
+
 	d = st_dimensions(x)
 	if (inherits(new_dims, "dimensions")) {
 		di = dim(new_dims)
@@ -736,6 +738,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 	if (! identical(setNames(di, NULL), setNames(dim(x), NULL))) {
 		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
+		for (i in seq_len(min(length(di), length(dim(x)))))
+			if (di[i] == dim(x)[i])
+				new_dims[[i]] = d[[i]]
+		x = unclass(x)
 		for (i in seq_along(x))
 			dim(x[[i]]) = di
 		st_stars(x, dimensions = new_dims)
