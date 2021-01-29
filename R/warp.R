@@ -139,6 +139,10 @@ transform_grid_grid = function(x, target) {
 #' r %>% st_set_crs(4326) %>% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
 #' plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
 #' plot(s, axes = TRUE)
+#' # downsample raster (90 to 270 m)
+#' r = read_stars(system.file("tif/olinda_dem_utm25s.tif", package = "stars"))
+#' r270 = st_as_stars(st_bbox(r), dx = 270)
+#' r270 = st_warp(r, r270)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
