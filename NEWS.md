@@ -1,5 +1,7 @@
 # version 0.5-2
 
+* multi-file proxy objects can be `st_warp`ed with `use_gdal=TRUE`; #385
+
 # version 0.5-1
 
 * fix weird GDAL-related bug in stars2 vignette
