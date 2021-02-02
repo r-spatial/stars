@@ -168,6 +168,12 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			else
 				on.exit(unlink(src[[1]])) # temp file
 		}
+		# collapse a multi-file proxy objects into single-file/multi-band:
+		if (length(src[[1]]) > 1) {
+			tmp = tempfile()
+			sf::gdal_utils("buildvrt", src[[1]], tmp, options = "-separate")
+			src[[1]] = tmp
+		}
 		if (missing(dest) && is.na(crs)) {
 			delete = TRUE
 			dest = tempfile(fileext = ".tif")
