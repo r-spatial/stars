@@ -82,6 +82,7 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 				else 
 					(1 - di) * x[i] + di * x[i+1]
 			}
+			# each time series is reduced to a _single_ time step, interpolated:
 			m = lapply(m, function(n) mapply(interpolate, asplit(n, 1), tm_ix))
 		}
 	}
