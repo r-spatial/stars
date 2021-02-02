@@ -62,25 +62,21 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 #' @param chunk_size length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.
 #' @param progress logical; if \code{TRUE}, a progress bar is shown
 #' @details \code{write_stars} first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
+#' @details in case \code{obj} is a multi-file \code{stars_proxy} object, all files are written as layers into the output file \code{dsn}
 #' @export
 write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
-	if (missing(layer)) {
-		if (length(obj) > 1)
-			warning("all but first attribute are ignored")
-	} else {
-		warning("specifying layer may not work in write_stars()")
+	if (!missing(layer))
 		obj = obj[layer]
-	}
-	if (length(obj[[1]]) > 1) { # collapse bands:
+
+	if (length(obj[[1]]) > 1 || length(obj) > 1) { # collapse bands:
 		out_file = tempfile(fileext = ".vrt")
-		gdal_utils("buildvrt", obj[[1]], out_file, options = "-separate")
-		obj = unclass(obj)
+		gdal_utils("buildvrt", unlist(obj), out_file, options = "-separate")
 		obj[[1]] = out_file
-		obj = structure(obj, class = c("stars_proxy", "stars"))
 	}
+
 	if (progress) {
 		pb = txtProgressBar()
 		setTxtProgressBar(pb, 0)

@@ -70,6 +70,8 @@ write stars object to gdal dataset (typically: to file)
 }
 \details{
 \code{write_stars} first creates the target file, then updates it sequentially by writing blocks of \code{chunk_size}.
+
+in case \code{obj} is a multi-file \code{stars_proxy} object, all files are written as layers into the output file \code{dsn}
 }
 \examples{
 detect.driver("L7_ETMs.tif")

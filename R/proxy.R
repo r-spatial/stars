@@ -476,6 +476,13 @@ predict.stars_proxy = function(object, model, ...) {
 	collect(object, match.call(), "predict", c("object", "model"), env = environment(), ...)
 }
 
+#' @export
+"[[<-.stars_proxy" = function(x, i, value) {
+	y = unclass(x)
+	y[[i]] = value
+	structure(y, class = class(x))
+}
+
 #nocov start
 get_data_url = function(url, expr = NULL) {
 	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
