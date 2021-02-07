@@ -1,5 +1,7 @@
 # version 0.5-2
 
+* for `stars_proxy` objects, `write_stars` writes all objects into a multi-layer file; #385
+
 * multi-file proxy objects can be `st_warp`ed with `use_gdal=TRUE`; #385
 
 # version 0.5-1

@@ -15,7 +15,7 @@ print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 		cat("multi-resolution ")
 	cat("stars_proxy object with", length(x), 
 		if (length(x) > 1) "attributes" else "attribute",
-		"in", if (sum(lengths(x)) > 1) "files" else "file")
+		"in", sum(lengths(x)), "file(s)")
 	if (length(x[[1]]) > nfiles)
 		cat("; showing the first", min(length(x[[1]]), nfiles), "filenames\n")
 	else
@@ -187,7 +187,9 @@ fetch = function(x, downsample = 0, ...) {
 
 	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
-	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) # we want to select here
+
+	# select bands?
+	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) 
 		rasterio$bands = bands$values
 
 	# do it:
@@ -230,9 +232,14 @@ fetch = function(x, downsample = 0, ...) {
 		do.call(c, lapply(ret, st_redimension, along = along))
 	
 	new_dim = st_dimensions(ret)
-	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
-		if (dm %in% names(new_dim))
-			new_dim[[dm]] = d[[dm]]
+#	for (dm in setdiff(names(d), xy)) # copy over non x/y dimension values, if present:
+#		if (dm %in% names(new_dim))
+#			new_dim[[dm]] = d[[dm]]
+	if (length(d) > 2)
+		for (dm in 3:length(d)) {
+			new_dim[[dm]] = d[[dm]] # copy all fields - what if this was downsampled?
+			names(new_dim)[dm] = names(d)[dm]
+		}
 
 	st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x))
 }
@@ -260,14 +267,16 @@ check_xy_warn = function(call, dimensions) {
 #' @param url character; URL of the stars endpoint where the data reside 
 #' @param envir environment to resolve objects in
 #' @export
-st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), envir = parent.frame()) {
+st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"), 
+		envir = parent.frame()) {
 	if (! is.null(url)) { # execute/get remotely: # nocov start
 		# if existing, convert call_list to character:
 		attr(.x, "call_list") = lapply(attr(.x, "call_list"), deparse)
 		# push the object to url, then st_as_stars() it there:
 		tempnam = substr(tempfile(pattern = "Z", tmpdir = "", fileext = ""), 2, 15)
 		put_data_url(url, tempnam, .x)
-		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, ", envir = data)") # evaluate in "data" first
+		expr = paste0("st_as_stars(", tempnam, ", url = NULL, downsample=", downsample, 
+			", envir = data)") # evaluate in "data" first
 		ret = get_data_url(url, expr)
 		put_data_url(url, tempnam, NULL) # remove the temporary object
 		ret # nocov end
