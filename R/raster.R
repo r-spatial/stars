@@ -89,7 +89,11 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 			setNames(list(v), deparse(substitute(.x), 50))
 		else
 			setNames(list(v), names(.x)[1])
-	adrop(st_as_stars(l, dimensions = create_dimensions(dimensions, get_raster())))
+	ret = st_as_stars(l, dimensions = create_dimensions(dimensions, get_raster()))
+	if (dim(ret)[3] == 1)
+		adrop(ret, 3)
+	else
+		ret
 }
 
 st_as_raster = function(x, ...) {
