@@ -130,21 +130,22 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 	} else if (!is.null(point) && is.logical(point)) {
 		d[[which]]$point = point
 	} else if (!missing(names)) {
-		# handle names in raster attribute, #46
-		r = attr(d, "raster")
-		if (any(!is.na(r$dimensions))) {
-			r$dimensions = names[match(r$dimensions, names(d))]
-			attr(d, "raster") = r
-		}
 		if (length(d) != length(names) && length(names) != 1)
 			stop("length of names should match number of dimensions")
-		new_names = if (length(d) == length(names))
-				names
-			else { # replace the name of dimension `which`, #354
-				new_names = names(d)
-				new_names[which] = names
-				new_names
-			}
+		r = attr(d, "raster")
+		if (length(d) == length(names)) {
+			# handle names in raster attribute, #46
+			# problematic again in #379
+			if (any(!is.na(r$dimensions)))
+				r$dimensions = names[match(r$dimensions, names(d))]
+			new_names = names
+		} else { # replace the name of dimension `which`, #354
+			if (names(d)[which] %in% r$dimensions)
+				r$dimensions[match(names(d)[which], r$dimensions)] = names
+			new_names = names(d)
+			new_names[which] = names
+		}
+		attr(d, "raster") = r
 		base::names(d) = new_names
 	} else if (! missing(xy)) {
 		stopifnot(length(xy) == 2)
