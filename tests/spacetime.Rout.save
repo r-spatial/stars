@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -328,9 +328,9 @@ attribute(s):
  3rd Qu.:29.50  
  Max.   :31.20  
 dimension(s):
-       from to                  offset   delta  refsys point  values
-time      1  4 2010-08-05 10:00:00 UTC 1 hours POSIXct    NA    NULL
-others    1  3                      NA      NA      NA    NA 1, 2, 3
+       from to                  offset   delta  refsys point values
+time      1  4 2010-08-05 10:00:00 UTC 1 hours POSIXct    NA   NULL
+others    1  3                      NA      NA      NA    NA   NULL
 > st_as_stars(xts, dimensions = st_dimensions(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -363,4 +363,4 @@ time                                  NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.751   0.084   1.837 
+  1.558   0.071   1.620 

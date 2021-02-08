@@ -82,7 +82,7 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA   NULL [y]
 > 
 > # proxy:
 > (x = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in file:
+stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
@@ -120,4 +120,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.242   0.216   2.141 
+  2.125   0.080   2.197 
