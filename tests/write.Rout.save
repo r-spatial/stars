@@ -1,5 +1,5 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -39,7 +39,7 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > # write stars_proxy object:
 > (x = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in file:
+stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
@@ -49,7 +49,8 @@ x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > write_stars(x, tempfile(), driver = "GTiff")
+
 > 
 > proc.time()
    user  system elapsed 
-  0.954   0.058   1.002 
+  0.917   0.036   0.946 
