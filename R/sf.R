@@ -174,6 +174,14 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	}
 }
 
+
+#' @export
+#' @name st_as_sf
+#' @param downsample see \link{st_as_stars}
+st_as_sf.stars_proxy = function(x, ..., downsample = 0) {
+	st_as_sf(st_as_stars(x, downsample = downsample), ...)
+}
+
 #' Compute or plot contour lines or sets
 #' 
 #' Compute contour lines or sets

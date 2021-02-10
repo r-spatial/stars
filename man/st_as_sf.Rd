@@ -4,6 +4,7 @@
 \alias{st_as_sf}
 \alias{st_as_sfc.stars}
 \alias{st_as_sf.stars}
+\alias{st_as_sf.stars_proxy}
 \title{Convert stars object into an sf object}
 \usage{
 \method{st_as_sfc}{stars}(x, ..., as_points, which = seq_len(prod(dim(x)[1:2])))
@@ -18,6 +19,8 @@
   long = FALSE,
   connect8 = FALSE
 )
+
+\method{st_as_sf}{stars_proxy}(x, ..., downsample = 0)
 }
 \arguments{
 \item{x}{object of class \code{stars}}
@@ -37,6 +40,8 @@
 \item{long}{logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensions recycled}
 
 \item{connect8}{logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.}
+
+\item{downsample}{see \link{st_as_stars}}
 }
 \description{
 Convert stars object into an sf object
