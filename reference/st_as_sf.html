@@ -163,7 +163,10 @@
   use_integer <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/logical.html'>is.logical</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>||</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,
   long <span class='op'>=</span> <span class='cn'>FALSE</span>,
   connect8 <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for stars_proxy</span>
+<span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, downsample <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,6 +206,10 @@
     <tr>
       <th>connect8</th>
       <td><p>logical; if <code>TRUE</code>, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.</p></td>
+    </tr>
+    <tr>
+      <th>downsample</th>
+      <td><p>see <a href='st_as_stars.html'>st_as_stars</a></p></td>
     </tr>
     </table>
 
