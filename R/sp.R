@@ -27,7 +27,11 @@ stars_to_Spatial = function(from) {
 			stop("no feature dimension in stars object")
 		as(st_dimensions(from)[[1]]$values, "Spatial")
 	}
-	sp::addAttrToGeom(geom, as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
+	if (length(from) == 0)
+		geom
+	else
+		sp::addAttrToGeom(geom, 
+			as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
 }
 setAs("stars", "Spatial", stars_to_Spatial)
 
