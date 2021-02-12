@@ -68,7 +68,7 @@ Suggests:
 	s2 (>= 1.0.0),
     sp,
     spacetime,
-    spatstat,
+    spatstat.geom, spatstat (>= 2.0-0),
     starsdata,
     terra,
     testthat,
