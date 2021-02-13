@@ -27,6 +27,7 @@ License: Apache License
 URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
+Remotes: baddstats/spatstat
 Depends:
     R (>= 3.3.0),
     abind,
