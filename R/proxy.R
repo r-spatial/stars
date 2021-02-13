@@ -332,10 +332,19 @@ collect = function(x, call, fn, args = "x", env, ...) {
 	lst = as.list(call)
 	if (!missing(fn))
 		lst[[1]] = as.name(fn)
-	# set first argument name:
-	for (i in seq_along(args)) {
-		lst[[i+1]] = as.name(args[i])
-		names(lst)[[i+1]] = args[i]
+	# set argument names:
+	if (!missing(fn) && fn == "[") {
+		lst[[2]] = as.name(args[1])
+		lst[[3]] = as.name(args[2])
+		for (i in seq_along(args)[-(1:2)]) {
+			if (!args[i] %in% names(lst))
+				lst[[ args[i] ]] = as.name(args[i]) # appends
+		}
+	} else {
+		for (i in seq_along(args)) {
+			lst[[i+1]] = as.name(args[i])
+			names(lst)[[i+1]] = args[i]
+		}
 	}
 	call = as.call(lst)
 	environment(call) = env
