@@ -43,7 +43,7 @@ st_set_dimensions(
   ...
 )
 
-st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
+st_get_dimension_values(.x, which, ..., where = NA, max = FALSE, center = NA)
 }
 \arguments{
 \item{.x}{object to retrieve dimensions information from}
@@ -69,6 +69,10 @@ st_get_dimension_values(.x, which, ..., max = FALSE, center = NA)
 \item{names}{character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}}
 
 \item{xy}{length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions}
+
+\item{where}{character one of 'start', 'center' or 'end'. Set to NA to ignore
+and use \code{max} and \code{center} explictly.  This argument provides
+a convenient alternative to setting \code{max} and \code{center}}
 
 \item{max}{logical; if \code{TRUE} return the end, rather than the beginning of an interval}
 
@@ -96,4 +100,13 @@ rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), 
    names = "bandwidth_midpoint", point = TRUE))
 # set bandwidth intervals:
 (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
+m = matrix(1:20, nrow = 5, ncol = 4)
+dim(m) = c(x = 5, y = 4) # named dim
+(s = st_as_stars(m))
+st_get_dimension_values(s, 'x', where = "start")
+st_get_dimension_values(s, 'x', center = FALSE)
+st_get_dimension_values(s, 'x', where = "center")
+st_get_dimension_values(s, 'x', center = TRUE)
+st_get_dimension_values(s, 'x', where = "end")
+st_get_dimension_values(s, 'x', max = TRUE)
 }
