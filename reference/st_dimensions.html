@@ -186,7 +186,7 @@
   <span class='va'>...</span>
 <span class='op'>)</span>
 
-<span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>which</span>, <span class='va'>...</span>, max <span class='op'>=</span> <span class='cn'>FALSE</span>, center <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+<span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>which</span>, <span class='va'>...</span>, where <span class='op'>=</span> <span class='cn'>NA</span>, max <span class='op'>=</span> <span class='cn'>FALSE</span>, center <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -238,6 +238,12 @@
     <tr>
       <th>xy</th>
       <td><p>length-2 character vector; (new) names for the <code>x</code> and <code>y</code> raster dimensions</p></td>
+    </tr>
+    <tr>
+      <th>where</th>
+      <td><p>character one of 'start', 'center' or 'end'. Set to NA to ignore
+and use <code>max</code> and <code>center</code> explictly.  This argument provides
+a convenient alternative to setting <code>max</code> and <code>center</code></p></td>
     </tr>
     <tr>
       <th>max</th>
@@ -320,7 +326,28 @@
 #&gt;                                           values x/y
 #&gt; x                                           NULL [x]
 #&gt; y                                           NULL [y]
-#&gt; bandwidth [0.45,0.515) [um],...,[2.08,2.35) [um]    </div></pre>
+#&gt; bandwidth [0.45,0.515) [um],...,[2.08,2.35) [um]    </div><div class='input'><span class='va'>m</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span>, nrow <span class='op'>=</span> <span class='fl'>5</span>, ncol <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>5</span>, y <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='co'># named dim</span>
+<span class='op'>(</span><span class='va'>s</span> <span class='op'>=</span> <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;       A1        
+#&gt;  Min.   : 1.00  
+#&gt;  1st Qu.: 5.75  
+#&gt;  Median :10.50  
+#&gt;  Mean   :10.50  
+#&gt;  3rd Qu.:15.25  
+#&gt;  Max.   :20.00  
+#&gt; dimension(s):
+#&gt;   from to offset delta refsys point values x/y
+#&gt; x    1  5      0     1     NA FALSE   NULL [x]
+#&gt; y    1  4      0     1     NA FALSE   NULL [y]</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, where <span class='op'>=</span> <span class='st'>"start"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0 1 2 3 4</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, center <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0 1 2 3 4</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, where <span class='op'>=</span> <span class='st'>"center"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.5 1.5 2.5 3.5 4.5</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, center <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.5 1.5 2.5 3.5 4.5</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, where <span class='op'>=</span> <span class='st'>"end"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1 2 3 4 5</div><div class='input'><span class='fu'>st_get_dimension_values</span><span class='op'>(</span><span class='va'>s</span>, <span class='st'>'x'</span>, max <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1 2 3 4 5</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
