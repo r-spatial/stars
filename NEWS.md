@@ -1,5 +1,7 @@
 # version 0.5-2
 
+* speed up `st_apply` when a function is provided that can work on chunks at a time; #390
+
 * warn if breaks = "quantile" and only one class comes out; #388
 
 * fix `[` bug selecting bands in proxy objects; #388
