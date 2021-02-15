@@ -1,5 +1,9 @@
 # version 0.5-2
 
+* correctly write band subsets for smaller proxy objects; #291
+
+* write arbitrarily cropped proxy objects; #291
+
 * speed up `st_apply` when a function is provided that can work on chunks at a time; #390
 
 * warn if breaks = "quantile" and only one class comes out; #388

@@ -189,8 +189,13 @@ fetch = function(x, downsample = 0, ...) {
 		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
 
 	# select bands?
-	if (!is.null(bands <- d[["band"]]) && !is.null(bands$values) && is.numeric(bands$values)) 
-		rasterio$bands = bands$values
+	bands <- d[["band"]]
+	if (!is.null(bands)) {
+		if (!is.null(bands$values) && is.numeric(bands$values)) 
+			rasterio$bands = bands$values
+		else if (!is.na(bands$from) && !is.na(bands$to))
+			rasterio$bands = seq(bands$from, bands$to)
+	}
 
 	# do it:
 	ret = vector("list", length(x))
