@@ -135,8 +135,8 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 		else
 			array(ret, dX)
 	}
-	n_args_cleaned = function(f) sum(!(names(as.list(args(f))) %in% c("", "...")))
-	ret = if (n_args_cleaned(FUN) == 1)
+	n_args_cleaned = function(f, n) sum(!(names(as.list(args(f))) %in% c("", "...", n)))
+	ret = if (n_args_cleaned(FUN, names(list(...))) == 1)
 			lapply(X, fn, ...) 
 		else {
 			mar_split = setdiff(seq_along(dim(X)), MARGIN)
