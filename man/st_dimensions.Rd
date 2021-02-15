@@ -70,9 +70,7 @@ st_get_dimension_values(.x, which, ..., where = NA, max = FALSE, center = NA)
 
 \item{xy}{length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions}
 
-\item{where}{character one of 'start', 'center' or 'end'. Set to NA to ignore
-and use \code{max} and \code{center} explictly.  This argument provides
-a convenient alternative to setting \code{max} and \code{center}}
+\item{where}{character, one of 'start', 'center' or 'end'. Set to NA (default) to ignore and use \code{max} and \code{center} explictly.  This argument provides a convenient alternative to setting \code{max} and \code{center}.}
 
 \item{max}{logical; if \code{TRUE} return the end, rather than the beginning of an interval}
 
