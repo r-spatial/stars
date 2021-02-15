@@ -145,13 +145,13 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 		else
 			array(ret, dX)
 	}
+	no_margin = setdiff(seq_along(dim(X)), MARGIN)
 	n_args_cleaned = function(f, n) sum(!(names(as.list(args(f))) %in% c("", "...", n)))
-	ret = if (n_args_cleaned(FUN, names(list(...))) == 1)
+	ret = if (n_args_cleaned(FUN, names(list(...))) == 1) # single arg, can't chunk ...
 			lapply(X, fn, ...) 
-		else {
-			mar_split = setdiff(seq_along(dim(X)), MARGIN)
-			lapply(X, function(a) do.call(FUN, setNames(append(asplit(a, mar_split), list(...)), NULL)))
-		}
+		else # call FUN on full chunks:
+			lapply(X, function(a) do.call(FUN, setNames(append(asplit(a, no_margin), list(...)), NULL)))
+	# fix dimensions:
 	dim_ret = dim(ret[[1]])
 	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
 			if (length(ret) == 1 && rename && make.names(.fname) == .fname)
@@ -159,7 +159,6 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			st_stars(ret, st_dimensions(X)[MARGIN])
 		} else { # FUN returned multiple values: need to set dimension name & values
 			dim_no_margin = dim(X)[-MARGIN]
-			no_margin = setdiff(seq_along(dim(X)), MARGIN)
 			if (length(no_margin) > 1 && dim(ret[[1]])[1] == prod(dim_no_margin)) {
 				r = attr(st_dimensions(X), "raster")
 				new_dim = c(dim_no_margin, dim(ret[[1]])[-1])
