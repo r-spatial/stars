@@ -135,7 +135,13 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 		else
 			array(ret, dX)
 	}
-	ret = lapply(X, fn, ...) 
+	n_args_cleaned = function(f) sum(!(names(as.list(args(f))) %in% c("", "...")))
+	ret = if (n_args_cleaned(FUN) == 1)
+			lapply(X, fn, ...) 
+		else {
+			mar_split = setdiff(seq_along(dim(X)), MARGIN)
+			lapply(X, function(a) do.call(FUN, setNames(append(asplit(a, mar_split), list(...)), NULL)))
+		}
 	dim_ret = dim(ret[[1]])
 	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value
 			if (length(ret) == 1 && rename && make.names(.fname) == .fname)
