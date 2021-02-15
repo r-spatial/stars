@@ -82,7 +82,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @name st_apply
 #' @param X object of class \code{stars}
 #' @param MARGIN see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied 
-#' @param FUN see \link[base]{apply}
+#' @param FUN see \link[base]{apply} and do see below at details.
 #' @param ... arguments passed on to \code{FUN}
 #' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
 #' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
@@ -90,6 +90,11 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name
 #' @param .fname function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of \code{FUN} is used
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
+#' @details FUN is a function which either operates on a single object, which will 
+#' be the data of each iteration step over dimensions MARGIN, or a function that 
+#' has as many arguments as there are elements in such an object. See the NDVI 
+#' examples below. Note that the second form can be very much faster e.g. when a trivial 
+#' function is not being called for every pixel, but only once (example).
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
@@ -98,6 +103,11 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, 3, mean)   # mean of all pixels for each band
 #' st_apply(x, "band", mean) # equivalent to the above
 #' st_apply(x, 1:2, range) # min and max band value for each pixel
+#' fn_ndvi1 = function(x) (x[4]-x[3])/(x[4]+x[3]) # ONE argument: will be called for each pixel
+#' fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called only once
+#' ndvi1 = st_apply(x, 1:2, fn_ndvi1)
+#' ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
+#' all.equal(ndvi1, ndvi2)
 #' # to get a progress bar also in non-interactive mode, specify:
 #' if (require(pbapply)) { # install it, if FALSE
 #'   pboptions(type = "timer")

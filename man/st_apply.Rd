@@ -22,7 +22,7 @@
 
 \item{MARGIN}{see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied}
 
-\item{FUN}{see \link[base]{apply}}
+\item{FUN}{see \link[base]{apply} and do see below at details.}
 
 \item{...}{arguments passed on to \code{FUN}}
 
@@ -42,6 +42,13 @@ object of class \code{stars} with accordingly reduced number of dimensions; in c
 \description{
 st_apply apply a function to array dimensions: aggregate over space, time, or something else
 }
+\details{
+FUN is a function which either operates on a single object, which will 
+be the data of each iteration step over dimensions MARGIN, or a function that 
+has as many arguments as there are elements in such an object. See the NDVI 
+examples below. Note that the second form can be very much faster e.g. when a trivial 
+function is not being called for every pixel, but only once (example).
+}
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
@@ -50,6 +57,11 @@ st_apply(x, c("x", "y"), mean) # equivalent to the above
 st_apply(x, 3, mean)   # mean of all pixels for each band
 st_apply(x, "band", mean) # equivalent to the above
 st_apply(x, 1:2, range) # min and max band value for each pixel
+fn_ndvi1 = function(x) (x[4]-x[3])/(x[4]+x[3]) # ONE argument: will be called for each pixel
+fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called only once
+ndvi1 = st_apply(x, 1:2, fn_ndvi1)
+ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
+all.equal(ndvi1, ndvi2)
 # to get a progress bar also in non-interactive mode, specify:
 if (require(pbapply)) { # install it, if FALSE
   pboptions(type = "timer")
