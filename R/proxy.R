@@ -396,7 +396,7 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 		if (is.numeric(v) && all(diff(v) == 1))
 			range(v)
 		else
-			NA
+			NULL
 	}
 	mc = match.call()
 	lst = as.list(mc)
@@ -405,13 +405,15 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	if (missing(i)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
 	if (inherits(i, c("character", "logical", "numeric"))) {
-		if (!is.null(resolutions <- attr(x, "resolutions")))
-			resolutions = resolutions[i, ]
-		x = st_stars_proxy(unclass(x)[i], st_dimensions(x), NA_value = attr(x, "NA_value"),
-			resolutions = resolutions)
-		lst[["i"]] = TRUE # this one has been handled now
-		for (ix in 1:3) { # FIXME: further than 3?
-			if (length(lst) >= 4 && !any(is.na(r <- get_range(lst[[4]])))) {
+		if (!is.null(unclass(x)[[i]])) { # can/should be selected now:
+			if (!is.null(resolutions <- attr(x, "resolutions")))
+				resolutions = resolutions[i, ]
+			x = st_stars_proxy(unclass(x)[i], st_dimensions(x), NA_value = attr(x, "NA_value"),
+				resolutions = resolutions)
+			lst[["i"]] = TRUE # this one has been handled now
+		}
+		for (ix in 1:3) { # FIXME: process further dimensions than 3?
+			if (length(lst) >= 4 && !is.null(r <- get_range(lst[[4]]))) {
 				attr(x, "dimensions")[[ix]]$from = r[1]
 				attr(x, "dimensions")[[ix]]$to = r[2]
 				lst[[4]] = NULL # remove
