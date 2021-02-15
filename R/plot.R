@@ -53,6 +53,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	if (missing(col) && is.factor(x[[1]]))
 		col = attr(x[[1]], "colors") %||% sf.colors(length(levels(x[[1]])), categorical = TRUE)
 	key.pos.missing = missing(key.pos)
+	breaks.missing = missing(breaks)
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
 	opar = par()
@@ -68,6 +69,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		if (length(breaks) > 2)
 			breaks = unique(breaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
+		if (breaks.missing && nbreaks <= 2) # unlucky default!
+			warning('breaks="quantile" leads to a single class; maybe try breaks="equal" instead?')
 	}
 
 	if (isTRUE(dots$logz) && !((has_raster(x) && (is_curvilinear(x) || has_rotate_or_shear(x))) || has_sfc(x)))

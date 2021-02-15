@@ -1,5 +1,9 @@
 # version 0.5-2
 
+* warn if breaks = "quantile" and only one class comes out; #388
+
+* fix `[` bug selecting bands in proxy objects; #388
+
 * for `stars_proxy` objects, `write_stars` writes all objects into a multi-layer file; #385
 
 * multi-file proxy objects can be `st_warp`ed with `use_gdal=TRUE`; #385
