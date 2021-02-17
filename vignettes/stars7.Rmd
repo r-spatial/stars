@@ -241,7 +241,7 @@ plot(out, col = sf.colors(nclus, categorical=TRUE), reset = FALSE)
 plot(m, add = TRUE)
 ```
 
-we see that class 4 picks up the unclouded area, the other classes seem to mainly catch the cloud signal.
+we see that class 5 identifies with the unclouded area, the other classes seem to mainly catch aspects of the cloud signal.
 
 ## Supervised learners
 
