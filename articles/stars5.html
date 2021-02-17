@@ -134,9 +134,9 @@
 <span class="co">##  Max.   :21.248  </span>
 <span class="co">##  NA's   :4808    </span>
 <span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset delta                       refsys point values x/y</span>
-<span class="co">## x    1 162 123829  5000 PROJCS["NAD83 / North Car... FALSE   NULL [x]</span>
-<span class="co">## y    1  61 318260 -5000 PROJCS["NAD83 / North Car... FALSE   NULL [y]</span>
+<span class="co">##   from  to offset delta                 refsys point values x/y</span>
+<span class="co">## x    1 162 123829  5000 NAD83 / North Carolina FALSE   NULL [x]</span>
+<span class="co">## y    1  61 318260 -5000 NAD83 / North Carolina FALSE   NULL [y]</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.st</span><span class="op">)</span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
@@ -157,6 +157,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>,contour_lines<span class="op">=</span><span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">8</span><span class="op">:</span><span class="fl">14</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="fu">sf.colors</span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
+<p><img src="stars5_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div id="exporting-to-points" class="section level2">
 <h2 class="hasAnchor">
@@ -168,7 +169,7 @@
 <span class="co">## geometry type:  POINT</span>
 <span class="co">## dimension:      XY</span>
 <span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</span>
 <span class="co">## 1              14             11 POINT (288790.5 9120747)</span>
@@ -188,7 +189,7 @@
 <span class="co">## geometry type:  POINT</span>
 <span class="co">## dimension:      XY</span>
 <span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    band L7_ETMs.tif                 geometry</span>
 <span class="co">## 1     1          14 POINT (288790.5 9120747)</span>
@@ -213,7 +214,7 @@
 <span class="co">## geometry type:  POLYGON</span>
 <span class="co">## dimension:      XY</span>
 <span class="co">## bbox:           xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span>
-<span class="co">## CRS:            PROJCS["UTM Zone 25, Southern Hemisphere",GEOGCS["GRS 1980(IUGG, 1980)",DATUM["unknown",SPHEROID["GRS80",6378137,298.257222101],TOWGS84[0,0,0,0,0,0,0]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-33],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1,AUTHORITY["EPSG","9001"]]]</span>
+<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</span>
 <span class="co">## 1              14             11 POLYGON ((288776.3 9120761,...</span>
@@ -254,7 +255,7 @@
 <span class="co">##  Max.   :28.00  </span>
 <span class="co">## dimension(s):</span>
 <span class="co">##          from   to offset delta                       refsys point</span>
-<span class="co">## geometry    1 2500     NA    NA PROJCS["UTM Zone 25, Sout...  TRUE</span>
+<span class="co">## geometry    1 2500     NA    NA UTM Zone 25, Southern Hem...  TRUE</span>
 <span class="co">## band        1    2     NA    NA                           NA    NA</span>
 <span class="co">##                                                       values</span>
 <span class="co">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</span>

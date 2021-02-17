@@ -267,8 +267,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>x2</span> <span class='op'>=</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>tif</span>, <span class='va'>tif</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
 #&gt; attribute(s):
@@ -281,8 +281,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  Max.   :255.00   Max.   :255.00  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>x3</span> <span class='op'>=</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>tif</span>, <span class='va'>tif</span><span class='op'>)</span>, along <span class='op'>=</span> <span class='st'>"band"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
@@ -295,8 +295,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y       1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]
+#&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    1  12      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>x4</span> <span class='op'>=</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>tif</span>, <span class='va'>tif</span><span class='op'>)</span>, along <span class='op'>=</span> <span class='st'>"new_dimensions"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># create 4-dimensional array</span>
 </div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
@@ -309,8 +309,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;                from  to  offset delta                       refsys point values
-#&gt; x                 1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
-#&gt; y                 1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL
+#&gt; x                 1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL
+#&gt; y                 1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL
 #&gt; band              1   6      NA    NA                           NA    NA   NULL
 #&gt; new_dimensions    1   2      NA    NA                           NA    NA   NULL
 #&gt;                x/y
@@ -332,8 +332,8 @@ has to be one of: "nearest_neighbour" (the default),
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;      from  to     offset  delta                       refsys point     values
-#&gt; x       1 349     288776   28.5 PROJCS["UTM Zone 25, Sout... FALSE       NULL
-#&gt; y       1 352    9120761  -28.5 PROJCS["UTM Zone 25, Sout... FALSE       NULL
+#&gt; x       1 349     288776   28.5 UTM Zone 25, Southern Hem... FALSE       NULL
+#&gt; y       1 352    9120761  -28.5 UTM Zone 25, Southern Hem... FALSE       NULL
 #&gt; band    1   6         NA     NA                           NA    NA       NULL
 #&gt; foo     1   2         NA     NA                           NA    NA bar1, bar2
 #&gt; time    1   2 2018-07-31 2 days                         Date    NA       NULL
@@ -366,7 +366,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file6621274cdad0.tif 
+#&gt;  filee92c4fdab2d3.tif 
 #&gt;  Min.   :  1.00       
 #&gt;  1st Qu.: 30.75       
 #&gt;  Median : 60.50       
@@ -384,7 +384,7 @@ has to be one of: "nearest_neighbour" (the default),
    nBufXSize <span class='op'>=</span> <span class='fl'>2</span>, nBufYSize <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  file6621274cdad0.tif 
+#&gt;  filee92c4fdab2d3.tif 
 #&gt;  Min.   :33.00        
 #&gt;  1st Qu.:36.75        
 #&gt;  Median :65.50        

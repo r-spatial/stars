@@ -230,8 +230,8 @@ function is not being called for every pixel, but only once (example).</p>
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
-#&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
+#&gt; x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span>, <span class='va'>mean</span><span class='op'>)</span> <span class='co'># equivalent to the above</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean        
@@ -243,8 +243,8 @@ function is not being called for every pixel, but only once (example).</p>
 #&gt;  Max.   :255.00  
 #&gt; dimension(s):
 #&gt;   from  to  offset delta                       refsys point values x/y
-#&gt; x    1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y    1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='va'>mean</span><span class='op'>)</span>   <span class='co'># mean of all pixels for each band</span>
+#&gt; x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='va'>mean</span><span class='op'>)</span>   <span class='co'># mean of all pixels for each band</span>
 </div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      mean       
@@ -281,8 +281,8 @@ function is not being called for every pixel, but only once (example).</p>
 #&gt; dimension(s):
 #&gt;       from  to  offset delta                       refsys point values x/y
 #&gt; range    1   2      NA    NA                           NA    NA   NULL    
-#&gt; x        1 349  288776  28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [x]
-#&gt; y        1 352 9120761 -28.5 PROJCS["UTM Zone 25, Sout... FALSE   NULL [y]</div><div class='input'><span class='va'>fn_ndvi1</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>-</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span><span class='op'>/</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>+</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span> <span class='co'># ONE argument: will be called for each pixel</span>
+#&gt; x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='va'>fn_ndvi1</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>-</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span><span class='op'>/</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>4</span><span class='op'>]</span><span class='op'>+</span><span class='va'>x</span><span class='op'>[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span> <span class='co'># ONE argument: will be called for each pixel</span>
 <span class='va'>fn_ndvi2</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>red</span>,<span class='va'>nir</span><span class='op'>)</span> <span class='op'>(</span><span class='va'>nir</span><span class='op'>-</span><span class='va'>red</span><span class='op'>)</span><span class='op'>/</span><span class='op'>(</span><span class='va'>nir</span><span class='op'>+</span><span class='va'>red</span><span class='op'>)</span> <span class='co'># n arguments: will be called only once</span>
 <span class='va'>ndvi1</span> <span class='op'>=</span> <span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>fn_ndvi1</span><span class='op'>)</span>
 <span class='va'>ndvi2</span> <span class='op'>=</span> <span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>fn_ndvi2</span><span class='op'>)</span> <span class='co'># note that we select bands 3 and 4 in the first argument</span>
