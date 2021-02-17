@@ -1,5 +1,7 @@
 # version 0.5-2
 
+* improve handling of crs in Spatial objects (avoid loss of wkt comments)
+
 * correctly write band subsets for smaller proxy objects; #291
 
 * write arbitrarily cropped proxy objects; #291

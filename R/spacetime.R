@@ -40,7 +40,7 @@ st_as_stars.STFDF = function(.x, ...) {
 				sfc = create_dimension(values = st_as_sfc(.x@sp)), # FIXME: doesn't do SpatialPixels -> x/y
 				time = create_dimension(values = zoo::index(.x@time))))
 	vals = lapply(.x@data, function(y) { dim(y) = dim(d); y })
-	st_set_crs(st_as_stars(vals, dimensions = d), sp::proj4string(.x@sp))
+	st_set_crs(st_as_stars(vals, dimensions = d), st_crs(.x@sp))
 }
 
 st_as_STFDF = function(x) {

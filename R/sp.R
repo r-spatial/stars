@@ -47,10 +47,10 @@ st_as_stars.Spatial = function(.x, ...) {
 		# UL corner:
 		x = create_dimension(1, gt$cells.dim[1], 
 			offset = gt$cellcentre.offset[1] - 0.5 * gt$cellsize[1], delta = gt$cellsize[1],
-			refsys = st_crs(sp::proj4string(.x))$proj4string)
+			refsys = st_crs(.x))
 		y = create_dimension(1, gt$cells.dim[2], 
 			offset = gt$cellcentre.offset[2] + (gt$cells.dim[2] - 0.5) * gt$cellsize[1], 
-			delta = -gt$cellsize[2], refsys = st_crs(sp::proj4string(.x))$proj4string)
+			delta = -gt$cellsize[2], refsys = st_crs(.x))
 		d = create_dimensions(list(x = x, y = y), raster = get_raster(dimensions = c("x", "y")))
 		lst = lapply(.x@data, function(x, dims) structure(x, dim = dims), dims = dim(d))
 		st_stars(lst, d)
