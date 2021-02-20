@@ -445,7 +445,8 @@ contour.stars = function(x, ...) {
 #' if (require(ggplot2)) {
 #'  ggplot() + geom_stars(data = r) + scale_fill_identity()
 #' }
-st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, probs = c(0., 1.), stretch = FALSE) {
+st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, probs = c(0., 1.), 
+		stretch = FALSE) {
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
 	stopifnot(is.numeric(dimension), length(dimension)==1)

@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -48,7 +48,10 @@ POINT (13.29635 52.65315)
 > nc = read_sf(system.file("shape/nc.shp", package = "sf"))
 > output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
 > plot(output)
+Warning message:
+In plot.stars(output) :
+  breaks="quantile" leads to a single class; maybe try breaks="equal" instead?
 > 
 > proc.time()
    user  system elapsed 
-  3.468   0.141   3.605 
+  2.391   0.079   2.481 

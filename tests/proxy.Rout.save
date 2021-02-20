@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -45,9 +45,9 @@ y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 call_list:
 [[1]]
-x[i = i, drop = drop, crop = crop, 2:3]
+x[i = i, , , 2:3, drop = drop, crop = crop]
 attr(,".Environment")
-<environment: 0x565340098830>
+<environment: 0x5630400ebdb8>
 
 > r+r
 stars_proxy object with 1 attribute in 1 file(s):
@@ -63,7 +63,7 @@ call_list:
 [[1]]
 e1 + e2
 attr(,".Environment")
-<environment: 0x56534296ba50>
+<environment: 0x563042ee1e00>
 
 > st_as_stars(sin(r), downsample = 2)
 stars object with 3 dimensions and 1 attribute
@@ -94,7 +94,7 @@ call_list:
 [[1]]
 aperm(a = a, perm = perm)
 attr(,".Environment")
-<environment: 0x5653413cca48>
+<environment: 0x563041827168>
 
 > plot(r)
 > (xx = c(r,r))
@@ -156,7 +156,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x565343712d28>
+<environment: 0x563043c5cbb8>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -187,12 +187,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5653425c02f0>
+<environment: 0x563042b08be0>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x5653425c5bb8>
+<environment: 0x563042b102e8>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -224,12 +224,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x56533f8c4550>
+<environment: 0x56303f8e9220>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x56533f8b9ba0>
+<environment: 0x56303f8d3ba0>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
@@ -427,7 +427,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x565343503260>
+<environment: 0x563043920a20>
 
 > st_as_stars(x)
 stars object with 2 dimensions and 1 attribute
@@ -446,4 +446,4 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  4.137   0.336   4.467 
+  3.795   0.383   4.173 
