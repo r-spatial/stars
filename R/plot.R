@@ -440,16 +440,18 @@ contour.stars = function(x, ...) {
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
-#' st_rgb(x, 3)
+#' st_rgb(x[,,,3:1])
 #' r = st_rgb(x[,,,c(6,5,4,3)], 3, use_alpha=TRUE) # now R=6,G=5,B=4,alpha=3
 #' if (require(ggplot2)) {
 #'  ggplot() + geom_stars(data = r) + scale_fill_identity()
 #' }
-st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, probs = c(0., 1.), 
-		stretch = FALSE) {
+st_rgb = function(x, dimension = 3, use_alpha = dim(x)[dimension] == 4, maxColorValue = 255L, 
+		probs = c(0., 1.), stretch = FALSE) {
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
 	stopifnot(is.numeric(dimension), length(dimension)==1)
+	if (!dim(x)[dimension] %in% c(3,4))
+		stop(paste("number of bands along dimension", dimension, "should be 3 or 4"))
 	dims = setdiff(seq_along(dim(x)), dimension)
 	cutoff = function(x, probs) {
 		qs = if (all(probs == c(0., 1.)))
@@ -463,10 +465,26 @@ st_rgb = function(x, dimension = 3, use_alpha = FALSE, maxColorValue = 255L, pro
 	}
 	if (stretch)
 		x = st_apply(x, dimension, cutoff, probs = probs)
-	rgb4 = function(x, ...) if (any(is.na(x[1:4]))) NA_character_ else rgb(x[1], x[2], x[3], x[4], ...)
-	rgb3 = function(x, ...) if (any(is.na(x[1:3]))) NA_character_ else rgb(x[1], x[2], x[3], ...)
-	if (use_alpha)
-		st_apply(x, dims, rgb4, maxColorValue = maxColorValue)
-	else 
-		st_apply(x, dims, rgb3, maxColorValue = maxColorValue)
+	if (anyNA(x[[1]])) {
+		rgb4 = function(r, g, b, a) {
+			r = cbind(as.vector(r), as.vector(g), as.vector(b), as.vector(a))
+			sel = !apply(r, 1, anyNA)
+			ret = rep(NA_character_, nrow(r))
+			ret[sel] = rgb(r[sel,1:3], alpha = a[sel], maxColorValue = maxColorValue) 
+			structure(ret, dim = dim(g))
+		}
+		rgb3 = function(r, g, b) {
+			r = cbind(as.vector(r), as.vector(g), as.vector(b))
+			sel = !apply(r, 1, anyNA)
+			ret = rep(NA_character_, nrow(r))
+			ret[sel] = rgb(r[sel,1:3], maxColorValue = maxColorValue) 
+			structure(ret, dim = dim(g))
+		}
+	} else {
+		rgb4 = function(r, g, b, a) 
+			structure(rgb(r, g, b, a, maxColorValue = maxColorValue), dim = dim(r))
+		rgb3 = function(r, g, b)
+			structure(rgb(r, g, b,    maxColorValue = maxColorValue), dim = dim(r))
+	}
+	st_apply(x, dims, if (use_alpha) rgb4 else rgb3)
 }

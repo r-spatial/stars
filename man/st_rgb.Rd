@@ -7,7 +7,7 @@
 st_rgb(
   x,
   dimension = 3,
-  use_alpha = FALSE,
+  use_alpha = dim(x)[dimension] == 4,
   maxColorValue = 255L,
   probs = c(0, 1),
   stretch = FALSE
@@ -36,7 +36,7 @@ ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
-st_rgb(x, 3)
+st_rgb(x[,,,3:1])
 r = st_rgb(x[,,,c(6,5,4,3)], 3, use_alpha=TRUE) # now R=6,G=5,B=4,alpha=3
 if (require(ggplot2)) {
  ggplot() + geom_stars(data = r) + scale_fill_identity()
