@@ -1,14 +1,16 @@
 # version 0.5-2
 
+* speed up `st_rgb` using faster `st_apply` approach; #315, #390
+
 * improve handling of crs in Spatial objects (avoid loss of wkt comments)
 
 * correctly write band subsets for smaller proxy objects; #291
 
 * write arbitrarily cropped proxy objects; #291
 
-* speed up `st_apply` when a function is provided that can work on chunks at a time; #390
+* speed up `st_apply` when a function is provided that works on chunks at a time; #390
 
-* warn if breaks = "quantile" and only one class comes out; #388
+* warn when breaks = "quantile" results in a single class; #388
 
 * fix `[` bug selecting bands in proxy objects; #388
 
