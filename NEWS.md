@@ -1,5 +1,9 @@
 # version 0.5-2
 
+* handle `normalize_path` for choosing to `proxy`; #391
+
+* ignore units if there are different units accross bands of a subdataset
+
 * speed up `st_rgb` using faster `st_apply` approach; #315, #390
 
 * improve handling of crs in Spatial objects (avoid loss of wkt comments)
