@@ -160,7 +160,8 @@
   NA_value <span class='op'>=</span> <span class='cn'>NA_real_</span>,
   along <span class='op'>=</span> <span class='cn'>NA_integer_</span>,
   RasterIO <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
-  proxy <span class='op'>=</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>curvilinear</span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='fu'>is_big</span><span class='op'>(</span><span class='va'>.x</span>, sub <span class='op'>=</span> <span class='va'>sub</span>, driver <span class='op'>=</span> <span class='va'>driver</span>, <span class='va'>...</span><span class='op'>)</span>,
+  proxy <span class='op'>=</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>curvilinear</span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='fu'>is_big</span><span class='op'>(</span><span class='va'>.x</span>, sub <span class='op'>=</span> <span class='va'>sub</span>, driver <span class='op'>=</span> <span class='va'>driver</span>, normalize_path
+    <span class='op'>=</span> <span class='va'>normalize_path</span>, <span class='va'>...</span><span class='op'>)</span>,
   curvilinear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
   normalize_path <span class='op'>=</span> <span class='cn'>TRUE</span>,
   RAT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>
@@ -366,13 +367,13 @@ has to be one of: "nearest_neighbour" (the default),
 <span class='op'>(</span><span class='va'>red</span> <span class='op'>&lt;-</span> <span class='fu'>read_stars</span><span class='op'>(</span><span class='va'>tmp</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  filee822d4a4496.tif 
-#&gt;  Min.   :  1.00      
-#&gt;  1st Qu.: 30.75      
-#&gt;  Median : 60.50      
-#&gt;  Mean   : 60.50      
-#&gt;  3rd Qu.: 90.25      
-#&gt;  Max.   :120.00      
+#&gt;  file537f403e4291.tif 
+#&gt;  Min.   :  1.00       
+#&gt;  1st Qu.: 30.75       
+#&gt;  Median : 60.50       
+#&gt;  Mean   : 60.50       
+#&gt;  3rd Qu.: 90.25       
+#&gt;  Max.   :120.00       
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
@@ -384,13 +385,13 @@ has to be one of: "nearest_neighbour" (the default),
    nBufXSize <span class='op'>=</span> <span class='fl'>2</span>, nBufYSize <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;  filee822d4a4496.tif 
-#&gt;  Min.   :33.00       
-#&gt;  1st Qu.:36.75       
-#&gt;  Median :65.50       
-#&gt;  Mean   :65.50       
-#&gt;  3rd Qu.:94.25       
-#&gt;  Max.   :98.00       
+#&gt;  file537f403e4291.tif 
+#&gt;  Min.   :33.00        
+#&gt;  1st Qu.:36.75        
+#&gt;  Median :65.50        
+#&gt;  Mean   :65.50        
+#&gt;  3rd Qu.:94.25        
+#&gt;  Max.   :98.00        
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]

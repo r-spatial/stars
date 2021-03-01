@@ -160,7 +160,8 @@
   <span class='va'>...</span>,
   driver <span class='op'>=</span> <span class='fu'>detect.driver</span><span class='op'>(</span><span class='va'>dsn</span><span class='op'>)</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
-  type <span class='op'>=</span> <span class='st'>"Float32"</span>,
+  type <span class='op'>=</span> <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/factor.html'>is.factor</a></span><span class='op'>(</span><span class='va'>obj</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/levels.html'>levels</a></span><span class='op'>(</span><span class='va'>obj</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='fl'>256</span><span class='op'>)</span> <span class='st'>"Byte"</span> <span class='kw'>else</span>
+    <span class='st'>"Float32"</span>,
   NA_value <span class='op'>=</span> <span class='cn'>NA_real_</span>,
   update <span class='op'>=</span> <span class='cn'>FALSE</span>,
   normalize_path <span class='op'>=</span> <span class='cn'>TRUE</span>
