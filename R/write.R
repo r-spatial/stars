@@ -43,8 +43,9 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
-		options = character(0), type = "Float32", NA_value = NA_real_, update = FALSE,
-		normalize_path = TRUE) {
+		options = character(0), 
+		type = if (is.factor(obj[[1]]) && length(levels(obj[[1]])) < 256) "Byte" else "Float32", 
+		NA_value = NA_real_, update = FALSE, normalize_path = TRUE) {
 	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
 	obj = st_upfront(obj[layer])

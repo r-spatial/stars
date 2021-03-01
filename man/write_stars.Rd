@@ -16,7 +16,8 @@ write_stars(obj, dsn, layer, ...)
   ...,
   driver = detect.driver(dsn),
   options = character(0),
-  type = "Float32",
+  type = if (is.factor(obj[[1]]) && length(levels(obj[[1]])) < 256) "Byte" else
+    "Float32",
   NA_value = NA_real_,
   update = FALSE,
   normalize_path = TRUE

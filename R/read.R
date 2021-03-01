@@ -177,9 +177,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# handle color table and/or attribute table
 		ct = meta_data$color_tables
 		at = meta_data$attribute_tables
-		cn = meta_data$categorynames
 		# FIXME: how to handle multiple color, category or attribute tables?
-		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0) || length(cn) > 1)) {
+		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0))) {
 			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
 					meta_data$ranges[1,1]
 				else
@@ -205,10 +204,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				if (min_value > 0)
 					at = at[-seq_len(min_value)]
 				attr(data, "levels") = at
-			}
-			if (length(cn) > 1 && is.null(attr(data, "levels"))) {
-				data[data == 0] = NA
-				attr(data, "levels") = cn[-1]
 			}
 			data = structure(data, class = "factor")
 		}
