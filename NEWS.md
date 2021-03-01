@@ -1,5 +1,7 @@
 # version 0.5-2
 
+* read rasters with category names into a factor attribute; #392
+
 * handle `normalize_path` for choosing to `proxy`; #391
 
 * ignore units if there are different units accross bands of a subdataset
