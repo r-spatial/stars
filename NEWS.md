@@ -1,6 +1,6 @@
 # version 0.5-2
 
-* read rasters with category names into a factor attribute; #392
+* read and write categorical rasters, as factor attribute; #392
 
 * handle `normalize_path` for choosing to `proxy`; #391
 
