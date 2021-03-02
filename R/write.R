@@ -51,6 +51,8 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 	obj = st_upfront(obj[layer])
 	if (! update) # new file: should not be a sub-array
 		obj = reset_sub(obj)
+	if (!is.null(attr(obj[[1]], "colors"))) # add r g b alpha table from colors:
+		obj[[1]] = structure(obj[[1]], rgba = t(col2rgb(attr(obj[[1]], "colors"), alpha = TRUE)))
 	if (normalize_path)
 		dsn = enc2utf8(maybe_normalizePath(dsn, TRUE))
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 

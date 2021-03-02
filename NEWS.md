@@ -1,6 +1,6 @@
 # version 0.5-2
 
-* read and write categorical rasters, as factor attribute; #392
+* read and write factor levels as GDAL category names; write color table; #392
 
 * handle `normalize_path` for choosing to `proxy`; #391
 
