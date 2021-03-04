@@ -452,6 +452,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   } else {
     if (nrow(dims) != nrow(ncsub)) 
       stop("input ncsub doesn't match available dims")
+    ix <- is.na(ncsub[, "count"])
+    if (any(ix))  ncsub[ix, "count"] <- dims$length[ix]
     if (any(ncsub[, "start"] < 1) || 
         any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) 
       stop("start or count out of bounds")
