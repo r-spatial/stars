@@ -54,7 +54,14 @@ st_as_stars(.x, ...)
   envir = parent.frame()
 )
 
-\method{st_as_stars}{data.frame}(.x, ..., dims = 1:2, xy = dims[1:2], y_decreasing = TRUE)
+\method{st_as_stars}{data.frame}(
+  .x,
+  ...,
+  dims = coords,
+  xy = dims[1:2],
+  y_decreasing = TRUE,
+  coords = 1:2
+)
 
 \method{st_as_stars}{xts}(.x, ..., dimensions)
 
@@ -115,6 +122,8 @@ Must have same number of rows as timeseries instances.}
 \item{xy}{the x and y raster dimension names or indices; only takes effect after dims has been specified}
 
 \item{y_decreasing}{logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)}
+
+\item{coords}{same as dims, for symmetry with \link[sf]{st_as_sf}}
 
 \item{as_col}{logical; return rgb numbers (FALSE) or (character) color values (TRUE)?}
 }

@@ -86,18 +86,19 @@ guess_raster = function(x, ...) {
 
 #' @export
 #' @param dims the column names or indices that form the cube dimensions
+#' @param coords same as dims, for symmetry with \link[sf]{st_as_sf}
 #' @param xy the x and y raster dimension names or indices; only takes effect after dims has been specified
 #' @param y_decreasing logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)
 #' @name st_as_stars
 #' @examples
 #' data(Produc, package = "plm")
 #' st_as_stars(Produc, y_decreasing = FALSE)
-st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreasing = TRUE) {
+st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decreasing = TRUE, coords = 1:2) {
 
 	if (missing(dims) && !missing(xy))
 		stop("parameter xy only takes effect when the cube dimensions are set with dims")
 	if (is.character(xy))
-		xy = match(names(.x), xy)
+		xy = match(xy, names(.x))
 	if (any(is.na(xy)))
 		stop("xy coordinates not found in data")
 
@@ -124,11 +125,11 @@ st_as_stars.data.frame = function(.x, ..., dims = 1:2, xy = dims[1:2], y_decreas
 					create_dimension(values = suv, is_raster = TRUE)
 			this_dim = this_dim + 1
 		}
-		names(dimensions) = names(.x)[dims]
+		names(dimensions) = names(.x)[xy]
 	
 		raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
 		d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
-		l = lapply(.x[-dims], function(x) {
+		l = lapply(.x[-xy], function(x) {
 				m = if (is.factor(x))
 						structure(factor(rep(NA_character_, prod(dim(d))), levels = levels(x)),
 							dim = dim(d))
