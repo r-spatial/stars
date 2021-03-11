@@ -197,7 +197,14 @@
 <span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, dims <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, xy <span class='op'>=</span> <span class='va'>dims</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>, y_decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>st_as_stars</span><span class='op'>(</span>
+  <span class='va'>.x</span>,
+  <span class='va'>...</span>,
+  dims <span class='op'>=</span> <span class='va'>coords</span>,
+  xy <span class='op'>=</span> <span class='va'>dims</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span>,
+  y_decreasing <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  coords <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for xts</span>
 <span class='fu'>st_as_stars</span><span class='op'>(</span><span class='va'>.x</span>, <span class='va'>...</span>, <span class='va'>dimensions</span><span class='op'>)</span>
@@ -316,6 +323,10 @@ Must have same number of rows as timeseries instances.</p></td>
     <tr>
       <th>y_decreasing</th>
       <td><p>logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)</p></td>
+    </tr>
+    <tr>
+      <th>coords</th>
+      <td><p>same as dims, for symmetry with <a href='https://r-spatial.github.io/sf/reference/st_as_sf.html'>st_as_sf</a></p></td>
     </tr>
     <tr>
       <th>as_col</th>
