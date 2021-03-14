@@ -26,10 +26,10 @@ space  time
 > image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
 > st_geometry(aq)
 Geometry set for 70 features 
-geometry type:  POINT
-dimension:      XY
-bbox:           xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
-CRS:            +proj=longlat +datum=WGS84 +no_defs
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
+CRS:           +proj=longlat +datum=WGS84 +no_defs
 First 5 geometries:
 POINT (9.585911 53.67057)
 POINT (9.68503 53.52418)
@@ -54,4 +54,4 @@ In plot.stars(output) :
 > 
 > proc.time()
    user  system elapsed 
-  2.391   0.079   2.481 
+  3.353   0.145   3.491 

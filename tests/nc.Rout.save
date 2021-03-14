@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -82,10 +82,10 @@ year                                                          1974, 1979
 -84.32385  33.88199 -75.45698  36.58965 
 > (x = st_as_sf(foo))
 Simple feature collection with 100 features and 6 fields
-geometry type:  MULTIPOLYGON
-dimension:      XY
-bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-geographic CRS: NAD27
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+Geodetic CRS:  NAD27
 First 10 features:
             pop.BIR.1974 pop.SID.1974 pop.NWBIR.1974 pop.BIR.1979 pop.SID.1979
 Ashe                1091            1             10         1364            0
@@ -244,8 +244,8 @@ GEOGCRS["NAD27",
             ORDER[2],
             ANGLEUNIT["degree",0.0174532925199433]],
     USAGE[
-        SCOPE["unknown"],
-        AREA["North America - NAD27"],
+        SCOPE["Geodesy."],
+        AREA["North and central America: Antigua and Barbuda - onshore. Bahamas - onshore plus offshore over internal continental shelf only. Belize - onshore. British Virgin Islands - onshore. Canada onshore - Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland and Labrador, Northwest Territories, Nova Scotia, Nunavut, Ontario, Prince Edward Island, Quebec, Saskatchewan and Yukon - plus offshore east coast. Cuba - onshore and offshore. El Salvador - onshore. Guatemala - onshore. Honduras - onshore. Panama - onshore. Puerto Rico - onshore. Mexico - onshore plus offshore east coast. Nicaragua - onshore. United States (USA) onshore and offshore - Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware, Florida, Georgia, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana, Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina, North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia, Wisconsin and Wyoming - plus offshore . US Virgin Islands - onshore."],
         BBOX[7.15,167.65,83.17,-47.74]],
     ID["EPSG",4267]]
 > plot(foo)
@@ -274,4 +274,4 @@ year                                                          1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  1.128   0.208   1.033 
+  1.317   0.067   1.382 

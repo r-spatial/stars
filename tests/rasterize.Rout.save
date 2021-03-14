@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -52,10 +52,10 @@ y    1  50  36.5896 -0.0541531  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
 > (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1, 0), c(1.1, 1))), st_linestring(rbind(c(0, 0.05), c(1, 0.05))))))
 Simple feature collection with 2 features and 1 field
-geometry type:  LINESTRING
-dimension:      XY
-bbox:           xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
-CRS:            NA
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
+CRS:           NA
   a
 1 1
 2 2
@@ -82,7 +82,7 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > # to a seemingly half-gridcell-shift problem:
 > sf_extSoftVersion()["GDAL"]
    GDAL 
-"3.1.3" 
+"3.2.1" 
 > plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE;
 > plot(ls, add = TRUE, col = "red")
 > plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes = TRUE, reset = FALSE)
@@ -108,4 +108,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.933   0.212   0.821 
+  1.069   0.039   1.098 
