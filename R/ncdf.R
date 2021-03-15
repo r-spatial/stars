@@ -355,11 +355,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if(!is.na(c_v$Z)) {
     z_axis <- axis[axis$variable == c_v$Z, ]$dimension
     dim_matcher <- c(dim_matcher, z_axis)
-  } else if(nrow(dims) == 4 & !c_v$curvilinear) {
-    z_axis <- unique(axis[!axis$variable %in% c(c_v$X, c_v$Y, c_v$T) &
-                            !axis$dimension %in% dim_matcher, ]$dimension)
   }
-
+  
   if(!is.na(c_v$T)) {
     t_axis <- axis[axis$variable == c_v$T, ]$dimension
     if(length(z_axis) > 1) {
