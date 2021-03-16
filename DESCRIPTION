@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.4-2
+Version: 0.5-2
 Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -30,7 +30,7 @@ Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 0.9-0)
+    sf (>= 0.9-7)
 Imports:
     methods,
     parallel,
@@ -41,10 +41,12 @@ Imports:
 Suggests: 
     PCICt,
     RNetCDF (>= 1.8-2),
+	clue,
     covr,
+	cubelyr,
     digest,
     dplyr (>= 0.7-0),
-	cubelyr,
+    exactextractr,
     future.apply,
     ggforce,
     ggplot2,
@@ -54,23 +56,29 @@ Suggests:
     jsonlite,
     knitr,
     maps,
+    mapdata,
     ncdfgeom,
     ncmeta (>= 0.0.3),
     pbapply,
     plm,
+	randomForest,
     raster,
+	rgdal,
     rmarkdown,
+	s2 (>= 1.0.0),
     sp,
     spacetime,
-    spatstat,
+    spatstat (>= 2.0-1),
+    spatstat.geom, 
     starsdata,
+    terra,
     testthat,
     viridis,
     xts,
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Collate: 
     'init.R'
     'stars.R'
@@ -100,3 +108,4 @@ Collate:
     'spatstat.R'
     'OpenStreetMap.R'
     'sample.R'
+    'extract.R'

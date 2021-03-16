@@ -1,0 +1,254 @@
+---
+title: "6. How `raster` functions map to `stars` functions"
+author: "Sébastien Rochette, Adriano Fantini, Edzer Pebesma"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{6-raster-stars-mapping}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, collapse = TRUE, comment = "#>")
+
+suppressPackageStartupMessages(library(dplyr))
+```
+
+Here's an attempt at the table describing how `raster` functions map to `stars` functions, discussed in [issue #122](https://github.com/r-spatial/stars/issues/122). This table uses the functionality of the `raster` package as a template; it may be incomplete, imprecise or plain wrong, so take it with a pinch of salt. Any comment or correction is hugely appreciated, please contribute!
+
+Some of the functions (`filter`, `slice`, `mutate`, `select`, `pull`, ...) are provided via `dplyr`, which must be loaded. See `?stars::dplyr`.
+
+## COMMENT LEGEND
+
+? = Not sure / unknown
+
+\* = Not present, low priority
+
+\# = Not present, high priority
+
+NA = Not available by design
+
+## Creating objects
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "{raster, stack, brick} (read)", "read_stars or read_stars(along = ...)","",
+  "{stack, brick} (concatenate layers)", "c or c(along = ...)","",
+  "subset", "{[ ] , slice, filter}","",
+  "addLayer", "c() or c(along = ...)","",
+  "dropLayer", "{[ ] , slice, filter}","",
+  "unstack", "combine lapply and {[ ] , slice, filter}",""
+) %>% 
+  knitr::kable()
+```
+
+
+## Changing spatial extent and/or resolution of objects
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "merge", "c", "#, currently only works for adjacent objects",
+  "mosaic", "st_mosaic", "these are not identical, read the docs carefully",
+  "crop", "filter, st_crop", "",
+  "setExtent", "", "# maybe use st_warp?",
+  "trim", "", "#",
+  "aggregate", "aggregate", "WIP; raster's aggregate with fact=2 will not work, use st_warp in that case?",
+  "disaggregate", "", "# use st_warp(use_gdal = TRUE)?",
+  "resample", "{st_transform, st_warp}", "",
+  "projectRaster", "{st_transform, st_warp}", "",
+  "shift", "", "#, now use st_set_dimensions",
+  "flip", "[] with reversed index", "#",
+  "rotate", "", "*",
+  "t", "", "NA"
+) %>% 
+  knitr::kable()
+```
+
+## Cell based computation
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "calc", "st_apply", "",
+  "overlay", "c(along = , ...) %>% st_apply(...)", "",
+  "cover", "[ ] <-", "",
+  "mask", "[ ] <-", "",
+  "cut", "cut", "",
+  "subs", "", "",
+  "reclassify", "mutate with case_when", "or forcats::fct_recode ?",
+  "init", "[ ] <-", "",
+  "stackApply", "{[ ] , slice, filter} %>% st_apply", "",
+  "stackSelect", "", "",
+) %>% 
+  knitr::kable()
+```
+
+
+
+## Spatial contextual computation
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "distance", "", "#",
+  "gridDistance", "", "*",
+  "distanceFromPoints", "", "#",
+  "direction", "", "*",
+  "focal", "f = st_apply(x1, 3, foc, w = matrix(1, 3, 3))", "See. [issue 176](https://github.com/r-spatial/stars/issues/176)",
+  "localFun", "", "*",
+  "boundaries", "st_as_sf(as_points=FALSE, merge=TRUE, connect8=TRUE)", "",
+  "clump", "st_as_sf(r, merge = TRUE)", "`st_as_sf` returns polygons, `clump` a raster",
+  "adjacent", "", "*",
+  "area", "st_area", "",
+  "terrain", "", "#",
+  "Moran", "", ""
+) %>% 
+  knitr::kable()
+```
+
+
+## Model predictions
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "predict", "predict", "",
+  "interpolate", "gstat::idw, gstat::krige", "`st_warp` has raster-raster interpolations of `gdalwarp`"
+) %>% 
+  knitr::kable()
+```
+
+## Data type conversion
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "rasterize", "st_as_stars", "",
+  "rasterToPoints", "st_as_sf(as_points=TRUE)", "",
+  "rasterToPolygons", "st_as_sf(as_points=FALSE, ...), st_polygonize", "",
+  "rasterToContour", "st_contour", "requires GDAL >= 2.4.0",
+  "rasterFromXYZ", "", "",
+  "rasterFromCells", "", "",
+) %>% 
+  knitr::kable()
+```
+
+## Summarizing
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "cellStats", "st_apply", "",
+  "summary", "print, summary(as.vector(. %>% pull))", "",
+  "freq", "table", "*",
+  "crosstab", "", "",
+  "unique", "unique(as.vector(. %>% pull))", "",
+  "zonal", "", "*"
+) %>% 
+  knitr::kable()
+```
+
+
+## Accessing values of objects
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "getValues", "{pull, [[ ]]}", "",
+  "getValuesBlock", "{[ ] , slice, filter} %>% pull", "",
+  "getValuesFocal", "{[ ] , slice, filter} %>% pull", "",
+  "as.matrix", "[[ ]]", "currently behaves somewhat unexpectedly *", 
+  "as.array", "[[ ]]", "currently behaves somewhat unexpectedly *", 
+  "extract (by cell)", "{[ ] , slice, filter}", "",
+  "extract (by polygon)", "x[sf_object]", "",
+  "extract (by point)", "aggregate(stars_object, sf_object, function(x) x[1], as_points = FALSE)", "",
+  "sampleRandom", "", "*", 
+  "sampleRegular", "", "*",
+  "minValue", "purrr::map(x, min)", "",
+  "maxValue", "purrr::map(x, max)", "",
+  "setMinMax", "", "," 
+) %>% 
+  knitr::kable()
+```
+
+
+## Plotting
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "plot", "plot, geom_stars", "",
+  "plotRGB", "plot(x, rgb =...)", "",
+  "spplot", "-", "",
+  "image", "image", "",
+  "persp", "-", "",
+  "contour", "(st_contour, then sf::plot)", "",
+  "filledContour", "(same)", "",
+  "text", "text", "",
+  "`hist`", "`hist(x[[1]])`", "",
+  "barplot", "", "",
+  "density", "", "",
+  "pairs", "", "",
+  "boxplot", "", ""
+) %>% 
+  knitr::kable()
+```
+
+
+## Getting and setting dimensions
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "ncol", "dim(x)[1]", "or use name instead of 1; cols may be the second dimension!", 
+  "nrow", "dim(x)[2]", "or use name instead of 2; rows may be the first dimension!", 
+  "ncell", "prod(dim(x))", "",
+  "res", "st_dimensions", "can also not be a constant in case of rectilinear or curvilinear grids", 
+  "nlayers", "-", "there is no concept of layers in stars", 
+  "names", "names", "",
+  "xres", "st_dimensions, look for delta", "may not be a constant in case of rectilinear or curvilinear grids", 
+  "yres", "st_dimensions, look for delta", "may not be a constant in case of rectilinear or curvilinear grids", 
+  "xmin", "st_bbox(x)[1]", "",
+  "xmax", "st_bbox(x)[3]", "",
+  "ymin", "st_bbox(x)[2]", "",
+  "ymax", "st_bbox(x)[4]", "",
+  "extent", "st_bbox(x)", "different ordering of numbers", 
+  "origin", "-", "",
+  "projection", "st_crs(x)", "",
+  "isLonLat", "st_is_longlat(st_crs(x))", "",
+  "filename", "", "stars_proxy objects carry file names where otherwise the array data is", 
+  "bandnr", "", "stars has no general concept of bands", 
+  "nbands", "dim(x)[3]", "may also be time; bands may also be in another dimension, or have another name", 
+  "compareRaster", "all.equal(st_dimensions(x), st_dimensions(y))", "*", 
+  "NAvalue", "", "-"
+) %>% 
+  knitr::kable()
+```
+
+
+## Computing row, column, cell numbers and coordinates
+```{r}
+tribble(
+  ~raster, ~stars, ~`Note/comment`,
+  "xFromCol", "st_get_dimension_values(., 'x')[col]", "I am not sure how to generally get the x dimension name - here it is x",
+  "yFromRow", "st_get_dimension_values(., 'y')[row]", "I am not sure how to generally get the y dimension name - here it is y", 
+  "xFromCell", "", "",
+  "yFromCell", "", "",
+  "xyFromCell", "", "", 
+  "colFromX", "", "*",
+  "rowFromY", "", "*", 
+  "rowColFromCell", "", "",
+  "cellFromXY", "", "",
+  "cellFromRowCol", "", "",
+  "cellsFromExtent", "", "",
+  "coordinates", "st_coordinates", "",
+  "validCell", "", "",
+  "validCol", "col %>% between(st_dimensions(.)$x$from, st_dimensions(.)$x$to)", "raster columns are not always named 'x'", 
+  "validRow", "row %>% between(st_dimensions(.)$y$from, st_dimensions(.)$y$to)", "raster columns are not always named 'y'", 
+  "setValues", "[ ] <-", "",
+  "writeRaster", "write_stars", "currently uses GDAL, somewhat limited", 
+  "KML", "", ""
+) %>% 
+  knitr::kable()
+```
+
+
+The format of this table follows the `raster-package` entry in the raster manual, found at `https://cran.r-project.org/web/packages/raster/raster.pdf`.

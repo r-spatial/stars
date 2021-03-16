@@ -1,6 +1,6 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,7 +32,7 @@ attribute(s):
  3rd Qu.: 70.0  
  Max.   :130.0  
 dimension(s):
-     from to  offset delta                       refsys point values    
+     from to  offset delta                       refsys point values x/y
 x       1 20  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 20 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1  6      NA    NA                           NA    NA   NULL    
@@ -43,10 +43,10 @@ band    1  6      NA    NA                           NA    NA   NULL
 > image(x)
 > (sfc = st_as_sfc(x, as_points = FALSE))
 Geometry set for 400 features 
-geometry type:  POLYGON
-dimension:      XY
-bbox:           xmin: 288776.3 ymin: 9120191 xmax: 289346.3 ymax: 9120761
-projected CRS:  UTM Zone 25, Southern Hemisphere
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 288776.3 ymin: 9120191 xmax: 289346.3 ymax: 9120761
+Projected CRS: UTM Zone 25, Southern Hemisphere
 First 5 geometries:
 POLYGON ((288776.3 9120761, 288804.8 9120761, 2...
 POLYGON ((288804.8 9120761, 288833.3 9120761, 2...
@@ -56,10 +56,10 @@ POLYGON ((288890.3 9120761, 288918.8 9120761, 2...
 > plot(sfc, add  =TRUE)
 > (sfc = st_as_sfc(x, as_points = TRUE))
 Geometry set for 400 features 
-geometry type:  POINT
-dimension:      XY
-bbox:           xmin: 288790.5 ymin: 9120205 xmax: 289332 ymax: 9120747
-projected CRS:  UTM Zone 25, Southern Hemisphere
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 288790.5 ymin: 9120205 xmax: 289332 ymax: 9120747
+Projected CRS: UTM Zone 25, Southern Hemisphere
 First 5 geometries:
 POINT (288790.5 9120747)
 POINT (288819 9120747)
@@ -100,8 +100,8 @@ attribute(s):
  3rd Qu.:2.5   3rd Qu.:5.5   3rd Qu.:8.5  
  Max.   :3.0   Max.   :6.0   Max.   :9.0  
 dimension(s):
-     from to offset delta refsys point                      values
-geom    1  3     NA    NA     NA  TRUE POINT (0 1),...,POINT (2 3)
+     from to offset delta refsys point                                values
+geom    1  3     NA    NA     NA  TRUE POINT (0 1), POINT (1 2), POINT (2 3)
 > st_redimension(x)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -113,9 +113,9 @@ attribute(s):
  3rd Qu.:7  
  Max.   :9  
 dimension(s):
-        from to offset delta refsys point                      values
-geom       1  3     NA    NA     NA  TRUE POINT (0 1),...,POINT (2 3)
-new_dim    1  3     NA    NA     NA    NA                     a,...,c
+        from to offset delta refsys point                                values
+geom       1  3     NA    NA     NA  TRUE POINT (0 1), POINT (1 2), POINT (2 3)
+new_dim    1  3     NA    NA     NA    NA                               a, b, c
 > c(x, x)
 stars object with 1 dimensions and 6 attributes
 attribute(s):
@@ -134,8 +134,8 @@ attribute(s):
  3rd Qu.:8.5  
  Max.   :9.0  
 dimension(s):
-     from to offset delta refsys point                      values
-geom    1  3     NA    NA     NA  TRUE POINT (0 1),...,POINT (2 3)
+     from to offset delta refsys point                                values
+geom    1  3     NA    NA     NA  TRUE POINT (0 1), POINT (1 2), POINT (2 3)
 > (y = st_redimension(x, along = list(time = as.Date("2017-11-27") + 0:2)))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -147,25 +147,28 @@ attribute(s):
  3rd Qu.:7  
  Max.   :9  
 dimension(s):
-     from to     offset  delta refsys point                      values
-geom    1  3         NA     NA     NA  TRUE POINT (0 1),...,POINT (2 3)
-time    1  3 2017-11-27 1 days   Date    NA                        NULL
+     from to     offset  delta refsys point
+geom    1  3         NA     NA     NA  TRUE
+time    1  3 2017-11-27 1 days   Date    NA
+                                    values
+geom POINT (0 1), POINT (1 2), POINT (2 3)
+time                                  NULL
 > st_as_sf(y)
 Simple feature collection with 3 features and 3 fields
-geometry type:  POINT
-dimension:      XY
-bbox:           xmin: 0 ymin: 1 xmax: 2 ymax: 3
-CRS:            NA
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 0 ymin: 1 xmax: 2 ymax: 3
+CRS:           NA
   2017-11-27 2017-11-28 2017-11-29        geom
 1          1          4          7 POINT (0 1)
 2          2          5          8 POINT (1 2)
 3          3          6          9 POINT (2 3)
 > st_as_sf(st_as_stars(foo))
 Simple feature collection with 3 features and 3 fields
-geometry type:  POINT
-dimension:      XY
-bbox:           xmin: 0 ymin: 1 xmax: 2 ymax: 3
-CRS:            NA
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 0 ymin: 1 xmax: 2 ymax: 3
+CRS:           NA
   a b c        geom
 1 1 4 7 POINT (0 1)
 2 2 5 8 POINT (1 2)
@@ -196,10 +199,10 @@ attribute(s):
  3rd Qu.:0.00  
  Max.   :1.00  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1 10      0   0.2     NA    NA   NULL [x]
 y    1 10      3  -0.2     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.777   0.048   0.815 
+  1.516   0.079   1.587 

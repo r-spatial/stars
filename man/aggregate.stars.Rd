@@ -2,6 +2,7 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate.stars}
 \alias{aggregate.stars}
+\alias{aggregate}
 \title{spatially or temporally aggregate stars object}
 \usage{
 \method{aggregate}{stars}(
@@ -13,7 +14,8 @@
   join = st_intersects,
   as_points = any(st_dimension(by) == 2, na.rm = TRUE),
   rightmost.closed = FALSE,
-  left.open = FALSE
+  left.open = FALSE,
+  exact = FALSE
 )
 }
 \arguments{
@@ -27,13 +29,15 @@
 
 \item{drop}{logical; ignored}
 
-\item{join}{join function to find matches of x to by}
+\item{join}{function; function used to find matches of \code{x} to \code{by}}
 
 \item{as_points}{see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?}
 
 \item{rightmost.closed}{see \link{findInterval}}
 
 \item{left.open}{logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}}
+
+\item{exact}{logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells}
 }
 \description{
 spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution
@@ -63,4 +67,12 @@ x_agg_posix = aggregate(x, by = by_t, FUN = max)
 st_get_dimension_values(x_agg_posix, "time")
 x_agg_time - x_agg_posix
 aggregate(x, "2 days", mean)
+# Spatial aggregation, see https://github.com/r-spatial/stars/issues/299
+prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
+prec_slice = dplyr::slice(prec, index = 17, along = "time")
+nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
+nc = st_transform(nc, st_crs(prec_slice))
+agg = aggregate(prec_slice, st_geometry(nc), mean)
+plot(agg)
 }

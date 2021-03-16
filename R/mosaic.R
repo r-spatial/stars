@@ -29,12 +29,13 @@ st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext),
 		write_stars(obj, fname)
 		fname
 	}
-	src = sapply(append(list(.x), list(...)), lst_write)
+	objs = if (missing(.x)) list(...) else append(list(.x), list(...))
+	src = sapply(objs, lst_write)
 	on.exit(unlink(src))
 	if (missing(dst))
 		on.exit(unlink(dst))
 	st_mosaic(src, dst = dst, file_ext = file_ext, options = options)
-	setNames(read_stars(dst), names(.x)[1])
+	setNames(read_stars(dst), names(objs[[1]])[1])
 }
 
 #' @export
@@ -43,4 +44,15 @@ st_mosaic.character = function(.x, ...,  dst = tempfile(fileext = file_ext),
 		options = c("-vrtnodata", "-9999"), file_ext = ".tif") {
 	sf::gdal_utils("buildvrt", .x, dst, options)
 	dst
+}
+
+#' @export
+#' @name st_mosaic
+st_mosaic.stars_proxy = function(.x, ..., dst = tempfile(fileext = file_ext),
+		options = c("-vrtnodata", "-9999"), file_ext = ".tif") {
+	if (length(.x) > 1 || length(.x[[1]]) > 1)
+		stop("st_mosaic.stars_proxy only implemented for single-file proxy objects")
+	objs = if (missing(.x)) list(...) else append(list(.x), list(...))
+	files = sapply(objs, function(sp) sp[[1]])	
+	read_stars(st_mosaic(files, dst = dst, options = options, file_ext = file_ext), proxy = TRUE)
 }

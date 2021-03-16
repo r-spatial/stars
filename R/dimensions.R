@@ -1,7 +1,9 @@
 #' get dimensions from stars object
+#' @name st_dimensions
 #' @export
 #' @param .x object to retrieve dimensions information from 
 #' @param ... further arguments
+#' @param value new object of class \code{dimensions}, with matching dimensions
 #' @return the \code{dimensions} attribute of \code{x}, of class \code{dimensions}
 st_dimensions = function(.x, ...) UseMethod("st_dimensions")
 
@@ -11,6 +13,24 @@ st_dimensions.stars = function(.x, ...) attr(.x, "dimensions")
 
 #' @export
 st_dimensions.dimensions = function(.x, ...) .x
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-` = function(x, value) UseMethod("st_dimensions<-")
+
+#' @export
+#' @name st_dimensions
+#' @param x object of class \code{dimensions}
+`st_dimensions<-.stars` = function(x, value) {
+	stopifnot(inherits(value, "dimensions"), length(x) && all(dim(x[[1]]) == dim(value)))
+	st_stars(x, value)
+}
+
+#' @export
+#' @name st_dimensions
+`st_dimensions<-.list` = function(x, value) {
+	st_as_stars(x, dimensions = value)
+}
 
 
 #' @export
@@ -66,8 +86,8 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 
 #' @name st_dimensions
 #' @param which integer or character; index or name of the dimension to be changed
-#' @param values values for this dimension (e.g. \code{sfc} list-column)
-#' @param names character; new names vector for (all) dimensions, ignoring \code{which}
+#' @param values values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object
+#' @param names character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}
 #' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
 #' @examples
@@ -85,34 +105,48 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
 	d = st_dimensions(.x)
+	if (!missing(which) && is.character(which))
+		which = match(which, base::names(d))
 	if (! is.null(values)) {
-		if (is.character(which))
-			which = match(which, base::names(d))
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
-		if (dim(.x)[which] != length(values)) {
-			if (dim(.x)[which] == length(values) - 1)
+		if (inherits(values, "dimensions")) {
+			if (is.null(names))
+				names <- names(values)
+			values <- values[[1]]$values
+		}
+		if (!inherits(values, "intervals") && dim(.x)[which] != length(values)) {
+			if (dim(.x)[which] == length(values) - 1) # create intervals:
 				values = as_intervals(values)
 			else
-				stop(paste("length of values does not match dimension length", which))
+				stop(paste("length of values (", length(values), 
+					") does not match length of dimension", which, "(", dim(.x)[which], ")"))
 		}
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		if (! is.null(names) && length(names) == 1)
 			base::names(d)[which] = names
-		else if (inherits(values, "sfc"))
-			base::names(d)[which] = "sfc"
+#		else if (inherits(values, "sfc"))
+#			base::names(d)[which] = "sfc"
 	} else if (!is.null(point) && is.logical(point)) {
 		d[[which]]$point = point
 	} else if (!missing(names)) {
-		# handle names in raster attribute, #46
-		r = attr(d, "raster")
-		if (any(!is.na(r$dimensions))) {
-			r$dimensions = names[match(r$dimensions, names(d))]
-			attr(d, "raster") = r
-		}
-		if (length(d) != length(names))
+		if (length(d) != length(names) && length(names) != 1)
 			stop("length of names should match number of dimensions")
-		base::names(d) = names
+		r = attr(d, "raster")
+		if (length(d) == length(names)) {
+			# handle names in raster attribute, #46
+			# problematic again in #379
+			if (any(!is.na(r$dimensions)))
+				r$dimensions = names[match(r$dimensions, names(d))]
+			new_names = names
+		} else { # replace the name of dimension `which`, #354
+			if (names(d)[which] %in% r$dimensions)
+				r$dimensions[match(names(d)[which], r$dimensions)] = names
+			new_names = names(d)
+			new_names[which] = names
+		}
+		attr(d, "raster") = r
+		base::names(d) = new_names
 	} else if (! missing(xy)) {
 		stopifnot(length(xy) == 2)
 		r = attr(d, "raster")
@@ -178,15 +212,15 @@ regular_intervals = function(x, epsilon = 1e-10) {
 	if (length(x) <= 1)
 		FALSE
 	else {
-		ud = if (is.atomic(x))
+		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date"))))
 				unique(diff(x))
 			else {
-				if (identical(tail(x$end, -1), head(x$start, -1)))
+				if (inherits(x, "intervals") && identical(tail(x$end, -1), head(x$start, -1)))
 					x$end - x$start
 				else
 					return(FALSE)
 			}
-		abs(diff(range(ud)) / mean(ud)) < epsilon
+		isTRUE(abs(diff(range(ud)) / mean(ud)) < epsilon)
 	}
 }
 
@@ -241,14 +275,15 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 					set_dimension_values(start = values)
 		}
 	}
-	structure(list(from = from, to = to, offset = offset, delta = delta, 
-		refsys = refsys, point = point, values = values), class = "dimension")
+	structure(list(from = unname(from), to = unname(to), offset = unname(offset), 
+		delta = unname(delta), refsys = refsys, point = unname(point), values = values), 
+		class = "dimension")
 }
 
 create_dimensions = function(lst, raster = NULL) {
 	if (is.numeric(lst)) # when called with a dim(array) argument:
 		lst = setNames(lapply(seq_along(lst), function(i) create_dimension(from = 1, to = lst[i])), 
-		               names(lst))
+					names(lst))
 	if (is.null(names(lst)))
 		names(lst) = make.names(seq_along(lst))
 	if (any(names(lst) == "")) {
@@ -312,6 +347,9 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		}
 		lst[["band"]] = NULL
 	}
+	# handle band descriptions, if present:
+	if (!is.null(lst$band) && !is.null(pr$descriptions) && all(pr$descriptions != ""))
+		lst$band$values = pr$descriptions
 	# set up raster:
 	raster = get_raster(affine = pr$geotransform[c(3,5)], dimensions = c("x", "y"), curvilinear = FALSE)
 	create_dimensions(lst, raster)
@@ -399,8 +437,8 @@ parse_netcdf_meta = function(pr, name) {
 							} else
 								set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
 						origin_txt = as.character(as.POSIXct(origin[1]))
-    					if (!requireNamespace("PCICt", quietly = TRUE))
-        					stop("package PCICt required, please install it first") # nocov
+						if (!requireNamespace("PCICt", quietly = TRUE))
+							stop("package PCICt required, please install it first") # nocov
 						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
 					} else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
@@ -512,7 +550,7 @@ dim.dimensions = function(x) {
 #' @export
 print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	lst = lapply(x, function(y) {
-			if (length(y$values) > 2) {
+			if (length(y$values) > 3) {
 				y$values = if (is.array(y$values))
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 							format(min(y$values), digits = digits), ",...,", 
@@ -536,25 +574,34 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 		else
 			format(x, digits = digits, ...) 
 	}
-	lst = lapply(lst, function(x) lapply(x, mformat, digits = digits))
+	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")
 	if (!any(is.na(r$dimensions))) {
 		ret$raster = rep("", nrow(ret))
 		ret[r$dimensions[1], "raster"] = "[x]"
 		ret[r$dimensions[2], "raster"] = "[y]"
-		names(ret) = c(names(lst[[1]]), "")
+		names(ret) = c(names(lst[[1]]), "x/y")
 	}
 	print(ret)
 	print(attr(x, "raster"))
 	invisible(ret)
 }
 
-identical_dimensions = function(lst) {
+identical_dimensions = function(lst, ignore_resolution = FALSE) {
 	if (length(lst) > 1) {
-		for (i in 2:length(lst))
-			if (!identical(attr(lst[[1]], "dimensions"), attr(lst[[i]], "dimensions")))
+		d1 = attr(lst[[1]], "dimensions")
+		for (i in 2:length(lst)) {
+			di = attr(lst[[i]], "dimensions")
+			if (ignore_resolution) {
+				for (j in seq_along(d1))
+					d1[[j]]$delta = d1[[j]]$to = NA_real_
+				for (j in seq_along(di))
+					di[[j]]$delta = di[[j]]$to = NA_real_
+			}
+			if (! isTRUE(all.equal(d1, di)))
 				return(FALSE)
+		}
 	}
 	TRUE
 }
@@ -564,7 +611,7 @@ combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 	if (along > length(dims)) {
 		if (length(dots) > 1 && check_dims_identical) {
 			for (i in 2:length(dots))
-				if (!identical(dims, st_dimensions(dots[[i]])))
+				if (! isTRUE(all.equal(dims, st_dimensions(dots[[i]]))))
 					stop(paste("dimensions of element", 1, "and", i, "are not identical"))
 		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
@@ -587,7 +634,6 @@ combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensions also does, for single dimension
 	get_dimension_values(from, where = ifelse(center, 0.5, 0.0), NA, what = NA_character_)
 }
-
 
 #' @export
 `[.dimension` = function(x, i, ...) {
@@ -616,6 +662,15 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 		}
 	}
 	x
+}
+
+#' @export
+`[<-.dimensions` = function(x, i, value) {
+	# stopifnot(length(i) == length(value))
+	if (!is.null(value))
+		create_dimensions(NextMethod(), raster = attr(x, "raster"))
+	else
+		NextMethod()
 }
 
 #' @export

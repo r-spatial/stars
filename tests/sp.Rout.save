@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -15,6 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+> options(rgdal_show_exportToProj4_warnings = "none")
 > library(sp)
 > demo(meuse)
 
@@ -104,7 +105,7 @@ attribute(s):
  Max.   :1.000   Max.   :1.000   Max.   :0.993                          
  NA's   :5009    NA's   :5009    NA's   :5009                           
 dimension(s):
-  from  to offset delta                       refsys point values    
+  from  to offset delta                       refsys point values x/y
 x    1  78 178440    40 +proj=sterea +lat_0=52.15...    NA   NULL [x]
 y    1 104 333760   -40 +proj=sterea +lat_0=52.15...    NA   NULL [y]
 > 
@@ -181,4 +182,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  0.703   0.059   0.767 
+  0.970   0.081   1.043 

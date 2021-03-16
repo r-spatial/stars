@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ attribute(s):
  3rd Qu.:812.2  
  Max.   :812.2  
 dimension(s):
-  from  to  offset delta                       refsys point values    
+  from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > 
@@ -47,7 +47,7 @@ attribute(s):
  3rd Qu.:15.25  
  Max.   :20.00  
 dimension(s):
-  from to offset delta refsys point                values    
+  from to offset delta refsys point                values x/y
 x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
 y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > # image(r, axes = TRUE, col = grey((1:20)/20))
@@ -63,13 +63,12 @@ attribute(s):
  3rd Qu.:0.500  
  Max.   :2.000  
 dimension(s):
-  from to offset delta refsys point                values    
+  from to offset delta refsys point                values x/y
 x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
 y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 > plot(a, axes = TRUE)
 > 
-> (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
-[1] "/tmp/RtmpAhMJFm/RLIBS_13181fa468c5/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
+> s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
 > if (s5p != "") {
 + nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
 + 	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
@@ -93,7 +92,7 @@ attribute(s):
  3rd Qu.: 54640139  
  Max.   :101184840  
 dimension(s):
-  from  to offset delta refsys point                                 values    
+  from  to offset delta refsys point                                 values x/y
 x    1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°] [x]
 y    1 278     NA    NA WGS 84    NA  [450x278] 28.3605 [°],...,51.4686 [°] [y]
 curvilinear grid
@@ -101,4 +100,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  6.874   0.101   6.974 
+  8.024   0.103   8.119 

@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -29,7 +29,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -39,17 +39,18 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > # write stars_proxy object:
 > (x = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in file:
+stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
-[1] "/home/edzer/git/stars.Rcheck/stars/tif/L7_ETMs.tif"
+[1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
 > write_stars(x, tempfile(), driver = "GTiff")
+
 > 
 > proc.time()
    user  system elapsed 
-  0.705   0.057   0.751 
+  0.917   0.036   0.946 

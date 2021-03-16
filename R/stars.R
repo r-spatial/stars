@@ -94,7 +94,7 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions to be replaced
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param crs object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details
 #' @details if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
 #' @export
@@ -103,6 +103,11 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
 	if (is.null(curvilinear))
 		.x
 	else {
+		stopifnot(is.list(curvilinear), names(curvilinear) %in% names(dim(.x)))
+		if (inherits(curvilinear[[1]], "stars"))
+			curvilinear[[1]] = curvilinear[[1]][[1]]
+		if (inherits(curvilinear[[2]], "stars"))
+			curvilinear[[2]] = curvilinear[[2]][[1]]
 		dimensions = st_dimensions(.x)
 		xy = names(curvilinear)
 		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
@@ -126,6 +131,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 
 #' @param nx integer; number of cells in x direction; see details
 #' @param ny integer; number of cells in y direction; see details
+#' @param nz integer; number of cells in z direction; if missing no z-dimension is created.
 #' @param dx numeric; cell size in x direction; see details
 #' @param dy numeric; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
@@ -134,12 +140,12 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Postive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = FALSE) {
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz) {
 
 	if (xor(missing(nx), missing(ny)))
 		stop("either specify both nx and ny, or none of them")
@@ -178,8 +184,14 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		y = create_dimension(from = 1, to = ny, offset = unname(ylim[2]),
 			delta = unname(dy), refsys = st_crs(.x))
 	}
-	st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
-		dims = create_dimensions(list(x = x, y = y), get_raster()))
+	if (missing(nz)) # 2D:
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y), get_raster()))
+	else {
+		z = create_dimension(from = 1, to = nz[[1]])
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[1]] unnames
+			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
+	}
 }
 
 ## @param x two-column matrix with columns and rows, as understood by GDAL; 0.5 refers to the first cell's centre; 
@@ -322,8 +334,13 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 				setNames(do.call(expand.grid, expand_dimensions(dims[xy], max = TRUE)),
 					paste0(xy, "_max"))
 			)
-		} else
-			do.call(expand.grid, expand_dimensions(x, center = center)) # cell centers for x/y if raster
+		} else {
+			ed = expand_dimensions(x, center = center) # cell centers for x/y if raster
+			if (length(ed) > 1)
+				do.call(expand.grid, ed)
+			else
+				data.frame(ed)
+		}
 	}
 }
 
@@ -348,16 +365,18 @@ print.stars = function(x, ..., n = 1e5) {
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
 		length(x), if (length(x) != 1) "attributes\n" else "attribute\n")
-	cat("attribute(s)")
-	df = if (prod(dim(x)) > 10 * n) {
-		cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
-		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
-	} else {
-		cat(":\n")
-		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
+	if (length(x)) {
+		cat("attribute(s)")
+		df = if (prod(dim(x)) > 10 * n) {
+			cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
+			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
+		} else {
+			cat(":\n")
+			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
+		}
+		names(df) = add_units(x)
+		print(summary(df))
 	}
-	names(df) = add_units(x)
-	print(summary(df))
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
 }
@@ -369,14 +388,8 @@ aperm.stars = function(a, perm = NULL, ...) {
 	if (all(perm == seq_along(dim(a))) || isTRUE(all(match(perm, names(dim(a))) == seq_along(dim(a)))))
 		return(a)
 	d = st_dimensions(a)
-	if (is.character(perm)) {
-		ns = names(d)
-		for (i in seq_along(a)) { # every array 
-			if (is.null(dimnames(a[[i]])))
-				dimnames(a[[i]]) = lapply(as.list(dim(a)), seq_len)
-			dimnames(a[[i]]) = setNames(dimnames(a[[i]]), ns)
-		}
-	}
+	if (is.character(perm))
+		perm = match(perm, names(d))
 	st_stars(lapply(a, aperm, perm = perm, ...), d[perm])
 }
 
@@ -384,7 +397,7 @@ aperm.stars = function(a, perm = NULL, ...) {
 dim.stars = function(x) {
 	d = st_dimensions(x)
 	if (length(x) == 0)
-		lengths(expand_dimensions(d))
+		dim(d)
 	else {
 		stopifnot(length(d) == length(dim(x[[1]])))
 		structure(dim(x[[1]]), names = names(d))
@@ -403,6 +416,9 @@ propagate_units = function(new, old) {
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.
 #' @param along integer; see \link{read_stars}
+#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, 
+#' combine those that dimensions matching to the first array
+#' @param nms character; vector with array names
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -410,7 +426,7 @@ propagate_units = function(new, old) {
 #' (new = c(x, x))
 #' c(new) # collapses two arrays into one with an additional dimension
 #' c(x, x, along = 3)
-c.stars = function(..., along = NA_integer_) {
+c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...))) {
 	dots = list(...)
 	if (length(dots) == 1) {
 		if (!missing(along))
@@ -424,9 +440,22 @@ c.stars = function(..., along = NA_integer_) {
 		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
-			if (is.na(along))
+			if (!is.na(along))
+				do.call(c, c(dots, along = along))
+			else if (!try_hard)
 				stop("don't know how to merge arrays: please specify parameter along")
-			do.call(c, c(dots, along = along))
+			else {
+				d = lapply(dots, st_dimensions)
+				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
+				if (!all(ident))
+					warning(paste(
+					"ignored subdataset(s) with dimensions different from first subdataset:", 
+					paste(which(!ident), collapse = ", "), 
+					"\nuse gdal_subdatasets() to find all subdataset names"))
+				setNames(st_as_stars(do.call(c, 
+						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
+						nms[ident])
+			}
 		}
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
@@ -501,7 +530,10 @@ st_bbox.dimensions = function(obj, ...) {
 					c(xmin = x$from - 0.5, ymin = y$from - 0.5, xmax = x$to + 0.5, ymax = y$to + 0.5)
 			} else {
 				if (is_curvilinear(obj))
-					c(xmin = min(x$values), ymin = min(y$values), xmax = max(x$values), ymax = max(y$values))
+					c(xmin = min(x$values, na.rm = TRUE),
+						ymin = min(y$values, na.rm = TRUE),
+						xmax = max(x$values, na.rm = TRUE),
+						ymax = max(y$values, na.rm = TRUE))
 				else {
 					rx = range(x) # dispatches into range.dimension
 					ry = range(y)
@@ -524,6 +556,42 @@ st_bbox.stars = function(obj, ...) {
 	st_bbox(st_dimensions(obj), ...)
 }
 
+#' set bounding box parameters of regular grid
+#' @param x object of class dimensions, stars or stars_proxy
+#' @param value object of class bbox
+#' @param ... ignored
+#' @export
+st_set_bbox = function(x, value, ...) UseMethod("st_set_bbox")
+
+#' @export
+st_set_bbox.dimensions = function(x, value, ...) {
+	stopifnot(inherits(value, "bbox"), is_regular_grid(x))
+	xy = attr(x, "raster")$dimensions
+	if (x[[ xy[1] ]]$from != 1 || x[[ xy[2] ]]$from != 1)
+		stop("use st_normalize first so that dimensions start at index 1")
+	d = dim(x)
+	xsign = sign(x[[ xy[1] ]]$delta)
+	ysign = sign(x[[ xy[2] ]]$delta)
+	x[[ xy[1] ]]$offset = ifelse(xsign < 0, value["xmax"], value["xmin"])
+	x[[ xy[2] ]]$offset = ifelse(ysign < 0, value["ymax"], value["ymin"])
+	x[[ xy[1] ]]$delta = xsign * (value["xmax"] - value["xmin"]) / d[ xy[1] ]
+	x[[ xy[2] ]]$delta = ysign * (value["ymax"] - value["ymin"]) / d[ xy[2] ]
+	if (!is.na(st_crs(value)))
+		st_crs(x) = st_crs(value)
+	x
+}
+
+#' @export
+st_set_bbox.stars = function(x, value, ...) {
+	structure(x, dimensions = st_set_bbox(st_dimensions(x), value))
+}
+
+#' @export
+st_set_bbox.stars_proxy = function(x, value, ...) {
+	structure(x, dimensions = st_set_bbox(st_dimensions(x), value))
+}
+
+
 #' @export
 st_crs.stars = function(x, ...) {
 	st_crs(st_dimensions(x), ...)
@@ -542,6 +610,11 @@ st_crs.dimensions = function(x, ...) {
 
 #' @export
 `st_crs<-.stars` = function(x, value) {
+	structure(x, dimensions = st_set_crs(st_dimensions(x), value))
+}
+
+#' @export
+`st_crs<-.dimensions` = function(x, value) {
 	value = if (is.na(value))
 			NA_crs_
 		else if (is.numeric(value) || is.character(value))
@@ -552,19 +625,18 @@ st_crs.dimensions = function(x, ...) {
 			stop(paste("crs of class", class(value), "not recognized"))
 
 	# set CRS in dimensions:
-	d = st_dimensions(x)
-	xy = attr(d, "raster")$dimensions
+	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
-		d[[ xy[1] ]]$refsys = value
-		d[[ xy[2] ]]$refsys = value
+		x[[ xy[1] ]]$refsys = value
+		x[[ xy[2] ]]$refsys = value
 	}
 
 	# set crs of sfc's, if any:
 	for (j in which_sfc(x))
-		d[[ j ]]$refsys = value
-
-	structure(x, dimensions = d)
+		x[[ j ]]$refsys = value
+	x
 }
+
 
 #' @export
 st_geometry.stars = function(obj,...) {
@@ -574,9 +646,14 @@ st_geometry.stars = function(obj,...) {
 	d[[ which_sfc(obj) ]]$values
 }
 
-
+#' @name merge
+#' @aliases split
+#' @param f the name or index of the dimension to split; by default the last dimension
+#' @param drop ignored
+#' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
 #' @export
-split.stars = function(x, f, drop = TRUE, ...) {
+split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
+	stopifnot(length(x) == 1)
 	d = st_dimensions(x)
 	if (is.character(f))
 		f = which(names(d) == f)
@@ -590,19 +667,30 @@ split.stars = function(x, f, drop = TRUE, ...) {
 	spl
 }
 
+#' merge or split stars object
+#' 
+#' merge attributes into a dimension, or split a dimension over attributes
+#' @param x object of class \code{stars}
+#' @param y needs to be missing
+#' @param name name for the new dimension
+#' @param ... if defined, the first unnamed argument is used for dimension values, if not defined, attribute names are used for dimension values
+#' @returns merge merges attributes of a stars object into a new dimension; split splits a dimension over attributes
+#' @name merge
 #' @export
-merge.stars = function(x, y, ...) {
+merge.stars = function(x, y, ..., name = "attributes") {
 	dots = list(...)
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	#out = do.call(abind, st_redimension(x, along = length(dim(x[[1]]))+1))
 	out = do.call(abind, st_redimension(x))
+	if (is.factor(x[[1]]) && is.character(out))
+		out = structure(factor(as.vector(out), levels = levels(x[[1]])), dim = dim(out))
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
 			create_dimension(values = names(x))
-	d = create_dimensions(c(old_dim, list(new_dim)), raster = attr(old_dim, "raster"))
+	dims = setNames(c(old_dim, list(new_dim)), make.unique(c(names(old_dim), name)))
+	d = create_dimensions(dims, raster = attr(old_dim, "raster"))
 	if (!is.null(names(dots)))
 		names(d)[length(d)] = names(dots)
 	st_as_stars(out, dimensions = d)
@@ -637,7 +725,9 @@ st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
 #' @param new_dims target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes
 #' @param along named list with new dimension name and values
 #' @param ... ignored
-st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new_dim = names(x)), ...) {
+st_redimension.stars = function(x, new_dims = st_dimensions(x), 
+		along = list(new_dim = names(x)), ...) {
+
 	d = st_dimensions(x)
 	if (inherits(new_dims, "dimensions")) {
 		di = dim(new_dims)
@@ -648,6 +738,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 	if (! identical(setNames(di, NULL), setNames(dim(x), NULL))) {
 		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
+		for (i in seq_len(min(length(di), length(dim(x)))))
+			if (di[i] == dim(x)[i])
+				new_dims[[i]] = d[[i]]
+		x = unclass(x)
 		for (i in seq_along(x))
 			dim(x[[i]]) = di
 		st_stars(x, dimensions = new_dims)
@@ -667,6 +761,12 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 
 #' @export
 "$<-.stars" = function(x, i, value) {
+	x[[i]] = value
+	x
+}
+
+#' @export
+"[[<-.stars" = function(x, i, value) {
 	if (!is.null(value)) {
 		if (prod(dim(x)) %% length(value) != 0) { # error:
 			if (is.null(dim(value)))
@@ -674,8 +774,13 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x), along = list(new
 			else
 				stop(paste("replacement has dim", paste(dim(value), collapse = ", "), ", data has dim", paste(dim(x), collapse = ", ")))
 		}
+		if (inherits(value, "stars")) {
+			stopifnot(length(value) == 1)
+			value = value[[1]]
+		}
 		value = if (inherits(value, c("factor", "POSIXct")))
-				structure(rep(value, length.out = prod(dim(x))), dim = dim(x))
+				structure(rep(value, length.out = prod(dim(x))), dim = dim(x), colors = attr(value, "colors"),
+					rgba = attr(value, "rgba"))
 			else if (!is.array(value) || !identical(dim(value), dim(x)))
 				array(value, dim(x))
 			else
@@ -729,13 +834,28 @@ drop_units.stars = function(x) {
 	st_stars(lapply(x, drop_units), dimensions = st_dimensions(x))
 }
 
+#' Predict values, given a model object, for a stars or stars_proxy object
 #' @export
+#' @name predict.stars
+#' @param object object of class `stars`
+#' @param model model object of a class that has a predict method; check with `methods(class = class(object))`
+#' @param ... arguments passed on to this predict method
+#' @details separate predictors in object need to be separate attributes in object; 
+#' in case they are e.g. in a band dimension, use `split(object)`
 predict.stars = function(object, model, ...) {
-	pr = predict(model, as.data.frame(st_as_stars(object)), ...)
+	obj_df = as.data.frame(st_as_stars(object))
+	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
+	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
+	pr = predict(model, obj_df, ...)
 	if (!inherits(pr, "data.frame"))
-		pr = data.frame(prediction = pr)
+		pr = if (is.null(colnames(pr)))
+				data.frame(prediction = pr)
+			else
+				as.data.frame(pr)
+	pr[unique(data.frame(na_ids)[,1]), ] = NA # Mask with original NA's
 	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
 }
+
 
 #' create an array with dimension values
 #' 

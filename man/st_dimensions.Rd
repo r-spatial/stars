@@ -3,6 +3,9 @@
 \name{st_dimensions}
 \alias{st_dimensions}
 \alias{st_dimensions.stars}
+\alias{st_dimensions<-}
+\alias{st_dimensions<-.stars}
+\alias{st_dimensions<-.list}
 \alias{st_dimensions.array}
 \alias{st_dimensions.default}
 \alias{st_set_dimensions}
@@ -12,6 +15,12 @@
 st_dimensions(.x, ...)
 
 \method{st_dimensions}{stars}(.x, ...)
+
+st_dimensions(x) <- value
+
+\method{st_dimensions}{stars}(x) <- value
+
+\method{st_dimensions}{list}(x) <- value
 
 \method{st_dimensions}{array}(.x, ...)
 
@@ -41,6 +50,10 @@ st_get_dimension_values(.x, which, ..., where = NA, max = FALSE, center = NA)
 
 \item{...}{further arguments}
 
+\item{x}{object of class \code{dimensions}}
+
+\item{value}{new object of class \code{dimensions}, with matching dimensions}
+
 \item{.raster}{length 2 character array with names (if any) of the raster dimensions}
 
 \item{affine}{numeric; specify parameters of the affine transformation}
@@ -51,15 +64,13 @@ st_get_dimension_values(.x, which, ..., where = NA, max = FALSE, center = NA)
 
 \item{which}{integer or character; index or name of the dimension to be changed}
 
-\item{values}{values for this dimension (e.g. \code{sfc} list-column)}
+\item{values}{values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object}
 
-\item{names}{character; new names vector for (all) dimensions, ignoring \code{which}}
+\item{names}{character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}}
 
 \item{xy}{length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions}
 
-\item{where}{character one of 'start', 'center' or 'end'. Set to NA to ignore
-and use \code{max} and \code{center} explictly.  This argument provides
-a convenient alternative to setting \code{max} and \code{center}}
+\item{where}{character, one of 'start', 'center' or 'end'. Set to NA (default) to ignore and use \code{max} and \code{center} explictly.  This argument provides a convenient alternative to setting \code{max} and \code{center}.}
 
 \item{max}{logical; if \code{TRUE} return the end, rather than the beginning of an interval}
 

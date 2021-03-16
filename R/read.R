@@ -1,14 +1,10 @@
 maybe_normalizePath = function(.x, np = FALSE) {
-	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2")
+	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
 	if (!np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
 	else
 		normalizePath(.x, mustWork = FALSE)
-}
-
-is_big = function(x, ..., n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
-	prod(dim(read_stars(x, ..., proxy = TRUE))) > n_proxy
 }
 
 
@@ -23,11 +19,11 @@ is_big = function(x, ..., n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
 #' @param NA_value numeric value to be used for conversion into NA values; by default this is read from the input file
 #' @param along length-one character or integer, or list; determines how several arrays are combined, see Details.
 #' @param RasterIO list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.
-#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array 
-#' metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds. 
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
+#' metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds.
 #' If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
 #' or to 1e8 if that option was not set.
-#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells.
+#' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param RAT character; raster attribute table column name to use as factor levels
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set
@@ -64,20 +60,23 @@ is_big = function(x, ..., n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
 #' tmp = tempfile(fileext = ".tif")
 #' write_stars(st, tmp)
 #' (red <- read_stars(tmp))
-#' read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
+#' read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXSize = 10, nYSize = 12,
 #'    nBufXSize = 2, nBufYSize = 2))[[1]]
-#' (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
+#' (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXSize = 10, nYSize = 12,
 #'    nBufXSize = 2, nBufYSize = 2)))
 #' red[[1]] # cell values of subsample grid:
-#' plot(st, reset = FALSE, axes = TRUE, ylim = c(-.1,12.1), xlim = c(-.1,10.1),
-#'   main = "nBufXSize & nBufYSize demo", text_values = TRUE)
-#' plot(st_as_sfc(red, as_points = TRUE), add = TRUE, col = 'red', pch = 16)
-#' plot(st_as_sfc(st_as_stars(st), as_points = FALSE), add = TRUE, border = 'grey')
-#' plot(st_as_sfc(red, as_points = FALSE), add = TRUE, border = 'green', lwd = 2)
+#' \dontrun{
+#'   plot(st, reset = FALSE, axes = TRUE, ylim = c(-.1,12.1), xlim = c(-.1,10.1),
+#'     main = "nBufXSize & nBufYSize demo", text_values = TRUE)
+#'   plot(st_as_sfc(red, as_points = TRUE), add = TRUE, col = 'red', pch = 16)
+#'   plot(st_as_sfc(st_as_stars(st), as_points = FALSE), add = TRUE, border = 'grey')
+#'   plot(st_as_sfc(red, as_points = FALSE), add = TRUE, border = 'green', lwd = 2)
+#' }
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, ...), 
+		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, driver=driver, 
+		normalize_path = normalize_path, ...),
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0)) {
 
 	x = if (is.list(.x)) {
@@ -88,17 +87,17 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, proxy = FALSE, ...))
+			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
 		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value,
-			RasterIO = RasterIO, proxy = FALSE, ...))
-		curvilinear = setNames(c(st_set_dimensions(lon, c("x", "y")), st_set_dimensions(lat, c("x", "y"))), c("x", "y"))
+			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
+		curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
+			st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
 	}
 
 	if (length(x) > 1) { # loop over data sources:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_)
-		# dims = length(dim(ret[[1]][[1]]))
 		return(do.call(c, append(ret, list(along = along))))
 	}
 
@@ -129,7 +128,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
 
-		driver = if (is.null(driver)) # to override auto-detection:
+		driver = if (is.null(driver) || data$driver[1] == "HDF5") # to override auto-detection:
 				character(0)
 			else
 				data$driver[1]
@@ -141,14 +140,27 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# return:
 		if (length(ret) == 1)
 			ret[[1]]
-		else
-			structure(do.call(c, ret), names = nms)
+		else {
+			ret = do.call(c, append(ret, list(try_hard = TRUE, nms = nms)))
+			if (length(nms) == length(ret)) # lost my ability to solve this here...
+				setNames(ret, nms)
+			else
+				ret
+		}
 	} else { # we have one single array:
-		if (!isTRUE(sub))
-			warning("only one array present: argument 'sub' will be ignored")
+		if (!isTRUE(sub)) {
+			sub_required = if (is.null(list(...)$sub_required))
+					FALSE
+				else
+					list(...)$sub_required
+			if (sub_required)
+				stop(paste("only one array present in", .x, ": cannot resolve subdataset", sub))
+			else
+				warning("only one array present: argument 'sub' will be ignored")
+		}
 		meta_data = structure(data, data = NULL) # take meta_data only
 		data = if (proxy)
-				.x # names only
+				.x
 			else
 				get_data_units(attr(data, "data")) # extract data array; sets units if present
 		if (meta_data$driver[1] == "netCDF")
@@ -179,8 +191,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
 				if (min_value > 0)
 					co = co[-seq_len(min_value)] # removes [0,...,(min_value-1)]
-				data = structure(data + (1 - min_value), 
-					levels = as.character(seq_along(co)), colors = co, class = "factor")
+				f = factor(as.vector(data), levels = seq(min_value, length.out = length(co)))
+				data = structure(f, dim = dim(data), colors = co)
 			}
 			if (any(lengths(at) > 0)) {
 				which.at = which(lengths(at) > 0)[1]
@@ -193,6 +205,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 					at = at[-seq_len(min_value)]
 				attr(data, "levels") = at
 			}
+			data = structure(data, class = "factor")
 		}
 
 		dims = if (proxy) {
@@ -208,14 +221,13 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			} else
 				NULL
 
-		### WAS: tail(strsplit(x, .Platform$file.sep)[[1]], 1)
-
 		# return:
 		ret = if (proxy) # no data present, subclass of "stars":
-			st_stars_proxy(setNames(list(.x), tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
-				create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value)
+			st_stars_proxy(setNames(list(x), names(.x) %||% tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
+				create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
+				resolutions = NULL)
 		else
-			st_stars(setNames(list(data), tail(strsplit(x, '[\\\\/:]+')[[1]], 1)),
+			st_stars(setNames(list(data), names(.x) %||% tail(strsplit(x, '[\\\\/:]+')[[1]], 1)),
 				create_dimensions_from_gdal_meta(dim(data), meta_data))
 
 		if (is.list(curvilinear))
@@ -225,16 +237,29 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	}
 }
 
+#' @export
+#' @name read_stars
+#' @param x object to be read with \link{read_stars}
+#' @param n_proxy integer; number of cells above which .x will be read as stars
+#' proxy object, i.e. not as in-memory arrays but left on disk
+is_big = function(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
+	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE, quiet = TRUE))) > n_proxy
+}
+
 get_data_units = function(data) {
 	units = unique(attr(data, "units")) # will fail parsing in as_units() when more than one
 	if (length(units) > 1) {
-		warning(paste("more than one unit available for subdataset: using only", units[1])) # nocov
-		units = units[1] # nocov
-	}
-	if (!is.null(units) && nzchar(units))
-		units = try_as_units(units)
-	if (inherits(units, "units"))
-		units::set_units(structure(data, units = NULL), units, mode = "standard")
-	else
+		warning(paste("more than one unit available for array: ignoring all")) # nocov
 		structure(data, units = NULL)
+	} else {
+		if (!is.null(units) && nzchar(units)) {
+			if (units == "arc-second") # datum grids may have this
+				units = "arcsecond"
+			units = try_as_units(units)
+		}
+		if (inherits(units, "units"))
+			units::set_units(structure(data, units = NULL), units, mode = "standard")
+		else
+			structure(data, units = NULL)
+	}
 }

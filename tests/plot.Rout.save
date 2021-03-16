@@ -1,6 +1,6 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -26,10 +26,10 @@ space  time
 > image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
 > st_geometry(aq)
 Geometry set for 70 features 
-geometry type:  POINT
-dimension:      XY
-bbox:           xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
-CRS:            +proj=longlat +datum=WGS84
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
+CRS:           +proj=longlat +datum=WGS84 +no_defs
 First 5 geometries:
 POINT (9.585911 53.67057)
 POINT (9.68503 53.52418)
@@ -48,7 +48,10 @@ POINT (13.29635 52.65315)
 > nc = read_sf(system.file("shape/nc.shp", package = "sf"))
 > output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
 > plot(output)
+Warning message:
+In plot.stars(output) :
+  breaks="quantile" leads to a single class; maybe try breaks="equal" instead?
 > 
 > proc.time()
    user  system elapsed 
-  2.131   0.078   2.199 
+  3.353   0.145   3.491 

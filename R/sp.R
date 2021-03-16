@@ -2,6 +2,7 @@ stars_to_Spatial = function(from) {
     if (!requireNamespace("sp", quietly = TRUE))
         stop("package sp required, please install it first") #nocov
 	geom = if (has_raster(from)) {
+		from = st_normalize(from)
 		if (length(dim(from)) > 2)
 			stop("stars object must have two (raster: x, y) dimensions")
 		if (!is_regular_grid(from))
@@ -26,7 +27,11 @@ stars_to_Spatial = function(from) {
 			stop("no feature dimension in stars object")
 		as(st_dimensions(from)[[1]]$values, "Spatial")
 	}
-	sp::addAttrToGeom(geom, as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
+	if (length(from) == 0)
+		geom
+	else
+		sp::addAttrToGeom(geom, 
+			as.data.frame(lapply(from, function(y) structure(y, dim = NULL))), match.ID = FALSE)
 }
 setAs("stars", "Spatial", stars_to_Spatial)
 
@@ -42,10 +47,10 @@ st_as_stars.Spatial = function(.x, ...) {
 		# UL corner:
 		x = create_dimension(1, gt$cells.dim[1], 
 			offset = gt$cellcentre.offset[1] - 0.5 * gt$cellsize[1], delta = gt$cellsize[1],
-			refsys = st_crs(sp::proj4string(.x))$proj4string)
+			refsys = st_crs(.x))
 		y = create_dimension(1, gt$cells.dim[2], 
 			offset = gt$cellcentre.offset[2] + (gt$cells.dim[2] - 0.5) * gt$cellsize[1], 
-			delta = -gt$cellsize[2], refsys = st_crs(sp::proj4string(.x))$proj4string)
+			delta = -gt$cellsize[2], refsys = st_crs(.x))
 		d = create_dimensions(list(x = x, y = y), raster = get_raster(dimensions = c("x", "y")))
 		lst = lapply(.x@data, function(x, dims) structure(x, dim = dims), dims = dim(d))
 		st_stars(lst, d)

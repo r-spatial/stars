@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -30,7 +30,7 @@ attribute(s):
  3rd Qu.:64.00  
  Max.   :97.00  
 dimension(s):
-     from to  offset delta                       refsys point  values    
+     from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA  TRUE 1,...,2    
@@ -50,7 +50,7 @@ dimension(s):
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1  4      NA    NA                           NA    NA [1,2),...,[2,3)
-        
+     x/y
 x    [x]
 y    [y]
 band    
@@ -70,7 +70,7 @@ dimension(s):
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
 band    1  4      NA    NA                           NA FALSE [1,2),...,[2,3)
-        
+     x/y
 x    [x]
 y    [y]
 band    
@@ -86,7 +86,7 @@ attribute(s):
  3rd Qu.:64.00  
  Max.   :97.00  
 dimension(s):
-     from to  offset delta                       refsys point  values    
+     from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA    NA a,...,b    
@@ -102,7 +102,7 @@ attribute(s):
  3rd Qu.:64.00  
  Max.   :97.00  
 dimension(s):
-     from to  offset delta                       refsys point  values    
+     from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA    NA a,...,b    
@@ -118,11 +118,11 @@ attribute(s):
  3rd Qu.:64.00  
  Max.   :97.00  
 dimension(s):
-     from to  offset delta                       refsys point  values    
+     from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
 y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
 band    1  4      NA    NA                           NA  TRUE a,...,b    
 > 
 > proc.time()
    user  system elapsed 
-  0.650   0.028   0.669 
+  1.022   0.061   1.074 

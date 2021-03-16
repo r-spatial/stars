@@ -6,6 +6,8 @@
 \alias{filter.stars_proxy}
 \alias{mutate.stars}
 \alias{mutate.stars_proxy}
+\alias{transmute.stars}
+\alias{transmute.stars_proxy}
 \alias{select.stars}
 \alias{select.stars_proxy}
 \alias{pull.stars}
@@ -22,6 +24,10 @@ filter.stars_proxy(.data, ...)
 mutate.stars(.data, ...)
 
 mutate.stars_proxy(.data, ...)
+
+transmute.stars(.data, ...)
+
+transmute.stars_proxy(.data, ...)
 
 select.stars(.data, ...)
 

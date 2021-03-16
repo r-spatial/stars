@@ -30,7 +30,8 @@ cut.matrix = cut.array
 #' (x1_cut = cut(x1, breaks = c(0, 50, 100, Inf)))  # shows factor in summary
 #' plot(x1_cut[,,,c(3,6)]) # propagates through [ and plot
 cut.stars = function(x, breaks, ...) {
-	st_stars(lapply(x, cut, breaks = breaks, ...), st_dimensions(x))
+	my_cut = function(x, breaks, ...) structure(cut(x, breaks, ...), dim = dim(x))
+	st_stars(lapply(x, my_cut, breaks = breaks, ...), st_dimensions(x))
 }
 
 #' @export
@@ -53,5 +54,5 @@ droplevels.stars = function(x, ...) {
 
 #' @export
 droplevels.stars_proxy = function(x, ...) {
-	collect(x, match.call(), "droplevels")
+	collect(x, match.call(), "droplevels", env = environment())
 }

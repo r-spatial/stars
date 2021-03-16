@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> suppressPackageStartupMessages(library(spatstat))
+> suppressPackageStartupMessages(library(spatstat.geom))
 > suppressPackageStartupMessages(library(sf))
 > 
 > library(stars)

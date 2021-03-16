@@ -54,6 +54,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	d[[ dxy[2] ]] = NULL
 	attr(d, "raster") = get_raster(dimensions = rep(NA_character_, 2))
 	# flatten arrays:
+	x = unclass(x) # to omit using [[<-.stars method:
 	for (i in seq_along(x))
 		dim(x[[i]]) = c(geometry = length(keep), olddim[-xy_pos]) 
 	# reduce arrays to non-NA cells:
@@ -65,8 +66,14 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 			x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), 
 				levels = attr(x[[i]], "levels"))
 	}
-	structure(x, dimensions = d)
+	st_stars(x, dimensions = d)
 }
+
+st_as_sf.dimensions = function(x) {
+	ix = which_sfc(x)[1]
+	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x))
+}
+
 
 #' Convert stars object into an sf object
 #' 
@@ -78,29 +85,35 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 #' @param na.rm logical; should missing valued cells be removed, or also be converted to features?
 #' @param merge logical; if \code{TRUE}, cells with identical values are merged (using \code{GDAL_Polygonize} or \code{GDAL_FPolygonize}); if \code{FALSE}, a polygon for each raster cell is returned; see details
 #' @param use_integer (relevant only if \code{merge} is \code{TRUE}): if \code{TRUE}, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).
-#' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensinos recycled
+#' @param long logical; if \code{TRUE}, return a long table form \code{sf}, with geometries and other dimensions recycled
 #' @param connect8 logical; if \code{TRUE}, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.
 #' @param ... ignored
-#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf]{st_make_valid} to create valid polygons out of them.
+#' @details If \code{merge} is \code{TRUE}, only the first attribute is converted into an \code{sf} object. If \code{na.rm} is \code{FALSE}, areas with \code{NA} values are also written out as polygons. Note that the resulting polygons are typically invalid, and use \link[sf:valid]{st_make_valid} to create valid polygons out of them.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
-#' x = x[,,,6] # a band with lower values in it
+#' x = x[,1:100,1:100,6] # subset of a band with lower values in it
 #' x[[1]][x[[1]] < 30] = NA # set lower values to NA
 #' x[[1]] = x[[1]] < 100 # make the rest binary
 #' x
 #' (p = st_as_sf(x)) # removes NA areas
 #' (p = st_as_sf(x[,,,1], merge = TRUE)) # glues polygons together
 #' all(st_is_valid(p)) # not all valid, see details
-#' # plot(p, axes = TRUE)
+#' plot(p, axes = TRUE)
 #' (p = st_as_sf(x, na.rm = FALSE, merge = TRUE)) # includes polygons with NA values
-#' # plot(p, axes = TRUE)
+#' plot(p, axes = TRUE)
 st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE, 
 		use_integer = is.logical(x[[1]]) || is.integer(x[[1]]), long = FALSE, connect8 = FALSE) { 
 
+	if (length(x) == 0)
+		return(st_as_sf.dimensions(st_dimensions(st_xy2sfc(x, as_points = as_points, 
+			na.rm = FALSE))))
+
 	crs = st_crs(x)
+	d = st_dimensions(x)
 	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
+		x = st_normalize(x)
 		mask = if (na.rm) {
 				mask = x[1]
 				mask[[1]] = !is.na(mask[[1]])
@@ -108,17 +121,16 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			} else
 				NULL
 
-		ret = gdal_polygonize(x, mask, use_integer = use_integer, geotransform = get_geotransform(x),
-				use_contours = FALSE, connect8 = connect8, ...)
+		ret = gdal_polygonize(x, mask, use_integer = use_integer,
+				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels")))
 			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
 		st_set_crs(ret, crs)
 	} else {
-
 		if (merge)
-			stop("merge not yet supported for the as_points=TRUE case")
+			stop("merge=TRUE and as_points=TRUE unsupported; consider using st_contour for generating contour lines")
 
 		if (has_raster(x))
 			x = st_xy2sfc(st_upfront(x), as_points = as_points, ..., na.rm = na.rm)
@@ -132,7 +144,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			ix = which_sfc(x)
 			if (length(ix) > 1)	
 				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
+			other_dim = setdiff(seq_along(dim(x)), ix[1])
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
+			other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			un_dim = function(x) { # remove a dim attribute from data.frame columns
 				for (i in seq_along(x))
 					x[[i]] = structure(x[[i]], dim = NULL)
@@ -144,6 +158,8 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	
 			if (length(dim(x)) == 1) # one-dimensional cube...
 				names(df) = names(x)
+			else if (!is.null(other_values) && length(other_values) == ncol(df))
+				names(df) = other_values
 			else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
 				names(df) = names(dfs)
 			else { # another exception... time as second dimension
@@ -156,6 +172,14 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			st_sf(df, crs = crs)
 		}
 	}
+}
+
+
+#' @export
+#' @name st_as_sf
+#' @param downsample see \link{st_as_stars}
+st_as_sf.stars_proxy = function(x, ..., downsample = 0) {
+	st_as_sf(st_as_stars(x, downsample = downsample), ...)
 }
 
 #' Compute or plot contour lines or sets

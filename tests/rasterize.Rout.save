@@ -1,6 +1,6 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,14 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
-> demo(nc, echo = FALSE, ask = FALSE)
-Reading layer `nc.gpkg' from data source `/home/edzer/R/x86_64-pc-linux-gnu-library/3.6/sf/gpkg/nc.gpkg' using driver `GPKG'
-Simple feature collection with 100 features and 14 fields
-Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
-geometry type:  MULTIPOLYGON
-dimension:      XY
-bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-geographic CRS: NAD27
+> nc = read_sf(system.file("gpkg/nc.gpkg", package="sf"))
 > (x = st_rasterize(nc)) # default grid:
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -36,7 +29,7 @@ attribute(s):
  Max.   :0.241  
  NA's   :30904  
 dimension(s):
-  from  to   offset      delta refsys point values    
+  from  to   offset      delta refsys point values x/y
 x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
 y    1 141  36.5896 -0.0192484  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
@@ -53,16 +46,16 @@ attribute(s):
  Max.   :0.2410  
  NA's   :2373    
 dimension(s):
-  from  to   offset      delta refsys point values    
+  from  to   offset      delta refsys point values x/y
 x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
 y    1  50  36.5896 -0.0541531  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
 > (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1, 0), c(1.1, 1))), st_linestring(rbind(c(0, 0.05), c(1, 0.05))))))
 Simple feature collection with 2 features and 1 field
-geometry type:  LINESTRING
-dimension:      XY
-bbox:           xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
-CRS:            NA
+Geometry type: LINESTRING
+Dimension:     XY
+Bounding box:  xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
+CRS:           NA
   a
 1 1
 2 2
@@ -81,13 +74,15 @@ attribute(s):
  Max.   : NA  
  NA's   :100  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
 y    1 10      1  -0.1     NA    NA   NULL [y]
-> # the following two plots suggests a half-gridcell-shift problem:
+> # the following two plots confirm that (only) the
+> # upper-left corner is part of the grid cell (when dy is negative), leading 
+> # to a seemingly half-gridcell-shift problem:
 > sf_extSoftVersion()["GDAL"]
    GDAL 
-"3.0.2" 
+"3.2.1" 
 > plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE;
 > plot(ls, add = TRUE, col = "red")
 > plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes = TRUE, reset = FALSE)
@@ -104,7 +99,7 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
 y    1 10      1  -0.1     NA    NA   NULL [y]
 > r = st_rasterize(ls, grd, options = c("MERGE_ALG=ADD", "ALL_TOUCHED=TRUE"))
@@ -113,4 +108,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.585   0.017   0.592 
+  1.069   0.039   1.098 

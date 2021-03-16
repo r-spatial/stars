@@ -1,14 +1,140 @@
+# version 0.5-2
+
+* read and write factor levels as GDAL category names; write color table; #392
+
+* handle `normalize_path` for choosing to `proxy`; #391
+
+* ignore units if there are different units accross bands of a subdataset
+
+* speed up `st_rgb` using faster `st_apply` approach; #315, #390
+
+* improve handling of crs in Spatial objects (avoid loss of wkt comments)
+
+* correctly write band subsets for smaller proxy objects; #291
+
+* write arbitrarily cropped proxy objects; #291
+
+* speed up `st_apply` when a function is provided that works on chunks at a time; #390
+
+* warn when breaks = "quantile" results in a single class; #388
+
+* fix `[` bug selecting bands in proxy objects; #388
+
+* for `stars_proxy` objects, `write_stars` writes all objects into a multi-layer file; #385
+
+* multi-file proxy objects can be `st_warp`ed with `use_gdal=TRUE`; #385
+
+# version 0.5-1
+
+* fix weird GDAL-related bug in stars2 vignette
+
+* `read_ncdf` does not take time as mid-points of regular intervals, but as starting points; #378
+
+# version 0.5-0
+
+* fix handling of rasters with color tables; #375
+
+* `st_apply` and other methods for `stars_proxy` objects handle ... ; #374
+
+* add `st_bbox`, `st_crs` methods for terra's `SpatVector` objects; https://github.com/mtennekes/tmap/issues/536
+
+* add `st_bbox`, `st_crs` and `st_as_stars` methods for terra's `SpatRaster` objects; https://github.com/mtennekes/tmap/issues/536
+
+* allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.
+
+* `plot` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
+
+* `st_extract` extracts space-time points if `time_column` is specified, and handles time intervals; #352
+
+* add `[[<-.stars` method, which is now called by `$<-.stars`, so that array names can be set programmatically
+
+* add `transmute` methods
+
+* `plot.stars` calls `droplevels` if a factor array has any `NA` levels; #339
+
+* `read_stars` reads `NaN`s as `NA`; #333
+
+* improve `st_extract` method for both `stars` and `stars_proxy` objects; interpolation options are reduced to bilinear; #322, #279, #290
+
+* better handle categorical rasters that do not start at value 1; #329
+
+* plot layout can be controlled with `mfrow = c(nr, nc)` argument
+
+* `stars_proxy` objects have a normalized path; #331
+
+* cropping or selecting with `bbox` treats cells always as small polygons; #330
+
+* add faster `st_extract` method for `stars` objects; #322
+
+* added vignette: "How `raster` functions map to `stars` functions", by Sebastien Rochette; #122, #325
+
+* fix bug in dimension `values` field when downsampling; #324
+
+* `write_stars` also writes out band names; #323
+
+* add `rgdal` to Suggests:
+
+* each `call_list` entry of a `stars_proxy` object carries its proper calling environment; #309
+
+* `st_as_sf.stars` copes with zero attribute (empty) stars objects
+
+* add `st_set_bbox` generic, to set raster extent, motivated by #315
+
+* set up tic, with great help from @pat-s, #313
+
+* get rid of more `proj4string`s for representing coordinate reference systems; #312
+
+* as(x, "Spatial") correctly handles `from` dimension values different from one
+
+* `read_stars` now sets the `BANDNAME` GDAL metadata item, or else the band's GetDescription() as the band's dimension values
+
+* `st_as_stars.data.frame` reads simple tables (non-raster data) if `dims` has length less than 2
+
+* band descriptions are in the band dimension values
+
+* dimension tables are simpler, and are shown properly in Rstudio
+
+* `st_rgb` gains a `probs` argument, to cut off and stretch based on quantiles
+
+* `as(x, "Raster")` merges multiple attributes before converting to raster brick
+
+# version 0.4-3
+
+* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/mtennekes/tmap/issues/471
+
+* add `s2` to Suggests:
+
+* new function `st_rgb` collapses (reduces) a dimension to rgb hex value; #302
+
 # version 0.4-2
 
-* `read_stars` now chooses a value for `proxy` depending on the data dimensions; #281
+* aggregate.stars handles arrays with NA values now correctly; brought up in #299 by Thorsten Simon
+
+* `aggregate.stars` gains an argument `exact` which, if `TRUE`, calls `exactextractr` for polygonal aggregation; #289 
+
+* `read_stars` reads all subdatasets with dimensions equal to first, and warns when ignoring others; #296
+
+* make copying over of dimensions somewhat easier; #295
+
+* `st_as_stars.Raster` tries to read from file if the raster object is not an in-memory object.
+
+* `write_stars` normalizes path, as `read_stars` already did; #293
+
+* `merge` for proxy objects acts, and is no longer lazy; #290
+
+* `st_as_stars.Raster` returns a proxy object if the raster layer is on disk
+
+* add `st_extract` to extract e.g. time series from grids at point locations; #279; #290
+
+* `read_stars` chooses a value for `proxy` that depends on the data dimensions; #281
 
 * x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
 
-* `st_warp` now preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
+* `st_warp` preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
 
-* `st_crop` now works with bounding boxes larger than the downsampled bounding box; #276
+* `st_crop` works with bounding boxes larger than the downsampled bounding box; #276
 
-* `st_crop` now has a non-zero default for `epsilon` (bounding box shrinkage) to exclude cells touching the crop bounding box; #275
+* `st_crop` has a non-zero default for `epsilon` (bounding box shrinkage) to exclude cells touching the crop bounding box; #275
 
 * `image.stars` (and hence `plot.stars`) gains an `extent` argument for setting the extent of a plot; https://github.com/r-spatial/sf/issues/1193
 

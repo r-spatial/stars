@@ -142,10 +142,13 @@
 #' @param x object of class \code{stars}
 #' @param y object of class \code{sf}, \code{sfc} or \code{bbox}; see Details below.
 #' @param epsilon numeric; factor to shrink the bounding box of \code{y} towards its center before cropping.
-#' @param as_points logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}
+#' @param as_points logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
-#' @details for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
+#' @details for raster \code{x}, \code{st_crop} selects cells that intersect with \code{y}. 
+#' For intersection, are raster cells interpreted as points or as small polygons? 
+#' If \code{y} is of class \code{stars}, \code{x} raster cells are interpreted as points; if \code{y} is of class \code{bbox}, \code{x} cells are interpreted as cells (small polygons). Otherwise, if \code{as_points} is not given, cells are interpreted as points if \code{y} has a two-dimensional geometry.
+#' 
 #' @examples
 #' l7 = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
 #' d = st_dimensions(l7)
@@ -202,6 +205,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 	args = rep(list(rlang::missing_arg()), length(d)+1)
 	if (inherits(y, c("stars", "sf", "sfc", "bbox")) && st_crs(x) != st_crs(y))
 		stop("for cropping, the CRS of both objects have to be identical")
+	if (inherits(y, "stars")) {
+		as_points = TRUE
+		y = st_as_sfc(st_bbox(y))
+	}
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
@@ -230,20 +237,20 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 	} else if (crop)
 		warning("crop only crops regular grids")
 
-	if (inherits(y, "bbox"))
-		y = st_as_sfc(y)
-	dxy = attr(dm, "raster")$dimensions
-	xy_grd = if (is_curvilinear(x) || !as_points) # FIXME: for curvilinear as_points should work too!
-			st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
-		else
-			st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
-	inside = st_intersects(st_union(y), xy_grd)[[1]]
-	d = dim(x) # cropped x
-	mask = rep(TRUE, prod(d[dxy]))
-	mask[inside] = FALSE
-	mask = array(mask, d) # replicates over secondary dims
-	for (i in seq_along(x))
-		x[[i]][mask] = NA
+	if (!inherits(y, "bbox")) { # post-process: burn in geometry mask
+		dxy = attr(dm, "raster")$dimensions
+		xy_grd = if (is_curvilinear(x) || !as_points) # FIXME: for curvilinear as_points should work too!
+				st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
+			else
+				st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
+		inside = st_intersects(st_union(y), xy_grd)[[1]]
+		d = dim(x) # cropped x
+		mask = rep(TRUE, prod(d[dxy]))
+		mask[inside] = FALSE
+		mask = array(mask, d) # replicates over secondary dims
+		for (i in seq_along(x))
+			x[[i]][mask] = NA
+	}
 	x
 }
 

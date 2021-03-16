@@ -1,4 +1,4 @@
-suppressPackageStartupMessages(library(spatstat))
+suppressPackageStartupMessages(library(spatstat.geom))
 suppressPackageStartupMessages(library(sf))
 
 library(stars)

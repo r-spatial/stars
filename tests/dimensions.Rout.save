@@ -1,0 +1,73 @@
+
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # https://github.com/r-spatial/stars/issues/295
+> suppressPackageStartupMessages(library(stars))
+> raw <- read_stars(system.file("nc/bcsd_obs_1999.nc", package = "stars"))
+pr, tas, 
+> foo <- function(x, idx) stats::lowess(idx, x)$y
+> 
+> timeline <- st_get_dimension_values(raw, "time")
+> smooth = st_apply(raw,
++ 	MARGIN = c("x", "y"),
++ 	FUN = foo,
++ 	idx = st_get_dimension_values(raw, "time")
++ )
+> 
+> st_set_dimensions(smooth,
++ 	which = "foo",
++ 	values = st_get_dimension_values(raw, "time"),
++ 	names = "time"
++ )
+stars object with 3 dimensions and 2 attributes
+attribute(s):
+      pr               tas        
+ Min.   : 16.13   Min.   :-2.355  
+ 1st Qu.: 70.37   1st Qu.: 9.632  
+ Median : 84.56   Median :15.327  
+ Mean   : 87.73   Mean   :14.617  
+ 3rd Qu.:101.95   3rd Qu.:19.993  
+ Max.   :278.64   Max.   :24.798  
+ NA's   :7116     NA's   :7116    
+dimension(s):
+     from to offset  delta  refsys point                    values x/y
+time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31    
+x       1 81    -85  0.125      NA    NA                      NULL [x]
+y       1 33 37.125 -0.125      NA    NA                      NULL [y]
+> 
+> raw %>%
++   st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) %>%
++   st_set_dimensions("foo", st_dimensions(raw)["time"])
+stars object with 3 dimensions and 2 attributes
+attribute(s):
+      pr               tas        
+ Min.   : 16.13   Min.   :-2.355  
+ 1st Qu.: 70.37   1st Qu.: 9.632  
+ Median : 84.56   Median :15.327  
+ Mean   : 87.73   Mean   :14.617  
+ 3rd Qu.:101.95   3rd Qu.:19.993  
+ Max.   :278.64   Max.   :24.798  
+ NA's   :7116     NA's   :7116    
+dimension(s):
+     from to offset  delta  refsys point                    values x/y
+time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31    
+x       1 81    -85  0.125      NA    NA                      NULL [x]
+y       1 33 37.125 -0.125      NA    NA                      NULL [y]
+> 
+> proc.time()
+   user  system elapsed 
+  1.534   0.136   1.350 

@@ -4,7 +4,7 @@
 \alias{st_transform}
 \alias{st_transform.stars}
 \alias{st_transform_proj.stars}
-\title{transform features, or warp/resample grids in stars objects to a new coordinate reference system}
+\title{transform geometries in stars objects to a new coordinate reference system, without warping}
 \usage{
 \method{st_transform}{stars}(x, crs, ...)
 
@@ -18,10 +18,10 @@
 \item{...}{ignored}
 }
 \description{
-transform features, or warp/resample grids in stars objects to a new coordinate reference system
+transform geometries in stars objects to a new coordinate reference system, without warping
 }
 \details{
-For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp}.
+For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp} (which is in general lossy).
 }
 \examples{
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")

@@ -10,21 +10,21 @@ geom_stars(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE)
 theme_stars(...)
 }
 \arguments{
-\item{mapping}{see \link[ggplot2]{geom_raster}}
+\item{mapping}{see \link[ggplot2:geom_tile]{geom_raster}}
 
-\item{data}{see \link[ggplot2]{geom_raster}}
+\item{data}{see \link[ggplot2:geom_tile]{geom_raster}}
 
-\item{...}{see \link[ggplot2]{geom_raster}}
+\item{...}{see \link[ggplot2:geom_tile]{geom_raster}}
 
 \item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample}
 
-\item{sf}{logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2]{geom_sf}.}
+\item{sf}{logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2:ggsf]{geom_sf}.}
 }
 \description{
 ggplot geom for stars objects
 }
 \details{
-\code{geom_stars} returns (a call to) either \link[ggplot2]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples.
+\code{geom_stars} returns (a call to) either \link[ggplot2:geom_tile]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2:ggsf]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2:coord_fixed]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples.
 }
 \examples{
 system.file("tif/L7_ETMs.tif", package = "stars") \%>\% read_stars() -> x

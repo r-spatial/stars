@@ -1,5 +1,5 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -33,7 +33,7 @@ dimension(s):
 x       1 348     NA    NA UTM Zone 25, Southern Hem... FALSE
 y       1 351     NA    NA UTM Zone 25, Southern Hem... FALSE
 band    1   6     NA    NA                           NA    NA
-                                      values    
+                                      values x/y
 x    [288790.5,288819),...,[298708.5,298737) [x]
 y    [9120747,9120718),...,[9110743,9110715) [y]
 band                                    NULL    
@@ -54,14 +54,14 @@ attribute(s):
  3rd Qu.:12.25  
  Max.   :16.00  
 dimension(s):
-  from to offset delta refsys point values    
+  from to offset delta refsys point values x/y
 x    1  4      1     1     NA FALSE   NULL [x]
 y    1  4      2     1     NA FALSE   NULL [y]
 > st = st_set_dimensions(st, 1, values = c(1,2,3,4,6))
 > st = st_set_dimensions(st, 2, values = c(2,3,4,5,8))
 > try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
 Error in st_set_dimensions(st, 2, values = c(2, 3, 4, 5, 8, 20)) : 
-  length of values does not match dimension length 2
+  length of values ( 6 ) does not match length of dimension 2 ( 4 )
 > 
 > # $<-.stars:
 > st$foo = st$m * 2
@@ -76,7 +76,7 @@ attribute(s):
  3rd Qu.:12.25   3rd Qu.:24.5  
  Max.   :16.00   Max.   :32.0  
 dimension(s):
-  from to offset delta refsys point          values    
+  from to offset delta refsys point          values x/y
 x    1  4     NA    NA     NA FALSE [1,2),...,[4,6) [x]
 y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
@@ -90,4 +90,4 @@ y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.838   0.037   0.866 
+  1.299   0.225   1.211 

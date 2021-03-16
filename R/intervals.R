@@ -37,6 +37,7 @@ c.intervals = function(...) {
 	make_intervals(x$start[i], x$end[i])
 }
 
+#' @export
 format.intervals = function(x, ...) {
 	mformat = function(x, ..., digits = getOption("digits")) {
 		if (inherits(x, "PCICt")) 
@@ -53,7 +54,31 @@ format.intervals = function(x, ...) {
 }
 
 find_interval = function(x, intervals) {
-	i = findInterval(x, c(intervals$start, tail(intervals$end, 1)))
-	i[i == 0 | i > length(intervals)] = NA
-	i
+	if (inherits(intervals$start, "Date") && inherits(x, "POSIXct"))
+		x = as.Date(x)
+	if (inherits(x, "Date") && inherits(intervals$start, "POSIXct"))
+		x = as.POSIXct(x)
+	w = apply(outer(x, intervals$start, ">=") & outer(x, intervals$end, "<"), 1, which)
+	l = lengths(w)
+	w[l == 0] = NA
+	unlist(w)
+}
+
+#' @export
+as.list.intervals = function(x, ...) {
+	structure(mapply(make_intervals, x$start, x$end, SIMPLIFY = FALSE),
+		class = "intervals_list")
+}
+
+#' @export
+format.intervals_list = function(x, ...) {
+	sapply(x, format, ...)
+}
+
+#' @export
+`[.intervals_list` = function(x, i, ...) {
+	ret = NextMethod()
+	is_null = sapply(ret, is.null)
+	ret[is_null] = list(make_intervals(NA_real_, NA_real_))
+	structure(ret, class = "intervals_list")
 }

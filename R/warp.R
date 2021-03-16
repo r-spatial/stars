@@ -17,14 +17,20 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	envelope = st_as_sfc(bb_x)
 	# global adjustment: needed to have st_segmentize span global extent
 	# https://github.com/r-spatial/mapview/issues/256
-	if (!is.na(segments) && !has_global_longitude(x))
-		envelope = st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
+	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
+				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
+			else {
+				# https://github.com/mtennekes/tmap/issues/526 :
+				old_crs = st_crs(envelope)
+				st_crs(envelope) = NA_crs_
+				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
+			}
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
 	if (any(is.na(cellsize))) {
 		area = if (st_is_longlat(crs)) # we need a cell size in degree lon lat
 				diff(bb[c("xmin", "xmax")]) * diff(bb[c("ymin", "ymax")])
-			else 
+			else
 				st_area(envelope_new)
 		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
@@ -39,15 +45,14 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 		# TODO: divide by st_area(evelope_new)/st_area(envelope) ?
 	}
 	cellsize = rep(abs(cellsize), length.out = 2)
-	p4s = crs$proj4string
-	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1]) 
+	nx = ceiling(diff(bb[c("xmin", "xmax")])/cellsize[1])
 	ny = ceiling(diff(bb[c("ymin", "ymax")])/cellsize[2])
 	if (has_global_longitude(x)) { # if global coverage, don't cross the boundaries:
 		cellsize[1] = diff(bb[c("xmin", "xmax")])/nx
 		cellsize[2] = diff(bb[c("ymin", "ymax")])/ny
 	}
-	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = p4s)
-	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = p4s)
+	x = create_dimension(from = 1, to = nx, offset = bb["xmin"], delta =  cellsize[1], refsys = crs)
+	y = create_dimension(from = 1, to = ny, offset = bb["ymax"], delta = -cellsize[2], refsys = crs)
 	create_dimensions(list(x = x, y = y), get_raster())
 }
 
@@ -75,12 +80,8 @@ transform_grid_grid = function(x, target) {
 	new_pts = st_coordinates(target[xy_names])
 	dxy = attr(target, "raster")$dimensions
 
-	from = if (inherits(target[[ dxy[1] ]]$refsys, "crs")) # FIXME: drop support for this?
-			target[[ dxy[1] ]]$refsys$proj4string
-		else
-			target[[ dxy[1] ]]$refsys
-
-	pts = sf_project(from = from, to = st_crs(x)$proj4string, pts = new_pts)
+	from = st_crs(target)
+	pts = sf_project(from = from, to = st_crs(x), pts = new_pts)
 
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
@@ -89,6 +90,7 @@ transform_grid_grid = function(x, target) {
 	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
 	dims = dim(x)
 	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
+	x = unclass(x) # avoid using [[<-.stars:
 	if (length(dims) > 2) {
 		remaining_dims = dims[setdiff(names(dims), dxy)]
 		newdim = c(prod(dims[dxy]), prod(remaining_dims))
@@ -112,14 +114,14 @@ transform_grid_grid = function(x, target) {
 #'
 #' @param src object of class \code{stars} with source raster
 #' @param dest object of class \code{stars} with target raster geometry
-#' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing 
+#' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing
 #' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
-#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporaray file
+#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
-#' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE} 
+#' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}
 #' @param ... ignored
 #' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples
@@ -137,9 +139,13 @@ transform_grid_grid = function(x, target) {
 #' r %>% st_set_crs(4326) %>% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
 #' plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
 #' plot(s, axes = TRUE)
+#' # downsample raster (90 to 270 m)
+#' r = read_stars(system.file("tif/olinda_dem_utm25s.tif", package = "stars"))
+#' r270 = st_as_stars(st_bbox(r), dx = 270)
+#' r270 = st_warp(r, r270)
 #' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
-st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100, 
+st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
 		method = "near") {
 
@@ -148,7 +154,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 
 	if (!is.na(crs))
 		crs = st_crs(crs)
-	
+
 	ret = if (use_gdal) {
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
 		if (all(!is.na(cellsize))) {
@@ -161,6 +167,12 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 				cat("Writing input to: ", src[[1]], "\n")
 			else
 				on.exit(unlink(src[[1]])) # temp file
+		}
+		# collapse a multi-file proxy objects into single-file/multi-band:
+		if (length(src[[1]]) > 1 || length(src) > 1) {
+			tmp = tempfile(fileext = ".vrt") # multi-band destination
+			sf::gdal_utils("buildvrt", unlist(src), tmp, options = "-separate")
+			src[[1]] = tmp
 		}
 		if (missing(dest) && is.na(crs)) {
 			delete = TRUE
@@ -197,9 +209,9 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (method %in% c("near", "mode")) {
 		a = lapply(src, attributes)
 		for (i in seq_along(ret))
-			ret[[i]] = structure(ret[[i]], 
-				levels = attr(ret[[i]], "levels") %||% a[[i]]$levels, 
-				colors = attr(ret[[i]], "colors") %||% a[[i]]$colors, 
+			ret[[i]] = structure(ret[[i]],
+				levels = attr(ret[[i]], "levels") %||% a[[i]]$levels,
+				colors = attr(ret[[i]], "colors") %||% a[[i]]$colors,
 				class =  attr(ret[[i]], "class")  %||% a[[i]]$class)
 	}
 	ret

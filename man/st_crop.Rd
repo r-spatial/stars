@@ -37,13 +37,15 @@
 
 \item{collect}{logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read}
 
-\item{as_points}{logical; if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}}
+\item{as_points}{logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details}
 }
 \description{
 crop a stars object
 }
 \details{
-for raster \code{x}, \code{st_crop} selects cells for which the cell centre is inside the bounding box; see the examples below.
+for raster \code{x}, \code{st_crop} selects cells that intersect with \code{y}. 
+For intersection, are raster cells interpreted as points or as small polygons? 
+If \code{y} is of class \code{stars}, \code{x} raster cells are interpreted as points; if \code{y} is of class \code{bbox}, \code{x} cells are interpreted as cells (small polygons). Otherwise, if \code{as_points} is not given, cells are interpreted as points if \code{y} has a two-dimensional geometry.
 }
 \examples{
 l7 = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))

@@ -50,10 +50,10 @@ We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the pack
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
-plot(x)
+plot(x, axes = TRUE)
 ```
 
-We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions called `x`, `y` and `band`, and has one attribute.
+We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (`x`) has three dimensions called `x`, `y` and `band`, and has one attribute:
 ```{r}
 x
 ```
@@ -189,7 +189,9 @@ which doesn't convert time values in a proper R time format.
 
 ## Reading datasets from multiple files
 
-Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/); a subset of the 1981 data was downloaded from [here](ftp://eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
+Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2.highres/); the subset from 1981 used below
+was downloaded from a NOAA ftp site that is no longer available in this form.
+(ftp site used to be eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 
 We read the data by giving `read_stars` a vector with character names:
 ```{r eval=ev}
@@ -205,7 +207,7 @@ x = c(
 "avhrr-only-v2.19810909.nc"
 )
 # see the second vignette:
-# install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source") 
+# install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source")
 file_list = system.file(paste0("netcdf/", x), package = "starsdata")
 (y = read_stars(file_list, quiet = TRUE))
 ```

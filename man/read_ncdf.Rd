@@ -25,7 +25,7 @@ read_ncdf(
 
 \item{ncsub}{matrix of start, count columns (see Details)}
 
-\item{curvilinear}{length two character named vector with names of variables holding 
+\item{curvilinear}{length two character named vector with names of variables holding
 longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
 curvilinear coordinates if they are not supplied.}
 

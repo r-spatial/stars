@@ -1,5 +1,5 @@
 
-R version 4.0.0 (2020-04-24) -- "Arbor Day"
+R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -30,7 +30,7 @@ attribute(s):
  3rd Qu.: 86.00   3rd Qu.: 86.00  
  Max.   :255.00   Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -45,7 +45,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -138,7 +138,7 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-  from  to  offset delta                       refsys point values    
+  from  to  offset delta                       refsys point values x/y
 a    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 b    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 c    1   6      NA    NA                           NA    NA   NULL    
@@ -160,7 +160,7 @@ dimension(s):
 x              1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL
 y              1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL
 band_number    1   6      NA    NA                           NA  TRUE 1,...,7
-               
+            x/y
 x           [x]
 y           [y]
 band_number    
@@ -183,7 +183,7 @@ dimension(s):
 x                     1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
 y                     1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 bandwidth_midpoint    1   6      NA    NA                      udunits  TRUE
-                                       values    
+                                       values x/y
 x                                        NULL [x]
 y                                        NULL [y]
 bandwidth_midpoint 0.4825 [um],...,2.215 [um]    
@@ -203,7 +203,7 @@ dimension(s):
 x            1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
 y            1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
 bandwidth    1   6      NA    NA                      udunits    NA
-                                          values    
+                                          values x/y
 x                                           NULL [x]
 y                                           NULL [y]
 bandwidth [0.45,0.515) [um],...,[2.08,2.35) [um]    
@@ -219,7 +219,7 @@ attribute(s):
  3rd Qu.:172.0  
  Max.   :510.0  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -234,7 +234,7 @@ attribute(s):
  3rd Qu.: 7396  
  Max.   :65025  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -249,7 +249,7 @@ attribute(s):
  3rd Qu.: 83.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   3      NA    NA                           NA    NA   NULL    
@@ -264,7 +264,7 @@ attribute(s):
  3rd Qu.: 77.00  
  Max.   :252.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 100  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y     100 200 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -279,7 +279,7 @@ attribute(s):
  3rd Qu.: 9.274  
  Max.   :15.969  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -307,7 +307,7 @@ attribute(s):
  3rd Qu.:113.00  
  Max.   :255.00  
 dimension(s):
-  from  to  offset delta                       refsys point values    
+  from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > st_apply(x, 1:2, range)
@@ -321,7 +321,7 @@ attribute(s):
  3rd Qu.: 96.00  
  Max.   :255.00  
 dimension(s):
-      from  to  offset delta                       refsys point values    
+      from  to  offset delta                       refsys point values x/y
 range    1   2      NA    NA                           NA    NA   NULL    
 x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
@@ -355,7 +355,7 @@ attribute(s):
  Max.   :305.5          
  NA's   :228240         
 dimension(s):
-     from  to     offset   delta refsys point values    
+     from  to     offset   delta refsys point values x/y
 x       1 180          0       2     NA    NA   NULL [x]
 y       1 170         90      -1     NA    NA   NULL [y]
 time    1  24 2001-01-16 30 days  PCICt    NA   NULL    
@@ -381,7 +381,7 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from  to offset delta refsys point values    
+  from  to offset delta refsys point values x/y
 x    1 360      0     1     NA    NA   NULL [x]
 y    1 170     90    -1     NA    NA   NULL [y]
 > st_bbox(s)
@@ -411,7 +411,7 @@ attribute(s):
  Max.   :305.5       
  NA's   :228240      
 dimension(s):
-     from  to     offset   delta refsys point values    
+     from  to     offset   delta refsys point values x/y
 x       1 180          0       2     NA    NA   NULL [x]
 y       1 170         90      -1     NA    NA   NULL [y]
 time    1  24 2001-01-16 30 days  PCICt    NA   NULL    
@@ -432,14 +432,13 @@ attribute(s):
  3rd Qu.:0  
  Max.   :0  
 dimension(s):
-  from  to offset delta refsys point values    
+  from  to offset delta refsys point values x/y
 x    1 360   -180     1 WGS 84    NA   NULL [x]
 y    1 180     90    -1 WGS 84    NA   NULL [y]
 > 
 > # multiple sub-datasets:
 > nc_red = system.file("nc/reduced.nc", package = "stars")
 > red = read_stars(nc_red)
-sst, anom, err, ice, 
 sst, anom, err, ice, 
 > red
 stars object with 4 dimensions and 4 attributes
@@ -453,7 +452,7 @@ attribute(s):
  Max.   :32.97   Max.   :  2.990   Max.   :0.840   Max.   :1.000  
  NA's   :4448    NA's   :4448      NA's   :4448    NA's   :13266  
 dimension(s):
-     from  to         offset delta  refsys point values    
+     from  to         offset delta  refsys point values x/y
 x       1 180             -1     2      NA    NA   NULL [x]
 y       1  90             90    -2      NA    NA   NULL [y]
 zlev    1   1          0 [m]    NA      NA    NA   NULL    
@@ -476,10 +475,14 @@ attribute(s):
  3rd Qu.: 86.00  
  Max.   :255.00  
 dimension(s):
-   from  to  offset delta                       refsys point    values    
-x     1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE      NULL [x]
-y     1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE      NULL [y]
-X1    1   6      NA    NA                           NA    NA X1,...,X6    
+           from  to  offset delta                       refsys point    values
+x             1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE      NULL
+y             1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE      NULL
+attributes    1   6      NA    NA                           NA    NA X1,...,X6
+           x/y
+x          [x]
+y          [y]
+attributes    
 > 
 > read_stars(c(tif,tif)) # merges as attributes
 stars object with 3 dimensions and 2 attributes
@@ -492,7 +495,7 @@ attribute(s):
  3rd Qu.: 86.00   3rd Qu.: 86.00  
  Max.   :255.00   Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -507,7 +510,7 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-       from  to  offset delta                       refsys point values    
+       from  to  offset delta                       refsys point values x/y
 x         1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y         1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band      1   6      NA    NA                           NA    NA   NULL    
@@ -523,7 +526,7 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-        from  to  offset delta                       refsys point values    
+        from  to  offset delta                       refsys point values x/y
 x          1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y          1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band       1   6      NA    NA                           NA    NA   NULL    
@@ -539,7 +542,7 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1  12      NA    NA                           NA    NA   NULL    
@@ -554,7 +557,7 @@ attribute(s), summary of first 1e+05 cells:
  3rd Qu.: 87.00  
  Max.   :255.00  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1  12      NA    NA                           NA    NA   NULL    
@@ -570,7 +573,7 @@ attribute(s):
  (50,100] :503764  
  (100,255]: 77264  
 dimension(s):
-     from  to  offset delta                       refsys point values    
+     from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 band    1   6      NA    NA                           NA    NA   NULL    
@@ -582,7 +585,7 @@ attribute(s):
  (50,100] :117134  
  (100,255]:  5713  
 dimension(s):
-  from  to  offset delta                       refsys point values    
+  from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
 y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > plot(cut(x[,,,1,drop=TRUE], c(0, 50, 100, 255)))
@@ -617,23 +620,14 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 +   #ret = adrop(adrop(c(l[[1]], l[[2]], l[[3]], along = "times")))
 +   #print(ret)
 + }
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
-sst, anom, err, ice, 
 sst, anom, 
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
@@ -646,7 +640,7 @@ attribute(s), summary of first 1e+05 cells:
  Max.   : 9.36   Max.   : 3.70  
  NA's   :13360   NA's   :13360  
 dimension(s):
-     from   to         offset  delta  refsys point values    
+     from   to         offset  delta  refsys point values x/y
 x       1 1440              0   0.25      NA    NA   NULL [x]
 y       1  720             90  -0.25      NA    NA   NULL [y]
 zlev    1    1          0 [m]     NA      NA    NA   NULL    
@@ -662,7 +656,7 @@ attribute(s), summary of first 1e+05 cells:
  Max.   : 9.36   Max.   : 3.70  
  NA's   :13360   NA's   :13360  
 dimension(s):
-      from   to     offset  delta refsys point values    
+      from   to     offset  delta refsys point values x/y
 x        1 1440          0   0.25     NA    NA   NULL [x]
 y        1  720         90  -0.25     NA    NA   NULL [y]
 times    1    3 1981-09-01 1 days   Date    NA   NULL    
@@ -702,4 +696,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.054   0.368   6.427 
+  6.731   0.460   6.868 

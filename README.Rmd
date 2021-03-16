@@ -2,9 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file - rmarkdown::render('README.Rmd', output_format = 'github_document', output_file = 'README.md') -->
-
-
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -16,12 +13,14 @@ is_online = curl::has_internet()
 
 # Spatiotemporal Arrays: Raster and Vector Datacubes
 
-[![Build Status](https://travis-ci.org/r-spatial/stars.png?branch=master)](https://travis-ci.org/r-spatial/stars) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/r-spatial/stars?branch=master&svg=true)](https://ci.appveyor.com/project/edzerpebesma/stars)
+<!-- badges: start -->
+[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master)](https://github.com/r-spatial/stars/actions)
 [![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 [![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 [![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
+<!-- badges: end -->
 
 Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
 
@@ -102,7 +101,7 @@ plot(st_geometry(st_as_sf(r4, as_points = FALSE)), main = "rectilinear")
 plot(st_geometry((r5)), main = "curvilinear")
 ```
 
-Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension indicating spatial feature geometries, such as polygons (e.g. denoting administrative regions):
+Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension that points to distinct spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
 ```{r cube3,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png")
@@ -113,6 +112,8 @@ or points (e.g. denoting sensor locations):
 ```{r cube4,out.width='50%',echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png")
 ```
+
+NetCDF's CF-convention calls this a [discrete axis](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis).
 
 ## NetCDF, GDAL
 

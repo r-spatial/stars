@@ -63,3 +63,15 @@ if (f != "") {
   ret <- st_redimension(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
   print(ret)
 }
+
+# demonstrate that environments work:
+x = read_stars(tif, proxy = TRUE)
+f = function(x) {
+	g = function(xx) {
+		ndvi = function(z) (z[2]-z[1])/(z[2]+z[1])
+		st_apply(xx, 1:2, ndvi)
+	}
+	g(x)
+}
+(x = f(x))
+st_as_stars(x)

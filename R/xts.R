@@ -14,8 +14,10 @@ as.xts.stars <- function(x,...) {
 		time = time[1]
 	}
 	x = st_upfront(x[1], time)
-	if (length(dim(x)) > 2)
-		x = st_redimension(x, c(dim(x)[1], prod(dim(x)[-1])))
+	if (length(dim(x)) > 2) {
+		dims = setNames(c(dim(x)[1], prod(dim(x)[-1])), c(names(ed)[time], "other"))
+		x = st_redimension(x, dims)
+	}
 	
 	xts::xts(x[[1]], ed[[time]])
 }

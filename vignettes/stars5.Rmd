@@ -64,8 +64,8 @@ a vector representation of the whole field, we can draw contour
 lines and export the contour sets (only available when the 
 GDAL version is at least 2.4.0):
 ```{r eval=ev}
-l =  st_contour(x,contour_lines=TRUE, breaks = 8:14)
-plot(l, key.pos = 1, pal = sf.colors(6), lwd = 2, key.length = 0.8)
+l =  st_contour(x,contour_lines=TRUE, breaks = 11:15)
+plot(l[1], key.pos = 1, pal = sf.colors, lwd = 2, key.length = 0.8)
 ```
 
 ## Exporting to points
