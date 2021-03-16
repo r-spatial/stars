@@ -97,6 +97,8 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decr
 
 	if (missing(dims) && !missing(xy))
 		stop("parameter xy only takes effect when the cube dimensions are set with dims")
+	if (is.character(dims))
+		dims = match(dims, names(.x))
 	if (is.character(xy))
 		xy = match(xy, names(.x))
 	if (any(is.na(xy)))
@@ -125,7 +127,7 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decr
 					create_dimension(values = suv, is_raster = TRUE)
 			this_dim = this_dim + 1
 		}
-		names(dimensions) = names(.x)[xy]
+		names(dimensions) = names(.x)[dims]
 	
 		raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
 		d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
