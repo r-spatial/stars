@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
       </span>
     </div>
 
@@ -222,10 +222,10 @@ dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
 #&gt; geometry POINT (289579.4 9119503),...,POINT (296460.1 9120515)
 #&gt; band                                                      NULL</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Simple feature collection with 10 features and 6 fields
-#&gt; geometry type:  POINT
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
-#&gt; projected CRS:  UTM Zone 25, Southern Hemisphere
+#&gt; Geometry type: POINT
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt;    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5
 #&gt; 1              57             40             30             53             42
 #&gt; 2              97             93             78             15             14
@@ -249,10 +249,10 @@ dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
 #&gt; 9              25 POINT (296065.9 9114628)
 #&gt; 10             18 POINT (296460.1 9120515)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Simple feature collection with 10 features and 1 field
-#&gt; geometry type:  POINT
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
-#&gt; projected CRS:  UTM Zone 25, Southern Hemisphere
+#&gt; Geometry type: POINT
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt;    L7_ETMs.tif                 geometry
 #&gt; 1           57 POINT (289579.4 9119503)
 #&gt; 2           97 POINT (297074.9 9112484)

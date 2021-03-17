@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
       </span>
     </div>
 
@@ -237,10 +237,10 @@
 #&gt; y       1 100 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 #&gt; band    6   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># removes NA areas</span>
 </div><div class='output co'>#&gt; Simple feature collection with 8190 features and 1 field
-#&gt; geometry type:  POLYGON
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; projected CRS:  UTM Zone 25, Southern Hemisphere
+#&gt; Geometry type: POLYGON
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
+#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt; First 10 features:
 #&gt;      V1                       geometry
 #&gt; 1  TRUE POLYGON ((288776.3 9120761,...
@@ -254,10 +254,10 @@
 #&gt; 9  TRUE POLYGON ((289004.3 9120761,...
 #&gt; 10 TRUE POLYGON ((289032.8 9120761,...</div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># glues polygons together</span>
 </div><div class='output co'>#&gt; Simple feature collection with 155 features and 1 field
-#&gt; geometry type:  POLYGON
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; projected CRS:  UTM Zone 25, Southern Hemisphere
+#&gt; Geometry type: POLYGON
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
+#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt; First 10 features:
 #&gt;    L7_ETMs.tif                       geometry
 #&gt; 1            0 POLYGON ((289517.3 9120761,...
@@ -273,10 +273,10 @@
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='st_as_sf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span>
 </div><div class='output co'>#&gt; Simple feature collection with 380 features and 1 field
-#&gt; geometry type:  POLYGON
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; projected CRS:  UTM Zone 25, Southern Hemisphere
+#&gt; Geometry type: POLYGON
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
+#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt; First 10 features:
 #&gt;    L7_ETMs.tif                       geometry
 #&gt; 1            0 POLYGON ((289517.3 9120761,...

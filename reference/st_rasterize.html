@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
       </span>
     </div>
 
@@ -195,10 +195,10 @@
 </div><div class='output co'>#&gt; Reading layer `nc.gpkg' from data source `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
 #&gt; Simple feature collection with 100 features and 14 fields
 #&gt; Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
-#&gt; geometry type:  MULTIPOLYGON
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-#&gt; geographic CRS: NAD27</div><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># default grid:</span>
+#&gt; Geometry type: MULTIPOLYGON
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+#&gt; Geodetic CRS:  NAD27</div><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># default grid:</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;      AREA       
@@ -232,10 +232,10 @@
 </div><div class='img'><img src='st_rasterize-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>ls</span> <span class='op'>=</span> <span class='fu'>st_sf</span><span class='op'>(</span>a <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='fu'>st_sfc</span><span class='op'>(</span><span class='fu'>st_linestring</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>0</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1.1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
    <span class='fu'>st_linestring</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.05</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Simple feature collection with 2 features and 1 field
-#&gt; geometry type:  LINESTRING
-#&gt; dimension:      XY
-#&gt; bbox:           xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
-#&gt; CRS:            NA
+#&gt; Geometry type: LINESTRING
+#&gt; Dimension:     XY
+#&gt; Bounding box:  xmin: 0 ymin: 0 xmax: 1.1 ymax: 1
+#&gt; CRS:           NA
 #&gt;   a
 #&gt; 1 1
 #&gt; 2 2

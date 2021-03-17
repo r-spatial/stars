@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-3</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@
 <a href="#polygonizing" class="anchor"></a>Polygonizing</h2>
 <p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>,contour_lines<span class="op">=</span><span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
@@ -166,10 +166,10 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">## Simple feature collection with 2500 features and 2 fields</span>
-<span class="co">## geometry type:  POINT</span>
-<span class="co">## dimension:      XY</span>
-<span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
+<span class="co">## Geometry type: POINT</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
+<span class="co">## Projected CRS: UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</span>
 <span class="co">## 1              14             11 POINT (288790.5 9120747)</span>
@@ -186,10 +186,10 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span>, long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">## Simple feature collection with 5000 features and 2 fields</span>
-<span class="co">## geometry type:  POINT</span>
-<span class="co">## dimension:      XY</span>
-<span class="co">## bbox:           xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
+<span class="co">## Geometry type: POINT</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
+<span class="co">## Projected CRS: UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    band L7_ETMs.tif                 geometry</span>
 <span class="co">## 1     1          14 POINT (288790.5 9120747)</span>
@@ -211,10 +211,10 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">## Simple feature collection with 2500 features and 2 fields</span>
-<span class="co">## geometry type:  POLYGON</span>
-<span class="co">## dimension:      XY</span>
-<span class="co">## bbox:           xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span>
-<span class="co">## projected CRS:  UTM Zone 25, Southern Hemisphere</span>
+<span class="co">## Geometry type: POLYGON</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span>
+<span class="co">## Projected CRS: UTM Zone 25, Southern Hemisphere</span>
 <span class="co">## First 10 features:</span>
 <span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</span>
 <span class="co">## 1              14             11 POLYGON ((288776.3 9120761,...</span>
