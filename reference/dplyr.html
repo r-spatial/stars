@@ -174,7 +174,11 @@
 
 <span class='fu'>slice.stars</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>along</span>, <span class='va'>index</span>, <span class='va'>...</span>, drop <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>index</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span>
 
-<span class='fu'>slice.stars_proxy</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>slice.stars_proxy</span><span class='op'>(</span><span class='va'>.data</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>replace_na.stars</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>replace</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>replace_na.stars_proxy</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -206,6 +210,14 @@
     <tr>
       <th>drop</th>
       <td><p>logical; drop dimensions that only have a single index?</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>data set to work on</p></td>
+    </tr>
+    <tr>
+      <th>replace</th>
+      <td><p>see <a href='https://tidyr.tidyverse.org/reference/replace_na.html'>replace_na</a>: list with variable=value pairs, where value is the replacement value for NA's</p></td>
     </tr>
     </table>
 
