@@ -158,6 +158,28 @@ as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
 	)
 }
 
+#' @name dplyr
+#' @param data data set to work on
+#' @param replace see \link[tidyr]{replace_na}: list with variable=value pairs, where value is the replacement value for NA's
+replace_na.stars = function(data, replace, ...) {
+    if (!requireNamespace("tidyr", quietly = TRUE))
+        stop("package tidyr required, please install it first") # nocov
+    if (!requireNamespace("cubelyr", quietly = TRUE))
+        stop("package cubelyr required, please install it first") # nocov
+	cb = cubelyr::as.tbl_cube(data)
+	d = dim(cb$mets[[1]])
+	cb$mets = as.data.frame(lapply(cb$mets, as.vector))
+	cb$mets = unclass(tidyr::replace_na(cb$mets, replace, ...))
+	for (i in seq_along(cb$mets))
+		cb$mets[[i]] = structure(cb$mets[[i]], dim = d)
+	st_as_stars(cb$mets, dimensions = get_dims(cb$dims, st_dimensions(data)))
+}
+
+#' @name dplyr
+replace_na.stars_proxy = function(data, ...) {
+	collect(data, match.call(), "replace_na", "data", env = environment())
+}
+
 
 #' ggplot geom for stars objects
 #' 
@@ -251,6 +273,8 @@ register_all_s3_methods = function() {
 	register_s3_method("dplyr", "slice", "stars_proxy")
 	register_s3_method("dplyr", "transmute", "stars")
 	register_s3_method("dplyr", "transmute", "stars_proxy")
+	register_s3_method("tidyr", "replace_na", "stars")
+	register_s3_method("tidyr", "replace_na", "stars_proxy")
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("sf", "st_join", "stars")
 	register_s3_method("spatstat.geom", "as.owin", "stars")

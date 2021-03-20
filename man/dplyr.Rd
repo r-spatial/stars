@@ -15,6 +15,8 @@
 \alias{as.tbl_cube.stars}
 \alias{slice.stars}
 \alias{slice.stars_proxy}
+\alias{replace_na.stars}
+\alias{replace_na.stars_proxy}
 \title{dplyr verbs for stars objects}
 \usage{
 filter.stars(.data, ...)
@@ -42,6 +44,10 @@ as.tbl_cube.stars(x, ...)
 slice.stars(.data, along, index, ..., drop = length(index) == 1)
 
 slice.stars_proxy(.data, ...)
+
+replace_na.stars(data, replace, ...)
+
+replace_na.stars_proxy(data, ...)
 }
 \arguments{
 \item{.data}{object of class \code{stars}}
@@ -57,6 +63,10 @@ slice.stars_proxy(.data, ...)
 \item{index}{integer value(s) for this index}
 
 \item{drop}{logical; drop dimensions that only have a single index?}
+
+\item{data}{data set to work on}
+
+\item{replace}{see \link[tidyr]{replace_na}: list with variable=value pairs, where value is the replacement value for NA's}
 }
 \description{
 dplyr verbs for stars objects

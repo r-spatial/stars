@@ -73,6 +73,7 @@ Suggests:
     starsdata,
     terra,
     testthat,
+    tidyr,
     viridis,
     xts,
     zoo

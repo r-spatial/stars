@@ -367,6 +367,19 @@ aperm.stars_proxy = function(a, perm = NULL, ...) {
 }
 
 #' @export
+is.na.stars_proxy = function(x) {
+	collect(x, match.call(), "is.na", "x", env = environment())
+}
+
+#' @export
+"[<-.stars_proxy" = function(x, i, value) {
+	if (inherits(i, "stars_proxy"))
+		i = st_as_stars(i) # FIXME: at all cost? should this be done elsewhere?
+	collect(x, match.call(), "[<-", c("x", "i", "value"), env = environment())
+}
+
+
+#' @export
 split.stars_proxy = function(x, ...) {
 	collect(x, match.call(), "split", env = environment())
 }

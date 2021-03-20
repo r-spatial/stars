@@ -16,7 +16,7 @@ theme_stars(...)
 
 \item{...}{see \link[ggplot2:geom_tile]{geom_raster}}
 
-\item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample}
+\item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample; can be specified for each dimension, e.g. \code{c(5,5,0)} to downsample the first two dimensions but not the third.}
 
 \item{sf}{logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2:ggsf]{geom_sf}.}
 }

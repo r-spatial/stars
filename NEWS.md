@@ -1,3 +1,9 @@
+# version 0.5-3
+
+* add `[<-` and `is.na` methods for proxy objects; #402
+
+* add `replace_na` methods; #402
+
 # version 0.5-2
 
 * read and write factor levels as GDAL category names; write color table; #392
