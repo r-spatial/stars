@@ -193,7 +193,7 @@ fetch = function(x, downsample = 0, ...) {
 	if (!is.null(bands)) {
 		if (!is.null(bands$values) && is.numeric(bands$values)) 
 			rasterio$bands = bands$values
-		else if (!is.na(bands$from) && !is.na(bands$to))
+		else if (!is.na(bands$from) && !is.na(bands$to) && (bands$to - bands$from + 1) < length(x[[1]]))
 			rasterio$bands = seq(bands$from, bands$to)
 	}
 
