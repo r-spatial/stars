@@ -298,8 +298,6 @@ create_dimensions = function(lst, raster = NULL) {
 get_crs = function(pr) {
 	if (!is.null(pr$crs))
 		pr$crs
-	else if (!is.null(pr$proj4string)) # older sf
-		st_crs(pr$proj4string)
 	else if (!is.null(pr$wkt)) # newer sf, but GDAL < 3.0.0
 		st_crs(pr$wkt)
 	else if (!is.null(pr$proj_wkt))

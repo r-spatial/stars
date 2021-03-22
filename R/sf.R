@@ -229,7 +229,7 @@ st_as_stars.sf = function(.x, ..., name = attr(.x, "sf_column")) {
 	if (length(list(...)))
 		stop("... arguments ignored")
 	dimensions = create_dimensions(setNames(list(create_dimension(1, length(geom), 
-		refsys = st_crs(geom)$proj4string, values = geom)), name))
+		refsys = st_crs(geom), values = geom)), name))
 	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
 	st_as_stars(lst, dimensions = dimensions)
 }
