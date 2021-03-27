@@ -81,7 +81,7 @@ transform_grid_grid = function(x, target) {
 	dxy = attr(target, "raster")$dimensions
 
 	from = st_crs(target)
-	pts = sf_project(from = from, to = st_crs(x), pts = new_pts)
+	pts = sf::sf_project(from = from, to = st_crs(x), pts = new_pts)
 
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
