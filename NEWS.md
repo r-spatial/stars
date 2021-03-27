@@ -1,5 +1,7 @@
 # version 0.5-3
 
+* `write_stars` deals better with `stars_proxy` objects; #404
+
 * fix regression in reading some `stars_proxy` objects; #379
 
 * add `[<-` (partially) and `is.na` methods for proxy objects; #402

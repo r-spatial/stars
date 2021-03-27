@@ -74,7 +74,8 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	if (!missing(layer))
 		obj = obj[layer]
 
-	if (length(obj[[1]]) > 1 || length(obj) > 1) { # collapse bands:
+	cl = attr(obj, "call_list")
+	if (is.null(cl) && (length(obj[[1]]) > 1 || length(obj) > 1)) { # collapse bands:
 		out_file = tempfile(fileext = ".vrt")
 		gdal_utils("buildvrt", unlist(obj), out_file, options = "-separate")
 		obj[[1]] = out_file
@@ -109,7 +110,8 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 				di_read[[2]]$to   = di_write[[2]]$to + di_from[2] -1
 				di_write[[2]]$offset = with(di_read[[2]], offset + delta * (from - 1))
 				chunk = st_as_stars(structure(obj, dimensions = di_read))
-				attr(chunk, "dimensions") <- di_write
+				attr(chunk, "dimensions")[[1]] <- di_write[[1]] # x
+				attr(chunk, "dimensions")[[2]] <- di_write[[2]] # y
 
 				if (! created) { # create:
 					d = st_dimensions(chunk)
