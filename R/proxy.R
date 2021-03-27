@@ -418,11 +418,12 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	}
 	mc = match.call()
 	lst = as.list(mc)
+	cl = attr(x, "call_list")
 	if (length(lst) < 3)
 		return(x) # 
 	if (missing(i)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
-	if (inherits(i, c("character", "logical", "numeric"))) {
+	if (inherits(i, c("character", "logical", "numeric")) && is.null(cl)) {
 		if (!is.null(unclass(x)[[i]])) { # can/should be selected now:
 			if (!is.null(resolutions <- attr(x, "resolutions")))
 				resolutions = resolutions[i, ]
@@ -444,8 +445,8 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	}
 
 	# return:
-	if (length(lst) == 3 && isTRUE(lst[["i"]])) 
-		x
+	if (length(lst) == 3 && isTRUE(lst[["i"]]) && is.null(cl)) # all is done
+		x 
 	else # still processing the geometries inside the bbox:
 		collect(x, as.call(lst), "[", c("x", "i", "drop", "crop"), 
 			env = environment()) # postpone every arguments > 3 to after reading cells
