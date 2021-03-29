@@ -147,7 +147,7 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 	}
 	no_margin = setdiff(seq_along(dim(X)), MARGIN)
 	n_args_cleaned = function(f, n) sum(!(names(as.list(args(f))) %in% c("", "...", n)))
-	ret = if (n_args_cleaned(FUN, names(list(...))) == 1) # single arg, can't chunk ...
+	ret = if (n_args_cleaned(FUN, names(list(...))) <= 1) # single arg, can't chunk ...
 			lapply(X, fn, ...) 
 		else # call FUN on full chunks:
 			lapply(X, function(a) do.call(FUN, setNames(append(asplit(a, no_margin), list(...)), NULL)))
