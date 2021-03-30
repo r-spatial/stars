@@ -35,7 +35,7 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param layer attribute name; if missing, the first attribute is written
 #' @param ... passed on to \link[sf:gdal]{gdal_write}
 #' @param driver driver driver name; see \link[sf]{st_drivers}
-#' @param options character vector with options
+#' @param options character vector with dataset creation options, passed on to GDAL
 #' @param type character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
 #' @param update logical; if \code{TRUE}, an existing file is being updated

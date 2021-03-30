@@ -49,7 +49,7 @@ detect.driver(filename)
 
 \item{driver}{driver driver name; see \link[sf]{st_drivers}}
 
-\item{options}{character vector with options}
+\item{options}{character vector with dataset creation options, passed on to GDAL}
 
 \item{type}{character; output binary type, one of: \code{Byte} for eight bit unsigned integer, \code{UInt16} for sixteen bit unsigned integer, \code{Int16} for sixteen bit signed integer, \code{UInt32} for thirty two bit unsigned integer, \code{Int32} for thirty two bit signed integer, \code{Float32} for thirty two bit floating point, \code{Float64} for sixty four bit floating point.}
 
