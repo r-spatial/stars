@@ -179,6 +179,9 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			dest = tempfile(fileext = ".tif")
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
 		} else {  # dest exists, and should be used: should use warper rather than warp
+			# https://github.com/r-spatial/stars/issues/407
+			if (length(dim(src)) == 3 && length(dim(dest)) == 2)
+				dest = merge(do.call(c, lapply(seq_len(dim(src)[3]), function(x) dest)))
 			dest = if (! inherits(dest, "stars_proxy")) {
 					dest[[1]] = NA_real_ * dest[[1]] # blank out values
 					delete = !debug
