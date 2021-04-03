@@ -1,5 +1,7 @@
 # version 0.5-3
 
+* `st_rasterize` rasterizes multiple attributes, and handles factors
+
 * `write_stars` deals better with `stars_proxy` objects; #404
 
 * fix regression in reading some `stars_proxy` objects; #379
