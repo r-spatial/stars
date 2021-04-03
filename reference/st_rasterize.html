@@ -199,32 +199,64 @@
 #&gt; Dimension:     XY
 #&gt; Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
 #&gt; Geodetic CRS:  NAD27</div><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># default grid:</span>
-</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 12 attributes
 #&gt; attribute(s):
-#&gt;      AREA       
-#&gt;  Min.   :0.042  
-#&gt;  1st Qu.:0.108  
-#&gt;  Median :0.142  
-#&gt;  Mean   :0.145  
-#&gt;  3rd Qu.:0.181  
-#&gt;  Max.   :0.241  
-#&gt;  NA's   :30904  
+#&gt;      AREA          PERIMETER         CNTY_          CNTY_ID     
+#&gt;  Min.   :0.042   Min.   : NA     Min.   : NA     Min.   : NA    
+#&gt;  1st Qu.:0.108   1st Qu.: NA     1st Qu.: NA     1st Qu.: NA    
+#&gt;  Median :0.142   Median : NA     Median : NA     Median : NA    
+#&gt;  Mean   :0.145   Mean   :NaN     Mean   :NaN     Mean   :NaN    
+#&gt;  3rd Qu.:0.181   3rd Qu.: NA     3rd Qu.: NA     3rd Qu.: NA    
+#&gt;  Max.   :0.241   Max.   : NA     Max.   : NA     Max.   : NA    
+#&gt;  NA's   :30904   NA's   :65001   NA's   :65001   NA's   :65001  
+#&gt;     FIPSNO         CRESS_ID          BIR74           SID74      
+#&gt;  Min.   : NA     Min.   : NA     Min.   : NA     Min.   : NA    
+#&gt;  1st Qu.: NA     1st Qu.: NA     1st Qu.: NA     1st Qu.: NA    
+#&gt;  Median : NA     Median : NA     Median : NA     Median : NA    
+#&gt;  Mean   :NaN     Mean   :NaN     Mean   :NaN     Mean   :NaN    
+#&gt;  3rd Qu.: NA     3rd Qu.: NA     3rd Qu.: NA     3rd Qu.: NA    
+#&gt;  Max.   : NA     Max.   : NA     Max.   : NA     Max.   : NA    
+#&gt;  NA's   :65001   NA's   :65001   NA's   :65001   NA's   :65001  
+#&gt;     NWBIR74          BIR79           SID79          NWBIR79     
+#&gt;  Min.   : NA     Min.   : NA     Min.   : NA     Min.   : NA    
+#&gt;  1st Qu.: NA     1st Qu.: NA     1st Qu.: NA     1st Qu.: NA    
+#&gt;  Median : NA     Median : NA     Median : NA     Median : NA    
+#&gt;  Mean   :NaN     Mean   :NaN     Mean   :NaN     Mean   :NaN    
+#&gt;  3rd Qu.: NA     3rd Qu.: NA     3rd Qu.: NA     3rd Qu.: NA    
+#&gt;  Max.   : NA     Max.   : NA     Max.   : NA     Max.   : NA    
+#&gt;  NA's   :65001   NA's   :65001   NA's   :65001   NA's   :65001  
 #&gt; dimension(s):
 #&gt;   from  to   offset      delta refsys point values x/y
 #&gt; x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
 #&gt; y    1 141  36.5896 -0.0192484  NAD27 FALSE   NULL [y]</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>x</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='img'><img src='st_rasterize-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># a bit more customized grid:</span>
 <span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span>, <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span>, nx <span class='op'>=</span> <span class='fl'>100</span>, ny <span class='op'>=</span> <span class='fl'>50</span>, values <span class='op'>=</span> <span class='cn'>NA_real_</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
+</div><div class='output co'>#&gt; stars object with 2 dimensions and 12 attributes
 #&gt; attribute(s):
-#&gt;      AREA        
-#&gt;  Min.   :0.0420  
-#&gt;  1st Qu.:0.1080  
-#&gt;  Median :0.1420  
-#&gt;  Mean   :0.1455  
-#&gt;  3rd Qu.:0.1810  
-#&gt;  Max.   :0.2410  
-#&gt;  NA's   :2373    
+#&gt;      AREA           PERIMETER        CNTY_         CNTY_ID        FIPSNO     
+#&gt;  Min.   :0.0420   Min.   : NA    Min.   : NA    Min.   : NA    Min.   : NA   
+#&gt;  1st Qu.:0.1080   1st Qu.: NA    1st Qu.: NA    1st Qu.: NA    1st Qu.: NA   
+#&gt;  Median :0.1420   Median : NA    Median : NA    Median : NA    Median : NA   
+#&gt;  Mean   :0.1455   Mean   :NaN    Mean   :NaN    Mean   :NaN    Mean   :NaN   
+#&gt;  3rd Qu.:0.1810   3rd Qu.: NA    3rd Qu.: NA    3rd Qu.: NA    3rd Qu.: NA   
+#&gt;  Max.   :0.2410   Max.   : NA    Max.   : NA    Max.   : NA    Max.   : NA   
+#&gt;  NA's   :2373     NA's   :5000   NA's   :5000   NA's   :5000   NA's   :5000  
+#&gt;    CRESS_ID         BIR74          SID74         NWBIR74         BIR79     
+#&gt;  Min.   : NA    Min.   : NA    Min.   : NA    Min.   : NA    Min.   : NA   
+#&gt;  1st Qu.: NA    1st Qu.: NA    1st Qu.: NA    1st Qu.: NA    1st Qu.: NA   
+#&gt;  Median : NA    Median : NA    Median : NA    Median : NA    Median : NA   
+#&gt;  Mean   :NaN    Mean   :NaN    Mean   :NaN    Mean   :NaN    Mean   :NaN   
+#&gt;  3rd Qu.: NA    3rd Qu.: NA    3rd Qu.: NA    3rd Qu.: NA    3rd Qu.: NA   
+#&gt;  Max.   : NA    Max.   : NA    Max.   : NA    Max.   : NA    Max.   : NA   
+#&gt;  NA's   :5000   NA's   :5000   NA's   :5000   NA's   :5000   NA's   :5000  
+#&gt;      SID79         NWBIR79    
+#&gt;  Min.   : NA    Min.   : NA   
+#&gt;  1st Qu.: NA    1st Qu.: NA   
+#&gt;  Median : NA    Median : NA   
+#&gt;  Mean   :NaN    Mean   :NaN   
+#&gt;  3rd Qu.: NA    3rd Qu.: NA   
+#&gt;  Max.   : NA    Max.   : NA   
+#&gt;  NA's   :5000   NA's   :5000  
 #&gt; dimension(s):
 #&gt;   from  to   offset      delta refsys point values x/y
 #&gt; x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
