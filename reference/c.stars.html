@@ -195,13 +195,9 @@ combine those that dimensions matching to the first array</p></td>
 <span class='op'>(</span><span class='va'>new</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
 #&gt; attribute(s):
-#&gt;   L7_ETMs.tif     L7_ETMs.tif.1   
-#&gt;  Min.   :  1.00   Min.   :  1.00  
-#&gt;  1st Qu.: 54.00   1st Qu.: 54.00  
-#&gt;  Median : 69.00   Median : 69.00  
-#&gt;  Mean   : 68.91   Mean   : 68.91  
-#&gt;  3rd Qu.: 86.00   3rd Qu.: 86.00  
-#&gt;  Max.   :255.00   Max.   :255.00  
+#&gt;                Min. 1st Qu. Median     Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif       1      54     69 68.91242      86  255
+#&gt; L7_ETMs.tif.1     1      54     69 68.91242      86  255
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -209,13 +205,9 @@ combine those that dimensions matching to the first array</p></td>
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>new</span><span class='op'>)</span> <span class='co'># collapses two arrays into one with an additional dimension</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
 #&gt; attribute(s):
-#&gt;   L7_ETMs.tif     L7_ETMs.tif.1   
-#&gt;  Min.   :  1.00   Min.   :  1.00  
-#&gt;  1st Qu.: 54.00   1st Qu.: 54.00  
-#&gt;  Median : 69.00   Median : 69.00  
-#&gt;  Mean   : 68.91   Mean   : 68.91  
-#&gt;  3rd Qu.: 86.00   3rd Qu.: 86.00  
-#&gt;  Max.   :255.00   Max.   :255.00  
+#&gt;                Min. 1st Qu. Median     Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif       1      54     69 68.91242      86  255
+#&gt; L7_ETMs.tif.1     1      54     69 68.91242      86  255
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -223,13 +215,8 @@ combine those that dimensions matching to the first array</p></td>
 #&gt; band    1   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>x</span>, along <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s), summary of first 1e+05 cells:
-#&gt;   L7_ETMs.tif    
-#&gt;  Min.   : 47.00  
-#&gt;  1st Qu.: 65.00  
-#&gt;  Median : 76.00  
-#&gt;  Mean   : 77.34  
-#&gt;  3rd Qu.: 87.00  
-#&gt;  Max.   :255.00  
+#&gt;              Min. 1st Qu. Median    Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif    47      65     76 77.3419      87  255
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]

@@ -142,13 +142,8 @@
 <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##   L7_ETMs.tif    </span>
-<span class="co">##  Min.   : 23.00  </span>
-<span class="co">##  1st Qu.: 54.00  </span>
-<span class="co">##  Median : 63.00  </span>
-<span class="co">##  Mean   : 62.06  </span>
-<span class="co">##  3rd Qu.: 73.25  </span>
-<span class="co">##  Max.   :235.00  </span>
+<span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## L7_ETMs.tif    23      54     63 62.05977   73.25  235</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       6 105  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -184,13 +179,8 @@
 <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##   L7_ETMs.tif    </span>
-<span class="co">##  Min.   : 29.00  </span>
-<span class="co">##  1st Qu.: 54.00  </span>
-<span class="co">##  Median : 64.00  </span>
-<span class="co">##  Mean   : 62.28  </span>
-<span class="co">##  3rd Qu.: 73.00  </span>
-<span class="co">##  Max.   :107.00  </span>
+<span class="co">##              Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
+<span class="co">## L7_ETMs.tif    29      54     64 62.2825      73  107</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from to  offset  delta                       refsys point values x/y</span>
 <span class="co">## x       2 21  288776  142.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -293,7 +283,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.370   0.160   2.174</code></pre>
+##   2.349   0.188   2.169</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -385,12 +375,12 @@
 <span class="co">## [[1]]</span>
 <span class="co">## adrop(x = x, drop = drop)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55fc331505d0&gt;</span>
+<span class="co">## &lt;environment: 0x55f0977a08b0&gt;</span>
 <span class="co">## </span>
 <span class="co">## [[2]]</span>
 <span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55fc330e6550&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x55f0977158b0&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
@@ -407,13 +397,11 @@
 <code class="sourceCode R"><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">yyy</span><span class="op">)</span><span class="op">)</span> <span class="co"># read, adrop, subset</span>
 <span class="co">## stars object with 3 dimensions and 4 attributes</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##    sst [°*C]        anom [°*C]      err [°*C]   ice [percent]   </span>
-<span class="co">##  Min.   :-1.280   Min.   :0.480   Min.   :0.3   Min.   :0.7600  </span>
-<span class="co">##  1st Qu.:-1.170   1st Qu.:0.620   1st Qu.:0.3   1st Qu.:0.7900  </span>
-<span class="co">##  Median :-1.110   Median :0.690   Median :0.3   Median :0.8100  </span>
-<span class="co">##  Mean   :-1.116   Mean   :0.665   Mean   :0.3   Mean   :0.8063  </span>
-<span class="co">##  3rd Qu.:-1.060   3rd Qu.:0.720   3rd Qu.:0.3   3rd Qu.:0.8200  </span>
-<span class="co">##  Max.   :-0.950   Max.   :0.770   Max.   :0.3   Max.   :0.8500  </span>
+<span class="co">##                Min. 1st Qu. Median       Mean 3rd Qu.  Max.</span>
+<span class="co">## sst [°*C]     -1.28   -1.17  -1.11 -1.1163555   -1.06 -0.95</span>
+<span class="co">## anom [°*C]     0.48    0.62   0.69  0.6649555    0.72  0.77</span>
+<span class="co">## err [°*C]      0.30    0.30   0.30  0.3000000    0.30  0.30</span>
+<span class="co">## ice [percent]  0.76    0.79   0.81  0.8062889    0.82  0.85</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 10              0   0.25      NA    NA   NULL [x]</span>
@@ -443,11 +431,11 @@
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55fc330074a8&gt;</span>
+<span class="co">## &lt;environment: 0x55f0974bbdd0&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.663   0.160   1.467</code></pre>
+##   1.630   0.192   1.456</code></pre>
 </div>
 </div>
 </div>

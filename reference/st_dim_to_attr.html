@@ -175,13 +175,10 @@
 <span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_dim_to_attr</span><span class='op'>(</span><span class='va'>x1</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 3 attributes
 #&gt; attribute(s):
-#&gt;        x                y               band     
-#&gt;  Min.   :288790   Min.   :9110743   Min.   :1.0  
-#&gt;  1st Qu.:291270   1st Qu.:9113244   1st Qu.:2.0  
-#&gt;  Median :293750   Median :9115745   Median :3.5  
-#&gt;  Mean   :293750   Mean   :9115745   Mean   :3.5  
-#&gt;  3rd Qu.:296229   3rd Qu.:9118246   3rd Qu.:5.0  
-#&gt;  Max.   :298708   Max.   :9120747   Max.   :6.0  
+#&gt;            Min. 1st Qu.    Median      Mean 3rd Qu.      Max.
+#&gt; x      288790.5  291270  293749.5  293749.5  296229  298708.5
+#&gt; y     9110743.0 9113244 9115744.8 9115744.8 9118246 9120746.5
+#&gt; band        1.0       2       3.5       3.5       5       6.0
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -190,13 +187,9 @@
 </div><div class='img'><img src='st_dim_to_attr-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_dim_to_attr</span><span class='op'>(</span><span class='va'>x1</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 2 attributes
 #&gt; attribute(s):
-#&gt;        y               band     
-#&gt;  Min.   :9110743   Min.   :1.0  
-#&gt;  1st Qu.:9113244   1st Qu.:2.0  
-#&gt;  Median :9115745   Median :3.5  
-#&gt;  Mean   :9115745   Mean   :3.5  
-#&gt;  3rd Qu.:9118246   3rd Qu.:5.0  
-#&gt;  Max.   :9120747   Max.   :6.0  
+#&gt;          Min. 1st Qu.    Median      Mean 3rd Qu.    Max.
+#&gt; y     9110743 9113244 9115744.8 9115744.8 9118246 9120747
+#&gt; band        1       2       3.5       3.5       5       6
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -205,13 +198,8 @@
 </div><div class='img'><img src='st_dim_to_attr-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>x</span><span class='op'>=</span> <span class='fu'>st_dim_to_attr</span><span class='op'>(</span><span class='va'>x1</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;      band     
-#&gt;  Min.   :1.0  
-#&gt;  1st Qu.:2.0  
-#&gt;  Median :3.5  
-#&gt;  Mean   :3.5  
-#&gt;  3rd Qu.:5.0  
-#&gt;  Max.   :6.0  
+#&gt;       Min. 1st Qu. Median Mean 3rd Qu. Max.
+#&gt; band     1       2    3.5  3.5       5    6
 #&gt; dimension(s):
 #&gt;      from  to  offset delta                       refsys point values x/y
 #&gt; x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]

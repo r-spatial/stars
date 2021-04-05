@@ -152,13 +152,8 @@
 <code class="sourceCode R"><span class="va">x</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##   L7_ETMs.tif    </span>
-<span class="co">##  Min.   :  1.00  </span>
-<span class="co">##  1st Qu.: 54.00  </span>
-<span class="co">##  Median : 69.00  </span>
-<span class="co">##  Mean   : 68.91  </span>
-<span class="co">##  3rd Qu.: 86.00  </span>
-<span class="co">##  Max.   :255.00  </span>
+<span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## L7_ETMs.tif     1      54     69 68.91242      86  255</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -226,20 +221,13 @@
 <code class="sourceCode R"><span class="op">(</span><span class="va">x.spl</span> <span class="op">=</span> <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"band"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 6 attributes</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##       X1               X2               X3               X4         </span>
-<span class="co">##  Min.   : 47.00   Min.   : 32.00   Min.   : 21.00   Min.   :  9.00  </span>
-<span class="co">##  1st Qu.: 67.00   1st Qu.: 55.00   1st Qu.: 49.00   1st Qu.: 52.00  </span>
-<span class="co">##  Median : 78.00   Median : 66.00   Median : 63.00   Median : 63.00  </span>
-<span class="co">##  Mean   : 79.15   Mean   : 67.57   Mean   : 64.36   Mean   : 59.24  </span>
-<span class="co">##  3rd Qu.: 89.00   3rd Qu.: 79.00   3rd Qu.: 77.00   3rd Qu.: 75.00  </span>
-<span class="co">##  Max.   :255.00   Max.   :255.00   Max.   :255.00   Max.   :255.00  </span>
-<span class="co">##       X5               X6         </span>
-<span class="co">##  Min.   :  1.00   Min.   :  1.00  </span>
-<span class="co">##  1st Qu.: 63.00   1st Qu.: 32.00  </span>
-<span class="co">##  Median : 89.00   Median : 60.00  </span>
-<span class="co">##  Mean   : 83.18   Mean   : 59.98  </span>
-<span class="co">##  3rd Qu.:112.00   3rd Qu.: 88.00  </span>
-<span class="co">##  Max.   :255.00   Max.   :255.00  </span>
+<span class="co">##     Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## X1    47      67     78 79.14772      89  255</span>
+<span class="co">## X2    32      55     66 67.57465      79  255</span>
+<span class="co">## X3    21      49     63 64.35886      77  255</span>
+<span class="co">## X4     9      52     63 59.23541      75  255</span>
+<span class="co">## X5     1      63     89 83.18266     112  255</span>
+<span class="co">## X6     1      32     60 59.97521      88  255</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##   from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -247,13 +235,8 @@
 <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##        X         </span>
-<span class="co">##  Min.   :  1.00  </span>
-<span class="co">##  1st Qu.: 54.00  </span>
-<span class="co">##  Median : 69.00  </span>
-<span class="co">##  Mean   : 68.91  </span>
-<span class="co">##  3rd Qu.: 86.00  </span>
-<span class="co">##  Max.   :255.00  </span>
+<span class="co">##    Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## X     1      54     69 68.91242      86  255</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##            from  to  offset delta                       refsys point    values</span>
 <span class="co">## x             1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE      NULL</span>
@@ -271,13 +254,8 @@
   <span class="fu"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span><span class="op">(</span>names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"band"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##   L7_ETMs.tif    </span>
-<span class="co">##  Min.   :  1.00  </span>
-<span class="co">##  1st Qu.: 54.00  </span>
-<span class="co">##  Median : 69.00  </span>
-<span class="co">##  Mean   : 68.91  </span>
-<span class="co">##  3rd Qu.: 86.00  </span>
-<span class="co">##  Max.   :255.00  </span>
+<span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## L7_ETMs.tif     1      54     69 68.91242      86  255</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point          values</span>
 <span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL</span>
@@ -303,13 +281,9 @@
 <span class="va">x</span>
 <span class="co">## stars object with 3 dimensions and 2 attributes</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##   L7_ETMs.tif          two       </span>
-<span class="co">##  Min.   :  1.00   Min.   :  2.0  </span>
-<span class="co">##  1st Qu.: 54.00   1st Qu.:108.0  </span>
-<span class="co">##  Median : 69.00   Median :138.0  </span>
-<span class="co">##  Mean   : 68.91   Mean   :137.8  </span>
-<span class="co">##  3rd Qu.: 86.00   3rd Qu.:172.0  </span>
-<span class="co">##  Max.   :255.00   Max.   :510.0  </span>
+<span class="co">##              Min. 1st Qu. Median      Mean 3rd Qu. Max.</span>
+<span class="co">## L7_ETMs.tif     1      54     69  68.91242      86  255</span>
+<span class="co">## two             2     108    138 137.82484     172  510</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -327,13 +301,8 @@
 <code class="sourceCode R"><span class="va">x</span><span class="op">[</span><span class="st">"two"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, , <span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##       two       </span>
-<span class="co">##  Min.   : 36.0  </span>
-<span class="co">##  1st Qu.:100.0  </span>
-<span class="co">##  Median :116.0  </span>
-<span class="co">##  Mean   :119.7  </span>
-<span class="co">##  3rd Qu.:136.0  </span>
-<span class="co">##  Max.   :470.0  </span>
+<span class="co">##      Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## two    36     100    116 119.7326     136  470</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from  to  offset delta                       refsys point values x/y</span>
 <span class="co">## x       1  10  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
@@ -379,14 +348,9 @@
 <code class="sourceCode R"><span class="va">w</span>
 <span class="co">## stars object with 3 dimensions and 2 attributes</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##    pr [mm/m]         tas [C]      </span>
-<span class="co">##  Min.   :  0.59   Min.   :-0.421  </span>
-<span class="co">##  1st Qu.: 56.14   1st Qu.: 8.899  </span>
-<span class="co">##  Median : 81.88   Median :15.658  </span>
-<span class="co">##  Mean   :101.26   Mean   :15.489  </span>
-<span class="co">##  3rd Qu.:121.07   3rd Qu.:21.780  </span>
-<span class="co">##  Max.   :848.55   Max.   :29.386  </span>
-<span class="co">##  NA's   :7116     NA's   :7116    </span>
+<span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span>
+<span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span>
+<span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from to offset  delta  refsys point                    values x/y</span>
 <span class="co">## x       1 81    -85  0.125      NA    NA                      NULL [x]</span>
@@ -409,14 +373,9 @@
 <span class="co">##  assuming WGS84 Lat/Lon.</span>
 <span class="co">## stars object with 3 dimensions and 2 attributes</span>
 <span class="co">## attribute(s):</span>
-<span class="co">##    pr [mm/m]         tas [C]      </span>
-<span class="co">##  Min.   :  0.59   Min.   :-0.421  </span>
-<span class="co">##  1st Qu.: 56.14   1st Qu.: 8.899  </span>
-<span class="co">##  Median : 81.88   Median :15.658  </span>
-<span class="co">##  Mean   :101.26   Mean   :15.489  </span>
-<span class="co">##  3rd Qu.:121.07   3rd Qu.:21.780  </span>
-<span class="co">##  Max.   :848.55   Max.   :29.386  </span>
-<span class="co">##  NA's   :7116     NA's   :7116    </span>
+<span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span>
+<span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span>
+<span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##           from to offset delta  refsys point                    values x/y</span>
 <span class="co">## longitude    1 81    -85 0.125  WGS 84    NA                      NULL [x]</span>
@@ -446,14 +405,11 @@
 <span class="op">(</span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 4 dimensions and 4 attributes</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##    sst [°*C]       anom [°*C]      err [°*C]     ice [percent]  </span>
-<span class="co">##  Min.   :-1.80   Min.   :-4.69   Min.   :0.110   Min.   :0.010  </span>
-<span class="co">##  1st Qu.:-1.19   1st Qu.:-0.06   1st Qu.:0.300   1st Qu.:0.730  </span>
-<span class="co">##  Median :-1.05   Median : 0.52   Median :0.300   Median :0.830  </span>
-<span class="co">##  Mean   :-0.32   Mean   : 0.23   Mean   :0.295   Mean   :0.766  </span>
-<span class="co">##  3rd Qu.:-0.20   3rd Qu.: 0.71   3rd Qu.:0.300   3rd Qu.:0.870  </span>
-<span class="co">##  Max.   : 9.36   Max.   : 3.70   Max.   :0.480   Max.   :1.000  </span>
-<span class="co">##  NA's   :13360   NA's   :13360   NA's   :13360   NA's   :27377  </span>
+<span class="co">##                Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's</span>
+<span class="co">## sst [°*C]     -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360</span>
+<span class="co">## anom [°*C]    -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360</span>
+<span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span>
+<span class="co">## ice [percent]  0.01    0.73   0.83  0.7657695    0.87 1.00 27377</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##      from   to         offset  delta  refsys point values x/y</span>
 <span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
@@ -568,13 +524,8 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##     traffic     </span>
-<span class="co">##  Min.   : 0.00  </span>
-<span class="co">##  1st Qu.: 8.00  </span>
-<span class="co">##  Median :10.00  </span>
-<span class="co">##  Mean   :10.02  </span>
-<span class="co">##  3rd Qu.:12.00  </span>
-<span class="co">##  Max.   :26.00  </span>
+<span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## traffic     0       8     10 10.01403      12   29</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
