@@ -544,9 +544,8 @@ dim.dimensions = function(x) {
 		lengths(expand_dimensions(x)) # FIXME: optimise?
 }
 
-
 #' @export
-print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
+as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	lst = lapply(x, function(y) {
 			if (length(y$values) > 3) {
 				y$values = if (is.array(y$values))
@@ -575,12 +574,18 @@ print.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")
-	if (!any(is.na(r$dimensions))) {
+	if (! any(is.na(r$dimensions))) {
 		ret$raster = rep("", nrow(ret))
 		ret[r$dimensions[1], "raster"] = "[x]"
 		ret[r$dimensions[2], "raster"] = "[y]"
 		names(ret) = c(names(lst[[1]]), "x/y")
 	}
+	ret
+}
+
+#' @export
+print.dimensions = function(x, ...) {
+	ret = as.data.frame(x, ...)
 	print(ret)
 	print(attr(x, "raster"))
 	invisible(ret)

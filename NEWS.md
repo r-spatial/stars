@@ -1,12 +1,12 @@
 # version 0.5-3
 
-* `st_rasterize` rasterizes multiple attributes, and handles factors
+* `st_rasterize` rasterizes multiple attributes, and handles factors (when sf >= 0.9-9)
 
 * `write_stars` deals better with `stars_proxy` objects; #404
 
 * fix regression in reading some `stars_proxy` objects; #379
 
-* add `[<-` (partially) and `is.na` methods for proxy objects; #402
+* add `[<-` (partially) and `is.na` methods for `stars_proxy` objects; #402
 
 * add `replace_na` methods; #402
 
