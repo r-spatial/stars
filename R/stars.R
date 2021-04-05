@@ -375,7 +375,10 @@ print.stars = function(x, ..., n = 1e5) {
 			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
 		}
 		names(df) = add_units(x)
-		print(summary(df))
+		if (all(sapply(x, is.numeric)))
+			print(do.call(rbind, lapply(df, summary)))
+		else
+			print(summary(df))
 	}
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
