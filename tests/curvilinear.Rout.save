@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -72,14 +72,12 @@ Type 'q()' to quit R.
 /PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- nitrogendioxide_summed_total_column 
- Min.   :0e+00                       
- 1st Qu.:1e-04                       
- Median :1e-04                       
- Mean   :1e-04                       
- 3rd Qu.:1e-04                       
- Max.   :5e-04                       
- NA's   :330                         
+                                             Min.      1st Qu.       Median
+nitrogendioxide_summed_total_column  3.650813e-05 7.451281e-05 8.296968e-05
+                                             Mean      3rd Qu.         Max.
+nitrogendioxide_summed_total_column  8.581399e-05 9.397442e-05 0.0004535302
+                                     NA's
+nitrogendioxide_summed_total_column   330
 dimension(s):
      from  to offset delta refsys point                                 values
 x       1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°]
@@ -92,14 +90,12 @@ time
 curvilinear grid
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- nitrogendioxide_summed_total_column 
- Min.   :0.00005                     
- 1st Qu.:0.00008                     
- Median :0.00008                     
- Mean   :0.00009                     
- 3rd Qu.:0.00009                     
- Max.   :0.00023                     
- NA's   :37                          
+                                           Min.      1st Qu.       Median
+nitrogendioxide_summed_total_column  5.2174e-05 7.538364e-05 8.273005e-05
+                                             Mean      3rd Qu.         Max.
+nitrogendioxide_summed_total_column  8.607436e-05 9.393939e-05 0.0002323525
+                                     NA's
+nitrogendioxide_summed_total_column    37
 dimension(s):
      from to offset delta refsys point                               values x/y
 x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x]
@@ -112,4 +108,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.340   0.172   7.507 
+  7.116   0.112   7.220 

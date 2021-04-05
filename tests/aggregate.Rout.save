@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -33,14 +33,8 @@ space  time
 > (aq = st_as_stars(list(PM10 = air), dimensions = d))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     PM10        
- Min.   :  0.00  
- 1st Qu.:  9.92  
- Median : 14.79  
- Mean   : 17.70  
- 3rd Qu.: 21.99  
- Max.   :274.33  
- NA's   :157659  
+      Min. 1st Qu. Median     Mean 3rd Qu.    Max.   NA's
+PM10     0   9.921 14.792 17.69728  21.992 274.333 157659
 dimension(s):
         from   to     offset  delta refsys point
 station    1   70         NA     NA WGS 84  TRUE
@@ -53,14 +47,8 @@ although coordinates are longitude/latitude, st_intersects assumes that they are
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     PM10        
- Min.   :  1.00  
- 1st Qu.: 11.00  
- Median : 15.57  
- Mean   : 18.17  
- 3rd Qu.: 22.17  
- Max.   :183.27  
- NA's   :8429    
+      Min. 1st Qu.   Median    Mean  3rd Qu.    Max. NA's
+PM10     1      11 15.57425 18.1715 22.17197 183.271 8429
 dimension(s):
          from   to     offset  delta refsys point
 geometry    1    9         NA     NA WGS 84 FALSE
@@ -84,13 +72,8 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
- file311327eac9a8d.tif 
- Min.   : 33.0         
- 1st Qu.:199.2         
- Median :365.5         
- Mean   :365.5         
- 3rd Qu.:531.8         
- Max.   :698.0         
+                       Min. 1st Qu. Median  Mean 3rd Qu. Max.
+file35ce24c1b2759.tif    33  199.25  365.5 365.5  531.75  698
 dimension(s):
      from to offset delta refsys point values x/y
 x       1  2      0     5 WGS 84 FALSE   NULL [x]
@@ -103,13 +86,8 @@ although coordinates are longitude/latitude, st_intersects assumes that they are
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      A1        
- Min.   : 28.0  
- 1st Qu.:194.2  
- Median :360.5  
- Mean   :360.5  
- 3rd Qu.:526.8  
- Max.   :693.0  
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1    28  194.25  360.5 360.5  526.75  693
 dimension(s):
          from to     offset  delta refsys point
 geometry    1  4         NA     NA WGS 84 FALSE
@@ -130,14 +108,8 @@ t                                                                     NULL
 > (a = aggregate(st, tm0, mean, na.rm = TRUE))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      A1        
- Min.   :  1.0  
- 1st Qu.:180.8  
- Median :360.5  
- Mean   :360.5  
- 3rd Qu.:540.2  
- Max.   :720.0  
- NA's   :480    
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+A1     1  180.75  360.5 360.5  540.25  720  480
 dimension(s):
      from to     offset  delta refsys point values x/y
 time    1 10 2019-02-18 1 days   Date    NA   NULL    
@@ -161,14 +133,8 @@ POINT (-10 -10)
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      A1        
- Min.   : 28.0  
- 1st Qu.:194.2  
- Median :360.5  
- Mean   :360.5  
- 3rd Qu.:526.8  
- Max.   :693.0  
- NA's   :6      
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+A1    28  194.25  360.5 360.5  526.75  693    6
 dimension(s):
          from to     offset  delta refsys point
 geometry    1  5         NA     NA WGS 84 FALSE
@@ -182,13 +148,8 @@ although coordinates are longitude/latitude, st_intersects assumes that they are
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      A1        
- Min.   :  1.0  
- 1st Qu.:180.8  
- Median :360.5  
- Mean   :360.5  
- 3rd Qu.:540.2  
- Max.   :720.0  
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1     1  180.75  360.5 360.5  540.25  720
 dimension(s):
          from  to     offset  delta refsys point
 geometry    1 120         NA     NA WGS 84 FALSE
@@ -199,4 +160,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.776   0.044   1.810 
+  1.426   0.076   1.495 

@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -26,13 +26,8 @@ Type 'q()' to quit R.
 > (st = st_as_stars(pop = n))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop       
- Min.   :    0  
- 1st Qu.:    8  
- Median :  538  
- Mean   : 1657  
- 3rd Qu.: 1784  
- Max.   :30757  
+     Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+pop     0       8    538 1657.032    1784 30757
 dimension(s):
        from  to offset delta refsys point              values
 county    1 100     NA    NA     NA    NA  Ashe,...,Brunswick
@@ -42,13 +37,8 @@ year      1   2     NA    NA     NA    NA          1974, 1979
 > st %>% st_set_dimensions(1, st_geometry(nc)) %>% st_set_dimensions(names = c("geometries", "var", "year"))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop       
- Min.   :    0  
- 1st Qu.:    8  
- Median :  538  
- Mean   : 1657  
- 3rd Qu.: 1784  
- Max.   :30757  
+     Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+pop     0       8    538 1657.032    1784 30757
 dimension(s):
            from  to offset delta refsys point
 geometries    1 100     NA    NA  NAD27 FALSE
@@ -61,13 +51,8 @@ year                                                              1974, 1979
 > foo
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop       
- Min.   :    0  
- 1st Qu.:    8  
- Median :  538  
- Mean   : 1657  
- 3rd Qu.: 1784  
- Max.   :30757  
+     Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+pop     0       8    538 1657.032    1784 30757
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -115,13 +100,8 @@ Stokes                 176 MULTIPOLYGON (((-80.02567 3...
 > st_apply(foo, c(1,3), frac)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     frac          
- Min.   :0.000000  
- 1st Qu.:0.001198  
- Median :0.001931  
- Mean   :0.002042  
- 3rd Qu.:0.002599  
- Max.   :0.009554  
+      Min.     1st Qu.      Median        Mean     3rd Qu.       Max.
+frac     0 0.001197874 0.001930504 0.002042241 0.002599348 0.00955414
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -132,13 +112,8 @@ year                                                          1974, 1979
 > st_apply(foo, c(1,3), frac2)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop          
- Min.   :0.000000  
- 1st Qu.:0.001923  
- Median :0.005120  
- Mean   :0.156758  
- 3rd Qu.:0.306530  
- Max.   :0.772727  
+     Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
+pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
        from  to offset delta refsys point
 frac2     1   2     NA    NA     NA    NA
@@ -151,13 +126,8 @@ year                                                          1974, 1979
 > st_apply(foo, c(1,3), frac2an)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop          
- Min.   :0.000000  
- 1st Qu.:0.001923  
- Median :0.005120  
- Mean   :0.156758  
- 3rd Qu.:0.306530  
- Max.   :0.772727  
+     Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
+pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
         from  to offset delta refsys point
 frac2an    1   2     NA    NA     NA    NA
@@ -171,13 +141,8 @@ year                                                           1974, 1979
 > (x = aperm(st_apply(foo, c(1,3), frac2), c(2,3,1)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop          
- Min.   :0.000000  
- 1st Qu.:0.001923  
- Median :0.005120  
- Mean   :0.156758  
- 3rd Qu.:0.306530  
- Max.   :0.772727  
+     Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
+pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -194,13 +159,10 @@ frac2                                             sidsr.SID , nwbr.NWBIR
 > split(foo, 2)
 stars object with 2 dimensions and 3 attributes
 attribute(s):
-      BIR             SID             NWBIR      
- Min.   :  248   Min.   : 0.000   Min.   :    1  
- 1st Qu.: 1177   1st Qu.: 2.000   1st Qu.:  206  
- Median : 2265   Median : 5.000   Median :  742  
- Mean   : 3762   Mean   : 7.515   Mean   : 1202  
- 3rd Qu.: 4451   3rd Qu.: 9.000   3rd Qu.: 1316  
- Max.   :30757   Max.   :57.000   Max.   :11631  
+       Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+BIR     248 1176.75   2265 3761.770 4450.75 30757
+SID       0    2.00      5    7.515    9.00    57
+NWBIR     1  206.00    742 1201.810 1315.75 11631
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -211,13 +173,9 @@ year                                                          1974, 1979
 > split(foo, 3)
 stars object with 2 dimensions and 2 attributes
 attribute(s):
-     1974              1979       
- Min.   :    0.0   Min.   :    0  
- 1st Qu.:    8.0   1st Qu.:    9  
- Median :  501.5   Median :  614  
- Mean   : 1452.4   Mean   : 1862  
- 3rd Qu.: 1580.5   3rd Qu.: 2040  
- Max.   :21588.0   Max.   :30757  
+      Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+1974     0       8  501.5 1452.367 1580.50 21588
+1979     0       9  614.0 1861.697 2040.25 30757
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -255,13 +213,8 @@ GEOGCRS["NAD27",
 although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-      pop       
- Min.   :    0  
- 1st Qu.:    8  
- Median :  538  
- Mean   : 1657  
- 3rd Qu.: 1784  
- Max.   :30757  
+     Min. 1st Qu. Median     Mean 3rd Qu.  Max.
+pop     0       8    538 1657.032    1784 30757
 dimension(s):
        from  to offset delta refsys point
 county    1 100     NA    NA  NAD27 FALSE
@@ -274,4 +227,4 @@ year                                                          1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  1.317   0.067   1.382 
+  1.186   0.056   1.234 

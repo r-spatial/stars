@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -47,7 +47,7 @@ call_list:
 [[1]]
 x[i = i, , , 2:3, drop = drop, crop = crop]
 attr(,".Environment")
-<environment: 0x5630400ebdb8>
+<environment: 0x55d6f1fd1260>
 
 > r+r
 stars_proxy object with 1 attribute in 1 file(s):
@@ -63,18 +63,13 @@ call_list:
 [[1]]
 e1 + e2
 attr(,".Environment")
-<environment: 0x563042ee1e00>
+<environment: 0x55d6f34c2300>
 
 > st_as_stars(sin(r), downsample = 2)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif      
- Min.   :-0.99999  
- 1st Qu.:-0.67677  
- Median : 0.03540  
- Mean   : 0.01811  
- 3rd Qu.: 0.68326  
- Max.   : 0.99991  
+                   Min.   1st Qu.    Median       Mean   3rd Qu.      Max.
+L7_ETMs.tif  -0.9999902 -0.676772 0.0353983 0.01811428 0.6832617 0.9999119
 dimension(s):
      from  to  offset    delta                       refsys point values x/y
 x       1 117  288776  85.0128 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -94,7 +89,7 @@ call_list:
 [[1]]
 aperm(a = a, perm = perm)
 attr(,".Environment")
-<environment: 0x563041827168>
+<environment: 0x55d6f47e43a8>
 
 > plot(r)
 > (xx = c(r,r))
@@ -129,13 +124,8 @@ new_dim L7_ETMs.tif, L7_ETMs.tif
 > st_as_stars(r)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -156,18 +146,13 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x563043c5cbb8>
+<environment: 0x55d6f1d0dcb8>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      max        
- Min.   : 56.00  
- 1st Qu.: 85.00  
- Median : 96.00  
- Mean   : 98.54  
- 3rd Qu.:111.00  
- Max.   :255.00  
+     Min. 1st Qu. Median     Mean 3rd Qu. Max.
+max    56      85     96 98.53718     111  255
 dimension(s):
   from  to  offset   delta                       refsys point values x/y
 x    1 175  288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -187,23 +172,18 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x563042b08be0>
+<environment: 0x55d6f1e5fce0>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x563042b102e8>
+<environment: 0x55d6f1e35d28>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      max        
- Min.   : 56.00  
- 1st Qu.: 85.00  
- Median : 96.00  
- Mean   : 98.54  
- 3rd Qu.:111.00  
- Max.   :255.00  
+     Min. 1st Qu. Median     Mean 3rd Qu. Max.
+max    56      85     96 98.53718     111  255
 dimension(s):
   from  to  offset   delta                       refsys point values x/y
 x    1 175  288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -224,23 +204,18 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x56303f8e9220>
+<environment: 0x55d6f4ace0c0>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x56303f8d3ba0>
+<environment: 0x55d6f4ac2d38>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      max       
- Min.   : 71.0  
- 1st Qu.:103.0  
- Median :119.0  
- Mean   :123.4  
- 3rd Qu.:139.0  
- Max.   :255.0  
+     Min. 1st Qu. Median     Mean 3rd Qu. Max.
+max    71     103    119 123.4324     139  255
 dimension(s):
      from  to offset   delta                       refsys point values
 x       1 175 288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL
@@ -357,14 +332,9 @@ sst, anom,
 sst, anom, 
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
-   sst [C*°]       anom [C*°]   
- Min.   :-1.80   Min.   :-4.69  
- 1st Qu.:-1.19   1st Qu.:-0.06  
- Median :-1.05   Median : 0.52  
- Mean   :-0.32   Mean   : 0.23  
- 3rd Qu.:-0.20   3rd Qu.: 0.71  
- Max.   : 9.36   Max.   : 3.70  
- NA's   :13360   NA's   :13360  
+            Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's
+sst [C*°]  -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360
+anom [C*°] -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360
 dimension(s):
      from   to         offset  delta  refsys point values x/y
 x       1 1440              0   0.25      NA    NA   NULL [x]
@@ -373,14 +343,8 @@ zlev    1    1          0 [m]     NA      NA    NA   NULL
 time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL    
 stars object with 5 dimensions and 1 attribute
 attribute(s), summary of first 1e+05 cells:
-   sst.anom     
- Min.   :-1.80  
- 1st Qu.:-1.19  
- Median :-1.05  
- Mean   :-0.32  
- 3rd Qu.:-0.20  
- Max.   : 9.36  
- NA's   :13360  
+          Min. 1st Qu. Median      Mean 3rd Qu. Max.  NA's
+sst.anom  -1.8   -1.19  -1.05 -0.320167    -0.2 9.36 13360
 dimension(s):
         from   to         offset  delta  refsys point     values x/y
 x          1 1440              0   0.25      NA    NA       NULL [x]
@@ -427,18 +391,13 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x563043920a20>
+<environment: 0x55d6f549ae60>
 
 > st_as_stars(x)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     ndvi          
- Min.   :-0.28283  
- 1st Qu.:-0.10811  
- Median :-0.08287  
- Mean   :-0.08465  
- 3rd Qu.:-0.05882  
- Max.   : 0.09259  
+            Min.    1st Qu.      Median        Mean     3rd Qu.       Max.
+ndvi  -0.2828283 -0.1081081 -0.08287293 -0.08464615 -0.05882353 0.09259259
 dimension(s):
   from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -446,4 +405,4 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  3.795   0.383   4.173 
+  4.529   0.347   4.867 

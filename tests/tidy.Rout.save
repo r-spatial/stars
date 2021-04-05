@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,13 +21,8 @@ Type 'q()' to quit R.
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -37,13 +32,8 @@ band    1   6      NA    NA                           NA    NA   NULL
 > (y <- x %>% select(L7_ETMs.tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -52,13 +42,8 @@ band    1   6      NA    NA                           NA    NA   NULL
 > (y <- x %>% filter(band > 2))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 47.00  
- Median : 67.00  
- Mean   : 66.69  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      47     67 66.68804      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -67,13 +52,9 @@ band    1   4       3     1                           NA    NA   NULL
 > (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
 stars object with 3 dimensions and 2 attributes
 attribute(s):
-  L7_ETMs.tif          foo       
- Min.   :  1.00   Min.   :  2.0  
- 1st Qu.: 54.00   1st Qu.:108.0  
- Median : 69.00   Median :138.0  
- Mean   : 68.91   Mean   :137.8  
- 3rd Qu.: 86.00   3rd Qu.:172.0  
- Max.   :255.00   Max.   :510.0  
+             Min. 1st Qu. Median      Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69  68.91242      86  255
+foo             2     108    138 137.82484     172  510
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -84,13 +65,8 @@ band    1   6      NA    NA                           NA    NA   NULL
 > x %>% filter(x > 289900)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 55.00  
- Median : 70.00  
- Mean   : 69.39  
- 3rd Qu.: 87.00  
- Max.   :255.00  
+             Min. 1st Qu. Median    Mean 3rd Qu. Max.
+L7_ETMs.tif     1      55     70 69.3936      87  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 310  289888  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -99,13 +75,8 @@ band    1   6       1     1                           NA    NA   NULL
 > x %>% slice("x", 50:100)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   : 11.0  
- 1st Qu.: 56.0  
- Median : 68.0  
- Mean   : 70.5  
- 3rd Qu.: 82.0  
- Max.   :252.0  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif    11      56     68 70.50099      82  252
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x      50 100  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -120,4 +91,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.035   0.194   4.222 
+  3.823   0.153   3.966 

@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,13 +28,8 @@ Type 'q()' to quit R.
 > (xx = x[bb])
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  3.00  
- 1st Qu.: 56.00  
- Median : 73.00  
- Mean   : 70.87  
- 3rd Qu.: 89.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     3      56     73 70.87303      89  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x     158 268  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -43,7 +38,8 @@ band    1   6      NA    NA                           NA    NA   NULL
 > image(xx)
 > plot(st_as_sfc(bb), add = TRUE, col = NA)
 > st_contains(st_as_sfc(st_bbox(xx)), st_as_sfc(st_bbox(pts)))
-Sparse geometry binary predicate list of length 1, where the predicate was `contains'
+Sparse geometry binary predicate list of length 1, where the predicate
+was `contains'
  1: 1
 > 
 > image(x)
@@ -62,4 +58,4 @@ Sparse geometry binary predicate list of length 1, where the predicate was `cont
 > 
 > proc.time()
    user  system elapsed 
-  2.021   0.091   2.104 
+  2.335   0.068   2.395 

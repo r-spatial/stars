@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,13 +22,8 @@ Type 'q()' to quit R.
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
@@ -38,13 +33,8 @@ band    1  4      NA    NA                           NA  TRUE 1,...,2
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point          values
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
@@ -58,13 +48,8 @@ band
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point          values
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
@@ -78,13 +63,8 @@ band
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
@@ -94,13 +74,8 @@ band    1  4      NA    NA                           NA    NA a,...,b
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
@@ -110,13 +85,8 @@ band    1  4      NA    NA                           NA    NA a,...,b
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif   
- Min.   :25.00  
- 1st Qu.:45.00  
- Median :57.00  
- Mean   :56.53  
- 3rd Qu.:64.00  
- Max.   :97.00  
+             Min. 1st Qu. Median   Mean 3rd Qu. Max.
+L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
      from to  offset delta                       refsys point  values x/y
 x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
@@ -125,4 +95,4 @@ band    1  4      NA    NA                           NA  TRUE a,...,b
 > 
 > proc.time()
    user  system elapsed 
-  1.022   0.061   1.074 
+  1.278   0.049   1.317 

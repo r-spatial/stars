@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -49,20 +49,12 @@ foo     1   4       1     1                           NA    NA   NULL
 > st_as_stars(rr)
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
- a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
- Min.   : 47.00                                          
- 1st Qu.: 65.00                                          
- Median : 76.00                                          
- Mean   : 77.34                                          
- 3rd Qu.: 87.00                                          
- Max.   :255.00                                          
- a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif 
- Min.   : 47.00                                          
- 1st Qu.: 65.00                                          
- Median : 76.00                                          
- Mean   : 77.34                                          
- 3rd Qu.: 87.00                                          
- Max.   :255.00                                          
+                                                         Min. 1st Qu. Median
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif    47      65     76
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif    47      65     76
+                                                            Mean 3rd Qu. Max.
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif  77.3419      87  255
+a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif  77.3419      87  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -73,4 +65,4 @@ foo     1   4       1     1                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.297   0.128   1.417 
+  1.421   0.069   1.482 

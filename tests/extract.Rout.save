@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -26,14 +26,8 @@ Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1
 > (r = st_as_stars(t(volcano)))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      A1        
- Min.   : 94.0  
- 1st Qu.:108.0  
- Median :124.0  
- Mean   :130.2  
- 3rd Qu.:150.0  
- Max.   :195.0  
- NA's   :732    
+    Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+A1    94     108    124 130.1879     150  195  732
 dimension(s):
    from to offset delta refsys point values x/y
 X1    1 61      0     1     NA FALSE   NULL [x]
@@ -155,4 +149,4 @@ X2    1 99      0     1     NA FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.997   0.050   1.036 
+  0.832   0.044   0.869 

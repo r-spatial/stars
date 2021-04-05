@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -18,16 +18,21 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages(library(stars))
 > nc = read_sf(system.file("gpkg/nc.gpkg", package="sf"))
 > (x = st_rasterize(nc)) # default grid:
-stars object with 2 dimensions and 1 attribute
+stars object with 2 dimensions and 12 attributes
 attribute(s):
-     AREA       
- Min.   :0.042  
- 1st Qu.:0.108  
- Median :0.142  
- Mean   :0.145  
- 3rd Qu.:0.181  
- Max.   :0.241  
- NA's   :30904  
+                Min.   1st Qu.    Median         Mean   3rd Qu.      Max.  NA's
+AREA           0.042     0.108     0.142 1.451932e-01     0.181     0.241 30904
+PERIMETER      0.999     1.461     1.716 1.786110e+00     2.004     3.640 30904
+CNTY_       1825.000  1907.000  1989.000 1.998403e+03  2085.000  2241.000 30904
+CNTY_ID     1825.000  1907.000  1989.000 1.998403e+03  2085.000  2241.000 30904
+FIPSNO     37001.000 37049.000 37101.000 3.710042e+04 37153.000 37199.000 30904
+CRESS_ID       1.000    25.000    51.000 5.071206e+01    77.000   100.000 30904
+BIR74        248.000  1323.000  2648.000 3.791637e+03  4139.000 21588.000 30904
+SID74          0.000     3.000     5.000 7.891985e+00    10.000    44.000 30904
+NWBIR74        1.000   297.000   844.000 1.246210e+03  1396.000  8027.000 30904
+BIR79        319.000  1606.000  3108.000 4.852046e+03  5400.000 30757.000 30904
+SID79          0.000     3.000     6.000 9.584098e+00    13.000    57.000 30904
+NWBIR79        3.000   360.000  1058.000 1.604642e+03  1524.000 11631.000 30904
 dimension(s):
   from  to   offset      delta refsys point values x/y
 x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
@@ -35,16 +40,21 @@ y    1 141  36.5896 -0.0192484  NAD27 FALSE   NULL [y]
 > plot(x, axes = TRUE)
 > # a bit more customized grid:
 > (x = st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
-stars object with 2 dimensions and 1 attribute
+stars object with 2 dimensions and 12 attributes
 attribute(s):
-     AREA        
- Min.   :0.0420  
- 1st Qu.:0.1080  
- Median :0.1420  
- Mean   :0.1455  
- 3rd Qu.:0.1810  
- Max.   :0.2410  
- NA's   :2373    
+                Min.   1st Qu.    Median         Mean   3rd Qu.      Max. NA's
+AREA           0.042     0.108     0.142     0.145536     0.181     0.241 2373
+PERIMETER      0.999     1.470     1.716     1.789032     2.004     3.640 2373
+CNTY_       1825.000  1908.000  1989.000  1999.761325  2088.000  2241.000 2373
+CNTY_ID     1825.000  1908.000  1989.000  1999.761325  2088.000  2241.000 2373
+FIPSNO     37001.000 37049.000 37101.000 37100.327750 37151.000 37199.000 2373
+CRESS_ID       1.000    25.000    51.000    50.663875    76.000   100.000 2373
+BIR74        248.000  1323.500  2648.000  3790.530263  4139.000 21588.000 2373
+SID74          0.000     3.000     5.000     7.905976    10.000    44.000 2373
+NWBIR74        1.000   289.000   844.000  1246.116483  1396.000  8027.000 2373
+BIR79        319.000  1606.000  3108.000  4848.231062  5386.000 30757.000 2373
+SID79          0.000     3.000     6.000     9.574419    13.000    57.000 2373
+NWBIR79        3.000   360.000  1058.000  1602.740769  1524.000 11631.000 2373
 dimension(s):
   from  to   offset      delta refsys point values x/y
 x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
@@ -65,14 +75,8 @@ CRS:           NA
 > (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0, 1.0), ylim = c(0, 1), values = NA_real_))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    values    
- Min.   : NA  
- 1st Qu.: NA  
- Median : NA  
- Mean   :NaN  
- 3rd Qu.: NA  
- Max.   : NA  
- NA's   :100  
+        Min. 1st Qu. Median Mean 3rd Qu. Max. NA's
+values    NA      NA     NA  NaN      NA   NA  100
 dimension(s):
   from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
@@ -91,13 +95,8 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0, 1.0), ylim = c(0, 1), values = 0))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    values  
- Min.   :0  
- 1st Qu.:0  
- Median :0  
- Mean   :0  
- 3rd Qu.:0  
- Max.   :0  
+        Min. 1st Qu. Median Mean 3rd Qu. Max.
+values     0       0      0    0       0    0
 dimension(s):
   from to offset delta refsys point values x/y
 x    1 10      0   0.1     NA    NA   NULL [x]
@@ -108,4 +107,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.069   0.039   1.098 
+  0.909   0.048   0.950 

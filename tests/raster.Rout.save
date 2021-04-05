@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,13 +22,8 @@ Type 'q()' to quit R.
 > (x = read_stars(tif))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -49,13 +44,8 @@ time       : 1, 2, 3, 4, 5, 6
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-    layer.1      
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+         Min. 1st Qu. Median     Mean 3rd Qu. Max.
+layer.1     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA   NULL [x]
@@ -68,13 +58,8 @@ band    1   6       1     1                           NA    NA   NULL
 > (y = st_as_stars(r))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     layer       
- Min.   : 47.00  
- 1st Qu.: 67.00  
- Median : 78.00  
- Mean   : 79.15  
- 3rd Qu.: 89.00  
- Max.   :255.00  
+       Min. 1st Qu. Median     Mean 3rd Qu. Max.
+layer    47      67     78 79.14772      89  255
 dimension(s):
   from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA   NULL [x]
@@ -105,13 +90,8 @@ max values :       255,       255,       255,       255,       255,       255
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-  L7_ETMs.tif    
- Min.   :  1.00  
- 1st Qu.: 54.00  
- Median : 69.00  
- Mean   : 68.91  
- 3rd Qu.: 86.00  
- Max.   :255.00  
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -120,4 +100,4 @@ band    1   6      NA    NA                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.125   0.080   2.197 
+  2.097   0.076   2.165 

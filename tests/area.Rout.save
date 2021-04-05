@@ -1,6 +1,6 @@
 
-R version 4.0.2 (2020-06-22) -- "Taking Off Again"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,13 +21,8 @@ Type 'q()' to quit R.
 > (a = st_area(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-   area [m^2]   
- Min.   :812.2  
- 1st Qu.:812.2  
- Median :812.2  
- Mean   :812.2  
- 3rd Qu.:812.2  
- Max.   :812.2  
+             Min. 1st Qu. Median   Mean 3rd Qu.   Max.
+area [m^2] 812.25  812.25 812.25 812.25  812.25 812.25
 dimension(s):
   from  to  offset delta                       refsys point values x/y
 x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -39,13 +34,8 @@ y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
 > (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-       m        
- Min.   : 1.00  
- 1st Qu.: 5.75  
- Median :10.50  
- Mean   :10.50  
- 3rd Qu.:15.25  
- Max.   :20.00  
+   Min. 1st Qu. Median Mean 3rd Qu. Max.
+m     1    5.75   10.5 10.5   15.25   20
 dimension(s):
   from to offset delta refsys point                values x/y
 x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
@@ -55,13 +45,8 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 Missing coordinate reference system: assuming Cartesian coordinates
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-     area       
- Min.   :0.100  
- 1st Qu.:0.200  
- Median :0.325  
- Mean   :0.475  
- 3rd Qu.:0.500  
- Max.   :2.000  
+      Min. 1st Qu. Median  Mean 3rd Qu. Max.
+area   0.1     0.2  0.325 0.475     0.5    2
 dimension(s):
   from to offset delta refsys point                values x/y
 x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
@@ -84,13 +69,8 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 /PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-   area [m^2]       
- Min.   : 25990150  
- 1st Qu.: 28050933  
- Median : 35705689  
- Mean   : 42968454  
- 3rd Qu.: 54640139  
- Max.   :101184840  
+               Min.  1st Qu.   Median     Mean  3rd Qu.      Max.
+area [m^2] 25990150 28050933 35705689 42968454 54640139 101184840
 dimension(s):
   from  to offset delta refsys point                                 values x/y
 x    1 450     NA    NA WGS 84    NA [450x278] -5.81066 [°],...,30.9468 [°] [x]
@@ -100,4 +80,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  8.024   0.103   8.119 
+  7.935   0.151   8.079 
