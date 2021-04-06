@@ -545,7 +545,7 @@ dim.dimensions = function(x) {
 }
 
 #' @export
-as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
+as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28) {
 	lst = lapply(x, function(y) {
 			if (length(y$values) > 3) {
 				y$values = if (is.array(y$values))
@@ -560,8 +560,8 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE) {
 			}
 			if (is.na(y$refsys))
 				y$refsys = NA_character_
-			else if (nchar(tail(format(y$refsys), 1)) > 28)
-				y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, 25),"...")
+			else if (nchar(tail(format(y$refsys), 1)) > stars_crs)
+				y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, stars_crs - 3),"...")
 			y
 		}
 	)
