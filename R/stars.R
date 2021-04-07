@@ -382,6 +382,7 @@ print.stars = function(x, ..., n = 1e5) {
 	}
 	cat("dimension(s):\n")
 	print(st_dimensions(x), ...)
+	invisible(x)
 }
 
 #' @export

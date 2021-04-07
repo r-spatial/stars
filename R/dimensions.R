@@ -384,6 +384,7 @@ print.stars_raster = function(x, ...) {
 		cat(paste("sheared raster with parameters:", x$affine[1], x$affine[2], "\n"))
 	if (x$curvilinear)
 		cat("curvilinear grid\n")
+	invisible(x)
 }
 
 get_val = function(pattern, meta) {
@@ -588,7 +589,7 @@ print.dimensions = function(x, ...) {
 	ret = as.data.frame(x, ...)
 	print(ret)
 	print(attr(x, "raster"))
-	invisible(ret)
+	invisible(x)
 }
 
 identical_dimensions = function(lst, ignore_resolution = FALSE) {
