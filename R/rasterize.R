@@ -136,7 +136,7 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decr
 			dimensions[[this_dim]] = if (inherits(v, "sfc"))
 					create_dimension(values = v[match(uv, dig)])
 				else
-					create_dimension(values = suv, is_raster = TRUE)
+					create_dimension(values = suv, is_raster = i %in% xy)
 			this_dim = this_dim + 1
 		}
 		names(dimensions) = names(.x)[dims]
