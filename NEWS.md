@@ -1,5 +1,7 @@
 # version 0.5-3
 
+* binary Ops for `stars_proxy` objects now work; #390
+
 * `st_rasterize` rasterizes multiple attributes, and handles factors (when sf >= 0.9-9)
 
 * `write_stars` deals better with `stars_proxy` objects; #404

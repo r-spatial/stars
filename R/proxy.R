@@ -292,7 +292,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		# TODO: only warn when there is a reason to warn.
 		if (!all(downsample == 0))
 			lapply(attr(.x, "call_list"), check_xy_warn, dimensions = st_dimensions(.x))
-		process_call_list(fetch(.x, ..., downsample = downsample), cl, envir = envir)
+		process_call_list(fetch(.x, ..., downsample = downsample), cl, envir = envir, downsample = downsample)
 	}
 }
 
@@ -310,13 +310,16 @@ st_as_stars_proxy = function(x, fname = tempfile(fileext = rep_len(".tif", lengt
 }
 
 # execute the call list on a stars object
-process_call_list = function(x, cl, envir = new.env()) {
+process_call_list = function(x, cl, envir = new.env(), downsample = 0) {
 	for (i in seq_along(cl)) {
 		if (is.character(cl[[i]]))
 			cl[[i]] = parse(text = cl[[i]])[[1]]
 		stopifnot(is.call(cl[[i]]))
 		env = environment(cl[[i]])
-		env [[ names(cl[[i]])[2] ]] = x
+		env [[ names(cl[[i]])[2] ]] = x # here, a stars_proxy may be replaced with the fetched stars object
+		# so we need to do that for other args too: https://github.com/r-spatial/stars/issues/390 :
+		if ("e2" %in% names(env) && inherits(env$e2, "stars_proxy")) # binary ops: also fetch the second arg
+			env$e2 = st_as_stars(env$e2, downsample = downsample)
 		x = eval(cl[[i]], env, parent.frame())
 	}
 	x
