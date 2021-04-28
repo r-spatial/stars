@@ -440,7 +440,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	} else if (identical(along, NA_integer_)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
-		if (identical_dimensions(dots, tolerance))
+		if (identical_dimensions(dots, tolerance = tolerance))
 			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
 		else {
 			# currently catches only the special case of ... being a broken up time series:
