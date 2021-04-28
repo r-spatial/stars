@@ -151,7 +151,13 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>...</span>, along <span class='op'>=</span> <span class='cn'>NA_integer_</span>, try_hard <span class='op'>=</span> <span class='cn'>FALSE</span>, nms <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+  <span class='va'>...</span>,
+  along <span class='op'>=</span> <span class='cn'>NA_integer_</span>,
+  try_hard <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  nms <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span>,
+  tolerance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>.Machine</span><span class='op'>$</span><span class='va'>double.eps</span><span class='op'>)</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
@@ -159,7 +165,8 @@
   along <span class='op'>=</span> <span class='cn'>NA_integer_</span>,
   along_crs <span class='op'>=</span> <span class='cn'>FALSE</span>,
   try_hard <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  nms <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span>
+  nms <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span>,
+  tolerance <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>.Machine</span><span class='op'>$</span><span class='va'>double.eps</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,12 +182,16 @@
     </tr>
     <tr>
       <th>try_hard</th>
-      <td><p>logical; if <code>TRUE</code> and some arrays have different dimensions, 
-combine those that dimensions matching to the first array</p></td>
+      <td><p>logical; if <code>TRUE</code> and some arrays have different dimensions,</p></td>
     </tr>
     <tr>
       <th>nms</th>
       <td><p>character; vector with array names</p></td>
+    </tr>
+    <tr>
+      <th>tolerance</th>
+      <td><p>numeric; values used in <a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a> to compare dimension values
+combine those that dimensions matching to the first array</p></td>
     </tr>
     <tr>
       <th>along_crs</th>

@@ -164,7 +164,8 @@
     <span class='op'>=</span> <span class='va'>normalize_path</span>, <span class='va'>...</span><span class='op'>)</span>,
   curvilinear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
   normalize_path <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  RAT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>
+  RAT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span>,
+  tolerance <span class='op'>=</span> <span class='fl'>1e-10</span>
 <span class='op'>)</span>
 
 <span class='fu'>is_big</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, sub <span class='op'>=</span> <span class='va'>sub</span>, n_proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>options</a></span><span class='op'>(</span><span class='st'>"stars.n_proxy"</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>%||%</span> <span class='fl'>1e+08</span><span class='op'>)</span></pre>
@@ -228,6 +229,10 @@ or to 1e8 if that option was not set.</p></td>
       <td><p>character; raster attribute table column name to use as factor levels</p></td>
     </tr>
     <tr>
+      <th>tolerance</th>
+      <td><p>numeric; passed on to <a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a> for comparing dimension parameters.</p></td>
+    </tr>
+    <tr>
       <th>x</th>
       <td><p>object to be read with read_stars</p></td>
     </tr>
@@ -247,7 +252,7 @@ proxy object, i.e. not as in-memory arrays but left on disk</p></td>
 <p><code>RasterIO</code> is a list with zero or more of the following named arguments:
 <code>nXOff</code>, <code>nYOff</code> (both 1-based: the first row/col has offset value 1),
 <code>nXSize</code>, <code>nYSize</code>, <code>nBufXSize</code>, <code>nBufYSize</code>, <code>bands</code>, coderesample.
-see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
+see https://www.gdal.org/classGDALDataset.html for their meaning;
 <code>bands</code> is an integer vector containing the band numbers to be read (1-based: first band is 1)
 Note that if <code>nBufXSize</code> or <code>nBufYSize</code> are specified for downsampling an image,
 resulting in an adjusted geotransform. <code>resample</code> reflects the resampling method and
@@ -339,7 +344,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#&gt; filede6a5cfa5cea.tif     1   30.75   60.5 60.5   90.25  120
+#&gt; file4220638ae651.tif     1   30.75   60.5 60.5   90.25  120
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
@@ -352,7 +357,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#&gt; filede6a5cfa5cea.tif    33   36.75   65.5 65.5   94.25   98
+#&gt; file4220638ae651.tif    33   36.75   65.5 65.5   94.25   98
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
