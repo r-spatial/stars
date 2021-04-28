@@ -49,7 +49,7 @@ as.data.frame.stars_proxy = function(x, ...) {
 #' @export
 #' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.
 plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
-	if (missing(downsample) && any(downsample > 1))
+	if (missing(downsample) && any(downsample > 0))
 		cat(paste0("downsample set to c(", paste(downsample, collapse = ","), ")\n"))
 	x = st_as_stars(x, downsample = downsample, ...)
 	plot(x, ..., downsample = 0)

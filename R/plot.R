@@ -90,7 +90,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		x = if (isTRUE(downsample)) {
 				n = dims * 0 + 1 # keep names
 				n[dxy] = get_downsample(dims)
-				if (any(n > 1))
+				if (any(n > 0))
 					cat(paste0("downsample set to c(", paste(n, collapse = ","), ")\n"))
 				st_downsample(x, n)
 			} else if (is.numeric(downsample))
