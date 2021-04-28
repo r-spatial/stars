@@ -1,6 +1,8 @@
 # version 0.5-3
 
-* binary Ops for `stars_proxy` objects now work; #390
+* `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
+
+* binary Ops (like `+`, `-` etc.) for `stars_proxy` objects now work; #390
 
 * `st_rasterize` rasterizes multiple attributes, and handles factors (when sf >= 0.9-9)
 

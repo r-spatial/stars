@@ -19,7 +19,8 @@ read_stars(
     = normalize_path, ...),
   curvilinear = character(0),
   normalize_path = TRUE,
-  RAT = character(0)
+  RAT = character(0),
+  tolerance = 1e-10
 )
 
 is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
@@ -54,6 +55,8 @@ or to 1e8 if that option was not set.}
 
 \item{RAT}{character; raster attribute table column name to use as factor levels}
 
+\item{tolerance}{numeric; passed on to \link{all.equal} for comparing dimension parameters.}
+
 \item{x}{object to be read with \link{read_stars}}
 
 \item{n_proxy}{integer; number of cells above which .x will be read as stars
@@ -71,7 +74,7 @@ In case \code{.x} contains multiple files, they will all be read and combined wi
 \code{RasterIO} is a list with zero or more of the following named arguments:
 \code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, code{resample}.
-see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
+see https://www.gdal.org/classGDALDataset.html for their meaning;
 \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
 Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 resulting in an adjusted geotransform. \code{resample} reflects the resampling method and

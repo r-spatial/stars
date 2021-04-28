@@ -592,7 +592,7 @@ print.dimensions = function(x, ...) {
 	invisible(x)
 }
 
-identical_dimensions = function(lst, ignore_resolution = FALSE) {
+identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	if (length(lst) > 1) {
 		d1 = attr(lst[[1]], "dimensions")
 		for (i in 2:length(lst)) {
@@ -603,7 +603,7 @@ identical_dimensions = function(lst, ignore_resolution = FALSE) {
 				for (j in seq_along(di))
 					di[[j]]$delta = di[[j]]$to = NA_real_
 			}
-			if (! isTRUE(all.equal(d1, di)))
+			if (! isTRUE(all.equal(d1, di, tolerance = tolerance)))
 				return(FALSE)
 		}
 	}

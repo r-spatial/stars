@@ -5,14 +5,21 @@
 \alias{c.stars_proxy}
 \title{combine multiple stars objects, or combine multiple attributes in a single stars object into a single array}
 \usage{
-\method{c}{stars}(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...)))
+\method{c}{stars}(
+  ...,
+  along = NA_integer_,
+  try_hard = FALSE,
+  nms = names(list(...)),
+  tolerance = sqrt(.Machine$double.eps)
+)
 
 \method{c}{stars_proxy}(
   ...,
   along = NA_integer_,
   along_crs = FALSE,
   try_hard = FALSE,
-  nms = names(list(...))
+  nms = names(list(...)),
+  tolerance = sqrt(.Machine$double.eps)
 )
 }
 \arguments{
@@ -20,10 +27,12 @@
 
 \item{along}{integer; see \link{read_stars}}
 
-\item{try_hard}{logical; if \code{TRUE} and some arrays have different dimensions, 
-combine those that dimensions matching to the first array}
+\item{try_hard}{logical; if \code{TRUE} and some arrays have different dimensions,}
 
 \item{nms}{character; vector with array names}
+
+\item{tolerance}{numeric; values used in \link{all.equal} to compare dimension values
+combine those that dimensions matching to the first array}
 
 \item{along_crs}{logical; if \code{TRUE}, combine arrays along a CRS dimension}
 }

@@ -26,6 +26,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param RAT character; raster attribute table column name to use as factor levels
+#' @param tolerance numeric; passed on to \link{all.equal} for comparing dimension parameters.
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set
 #' @return object of class \code{stars}
 #' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
@@ -33,7 +34,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 #' \code{RasterIO} is a list with zero or more of the following named arguments:
 #' \code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 #' \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, code{resample}.
-#' see https://www.gdal.org/classGDALDataset.html#a80d005ed10aefafa8a55dc539c2f69da for their meaning;
+#' see https://www.gdal.org/classGDALDataset.html for their meaning;
 #' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
 #' Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
@@ -77,7 +78,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
 		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, driver=driver, 
 		normalize_path = normalize_path, ...),
-		curvilinear = character(0), normalize_path = TRUE, RAT = character(0)) {
+		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
+		tolerance = 1e-10) {
 
 	x = if (is.list(.x)) {
 			f = function(y, np) enc2utf8(maybe_normalizePath(y, np))
@@ -98,7 +100,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_)
-		return(do.call(c, append(ret, list(along = along))))
+		return(do.call(c, append(ret, list(along = along, tolerance = tolerance))))
 	}
 
 	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy,

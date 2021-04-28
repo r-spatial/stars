@@ -79,7 +79,8 @@ add_resolution = function(lst) {
 #' @export
 #' @param along_crs logical; if \code{TRUE}, combine arrays along a CRS dimension
 #' @name c.stars
-c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, nms = names(list(...))) {
+c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, 
+						 nms = names(list(...)), tolerance = sqrt(.Machine$double.eps)) {
 	dots = list(...)
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
@@ -91,7 +92,7 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 		if (identical_dimensions(dots))
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
 				NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL)
-		else if (identical_dimensions(dots, ignore_resolution = TRUE)) {
+		else if (identical_dimensions(dots, ignore_resolution = TRUE, tolerance = tolerance)) {
 			dots = add_resolution(dots)
 			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
 				resolutions = attr(dots, "resolutions"),
