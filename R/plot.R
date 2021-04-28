@@ -30,7 +30,7 @@ make_label = function(x, i = 1) {
 #' @param hook NULL or function; hook function that will be called on every sub-plot.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details 
-#' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on. 
+#' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on; can be specified for each dimension.
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE, 
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
@@ -90,6 +90,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		x = if (isTRUE(downsample)) {
 				n = dims * 0 + 1 # keep names
 				n[dxy] = get_downsample(dims)
+				if (any(n > 1))
+					cat(paste0("downsample set to c(", paste(n, collapse = ","), ")\n"))
 				st_downsample(x, n)
 			} else if (is.numeric(downsample))
 				st_downsample(x, downsample)

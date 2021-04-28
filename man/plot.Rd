@@ -135,7 +135,7 @@
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 }
 \details{
-Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on.
+Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on; can be specified for each dimension.
 
 use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 
