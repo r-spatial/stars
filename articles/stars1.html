@@ -145,7 +145,8 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (<code>x</code>) has three dimensions called <code>x</code>, <code>y</code> and <code>band</code>, and has one attribute:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -313,6 +314,7 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">circle</span> <span class="op">=</span> <span class="fu">st_sfc</span><span class="op">(</span><span class="fu">st_buffer</span><span class="op">(</span><span class="fu">st_point</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">293749.5</span>, <span class="fl">9115745</span><span class="op">)</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fu">st_crs</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">circle</span><span class="op">]</span><span class="op">[</span>, , , <span class="fl">1</span><span class="op">]</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">## downsample set to c(0,0,1)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">circle</span>, col <span class="op">=</span> <span class="cn">NA</span>, border <span class="op">=</span> <span class="st">'red'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
@@ -525,7 +527,7 @@
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
 <span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
-<span class="co">## traffic     0       8     10 9.99048      12   27</span>
+<span class="co">## traffic     0       8     10 9.98597      12   27</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
