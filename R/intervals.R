@@ -58,6 +58,11 @@ find_interval = function(x, intervals) {
 		x = as.Date(x)
 	if (inherits(x, "Date") && inherits(intervals$start, "POSIXct"))
 		x = as.POSIXct(x)
+	if (all(intervals$start > intervals$end)) { # decreasing intervals
+		start = intervals$end
+		intervals$end = intervals$start
+		intervals$start = start
+	}
 	w = apply(outer(x, intervals$start, ">=") & outer(x, intervals$end, "<"), 1, which)
 	l = lengths(w)
 	w[l == 0] = NA
