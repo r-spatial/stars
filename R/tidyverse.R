@@ -26,7 +26,7 @@ get_dims = function(d_cube, d_stars) {
 
 #' dplyr verbs for stars objects
 #' 
-#' dplyr verbs for stars objects
+#' dplyr verbs for stars objects; package dplyr needs to be loaded before these methods can be used for stars objects.
 #' @param .data object of class \code{stars}
 #' @param ... see \link[dplyr]{filter}
 #' @name dplyr
