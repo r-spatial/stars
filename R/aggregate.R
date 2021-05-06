@@ -198,6 +198,6 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 	by = st_geometry(by)
 
 	# this assumes the result is small, no need to proxy
-	l = lapply(seq_along(by), function(i) aggregate(st_as_stars(x[by[i]]), by[i], FUN, ...))
+	l = lapply(seq_along(by), function(i) aggregate(st_normalize(st_as_stars(x[by[i]])), by[i], FUN, ...))
 	do.call(c, c(l, along = list(which_sfc(l[[1]]))))
 }
