@@ -69,7 +69,7 @@ replace_na.stars_proxy(data, ...)
 \item{replace}{see \link[tidyr]{replace_na}: list with variable=value pairs, where value is the replacement value for NA's}
 }
 \description{
-dplyr verbs for stars objects
+dplyr verbs for stars objects; package dplyr needs to be loaded before these methods can be used for stars objects.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

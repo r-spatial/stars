@@ -40,7 +40,7 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
        		class = "sgbp")
 		if (! sparse)
 			ret = as.matrix(ret)
-		if (! transpose) 
+		if (! transpose)
 			t(ret)
 		else
 			ret
