@@ -22,7 +22,10 @@ Ops.stars <- function(e1, e2) {
 		else if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
 		else {
-			if (!all(dim(e1) == dim(e2))) {
+			# https://github.com/r-spatial/stars/issues/187#issuecomment-834020710 :
+			# if (!all(dim(e1) == dim(e2))) { 
+			if (!is.null(dim(e1)) &&
+					!isTRUE(all.equal(dim(e1), dim(e2), check.attributes = FALSE))) {
 				stopifnot(length(e2) == 1)
 				lapply(e1, .Generic, e2 = as.vector(e2[[1]]))
 			} else
