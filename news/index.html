@@ -150,7 +150,7 @@
 </h1>
 <ul>
 <li><p><code>read_stars</code> gains an argument <code>tolerance</code> to control tolerance in dimension value comparisons; <a href='https://github.com/r-spatial/stars/issues/414'>#414</a></p></li>
-<li><p>binary Ops (like <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code>, <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code> etc.) for <code>stars_proxy</code> objects now work; <a href='https://github.com/r-spatial/stars/issues/390'>#390</a></p></li>
+<li><p>binary Ops (like <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code>, <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code>, <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> etc.) work for <code>stars_proxy</code> objects; <a href='https://github.com/r-spatial/stars/issues/390'>#390</a></p></li>
 <li><p><code>st_rasterize</code> rasterizes multiple attributes, and handles factors (when sf &gt;= 0.9-9)</p></li>
 <li><p><code>write_stars</code> deals better with <code>stars_proxy</code> objects; <a href='https://github.com/r-spatial/stars/issues/404'>#404</a></p></li>
 <li><p>fix regression in reading some <code>stars_proxy</code> objects; <a href='https://github.com/r-spatial/stars/issues/379'>#379</a></p></li>
@@ -165,7 +165,7 @@
 <ul>
 <li><p>read and write factor levels as GDAL category names; write color table; <a href='https://github.com/r-spatial/stars/issues/392'>#392</a></p></li>
 <li><p>handle <code>normalize_path</code> for choosing to <code>proxy</code>; <a href='https://github.com/r-spatial/stars/issues/391'>#391</a></p></li>
-<li><p>ignore units if there are different units accross bands of a subdataset</p></li>
+<li><p>ignore units when there are different units accross bands of a subdataset</p></li>
 <li><p>speed up <code>st_rgb</code> using faster <code>st_apply</code> approach; <a href='https://github.com/r-spatial/stars/issues/315'>#315</a>, <a href='https://github.com/r-spatial/stars/issues/390'>#390</a></p></li>
 <li><p>improve handling of crs in Spatial objects (avoid loss of wkt comments)</p></li>
 <li><p>correctly write band subsets for smaller proxy objects; <a href='https://github.com/r-spatial/stars/issues/291'>#291</a></p></li>
@@ -174,7 +174,7 @@
 <li><p>warn when breaks = “quantile” results in a single class; <a href='https://github.com/r-spatial/stars/issues/388'>#388</a></p></li>
 <li><p>fix <code><a href="https://rdrr.io/r/base/Extract.html">[</a></code> bug selecting bands in proxy objects; <a href='https://github.com/r-spatial/stars/issues/388'>#388</a></p></li>
 <li><p>for <code>stars_proxy</code> objects, <code>write_stars</code> writes all objects into a multi-layer file; <a href='https://github.com/r-spatial/stars/issues/385'>#385</a></p></li>
-<li><p>multi-file proxy objects can be <code>st_warp</code>ed with <code>use_gdal=TRUE</code>; <a href='https://github.com/r-spatial/stars/issues/385'>#385</a></p></li>
+<li><p>multi-file proxy objects can be <code>st_warp</code>ed with <code>use_gdal = TRUE</code>; <a href='https://github.com/r-spatial/stars/issues/385'>#385</a></p></li>
 </ul>
 </div>
     <div id="version-05-1" class="section level1">

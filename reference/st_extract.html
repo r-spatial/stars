@@ -207,58 +207,58 @@ dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
 <span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
-#&gt;              Min. 1st Qu. Median  Mean 3rd Qu. Max.
-#&gt; L7_ETMs.tif    12   41.75   59.5 59.45    76.5  133
+#&gt;              Min. 1st Qu. Median     Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif    11      54   72.5 72.23333    92.5  139
 #&gt; dimension(s):
 #&gt;          from to offset delta                       refsys point
 #&gt; geometry    1 10     NA    NA UTM Zone 25, Southern Hem...  TRUE
 #&gt; band        1  6     NA    NA                           NA    NA
 #&gt;                                                         values
-#&gt; geometry POINT (289579.4 9119503),...,POINT (296460.1 9120515)
+#&gt; geometry POINT (293856.7 9116346),...,POINT (291157.3 9113704)
 #&gt; band                                                      NULL</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Simple feature collection with 10 features and 6 fields
 #&gt; Geometry type: POINT
 #&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106
 #&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt;    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5
-#&gt; 1              57             40             30             53             42
-#&gt; 2              97             93             78             15             14
-#&gt; 3              85             76             55             12             14
-#&gt; 4              72             56             59             47             91
-#&gt; 5              65             53             45             76             72
-#&gt; 6              80             65             71             53            120
-#&gt; 7              92             80             90             62            133
-#&gt; 8              81             66             64             50             82
-#&gt; 9              60             43             32             70             49
-#&gt; 10             69             50             48             41             36
+#&gt; 1              62             43             32             76             62
+#&gt; 2              83             73             79             61            120
+#&gt; 3              94             81             96             68            135
+#&gt; 4              61             49             39             78             68
+#&gt; 5              70             50             54             42             97
+#&gt; 6              72             61             67             56            116
+#&gt; 7              91             77             57             12             13
+#&gt; 8              96             79             81             54            103
+#&gt; 9             105             98            111             74            139
+#&gt; 10             62             50             36             89             70
 #&gt;    L7_ETMs.tif.V6                 geometry
-#&gt; 1              24 POINT (289579.4 9119503)
-#&gt; 2              13 POINT (297074.9 9112484)
-#&gt; 3              14 POINT (294751.7 9111072)
-#&gt; 4              72 POINT (290339.9 9113943)
-#&gt; 5              40 POINT (288849.8 9114765)
-#&gt; 6             100 POINT (293415.2 9112692)
-#&gt; 7             113 POINT (293727.4 9114777)
-#&gt; 8              64 POINT (291658.4 9111367)
-#&gt; 9              25 POINT (296065.9 9114628)
-#&gt; 10             18 POINT (296460.1 9120515)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span>
+#&gt; 1              29 POINT (293856.7 9116346)
+#&gt; 2              96   POINT (289463 9115896)
+#&gt; 3             116 POINT (297386.8 9119071)
+#&gt; 4              36 POINT (289998.6 9118502)
+#&gt; 5              75 POINT (291149.7 9113485)
+#&gt; 6              92 POINT (290831.3 9115932)
+#&gt; 7              11   POINT (297550 9114174)
+#&gt; 8              91 POINT (293928.2 9113897)
+#&gt; 9             114 POINT (295710.5 9119106)
+#&gt; 10             32 POINT (291157.3 9113704)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Simple feature collection with 10 features and 1 field
 #&gt; Geometry type: POINT
 #&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 288849.8 ymin: 9111072 xmax: 297074.9 ymax: 9120515
+#&gt; Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106
 #&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
 #&gt;    L7_ETMs.tif                 geometry
-#&gt; 1           57 POINT (289579.4 9119503)
-#&gt; 2           97 POINT (297074.9 9112484)
-#&gt; 3           85 POINT (294751.7 9111072)
-#&gt; 4           72 POINT (290339.9 9113943)
-#&gt; 5           65 POINT (288849.8 9114765)
-#&gt; 6           80 POINT (293415.2 9112692)
-#&gt; 7           92 POINT (293727.4 9114777)
-#&gt; 8           81 POINT (291658.4 9111367)
-#&gt; 9           60 POINT (296065.9 9114628)
-#&gt; 10          69 POINT (296460.1 9120515)</div></pre>
+#&gt; 1           62 POINT (293856.7 9116346)
+#&gt; 2           83   POINT (289463 9115896)
+#&gt; 3           94 POINT (297386.8 9119071)
+#&gt; 4           61 POINT (289998.6 9118502)
+#&gt; 5           70 POINT (291149.7 9113485)
+#&gt; 6           72 POINT (290831.3 9115932)
+#&gt; 7           91   POINT (297550 9114174)
+#&gt; 8           96 POINT (293928.2 9113897)
+#&gt; 9          105 POINT (295710.5 9119106)
+#&gt; 10          62 POINT (291157.3 9113704)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
