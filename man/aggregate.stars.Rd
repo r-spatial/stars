@@ -75,4 +75,19 @@ nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 nc = st_transform(nc, st_crs(prec_slice))
 agg = aggregate(prec_slice, st_geometry(nc), mean)
 plot(agg)
+
+# example of using a function for "by": aggregate by month-of-year
+d = c(10, 10, 150)
+a = array(rnorm(prod(d)), d) # pure noise
+times = Sys.Date() + seq(1, 2000, length.out = d[3])
+m = as.numeric(format(times, "\%m"))
+signal = rep(sin(m / 12 * pi), each = prod(d[1:2])) # yearly period
+s = (st_as_stars(a) + signal) \%>\%
+      st_set_dimensions(3, values = times)
+f = function(x, format = "\%B") {
+	  months = format(as.Date(paste0("01-", 1:12, "-1970")), format)
+	  factor(format(x, format), levels = months)
+}
+agg = aggregate(s, f, mean)
+plot(agg)
 }

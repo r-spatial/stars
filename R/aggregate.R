@@ -47,6 +47,21 @@
 #' nc = st_transform(nc, st_crs(prec_slice))
 #' agg = aggregate(prec_slice, st_geometry(nc), mean)
 #' plot(agg)
+#'
+#' # example of using a function for "by": aggregate by month-of-year
+#' d = c(10, 10, 150)
+#' a = array(rnorm(prod(d)), d) # pure noise
+#' times = Sys.Date() + seq(1, 2000, length.out = d[3])
+#' m = as.numeric(format(times, "%m"))
+#' signal = rep(sin(m / 12 * pi), each = prod(d[1:2])) # yearly period
+#' s = (st_as_stars(a) + signal) %>%
+#'       st_set_dimensions(3, values = times)
+#' f = function(x, format = "%B") {
+#' 	  months = format(as.Date(paste0("01-", 1:12, "-1970")), format)
+#' 	  factor(format(x, format), levels = months)
+#' }
+#' agg = aggregate(s, f, mean)
+#' plot(agg)
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
@@ -56,8 +71,8 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		# and if not, then use st_normalize(by)
 	}
 
-	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character")
-	if (!inherits(by, classes))
+	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function")
+	if (!is.function(by) && !inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
 			paste(classes, collapse= ", "), "supported"))
 
@@ -123,13 +138,17 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			ndims = 1
 			x = st_upfront(x, which_time(x))
 			values = expand_dimensions(x)[[1]]
-			if (inherits(by, "character")) {
+			if (inherits(by, "function")) {
+				i = by(values)
+				if (!is.factor(i))
+					i = as.factor(i)
+				by = levels(i)
+			} else if (inherits(by, "character")) {
 				i = cut(values, by, right = left.open)
 				by = if (inherits(values, "Date"))
 						as.Date(levels(i))
 					else
 						as.POSIXct(levels(i))
-				i = as.integer(i)
 			} else {
 				if (!inherits(values, class(by)))
 					warning(paste0('argument "by" is of a different class (', class(by)[1], 
@@ -137,7 +156,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				i = findInterval(values, by, left.open = left.open, rightmost.closed = rightmost.closed)
 				i[ i == 0 | i == length(by) ] = NA
 			}
-			i
+			as.integer(i)
 		}
 
 	d = st_dimensions(x)
@@ -162,7 +181,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	# reconstruct dimensions table:
 	d[[1]] = create_dimension(values = by)
-	names(d)[1] = if (inherits(by, c("POSIXct", "Date", "PCICt")))
+	names(d)[1] = if (inherits(by, c("POSIXct", "Date", "PCICt", "function")))
 			"time"
 		else
 			geom
