@@ -16,6 +16,11 @@
 #' x + 10
 #' all.equal(x * 10, 10 * x)
 #' @export
+#' @details if \code{e1} or \code{e2} is is a numeric vector, or \code{e2}
+#' has less or smaller dimensions than \code{e1}, then \code{e2} is recycled
+#' such that it fits \code{e1}, using usual R array recycling rules. The user
+#' needs to make sure this is sensible; it may be needed to use \code{aperm}
+#' to permutate dimensions first. 
 Ops.stars <- function(e1, e2) {
 	ret = if (missing(e2))
 			lapply(e1, .Generic)

@@ -2,7 +2,7 @@
 
 * `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
 
-* binary Ops (like `+`, `-` etc.) for `stars_proxy` objects now work; #390
+* binary Ops (like `+`, `-`, `*` etc.) work for `stars_proxy` objects; #390
 
 * `st_rasterize` rasterizes multiple attributes, and handles factors (when sf >= 0.9-9)
 
@@ -20,7 +20,7 @@
 
 * handle `normalize_path` for choosing to `proxy`; #391
 
-* ignore units if there are different units accross bands of a subdataset
+* ignore units when there are different units accross bands of a subdataset
 
 * speed up `st_rgb` using faster `st_apply` approach; #315, #390
 
@@ -38,7 +38,7 @@
 
 * for `stars_proxy` objects, `write_stars` writes all objects into a multi-layer file; #385
 
-* multi-file proxy objects can be `st_warp`ed with `use_gdal=TRUE`; #385
+* multi-file proxy objects can be `st_warp`ed with `use_gdal = TRUE`; #385
 
 # version 0.5-1
 
