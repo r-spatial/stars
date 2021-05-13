@@ -48,6 +48,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		dim(x) = newdims
 		st_as_stars(setNames(list(x[,,i]), nms[1]), dimensions = d[dxy])
 	}
+	x = st_normalize(x)
 	if (is.character(x[[1]])) # rgb values
 		key.pos = NULL
 	if (missing(col) && is.factor(x[[1]]))

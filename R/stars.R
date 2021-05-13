@@ -375,9 +375,13 @@ print.stars = function(x, ..., n = 1e5) {
 			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), optional = TRUE)
 		}
 		names(df) = add_units(x)
-		if (all(sapply(x, is.numeric)))
-			print(do.call(rbind, lapply(df, summary)))
-		else
+		if (all(sapply(x, is.numeric))) {
+			m_summary = function(x) { s = summary(x); if (!"NA's" %in% names(s)) s["NA's"] = 0; s }
+			sums = lapply(df, summary)
+			if (length(unique(lengths(sums))) > 1)
+				sums = lapply(df, m_summary)
+			print(do.call(rbind, sums))
+		} else
 			print(summary(df))
 	}
 	cat("dimension(s):\n")
@@ -797,7 +801,10 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 st_upfront = function(x, first = attr(st_dimensions(x), "raster")$dimensions) {
 	if (!is.character(first))
 		first = names(st_dimensions(x))[first]
-	aperm(x, c(first, setdiff(names(st_dimensions(x)), first)))
+	if (!any(is.na(first)))
+		aperm(x, c(first, setdiff(names(st_dimensions(x)), first)))
+	else
+		x
 }
 
 #' @export
