@@ -56,7 +56,7 @@ st_extract.stars = function(x, pts, ..., bilinear = FALSE, time_column =
 	for (i in seq_along(m)) {
 		if (inherits(x[[i]], "factor")) {
 			if (is.character(m[[i]]))
-				m[[i]] = structure(as.factor(m[[i]]), dim = dim(m[[i]]))
+				m[[i]] = match(as.vector(m[[i]]), levels(x[[i]]))
 			m[[i]] = structure(m[[i]], levels = levels(x[[i]]), 
 				colors = attr(x[[i]], "colors"), class = "factor")
 		} else if (inherits(x[[i]], "units"))
