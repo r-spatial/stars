@@ -189,3 +189,14 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 		names(dim(ret[[i]])) = names(st_dimensions(ret))
 	ret
 }
+
+if (!isGeneric("%in%"))
+	setGeneric("%in%", function(x, table) standardGeneric("%in%"))
+
+#' @exportMethod "%in%"
+setMethod("%in%", signature(x = "stars"),
+	function(x, table) {
+		st_stars(lapply(x, function(y) structure(y %in% table, dim = dim(y))),
+			st_dimensions(x))
+	}
+)
