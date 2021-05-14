@@ -1,5 +1,7 @@
 # version 0.5-3
 
+* add `%in%` method; #424
+
 * `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
 
 * binary Ops (like `+`, `-`, `*` etc.) work for `stars_proxy` objects; #390
