@@ -7,6 +7,11 @@
 \usage{
 \S4method{\%in\%}{stars}(x, table)
 }
+\arguments{
+\item{x}{data cube value}
+
+\item{table}{values of the set}
+}
 \description{
 evaluate whether cube values are in a given set
 }

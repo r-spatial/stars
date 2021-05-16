@@ -198,6 +198,8 @@ if (!isGeneric("%in%"))
 #' evaluate whether cube values are in a given set
 #' @docType methods
 #' @rdname in-methods
+#' @param x data cube value
+#' @param table values of the set
 #' @exportMethod "%in%"
 setMethod("%in%", signature(x = "stars"),
 	function(x, table) {
