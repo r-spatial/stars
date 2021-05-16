@@ -193,6 +193,11 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 if (!isGeneric("%in%"))
 	setGeneric("%in%", function(x, table) standardGeneric("%in%"))
 
+#' evaluate whether cube values are in a given set
+#'
+#' evaluate whether cube values are in a given set
+#' @docType methods
+#' @rdname in-methods
 #' @exportMethod "%in%"
 setMethod("%in%", signature(x = "stars"),
 	function(x, table) {
