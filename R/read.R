@@ -265,3 +265,36 @@ get_data_units = function(data) {
 			structure(data, units = NULL)
 	}
 }
+
+read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL) {
+	ret = sf::gdal_read_mdim(x, variable, options)
+	create_units = function(x) {
+		u <- attr(x, "units")
+		if (is.null(u) || u == "")
+			x 
+		else {
+			u = units::set_units(x, u, mode = "standard")
+			p = try(as.POSIXct(u), silent = TRUE)
+			if (inherits(p, "POSIXct"))
+				p
+			else
+				u
+		}
+	}
+	l = lapply(ret$dimensions, function(x) create_units(x$values[[1]]))
+	d = rev(lapply(l, function(x) create_dimension(values = x)))
+	if (is.null(raster))
+		raster = get_raster(dimensions = names(d)[1:2])
+	lst = lapply(ret$array_list, function(x) structure(x, dim = rev(dim(x))))
+	st_set_crs(st_stars(lst, dimensions = structure(d, raster = raster, class = "dimensions")),
+		ret$srs)
+}
+
+write_mdim = function(x, filename, ...) {
+	stopifnot(inherits(x, "stars"))
+	to_units = function(x) if (inherits(x, c("POSIXct", "Date"))) units::as_units(x) else x
+	dimension_values = rev(lapply(expand_dimensions(x), to_units))
+	units = sapply(dimension_values, function(x) if(inherits(x, "units")) as.character(units(x)) else "")
+	sf::gdal_write_mdim(st_as_stars(x), filename, dimension_values, units)
+	invisible(x)
+}
