@@ -9,25 +9,28 @@ st_extract(x, ...)
 
 \method{st_extract}{stars}(
   x,
-  pts,
+  at,
   ...,
   bilinear = FALSE,
-  time_column = attr(pts, "time_column") \%||\% attr(pts, "time_col"),
-  interpolate_time = bilinear
+  time_column = attr(at, "time_column") \%||\% attr(at, "time_col"),
+  interpolate_time = bilinear,
+  FUN = mean
 )
 }
 \arguments{
 \item{x}{object of class \code{stars} or \code{stars_proxy}}
 
-\item{...}{ignored}
+\item{...}{passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries}
 
-\item{pts}{object of class \code{sf} or \code{sfc} with POINT geometries}
+\item{at}{object of class \code{sf} or \code{sfc} with geometries, where to extract x}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
 \item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
 
 \item{interpolate_time}{logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.}
+
+\item{FUN}{function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel}
 }
 \value{
 if \code{x} has more dimensions than only x and y (raster), an 
