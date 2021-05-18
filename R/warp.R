@@ -159,7 +159,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 		options = c(options, "-dstnodata", no_data_value, "-r", method)
 		if (all(!is.na(cellsize))) {
 			cellsize = rep(abs(cellsize), length.out = 2)
-			options = c(options, "-ts", cellsize[1], cellsize[2])
+			options = c(options, "-tr", cellsize[1], cellsize[2])
 		}
 		if (! inherits(src, "stars_proxy")) {
 			src = st_as_stars_proxy(src, NA_value = no_data_value)
