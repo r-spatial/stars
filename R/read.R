@@ -205,6 +205,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				at = at[[ which.at ]][[ which.column ]]
 				if (min_value > 0)
 					at = at[-seq_len(min_value)]
+				if (min_value == 0) {
+					data = data + 1
+					warning("categorical data values starting at 0 are shifted with one to start at 1")
+				}
 				attr(data, "levels") = at
 			}
 			data = structure(data, class = "factor")
