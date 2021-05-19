@@ -1,5 +1,7 @@
 # version 0.5-3
 
+* handle categorical rasters starting at value 0 (by adding 1, and warning); #428
+
 * add `%in%` method; #424
 
 * `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
