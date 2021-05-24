@@ -271,7 +271,9 @@ get_data_units = function(data) {
 }
 
 read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL) {
-	ret = sf::gdal_read_mdim(x, variable, options)
+	if (packageVersion("sf") <= "0.9-8")
+		gdal_read_mdim = function(...) stop("sf > 0.9-8 required")
+	ret = gdal_read_mdim(x, variable, options)
 	create_units = function(x) {
 		u <- attr(x, "units")
 		if (is.null(u) || u == "")
@@ -296,9 +298,11 @@ read_mdim = function(x, variable = character(0), ..., options = character(0), ra
 
 write_mdim = function(x, filename, ...) {
 	stopifnot(inherits(x, "stars"))
+	if (packageVersion("sf") <= "0.9-8")
+		gdal_write_mdim = function(...) stop("sf > 0.9-8 required")
 	to_units = function(x) if (inherits(x, c("POSIXct", "Date"))) units::as_units(x) else x
 	dimension_values = rev(lapply(expand_dimensions(x), to_units))
 	units = sapply(dimension_values, function(x) if(inherits(x, "units")) as.character(units(x)) else "")
-	sf::gdal_write_mdim(st_as_stars(x), filename, dimension_values, units)
+	gdal_write_mdim(st_as_stars(x), filename, dimension_values, units)
 	invisible(x)
 }
