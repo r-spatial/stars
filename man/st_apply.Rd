@@ -15,7 +15,7 @@
   FUTURE = FALSE,
   rename = TRUE,
   .fname,
-  multi_arg = inherits(try(FUN(1:10), silent = TRUE), "try-error")
+  single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN)
 )
 }
 \arguments{
@@ -41,8 +41,8 @@ to the function name}
 dimensions are reduced) or the new dimension (if a new dimension is created); 
 if missing, the name of \code{FUN} is used}
 
-\item{multi_arg}{logical; if \code{TRUE}, FUN takes multiple arguments (like \code{fn_ndvi2} below), 
-if \code{FALSE} FUN takes a single argument (like \code{fn_ndvi1} below).}
+\item{single_arg}{logical; if \code{TRUE}, FUN takes a single argument (like \code{fn_ndvi1} below), 
+if \code{FALSE} FUN takes multiple arguments (like \code{fn_ndvi2} below).}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; 
