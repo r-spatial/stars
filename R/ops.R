@@ -90,14 +90,22 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' @name st_apply
 #' @param X object of class \code{stars}
 #' @param MARGIN see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied 
-#' @param FUN see \link[base]{apply} and do see below at details.
+#' @param FUN see \link[base]{apply} and see Details.
 #' @param ... arguments passed on to \code{FUN}
 #' @param CLUSTER cluster to use for parallel apply; see \link[parallel]{makeCluster}
 #' @param PROGRESS logical; if \code{TRUE}, use \code{pbapply::pbapply} to show progress bar
 #' @param FUTURE logical;if \code{TRUE}, use \code{future.apply::future_apply} 
-#' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name
-#' @param .fname function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of \code{FUN} is used
-#' @return object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
+#' @param rename logical; if \code{TRUE} and \code{X} has only one attribute and 
+#' \code{FUN} is a simple function name, rename the attribute of the returned object 
+#' to the function name
+#' @param .fname function name for the new attribute name (if one or more 
+#' dimensions are reduced) or the new dimension (if a new dimension is created); 
+#' if missing, the name of \code{FUN} is used
+#' @param multi_arg logical; if \code{TRUE}, FUN takes multiple arguments (like \code{fn_ndvi2} below), 
+#' if \code{FALSE} FUN takes a single argument (like \code{fn_ndvi1} below).
+#' @return object of class \code{stars} with accordingly reduced number of dimensions; 
+#' in case \code{FUN} returns more than one value, a new dimension is created carrying 
+#' the name of the function used; see the examples.
 #' @details FUN is a function which either operates on a single object, which will 
 #' be the data of each iteration step over dimensions MARGIN, or a function that 
 #' has as many arguments as there are elements in such an object. See the NDVI 
@@ -122,7 +130,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' }
 #' @export
 st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, FUTURE = FALSE, 
-		rename = TRUE, .fname) {
+		rename = TRUE, .fname, multi_arg = inherits(try(FUN(1:10), silent = TRUE), "try-error")) {
 	if (missing(.fname))
 		.fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
@@ -154,11 +162,10 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			array(ret, dX)
 	}
 	no_margin = setdiff(seq_along(dim(X)), MARGIN)
-	n_args_cleaned = function(f, n) sum(!(names(as.list(args(f))) %in% c("", "...", n)))
-	ret = if (n_args_cleaned(FUN, names(list(...))) <= 1) # single arg, can't chunk ...
-			lapply(X, fn, ...) 
-		else # call FUN on full chunks:
+	ret = if (multi_arg) # call FUN on full chunks:
 			lapply(X, function(a) do.call(FUN, setNames(append(asplit(a, no_margin), list(...)), NULL)))
+		else 
+			lapply(X, fn, ...) 
 	# fix dimensions:
 	dim_ret = dim(ret[[1]])
 	ret = if (length(dim_ret) == length(MARGIN)) { # FUN returned a single value

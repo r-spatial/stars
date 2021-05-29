@@ -14,7 +14,8 @@
   PROGRESS = FALSE,
   FUTURE = FALSE,
   rename = TRUE,
-  .fname
+  .fname,
+  multi_arg = inherits(try(FUN(1:10), silent = TRUE), "try-error")
 )
 }
 \arguments{
@@ -22,7 +23,7 @@
 
 \item{MARGIN}{see \link[base]{apply}; index number(s) or name(s) of the dimensions over which \code{FUN} will be applied}
 
-\item{FUN}{see \link[base]{apply} and do see below at details.}
+\item{FUN}{see \link[base]{apply} and see Details.}
 
 \item{...}{arguments passed on to \code{FUN}}
 
@@ -32,12 +33,21 @@
 
 \item{FUTURE}{logical;if \code{TRUE}, use \code{future.apply::future_apply}}
 
-\item{rename}{logical; if \code{TRUE} and \code{X} has only one attribute and \code{FUN} is a simple function name, rename the attribute of the returned object to the function name}
+\item{rename}{logical; if \code{TRUE} and \code{X} has only one attribute and 
+\code{FUN} is a simple function name, rename the attribute of the returned object 
+to the function name}
 
-\item{.fname}{function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of \code{FUN} is used}
+\item{.fname}{function name for the new attribute name (if one or more 
+dimensions are reduced) or the new dimension (if a new dimension is created); 
+if missing, the name of \code{FUN} is used}
+
+\item{multi_arg}{logical; if \code{TRUE}, FUN takes multiple arguments (like \code{fn_ndvi2} below), 
+if \code{FALSE} FUN takes a single argument (like \code{fn_ndvi1} below).}
 }
 \value{
-object of class \code{stars} with accordingly reduced number of dimensions; in case \code{FUN} returns more than one value, a new dimension is created carrying the name of the function used; see the examples.
+object of class \code{stars} with accordingly reduced number of dimensions; 
+in case \code{FUN} returns more than one value, a new dimension is created carrying 
+the name of the function used; see the examples.
 }
 \description{
 st_apply apply a function to array dimensions: aggregate over space, time, or something else
