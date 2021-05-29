@@ -56,8 +56,11 @@ st_apply apply a function to array dimensions: aggregate over space, time, or so
 FUN is a function which either operates on a single object, which will 
 be the data of each iteration step over dimensions MARGIN, or a function that 
 has as many arguments as there are elements in such an object. See the NDVI 
-examples below. Note that the second form can be very much faster e.g. when a trivial 
+examples below. The second form can be VERY much faster e.g. when a trivial 
 function is not being called for every pixel, but only once (example).
+
+The heuristics for the default of \code{single_arg} work often, but not always; try
+setting this to the right value when \code{st_apply} gives an error.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -72,6 +75,8 @@ fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called o
 ndvi1 = st_apply(x, 1:2, fn_ndvi1)
 ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
 all.equal(ndvi1, ndvi2)
+# compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430
+st_apply(x, 3, function(x) var(as.vector(x))) # as.vector is required!
 # to get a progress bar also in non-interactive mode, specify:
 if (require(pbapply)) { # install it, if FALSE
   pboptions(type = "timer")
