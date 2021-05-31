@@ -160,7 +160,8 @@
   PROGRESS <span class='op'>=</span> <span class='cn'>FALSE</span>,
   FUTURE <span class='op'>=</span> <span class='cn'>FALSE</span>,
   rename <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  <span class='va'>.fname</span>
+  <span class='va'>.fname</span>,
+  single_arg <span class='op'>=</span> <span class='fu'>has_single_arg</span><span class='op'>(</span><span class='va'>FUN</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>||</span> <span class='fu'>can_single_arg</span><span class='op'>(</span><span class='va'>FUN</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -176,7 +177,7 @@
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>see <a href='https://rdrr.io/r/base/apply.html'>apply</a> and do see below at details.</p></td>
+      <td><p>see <a href='https://rdrr.io/r/base/apply.html'>apply</a> and see Details.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -196,24 +197,37 @@
     </tr>
     <tr>
       <th>rename</th>
-      <td><p>logical; if <code>TRUE</code> and <code>X</code> has only one attribute and <code>FUN</code> is a simple function name, rename the attribute of the returned object to the function name</p></td>
+      <td><p>logical; if <code>TRUE</code> and <code>X</code> has only one attribute and 
+<code>FUN</code> is a simple function name, rename the attribute of the returned object 
+to the function name</p></td>
     </tr>
     <tr>
       <th>.fname</th>
-      <td><p>function name for the new attribute name (if one or more dimensions are reduced) or the new dimension (if a new dimension is created); if missing, the name of <code>FUN</code> is used</p></td>
+      <td><p>function name for the new attribute name (if one or more 
+dimensions are reduced) or the new dimension (if a new dimension is created); 
+if missing, the name of <code>FUN</code> is used</p></td>
+    </tr>
+    <tr>
+      <th>single_arg</th>
+      <td><p>logical; if <code>TRUE</code>, FUN takes a single argument (like <code>fn_ndvi1</code> below), 
+if <code>FALSE</code> FUN takes multiple arguments (like <code>fn_ndvi2</code> below).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>object of class <code>stars</code> with accordingly reduced number of dimensions; in case <code>FUN</code> returns more than one value, a new dimension is created carrying the name of the function used; see the examples.</p>
+    <p>object of class <code>stars</code> with accordingly reduced number of dimensions; 
+in case <code>FUN</code> returns more than one value, a new dimension is created carrying 
+the name of the function used; see the examples.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>FUN is a function which either operates on a single object, which will 
 be the data of each iteration step over dimensions MARGIN, or a function that 
 has as many arguments as there are elements in such an object. See the NDVI 
-examples below. Note that the second form can be very much faster e.g. when a trivial 
+examples below. The second form can be VERY much faster e.g. when a trivial 
 function is not being called for every pixel, but only once (example).</p>
+<p>The heuristics for the default of <code>single_arg</code> work often, but not always; try
+setting this to the right value when <code>st_apply</code> gives an error.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
@@ -262,7 +276,15 @@ function is not being called for every pixel, but only once (example).</p>
 <span class='va'>ndvi1</span> <span class='op'>=</span> <span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>fn_ndvi1</span><span class='op'>)</span>
 <span class='va'>ndvi2</span> <span class='op'>=</span> <span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>3</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>]</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>fn_ndvi2</span><span class='op'>)</span> <span class='co'># note that we select bands 3 and 4 in the first argument</span>
 <span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>ndvi1</span>, <span class='va'>ndvi2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Names: 1 string mismatch"</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
+</div><div class='output co'>#&gt; [1] "Names: 1 string mismatch"</div><div class='input'><span class='co'># compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430</span>
+<span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>3</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># as.vector is required!</span>
+</div><div class='output co'>#&gt; stars object with 1 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;                  Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
+#&gt; L7_ETMs.tif  215.9173 318.0459 497.9929 679.4198 968.1705 1481.656
+#&gt; dimension(s):
+#&gt;      from to offset delta refsys point values
+#&gt; band    1  6     NA    NA     NA    NA   NULL</div><div class='input'><span class='co'># to get a progress bar also in non-interactive mode, specify:</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/psolymos/pbapply'>pbapply</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># install it, if FALSE</span>
   <span class='fu'><a href='https://rdrr.io/pkg/pbapply/man/pboptions.html'>pboptions</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"timer"</span><span class='op'>)</span>
 <span class='op'>}</span>
