@@ -20,10 +20,11 @@ print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 		cat("; showing the first", min(length(x[[1]]), nfiles), "filenames\n")
 	else
 		cat(":\n")
+	names = lapply(x, function(nm) if (is.function(nm)) nm() else nm)
 	if (simplify)
-		print(lapply(x, shorten_names, n = nfiles))
+		print(lapply(names, shorten_names, n = nfiles))
 	else
-		print(lapply(x, head, n = nfiles))
+		print(lapply(names, head, n = nfiles))
 	if (!is.null(attr(x, "NA_value")) && !is.na(attr(x, "NA_value")))
 		cat("NA_value: ", attr(x, "NA_value"), "\n")
 	cat("dimension(s):\n")
@@ -216,7 +217,10 @@ fetch = function(x, downsample = 0, ...) {
 			offset = round(c(mod(dx$from - 1, mult[1]), mod(dy$from - 1, mult[2])))
 		} else
 			offset = c(0,0)
-		ret[[i]] = read_stars(unclass(x)[[i]], RasterIO = rasterio, 
+		file_name = unclass(x)[[i]]
+		if (is.function(file_name)) # realise:
+			file_name = file_name()
+		ret[[i]] = read_stars(file_name, RasterIO = rasterio, 
 			NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,
 			proxy = FALSE, ...)
 		if (i == 1)

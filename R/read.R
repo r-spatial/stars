@@ -1,10 +1,17 @@
 maybe_normalizePath = function(.x, np = FALSE) {
 	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
-	if (!np || any(sapply(prefixes, has_prefix, x = .x)))
+	if (is.function(.x) || !np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
 	else
 		normalizePath(.x, mustWork = FALSE)
+}
+
+enc2utf8char = function(x) {
+	if (is.character(x))
+		enc2utf8(x)
+	else
+		x
 }
 
 
@@ -82,10 +89,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		tolerance = 1e-10) {
 
 	x = if (is.list(.x)) {
-			f = function(y, np) enc2utf8(maybe_normalizePath(y, np))
-			rapply(.x, f, classes = "character", how = "replace", np = normalize_path)
+			f = function(y, np) enc2utf8char(maybe_normalizePath(y, np))
+			rapply(.x, f, classes = c("character", "function"), how = "replace", np = normalize_path)
 		} else
-			enc2utf8(maybe_normalizePath(.x, np = normalize_path))
+			enc2utf8char(maybe_normalizePath(.x, np = normalize_path))
 
 	if (length(curvilinear) == 2 && is.character(curvilinear)) {
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
@@ -103,7 +110,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		return(do.call(c, append(ret, list(along = along, tolerance = tolerance))))
 	}
 
-	data = sf::gdal_read(x, options = options, driver = driver, read_data = !proxy,
+	data = sf::gdal_read(if (is.function(x)) x() else x, 
+		options = options, driver = driver, read_data = !proxy,
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 	if (!is.null(data$default_geotransform) && data$default_geotransform == 1) {
 		## we have the 0 1 0 0 0 1 transform indicated
@@ -229,7 +237,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 		# return:
 		ret = if (proxy) # no data present, subclass of "stars":
-			st_stars_proxy(setNames(list(x), names(.x) %||% tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
+			st_stars_proxy(setNames(list(x), names(.x) %||% 
+				if (is.function(x)) "Function" else tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
 				create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
 				resolutions = NULL)
 		else
