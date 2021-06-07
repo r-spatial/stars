@@ -491,3 +491,13 @@ st_rgb = function(x, dimension = 3, use_alpha = dim(x)[dimension] == 4, maxColor
 	}
 	st_apply(x, dims, if (use_alpha) rgb4 else rgb3)
 }
+
+#' @export
+hist.stars = function(x, ..., main = names(x)[1]) {
+	hist(x[[1]], ..., main = main)
+}
+
+#' @export
+hist.stars_proxy = function(x, ..., downsample = 0) {
+	hist(st_as_stars(x, downsample = downsample)[[1]], ...)
+}
