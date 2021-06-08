@@ -343,7 +343,7 @@
 <p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"nc/bcsd_obs_1999.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="st">"data/full_data_daily_2013.nc"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">w</span>
+    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">w</span>
 <span class="co">## pr, tas,</span></code></pre></div>
 <p>We see that</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -528,8 +528,8 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
-<span class="co">## traffic     0       8     10 10.00397      12   26</span>
+<span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
+<span class="co">## traffic     0       8     10 9.99148      12   28</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
