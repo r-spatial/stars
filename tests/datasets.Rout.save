@@ -1,0 +1,58 @@
+
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(stars))
+> bcsd_obs
+stars_proxy object with 2 attributes in 2 file(s):
+$foo
+[1] "[...]/bcsd_obs_1999.nc:pr"
+
+$bar
+[1] "[...]/bcsd_obs_1999.nc:tas"
+
+dimension(s):
+     from to offset  delta  refsys point                    values x/y
+x       1 81    -85  0.125      NA    NA                      NULL [x]
+y       1 33 37.125 -0.125      NA    NA                      NULL [y]
+time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31    
+> L7_ETMs
+stars_proxy object with 1 attribute in 1 file(s):
+$L7_ETMs
+[1] "[...]/L7_ETMs.tif"
+
+dimension(s):
+     from  to  offset delta                       refsys point values x/y
+x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+band    1   6      NA    NA                           NA    NA   NULL    
+> if (require(starsdata)) {
++ 	print(stars_sentinel2)
++ }
+Loading required package: starsdata
+stars_proxy object with 1 attribute in 1 file(s):
+$`MTD_MSIL1C.xml:10m:EPSG_32632`
+[1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"
+
+dimension(s):
+     from    to offset delta                refsys point    values x/y
+x       1 10980  3e+05    10 WGS 84 / UTM zone 32N    NA      NULL [x]
+y       1 10980  6e+06   -10 WGS 84 / UTM zone 32N    NA      NULL [y]
+band    1     4     NA    NA                    NA    NA B4,...,B8    
+> 
+> proc.time()
+   user  system elapsed 
+  0.778   0.043   0.813 
