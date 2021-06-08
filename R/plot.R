@@ -66,9 +66,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		x = droplevels(x) # https://github.com/r-spatial/stars/issues/339
 
 	if (join_zlim && !is.character(x[[1]])) {
-		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
+		breaks = as.numeric(get_breaks(x, breaks, nbreaks, dots$logz))
 		if (length(breaks) > 2)
-			breaks = as.numeric(unique(breaks))
+			breaks = unique(breaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
 		if (breaks.missing && nbreaks <= 2) # unlucky default!
 			warning('breaks="quantile" leads to a single class; maybe try breaks="equal" instead?')
