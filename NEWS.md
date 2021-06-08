@@ -1,5 +1,9 @@
 # version 0.5-3
 
+* `read_stars()` accepts a function (or list with functions) as first argument, 
+   allowing for saving `stars` objects that read from package directories resolving 
+   platform-dependent paths at run-time
+
 * handle categorical rasters starting at value 0 (by adding 1, and warning); #428
 
 * add `%in%` method; #424

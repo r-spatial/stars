@@ -15,8 +15,8 @@ read_stars(
   NA_value = NA_real_,
   along = NA_integer_,
   RasterIO = list(),
-  proxy = !length(curvilinear) && is_big(.x, sub = sub, driver = driver, normalize_path
-    = normalize_path, ...),
+  proxy = is_functions(.x) || (!length(curvilinear) && is_big(.x, sub = sub, driver =
+    driver, normalize_path = normalize_path, ...)),
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0),
@@ -26,7 +26,7 @@ read_stars(
 is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 }
 \arguments{
-\item{.x}{character vector with name(s) of file(s) or data source(s) to be read}
+\item{.x}{character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector}
 
 \item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set}
 

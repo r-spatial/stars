@@ -14,11 +14,22 @@ enc2utf8char = function(x) {
 		x
 }
 
+get_names = function(x) {
+	if (is.function(x))
+		x()
+	else
+		x
+}
+
+is_functions = function(x) {
+	is.function(x) || all(sapply(x, is.function))
+}
+
 
 #' read raster/array dataset from file or connection
 #'
 #' read raster/array dataset from file or connection
-#' @param .x character vector with name(s) of file(s) or data source(s) to be read
+#' @param .x character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector
 #' @param options character; opening options
 #' @param driver character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.
 #' @param sub character, integer or logical; name, index or indicator of sub-dataset(s) to be read
@@ -83,8 +94,8 @@ enc2utf8char = function(x) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = !length(curvilinear) && is_big(.x, sub = sub, driver=driver, 
-		normalize_path = normalize_path, ...),
+		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) && 
+				is_big(.x, sub = sub, driver=driver, normalize_path = normalize_path, ...)),
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
 		tolerance = 1e-10) {
 
@@ -103,14 +114,15 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
 	}
 
-	if (length(x) > 1) { # loop over data sources:
+	if (length(x) > 1) { # loop over data sources and RETURNS:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_)
 		return(do.call(c, append(ret, list(along = along, tolerance = tolerance))))
 	}
 
-	data = sf::gdal_read(if (is.function(x)) x() else x, 
+	# else:
+	data = sf::gdal_read(get_names(x),
 		options = options, driver = driver, read_data = !proxy,
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 	if (!is.null(data$default_geotransform) && data$default_geotransform == 1) {
@@ -174,7 +186,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			else
 				get_data_units(attr(data, "data")) # extract data array; sets units if present
 		if (meta_data$driver[1] == "netCDF")
-			meta_data = parse_netcdf_meta(meta_data, x) # sets all kind of units
+			meta_data = parse_netcdf_meta(meta_data, get_names(x)) # sets all kind of units
 		if (! proxy && !is.null(meta_data$units) && !is.na(meta_data$units)
 				&& !inherits(data, "units")) # set units
 			units(data) = try_as_units(meta_data$units)
@@ -236,15 +248,18 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				NULL
 
 		# return:
-		ret = if (proxy) # no data present, subclass of "stars":
-			st_stars_proxy(setNames(list(x), names(.x) %||% 
-				if (is.function(x)) "Function" else tail(strsplit(x, '[\\\\/]+')[[1]], 1)),
-				create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
-				resolutions = NULL)
-		else
-			st_stars(setNames(list(data), names(.x) %||% tail(strsplit(x, '[\\\\/:]+')[[1]], 1)),
-				create_dimensions_from_gdal_meta(dim(data), meta_data))
-
+		name_x = if (is.function(.x))
+				names(.x()) %||% .x()
+			else
+				x
+		ret = if (proxy) { # no data present, subclass of "stars":
+				st_stars_proxy(setNames(list(x), names(.x) %||% tail(strsplit(name_x, '[\\\\/]+')[[1]], 1)),
+					create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
+					resolutions = NULL)
+			} else
+				st_stars(setNames(list(data), names(.x) %||% tail(strsplit(name_x, '[\\\\/:]+')[[1]], 1)),
+					create_dimensions_from_gdal_meta(dim(data), meta_data))
+	
 		if (is.list(curvilinear))
 			st_as_stars(ret, curvilinear = curvilinear, ...)
 		else

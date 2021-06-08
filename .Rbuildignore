@@ -23,3 +23,4 @@ vignettes.awk
 ^\.ccache$
 ^\.github$
 ^tic\.R$
+^data-raw$

@@ -166,7 +166,7 @@ image(x3[,,,1])
 Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
 ```{r eval=ev}
 system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
-	read_stars("data/full_data_daily_2013.nc") -> w
+	read_stars() -> w
 ```
 
 We see that
