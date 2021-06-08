@@ -68,7 +68,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	if (join_zlim && !is.character(x[[1]])) {
 		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
 		if (length(breaks) > 2)
-			breaks = unique(breaks)
+			breaks = as.numeric(unique(breaks))
 		nbreaks = length(breaks) # might be shorter than originally intended!
 		if (breaks.missing && nbreaks <= 2) # unlucky default!
 			warning('breaks="quantile" leads to a single class; maybe try breaks="equal" instead?')
@@ -499,5 +499,6 @@ hist.stars = function(x, ..., main = names(x)[1]) {
 
 #' @export
 hist.stars_proxy = function(x, ..., downsample = 0) {
-	hist(st_as_stars(x, downsample = downsample)[[1]], ...)
+	x = st_as_stars(x, downsample = downsample)
+	NextMethod()
 }
