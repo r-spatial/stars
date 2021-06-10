@@ -31,7 +31,7 @@ LazyData: true
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 0.9-7)
+    sf (>= 1.0-0)
 Imports:
     methods,
     parallel,
@@ -66,7 +66,6 @@ Suggests:
     raster,
 	rgdal,
     rmarkdown,
-	s2 (>= 1.0.0),
     sp,
     spacetime,
     spatstat (>= 2.0-1),

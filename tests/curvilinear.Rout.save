@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -88,6 +88,8 @@ x    [x]
 y    [y]
 time    
 curvilinear grid
+downsample set to c(0,0,1)
+downsample set to c(0,0,1)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
                                            Min.      1st Qu.       Median
@@ -102,10 +104,12 @@ x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x
 y       1 35     NA    NA WGS 84    NA  [57x35] 28.6622 [°],...,51.4679 [°] [y]
 time    1  1     NA    NA     NA    NA                                 NULL    
 curvilinear grid
+downsample set to c(0,0,1)
+downsample set to c(0,0,1)
 null device 
           1 
 There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.116   0.112   7.220 
+  7.866   0.107   7.968 

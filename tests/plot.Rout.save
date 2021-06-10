@@ -1,5 +1,5 @@
 
-R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -43,6 +43,7 @@ POINT (13.29635 52.65315)
 + 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
 + 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 + }
+downsample set to c(1,1,1)
 > 
 > # https://github.com/r-spatial/stars/issues/233 :
 > nc = read_sf(system.file("shape/nc.shp", package = "sf"))
@@ -54,4 +55,4 @@ In plot.stars(output) :
 > 
 > proc.time()
    user  system elapsed 
-  3.353   0.145   3.491 
+  2.592   0.109   2.701 

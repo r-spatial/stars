@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -43,8 +43,6 @@ time       1 4383 1998-01-01 1 days   Date FALSE
 station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
 time                                                       NULL
 > (a = aggregate(aq, blocks, mean, na.rm = TRUE))
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
       Min. 1st Qu.   Median    Mean  3rd Qu.    Max. NA's
@@ -72,8 +70,8 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                       Min. 1st Qu. Median  Mean 3rd Qu. Max.
-file35ce24c1b2759.tif    33  199.25  365.5 365.5  531.75  698
+                     Min. 1st Qu. Median  Mean 3rd Qu. Max.
+file46ef83309cd.tif    33  199.25  365.5 365.5  531.75  698
 dimension(s):
      from to offset delta refsys point values x/y
 x       1  2      0     5 WGS 84 FALSE   NULL [x]
@@ -82,8 +80,6 @@ band    1  6     NA    NA     NA    NA   NULL
 > 
 > sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 > (a = aggregate(st, sfc, mean))
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -130,7 +126,6 @@ POLYGON ((0 6, 5 6, 5 0, 0 0, 0 6))
 POLYGON ((5 6, 10 6, 10 0, 5 0, 5 6))
 POINT (-10 -10)
 > (a = aggregate(st, sfc, mean))
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
@@ -144,8 +139,6 @@ geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POINT (-10 -10)
 t                                                      NULL
 > 
 > (a = aggregate(st, st, mean))
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
-although coordinates are longitude/latitude, st_intersects assumes that they are planar
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -160,4 +153,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.426   0.076   1.495 
+  1.389   0.053   1.442 
