@@ -192,7 +192,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/demo.html'>demo</a></span><span class='op'>(</span><span class='va'>nc</span>, echo <span class='op'>=</span> <span class='cn'>FALSE</span>, ask <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Reading layer `nc.gpkg' from data source `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
+</div><div class='output co'>#&gt; Reading layer `nc.gpkg' from data source 
+#&gt;   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
 #&gt; Simple feature collection with 100 features and 14 fields
 #&gt; Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity
 #&gt; Geometry type: MULTIPOLYGON
@@ -201,19 +202,19 @@
 #&gt; Geodetic CRS:  NAD27</div><div class='input'><span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># default grid:</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 12 attributes
 #&gt; attribute(s):
-#&gt;             Min. 1st Qu. Median      Mean 3rd Qu.  Max.  NA's
-#&gt; AREA       0.042   0.108  0.142 0.1451932   0.181 0.241 30904
-#&gt; PERIMETER     NA      NA     NA       NaN      NA    NA 65001
-#&gt; CNTY_         NA      NA     NA       NaN      NA    NA 65001
-#&gt; CNTY_ID       NA      NA     NA       NaN      NA    NA 65001
-#&gt; FIPSNO        NA      NA     NA       NaN      NA    NA 65001
-#&gt; CRESS_ID      NA      NA     NA       NaN      NA    NA 65001
-#&gt; BIR74         NA      NA     NA       NaN      NA    NA 65001
-#&gt; SID74         NA      NA     NA       NaN      NA    NA 65001
-#&gt; NWBIR74       NA      NA     NA       NaN      NA    NA 65001
-#&gt; BIR79         NA      NA     NA       NaN      NA    NA 65001
-#&gt; SID79         NA      NA     NA       NaN      NA    NA 65001
-#&gt; NWBIR79       NA      NA     NA       NaN      NA    NA 65001
+#&gt;                 Min.   1st Qu.    Median         Mean   3rd Qu.      Max.  NA's
+#&gt; AREA           0.042     0.108     0.142 1.451932e-01     0.181     0.241 30904
+#&gt; PERIMETER      0.999     1.461     1.716 1.786110e+00     2.004     3.640 30904
+#&gt; CNTY_       1825.000  1907.000  1989.000 1.998403e+03  2085.000  2241.000 30904
+#&gt; CNTY_ID     1825.000  1907.000  1989.000 1.998403e+03  2085.000  2241.000 30904
+#&gt; FIPSNO     37001.000 37049.000 37101.000 3.710042e+04 37153.000 37199.000 30904
+#&gt; CRESS_ID       1.000    25.000    51.000 5.071206e+01    77.000   100.000 30904
+#&gt; BIR74        248.000  1323.000  2648.000 3.791637e+03  4139.000 21588.000 30904
+#&gt; SID74          0.000     3.000     5.000 7.891985e+00    10.000    44.000 30904
+#&gt; NWBIR74        1.000   297.000   844.000 1.246210e+03  1396.000  8027.000 30904
+#&gt; BIR79        319.000  1606.000  3108.000 4.852046e+03  5400.000 30757.000 30904
+#&gt; SID79          0.000     3.000     6.000 9.584098e+00    13.000    57.000 30904
+#&gt; NWBIR79        3.000   360.000  1058.000 1.604642e+03  1524.000 11631.000 30904
 #&gt; dimension(s):
 #&gt;   from  to   offset      delta refsys point values x/y
 #&gt; x    1 461 -84.3239  0.0192484  NAD27 FALSE   NULL [x]
@@ -222,19 +223,19 @@
 <span class='op'>(</span><span class='va'>x</span> <span class='op'>=</span> <span class='fu'>st_rasterize</span><span class='op'>(</span><span class='va'>nc</span>, <span class='fu'><a href='st_as_stars.html'>st_as_stars</a></span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span>, nx <span class='op'>=</span> <span class='fl'>100</span>, ny <span class='op'>=</span> <span class='fl'>50</span>, values <span class='op'>=</span> <span class='cn'>NA_real_</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 12 attributes
 #&gt; attribute(s):
-#&gt;             Min. 1st Qu. Median     Mean 3rd Qu.  Max. NA's
-#&gt; AREA       0.042   0.108  0.142 0.145536   0.181 0.241 2373
-#&gt; PERIMETER     NA      NA     NA      NaN      NA    NA 5000
-#&gt; CNTY_         NA      NA     NA      NaN      NA    NA 5000
-#&gt; CNTY_ID       NA      NA     NA      NaN      NA    NA 5000
-#&gt; FIPSNO        NA      NA     NA      NaN      NA    NA 5000
-#&gt; CRESS_ID      NA      NA     NA      NaN      NA    NA 5000
-#&gt; BIR74         NA      NA     NA      NaN      NA    NA 5000
-#&gt; SID74         NA      NA     NA      NaN      NA    NA 5000
-#&gt; NWBIR74       NA      NA     NA      NaN      NA    NA 5000
-#&gt; BIR79         NA      NA     NA      NaN      NA    NA 5000
-#&gt; SID79         NA      NA     NA      NaN      NA    NA 5000
-#&gt; NWBIR79       NA      NA     NA      NaN      NA    NA 5000
+#&gt;                 Min.   1st Qu.    Median         Mean   3rd Qu.      Max. NA's
+#&gt; AREA           0.042     0.108     0.142     0.145536     0.181     0.241 2373
+#&gt; PERIMETER      0.999     1.470     1.716     1.789032     2.004     3.640 2373
+#&gt; CNTY_       1825.000  1908.000  1989.000  1999.761325  2088.000  2241.000 2373
+#&gt; CNTY_ID     1825.000  1908.000  1989.000  1999.761325  2088.000  2241.000 2373
+#&gt; FIPSNO     37001.000 37049.000 37101.000 37100.327750 37151.000 37199.000 2373
+#&gt; CRESS_ID       1.000    25.000    51.000    50.663875    76.000   100.000 2373
+#&gt; BIR74        248.000  1323.500  2648.000  3790.530263  4139.000 21588.000 2373
+#&gt; SID74          0.000     3.000     5.000     7.905976    10.000    44.000 2373
+#&gt; NWBIR74        1.000   289.000   844.000  1246.116483  1396.000  8027.000 2373
+#&gt; BIR79        319.000  1606.000  3108.000  4848.231062  5386.000 30757.000 2373
+#&gt; SID79          0.000     3.000     6.000     9.574419    13.000    57.000 2373
+#&gt; NWBIR79        3.000   360.000  1058.000  1602.740769  1524.000 11631.000 2373
 #&gt; dimension(s):
 #&gt;   from  to   offset      delta refsys point values x/y
 #&gt; x    1 100 -84.3239  0.0886687  NAD27 FALSE   NULL [x]
