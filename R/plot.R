@@ -435,12 +435,13 @@ contour.stars = function(x, ...) {
 #' @param dimension dimension name or number to reduce
 #' @param use_alpha logical; if TRUE, the fourth band will be used as alpha values
 #' @param maxColorValue integer; maximum value for colors
-#' @param stretch logical or character; if \code{TRUE}, each band is stretched to 0 ... \code{maxColorValue}
-#' by "percent clip"; if character \code{"percent"} is required \code{probs}; if
-#' character \code{"histogram"} a "histogram equalization" is performed. Other character
-#' values are ignored, insted method used is "percent".
-#' @param probs probability values for quantiles used for stretching. Ignored when \code{stretch}
-#' is one of \code{NULL}, \code{FALSE}, or character \code{"histogram"}
+#' @param stretch logical or character; if \code{TRUE} or \code{"percent"},
+#' each band is stretched to 0 ... maxColorValue by "percent clip" method using
+#' probs values. If \code{"histogram"} a "histogram equalization" is performed,
+#' prob values are ignored. If stretch is \code{NULL} or \code{FALSE}, no stretching
+#' is performed. Other character values are interpreted as "percent" and a message
+#' will be printed.
+#' @param probs probability values for quantiles used for stretching by "percent".
 #' @seealso \link{st_apply}, \link[grDevices]{rgb}
 #' @details the dimension's bands are mapped to red, green, blue, alpha; if a different
 #' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
