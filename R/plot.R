@@ -534,10 +534,10 @@ st_rgb <- function (x,
 			structure(ret, dim = dim(g))
 		}
 	} else {
-		rgb4 = function(r, g, b, a) structure(rgb(r, g, b, a,
-												  maxColorValue = maxColorValue), dim = dim(r))
-		rgb3 = function(r, g, b) structure(rgb(r, g, b, maxColorValue = maxColorValue),
-										   dim = dim(r))
+		rgb4 = function(r, g, b, a)
+			structure(rgb(r, g, b, a,maxColorValue = maxColorValue), dim = dim(r))
+		rgb3 = function(r, g, b)
+			structure(rgb(r, g, b, maxColorValue = maxColorValue), dim = dim(r))
 	}
 	st_apply(x, dims, if (use_alpha) rgb4 else rgb3)
 }
