@@ -452,6 +452,14 @@ contour.stars = function(x, ...) {
 #' if (require(ggplot2)) {
 #'  ggplot() + geom_stars(data = r) + scale_fill_identity()
 #' }
+#' r = st_rgb(x[,,,3:1],
+#' 		   probs = c(0.01, 0.99),
+#' 		   stretch = "percent")
+#' plot(r)
+#' r = st_rgb(x[,,,3:1],
+#' 		   probs = c(0.01, 0.99),
+#' 		   stretch = "histogram")
+#' plot(r)
 st_rgb <- function (x,
 					dimension = 3,
 					use_alpha = dim(x)[dimension] == 4,
