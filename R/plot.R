@@ -437,8 +437,8 @@ contour.stars = function(x, ...) {
 #' @param maxColorValue integer; maximum value for colors
 #' @param stretch logical or character; if \code{TRUE} or \code{"percent"},
 #' each band is stretched to 0 ... maxColorValue by "percent clip" method using
-#' probs values. If \code{"histogram"}, a "histogram equalization" is performed,
-#' prob values are ignored. If stretch is \code{NULL} or \code{FALSE}, no stretching
+#' probs values. If \code{"histogram"}, a "histogram equalization" is performed
+#' (\code{probs} values are ignored). If stretch is \code{NULL} or \code{FALSE}, no stretching
 #' is performed. Other character values are interpreted as "percent" and a message
 #' will be printed.
 #' @param probs probability values for quantiles used for stretching by "percent".
