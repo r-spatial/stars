@@ -487,7 +487,8 @@ st_rgb <- function (x,
 			x = stats::ecdf(x)(x)
 			x * maxColorValue
 		} else {
-			x
+			qs = range(x)
+			(x - qs[1])/(qs[2] - qs[1]) * maxColorValue
 		}
 	}
 
@@ -499,16 +500,14 @@ st_rgb <- function (x,
 	if(is.logical(stretch)) {
 		if(stretch){
 			stretch.method = "percent"
-			message("Stretch as logical == TRUE, then percent clip by probs is applied")
 		} else {
-			maxColorValue = max(x[[1]])
+			maxColorValue = max(maxColorValue, max(x[[1]]))
 		}
 	}
 
 	if(is.character(stretch)) {
 		if(!stretch %in% c("percent", "histogram")){
 			stretch.method = "percent"
-			message("Stretch not in c('histogram', 'percent'), then 'percent' applied")
 		} else {
 			stretch.method = stretch
 		}
