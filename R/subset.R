@@ -66,8 +66,14 @@
 	for (i in seq_along(mc)) { 
 		if ((is.call(mc[[i]]) || is.name(mc[[i]])) && !identical(as.character(mc[[i]]), "")) # try to "get" it:
 			mc[[i]] = eval(mc[[i]], parent.frame())
-		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]])) { # FIXME: or something else?
-			args[[i]] = mc[[i]]
+		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]]) || is.character(mc[[i]])) { # FIXME: or something else?
+			args[[i]] = if (is.character(mc[[i]])) {
+						m = match(mc[[i]], d[[i]]$values)
+						if (length(m) == 0 || any(is.na(m)))
+							stop("selecting using invalid value label(s)?")
+						m
+					} else
+						mc[[i]]
 			do_select = TRUE
 		}
 	}

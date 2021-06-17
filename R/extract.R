@@ -52,7 +52,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 
 	m = if (inherits(x, "stars_proxy")) {
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
-			lapply(x, function(y) do.call(abind, lapply(y, 
+			lapply(x, function(y) do.call(abind, lapply(get_names(y), 
 				gdal_extract, pts = st_coordinates(at), bilinear = bilinear)))
 		} else {
 			x = st_normalize(st_upfront(x))

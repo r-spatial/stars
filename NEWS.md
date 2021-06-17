@@ -1,3 +1,7 @@
+# version 0.5-4
+
+* allow subsetting with `[` by using labels, e.g. of band names.
+
 # version 0.5-3
 
 * `read_stars()` accepts a function (or list with functions) as first argument, 
