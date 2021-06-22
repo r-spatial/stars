@@ -199,6 +199,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		# handle color table and/or attribute table
 		ct = meta_data$color_tables
 		at = meta_data$attribute_tables
+		if (meta_data$driver[1] == "AIG" && identical(names(at[[1]]), c("VALUE", "COUNT")))
+			at = list() # skip it: https://github.com/r-spatial/stars/issues/435
 		# FIXME: how to handle multiple color, category or attribute tables?
 		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0))) {
 			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
