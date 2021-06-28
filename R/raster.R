@@ -9,7 +9,7 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 	#0 360 -90  90
 	e = as.vector(raster::extent(.x)) # xmin xmax ymin ymax
 
-	RasterIO = if (inherits(.x@data, ".SingleLayerData"))
+	RasterIO = if ("data" %in% slotNames(.x) && inherits(.x@data, ".SingleLayerData"))
 			list(bands = .x@data@band)
 		else
 			list()
