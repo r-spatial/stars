@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* extend options in `st_rgb()`, #432, by Gabo Gaona
+
 * allow subsetting with `[` by using labels, e.g. of band names.
 
 # version 0.5-3
