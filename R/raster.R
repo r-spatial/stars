@@ -206,6 +206,7 @@ st_as_stars.SpatRaster = function(.x, ...) {
 	st_as_stars(as(.x, "Raster"), ...)
 }
 
+#' @export
 st_bbox.SpatVector = function(obj, ...) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
@@ -214,6 +215,7 @@ st_bbox.SpatVector = function(obj, ...) {
     st_bbox(bb, crs = st_crs(obj))
 }
 
+#' @export
 st_crs.SpatVector = function(x, ...) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
