@@ -10,7 +10,7 @@ st_rgb(
   use_alpha = dim(x)[dimension] == 4,
   maxColorValue = 255L,
   probs = c(0, 1),
-  stretch = FALSE
+  stretch = NULL
 )
 }
 \arguments{
@@ -22,15 +22,20 @@ st_rgb(
 
 \item{maxColorValue}{integer; maximum value for colors}
 
-\item{probs}{probability values for quantiles used for stretching}
+\item{probs}{probability values for quantiles used for stretching by "percent".}
 
-\item{stretch}{logical; if \code{TRUE}, each band is stretched to 0 ... \code{maxColorValue}}
+\item{stretch}{logical or character; if \code{TRUE} or \code{"percent"},
+each band is stretched to 0 ... maxColorValue by "percent clip" method using
+probs values. If \code{"histogram"}, a "histogram equalization" is performed
+(\code{probs} values are ignored). If stretch is \code{NULL} or \code{FALSE}, no stretching
+is performed. Other character values are interpreted as "percent" and a message
+will be printed.}
 }
 \description{
 reduce dimension to rgb (alpha) hex values
 }
 \details{
-the dimension's bands are mapped to red, green, blue, alpha; if a different 
+the dimension's bands are mapped to red, green, blue, alpha; if a different
 ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
 }
 \examples{
@@ -41,6 +46,14 @@ r = st_rgb(x[,,,c(6,5,4,3)], 3, use_alpha=TRUE) # now R=6,G=5,B=4,alpha=3
 if (require(ggplot2)) {
  ggplot() + geom_stars(data = r) + scale_fill_identity()
 }
+r = st_rgb(x[,,,3:1],
+		   probs = c(0.01, 0.99),
+		   stretch = "percent")
+plot(r)
+r = st_rgb(x[,,,3:1],
+		   probs = c(0.01, 0.99),
+		   stretch = "histogram")
+plot(r)
 }
 \seealso{
 \link{st_apply}, \link[grDevices]{rgb}
