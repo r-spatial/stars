@@ -156,7 +156,7 @@
   use_alpha <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>[</span><span class='va'>dimension</span><span class='op'>]</span> <span class='op'>==</span> <span class='fl'>4</span>,
   maxColorValue <span class='op'>=</span> <span class='fl'>255L</span>,
   probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
-  stretch <span class='op'>=</span> <span class='cn'>FALSE</span>
+  stretch <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -180,17 +180,22 @@
     </tr>
     <tr>
       <th>probs</th>
-      <td><p>probability values for quantiles used for stretching</p></td>
+      <td><p>probability values for quantiles used for stretching by "percent".</p></td>
     </tr>
     <tr>
       <th>stretch</th>
-      <td><p>logical; if <code>TRUE</code>, each band is stretched to 0 ... <code>maxColorValue</code></p></td>
+      <td><p>logical or character; if <code>TRUE</code> or <code>"percent"</code>,
+each band is stretched to 0 ... maxColorValue by "percent clip" method using
+probs values. If <code>"histogram"</code>, a "histogram equalization" is performed
+(<code>probs</code> values are ignored). If stretch is <code>NULL</code> or <code>FALSE</code>, no stretching
+is performed. Other character values are interpreted as "percent" and a message
+will be printed.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>the dimension's bands are mapped to red, green, blue, alpha; if a different 
+    <p>the dimension's bands are mapped to red, green, blue, alpha; if a different
 ordering is wanted, use <a href='stars_subset.html'>[.stars</a> to reorder a dimension, see examples</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -213,7 +218,15 @@ ordering is wanted, use <a href='stars_subset.html'>[.stars</a> to reorder a dim
 <span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='geom_stars.html'>geom_stars</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>r</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_identity.html'>scale_fill_identity</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>}</span>
-</div><div class='img'><img src='st_rgb-1.png' alt='' width='700' height='433' /></div></pre>
+</div><div class='img'><img src='st_rgb-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='va'>r</span> <span class='op'>=</span> <span class='fu'>st_rgb</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>3</span><span class='op'>:</span><span class='fl'>1</span><span class='op'>]</span>,
+       probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>0.99</span><span class='op'>)</span>,
+       stretch <span class='op'>=</span> <span class='st'>"percent"</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in image.stars(x, ..., axes = axes, breaks = breaks, col = col,     key.pos = key.pos, key.width = key.width, key.length = key.length,     main = NULL): rgb plotting not supported on this device</span></div><div class='input'><span class='va'>r</span> <span class='op'>=</span> <span class='fu'>st_rgb</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>3</span><span class='op'>:</span><span class='fl'>1</span><span class='op'>]</span>,
+       probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>0.99</span><span class='op'>)</span>,
+       stretch <span class='op'>=</span> <span class='st'>"histogram"</span><span class='op'>)</span>
+<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in image.stars(x, ..., axes = axes, breaks = breaks, col = col,     key.pos = key.pos, key.width = key.width, key.length = key.length,     main = NULL): rgb plotting not supported on this device</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
