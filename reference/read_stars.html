@@ -251,9 +251,9 @@ proxy object, i.e. not as in-memory arrays but left on disk</p></td>
     <p>In case <code>.x</code> contains multiple files, they will all be read and combined with <a href='c.stars.html'>c.stars</a>. Along which dimension, or how should objects be merged? If <code>along</code> is set to <code>NA</code> it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called <code>time</code> indicates different time stamps. A single name (or positive value) for <code>along</code> will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to <code>along</code> to specify them; see example.</p>
 <p><code>RasterIO</code> is a list with zero or more of the following named arguments:
 <code>nXOff</code>, <code>nYOff</code> (both 1-based: the first row/col has offset value 1),
-<code>nXSize</code>, <code>nYSize</code>, <code>nBufXSize</code>, <code>nBufYSize</code>, <code>bands</code>, coderesample.
-see https://www.gdal.org/classGDALDataset.html for their meaning;
-<code>bands</code> is an integer vector containing the band numbers to be read (1-based: first band is 1)
+<code>nXSize</code>, <code>nYSize</code>, <code>nBufXSize</code>, <code>nBufYSize</code>, <code>bands</code>, <code>resample</code>.
+See <a href='https://gdal.org/doxygen/classGDALDataset.html'>https://gdal.org/doxygen/classGDALDataset.html</a> for their meaning;
+<code>bands</code> is an integer vector containing the band numbers to be read (1-based: first band is 1).
 Note that if <code>nBufXSize</code> or <code>nBufYSize</code> are specified for downsampling an image,
 resulting in an adjusted geotransform. <code>resample</code> reflects the resampling method and
 has to be one of: "nearest_neighbour" (the default),
@@ -344,7 +344,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#&gt; filed9565ee3741d.tif     1   30.75   60.5 60.5   90.25  120
+#&gt; file3cf23ef3e4b1.tif     1   30.75   60.5 60.5   90.25  120
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1 10      0     1     NA    NA   NULL [x]
@@ -357,7 +357,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
 #&gt; attribute(s):
 #&gt;                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#&gt; filed9565ee3741d.tif    33   36.75   65.5 65.5   94.25   98
+#&gt; file3cf23ef3e4b1.tif    33   36.75   65.5 65.5   94.25   98
 #&gt; dimension(s):
 #&gt;   from to offset delta refsys point values x/y
 #&gt; x    1  2      0     5     NA    NA   NULL [x]
