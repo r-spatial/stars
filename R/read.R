@@ -51,9 +51,9 @@ is_functions = function(x) {
 #'
 #' \code{RasterIO} is a list with zero or more of the following named arguments:
 #' \code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
-#' \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, code{resample}.
-#' see https://www.gdal.org/classGDALDataset.html for their meaning;
-#' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1)
+#' \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, \code{resample}.
+#' See \url{https://gdal.org/doxygen/classGDALDataset.html} for their meaning;
+#' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1).
 #' Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
 #' has to be one of: "nearest_neighbour" (the default),
@@ -94,7 +94,7 @@ is_functions = function(x) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) && 
+		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) &&
 				is_big(.x, sub = sub, driver=driver, normalize_path = normalize_path, ...)),
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
 		tolerance = 1e-10) {
@@ -261,7 +261,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			} else
 				st_stars(setNames(list(data), names(.x) %||% tail(strsplit(name_x, '[\\\\/:]+')[[1]], 1)),
 					create_dimensions_from_gdal_meta(dim(data), meta_data))
-	
+
 		if (is.list(curvilinear))
 			st_as_stars(ret, curvilinear = curvilinear, ...)
 		else
@@ -301,7 +301,7 @@ read_mdim = function(x, variable = character(0), ..., options = character(0), ra
 	create_units = function(x) {
 		u <- attr(x, "units")
 		if (is.null(u) || u == "")
-			x 
+			x
 		else {
 			u = units::set_units(x, u, mode = "standard")
 			p = try(as.POSIXct(u), silent = TRUE)
