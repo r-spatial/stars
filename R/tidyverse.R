@@ -54,7 +54,7 @@ mutate.stars <- function(.data, ...) {
 
 #' @name dplyr
 mutate.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "mutate", ".data", env = environment())
+	collect(.data, match.call(), "mutate", ".data", env = parent.frame())
 }
 
 #' @name dplyr
