@@ -142,7 +142,7 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 
 #' @name dplyr
 slice.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "slice", ".data", env = environment())
+	collect(.data, match.call(), "slice", ".data", env = parent.frame())
 }
 
 #' @name st_coordinates
