@@ -356,17 +356,23 @@ as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
 		lapply(x, function(y) structure(y, dim = NULL)))
 }
 
-
 #' @export
-print.stars = function(x, ..., n = 1e5) {
+print.stars = function(x, ..., n = 1e5, abbrev = 30) {
 	add_units = function(x) {
 		f = function(obj) if (inherits(obj, "units")) paste0("[", enc2utf8(as.character(units(obj))), "]") else ""
 		paste(names(x), sapply(x, f))
+	}
+	shorten = function(s) {
+		if (nchar(s) > abbrev)
+			paste0(substr(s, 1, abbrev), "...")
+		else
+			s
 	}
 	cat("stars object with", length(dim(x)), "dimensions and", 
 		length(x), if (length(x) != 1) "attributes\n" else "attribute\n")
 	if (length(x)) {
 		cat("attribute(s)")
+		names(x) = sapply(names(x), shorten)
 		df = if (prod(dim(x)) > 10 * n) {
 			cat(paste0(", summary of first ", n, " cells:\n"))                       # nocov
 			as.data.frame(lapply(x, function(y) structure(y, dim = NULL)[1:n]), optional = TRUE) # nocov
