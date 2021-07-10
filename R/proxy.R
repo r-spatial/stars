@@ -56,14 +56,16 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	plot(x, ..., downsample = 0)
 }
 
-st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions) {
+st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions, RasterIO = list()) {
 	stopifnot(!missing(NA_value))
 	stopifnot(!missing(resolutions))
 	stopifnot(length(list(...)) == 0)
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
+	if (length(RasterIO) == 0)
+		RasterIO = NULL
 	structure(x, dimensions = dimensions, NA_value = NA_value, resolutions = resolutions,
-		class = c("stars_proxy", "stars"))
+		RasterIO = RasterIO, class = c("stars_proxy", "stars"))
 }
 
 add_resolution = function(lst) {
@@ -180,6 +182,7 @@ fetch = function(x, downsample = 0, ...) {
 	xy = attr(d, "raster")$dimensions
 	dx = d[[ xy[1] ]]
 	dy = d[[ xy[2] ]]
+
 	nBufXSize = nXSize = dx$to - dx$from + 1
 	nBufYSize = nYSize = dy$to - dy$from + 1
 
@@ -189,8 +192,11 @@ fetch = function(x, downsample = 0, ...) {
 	if (downsample[2] > 0)
 		nBufYSize = ceiling(nBufYSize / (downsample[2] + 1))
 
-	rasterio = list(nXOff = dx$from, nYOff = dy$from, nXSize = nXSize, nYSize = nYSize, 
-		nBufXSize = nBufXSize, nBufYSize = nBufYSize)
+	# issue #438:
+	if (any(downsample > 0) && !is.null(attr(x, "RasterIO")))
+		warning("with RasterIO defined, argument downsample is ignored")
+	rasterio = attr(x, "RasterIO") %||% list(nXOff = dx$from, nYOff = dy$from, 
+			nXSize = nXSize, nYSize = nYSize, nBufXSize = nBufXSize, nBufYSize = nBufYSize)
 
 	# select bands?
 	bands <- d[["band"]]
