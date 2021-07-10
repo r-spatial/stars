@@ -5,7 +5,7 @@
 \alias{predict.stars_proxy}
 \title{Predict values, given a model object, for a stars or stars_proxy object}
 \usage{
-\method{predict}{stars}(object, model, ...)
+\method{predict}{stars}(object, model, ..., drop_dimensions = FALSE)
 
 \method{predict}{stars_proxy}(object, model, ...)
 }
@@ -15,6 +15,8 @@
 \item{model}{model object of a class that has a predict method; check with `methods(class = class(object))`}
 
 \item{...}{arguments passed on to this predict method}
+
+\item{drop_dimensions}{logical; if `TRUE`, remove dimensions (coordinates etc) from `data.frame` with predictors}
 }
 \description{
 Predict values, given a model object, for a stars or stars_proxy object

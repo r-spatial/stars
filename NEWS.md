@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* `predict.stars()` obtains an argument `drop_dimensions` that, if `TRUE`, drops dimensions from the prediction `data.frame`; #362
+
 * extend options in `st_rgb()`, #432, by Gabo Gaona
 
 * allow subsetting with `[` by using labels, e.g. of band names.

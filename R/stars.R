@@ -857,11 +857,14 @@ drop_units.stars = function(x) {
 #' @name predict.stars
 #' @param object object of class `stars`
 #' @param model model object of a class that has a predict method; check with `methods(class = class(object))`
+#' @param drop_dimensions logical; if `TRUE`, remove dimensions (coordinates etc) from `data.frame` with predictors
 #' @param ... arguments passed on to this predict method
 #' @details separate predictors in object need to be separate attributes in object; 
 #' in case they are e.g. in a band dimension, use `split(object)`
-predict.stars = function(object, model, ...) {
+predict.stars = function(object, model, ..., drop_dimensions = FALSE) {
 	obj_df = as.data.frame(st_as_stars(object))
+	if (drop_dimensions)
+		obj_df = obj_df[-seq_along(dim(object))]
 	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
 	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
 	pr = predict(model, obj_df, ...)
