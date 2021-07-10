@@ -151,7 +151,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>model</span>, <span class='va'>...</span>, drop_dimensions <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars_proxy</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/predict.html'>predict</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>model</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -170,6 +170,10 @@
     <tr>
       <th>...</th>
       <td><p>arguments passed on to this predict method</p></td>
+    </tr>
+    <tr>
+      <th>drop_dimensions</th>
+      <td><p>logical; if `TRUE`, remove dimensions (coordinates etc) from `data.frame` with predictors</p></td>
     </tr>
     </table>
 
