@@ -278,6 +278,7 @@ register_all_s3_methods = function() {
 	register_s3_method("lwgeom", "st_transform_proj", "stars")
 	register_s3_method("sf", "st_join", "stars")
 	register_s3_method("spatstat.geom", "as.owin", "stars")
+	register_s3_method("spatstat.geom", "as.im", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 
