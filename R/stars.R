@@ -899,8 +899,11 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 	l = vector("list", length = length(which))
 	e = expand_dimensions(x)
 	for (i in seq_along(which)) {
-		dp = c(which[i], setdiff(seq_along(dim(x)), which[i]))
-		l[[i]] = aperm(array(e[[ which[i] ]], d[dp]), order(dp))
+		l [[i]] = if (is.null(dim(e[[i]]))) {
+				dp = c(which[i], setdiff(seq_along(dim(x)), which[i]))
+				aperm(array(e[[ which[i] ]], d[dp]), order(dp))
+			} else
+				array(e[[i]], d)
 	}
 	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
 }
