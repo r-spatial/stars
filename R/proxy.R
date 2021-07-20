@@ -330,10 +330,16 @@ process_call_list = function(x, cl, envir = new.env(), downsample = 0) {
 		stopifnot(is.call(cl[[i]]))
 		env = environment(cl[[i]])
 		env [[ names(cl[[i]])[2] ]] = x # here, a stars_proxy may be replaced with the fetched stars object
+		old_downsample = env$downsample # might be NULL
+		if (!is.null(env$downsample) && any(env$downsample != downsample)) {
+			cat(paste0("overriding downsample of (sub)expression to c(", paste(downsample, collapse = ","), ")\n"))
+			env$downsample = downsample
+		}
 		# so we need to do that for other args too: https://github.com/r-spatial/stars/issues/390 :
 		if ("e2" %in% names(env) && inherits(env$e2, "stars_proxy")) # binary ops: also fetch the second arg
 			env$e2 = st_as_stars(env$e2, downsample = downsample)
 		x = eval(cl[[i]], env, parent.frame())
+		env$downsample = old_downsample
 	}
 	x
 }
@@ -388,10 +394,8 @@ is.na.stars_proxy = function(x) {
 }
 
 #' @export
-"[<-.stars_proxy" = function(x, i, value) {
-	if (inherits(i, "stars_proxy"))
-		i = st_as_stars(i) # FIXME: at all cost? should this be done elsewhere?
-	collect(x, match.call(), "[<-", c("x", "i", "value"), env = environment())
+"[<-.stars_proxy" = function(x, i, downsample = 0, value) {
+	collect(x, match.call(), "[<-", c("x", "i", "value", "downsample"), env = environment())
 }
 
 

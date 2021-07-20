@@ -129,10 +129,13 @@
 }
 
 #' @name stars_subset
+#' @param downsample downsampling rate used in case \code{i} is a \code{stars_proxy} object
 #' @param value array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array
 #' @export
 #' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
-"[<-.stars" = function(x, i, value) {
+"[<-.stars" = function(x, i, downsample = 0, value) {
+	if (inherits(i, "stars_proxy"))
+		i = st_as_stars(i, downsample = downsample)
 	if (!inherits(i, "stars"))
 		stop("selector should be a stars object")
 	fun = function(x, y, value) { x[y] = value; x }

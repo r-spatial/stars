@@ -9,7 +9,7 @@
 \usage{
 \method{[}{stars}(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
-\method{[}{stars}(x, i) <- value
+\method{[}{stars}(x, i, downsample = 0) <- value
 
 st_flip(x, which = 1)
 }
@@ -23,6 +23,8 @@ st_flip(x, which = 1)
 \item{drop}{logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped}
 
 \item{crop}{logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.}
+
+\item{downsample}{downsampling rate used in case \code{i} is a \code{stars_proxy} object}
 
 \item{value}{array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array}
 

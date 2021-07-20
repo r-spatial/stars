@@ -38,5 +38,5 @@ as.im.stars = function(X, ...) {
 	if (length(dim(X)) > 2)
 		stop("as.im.stars only works for two-dimensional rasters")
 	X = as.data.frame(X)
-	as.im.data.frame(X, ...) # NextMethod() didn't do it - but why?
+	spatstat.geom::as.im.data.frame(X, ...)
 }
