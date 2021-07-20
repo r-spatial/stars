@@ -154,7 +154,7 @@
 [(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
 # S3 method for stars
-[(x, i) &lt;- value
+[(x, i, downsample = 0) &lt;- value
 
 st_flip(x, which = 1)</pre>
 
@@ -180,6 +180,10 @@ st_flip(x, which = 1)</pre>
     <tr>
       <th>crop</th>
       <td><p>logical; if <code>TRUE</code> and parameter <code>i</code> is a spatial geometry (<code>sf</code> or <code>sfc</code>) object, the extent (bounding box) of the result is cropped to match the extent of <code>i</code> using <a href='st_crop.html'>st_crop</a>. Cropping curvilinear grids is not supported.</p></td>
+    </tr>
+    <tr>
+      <th>downsample</th>
+      <td><p>downsampling rate used in case <code>i</code> is a <code>stars_proxy</code> object</p></td>
     </tr>
     <tr>
       <th>value</th>
