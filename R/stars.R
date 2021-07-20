@@ -902,7 +902,7 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 		l [[i]] = if (is.null(dim(e[[i]]))) {
 				dp = c(which[i], setdiff(seq_along(dim(x)), which[i]))
 				aperm(array(e[[ which[i] ]], d[dp]), order(dp))
-			} else
+			} else # curvilinear:
 				array(e[[i]], d)
 	}
 	st_stars(setNames(l, names(d)[which]), st_dimensions(x))
