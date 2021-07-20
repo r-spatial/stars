@@ -1,5 +1,9 @@
 # version 0.5-4
 
+* `st_redimension()` works for curvilinear grids; #441
+
+* `downsample` is propagated to subexpressions like `r[r < 50] = NA`
+
 * `predict.stars()` obtains an argument `drop_dimensions` that, if `TRUE`, drops dimensions from the prediction `data.frame`; #362
 
 * extend options in `st_rgb()`, #432, by Gabo Gaona
