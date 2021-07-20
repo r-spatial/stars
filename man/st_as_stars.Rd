@@ -63,7 +63,7 @@ st_as_stars(.x, ...)
   coords = 1:2
 )
 
-\method{st_as_stars}{xts}(.x, ..., dimensions)
+\method{st_as_stars}{xts}(.x, ..., dimensions, name = "attr")
 
 \method{st_as_stars}{OpenStreetMap}(.x, ..., as_col = FALSE)
 }
@@ -102,7 +102,7 @@ st_as_stars(.x, ...)
 
 \item{nz}{integer; number of cells in z direction; if missing no z-dimension is created.}
 
-\item{name}{character; name for the geometry dimensions}
+\item{name}{character; attribute name for array from an \code{xts} object}
 
 \item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 

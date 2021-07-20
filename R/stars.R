@@ -750,7 +750,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 		di = new_dims
 		new_dims = create_dimensions(di)
 	}
-	if (!all.equal(di, dim(x), check.attributes = FALSE)) {
+	if (!isTRUE(all.equal(di, dim(x), check.attributes = FALSE))) {
 		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
 		for (i in seq_len(min(length(di), length(dim(x)))))

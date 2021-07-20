@@ -23,9 +23,10 @@ as.xts.stars <- function(x,...) {
 }
 
 #' @name st_as_stars
+#' @param name character; attribute name for array from an \code{xts} object
 #' @details for the \code{xts} methods, if \code{dimensions} are provided, time has to be the first dimension.
 #' @export
-st_as_stars.xts = function(.x, ..., dimensions) {
+st_as_stars.xts = function(.x, ..., dimensions, name = "attr") {
 	if (!requireNamespace("xts", quietly = TRUE))
 		stop("xts required: install that first") # nocov
 	if (!requireNamespace("zoo", quietly = TRUE))
@@ -35,12 +36,12 @@ st_as_stars.xts = function(.x, ..., dimensions) {
 	if (!missing(dimensions)) {
 		.x = as.matrix(.x)
 		dim(.x) = dim(dimensions)
-		st_stars(list(.x), dimensions)
+		st_stars(setNames(list(.x), name), dimensions)
 	} else {
 		.x = st_as_stars(list(as.matrix(.x)))
 		.x = st_set_dimensions(.x, 1, time)
 		if (!is.null(cn))
 			.x = st_set_dimensions(.x, 2, cn)
-		st_set_dimensions(.x, names = c("time", "others"))
+		st_set_dimensions(setNames(.x, name), names = c("time", "others"))
 	}
 }

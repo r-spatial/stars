@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -49,12 +49,9 @@ foo     1   4       1     1                           NA    NA   NULL
 > st_as_stars(rr)
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
-                                                         Min. 1st Qu. Median
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif    47      65     76
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif    47      65     76
-                                                            Mean 3rd Qu. Max.
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif  77.3419      87  255
-a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif  77.3419      87  255
+                                   Min. 1st Qu. Median    Mean 3rd Qu. Max.
+a.L7_ETMs.tif.a.L7_ETMs.tif.b....    47      65     76 77.3419      87  255
+a.L7_ETMs.tif.a.L7_ETMs.tif.b....    47      65     76 77.3419      87  255
 dimension(s):
      from  to  offset delta                       refsys point values x/y
 x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
@@ -65,4 +62,4 @@ foo     1   4       1     1                           NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.421   0.069   1.482 
+  1.462   0.099   1.554 
