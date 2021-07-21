@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -320,8 +320,8 @@ In as.xts.stars(x) : all but first attribute will be ignored
 > st_as_stars(xts)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-  Min. 1st Qu. Median     Mean 3rd Qu. Max.
-  9.38  11.225   20.8 20.38167    29.5 31.2
+      Min. 1st Qu. Median     Mean 3rd Qu. Max.
+attr  9.38  11.225   20.8 20.38167    29.5 31.2
 dimension(s):
        from to                  offset   delta  refsys point values
 time      1  4 2010-08-05 10:00:00 UTC 1 hours POSIXct    NA   NULL
@@ -329,8 +329,8 @@ others    1  3                      NA      NA      NA    NA   NULL
 > st_as_stars(xts, dimensions = st_dimensions(x))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-  Min. 1st Qu. Median     Mean 3rd Qu. Max.
-  9.38  11.225   20.8 20.38167    29.5 31.2
+      Min. 1st Qu. Median     Mean 3rd Qu. Max.
+attr  9.38  11.225   20.8 20.38167    29.5 31.2
 dimension(s):
      from to                  offset   delta  refsys point
 sfc     1  3                      NA      NA      NA  TRUE
@@ -353,4 +353,4 @@ time                                  NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.307   0.063   1.362 
+  1.701   0.093   1.786 
