@@ -233,7 +233,7 @@
     </tr>
     <tr>
       <th>downsample</th>
-      <td><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the downsampling rate; see Details.</p></td>
+      <td><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.</p></td>
     </tr>
     <tr>
       <th>nbreaks</th>
@@ -261,7 +261,7 @@
     </tr>
     <tr>
       <th>reset</th>
-      <td><p>logical; if <code>FALSE</code>, keep the plot in a mode that allows adding further map elements; if <code>TRUE</code> restore original mode after plotting; see details.</p></td>
+      <td><p>logical; if <code>FALSE</code>, keep the plot in a mode that allows adding further map elements; if <code>TRUE</code> restore original mode after plotting</p></td>
     </tr>
     <tr>
       <th>box_col</th>
@@ -355,9 +355,9 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Downsampling: a value for <code>downsample</code> of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on; can be specified for each dimension.</p>
+    <p>Downsampling: a value for <code>downsample</code> of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.</p>
 <p>use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208</p>
-<p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and it and has to be set manually.</p>
+<p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and has to be set manually.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>

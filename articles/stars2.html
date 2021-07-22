@@ -281,10 +281,10 @@
 <p>and this happens <em>instantly</em>, because no data is read. When we plot this object,</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## downsample set to c(19)</span></code></pre></div>
+<span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.181   0.165   2.003</code></pre>
+##   2.547   0.160   2.367</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -376,12 +376,12 @@
 <span class="co">## [[1]]</span>
 <span class="co">## adrop(x = x, drop = drop)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55bbc65aee88&gt;</span>
+<span class="co">## &lt;environment: 0x558ab23bfdc8&gt;</span>
 <span class="co">## </span>
 <span class="co">## [[2]]</span>
 <span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55bbc64da4a0&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x558ab225b660&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
@@ -432,12 +432,12 @@
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x55bbc5e4dd68&gt;</span>
+<span class="co">## &lt;environment: 0x558ab2431060&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span>
-<span class="co">## downsample set to c(19)</span></code></pre></div>
+<span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.566   0.144   1.371</code></pre>
+##   1.604   0.160   1.437</code></pre>
 </div>
 </div>
 </div>
@@ -501,15 +501,13 @@
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
 <p>If we do this for a sub-range, defined for the object resolutions, we get:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>We now create four maps, all over the same region ([0,4] x [0,4]), with different resolutions (cell size 1, 1/2 and 1/3):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -561,14 +559,12 @@
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-22-2.png" width="700"></p>
 <p>Finally, an example where the first raster has the higher resolution:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
@@ -590,14 +586,12 @@
 
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## downsample set to c(0,0,1)</span></code></pre></div>
+  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-23-2.png" width="700"></p>
 </div>
   </div>
