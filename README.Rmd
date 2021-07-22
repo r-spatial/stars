@@ -160,7 +160,7 @@ nc_outline = st_union(st_geometry(nc))
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
 prec %>%
   slice(index = 1:12, along = "time") %>%
-  plot(downsample = c(5, 5, 1), hook = plot_hook)
+  plot(downsample = c(3, 3, 1), hook = plot_hook)
 ```
 
 and next, intersected with with the counties of North Carolina, where
