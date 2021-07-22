@@ -47,7 +47,7 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.9.0, GDAL 3.2.0, PROJ 7.2.0
+# Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
   slice(index = 1, along = "band") %>%
@@ -105,13 +105,14 @@ The following methods are currently available for `stars_proxy` objects:
 
 ``` r
 methods(class = "stars_proxy")
-#  [1] [              adrop          aggregate      aperm          as.data.frame 
-#  [6] c              coerce         dim            droplevels     filter        
-# [11] initialize     Math           merge          mutate         Ops           
-# [16] plot           predict        print          pull           select        
-# [21] show           slice          slotsFromS3    split          st_apply      
-# [26] st_as_stars    st_crop        st_mosaic      st_redimension st_sample     
-# [31] st_set_bbox    transmute      write_stars   
+#  [1] [              [[<-           [<-            adrop          aggregate     
+#  [6] aperm          as.data.frame  c              coerce         dim           
+# [11] droplevels     filter         hist           initialize     is.na         
+# [16] Math           merge          mutate         Ops            plot          
+# [21] predict        print          pull           select         show          
+# [26] slice          slotsFromS3    split          st_apply       st_as_sf      
+# [31] st_as_stars    st_crop        st_mosaic      st_redimension st_sample     
+# [36] st_set_bbox    transmute      write_stars   
 # see '?methods' for accessing help and source code
 ```
 
@@ -131,18 +132,15 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 #  assuming WGS84 Lat/Lon.
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
-#  Total_precipitation_surface_1_Hour_Accumulation [kg/m^2]
-#  Min.   :  0.000                                         
-#  1st Qu.:  0.000                                         
-#  Median :  0.750                                         
-#  Mean   :  4.143                                         
-#  3rd Qu.:  4.630                                         
-#  Max.   :163.750                                         
+#                                            Min. 1st Qu. Median     Mean 3rd Qu.
+# Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63
+#                                              Max.
+# Total_precipitation_surface_1_... [kg/m^2] 163.75
 # dimension(s):
 #      from  to                  offset   delta  refsys point
 # x       1  87                      NA      NA  WGS 84    NA
 # y       1 118                      NA      NA  WGS 84    NA
-# time    1  23 2018-09-13 18:30:00 UTC 1 hours POSIXct    NA
+# time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct    NA
 #                              values x/y
 # x    [87x118] -80.6113,...,-74.8822 [x]
 # y      [87x118] 32.4413,...,37.6193 [y]
@@ -151,11 +149,10 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
-# although coordinates are longitude/latitude, st_union assumes that they are planar
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
 prec %>%
   slice(index = 1:12, along = "time") %>%
-  plot(downsample = c(5, 5, 1), hook = plot_hook)
+  plot(downsample = c(3, 3, 1), hook = plot_hook)
 ```
 
 ![](man/figures/README-plot3-1.png)<!-- -->
@@ -166,8 +163,6 @@ plotted:
 
 ``` r
 a = aggregate(prec, by = nc, FUN = max)
-# although coordinates are longitude/latitude, st_intersects assumes that they are planar
-# although coordinates are longitude/latitude, st_intersects assumes that they are planar
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
 
