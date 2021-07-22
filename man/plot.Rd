@@ -71,7 +71,7 @@
 
 \item{axes}{logical; should axes and box be added to the plot?}
 
-\item{downsample}{logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the downsampling rate; see Details.}
+\item{downsample}{logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.}
 
 \item{nbreaks}{number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.}
 
@@ -85,7 +85,7 @@
 
 \item{key.length}{amount of space reserved for length of the key (labels); relative or absolute (using lcm)}
 
-\item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.}
+\item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting}
 
 \item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
 
@@ -135,11 +135,11 @@
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 }
 \details{
-Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on; can be specified for each dimension.
+Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
 
 use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 
-when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.
+when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

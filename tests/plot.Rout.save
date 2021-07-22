@@ -43,7 +43,6 @@ POINT (13.29635 52.65315)
 + 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
 + 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 + }
-downsample set to c(1,1,1)
 > 
 > # https://github.com/r-spatial/stars/issues/233 :
 > nc = read_sf(system.file("shape/nc.shp", package = "sf"))
@@ -55,4 +54,4 @@ In plot.stars(output) :
 > 
 > proc.time()
    user  system elapsed 
-  2.592   0.109   2.701 
+  2.558   0.068   2.618 

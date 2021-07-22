@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* argument `downsample` in `plot.stars` and `st_as_stars.stars_proxy` do the same thing (removed a one-offset between them).
+
 * `st_redimension()` works for curvilinear grids; #441
 
 * `downsample` is propagated to subexpressions like `r[r < 50] = NA`

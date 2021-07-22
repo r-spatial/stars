@@ -55,8 +55,7 @@ was `contains'
 > plot(buf, add = TRUE, col = NA)
 > 
 > plot(x, rgb = 1:3)
-downsample set to c(1,1,1)
 > 
 > proc.time()
    user  system elapsed 
-  1.898   0.087   1.978 
+  2.430   0.061   2.484 

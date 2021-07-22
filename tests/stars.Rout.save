@@ -117,9 +117,7 @@ BOUNDCRS[
         PARAMETER["Scale difference",1,
             ID["EPSG",8611]]]]
 > plot(x)
-downsample set to c(1,1,1)
 > plot(x, join_zlim = FALSE)
-downsample set to c(1,1,1)
 > x %>% st_set_dimensions(names = c('a', 'b', 'c'))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -370,7 +368,6 @@ y       1  90             90    -2      NA    NA   NULL [y]
 zlev    1   1          0 [m]    NA      NA    NA   NULL    
 time    1   1 1981-12-31 UTC    NA POSIXct    NA   NULL    
 > plot(red)
-downsample set to c(0,0,1,1)
 > 
 > x = st_xy2sfc(read_stars(tif)[,1:10,1:10,], as_points = FALSE)
 > st_bbox(x)
@@ -570,4 +567,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  5.669   0.304   5.966 
+  7.503   0.315   7.813 

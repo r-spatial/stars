@@ -86,26 +86,22 @@ x    [x]
 y    [y]
 time    
 curvilinear grid
-downsample set to c(0,0,1)
-downsample set to c(0,0,1)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                                         Min.      1st Qu.       Median
-nitrogendioxide_summed_total_c...  5.2174e-05 7.538364e-05 8.273005e-05
-                                           Mean      3rd Qu.         Max. NA's
-nitrogendioxide_summed_total_c...  8.607436e-05 9.393939e-05 0.0002323525   37
+                                           Min.      1st Qu.       Median
+nitrogendioxide_summed_total_c...  4.383528e-05 7.480038e-05 8.344652e-05
+                                           Mean      3rd Qu.        Max. NA's
+nitrogendioxide_summed_total_c...  8.607374e-05 9.398567e-05 0.000192237   32
 dimension(s):
      from to offset delta refsys point                               values x/y
-x       1 57     NA    NA WGS 84    NA [57x35] -5.81066 [°],...,30.8108 [°] [x]
-y       1 35     NA    NA WGS 84    NA  [57x35] 28.6622 [°],...,51.4679 [°] [y]
+x       1 50     NA    NA WGS 84    NA [50x31] -5.81066 [°],...,30.1405 [°] [x]
+y       1 31     NA    NA WGS 84    NA  [50x31] 28.7828 [°],...,51.4686 [°] [y]
 time    1  1     NA    NA     NA    NA                                 NULL    
 curvilinear grid
-downsample set to c(0,0,1)
-downsample set to c(0,0,1)
 null device 
           1 
 There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.221   0.113   7.327 
+  7.037   0.135   7.166 

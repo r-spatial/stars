@@ -48,12 +48,9 @@ as.data.frame.stars_proxy = function(x, ...) {
 
 #' @name plot
 #' @export
-#' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and it and has to be set manually.
+#' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.
 plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
-	if (missing(downsample) && any(downsample > 0))
-		cat(paste0("downsample set to c(", paste(downsample, collapse = ","), ")\n"))
-	x = st_as_stars(x, downsample = downsample, ...)
-	plot(x, ..., downsample = 0)
+	plot(st_as_stars(x, downsample = downsample, ...), ..., downsample = 0)
 }
 
 st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions, RasterIO = list()) {

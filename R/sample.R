@@ -5,13 +5,13 @@ st_downsample = function(x, n, fill_out = TRUE) {
 	n = rep(n, length.out = length(d))
 	dims = st_dimensions(x)
 	regular = is_regular_grid(x)
-	if (! all(n <= 1)) {
+	if (! all(n == 0)) {
 		args = rep(list(rlang::missing_arg()), length(d)+1)
 		for (i in seq_along(d)) {
-			if (n[i] > 1) {
-				sq = seq(1, d[i], n[i])
+			if (n[i] > 0) {
+				sq = seq(1, d[i], n[i] + 1)
 				args[[i+1]] = sq
-				# values:
+				# $values:
 				if (!is.null(dims[[i]]$values))
 					dims[[i]]$values = dims[[i]]$values[sq]
 			}
@@ -20,7 +20,7 @@ st_downsample = function(x, n, fill_out = TRUE) {
 		if (fill_out && regular) {
 			d_new = st_dimensions(x)
 			for (i in seq_along(d)) {
-				dims[[i]]$delta = dims[[i]]$delta * n[i]
+				dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
 				dims[[i]]$from = d_new[[i]]$from
 				dims[[i]]$to = d_new[[i]]$to
 			}

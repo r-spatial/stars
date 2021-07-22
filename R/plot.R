@@ -16,7 +16,7 @@ make_label = function(x, i = 1) {
 #' @param join_zlim logical; if \code{TRUE}, compute a single, joint zlim (color scale) for all subplots from \code{x}
 #' @param main character; subplot title prefix; use \code{""} to get only time, use \code{NULL} to suppress subplot titles
 #' @param axes logical; should axes and box be added to the plot?
-#' @param downsample logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the downsampling rate; see Details.
+#' @param downsample logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.
 #' @param nbreaks number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.
 #' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells
@@ -24,13 +24,13 @@ make_label = function(x, i = 1) {
 #' @param key.pos integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.
 #' @param key.width amount of space reserved for width of the key (labels); relative or absolute (using lcm)
 #' @param key.length amount of space reserved for length of the key (labels); relative or absolute (using lcm)
-#' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting; see details.
+#' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
 #' @param hook NULL or function; hook function that will be called on every sub-plot.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details
-#' Downsampling: a value for \code{downsample} of 0 or 1 causes no downsampling, 2 that every second dimension value is sampled, 3 that every third dimension value is sampled, and so on; can be specified for each dimension.
+#' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. 
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
@@ -89,10 +89,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 				rep(NA_real_, 2)
 		dims = dim(x)
 		x = if (isTRUE(downsample)) {
-				n = dims * 0 + 1 # keep names
+				n = dims * 0 # keep names
 				n[dxy] = get_downsample(dims)
-				if (any(n > 0))
-					cat(paste0("downsample set to c(", paste(n, collapse = ","), ")\n"))
 				st_downsample(x, n)
 			} else if (is.numeric(downsample))
 				st_downsample(x, downsample)
@@ -397,7 +395,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 # compute the degree of downsampling allowed to still have more than
 # one cell per screen/device pixel:
 get_downsample = function(dims, px = dev.size("px")) {
-	floor(sqrt(prod(dims) / prod(px)))
+	if (n <- max(0L, floor(sqrt(prod(dims) / prod(px))) - 1.0))
+		message(paste0("downsample set to ", n))
+	n
 }
 
 
