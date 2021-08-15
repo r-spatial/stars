@@ -180,14 +180,20 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
+#' @export
+st_bbox.SpatExtent = function(obj, ..., crs = NA_crs_) {
+	if (!requireNamespace("terra", quietly = TRUE))
+		stop("package terra required, please install it first") # nocov
+	bb = as.vector(obj)[c(1,3,2,4)]
+	names(bb) = c("xmin", "ymin", "xmax", "ymax")
+	st_bbox(bb, crs = crs)
+}
 
 #' @export
 st_bbox.SpatRaster = function(obj, ...) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
-	bb = as.vector(terra::ext(obj))[c(1,3,2,4)]
-	names(bb) = c("xmin", "ymin", "xmax", "ymax")
-	st_bbox(bb, crs = st_crs(obj))
+	st_bbox(terra::ext(obj), crs = st_crs(obj))
 }
 
 #' @export
