@@ -381,7 +381,7 @@
 <span class="co">## longitude    1 81    -85 0.125  WGS 84    NA                      NULL [x]</span>
 <span class="co">## latitude     1 33     33 0.125  WGS 84    NA                      NULL [y]</span>
 <span class="co">## time         1 12     NA    NA POSIXct    NA 1999-01-31,...,1999-12-31</span></code></pre></div>
-<p>which doesn’t convert time values in a proper R time format.</p>
+<p>The difference between <code>read_ncdf</code> and <code>read_stars</code> for NetCDF files is that the former uses package RNetCDF to directly read the NetCDF file, where the latter uses the GDAL driver for NetCDF files.</p>
 <div id="reading-datasets-from-multiple-files" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reading-datasets-from-multiple-files" class="anchor"></a>Reading datasets from multiple files</h2>
@@ -525,8 +525,8 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##          Min. 1st Qu. Median   Mean 3rd Qu. Max.</span>
-<span class="co">## traffic     0       8     10 9.9916      12   26</span>
+<span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
+<span class="co">## traffic     0       8     10 9.99712      12   27</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
