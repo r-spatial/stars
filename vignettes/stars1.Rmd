@@ -185,7 +185,10 @@ Alternatively, this dataset can be read using `read_ncdf`, as in
 system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
     read_ncdf()
 ```
-which doesn't convert time values in a proper R time format.
+
+The difference between `read_ncdf` and `read_stars` for NetCDF files
+is that the former uses package RNetCDF to directly read the NetCDF
+file, where the latter uses the GDAL driver for NetCDF files.
 
 ## Reading datasets from multiple files
 
