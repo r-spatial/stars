@@ -910,7 +910,17 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 
 #' @export
 st_interpolate_aw.stars = function(x, to, extensive, ...) {
-	sf::st_interpolate_aw(st_as_sf(x), to, extensive, ...)
+	ret = sf::st_interpolate_aw(st_as_sf(x), to, extensive, ...)
+	geom = attr(ret, "sf_column")
+	dx = dim(x)
+	if (length(dx) > 2 && length(x) == 1 && length(ret) > 2) {
+		ret = merge(st_as_stars(ret))
+		nd = names(st_dimensions(x))
+		ret = st_set_dimensions(ret, seq_along(dx), 
+								names = c(geom, paste0(nd[-(1:2)], collapse = ".")))
+		setNames(ret, names(x))
+	} else
+		ret
 }
 
 #' get the raster type (if any) of a stars object
