@@ -910,8 +910,7 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 
 #' @export
 st_interpolate_aw.stars = function(x, to, extensive, ...) {
-	x = st_as_sf(x)
-	NextMethod()
+	sf::st_interpolate_aw(st_as_sf(x), to, extensive, ...)
 }
 
 #' get the raster type (if any) of a stars object
