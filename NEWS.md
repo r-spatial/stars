@@ -1,6 +1,6 @@
 # version 0.5-4
 
-* argument `downsample` in `plot.stars` and `st_as_stars.stars_proxy` do the same thing (removed a one-offset between them).
+* argument `downsample` in `plot.stars()` and `st_as_stars.stars_proxy()` has the same effect (removed a one-offset between them).
 
 * `st_redimension()` works for curvilinear grids; #441
 
@@ -22,7 +22,7 @@
 
 * add `%in%` method; #424
 
-* `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
+* `read_stars()` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
 
 * binary Ops (like `+`, `-`, `*` etc.) work for `stars_proxy` objects; #390
 
