@@ -867,7 +867,12 @@ predict.stars = function(object, model, ..., drop_dimensions = FALSE) {
 		obj_df = obj_df[-seq_along(dim(object))]
 	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
 	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
-	pr = predict(model, obj_df, ...)
+	pr = try(predict(model, obj_df, ...), silent = TRUE)
+	if (inherits(pr, "try-error")) { # https://github.com/r-spatial/stars/issues/448
+		message("prediction on the entire object failed; will try to split() bands over attributes")
+		predict(split(object), model, ..., drop_dimensions = drop_dimensions)
+	}
+
 	if (!inherits(pr, "data.frame"))
 		pr = if (is.null(colnames(pr)))
 				data.frame(prediction = pr)
