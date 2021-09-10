@@ -284,7 +284,7 @@
 <span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   2.159   0.168   2.004</code></pre>
+##   2.324   0.188   2.174</code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -376,12 +376,12 @@
 <span class="co">## [[1]]</span>
 <span class="co">## adrop(x = x, drop = drop)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x556b2c74c2b8&gt;</span>
+<span class="co">## &lt;environment: 0x55aa4ebbf058&gt;</span>
 <span class="co">## </span>
 <span class="co">## [[2]]</span>
 <span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x556b2c646aa8&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x55aa4ea96a48&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
@@ -432,12 +432,12 @@
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x556b2c8361a0&gt;</span>
+<span class="co">## &lt;environment: 0x55aa4eccb078&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span>
 <span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code>##    user  system elapsed 
-##   1.542   0.135   1.355</code></pre>
+##   1.648   0.148   1.461</code></pre>
 </div>
 </div>
 </div>
@@ -556,7 +556,6 @@
 <span class="co">##   from to offset delta refsys point values x/y</span>
 <span class="co">## x    1  4      0     1     NA    NA   NULL [x]</span>
 <span class="co">## y    1  4      4    -1     NA    NA   NULL [y]</span>
-
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -583,7 +582,6 @@
 <span class="co">##   from to offset     delta refsys point values x/y</span>
 <span class="co">## x    1 12      0  0.333333     NA    NA   NULL [x]</span>
 <span class="co">## y    1 12      4 -0.333333     NA    NA   NULL [y]</span>
-
 <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
