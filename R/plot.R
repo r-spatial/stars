@@ -92,7 +92,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		dims = dim(x)
 		x = if (isTRUE(downsample)) {
 				n = dims * 0 # keep names
-				n[dxy] = get_downsample(dims)
+				n[dxy] = get_downsample(dims, rgb = is.numeric(dots$rgb))
 				st_downsample(x, n)
 			} else if (is.numeric(downsample))
 				st_downsample(x, downsample)
@@ -380,8 +380,14 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
         if (isTRUE(st_is_longlat(x))) {
-            .degAxis(1)
-            .degAxis(2)
+			if (isTRUE(all.equal(st_bbox(x), st_bbox(), tolerance = .1, 
+								 check.attributes = FALSE))) {
+				.degAxis(1, at = seq(-180, 180, 60))
+				.degAxis(2, at = seq(-90, 90, 30))
+			} else {
+				.degAxis(1)
+				.degAxis(2)
+			}
         } else {
             axis(1)
             axis(2)
@@ -396,7 +402,9 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 
 # compute the degree of downsampling allowed to still have more than
 # one cell per screen/device pixel:
-get_downsample = function(dims, px = dev.size("px")) {
+get_downsample = function(dims, px = dev.size("px"), rgb = FALSE) {
+	if (rgb)
+		dims = dims[1:2]
 	if (n <- max(0L, floor(sqrt(prod(dims) / prod(px))) - 1.0))
 		message(paste0("downsample set to ", n))
 	n
