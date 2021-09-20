@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* fix bug in `st_crop()` when cropping area is larger than grid; #455
+
 * export `st_downsample()`, e.g. to be used by `tmap`; https://github.com/r-tmap/tmap/issues/597
 
 * argument `downsample` in `plot.stars()` and `st_as_stars.stars_proxy()` and `st_downsample()` has the same effect (removed a one-offset between them).

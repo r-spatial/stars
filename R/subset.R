@@ -230,7 +230,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = TRUE)
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
 		cr[,1] = cr[,1] - dm[[xd]]$from + 1
 		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {
