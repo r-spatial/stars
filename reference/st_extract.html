@@ -266,7 +266,18 @@ to <code>at</code> may be much faster than passing an <code>sf</code> or <code>s
 #&gt; 7           91   POINT (297550 9114174)
 #&gt; 8           96 POINT (293928.2 9113897)
 #&gt; 9          105 POINT (295710.5 9119106)
-#&gt; 10          62 POINT (291157.3 9113704)</div></pre>
+#&gt; 10          62 POINT (291157.3 9113704)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='st_coordinates.html'>st_coordinates</a></span><span class='op'>(</span><span class='va'>pnt</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># "at" is a matrix: return a matrix</span>
+</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6]
+#&gt;  [1,]   62   43   32   76   62   29
+#&gt;  [2,]   83   73   79   61  120   96
+#&gt;  [3,]   94   81   96   68  135  116
+#&gt;  [4,]   61   49   39   78   68   36
+#&gt;  [5,]   70   50   54   42   97   75
+#&gt;  [6,]   72   61   67   56  116   92
+#&gt;  [7,]   91   77   57   12   13   11
+#&gt;  [8,]   96   79   81   54  103   91
+#&gt;  [9,]  105   98  111   74  139  114
+#&gt; [10,]   62   50   36   89   70   32</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
