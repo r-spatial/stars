@@ -53,4 +53,5 @@ pnt = st_sample(st_as_sfc(st_bbox(r)), 10)
 st_extract(r, pnt)
 st_extract(r, pnt) \%>\% st_as_sf()
 st_extract(r[,,,1], pnt)
+st_extract(r, st_coordinates(pnt)) # "at" is a matrix: return a matrix
 }
