@@ -3,20 +3,23 @@
 #' Extract cell values at point locations
 #' @name st_extract
 #' @export
-#' @returns if \code{x} has more dimensions than only x and y (raster), an 
-#' object of class \code{stars} with POINT geometries replacing x and y raster
-#' dimensions; otherwise an object of \code{sf} with extracted values.
-#' @details points outside the raster are returned as \code{NA} values.
 st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @name st_extract
 #' @param x object of class \code{stars} or \code{stars_proxy}
-#' @param at object of class \code{sf} or \code{sfc} with geometries, where to extract x
+#' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with points in rows, indicating where to extract x
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
 #' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
 #' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.
 #' @param FUN function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel
 #' @param ... passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries
+#' @returns if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
+#' otherwise: if \code{x} has more dimensions than only x and y (raster), an 
+#' object of class \code{stars} with POINT geometries replacing x and y raster
+#' dimensions, if this is not the case, an object of \code{sf} with extracted values.
+#' @details points outside the raster are returned as \code{NA} values. For
+#' large sets of points for which extraction is needed, passing a matrix as
+#' to \code{at} may be much faster than passing an \code{sf} or \code{sfc} object.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -29,23 +32,26 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		attr(at, "time_column") %||% attr(at, "time_col"),
 		interpolate_time = bilinear, FUN = mean) {
 
-	stopifnot(inherits(at, c("sf", "sfc")), st_crs(at) == st_crs(x))
+	stopifnot(inherits(at, c("sf", "sfc", "matrix")))
+	if (inherits(at, "matrix"))
+		pts = at
+	else {
+		stopifnot(st_crs(at) == st_crs(x))
+		if (! all(st_dimension(at) == 0)) { # should check & branch here in case of MULTIPOINT?
+			stopifnot(is.null(time_column), !bilinear, !interpolate_time)
+			# from aggregate.stars_proxy:
+			by = st_geometry(at)
+			# this assumes the result is small, no need to proxy
+			l = lapply(seq_along(by), function(i) aggregate(st_normalize(st_as_stars(x[by[i]])), by[i], FUN, ...))
+			return(do.call(c, c(l, along = list(which_sfc(l[[1]]))))) # RETURNS!
+		}
+		sf_column = attr(at, "sf_column") %||% "geometry"
 
-	if (! all(st_dimension(at) == 0)) { # should check & branch here in case of MULTIPOINT?
-		stopifnot(is.null(time_column), !bilinear, !interpolate_time)
-		# from aggregate.stars_proxy:
-		by = st_geometry(at)
-		# this assumes the result is small, no need to proxy
-		l = lapply(seq_along(by), function(i) aggregate(st_normalize(st_as_stars(x[by[i]])), by[i], FUN, ...))
-		return(do.call(c, c(l, along = list(which_sfc(l[[1]])))))
+		tm_pts = if (!is.null(time_column))
+					at[[time_column]] # else NULL
+		at = st_geometry(at)
+		pts = st_coordinates(at)
 	}
-
-	sf_column = attr(at, "sf_column") %||% "geometry"
-
-	tm_pts = if (!is.null(time_column))
-				at[[time_column]] # else NULL
-
-	at = st_geometry(at)
 
 	if (bilinear && !inherits(x, "stars_proxy"))
 		x = st_as_stars_proxy(x)
@@ -53,10 +59,10 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 	m = if (inherits(x, "stars_proxy")) {
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(get_names(y), 
-				gdal_extract, pts = st_coordinates(at), bilinear = bilinear)))
+				gdal_extract, pts = pts, bilinear = bilinear)))
 		} else {
 			x = st_normalize(st_upfront(x))
-			cr = colrow_from_xy(st_coordinates(at), x, NA_outside = TRUE)
+			cr = colrow_from_xy(pts, x, NA_outside = TRUE)
 			ix = (cr[,2] - 1) * dim(x)[1] + cr[,1]
 			lapply(x, function(y) 
 				array(y, dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))[ix, , drop = FALSE])
@@ -95,25 +101,33 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			m = lapply(m, function(n) mapply(interpolate, asplit(n, 1), tm_ix))
 		}
 	}
-	if (NCOL(m[[1]]) > 1) { # return stars:
-		for (i in seq_along(x))
-			dim(m[[i]]) = c(length(at), dim(x)[-(1:2)])
-		d = structure(st_dimensions(x),
-			raster = get_raster(dimensions = rep(NA_character_,2)))
-		d[[1]] = create_dimension(values = at)
-		d[[2]] = NULL
-		names(d)[1] = sf_column
-		setNames(st_as_stars(m, dimensions = d), names(x))
-	} else { # return sf:
-		df = setNames(as.data.frame(lapply(m, function(i) structure(i, dim = NULL))), names(x))
-		df[[sf_column]] = st_geometry(at)
-		if (!is.null(time_column)) { # add time columns of both cube and at:
-			if (inherits(tm_cube, "intervals"))
-				tm_cube = as.list(tm_cube)
-			df$time = tm_cube[tm_ix]
-			df[[time_column]] = tm_pts
+	if (NCOL(m[[1]]) > 1) { # multi-band:
+		if (inherits(at, "matrix"))
+			do.call(cbind, m)
+		else { # return stars:
+			for (i in seq_along(x))
+				dim(m[[i]]) = c(length(at), dim(x)[-(1:2)])
+			d = structure(st_dimensions(x),
+				raster = get_raster(dimensions = rep(NA_character_,2)))
+			d[[1]] = create_dimension(values = at)
+			d[[2]] = NULL
+			names(d)[1] = sf_column
+			setNames(st_as_stars(m, dimensions = d), names(x))
 		}
-		st_as_sf(df)
+	} else {
+		df = setNames(as.data.frame(lapply(m, function(i) structure(i, dim = NULL))), names(x))
+		if (inherits(at, "matrix")) 
+			df
+		else { # return sf:
+			df[[sf_column]] = st_geometry(at)
+			if (!is.null(time_column)) { # add time columns of both cube and at:
+				if (inherits(tm_cube, "intervals"))
+					tm_cube = as.list(tm_cube)
+				df$time = tm_cube[tm_ix]
+				df[[time_column]] = tm_pts
+			}
+			st_as_sf(df)
+		}
 	}
 }
 
