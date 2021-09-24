@@ -28,6 +28,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' st_extract(r, pnt)
 #' st_extract(r, pnt) %>% st_as_sf()
 #' st_extract(r[,,,1], pnt)
+#' st_extract(r, st_coordinates(pnt)) # "at" is a matrix: return a matrix
 st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column = 
 		attr(at, "time_column") %||% attr(at, "time_col"),
 		interpolate_time = bilinear, FUN = mean) {
