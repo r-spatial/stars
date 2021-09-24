@@ -176,7 +176,7 @@
     </tr>
     <tr>
       <th>at</th>
-      <td><p>object of class <code>sf</code> or <code>sfc</code> with geometries, where to extract x</p></td>
+      <td><p>object of class <code>sf</code> or <code>sfc</code> with geometries, or two-column matrix with points in rows, indicating where to extract x</p></td>
     </tr>
     <tr>
       <th>bilinear</th>
@@ -198,12 +198,15 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>if <code>x</code> has more dimensions than only x and y (raster), an 
+    <p>if <code>at</code> is of class <code>matrix</code>, a matrix with extracted values is returned; 
+otherwise: if <code>x</code> has more dimensions than only x and y (raster), an 
 object of class <code>stars</code> with POINT geometries replacing x and y raster
-dimensions; otherwise an object of <code>sf</code> with extracted values.</p>
+dimensions, if this is not the case, an object of <code>sf</code> with extracted values.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>points outside the raster are returned as <code>NA</code> values.</p>
+    <p>points outside the raster are returned as <code>NA</code> values. For
+large sets of points for which extraction is needed, passing a matrix as
+to <code>at</code> may be much faster than passing an <code>sf</code> or <code>sfc</code> object.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
