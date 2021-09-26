@@ -281,7 +281,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 		if (y_is_neg)
 			dims[[ dimy ]] = rev(dims[[ dimy ]])
-	}
+	} else
+		y_is_neg = FALSE
 
 	if (is.null(asp))
 		asp = if (isTRUE(st_is_longlat(x))) {
