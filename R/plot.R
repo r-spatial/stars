@@ -281,8 +281,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		y_is_neg = all(diff(dims[[ dimy ]]) < 0)
 		if (y_is_neg)
 			dims[[ dimy ]] = rev(dims[[ dimy ]])
-	} else
-		y_is_neg = FALSE
+	} 
 
 	if (is.null(asp))
 		asp = if (isTRUE(st_is_longlat(x))) {
@@ -313,8 +312,15 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		rgb = TRUE
 
 	if (! is.null(rgb)) {
-		if (is_curvilinear(x))
-			warning("when using rgb, curvilinear grid is plotted as regular grid")
+		if (is_curvilinear(x)) {
+			x.sf = st_as_sf(x, as_points = as_points)
+			plot_sf = function(x, col, ...) plot(x, ...) # absorb col
+			if (!is.null(co)) # #456:
+				plot_sf(x.sf, pal = co, border = FALSE, ...)
+			else
+				plot(x.sf, border = FALSE, ...)
+			return()
+		}
 		xy = dim(ar)[1:2]
 		if (! y_is_neg) { # need to flip y?
 			ar = if (length(dim(ar)) == 3)
