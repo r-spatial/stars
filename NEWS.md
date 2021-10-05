@@ -1,8 +1,10 @@
 # version 0.5-4
 
+* `as.data.frame.stars()` works for mixed regular and rectilinear dimension; #458
+
 * `plot.stars()` plots curvilinear rasters with color table, or without table but `col` argument passed; #456
 
-* `st_extract()` accepts a matrix with points as `at` argument, for performance reasons; see e.g. https://github.com/rspatial/terra/issues/341
+* `st_extract()` accepts a matrix with points as `at` argument, for when performance is important; see e.g. https://github.com/rspatial/terra/issues/341
 
 * fix bug in `st_crop()` when cropping area is larger than grid; #455
 
