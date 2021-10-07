@@ -1,7 +1,7 @@
 #' spatially or temporally aggregate stars object
-#' 
-#' spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution 
-#' 
+#'
+#' spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution
+#'
 #' @param x object of class \code{stars} with information to be aggregated
 #' @param by object of class \code{sf} or \code{sfc} for spatial aggregation, for temporal aggregation a vector with time values (\code{Date}, \code{POSIXct}, or \code{PCICt}) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see \link{cut.POSIXt}); if by is an object of class \code{stars}, it is converted to sfc by \code{st_as_sfc(by, as_points = FALSE)} thus ignoring its time component.
 #' @param FUN aggregation function, such as \code{mean}
@@ -20,19 +20,19 @@
 #' t1 = as.Date("2018-07-31")
 #' x = read_stars(c(tif, tif, tif, tif), along = list(time = c(t1, t1+1, t1+2, t1+3)))[,1:30,1:30]
 #' st_get_dimension_values(x, "time")
-#' x_agg_time = aggregate(x, by = t1 + c(0, 2, 4), FUN = max) 
+#' x_agg_time = aggregate(x, by = t1 + c(0, 2, 4), FUN = max)
 #'
 #' # aggregate time dimension in format Date - interval
 #' by_t = "2 days"
-#' x_agg_time2 = aggregate(x, by = by_t, FUN = max) 
+#' x_agg_time2 = aggregate(x, by = by_t, FUN = max)
 #' st_get_dimension_values(x_agg_time2, "time")
 #' x_agg_time - x_agg_time2
 #'
 #' # aggregate time dimension in format POSIXct
-#' x = st_set_dimensions(x, 4, values = as.POSIXct(c("2018-07-31", 
-#'                                                   "2018-08-01", 
-#'                                                   "2018-08-02", 
-#'                                                   "2018-08-03")), 
+#' x = st_set_dimensions(x, 4, values = as.POSIXct(c("2018-07-31",
+#'                                                   "2018-08-01",
+#'                                                   "2018-08-02",
+#'                                                   "2018-08-03")),
 #'                       names = "time")
 #' by_t = as.POSIXct(c("2018-07-31", "2018-08-02"))
 #' x_agg_posix = aggregate(x, by = by_t, FUN = max)
@@ -62,7 +62,7 @@
 #' }
 #' agg = aggregate(s, f, mean)
 #' plot(agg)
-aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
+aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
 
@@ -73,7 +73,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function")
 	if (!is.function(by) && !inherits(by, classes))
-		stop(paste("currently, only `by' arguments of class", 
+		stop(paste("currently, only `by' arguments of class",
 			paste(classes, collapse= ", "), "supported"))
 
 	if (missing(FUN))
@@ -98,7 +98,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		if (isTRUE(list(...)$na.rm))
 			x = lapply(x, function(y) { y[is.na(y)] = 0.0; y })
 		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
-		ret = st_as_stars(agg, dimensions = 
+		ret = st_as_stars(agg, dimensions =
 			create_dimensions(append(list(sfc = create_dimension(values = by)),
 			st_dimensions(x)[-(1:2)])))
 		return(ret)
@@ -120,9 +120,9 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				geom = attr(by, "sf_column")
 				by = st_geometry(by)
 			}
-	
+
 			# find groups:
-			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups, 
+			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups,
 			#      and may have multiple if geometries in by overlap, hence:
 			if (identical(join, st_intersects) && has_raster(x))
 				sapply(join(x, by, as_points = as_points),
@@ -151,7 +151,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 						as.POSIXct(levels(i))
 			} else {
 				if (!inherits(values, class(by)))
-					warning(paste0('argument "by" is of a different class (', class(by)[1], 
+					warning(paste0('argument "by" is of a different class (', class(by)[1],
 						') than the time values (', class(values)[1], ')'))
 				i = findInterval(values, by, left.open = left.open, rightmost.closed = rightmost.closed)
 				i[ i == 0 | i == length(by) ] = NA
@@ -162,7 +162,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	d = st_dimensions(x)
 	dims = dim(d)
 
-	agr_grps = function(x, grps, uq, FUN, ...) { 
+	agr_grps = function(x, grps, uq, FUN, ...) {
 		do.call(rbind, lapply(uq, function(i) {
 				sel <- which(grps == i)
 				if (!isTRUE(any(sel)))
@@ -189,12 +189,16 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		d = d[-2] # y
 
 	newdim = c(sfc = length(by), dims[-(1:ndims)])
-	st_stars(lapply(x, array, dim = newdim), dimensions = d)
+	x = st_stars(lapply(x, array, dim = newdim), dimensions = d)
+	if (inherits(by, c("POSIXct", "Date", "PCICt", "function")))
+		st_upfront(x)
+	else
+		x
 }
 
 	# aggregate is done over one or more dimensions
 	# say we have dimensions 1,...,k and we want to aggregate over i,...,j
-	# with 1 <= i <= j <= k; 
+	# with 1 <= i <= j <= k;
 	# let |n| = j-1+1 be the number of dimensions to aggregate over, n
 	# let |m| = k - n be the number of remaining dimensions, m
 	# permute the cube such that the n dimensions are followed by the m
