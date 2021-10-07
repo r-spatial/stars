@@ -209,6 +209,7 @@
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
 st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), 
 		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
+	x = st_upfront(x) # put spatial dimensions up front; https://github.com/r-spatial/stars/issues/457
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
