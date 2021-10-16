@@ -1,6 +1,6 @@
 # Create 'stars' object
 set.seed(1331)
-library(stars)
+suppressPackageStartupMessages(library(stars))
 volcano = rbind(volcano, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA) # add NA rows
 d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
 (r = st_as_stars(t(volcano)))

@@ -112,7 +112,9 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' if \code{FALSE} FUN takes multiple arguments (like \code{fn_ndvi2} below).
 #' @return object of class \code{stars} with accordingly reduced number of dimensions; 
 #' in case \code{FUN} returns more than one value, a new dimension is created carrying 
-#' the name of the function used; see the examples.
+#' the name of the function used; see the examples. Following the logic of 
+#' \link[base]{apply}, This new dimension is put before the
+#' other dimensions; use \link{aperm} to rearrange this, see last example.
 #' @details FUN is a function which either operates on a single object, which will 
 #' be the data of each iteration step over dimensions MARGIN, or a function that 
 #' has as many arguments as there are elements in such an object. See the NDVI 
@@ -140,6 +142,8 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' if (require(pbapply)) { # install it, if FALSE
 #'   pboptions(type = "timer")
 #' }
+#' st_apply(x, 1:2, range) # dimension "range" is first; rearrange by:
+#' st_apply(x, 1:2, range) %>% aperm(c(2,3,1))
 #' @export
 st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, FUTURE = FALSE, 
 		rename = TRUE, .fname, single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN)) {
