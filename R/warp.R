@@ -119,7 +119,8 @@ transform_grid_grid = function(x, target) {
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
 #' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
-#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file
+#' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file; 
+#'  not setting this when \code{use_gdal} is \code{TRUE} leads to a warning
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
 #' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}
 #' @param ... ignored
@@ -161,6 +162,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	ret = if (use_gdal) {
 		if (!is.na(no_data_value))
 			options = c(options, "-dstnodata", no_data_value)
+		else 
+			warning("no_data_value not set: missing values will appear as zero values")
 		options = c(options, "-r", method)
 		if (all(!is.na(cellsize))) {
 			cellsize = rep(abs(cellsize), length.out = 2)
