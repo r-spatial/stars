@@ -218,7 +218,9 @@ if <code>FALSE</code> FUN takes multiple arguments (like <code>fn_ndvi2</code> b
 
     <p>object of class <code>stars</code> with accordingly reduced number of dimensions; 
 in case <code>FUN</code> returns more than one value, a new dimension is created carrying 
-the name of the function used; see the examples.</p>
+the name of the function used; see the examples. Following the logic of 
+<a href='https://rdrr.io/r/base/apply.html'>apply</a>, This new dimension is put before the
+other dimensions; use <a href='https://rdrr.io/r/base/aperm.html'>aperm</a> to rearrange this, see last example.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>FUN is a function which either operates on a single object, which will 
@@ -288,7 +290,25 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 <span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/psolymos/pbapply'>pbapply</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># install it, if FALSE</span>
   <span class='fu'><a href='https://rdrr.io/pkg/pbapply/man/pboptions.html'>pboptions</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"timer"</span><span class='op'>)</span>
 <span class='op'>}</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: pbapply</span></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: pbapply</span></div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>range</span><span class='op'>)</span> <span class='co'># dimension "range" is first; rearrange by:</span>
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;              Min. 1st Qu. Median     Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif     1      50     71 72.43565      96  255
+#&gt; dimension(s):
+#&gt;       from  to  offset delta                       refsys point values x/y
+#&gt; range    1   2      NA    NA                           NA    NA   NULL    
+#&gt; x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</div><div class='input'><span class='fu'>st_apply</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span>, <span class='va'>range</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/aperm.html'>aperm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
+#&gt; attribute(s):
+#&gt;              Min. 1st Qu. Median     Mean 3rd Qu. Max.
+#&gt; L7_ETMs.tif     1      50     71 72.43565      96  255
+#&gt; dimension(s):
+#&gt;       from  to  offset delta                       refsys point values x/y
+#&gt; x        1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
+#&gt; y        1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+#&gt; range    1   2      NA    NA                           NA    NA   NULL    </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
