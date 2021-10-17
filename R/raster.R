@@ -180,7 +180,6 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
-
 st_as_terra = function(x, ...) {
 	stopifnot(inherits(x, "stars"))
 	x = st_upfront(x) # x/y dimensions first
@@ -283,20 +282,4 @@ st_as_stars.SpatRaster = function(.x, ...) {
 	if (!requireNamespace("raster", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
 	st_as_stars(as(.x, "Raster"), ...)
-}
-
-#' @export
-st_bbox.SpatVector = function(obj, ...) {
-	if (!requireNamespace("terra", quietly = TRUE))
-		stop("package terra required, please install it first") # nocov
-    bb = as.vector(terra::ext(obj))[c(1,3,2,4)]
-    names(bb) = c("xmin", "ymin", "xmax", "ymax")
-    st_bbox(bb, crs = st_crs(obj))
-}
-
-#' @export
-st_crs.SpatVector = function(x, ...) {
-	if (!requireNamespace("terra", quietly = TRUE))
-		stop("package terra required, please install it first") # nocov
-    st_crs(terra::crs(x))
 }

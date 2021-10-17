@@ -185,13 +185,19 @@ Alternatively, this dataset can be read using `read_ncdf`, as in
 system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
     read_ncdf()
 ```
-which doesn't convert time values in a proper R time format.
+
+The difference between `read_ncdf` and `read_stars` for NetCDF files
+is that the former uses package RNetCDF to directly read the NetCDF
+file, where the latter uses the GDAL driver for NetCDF files.
 
 ## Reading datasets from multiple files
 
-Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found [here](ftp://ftp.cdc.noaa.gov/Datasets/noaa.oisst.v2.highres/); the subset from 1981 used below
-was downloaded from a NOAA ftp site that is no longer available in this form.
-(ftp site used to be eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
+Model data are often spread across many files. An example of a 0.25
+degree grid, global daily sea surface temperature product is found
+[here](https://psl.noaa.gov/data/gridded/data.noaa.oisst.v2.highres.html);
+the subset from 1981 used below was downloaded from a NOAA ftp
+site that is no longer available in this form. (ftp site used to
+be eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 
 We read the data by giving `read_stars` a vector with character names:
 ```{r eval=ev}

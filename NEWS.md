@@ -1,6 +1,16 @@
 # version 0.5-4
 
-* argument `downsample` in `plot.stars` and `st_as_stars.stars_proxy` do the same thing (removed a one-offset between them).
+* `as.data.frame.stars()` works for mixed regular and rectilinear dimension; #458
+
+* `plot.stars()` plots curvilinear rasters with color table, or without table but `col` argument passed; #456
+
+* `st_extract()` accepts a matrix with points as `at` argument, for when performance is important; see e.g. https://github.com/rspatial/terra/issues/341
+
+* fix bug in `st_crop()` when cropping area is larger than grid; #455
+
+* export `st_downsample()`, e.g. to be used by `tmap`; https://github.com/r-tmap/tmap/issues/597
+
+* argument `downsample` in `plot.stars()` and `st_as_stars.stars_proxy()` and `st_downsample()` has the same effect (removed a one-offset between them).
 
 * `st_redimension()` works for curvilinear grids; #441
 
@@ -22,7 +32,7 @@
 
 * add `%in%` method; #424
 
-* `read_stars` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
+* `read_stars()` gains an argument `tolerance` to control tolerance in dimension value comparisons; #414
 
 * binary Ops (like `+`, `-`, `*` etc.) work for `stars_proxy` objects; #390
 

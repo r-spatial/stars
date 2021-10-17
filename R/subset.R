@@ -209,6 +209,7 @@
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
 st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), 
 		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
+	x = st_upfront(x) # put spatial dimensions up front; https://github.com/r-spatial/stars/issues/457
 	d = dim(x)
 	dm = st_dimensions(x)
 	args = rep(list(rlang::missing_arg()), length(d)+1)
@@ -230,7 +231,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = TRUE)
+		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
 		cr[,1] = cr[,1] - dm[[xd]]$from + 1
 		cr[,2] = cr[,2] - dm[[yd]]$from + 1
 		for (i in seq_along(d)) {

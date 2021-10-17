@@ -2,7 +2,7 @@ suppressPackageStartupMessages(library(stars))
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 x = read_stars(geomatrix)
 # can stars reproduce what gdal does, by default?
-x2 = st_warp(x, use_gdal = TRUE)
+x2 = st_warp(x, use_gdal = TRUE, no_data_value = -9999)
 y = st_warp(x, x2)
 plot(x2, breaks = "equal", axes=TRUE)
 plot(y, breaks = "equal", axes=TRUE)

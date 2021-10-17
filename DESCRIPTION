@@ -31,7 +31,7 @@ LazyData: true
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 1.0-0)
+    sf (>= 1.0-3)
 Imports:
     methods,
     parallel,
@@ -79,7 +79,7 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Collate: 
     'init.R'
     'stars.R'
