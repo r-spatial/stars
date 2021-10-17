@@ -115,36 +115,57 @@ st_as_raster = function(x, ...) {
 		d[[2]]$offset = d[[2]]$offset + ny * d[[2]]$delta # top
 		d[[2]]$delta = -d[[2]]$delta # going down
 		x[[1]] = if (length(dim(x)) == 2)
-				x[[1]][,ny:1]
-			else
-				x[[1]][,ny:1,]
+			x[[1]][,ny:1]
+		else
+			x[[1]][,ny:1,]
 	}
 	dxy = attr(d, "raster")$dimensions
 	stopifnot(all(dxy %in% names(d)))
 	bb = st_bbox(x)
-	values = if (is.factor(x[[1]]))
-			structure(x[[1]], dim = NULL)
-		else
-			as.vector(x[[1]]) # would convert factor into character
-	if (length(dim(x)) == 2) {
-		raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
-			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4],
-			crs = as(st_crs(x), "CRS"), vals = values)
+	values = if (is.factor(x[[1]])) {
+		structure(x[[1]], dim = NULL)
 	} else {
-		third = setdiff(names(d), dxy)
-		b = raster::brick(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
-			xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], nl = dim(x)[third],
-			crs = as(st_crs(x), "CRS"))
-		raster::values(b) = values
-		z = seq(d[[third]])
-		if (!any(is.na(z))) {
-			if (is.character(z))
-				names(b) = z
-			else
-				b = raster::setZ(b, z)
-		}
-		b
+		as.vector(x[[1]]) # would convert factor into character
 	}
+	if (inherits(x, "SpatRaster")){
+		third = setdiff(names(d), dxy)
+		b = terra::rast(nrows = dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
+						xmin = bb[1], xmax = bb[3], ymin = bb[2], ymax = bb[4],
+						nlyrs = ifelse(length(dim(x)) == 2, 1, dim(x)[third]),
+						crs = as(st_crs(x), "CRS"))
+		terra::values(b) = values
+		terra::coltab(b) = lapply(x, function(x) t(col2rgb(attr(x, "colors"), alpha = TRUE)))
+		if (length(dim(x)) != 2){
+			z = seq(d[[third]])
+			if (!any(is.na(z))) {
+				if (is.character(z)) {
+					names(b) = z
+				} else {
+					names(b) = paste0(third, z)
+				}
+			}
+		}
+	} else {
+		if (length(dim(x)) == 2) {
+			b = raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
+						   xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4],
+						   crs = as(st_crs(x), "CRS"), vals = values)
+		} else {
+			third = setdiff(names(d), dxy)
+			b = raster::brick(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
+							  xmn = bb[1], xmx = bb[3], ymn = bb[2], ymx = bb[4], nl = dim(x)[third],
+							  crs = as(st_crs(x), "CRS"))
+			raster::values(b) = values
+			z = seq(d[[third]])
+			if (!any(is.na(z))) {
+				if (is.character(z))
+					names(b) = z
+				else
+					b = raster::setZ(b, z)
+			}
+		}
+	}
+	return(b)
 }
 
 #' Coerce stars object into a Raster raster or brick
@@ -180,53 +201,6 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
-st_as_terra = function(x, ...) {
-	stopifnot(inherits(x, "stars"))
-	x = st_upfront(x) # x/y dimensions first
-	if (length(dim(x)) > 3) {
-		warning("folding all higher dimensions into the third dimension") # nocov
-		x = st_apply(x, 1:2, as.vector) # fortunes::fortune("side effect") # nocov
-	}
-	if (length(dim(x)) == 2 && length(x) > 1)
-		x = merge(x)
-	d = st_dimensions(x)
-	if (d[[2]]$delta > 0) { # swap:
-		ny = dim(x)[2]
-		d[[2]]$offset = d[[2]]$offset + ny * d[[2]]$delta # top
-		d[[2]]$delta = -d[[2]]$delta # going down
-		x[[1]] = if (length(dim(x)) == 2)
-			x[[1]][,ny:1]
-		else
-			x[[1]][,ny:1,]
-	}
-	dxy = attr(d, "raster")$dimensions
-	stopifnot(all(dxy %in% names(d)))
-	bb = st_bbox(x)
-	values = if (is.factor(x[[1]])) {
-		structure(x[[1]], dim = NULL)
-	} else {
-		as.vector(x[[1]]) # would convert factor into character
-	}
-	third = setdiff(names(d), dxy)
-	b = terra::rast(nrows = dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
-					xmin = bb[1], xmax = bb[3], ymin = bb[2], ymax = bb[4],
-					nlyrs = ifelse(length(dim(x)) == 2, 1, dim(x)[third]),
-					crs = as(st_crs(x), "CRS"))
-	terra::values(b) = values
-	terra::coltab(b) = lapply(x, function(x) t(col2rgb(attr(x, "colors"), alpha = TRUE)))
-	if (length(dim(x)) != 2){
-		z = seq(d[[third]])
-		if (!any(is.na(z))) {
-			if (is.character(z)) {
-				names(b) = z
-			} else {
-				names(b) = paste0(third, z)
-			}
-		}
-	}
-	b
-}
-
 #' Coerce stars object into a terra SpatRaster
 #'
 #' Coerce stars object into a terra SpatRaster
@@ -242,7 +216,7 @@ setAs("stars", "SpatRaster", function(from) {
 		stop("package terra required, please install it first") # nocov
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to SpatRaster objects")
-	st_as_terra(from)
+	st_as_raster(from)
 })
 
 setAs("stars_proxy", "SpatRaster", function(from) {
