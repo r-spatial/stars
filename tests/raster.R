@@ -15,6 +15,7 @@ r = as(x, "Raster")
 (x = read_stars(tif, proxy = TRUE))
 (r = as(x, "Raster"))
 (y = st_as_stars(r))
+(y2 = st_as_stars(r, proxy = TRUE))
 
 ## terra -------------
 (x = read_stars(tif))
@@ -30,3 +31,4 @@ r = as(x, "SpatRaster")
 (x = read_stars(tif, proxy = TRUE))
 (r = as(x, "SpatRaster"))
 (y = st_as_stars(r))
+(y2 = st_as_stars(r, proxy = TRUE))
