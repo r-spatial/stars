@@ -227,9 +227,9 @@ st_as_terra = function(x, ...) {
 	b
 }
 
-#' Coerce stars object into a Terra SpatRaster
+#' Coerce stars object into a terra SpatRaster
 #'
-#' Coerce stars object into a Terra SpatRaster
+#' Coerce stars object into a terra SpatRaster
 #' @param from object to coerce
 #' @name as
 #' @rdname coerce-methods
@@ -237,7 +237,7 @@ st_as_terra = function(x, ...) {
 #' @aliases coerce,stars_proxy,Terra-method
 #' @returns SpatRaster
 #' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a SpatRaster.
-setAs("stars", "Terra", function(from) {
+setAs("stars", "SpatRaster", function(from) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
 	if (!is_regular_grid(from))
@@ -245,7 +245,7 @@ setAs("stars", "Terra", function(from) {
 	st_as_terra(from)
 })
 
-setAs("stars_proxy", "Terra", function(from) {
+setAs("stars_proxy", "SpatRaster", function(from) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
 	if (!is_regular_grid(from))
@@ -257,7 +257,6 @@ setAs("stars_proxy", "Terra", function(from) {
 	}
 	terra::rast(unlist(from))
 })
-
 
 #' @export
 st_bbox.SpatRaster = function(obj, ...) {
