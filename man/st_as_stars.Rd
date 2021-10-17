@@ -9,6 +9,7 @@
 \alias{st_as_stars.bbox}
 \alias{st_as_stars.sf}
 \alias{st_as_stars.Raster}
+\alias{st_as_stars.SpatRaster}
 \alias{st_as_stars.ncdfgeom}
 \alias{st_as_stars.stars_proxy}
 \alias{st_as_stars.data.frame}
@@ -43,6 +44,8 @@ st_as_stars(.x, ...)
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
 
 \method{st_as_stars}{Raster}(.x, ..., att = 1, ignore_file = FALSE)
+
+\method{st_as_stars}{SpatRaster}(.x, ..., ignore_file = FALSE)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 
@@ -106,7 +109,7 @@ st_as_stars(.x, ...)
 
 \item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 
-\item{ignore_file}{logical; if \code{TRUE}, ignore the Raster object file name}
+\item{ignore_file}{logical; if \code{TRUE}, ignore the SpatRaster object file name}
 
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.}
