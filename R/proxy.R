@@ -256,7 +256,10 @@ fetch = function(x, downsample = 0, ...) {
 			names(new_dim)[dm] = names(d)[dm]
 		}
 
-	st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x))
+	ret = unclass(ret)
+	for (i in seq_along(ret))
+		dim(ret[[i]]) = dim(new_dim)
+	adrop(st_set_crs(st_stars(setNames(ret, names(x)), new_dim), st_crs(x)))
 }
 
 check_xy_warn = function(call, dimensions) {

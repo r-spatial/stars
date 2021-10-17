@@ -867,14 +867,20 @@ predict.stars = function(object, model, ..., drop_dimensions = FALSE) {
 		obj_df = obj_df[-seq_along(dim(object))]
 	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
 	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
-	pr = predict(model, obj_df, ...)
-	if (!inherits(pr, "data.frame"))
-		pr = if (is.null(colnames(pr)))
-				data.frame(prediction = pr)
-			else
-				as.data.frame(pr)
-	pr[unique(data.frame(na_ids)[,1]), ] = NA # Mask with original NA's
-	st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
+	pr = try(predict(model, obj_df, ...), silent = TRUE)
+	if (inherits(pr, "try-error")) { # https://github.com/r-spatial/stars/issues/448
+		m = paste0("prediction on array(s) `", paste(names(object), collapse = ","), "' failed; will try to split() dimension `", tail(names(dim(object)), 1), "' over attributes")
+		message(m)
+		predict(split(object), model, ..., drop_dimensions = drop_dimensions) # returns
+	} else {
+		if (!inherits(pr, "data.frame"))
+			pr = if (is.null(colnames(pr)))
+					data.frame(prediction = pr)
+				else
+					as.data.frame(pr)
+		pr[unique(data.frame(na_ids)[,1]), ] = NA # Mask with original NA's
+		st_stars(lapply(pr, function(y) structure(y, dim = dim(object))), st_dimensions(object))
+	}
 }
 
 
@@ -910,8 +916,17 @@ st_dim_to_attr = function(x, which = seq_along(dim(x))) {
 
 #' @export
 st_interpolate_aw.stars = function(x, to, extensive, ...) {
-	x = st_as_sf(x)
-	NextMethod()
+	ret = sf::st_interpolate_aw(st_as_sf(x), to, extensive, ...)
+	geom = attr(ret, "sf_column")
+	dx = dim(x)
+	if (length(dx) > 2 && length(x) == 1 && length(ret) > 2) {
+		ret = merge(st_as_stars(ret))
+		nd = names(st_dimensions(x))
+		ret = st_set_dimensions(ret, seq_along(dx), 
+								names = c(geom, paste0(nd[-(1:2)], collapse = ".")))
+		setNames(ret, names(x))
+	} else
+		ret
 }
 
 #' get the raster type (if any) of a stars object

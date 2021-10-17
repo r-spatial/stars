@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -84,9 +84,7 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > # the following two plots confirm that (only) the
 > # upper-left corner is part of the grid cell (when dy is negative), leading 
 > # to a seemingly half-gridcell-shift problem:
-> sf_extSoftVersion()["GDAL"]
-   GDAL 
-"3.2.1" 
+> ## sf_extSoftVersion()["GDAL"]
 > plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE;
 > plot(ls, add = TRUE, col = "red")
 > plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes = TRUE, reset = FALSE)
@@ -107,4 +105,4 @@ y    1 10      1  -0.1     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.909   0.048   0.950 
+  0.869   0.072   0.934 

@@ -22,7 +22,7 @@ st_extract(x, ...)
 
 \item{...}{passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries}
 
-\item{at}{object of class \code{sf} or \code{sfc} with geometries, where to extract x}
+\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with points in rows, indicating where to extract x}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
@@ -33,15 +33,18 @@ st_extract(x, ...)
 \item{FUN}{function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel}
 }
 \value{
-if \code{x} has more dimensions than only x and y (raster), an 
+if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
+otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
-dimensions; otherwise an object of \code{sf} with extracted values.
+dimensions, if this is not the case, an object of \code{sf} with extracted values.
 }
 \description{
 Extract cell values at point locations
 }
 \details{
-points outside the raster are returned as \code{NA} values.
+points outside the raster are returned as \code{NA} values. For
+large sets of points for which extraction is needed, passing a matrix as
+to \code{at} may be much faster than passing an \code{sf} or \code{sfc} object.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -50,4 +53,5 @@ pnt = st_sample(st_as_sfc(st_bbox(r)), 10)
 st_extract(r, pnt)
 st_extract(r, pnt) \%>\% st_as_sf()
 st_extract(r[,,,1], pnt)
+st_extract(r, st_coordinates(pnt)) # "at" is a matrix: return a matrix
 }

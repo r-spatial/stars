@@ -47,7 +47,9 @@ if \code{FALSE} FUN takes multiple arguments (like \code{fn_ndvi2} below).}
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; 
 in case \code{FUN} returns more than one value, a new dimension is created carrying 
-the name of the function used; see the examples.
+the name of the function used; see the examples. Following the logic of 
+\link[base]{apply}, This new dimension is put before the
+other dimensions; use \link{aperm} to rearrange this, see last example.
 }
 \description{
 st_apply apply a function to array dimensions: aggregate over space, time, or something else
@@ -81,4 +83,6 @@ st_apply(x, 3, function(x) var(as.vector(x))) # as.vector is required!
 if (require(pbapply)) { # install it, if FALSE
   pboptions(type = "timer")
 }
+st_apply(x, 1:2, range) # dimension "range" is first; rearrange by:
+st_apply(x, 1:2, range) \%>\% aperm(c(2,3,1))
 }

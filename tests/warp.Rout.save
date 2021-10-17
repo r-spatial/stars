@@ -1,6 +1,6 @@
 
-R version 3.5.3 (2019-03-11) -- "Great Truth"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.1.1 (2021-08-10) -- "Kick Things"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = read_stars(geomatrix)
 > # can stars reproduce what gdal does, by default?
-> x2 = st_warp(x, use_gdal = TRUE)
+> x2 = st_warp(x, use_gdal = TRUE, no_data_value = -9999)
 > y = st_warp(x, x2)
 > plot(x2, breaks = "equal", axes=TRUE)
 > plot(y, breaks = "equal", axes=TRUE)
@@ -56,4 +56,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-  0.408   0.056   0.457 
+  0.841   0.057   0.890 

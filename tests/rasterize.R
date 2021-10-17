@@ -10,7 +10,7 @@ plot(x, axes = TRUE)
 # the following two plots confirm that (only) the
 # upper-left corner is part of the grid cell (when dy is negative), leading 
 # to a seemingly half-gridcell-shift problem:
-sf_extSoftVersion()["GDAL"]
+## sf_extSoftVersion()["GDAL"]
 plot(st_rasterize(ls, grd), axes = TRUE, reset = FALSE) # ALL_TOUCHED=FALSE;
 plot(ls, add = TRUE, col = "red")
 plot(st_rasterize(ls, grd, options = "ALL_TOUCHED=TRUE"), axes = TRUE, reset = FALSE)

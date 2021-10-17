@@ -7,6 +7,18 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 	r = attr(st_dimensions(x), "raster")
 	gt = get_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
+	if (xor(is.null(d[[1]]$values), is.null(d[[2]]$values))) {
+		# mixed regular/rectilinear dimensions: make rectilinear; https://github.com/r-spatial/stars/issues/458
+		e = expand_dimensions(d)
+		if (is.null(d[[1]]$values)) {
+			d[[1]]$from = d[[1]]$to = NA
+			d[[1]]$values = e[[1]]
+		}
+		if (is.null(d[[2]]$values)) {
+			d[[2]]$from = d[[2]]$to = NA
+			d[[2]]$values = e[[2]]
+		}
+	}
 	sfc = st_as_sfc(d, ..., as_points = as_points, which = which, geotransform = gt) 
 	# swap axes?
 	if (st_axis_order() && isTRUE(st_crs(x, parameters = TRUE)$yx))
