@@ -100,7 +100,7 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 		ret
 }
 
-st_as_raster = function(x, ...) {
+st_as_raster = function(x, class, ...) {
 	stopifnot(inherits(x, "stars"))
 	x = st_upfront(x) # x/y dimensions first
 	if (length(dim(x)) > 3) {
@@ -127,7 +127,7 @@ st_as_raster = function(x, ...) {
 	} else {
 		as.vector(x[[1]]) # would convert factor into character
 	}
-	if (inherits(x, "SpatRaster")){
+	if (class == "SpatRaster"){
 		third = setdiff(names(d), dxy)
 		b = terra::rast(nrows = dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 						xmin = bb[1], xmax = bb[3], ymin = bb[2], ymax = bb[4],
@@ -216,7 +216,7 @@ setAs("stars", "SpatRaster", function(from) {
 		stop("package terra required, please install it first") # nocov
 	if (!is_regular_grid(from))
 		stop("only regular rasters can be converted to SpatRaster objects")
-	st_as_raster(from)
+	st_as_raster(from, class = "SpatRaster")
 })
 
 setAs("stars_proxy", "SpatRaster", function(from) {
