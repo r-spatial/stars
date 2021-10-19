@@ -89,10 +89,13 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		e = exactextractr::coverage_fraction(as(r, "Raster"), by)
 		st = do.call(raster::stack, e)
 		m = raster::getValues(st)
-		if (identical(FUN, mean))
-			m = sweep(m, 2, colSums(m), "/") # mean: divide weights by the sum of weights
-		else if (!identical(FUN, sum))
-			stop("for exact=TRUE, FUN should either be mean or sum")
+		#if (identical(FUN, mean)) see https://github.com/r-spatial/stars/issues/289
+		if (!identical(FUN, sum)) {
+			if (isTRUE(as.character(as.list(FUN)[[3]])[2] == "mean"))
+				m = sweep(m, 2, colSums(m), "/") # mean: divide weights by the sum of weights
+			else
+				stop("for exact=TRUE, FUN should either be mean or sum")
+		}
 		new_dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)]))
 		out_dim = c(ncol(m), dim(x)[-(1:2)])
 		if (isTRUE(list(...)$na.rm))
