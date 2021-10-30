@@ -224,73 +224,87 @@ and be valid index using <code><a href='https://rdrr.io/pkg/RNetCDF/man/var.get.
 is <code>NA</code> then all steps are included. Axis order must match that of the variable/s being read.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/reduced.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
-<span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
-#&gt; <span class='message'> lon, lat, zlev, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
-#&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
-#&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 4 attributes
-#&gt; attribute(s):
-#&gt;                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
-#&gt; sst [°C]      -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
-#&gt; anom [°C]     -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449
-#&gt; err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448
-#&gt; ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266
-#&gt; dimension(s):
-#&gt;      from  to offset delta  refsys point         values x/y
-#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1   1     NA    NA      NA    NA              0    
-#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"anom"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
-#&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
-#&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 1 attribute
-#&gt; attribute(s):
-#&gt;            Min. 1st Qu. Median       Mean 3rd Qu. Max. NA's
-#&gt; anom [°C] -7.95   -0.58  -0.08 -0.1847324    0.21 2.99 4449
-#&gt; dimension(s):
-#&gt;      from  to offset delta  refsys point         values x/y
-#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1   1     NA    NA      NA    NA              0    
-#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, ncsub <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, count <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using sst, anom, err, ice</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
-#&gt; <span class='message'> lon, lat, zlev, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
-#&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
-#&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='output co'>#&gt; stars object with 4 dimensions and 4 attributes
-#&gt; attribute(s):
-#&gt;                Min. 1st Qu. Median        Mean 3rd Qu. Max. NA's
-#&gt; sst [°C]      -1.39 -0.7200 -0.515 -0.53399999  -0.275 0.03   90
-#&gt; anom [°C]     -1.07 -0.3625  0.195  0.05866667   0.555 0.92   90
-#&gt; err [°C]       0.30  0.3000  0.300  0.30299999   0.300 0.32   90
-#&gt; ice [percent]  0.01  0.1100  0.170  0.20937500   0.255 0.52  104
-#&gt; dimension(s):
-#&gt;      from to offset delta  refsys point         values x/y
-#&gt; lon     1 10     -1     2  WGS 84    NA           NULL [x]
-#&gt; lat     1 12    -90     2  WGS 84    NA           NULL [y]
-#&gt; zlev    1  1     NA    NA      NA    NA              0    
-#&gt; time    1  1     NA    NA POSIXct    NA 1981-12-31 UTC    </div><div class='input'>
-
-<span class='co'>#' precipitation data in a curvilinear NetCDF</span>
-<span class='va'>prec_file</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/test_stageiv_xyt.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
-<span class='va'>prec</span> <span class='op'>=</span> <span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>prec_file</span>, curvilinear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lon"</span>, <span class='st'>"lat"</span><span class='op'>)</span>, ignore_bounds <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span></div><div class='output co'>#&gt; <span class='message'>other available variables:</span>
-#&gt; <span class='message'> time_bounds, lon, lat, time</span></div><div class='output co'>#&gt; <span class='message'>No projection information found in nc file. </span>
-#&gt; <span class='message'> Coordinate variable units found to be degrees, </span>
-#&gt; <span class='message'> assuming WGS84 Lat/Lon.</span></div><div class='input'>
-<span class='co'>##plot(prec) ## gives error about unique breaks</span>
-<span class='co'>## remove NAs, zeros, and give a large number</span>
-<span class='co'>## of breaks (used for validating in detail)</span>
-<span class='va'>qu_0_omit</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>n</span> <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>x</span> <span class='op'>=</span> <span class='fu'>units</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/drop_units.html'>drop_units</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>]</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, length.out <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>prec_slice</span> <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='va'>prec</span>, index <span class='op'>=</span> <span class='fl'>17</span>, along <span class='op'>=</span> <span class='st'>"time"</span><span class='op'>)</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>prec_slice</span>, border <span class='op'>=</span> <span class='cn'>NA</span>, breaks <span class='op'>=</span> <span class='fu'>qu_0_omit</span><span class='op'>(</span><span class='va'>prec_slice</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>, reset <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='input'><span class='va'>nc</span> <span class='op'>=</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_read.html'>read_sf</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"gpkg/nc.gpkg"</span>, package <span class='op'>=</span> <span class='st'>"sf"</span><span class='op'>)</span>, <span class='st'>"nc.gpkg"</span><span class='op'>)</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>st_geometry</span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span>, reset <span class='op'>=</span> <span class='cn'>FALSE</span>, col <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span>
-</div><div class='img'><img src='read_ncdf-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/reduced.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> no 'var' specified, using sst, anom, err, ice</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> other available variables:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  lon, lat, zlev, time</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> No projection information found in nc file. </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  Coordinate variable units found to be degrees, </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  assuming WGS84 Lat/Lon.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stars object with 4 dimensions and 4 attributes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> attribute(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sst [°C]      -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> anom [°C]     -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dimension(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      from  to offset delta  refsys point         values x/y</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lon     1 180     -1     2  WGS 84    NA           NULL [x]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lat     1  90    -90     2  WGS 84    NA           NULL [y]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> zlev    1   1     NA    NA      NA    NA              0    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </span>
+<span class='r-in'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, var <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"anom"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> No projection information found in nc file. </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  Coordinate variable units found to be degrees, </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  assuming WGS84 Lat/Lon.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stars object with 4 dimensions and 1 attribute</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> attribute(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>            Min. 1st Qu. Median       Mean 3rd Qu. Max. NA's</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> anom [°C] -7.95   -0.58  -0.08 -0.1847324    0.21 2.99 4449</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dimension(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      from  to offset delta  refsys point         values x/y</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lon     1 180     -1     2  WGS 84    NA           NULL [x]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lat     1  90    -90     2  WGS 84    NA           NULL [y]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> zlev    1   1     NA    NA      NA    NA              0    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC    </span>
+<span class='r-in'><span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>f</span>, ncsub <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span>start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, count <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>12</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> no 'var' specified, using sst, anom, err, ice</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> other available variables:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  lon, lat, zlev, time</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> No projection information found in nc file. </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  Coordinate variable units found to be degrees, </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  assuming WGS84 Lat/Lon.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stars object with 4 dimensions and 4 attributes</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> attribute(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                Min. 1st Qu. Median        Mean 3rd Qu. Max. NA's</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> sst [°C]      -1.39 -0.7200 -0.515 -0.53399999  -0.275 0.03   90</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> anom [°C]     -1.07 -0.3625  0.195  0.05866667   0.555 0.92   90</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> err [°C]       0.30  0.3000  0.300  0.30299999   0.300 0.32   90</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ice [percent]  0.01  0.1100  0.170  0.20937500   0.255 0.52  104</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dimension(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      from to offset delta  refsys point         values x/y</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lon     1 10     -1     2  WGS 84    NA           NULL [x]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> lat     1 12    -90     2  WGS 84    NA           NULL [y]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> zlev    1  1     NA    NA      NA    NA              0    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> time    1  1     NA    NA POSIXct    NA 1981-12-31 UTC    </span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>#' precipitation data in a curvilinear NetCDF</span></span>
+<span class='r-in'><span class='va'>prec_file</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"nc/test_stageiv_xyt.nc"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>prec</span> <span class='op'>=</span> <span class='fu'>read_ncdf</span><span class='op'>(</span><span class='va'>prec_file</span>, curvilinear <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"lon"</span>, <span class='st'>"lat"</span><span class='op'>)</span>, ignore_bounds <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> other available variables:</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  time_bounds, lon, lat, time</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> No projection information found in nc file. </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  Coordinate variable units found to be degrees, </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>  assuming WGS84 Lat/Lon.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>##plot(prec) ## gives error about unique breaks</span></span>
+<span class='r-in'><span class='co'>## remove NAs, zeros, and give a large number</span></span>
+<span class='r-in'><span class='co'>## of breaks (used for validating in detail)</span></span>
+<span class='r-in'><span class='va'>qu_0_omit</span> <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>n</span> <span class='op'>=</span> <span class='fl'>22</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='va'>x</span> <span class='op'>=</span> <span class='fu'>units</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/units/man/drop_units.html'>drop_units</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fu'><a href='https://rdrr.io/r/stats/quantile.html'>quantile</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>]</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, length.out <span class='op'>=</span> <span class='va'>n</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>prec_slice</span> <span class='op'>=</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/slice.html'>slice</a></span><span class='op'>(</span><span class='va'>prec</span>, index <span class='op'>=</span> <span class='fl'>17</span>, along <span class='op'>=</span> <span class='st'>"time"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>prec_slice</span>, border <span class='op'>=</span> <span class='cn'>NA</span>, breaks <span class='op'>=</span> <span class='fu'>qu_0_omit</span><span class='op'>(</span><span class='va'>prec_slice</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>, reset <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>nc</span> <span class='op'>=</span> <span class='fu'>sf</span><span class='fu'>::</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_read.html'>read_sf</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"gpkg/nc.gpkg"</span>, package <span class='op'>=</span> <span class='st'>"sf"</span><span class='op'>)</span>, <span class='st'>"nc.gpkg"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_geometry.html'>st_geometry</a></span><span class='op'>(</span><span class='va'>nc</span><span class='op'>)</span>, add <span class='op'>=</span> <span class='cn'>TRUE</span>, reset <span class='op'>=</span> <span class='cn'>FALSE</span>, col <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='read_ncdf-1.png' alt='' width='700' height='433' /></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

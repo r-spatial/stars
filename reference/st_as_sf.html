@@ -151,7 +151,7 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stars</span>
-<span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>as_points</span>, which <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sfc.html'>st_as_sfc</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, <span class='va'>as_points</span>, which <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/prod.html'>prod</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># S3 method for stars</span>
 <span class='fu'>st_as_sf</span><span class='op'>(</span>
@@ -218,78 +218,85 @@
     <p>If <code>merge</code> is <code>TRUE</code>, only the first attribute is converted into an <code>sf</code> object. If <code>na.rm</code> is <code>FALSE</code>, areas with <code>NA</code> values are also written out as polygons. Note that the resulting polygons are typically invalid, and use <a href='https://r-spatial.github.io/sf/reference/valid.html'>st_make_valid</a> to create valid polygons out of them.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
-<span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
-<span class='va'>x</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>6</span><span class='op'>]</span> <span class='co'># subset of a band with lower values in it</span>
-<span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>30</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span> <span class='co'># set lower values to NA</span>
-<span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>100</span> <span class='co'># make the rest binary</span>
-<span class='va'>x</span>
-</div><div class='output co'>#&gt; stars object with 3 dimensions and 1 attribute
-#&gt; attribute(s):
-#&gt;  L7_ETMs.tif    
-#&gt;  Mode :logical  
-#&gt;  FALSE:525      
-#&gt;  TRUE :7665     
-#&gt;  NA's :1810     
-#&gt; dimension(s):
-#&gt;      from  to  offset delta                       refsys point values x/y
-#&gt; x       1 100  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-#&gt; y       1 100 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-#&gt; band    6   6      NA    NA                           NA    NA   NULL    </div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># removes NA areas</span>
-</div><div class='output co'>#&gt; Simple feature collection with 8190 features and 1 field
-#&gt; Geometry type: POLYGON
-#&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
-#&gt; First 10 features:
-#&gt;      V1                       geometry
-#&gt; 1  TRUE POLYGON ((288776.3 9120761,...
-#&gt; 2  TRUE POLYGON ((288804.8 9120761,...
-#&gt; 3  TRUE POLYGON ((288833.3 9120761,...
-#&gt; 4  TRUE POLYGON ((288861.8 9120761,...
-#&gt; 5  TRUE POLYGON ((288890.3 9120761,...
-#&gt; 6  TRUE POLYGON ((288918.8 9120761,...
-#&gt; 7  TRUE POLYGON ((288947.3 9120761,...
-#&gt; 8  TRUE POLYGON ((288975.8 9120761,...
-#&gt; 9  TRUE POLYGON ((289004.3 9120761,...
-#&gt; 10 TRUE POLYGON ((289032.8 9120761,...</div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># glues polygons together</span>
-</div><div class='output co'>#&gt; Simple feature collection with 155 features and 1 field
-#&gt; Geometry type: POLYGON
-#&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
-#&gt; First 10 features:
-#&gt;    L7_ETMs.tif                       geometry
-#&gt; 1            0 POLYGON ((289517.3 9120761,...
-#&gt; 2            0 POLYGON ((290144.3 9120761,...
-#&gt; 3            0 POLYGON ((290315.3 9120761,...
-#&gt; 4            0 POLYGON ((291113.3 9120761,...
-#&gt; 5            0 POLYGON ((291341.3 9120761,...
-#&gt; 6            1 POLYGON ((291455.3 9120761,...
-#&gt; 7            1 POLYGON ((291569.3 9120761,...
-#&gt; 8            0 POLYGON ((290372.3 9120732,...
-#&gt; 9            1 POLYGON ((290628.8 9120732,...
-#&gt; 10           1 POLYGON ((290771.3 9120732,...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'>st_is_valid</span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># not all valid, see details</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='st_as_sf-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span>
-</div><div class='output co'>#&gt; Simple feature collection with 380 features and 1 field
-#&gt; Geometry type: POLYGON
-#&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761
-#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
-#&gt; First 10 features:
-#&gt;    L7_ETMs.tif                       geometry
-#&gt; 1            0 POLYGON ((289517.3 9120761,...
-#&gt; 2            0 POLYGON ((290144.3 9120761,...
-#&gt; 3            0 POLYGON ((290315.3 9120761,...
-#&gt; 4            0 POLYGON ((291113.3 9120761,...
-#&gt; 5            0 POLYGON ((291341.3 9120761,...
-#&gt; 6            1 POLYGON ((291455.3 9120761,...
-#&gt; 7            1 POLYGON ((291569.3 9120761,...
-#&gt; 8           NA POLYGON ((289745.3 9120732,...
-#&gt; 9           NA POLYGON ((289830.8 9120732,...
-#&gt; 10           0 POLYGON ((290372.3 9120732,...</div><div class='input'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='img'><img src='st_as_sf-2.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>100</span>,<span class='fl'>6</span><span class='op'>]</span> <span class='co'># subset of a band with lower values in it</span></span>
+<span class='r-in'><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>[</span><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>30</span><span class='op'>]</span> <span class='op'>=</span> <span class='cn'>NA</span> <span class='co'># set lower values to NA</span></span>
+<span class='r-in'><span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;</span> <span class='fl'>100</span> <span class='co'># make the rest binary</span></span>
+<span class='r-in'><span class='va'>x</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> attribute(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  L7_ETMs.tif    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  Mode :logical  </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  FALSE:525      </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  TRUE :7665     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  NA's :1810     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dimension(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      from  to  offset delta                       refsys point values x/y</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x       1 100  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> y       1 100 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> band    6   6      NA    NA                           NA    NA   NULL    </span>
+<span class='r-in'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># removes NA areas</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Simple feature collection with 8190 features and 1 field</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Geometry type: POLYGON</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dimension:     XY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Projected CRS: UTM Zone 25, Southern Hemisphere</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> First 10 features:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>      V1                       geometry</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1  TRUE POLYGON ((288776.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2  TRUE POLYGON ((288804.8 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3  TRUE POLYGON ((288833.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4  TRUE POLYGON ((288861.8 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5  TRUE POLYGON ((288890.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6  TRUE POLYGON ((288918.8 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7  TRUE POLYGON ((288947.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8  TRUE POLYGON ((288975.8 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9  TRUE POLYGON ((289004.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10 TRUE POLYGON ((289032.8 9120761,...</span>
+<span class='r-in'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># glues polygons together</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Simple feature collection with 155 features and 1 field</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Geometry type: POLYGON</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dimension:     XY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Projected CRS: UTM Zone 25, Southern Hemisphere</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> First 10 features:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    L7_ETMs.tif                       geometry</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            0 POLYGON ((289517.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            0 POLYGON ((290144.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3            0 POLYGON ((290315.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4            0 POLYGON ((291113.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5            0 POLYGON ((291341.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6            1 POLYGON ((291455.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7            1 POLYGON ((291569.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8            0 POLYGON ((290372.3 9120732,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9            1 POLYGON ((290628.8 9120732,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10           1 POLYGON ((290771.3 9120732,...</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span><span class='op'>(</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/valid.html'>st_is_valid</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># not all valid, see details</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] FALSE</span>
+<span class='r-in'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='st_as_sf-1.png' alt='' width='700' height='433' /></span>
+<span class='r-in'><span class='op'>(</span><span class='va'>p</span> <span class='op'>=</span> <span class='fu'>st_as_sf</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span>, merge <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># includes polygons with NA values</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Simple feature collection with 380 features and 1 field</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Geometry type: POLYGON</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dimension:     XY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Bounding box:  xmin: 288776.3 ymin: 9117911 xmax: 291626.3 ymax: 9120761</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Projected CRS: UTM Zone 25, Southern Hemisphere</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> First 10 features:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    L7_ETMs.tif                       geometry</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1            0 POLYGON ((289517.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2            0 POLYGON ((290144.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3            0 POLYGON ((290315.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4            0 POLYGON ((291113.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5            0 POLYGON ((291341.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6            1 POLYGON ((291455.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7            1 POLYGON ((291569.3 9120761,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8           NA POLYGON ((289745.3 9120732,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9           NA POLYGON ((289830.8 9120732,...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10           0 POLYGON ((290372.3 9120732,...</span>
+<span class='r-in'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='va'>p</span>, axes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='st_as_sf-2.png' alt='' width='700' height='433' /></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

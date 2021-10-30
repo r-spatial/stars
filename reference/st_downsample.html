@@ -180,7 +180,7 @@
     <p>If all n == 0, no downsampling takes place; if it is 1, every second row/column/band
 is skipped, if it is 2, every second+third row/column/band are skipped, etc.</p>
 <p>Downsampling a <code>stars_proxy</code> object returns a <code>stars</code> object, is
-equivalent to calling <code><a href='st_as_stars.html'>st_as_stars(x, downsample = 2)</a></code>, and only downsamples
+equivalent to calling <code>st_as_stars(x, downsample = 2)</code>, and only downsamples
 the first two (x and y) dimensions.</p>
 <p>Downsampled regular rasters keep their dimension offsets, have a cell size (delta) that
 is n[i]+1 times larger, and may result in a (slightly) different extent.</p>

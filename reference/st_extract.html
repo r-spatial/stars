@@ -209,75 +209,79 @@ large sets of points for which extraction is needed, passing a matrix as
 to <code>at</code> may be much faster than passing an <code>sf</code> or <code>sfc</code> object.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span>
-<span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span>
-<span class='va'>pnt</span> <span class='op'>=</span> <span class='fu'>st_sample</span><span class='op'>(</span><span class='fu'>st_as_sfc</span><span class='op'>(</span><span class='fu'>st_bbox</span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span>
-<span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; stars object with 2 dimensions and 1 attribute
-#&gt; attribute(s):
-#&gt;              Min. 1st Qu. Median     Mean 3rd Qu. Max.
-#&gt; L7_ETMs.tif    11      54   72.5 72.23333    92.5  139
-#&gt; dimension(s):
-#&gt;          from to offset delta                       refsys point
-#&gt; geometry    1 10     NA    NA UTM Zone 25, Southern Hem...  TRUE
-#&gt; band        1  6     NA    NA                           NA    NA
-#&gt;                                                         values
-#&gt; geometry POINT (293856.7 9116346),...,POINT (291157.3 9113704)
-#&gt; band                                                      NULL</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Simple feature collection with 10 features and 6 fields
-#&gt; Geometry type: POINT
-#&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106
-#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
-#&gt;    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5
-#&gt; 1              62             43             32             76             62
-#&gt; 2              83             73             79             61            120
-#&gt; 3              94             81             96             68            135
-#&gt; 4              61             49             39             78             68
-#&gt; 5              70             50             54             42             97
-#&gt; 6              72             61             67             56            116
-#&gt; 7              91             77             57             12             13
-#&gt; 8              96             79             81             54            103
-#&gt; 9             105             98            111             74            139
-#&gt; 10             62             50             36             89             70
-#&gt;    L7_ETMs.tif.V6                 geometry
-#&gt; 1              29 POINT (293856.7 9116346)
-#&gt; 2              96   POINT (289463 9115896)
-#&gt; 3             116 POINT (297386.8 9119071)
-#&gt; 4              36 POINT (289998.6 9118502)
-#&gt; 5              75 POINT (291149.7 9113485)
-#&gt; 6              92 POINT (290831.3 9115932)
-#&gt; 7              11   POINT (297550 9114174)
-#&gt; 8              91 POINT (293928.2 9113897)
-#&gt; 9             114 POINT (295710.5 9119106)
-#&gt; 10             32 POINT (291157.3 9113704)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Simple feature collection with 10 features and 1 field
-#&gt; Geometry type: POINT
-#&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106
-#&gt; Projected CRS: UTM Zone 25, Southern Hemisphere
-#&gt;    L7_ETMs.tif                 geometry
-#&gt; 1           62 POINT (293856.7 9116346)
-#&gt; 2           83   POINT (289463 9115896)
-#&gt; 3           94 POINT (297386.8 9119071)
-#&gt; 4           61 POINT (289998.6 9118502)
-#&gt; 5           70 POINT (291149.7 9113485)
-#&gt; 6           72 POINT (290831.3 9115932)
-#&gt; 7           91   POINT (297550 9114174)
-#&gt; 8           96 POINT (293928.2 9113897)
-#&gt; 9          105 POINT (295710.5 9119106)
-#&gt; 10          62 POINT (291157.3 9113704)</div><div class='input'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='st_coordinates.html'>st_coordinates</a></span><span class='op'>(</span><span class='va'>pnt</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># "at" is a matrix: return a matrix</span>
-</div><div class='output co'>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6]
-#&gt;  [1,]   62   43   32   76   62   29
-#&gt;  [2,]   83   73   79   61  120   96
-#&gt;  [3,]   94   81   96   68  135  116
-#&gt;  [4,]   61   49   39   78   68   36
-#&gt;  [5,]   70   50   54   42   97   75
-#&gt;  [6,]   72   61   67   56  116   92
-#&gt;  [7,]   91   77   57   12   13   11
-#&gt;  [8,]   96   79   81   54  103   91
-#&gt;  [9,]  105   98  111   74  139  114
-#&gt; [10,]   62   50   36   89   70   32</div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>r</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pnt</span> <span class='op'>=</span> <span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_sample.html'>st_sample</a></span><span class='op'>(</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_as_sfc.html'>st_as_sfc</a></span><span class='op'>(</span><span class='fu'><a href='https://r-spatial.github.io/sf/reference/st_bbox.html'>st_bbox</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> attribute(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> L7_ETMs.tif    11      54   72.5 72.23333    92.5  139</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dimension(s):</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          from to offset delta                       refsys point</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> geometry    1 10     NA    NA UTM Zone 25, Southern Hem...  TRUE</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> band        1  6     NA    NA                           NA    NA</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                                                         values</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> geometry POINT (293856.7 9116346),...,POINT (291157.3 9113704)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> band                                                      NULL</span>
+<span class='r-in'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>pnt</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> <span class='fu'><a href='st_as_sf.html'>st_as_sf</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Simple feature collection with 10 features and 6 fields</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Geometry type: POINT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dimension:     XY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Projected CRS: UTM Zone 25, Southern Hemisphere</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1              62             43             32             76             62</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2              83             73             79             61            120</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3              94             81             96             68            135</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4              61             49             39             78             68</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5              70             50             54             42             97</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6              72             61             67             56            116</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7              91             77             57             12             13</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8              96             79             81             54            103</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9             105             98            111             74            139</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10             62             50             36             89             70</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    L7_ETMs.tif.V6                 geometry</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1              29 POINT (293856.7 9116346)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2              96   POINT (289463 9115896)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3             116 POINT (297386.8 9119071)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4              36 POINT (289998.6 9118502)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5              75 POINT (291149.7 9113485)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6              92 POINT (290831.3 9115932)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7              11   POINT (297550 9114174)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8              91 POINT (293928.2 9113897)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9             114 POINT (295710.5 9119106)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10             32 POINT (291157.3 9113704)</span>
+<span class='r-in'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span><span class='op'>[</span>,,,<span class='fl'>1</span><span class='op'>]</span>, <span class='va'>pnt</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Simple feature collection with 10 features and 1 field</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Geometry type: POINT</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Dimension:     XY</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Bounding box:  xmin: 289463 ymin: 9113485 xmax: 297550 ymax: 9119106</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Projected CRS: UTM Zone 25, Southern Hemisphere</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>    L7_ETMs.tif                 geometry</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1           62 POINT (293856.7 9116346)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2           83   POINT (289463 9115896)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3           94 POINT (297386.8 9119071)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4           61 POINT (289998.6 9118502)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5           70 POINT (291149.7 9113485)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6           72 POINT (290831.3 9115932)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 7           91   POINT (297550 9114174)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 8           96 POINT (293928.2 9113897)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 9          105 POINT (295710.5 9119106)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10          62 POINT (291157.3 9113704)</span>
+<span class='r-in'><span class='fu'>st_extract</span><span class='op'>(</span><span class='va'>r</span>, <span class='fu'><a href='st_coordinates.html'>st_coordinates</a></span><span class='op'>(</span><span class='va'>pnt</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># "at" is a matrix: return a matrix</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>       [,1] [,2] [,3] [,4] [,5] [,6]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1,]   62   43   32   76   62   29</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [2,]   83   73   79   61  120   96</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [3,]   94   81   96   68  135  116</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [4,]   61   49   39   78   68   36</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [5,]   70   50   54   42   97   75</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [6,]   72   61   67   56  116   92</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [7,]   91   77   57   12   13   11</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [8,]   96   79   81   54  103   91</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [9,]  105   98  111   74  139  114</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [10,]   62   50   36   89   70   32</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

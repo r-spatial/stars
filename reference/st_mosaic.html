@@ -213,11 +213,12 @@
 <p>uses <a href='https://r-spatial.github.io/sf/reference/gdal_utils.html'>gdal_utils</a> to internally call <code>buildvrt</code>; no executables external to R are called.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>x1</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,<span class='op'>]</span>
-<span class='va'>x2</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,<span class='op'>]</span>
-<span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>st_mosaic</span><span class='op'>(</span><span class='va'>x1</span>, <span class='va'>x2</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='img'><img src='st_mosaic-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>x1</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,<span class='fl'>100</span><span class='op'>:</span><span class='fl'>200</span>,<span class='op'>]</span></span>
+<span class='r-in'><span class='va'>x2</span> <span class='op'>=</span> <span class='va'>x</span><span class='op'>[</span>,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,<span class='fl'>150</span><span class='op'>:</span><span class='fl'>300</span>,<span class='op'>]</span></span>
+<span class='r-in'><span class='fu'><a href='plot.html'>plot</a></span><span class='op'>(</span><span class='fu'>st_mosaic</span><span class='op'>(</span><span class='va'>x1</span>, <span class='va'>x2</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-plt img'><img src='st_mosaic-1.png' alt='' width='700' height='433' /></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
