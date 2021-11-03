@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* refresh CRS of packaged `L7_ETMs.tif`; #466
+
 * `as.data.frame.stars()` works for mixed regular and rectilinear dimension; #458
 
 * `plot.stars()` plots curvilinear rasters with color table, or without table but `col` argument passed; #456
