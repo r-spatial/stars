@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -25,10 +25,10 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > plot(r)
 > dim(r)
    x    y band 
@@ -39,15 +39,15 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 x[i = i, , , 2:3, drop = drop, crop = crop]
 attr(,".Environment")
-<environment: 0x55eb08e5cb08>
+<environment: 0x5638e279c398>
 
 > r+r
 stars_proxy object with 1 attribute in 1 file(s):
@@ -55,41 +55,41 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 e1 + e2
 attr(,".Environment")
-<environment: 0x55eb09969190>
+<environment: 0x5638e3383dd0>
 
 > st_as_stars(sin(r), downsample = 2)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
                    Min.   1st Qu.    Median       Mean   3rd Qu.      Max.
-L7_ETMs.tif  -0.9999902 -0.676772 0.0353983 0.01811428 0.6832617 0.9999119
+L7_ETMs.tif  -0.9999902 -0.676772 0.0353983 0.01655317 0.7210377 0.9999119
 dimension(s):
-     from  to  offset    delta                       refsys point values x/y
-x       1 117  288776  85.0128 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 118 9120761 -85.0169 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA       NA                           NA    NA   NULL    
+     from  to  offset    delta                     refsys point values x/y
+x       1 117  288776  85.0128 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 118 9120761 -85.0169 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA       NA                         NA    NA   NULL    
 > aperm(r, c(3,2,1))
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 aperm(a = a, perm = perm)
 attr(,".Environment")
-<environment: 0x55eb0834a808>
+<environment: 0x5638e1bc4088>
 
 > plot(r)
 > (xx = c(r,r))
@@ -101,21 +101,21 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > st_redimension(xx)
 stars_proxy object with 1 attribute in 2 file(s):
 $L7_ETMs.tif.L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
 
 dimension(s):
-        from  to  offset delta                       refsys point
-x          1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE
-y          1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE
-band       1   6      NA    NA                           NA    NA
-new_dim    1   2      NA    NA                           NA    NA
+        from  to  offset delta                     refsys point
+x          1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE
+y          1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE
+band       1   6      NA    NA                         NA    NA
+new_dim    1   2      NA    NA                         NA    NA
                           values x/y
 x                           NULL [x]
 y                           NULL [y]
@@ -127,67 +127,67 @@ attribute(s):
              Min. 1st Qu. Median     Mean 3rd Qu. Max.
 L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > (y = st_apply(r, 1:2, max))
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x55eb09584780>
+<environment: 0x5638e301c6b8>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
-max    56      85     96 98.53718     111  255
+max    55      85     96 99.38568     113  255
 dimension(s):
-  from  to  offset   delta                       refsys point values x/y
-x    1 175  288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y    1 176 9120761     -57 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+  from  to  offset   delta                     refsys point values x/y
+x    1 175  288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y    1 176 9120761     -57 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 > (y = adrop(st_apply(r, c("x", "y"), max)))
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x55eb0822ce68>
+<environment: 0x5638e1c56db0>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x55eb08222ad8>
+<environment: 0x5638e1c44d90>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
-max    56      85     96 98.53718     111  255
+max    55      85     96 99.38568     113  255
 dimension(s):
-  from  to  offset   delta                       refsys point values x/y
-x    1 175  288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y    1 176 9120761     -57 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+  from  to  offset   delta                     refsys point values x/y
+x    1 175  288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y    1 176 9120761     -57 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 > plot(yy)
 > (y = adrop(st_apply(r, c("x", "band"), max)))
 stars_proxy object with 1 attribute in 1 file(s):
@@ -195,31 +195,31 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x55eb0f199ed8>
+<environment: 0x5638e54643d0>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x55eb0f19c968>
+<environment: 0x5638e544baa0>
 
 > (yy = st_as_stars(y, downsample = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
-max    71     103    119 123.4324     139  255
+max    77     111    133 137.8505     157  255
 dimension(s):
-     from  to offset   delta                       refsys point values
-x       1 175 288776 56.8371 UTM Zone 25, Southern Hem... FALSE   NULL
-band    1   6     NA      NA                           NA    NA   NULL
+     from  to offset   delta                     refsys point values
+x       1 175 288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE   NULL
+band    1   6     NA      NA                         NA    NA   NULL
 Warning message:
 In FUN(X[[i]], ...) :
   st_apply on x/y dimensions applied to downsampled image(s)
@@ -234,10 +234,10 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > names(xx) = c("a", "b")
 > xx["a"]
 stars_proxy object with 1 attribute in 1 file(s):
@@ -245,10 +245,10 @@ $a
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > pt = st_point(c(x = 290462.103109179, y = 9114202.32594085))
 > buf = st_buffer(st_sfc(pt, crs = st_crs(r)), 1500)
 > buf = st_sfc(st_polygon(list(st_buffer(pt, 1500)[[1]], st_buffer(pt, 1000)[[1]])),
@@ -382,16 +382,16 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 call_list:
 [[1]]
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x55eb0a4159a0>
+<environment: 0x5638e3e93568>
 
 > st_as_stars(x)
 stars object with 2 dimensions and 1 attribute
@@ -399,10 +399,10 @@ attribute(s):
             Min.    1st Qu.      Median        Mean     3rd Qu.       Max.
 ndvi  -0.2828283 -0.1081081 -0.08287293 -0.08464615 -0.05882353 0.09259259
 dimension(s):
-  from  to  offset delta                       refsys point values x/y
-x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+  from  to  offset delta                     refsys point values x/y
+x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  6.049   0.383   6.427 
+  5.060   0.363   5.417 

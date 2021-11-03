@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -24,9 +24,9 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu.   Max.
 area [m^2] 812.25  812.25 812.25 812.25  812.25 812.25
 dimension(s):
-  from  to  offset delta                       refsys point values x/y
-x    1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
+  from  to  offset delta                     refsys point values x/y
+x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 > 
 > m = matrix(1:20, nrow = 5, ncol = 4)
 > x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
@@ -80,4 +80,4 @@ There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  7.587   0.128   7.714 
+  8.324   0.076   8.391 

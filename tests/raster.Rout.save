@@ -1,5 +1,5 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -25,10 +25,10 @@ attribute(s):
              Min. 1st Qu. Median     Mean 3rd Qu. Max.
 L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > (r = as(x, "Raster"))
 class      : RasterBrick 
 dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
@@ -47,10 +47,10 @@ attribute(s):
          Min. 1st Qu. Median     Mean 3rd Qu. Max.
 layer.1     1      54     69 68.91242      86  255
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA   NULL [y]
-band    1   6       1     1                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [y]
+band    1   6       1     1                         NA    NA   NULL    
 > 
 > # single band:
 > x = adrop(x[,,,1]) 
@@ -61,9 +61,9 @@ attribute(s):
        Min. 1st Qu. Median     Mean 3rd Qu. Max.
 layer    47      67     78 79.14772      89  255
 dimension(s):
-  from  to  offset delta                       refsys point values x/y
-x    1 349  288776  28.5 UTM Zone 25, Southern Hem...    NA   NULL [x]
-y    1 352 9120761 -28.5 UTM Zone 25, Southern Hem...    NA   NULL [y]
+  from  to  offset delta                     refsys point values x/y
+x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
+y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [y]
 > 
 > # proxy:
 > (x = read_stars(tif, proxy = TRUE))
@@ -72,10 +72,10 @@ $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > (r = as(x, "Raster"))
 class      : RasterBrick 
 dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
@@ -93,11 +93,11 @@ attribute(s):
              Min. 1st Qu. Median     Mean 3rd Qu. Max.
 L7_ETMs.tif     1      54     69 68.91242      86  255
 dimension(s):
-     from  to  offset delta                       refsys point values x/y
-x       1 349  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 352 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1   6      NA    NA                           NA    NA   NULL    
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
 > 
 > proc.time()
    user  system elapsed 
-  2.525   0.079   2.597 
+  4.068   0.128   4.196 

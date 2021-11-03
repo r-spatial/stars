@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -25,10 +25,10 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point  values x/y
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
-band    1  4      NA    NA                           NA  TRUE 1,...,2    
+     from to  offset delta                     refsys point  values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
+band    1  4      NA    NA                         NA  TRUE 1,...,2    
 > y = st_set_dimensions(x, "band", point = NA)
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
@@ -36,14 +36,10 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point          values
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
-band    1  4      NA    NA                           NA    NA [1,2),...,[2,3)
-     x/y
-x    [x]
-y    [y]
-band    
+     from to  offset delta                     refsys point          values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE            NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE            NULL [y]
+band    1  4      NA    NA                         NA    NA [1,2),...,[2,3)    
 > y = st_set_dimensions(x, "band", point = FALSE)
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
@@ -51,14 +47,10 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point          values
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE            NULL
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE            NULL
-band    1  4      NA    NA                           NA FALSE [1,2),...,[2,3)
-     x/y
-x    [x]
-y    [y]
-band    
+     from to  offset delta                     refsys point          values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE            NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE            NULL [y]
+band    1  4      NA    NA                         NA FALSE [1,2),...,[2,3)    
 > y = st_set_dimensions(x, "band", values = letters[1:6])
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
@@ -66,10 +58,10 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point  values x/y
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
-band    1  4      NA    NA                           NA    NA a,...,b    
+     from to  offset delta                     refsys point  values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
+band    1  4      NA    NA                         NA    NA a,...,b    
 > y = st_set_dimensions(x, "band", values = letters[1:6], point = NA)
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
@@ -77,10 +69,10 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point  values x/y
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
-band    1  4      NA    NA                           NA    NA a,...,b    
+     from to  offset delta                     refsys point  values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
+band    1  4      NA    NA                         NA    NA a,...,b    
 > y = st_set_dimensions(x, "band", values = letters[1:6], point = TRUE)
 > y[,1:10, 1:10, c(1,4,3,2)]
 stars object with 3 dimensions and 1 attribute
@@ -88,11 +80,11 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu. Max.
 L7_ETMs.tif    25      45     57 56.535      64   97
 dimension(s):
-     from to  offset delta                       refsys point  values x/y
-x       1 10  288776  28.5 UTM Zone 25, Southern Hem... FALSE    NULL [x]
-y       1 10 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE    NULL [y]
-band    1  4      NA    NA                           NA  TRUE a,...,b    
+     from to  offset delta                     refsys point  values x/y
+x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [x]
+y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
+band    1  4      NA    NA                         NA  TRUE a,...,b    
 > 
 > proc.time()
    user  system elapsed 
-  1.278   0.049   1.317 
+  1.043   0.049   1.084 

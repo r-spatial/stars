@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -17,10 +17,7 @@ Type 'q()' to quit R.
 
 > # Create 'stars' object
 > set.seed(1331)
-> library(stars)
-Loading required package: abind
-Loading required package: sf
-Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1
+> suppressPackageStartupMessages(library(stars))
 > volcano = rbind(volcano, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA) # add NA rows
 > d = st_dimensions(x = 1:ncol(volcano), y = 1:nrow(volcano))
 > (r = st_as_stars(t(volcano)))
@@ -149,4 +146,4 @@ X2    1 99      0     1     NA FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  0.832   0.044   0.869 
+  0.718   0.044   0.753 

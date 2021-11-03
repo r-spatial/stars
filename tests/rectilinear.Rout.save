@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -24,10 +24,10 @@ attribute(s):
              Min. 1st Qu. Median    Mean 3rd Qu. Max.
 L7_ETMs.tif     1      54     69 68.9915      86  255
 dimension(s):
-     from  to offset delta                       refsys point
-x       1 348     NA    NA UTM Zone 25, Southern Hem... FALSE
-y       1 351     NA    NA UTM Zone 25, Southern Hem... FALSE
-band    1   6     NA    NA                           NA    NA
+     from  to offset delta                     refsys point
+x       1 348     NA    NA SIRGAS 2000 / UTM zone 25S FALSE
+y       1 351     NA    NA SIRGAS 2000 / UTM zone 25S FALSE
+band    1   6     NA    NA                         NA    NA
                                       values x/y
 x    [288790.5,288819),...,[298708.5,298737) [x]
 y    [9120747,9120718),...,[9110743,9110715) [y]
@@ -76,4 +76,4 @@ y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.096   0.028   1.116 
+  1.098   0.064   1.163 

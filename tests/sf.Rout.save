@@ -1,5 +1,5 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
+R version 4.1.1 (2021-08-10) -- "Kick Things"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -27,10 +27,10 @@ attribute(s):
              Min. 1st Qu. Median     Mean 3rd Qu. Max.
 L7_ETMs.tif    17      44     58 58.19667      70  130
 dimension(s):
-     from to  offset delta                       refsys point values x/y
-x       1 20  288776  28.5 UTM Zone 25, Southern Hem... FALSE   NULL [x]
-y       1 20 9120761 -28.5 UTM Zone 25, Southern Hem... FALSE   NULL [y]
-band    1  6      NA    NA                           NA    NA   NULL    
+     from to  offset delta                     refsys point values x/y
+x       1 20  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 20 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1  6      NA    NA                         NA    NA   NULL    
 > # names(x) = "L7_ETM"
 > 
 > # library(abind)
@@ -41,7 +41,7 @@ Geometry set for 400 features
 Geometry type: POLYGON
 Dimension:     XY
 Bounding box:  xmin: 288776.3 ymin: 9120191 xmax: 289346.3 ymax: 9120761
-Projected CRS: UTM Zone 25, Southern Hemisphere
+Projected CRS: SIRGAS 2000 / UTM zone 25S
 First 5 geometries:
 POLYGON ((288776.3 9120761, 288804.8 9120761, 2...
 POLYGON ((288804.8 9120761, 288833.3 9120761, 2...
@@ -54,7 +54,7 @@ Geometry set for 400 features
 Geometry type: POINT
 Dimension:     XY
 Bounding box:  xmin: 288790.5 ymin: 9120205 xmax: 289332 ymax: 9120747
-Projected CRS: UTM Zone 25, Southern Hemisphere
+Projected CRS: SIRGAS 2000 / UTM zone 25S
 First 5 geometries:
 POINT (288790.5 9120747)
 POINT (288819 9120747)
@@ -172,4 +172,4 @@ y    1 10      3  -0.2     NA    NA   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.200   0.065   1.257 
+  1.232   0.036   1.261 
