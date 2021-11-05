@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Coerce stars object into a Raster raster or brick — as" />
-<meta property="og:description" content="Coerce stars object into a Raster raster or brick" />
+<meta property="og:description" content="Coerce stars object into a Raster raster or brick
+Coerce stars object into a terra SpatRaster" />
 
 
 
@@ -148,6 +149,7 @@
 
     <div class="ref-description">
     <p>Coerce stars object into a Raster raster or brick</p>
+<p>Coerce stars object into a terra SpatRaster</p>
     </div>
 
 
@@ -163,9 +165,11 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>RasterLayer or RasterBrick</p>
+<p>SpatRaster</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick.</p>
+<p>If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a SpatRaster.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
