@@ -191,22 +191,6 @@ setAs("stars_proxy", "SpatRaster", function(from) {
 	terra::rast(unlist(from))
 })
 
-#' @export
-st_bbox.SpatRaster = function(obj, ...) {
-	if (!requireNamespace("terra", quietly = TRUE))
-		stop("package terra required, please install it first") # nocov
-	bb = as.vector(terra::ext(obj))[c(1,3,2,4)]
-	names(bb) = c("xmin", "ymin", "xmax", "ymax")
-	st_bbox(bb, crs = st_crs(obj))
-}
-
-#' @export
-st_crs.SpatRaster = function(x, ...) {
-	if (!requireNamespace("terra", quietly = TRUE))
-		stop("package terra required, please install it first") # nocov
-	st_crs(terra::crs(x))
-}
-
 fix_dims = function(r, e){
 	e = unname(e)
 	rdims = attr(r, "dimensions")
