@@ -1,5 +1,7 @@
 # version 0.5-4
 
+* add `rename()` method; #470
+
 * refresh CRS of packaged `L7_ETMs.tif`; #466
 
 * `as.data.frame.stars()` works for mixed regular and rectilinear dimension; #458

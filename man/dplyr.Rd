@@ -10,6 +10,8 @@
 \alias{transmute.stars_proxy}
 \alias{select.stars}
 \alias{select.stars_proxy}
+\alias{rename.stars}
+\alias{rename.stars_proxy}
 \alias{pull.stars}
 \alias{pull.stars_proxy}
 \alias{as.tbl_cube.stars}
@@ -34,6 +36,10 @@ transmute.stars_proxy(.data, ...)
 select.stars(.data, ...)
 
 select.stars_proxy(.data, ...)
+
+rename.stars(.data, ...)
+
+rename.stars_proxy(.data, ...)
 
 pull.stars(.data, var = -1)
 
