@@ -524,7 +524,7 @@ st_apply.stars_proxy = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = 
 	FUTURE = FALSE, rename = TRUE, .fname) {
 	mc = match.call()
 	if (missing(.fname))
-		.fname = as.character(mc[["FUN"]])
+		.fname = as.character(mc[["FUN"]])[1]
 	collect(X, mc, "st_apply", c("X", "MARGIN", "FUN", "CLUSTER", "PROGRESS", "FUTURE", 
 		"rename", ".fname"), env = environment(), ...)
 }
