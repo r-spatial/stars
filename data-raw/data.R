@@ -4,6 +4,9 @@ library(stars)
 L7_ETMs = read_stars(
 	function() c(L7_ETMs = system.file("tif/L7_ETMs.tif", package = "stars"))
 )
+d = attr(L7_ETMs, "dimensions")
+attr(L7_ETMs, "dimensions")$x$refsys$wkt = gsub("°", "", d$x$refsys$wkt)
+attr(L7_ETMs, "dimensions")$y$refsys$wkt = gsub("°", "", d$x$refsys$wkt)
 usethis::use_data(L7_ETMs, overwrite = TRUE)
 
 # two attributes in a NetCDF file: use a list of functions giving the sub-datasets:
