@@ -161,7 +161,8 @@
   FUTURE <span class='op'>=</span> <span class='cn'>FALSE</span>,
   rename <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>.fname</span>,
-  single_arg <span class='op'>=</span> <span class='fu'>has_single_arg</span><span class='op'>(</span><span class='va'>FUN</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>||</span> <span class='fu'>can_single_arg</span><span class='op'>(</span><span class='va'>FUN</span><span class='op'>)</span>
+  single_arg <span class='op'>=</span> <span class='fu'>has_single_arg</span><span class='op'>(</span><span class='va'>FUN</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>||</span> <span class='fu'>can_single_arg</span><span class='op'>(</span><span class='va'>FUN</span><span class='op'>)</span>,
+  keep <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -211,6 +212,10 @@ if missing, the name of <code>FUN</code> is used</p></td>
       <th>single_arg</th>
       <td><p>logical; if <code>TRUE</code>, FUN takes a single argument (like <code>fn_ndvi1</code> below), 
 if <code>FALSE</code> FUN takes multiple arguments (like <code>fn_ndvi2</code> below).</p></td>
+    </tr>
+    <tr>
+      <th>keep</th>
+      <td><p>logical; if <code>TRUE</code>, preserve dimension metadata (e.g. time stamps)</p></td>
     </tr>
     </table>
 
