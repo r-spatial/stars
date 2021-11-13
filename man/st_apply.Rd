@@ -15,7 +15,8 @@
   FUTURE = FALSE,
   rename = TRUE,
   .fname,
-  single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN)
+  single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN),
+  keep = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ if missing, the name of \code{FUN} is used}
 
 \item{single_arg}{logical; if \code{TRUE}, FUN takes a single argument (like \code{fn_ndvi1} below), 
 if \code{FALSE} FUN takes multiple arguments (like \code{fn_ndvi2} below).}
+
+\item{keep}{logical; if \code{TRUE}, preserve dimension metadata (e.g. time stamps)}
 }
 \value{
 object of class \code{stars} with accordingly reduced number of dimensions; 

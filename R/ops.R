@@ -115,6 +115,7 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' the name of the function used; see the examples. Following the logic of 
 #' \link[base]{apply}, This new dimension is put before the
 #' other dimensions; use \link{aperm} to rearrange this, see last example.
+#' @param keep logical; if \code{TRUE}, preserve dimension metadata (e.g. time stamps)
 #' @details FUN is a function which either operates on a single object, which will 
 #' be the data of each iteration step over dimensions MARGIN, or a function that 
 #' has as many arguments as there are elements in such an object. See the NDVI 
@@ -146,7 +147,8 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #' st_apply(x, 1:2, range) %>% aperm(c(2,3,1))
 #' @export
 st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE, FUTURE = FALSE, 
-		rename = TRUE, .fname, single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN)) {
+		rename = TRUE, .fname, single_arg = has_single_arg(FUN, list(...)) || can_single_arg(FUN),
+		keep = FALSE) {
 	if (missing(.fname))
 		.fname <- paste(deparse(substitute(FUN), 50), collapse = "\n")
 	if (is.character(MARGIN))
@@ -200,11 +202,15 @@ st_apply.stars = function(X, MARGIN, FUN, ..., CLUSTER = NULL, PROGRESS = FALSE,
 			} else {
 				orig = st_dimensions(X)[MARGIN]
 				r = attr(orig, "raster")
-				dims = c(structure(list(list()), names = .fname), orig)
-				dims[[1]] = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
-						create_dimension(values = dimnames(ret[[1]])[[1]])
-					else
-						create_dimension(to = dim_ret[1])
+				dims = if (keep) {
+						c(st_dimensions(X)[no_margin], orig)
+					} else {
+						dim1 = if (!is.null(dimnames(ret[[1]])[[1]])) # FUN returned named vector:
+								create_dimension(values = dimnames(ret[[1]])[[1]])
+							else
+								create_dimension(to = dim_ret[1])
+						c(structure(list(dim1), names = .fname), orig)
+					}
 			}
 			st_stars(ret, dimensions = create_dimensions(dims, r))
 		}
