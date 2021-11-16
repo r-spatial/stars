@@ -95,6 +95,10 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install libgit2
 
+      - name: "[Stage] [macOS] Install spatial libs"
+        if: runner.os == 'macOS'
+        run: brew install proj geos gdal
+
       - name: "[Stage] [macOS] Install system libs for pkgdown"
         if: runner.os == 'macOS' && matrix.config.pkgdown != ''
         run: brew install harfbuzz fribidi
