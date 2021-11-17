@@ -1,7 +1,7 @@
 make_label = function(x, i = 1) {
 	dims = dim(x)
 	if ((length(dims) <= 2 || dims[3] == 1) && inherits(x[[i]], "units"))
-		make_unit_label(names(x)[i], units(x[[i]]))
+		make_unit_label(paste0("'", names(x)[i], "'"), units(x[[i]]))
 	else
 		names(x)[i]
 }

@@ -407,6 +407,8 @@ parse_netcdf_meta = function(pr, name) {
 			"zzzzz40163a99980" # bogus string, to avoid match
 		else
 			tail(spl, 1) # last one contains 
+	# longname:
+	pr$long_name = get_val(paste0(get_val("NC_GLOBAL#variable_id", meta), "#long_name"), meta)
 	# unit:
 	pr$units = get_val(paste0(name, "#units"), meta)
 	# extra dims: NETCDF_DIM_EXTRA={time,zlev}

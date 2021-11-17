@@ -250,7 +250,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				NULL
 
 		# return:
-		name_x = if (is.function(.x))
+		name_x = if (!is.null(meta_data$long_name) && !is.na(meta_data$long_name))
+				meta_data$long_name
+			else if (is.function(.x))
 				names(.x()) %||% .x()
 			else
 				x

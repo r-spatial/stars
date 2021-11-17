@@ -20,7 +20,7 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 		for (i in seq_along(.x)[-1])
 			if (!all(dim(.x[[1]]) == dim(.x[[i]])))
 				stop("dim attributes not identical")
-		if (!is.null(names(.x)))
+		if (!is.null(n <- names(.x)) && (any(n == "") || length(n) != length(unique(n))))
 			names(.x) = make.names(names(.x), unique = TRUE)
 
 		# check dimensions, if set:
@@ -498,6 +498,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 					along_dim
 			} else
 				along
+			stopifnot_identical_units(dots)
 			ret = propagate_units(mapply(abind, ..., along = along_dim, SIMPLIFY = FALSE), dots[[1]])
 			dims = combine_dimensions(dots, along_dim)
 			if (along_dim == length(d) + 1)
@@ -506,6 +507,17 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 		}
 	}
 }
+
+stopifnot_identical_units = function(lst) {
+	a1 = lst[[1]][[1]]
+	for (i in seq_along(lst[-1])) {
+		ai = lst[[i+1]][[1]]
+		if (inherits(a1, "units") && !identical(units(a1), units(ai)))
+			stop("cannot merge subarrays with different units")
+	}
+	TRUE
+}
+
 
 #' @export
 adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
