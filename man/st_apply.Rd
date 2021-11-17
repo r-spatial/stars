@@ -73,19 +73,21 @@ x = read_stars(tif)
 st_apply(x, 1:2, mean) # mean band value for each pixel
 st_apply(x, c("x", "y"), mean) # equivalent to the above
 st_apply(x, 3, mean)   # mean of all pixels for each band
-st_apply(x, "band", mean) # equivalent to the above
-st_apply(x, 1:2, range) # min and max band value for each pixel
-fn_ndvi1 = function(x) (x[4]-x[3])/(x[4]+x[3]) # ONE argument: will be called for each pixel
-fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called only once
-ndvi1 = st_apply(x, 1:2, fn_ndvi1)
-ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
-all.equal(ndvi1, ndvi2)
-# compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430
-st_apply(x, 3, function(x) var(as.vector(x))) # as.vector is required!
-# to get a progress bar also in non-interactive mode, specify:
-if (require(pbapply)) { # install it, if FALSE
-  pboptions(type = "timer")
+\dontrun{
+ st_apply(x, "band", mean) # equivalent to the above
+ st_apply(x, 1:2, range) # min and max band value for each pixel
+ fn_ndvi1 = function(x) (x[4]-x[3])/(x[4]+x[3]) # ONE argument: will be called for each pixel
+ fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called only once
+ ndvi1 = st_apply(x, 1:2, fn_ndvi1)
+ ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
+ all.equal(ndvi1, ndvi2)
+ # compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430
+ st_apply(x, 3, function(x) var(as.vector(x))) # as.vector is required!
+ # to get a progress bar also in non-interactive mode, specify:
+ if (require(pbapply)) { # install it, if FALSE
+   pboptions(type = "timer")
+ }
+ st_apply(x, 1:2, range) # dimension "range" is first; rearrange by:
+ st_apply(x, 1:2, range) \%>\% aperm(c(2,3,1))
 }
-st_apply(x, 1:2, range) # dimension "range" is first; rearrange by:
-st_apply(x, 1:2, range) \%>\% aperm(c(2,3,1))
 }
