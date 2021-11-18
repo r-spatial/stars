@@ -36,8 +36,16 @@ combine those that dimensions matching to the first array}
 
 \item{along_crs}{logical; if \code{TRUE}, combine arrays along a CRS dimension}
 }
+\value{
+a single \code{stars} object with merged (binded) arrays.
+}
 \description{
 combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
+}
+\details{
+An error is raised when attempting to combine arrays with different
+measurement units into a single array. If this was intentded, \code{drop_units} 
+can be used to remove units of a \code{stars} object before merging.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

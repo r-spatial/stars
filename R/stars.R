@@ -434,6 +434,10 @@ propagate_units = function(new, old) {
 #' @param tolerance numeric; values used in \link{all.equal} to compare dimension values
 #' combine those that dimensions matching to the first array
 #' @param nms character; vector with array names
+#' @returns a single \code{stars} object with merged (binded) arrays.
+#' @details An error is raised when attempting to combine arrays with different
+#' measurement units into a single array. If this was intentded, \code{drop_units} 
+#' can be used to remove units of a \code{stars} object before merging.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")

@@ -136,7 +136,8 @@ st_apply = function(X, MARGIN, FUN, ...) UseMethod("st_apply")
 #'  fn_ndvi1 = function(x) (x[4]-x[3])/(x[4]+x[3]) # ONE argument: will be called for each pixel
 #'  fn_ndvi2 = function(red,nir) (nir-red)/(nir+red) # n arguments: will be called only once
 #'  ndvi1 = st_apply(x, 1:2, fn_ndvi1)
-#'  ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) # note that we select bands 3 and 4 in the first argument
+#'    # note that we can select bands 3 and 4 in the first argument:
+#'  ndvi2 = st_apply(x[,,,3:4], 1:2, fn_ndvi2) 
 #'  all.equal(ndvi1, ndvi2)
 #'  # compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430
 #'  st_apply(x, 3, function(x) var(as.vector(x))) # as.vector is required!
