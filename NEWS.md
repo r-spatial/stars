@@ -1,8 +1,8 @@
 # version 0.5-4
 
-* `c.stars()` fails if it tries to merge arrays with different units; #457
+* `c.stars()` fails if it tries to merge arrays with different units; #475
 
-* For NetCDF files, `read_stars()` uses the `long_name` as array name; #457
+* For NetCDF files, `read_stars()` uses the `long_name` as array name; #475
 
 * add `rename()` method; #470
 
