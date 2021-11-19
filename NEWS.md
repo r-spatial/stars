@@ -1,3 +1,5 @@
+# version 0.5-5
+
 # version 0.5-4
 
 * `c.stars()` fails if it tries to merge arrays with different units; #475
