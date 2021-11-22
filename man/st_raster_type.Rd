@@ -4,20 +4,30 @@
 \alias{st_raster_type}
 \title{get the raster type (if any) of a stars object}
 \usage{
-st_raster_type(x)
+st_raster_type(x, dimension = character(0))
 }
 \arguments{
 \item{x}{object of class \code{stars}}
+
+\item{dimension}{optional: numbers or names of dimension(s) to get per-dimension type}
 }
 \value{
+if \code{dimension} is not specified, return the spatial raster type: 
 one of \code{NA} (if the object does not have raster dimensions), 
-\code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}
+\code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}.
+In case dimension(s) are specified, return one of \code{"regular"}, \code{"rectilinear"}
+(irregular but numeric), or \code{"discrete"} (anything else).
 }
 \description{
 get the raster type (if any) of a stars object
+}
+\details{
+categories \code{"curvilinear"} and \code{"affine"} only refer to
+the relationship between a pair of spatial (raster) dimensions.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 st_raster_type(x)
+st_raster_type(x, 1:3)
 }

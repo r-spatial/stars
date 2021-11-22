@@ -454,9 +454,12 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	} else if (identical(along, NA_integer_)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
-		if (identical_dimensions(dots, tolerance = tolerance))
-			st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
-		else {
+		if (identical_dimensions(dots, tolerance = tolerance)) {
+			ret = st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
+			if (!missing(nms))
+				names(ret) = nms
+			ret
+		} else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
 			if (!is.na(along))
@@ -947,15 +950,32 @@ st_interpolate_aw.stars = function(x, to, extensive, ...) {
 
 #' get the raster type (if any) of a stars object
 #' @param x object of class \code{stars}
-#' @return one of \code{NA} (if the object does not have raster dimensions), 
-#' \code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}
+#' @param dimension optional: numbers or names of dimension(s) to get per-dimension type
+#' @return if \code{dimension} is not specified, return the spatial raster type: 
+#' one of \code{NA} (if the object does not have raster dimensions), 
+#' \code{"curvilinear"}, \code{"rectilinear"}, \code{"affine"}, or \code{"regular"}.
+#' In case dimension(s) are specified, return one of \code{"regular"}, \code{"rectilinear"}
+#' (irregular but numeric), or \code{"discrete"} (anything else).
+#' @details categories \code{"curvilinear"} and \code{"affine"} only refer to
+#' the relationship between a pair of spatial (raster) dimensions.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' st_raster_type(x)
+#' st_raster_type(x, 1:3)
 #' @export
-st_raster_type = function(x) {
-	if (!has_raster(x))
+st_raster_type = function(x, dimension = character(0)) {
+	dimension_type = function(d) {
+		if (!any(is.na(c(d$offset, d$delta))))
+			"regular"
+		else if (!is.null(d$values) && is.numeric(d$values))
+			"rectilinear"
+		else
+			"discrete"
+	}
+	if (length(dimension))
+		sapply(st_dimensions(x)[dimension], dimension_type)
+	else if (!has_raster(x))
 		NA_character_
 	else if (is_curvilinear(x))
 		"curvilinear"
