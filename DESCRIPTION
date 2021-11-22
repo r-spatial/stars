@@ -32,7 +32,8 @@ Remotes:
     r-spatial/sf
 Depends:
     R (>= 3.3.0),
-    abind
+    abind,
+    sf (>= 1.0.3)
 Imports:
     methods,
     parallel,
