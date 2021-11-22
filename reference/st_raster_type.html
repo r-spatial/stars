@@ -150,7 +150,7 @@
     <p>get the raster type (if any) of a stars object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span>, dimension <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,18 +159,32 @@
       <th>x</th>
       <td><p>object of class <code>stars</code></p></td>
     </tr>
+    <tr>
+      <th>dimension</th>
+      <td><p>optional: numbers or names of dimension(s) to get per-dimension type</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>one of <code>NA</code> (if the object does not have raster dimensions), 
-<code>"curvilinear"</code>, <code>"rectilinear"</code>, <code>"affine"</code>, or <code>"regular"</code></p>
+    <p>if <code>dimension</code> is not specified, return the spatial raster type: 
+one of <code>NA</code> (if the object does not have raster dimensions), 
+<code>"curvilinear"</code>, <code>"rectilinear"</code>, <code>"affine"</code>, or <code>"regular"</code>.
+In case dimension(s) are specified, return one of <code>"regular"</code>, <code>"rectilinear"</code>
+(irregular but numeric), or <code>"discrete"</code> (anything else).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>categories <code>"curvilinear"</code> and <code>"affine"</code> only refer to
+the relationship between a pair of spatial (raster) dimensions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='va'>tif</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"tif/L7_ETMs.tif"</span>, package <span class='op'>=</span> <span class='st'>"stars"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>x</span> <span class='op'>=</span> <span class='fu'><a href='read_stars.html'>read_stars</a></span><span class='op'>(</span><span class='va'>tif</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "regular"</span>
+<span class='r-in'><span class='fu'>st_raster_type</span><span class='op'>(</span><span class='va'>x</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          x          y       band </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  "regular"  "regular" "discrete" </span>
 </pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
