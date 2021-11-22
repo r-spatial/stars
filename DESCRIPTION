@@ -28,10 +28,11 @@ URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 LazyData: true
+Remotes:
+    r-spatial/sf
 Depends:
     R (>= 3.3.0),
-    abind,
-    sf (>= 1.0-3)
+    abind
 Imports:
     methods,
     parallel,
