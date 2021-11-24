@@ -456,8 +456,11 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 		# dim does not change:
 		if (identical_dimensions(dots, tolerance = tolerance)) {
 			ret = st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
-			if (!missing(nms))
+			if (!missing(nms)) {
+				if (length(nms) != length(ret))
+					stop("length of argument nms must equal the number of attributes")
 				names(ret) = nms
+			}
 			ret
 		} else {
 			# currently catches only the special case of ... being a broken up time series:
