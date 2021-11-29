@@ -1,5 +1,7 @@
 # version 0.5-5
 
+* `aggregate.stars()` propagates units of arrays; #477
+
 # version 0.5-4
 
 * `c.stars()` fails if it tries to merge arrays with different units; #475
