@@ -59,6 +59,8 @@ bb = st_bbox(c(xmin = offset[1] + 2 * res[1],
 	xmax = offset[1] + 10 * res[1],
 	ymax = offset[2] +  3 * res[2]), crs = st_crs(l7))
 l7[bb]
+# equivalent:
+st_crop(l7, bb)
 
 plot(l7[,1:13,1:13,1], reset = FALSE)
 image(l7[bb,,,1], add = TRUE, col = sf.colors())
