@@ -117,7 +117,11 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 	#0 360 -90  90
 	e = as.vector(terra::ext(.x)) # xmin xmax ymin ymax
 
-	RasterIO = list()
+	RasterIO = if (dim(.x)[3] == 1)
+		list(bands = .x@ptr$getBands() + 1)
+	else
+		list()
+
 	if (!ignore_file) {
 		file = terra::sources(.x)$source
 		if (file != "") {
