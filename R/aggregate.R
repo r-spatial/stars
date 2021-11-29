@@ -101,6 +101,11 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		if (isTRUE(list(...)$na.rm))
 			x = lapply(x, function(y) { y[is.na(y)] = 0.0; y })
 		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
+		# %*% dropped units, so to propagate units, if present we need to copy (mean/sum):
+		for (i in seq_along(x)) {
+			if (inherits(x[[i]], "units")) 
+				agg[[i]] = units::set_units(agg[[i]], units(x[[i]]), mode = "standard")
+		}
 		ret = st_as_stars(agg, dimensions = 
 			create_dimensions(append(list(sfc = create_dimension(values = by)),
 			st_dimensions(x)[-(1:2)])))
@@ -179,8 +184,19 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	# rearrange:
 	x = structure(x, dimensions = NULL, class = NULL) # unclass
 	newdims = c(prod(dims[1:ndims]), prod(dims[-(1:ndims)]))
-	for (i in seq_along(x))
-		x[[i]] = agr_grps(array(x[[i]], newdims), grps, seq_along(by), FUN, ...)
+	for (i in seq_along(x)) {
+		a = array(x[[i]], newdims)
+		u = if (inherits(x[[i]], "units") && dim(a)[2] > 0) {
+				a = units::set_units(a, units(x[[i]]), mode = "standard")
+				try(out <- FUN(a[,1], ...))
+				if (inherits(out, "units"))
+					units(out)
+				else
+					NULL
+			} else
+				NULL
+		x[[i]] = units::set_units(agr_grps(a, grps, seq_along(by), FUN, ...), u, mode = "standard")
+	}
 
 	# reconstruct dimensions table:
 	d[[1]] = create_dimension(values = by)
@@ -192,7 +208,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		d = d[-2] # y
 
 	newdim = c(sfc = length(by), dims[-(1:ndims)])
-	st_stars(lapply(x, array, dim = newdim), dimensions = d)
+	st_stars(lapply(x, structure, dim = newdim), dimensions = d)
 }
 
 	# aggregate is done over one or more dimensions
