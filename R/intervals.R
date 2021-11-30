@@ -63,9 +63,8 @@ find_interval = function(x, intervals) {
 		intervals$end = intervals$start
 		intervals$start = start
 	}
-	w = apply(outer(x, intervals$start, ">=") & outer(x, intervals$end, "<"), 1, which)
-	l = lengths(w)
-	w[l == 0] = NA
+	w = apply(outer(x, intervals$start, ">=") & outer(x, intervals$end, "<"), 1, which, simplify = FALSE)
+	w[lengths(w) == 0] = NA_integer_
 	unlist(w)
 }
 
