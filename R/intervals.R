@@ -63,6 +63,8 @@ find_interval = function(x, intervals) {
 		intervals$end = intervals$start
 		intervals$start = start
 	}
+	if (getRversion() < "4.1.0")
+		stop("R >= 4.1.0 required for handling intervals")
 	w = apply(outer(x, intervals$start, ">=") & outer(x, intervals$end, "<"), 1, which, simplify = FALSE)
 	w[lengths(w) == 0] = NA_integer_
 	unlist(w)
