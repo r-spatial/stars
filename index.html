@@ -21,6 +21,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -33,18 +35,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5-5</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -84,7 +80,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars/">
+  <a href="https://github.com/r-spatial/stars/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,9 +97,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="spatiotemporal-arrays-raster-and-vector-datacubes" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#spatiotemporal-arrays-raster-and-vector-datacubes" class="anchor"></a>Spatiotemporal Arrays: Raster and Vector Datacubes</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="spatiotemporal-arrays-raster-and-vector-datacubes">Spatiotemporal Arrays: Raster and Vector Datacubes<a class="anchor" aria-label="anchor" href="#spatiotemporal-arrays-raster-and-vector-datacubes"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p>Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include</p>
@@ -116,23 +112,23 @@
 <li>climate or weather model output.</li>
 </ul>
 <p>This R package provides classes and methods for reading, manipulating, plotting and writing such data cubes, to the extent that there are proper formats for doing so.</p>
-<div id="raster-and-vector-data-cubes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#raster-and-vector-data-cubes" class="anchor"></a>Raster and vector data cubes</h2>
+<div class="section level2">
+<h2 id="raster-and-vector-data-cubes">Raster and vector data cubes<a class="anchor" aria-label="anchor" href="#raster-and-vector-data-cubes"></a>
+</h2>
 <p>The canonical data cube most of us have in mind is that where two dimensions represent spatial raster dimensions, and the third time (or band), as e.g. shown here:</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png" width="50%"></p>
 <p>By data cubes however we also consider higher-dimensional cubes (hypercubes) such as a five-dimensional cube where in addition to time, spectral band and sensor form dimensions:</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png" width="50%"></p>
 <p>or lower-dimensional cubes such as a raster image:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
 <span class="co"># Loading required package: abind</span>
 <span class="co"># Loading required package: sf</span>
 <span class="co"># Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1</span>
-<span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
-<span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, along <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, along <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-plot1-1.png"><!-- --></p>
 <p>Raster data do not need to be regular and aligned with North/East, and package <code>stars</code> supports besides <em>regular</em> also <em>rotated</em>, <em>sheared</em>, <em>rectilinear</em> and <em>curvilinear</em> rasters:</p>
@@ -141,21 +137,21 @@
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png" width="50%"></p>
 <p>or points (e.g. denoting sensor locations):</p>
 <p><img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png" width="50%"></p>
-<p>NetCDF’s CF-convention calls this a <a href="https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis">discrete axis</a>.</p>
+<p>NetCDF’s CF-convention calls this a <a href="https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis" class="external-link">discrete axis</a>.</p>
 </div>
-<div id="netcdf-gdal" class="section level2">
-<h2 class="hasAnchor">
-<a href="#netcdf-gdal" class="anchor"></a>NetCDF, GDAL</h2>
+<div class="section level2">
+<h2 id="netcdf-gdal">NetCDF, GDAL<a class="anchor" aria-label="anchor" href="#netcdf-gdal"></a>
+</h2>
 <p><code>stars</code> provides two functions to read data: <code>read_ncdf</code> and <code>read_stars</code>, where the latter reads through GDAL. (In the future, both will be integrated in <code>read_stars</code>.) For reading NetCDF files, package <code>RNetCDF</code> is used, for reading through GDAL, package <code>sf</code> provides the binary linking to GDAL.</p>
-<p>For vector and raster operations, <code>stars</code> uses as much as possible the routines available in GDAL and PROJ (e.g. <code>st_transform</code>, <code>rasterize</code>, <code>polygonize</code>, <code>warp</code>). Read more about this in the vignette on <a href="https://r-spatial.github.io/stars/articles/stars5.html">vector-raster conversions, reprojection, warping</a>.</p>
+<p>For vector and raster operations, <code>stars</code> uses as much as possible the routines available in GDAL and PROJ (e.g. <code>st_transform</code>, <code>rasterize</code>, <code>polygonize</code>, <code>warp</code>). Read more about this in the vignette on <a href="https://r-spatial.github.io/stars/articles/stars5.html" class="external-link">vector-raster conversions, reprojection, warping</a>.</p>
 </div>
-<div id="out-of-memory-on-disk-rasters" class="section level2">
-<h2 class="hasAnchor">
-<a href="#out-of-memory-on-disk-rasters" class="anchor"></a>Out-of-memory (on-disk) rasters</h2>
-<p>Package <code>stars</code> provides <code>stars_proxy</code> objects (currently only when read through GDAL), which contain only the dimensions metadata and pointers to the files on disk. These objects work lazily: reading and processing data is postponed to the moment that pixels are really needed (at plot time, or when writing to disk), and is done at the lowest spatial resolution possible that still fulfills the resolution of the graphics device. More details are found in the <a href="https://r-spatial.github.io/stars/articles/stars2.html">stars proxy vignette</a>.</p>
+<div class="section level2">
+<h2 id="out-of-memory-on-disk-rasters">Out-of-memory (on-disk) rasters<a class="anchor" aria-label="anchor" href="#out-of-memory-on-disk-rasters"></a>
+</h2>
+<p>Package <code>stars</code> provides <code>stars_proxy</code> objects (currently only when read through GDAL), which contain only the dimensions metadata and pointers to the files on disk. These objects work lazily: reading and processing data is postponed to the moment that pixels are really needed (at plot time, or when writing to disk), and is done at the lowest spatial resolution possible that still fulfills the resolution of the graphics device. More details are found in the <a href="https://r-spatial.github.io/stars/articles/stars2.html" class="external-link">stars proxy vignette</a>.</p>
 <p>The following methods are currently available for <code>stars_proxy</code> objects:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span>
 <span class="co">#  [1] [              [[&lt;-           [&lt;-            adrop          aggregate     </span>
 <span class="co">#  [6] aperm          as.data.frame  c              coerce         dim           </span>
 <span class="co"># [11] droplevels     filter         hist           initialize     is.na         </span>
@@ -166,13 +162,13 @@
 <span class="co"># [36] st_set_bbox    transmute      write_stars   </span>
 <span class="co"># see '?methods' for accessing help and source code</span></code></pre></div>
 </div>
-<div id="raster-and-vector-time-series-analysis-example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#raster-and-vector-time-series-analysis-example" class="anchor"></a>Raster and vector time series analysis example</h2>
+<div class="section level2">
+<h2 id="raster-and-vector-time-series-analysis-example">Raster and vector time series analysis example<a class="anchor" aria-label="anchor" href="#raster-and-vector-time-series-analysis-example"></a>
+</h2>
 <p>In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and the first 12 time steps are plotted:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">prec_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"nc/test_stageiv_xyt.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">prec_file</span>, curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, ignore_bounds <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">prec_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/test_stageiv_xyt.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<span class="op">(</span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">prec_file</span>, curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, ignore_bounds <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span>
 <span class="co"># other available variables:</span>
 <span class="co">#  time_bounds, lon, lat, time</span>
@@ -195,13 +191,13 @@
 <span class="co"># y      [87x118] 32.4413,...,37.6193 [y]</span>
 <span class="co"># time                           NULL    </span>
 <span class="co"># curvilinear grid</span>
-<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="va">prec</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span> <span class="co"># transform from NAD27 to WGS84</span>
-<span class="va">nc_outline</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html">st_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">prec</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span> <span class="co"># transform from NAD27 to WGS84</span>
+<span class="va">nc_outline</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_union</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span>
 <span class="va">plot_hook</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc_outline</span>, border <span class="op">=</span> <span class="st">'red'</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">prec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span>downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>, hook <span class="op">=</span> <span class="va">plot_hook</span><span class="op">)</span></code></pre></div>
+<span class="va">prec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span>downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>, hook <span class="op">=</span> <span class="va">plot_hook</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-plot3-1.png"><!-- --></p>
 <p>and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -210,19 +206,19 @@
 <p><img src="reference/figures/README-plot4-1.png"><!-- --></p>
 <p>We can integrate over (reduce) time, for instance to find out <em>when</em> the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">index_max</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.min.html">which.max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"geom"</span>, <span class="va">index_max</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>when <span class="op">=</span> <span class="fu"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">[</span><span class="va">.</span><span class="op">$</span><span class="va">index_max</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">when</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">index_max</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"geom"</span>, <span class="va">index_max</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>when <span class="op">=</span> <span class="fu"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">[</span><span class="va">.</span><span class="op">$</span><span class="va">index_max</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">when</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span>key.pos <span class="op">=</span> <span class="fl">1</span>, main <span class="op">=</span> <span class="st">"time of maximum precipitation"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-plot5-1.png"><!-- --></p>
 </div>
-<div id="other-packages-for-data-cubes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#other-packages-for-data-cubes" class="anchor"></a>Other packages for data cubes</h2>
-<div id="gdalcubes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gdalcubes" class="anchor"></a><a href="https://github.com/appelmar/gdalcubes_R/"><code>gdalcubes</code></a>
+<div class="section level2">
+<h2 id="other-packages-for-data-cubes">Other packages for data cubes<a class="anchor" aria-label="anchor" href="#other-packages-for-data-cubes"></a>
+</h2>
+<div class="section level3">
+<h3 id="gdalcubes">
+<a href="https://github.com/appelmar/gdalcubes_R/" class="external-link"><code>gdalcubes</code></a><a class="anchor" aria-label="anchor" href="#gdalcubes"></a>
 </h3>
 <p>Package <code>gdalcubes</code> can be used to create data cubes (or functions from them) from image collections, sets of multi-band images with varying</p>
 <ul>
@@ -233,15 +229,15 @@
 </ul>
 <p>and does this by resampling and/or aggregating over space and/or time. It reuses GDAL VRT’s and gdalwarp for spatial resampling and/or warping, and handles temporal resampling or aggregation itself.</p>
 </div>
-<div id="ncdfgeom" class="section level3">
-<h3 class="hasAnchor">
-<a href="#ncdfgeom" class="anchor"></a><a href="https://github.com/USGS-R/ncdfgeom"><code>ncdfgeom</code></a>
+<div class="section level3">
+<h3 id="ncdfgeom">
+<a href="https://github.com/USGS-R/ncdfgeom" class="external-link"><code>ncdfgeom</code></a><a class="anchor" aria-label="anchor" href="#ncdfgeom"></a>
 </h3>
 <p><code>ncdfgeom</code> reads and writes vector data cubes from and to netcdf files in a standards-compliant way.</p>
 </div>
-<div id="raster" class="section level3">
-<h3 class="hasAnchor">
-<a href="#raster" class="anchor"></a><a href="https://github.com/rspatial/raster/"><code>raster</code></a>
+<div class="section level3">
+<h3 id="raster">
+<a href="https://github.com/rspatial/raster/" class="external-link"><code>raster</code></a><a class="anchor" aria-label="anchor" href="#raster"></a>
 </h3>
 <p>Package <code>raster</code> is a powerful package for handling raster maps and stacks of raster maps both in memory and on disk, but does not address</p>
 <ul>
@@ -250,24 +246,24 @@
 <li>rasters with mixed type attributes (e.g., numeric, logical, factor, POSIXct)</li>
 <li>rectilinear or curvilinear rasters</li>
 </ul>
-<p>A list of <code>stars</code> commands matching existing <code>raster</code> commands is found in this <a href="https://github.com/r-spatial/stars/wiki/How-%60raster%60-functions-map-to-%60stars%60-functions">wiki</a>. A list of translations in the opposite direction (from <code>stars</code> to <code>raster</code>) still needs to be made.</p>
+<p>A list of <code>stars</code> commands matching existing <code>raster</code> commands is found in this <a href="https://github.com/r-spatial/stars/wiki/How-%60raster%60-functions-map-to-%60stars%60-functions" class="external-link">wiki</a>. A list of translations in the opposite direction (from <code>stars</code> to <code>raster</code>) still needs to be made.</p>
 </div>
 </div>
-<div id="other-stars-resources" class="section level2">
-<h2 class="hasAnchor">
-<a href="#other-stars-resources" class="anchor"></a>Other <code>stars</code> resources:</h2>
+<div class="section level2">
+<h2 id="other-stars-resources">Other <code>stars</code> resources:<a class="anchor" aria-label="anchor" href="#other-stars-resources"></a>
+</h2>
 <ul>
-<li>blog posts: <a href="https://r-spatial.org/r/2017/11/23/stars1.html">first</a>, <a href="https://www.r-spatial.org/r/2018/03/22/stars2.html">second</a>, <a href="https://www.r-spatial.org/r/2018/03/23/stars3.html">third</a>
+<li>blog posts: <a href="https://r-spatial.org/r/2017/11/23/stars1.html" class="external-link">first</a>, <a href="https://www.r-spatial.org/r/2018/03/22/stars2.html" class="external-link">second</a>, <a href="https://www.r-spatial.org/r/2018/03/23/stars3.html" class="external-link">third</a>
 </li>
-<li>vignettes: <a href="https://r-spatial.github.io/stars/articles/stars1.html">first</a>, <a href="https://r-spatial.github.io/stars/articles/stars2.html">second</a>, <a href="https://r-spatial.github.io/stars/articles/stars3.html">third</a>, <a href="https://r-spatial.github.io/stars/articles/stars4.html">fourth</a>, <a href="https://r-spatial.github.io/stars/articles/stars5.html">fifth</a>
+<li>vignettes: <a href="https://r-spatial.github.io/stars/articles/stars1.html" class="external-link">first</a>, <a href="https://r-spatial.github.io/stars/articles/stars2.html" class="external-link">second</a>, <a href="https://r-spatial.github.io/stars/articles/stars3.html" class="external-link">third</a>, <a href="https://r-spatial.github.io/stars/articles/stars4.html" class="external-link">fourth</a>, <a href="https://r-spatial.github.io/stars/articles/stars5.html" class="external-link">fifth</a>
 </li>
-<li>the original <a href="https://github.com/edzer/stars/blob/master/PROPOSAL.md">R Consortium proposal</a>.</li>
+<li>the original <a href="https://github.com/edzer/stars/blob/master/PROPOSAL.md" class="external-link">R Consortium proposal</a>.</li>
 </ul>
-<div id="acknowledgment" class="section level3">
-<h3 class="hasAnchor">
-<a href="#acknowledgment" class="anchor"></a>Acknowledgment</h3>
-<p>This project has been realized with financial <a href="https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants">support</a> from the</p>
-<p><a href="https://www.r-consortium.org/projects/awarded-projects"> <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400"></a></p>
+<div class="section level3">
+<h3 id="acknowledgment">Acknowledgment<a class="anchor" aria-label="anchor" href="#acknowledgment"></a>
+</h3>
+<p>This project has been realized with financial <a href="https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants" class="external-link">support</a> from the</p>
+<p><a href="https://www.r-consortium.org/projects/awarded-projects" class="external-link"> <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400"></a></p>
 </div>
 </div>
 </div>
@@ -275,51 +271,61 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=stars">https://​cloud.r-project.org/​package=stars</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/r-spatial/stars/">https://​github.com/​r-spatial/​stars/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/r-spatial/stars/issues/">https://​github.com/​r-spatial/​stars/​issues/​</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=stars" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/r-spatial/stars/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/r-spatial/stars/issues/" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>Apache License</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing stars</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/r-spatial/stars/actions"><img src="https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master" alt="tic"></a></li>
-<li><a href="https://codecov.io/gh/r-spatial/stars"><img src="https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg" alt="codecov"></a></li>
-<li><a href="https://cran.r-project.org/package=stars"><img src="https://www.r-pkg.org/badges/version/stars" alt="CRAN"></a></li>
-<li><a href="https://cran.r-project.org/web/checks/check_results_stars.html"><img src="https://cranchecks.info/badges/worst/stars" alt="cran checks"></a></li>
-<li><a href="https://www.r-pkg.org/pkg/stars"><img src="https://cranlogs.r-pkg.org/badges/stars?color=brightgreen" alt="Downloads"></a></li>
-<li><a href="https://CRAN.R-project.org/package=stars"><img src="https://tinyverse.netlify.com/badge/stars" alt="status"></a></li>
+<li>Edzer Pebesma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-8049-7069" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/r-spatial/stars/actions" class="external-link"><img src="https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master" alt="tic"></a></li>
+<li><a href="https://codecov.io/gh/r-spatial/stars" class="external-link"><img src="https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://cran.r-project.org/package=stars" class="external-link"><img src="https://www.r-pkg.org/badges/version/stars" alt="CRAN"></a></li>
+<li><a href="https://cran.r-project.org/web/checks/check_results_stars.html" class="external-link"><img src="https://cranchecks.info/badges/worst/stars" alt="cran checks"></a></li>
+<li><a href="https://www.r-pkg.org/pkg/stars" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/stars?color=brightgreen" alt="Downloads"></a></li>
+<li><a href="https://CRAN.R-project.org/package=stars" class="external-link"><img src="https://tinyverse.netlify.com/badge/stars" alt="status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Edzer Pebesma.</p>
+  <p></p>
+<p>Developed by Edzer Pebesma.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -327,6 +333,8 @@
 
   
 
+
+  
 
   </body>
 </html>

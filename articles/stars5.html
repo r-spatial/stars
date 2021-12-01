@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5-5</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -82,7 +78,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars/">
+  <a href="https://github.com/r-spatial/stars/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,10 +97,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>5. vector-raster conversions, reprojection, warping</h1>
-                        <h4 class="author">Edzer Pebesma</h4>
+                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/master/vignettes/stars5.Rmd"><code>vignettes/stars5.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars5.Rmd" class="external-link"><code>vignettes/stars5.Rmd</code></a></small>
       <div class="hidden name"><code>stars5.Rmd</code></div>
 
     </div>
@@ -112,16 +108,16 @@
     
     
 <p>This vignette shows how <code>stars</code> object can be moved from vector and raster representations.</p>
-<div id="rasterizing-an-sf-vector-object" class="section level1">
-<h1 class="hasAnchor">
-<a href="#rasterizing-an-sf-vector-object" class="anchor"></a>Rasterizing an <code>sf</code> vector object</h1>
+<div class="section level1">
+<h1 id="rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object<a class="anchor" aria-label="anchor" href="#rasterizing-an-sf-vector-object"></a>
+</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html">read_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">32119</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span>
-<span class="va">nc</span><span class="op">$</span><span class="va">dens</span> <span class="op">=</span> <span class="va">nc</span><span class="op">$</span><span class="va">BIR79</span> <span class="op">/</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">km</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
+<span class="va">nc</span><span class="op">$</span><span class="va">dens</span> <span class="op">=</span> <span class="va">nc</span><span class="op">$</span><span class="va">BIR79</span> <span class="op">/</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">km</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
 <span class="op">(</span><span class="va">nc.st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span><span class="op">(</span><span class="va">nc</span><span class="op">[</span><span class="st">"dens"</span><span class="op">]</span>, dx <span class="op">=</span> <span class="fl">5000</span>, dy <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -135,27 +131,27 @@
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
 </div>
-<div id="vectorizing-a-raster-object-to-an-sf-object" class="section level1">
-<h1 class="hasAnchor">
-<a href="#vectorizing-a-raster-object-to-an-sf-object" class="anchor"></a>Vectorizing a raster object to an <code>sf</code> object</h1>
+<div class="section level1">
+<h1 id="vectorizing-a-raster-object-to-an-sf-object">Vectorizing a raster object to an <code>sf</code> object<a class="anchor" aria-label="anchor" href="#vectorizing-a-raster-object-to-an-sf-object"></a>
+</h1>
 <p><code>stars</code> objects can be converted into an <code>sf</code> object using <code>st_as_sf</code>. It has a number of options, depending on whether pixels represent the point value at the pixel center, or small square polygons with a single value.</p>
 <p>We will work again with the landsat-7 6-band image, but will select the first band and round the values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
-<span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
-<div id="polygonizing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#polygonizing" class="anchor"></a>Polygonizing</h2>
+<span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
+<div class="section level2">
+<h2 id="polygonizing">Polygonizing<a class="anchor" aria-label="anchor" href="#polygonizing"></a>
+</h2>
 <p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
-<div id="exporting-to-points" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exporting-to-points" class="anchor"></a>Exporting to points</h2>
+<div class="section level2">
+<h2 id="exporting-to-points">Exporting to points<a class="anchor" aria-label="anchor" href="#exporting-to-points"></a>
+</h2>
 <p>Alternatively, we can simply export all the pixels as points, and get them either as a wide table with all bands per point, and no replicated <code>POINT</code> geometries:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -198,9 +194,9 @@
 <span class="co">## 10    1          13   POINT (289047 9120747)</span></code></pre></div>
 <p>as we can see, an additional attribute <code>band</code> now indicates which band is concerned.</p>
 </div>
-<div id="exporting-to-polygons" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exporting-to-polygons" class="anchor"></a>Exporting to polygons</h2>
+<div class="section level2">
+<h2 id="exporting-to-polygons">Exporting to polygons<a class="anchor" aria-label="anchor" href="#exporting-to-polygons"></a>
+</h2>
 <p>Alternatively, we can export to polygons and either get a single polygon per pixel, as in</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -231,9 +227,9 @@
 <p>A further option <code>connect8</code> can be set to <code>TRUE</code> to use 8 connectedness, rather than the default 4 connectedness algorithm. In both cases, the polygons returned will often be invalid according to the simple feature standard, but can be made valid using <code>lwgeom::st_make_valid</code>.</p>
 </div>
 </div>
-<div id="switching-between-vector-and-raster-in-stars-objects" class="section level1">
-<h1 class="hasAnchor">
-<a href="#switching-between-vector-and-raster-in-stars-objects" class="anchor"></a>Switching between vector and raster in <code>stars</code> objects</h1>
+<div class="section level1">
+<h1 id="switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#switching-between-vector-and-raster-in-stars-objects"></a>
+</h1>
 <p>We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a <code>stars</code> object by</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x.sf</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -251,13 +247,13 @@
 <span class="co">## band                                                    NULL</span></code></pre></div>
 <p>which also requires setting the <code>as_points</code> arguments as in <code>st_as_sf</code>.</p>
 </div>
-<div id="reprojecting-a-raster" class="section level1">
-<h1 class="hasAnchor">
-<a href="#reprojecting-a-raster" class="anchor"></a>Reprojecting a raster</h1>
+<div class="section level1">
+<h1 id="reprojecting-a-raster">Reprojecting a raster<a class="anchor" aria-label="anchor" href="#reprojecting-a-raster"></a>
+</h1>
 <p>If we accept that curvilinear rasters are rasters too, and that regular and rectilinear grids are special cases of curvilinear grids, reprojecting a raster is no longer a “problem”, it just recomputes new coordinates for every raster cell, and generally results in a curvilinear grid (that sometimes can be brought back to a regular or rectilinear grid). If curvilinear grid cells are represented by coordinates of the cell center, the actual shape of a grid cell gets lost, and this may be a larger effect if grid cells are large or if the transformation is stronger non-linear.</p>
 <p>An example of the reprojection of the grid created above is</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.curv</span>
+<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.curv</span>
 <span class="va">nc.curv</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -275,16 +271,16 @@
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>where it should be noted that the dimensionality of the grid didn’t change: the same set of raster cells has been replotted in the new CRS, but now in a curvilinear grid.</p>
 </div>
-<div id="warping-a-raster" class="section level1">
-<h1 class="hasAnchor">
-<a href="#warping-a-raster" class="anchor"></a>Warping a raster</h1>
+<div class="section level1">
+<h1 id="warping-a-raster">Warping a raster<a class="anchor" aria-label="anchor" href="#warping-a-raster"></a>
+</h1>
 <p>Warping a raster means creating a new <em>regular</em> grid in a new CRS, based on a (usually regular) grid in another CRS. We can do the transformation of the previous section by first creating a target grid:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">newgrid</span></code></pre></div>
 <p>and then warping the old raster to the new</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">newgrid</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.new</span>
+<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">newgrid</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.new</span>
 <span class="va">nc.new</span> 
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -311,11 +307,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Edzer Pebesma.</p>
+  <p></p>
+<p>Developed by Edzer Pebesma.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -323,6 +321,8 @@
 
   
 
+
+  
 
   </body>
 </html>

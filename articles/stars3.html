@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stars</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5-5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.5-5</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -82,7 +78,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/r-spatial/stars/">
+  <a href="https://github.com/r-spatial/stars/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,10 +97,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3. stars tidyverse methods</h1>
-                        <h4 class="author">Edzer Pebesma</h4>
+                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/master/vignettes/stars3.Rmd"><code>vignettes/stars3.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars3.Rmd" class="external-link"><code>vignettes/stars3.Rmd</code></a></small>
       <div class="hidden name"><code>stars3.Rmd</code></div>
 
     </div>
@@ -114,11 +110,11 @@
 <p>This vignette shows how some of the tidyverse verbs can be used on <code>stars</code> objects.</p>
 <p>The <code>stars</code> and <code>tidyverse</code> packages are loaded by</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/">stars</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
 <span class="co">## Loading required package: sf</span>
 <span class="co">## Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 <span class="co">## </span>
 <span class="co">## Attaching package: 'dplyr'</span>
 <span class="co">## The following objects are masked from 'package:stats':</span>
@@ -129,7 +125,7 @@
 <span class="co">##     intersect, setdiff, setequal, union</span></code></pre></div>
 <p>Methods now available for class <code>stars</code> are</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="co">##  [1] [                 [[&lt;-              [&lt;-               %in%             </span>
 <span class="co">##  [5] $&lt;-               adrop             aggregate         aperm            </span>
 <span class="co">##  [9] as_tibble         as.data.frame     c                 coerce           </span>
@@ -149,7 +145,7 @@
 <span class="co">## see '?methods' for accessing help and source code</span></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="va">read_stars</span> <span class="op">-&gt;</span> <span class="va">x</span>
 <span class="va">x</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
@@ -161,13 +157,13 @@
 <span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span>
 <span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></code></pre></div>
-<div id="slice" class="section level2">
-<h2 class="hasAnchor">
-<a href="#slice" class="anchor"></a><code>slice</code>
+<div class="section level2">
+<h2 id="slice">
+<code>slice</code><a class="anchor" aria-label="anchor" href="#slice"></a>
 </h2>
 <p><code>slice</code> slices a sub-array out of the cube; this is done by specifying the dimension on which to act, and the slice number.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span><span class="op">(</span><span class="va">band</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x6</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">band</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x6</span>
 <span class="va">x6</span>
 <span class="co">## stars object with 2 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -179,13 +175,13 @@
 <span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></code></pre></div>
 <p>It returns a lower-dimensional array if a single element is selected along the slice dimension.</p>
 </div>
-<div id="filter" class="section level2">
-<h2 class="hasAnchor">
-<a href="#filter" class="anchor"></a><code>filter</code>
+<div class="section level2">
+<h2 id="filter">
+<code>filter</code><a class="anchor" aria-label="anchor" href="#filter"></a>
 </h2>
 <p>Similar to <code>slice</code>, <code>filter</code> selects on dimensions but evaluates their values rather than their index: in</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">289000</span>, <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">291000</span>, <span class="va">band</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x7</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">289000</span>, <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">291000</span>, <span class="va">band</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x7</span>
 <span class="va">x7</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -199,25 +195,25 @@
 <p>the subarray is created based on the x <em>coordinate</em> values.</p>
 <p>Note that <code>filter</code> converts the object to a <code>tbl_cube</code>, and uses the <code>dplyr</code> <code>filter</code> method for <code>tbl_cube</code> objects. This has the limitation that <code>stars</code> objects with rectilinear, curvilinear or simple feature geometries cannot be handled. For such objects, using regular <code>[</code> selection or using <code>st_crop</code> may be an alternative.</p>
 </div>
-<div id="pull" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pull" class="anchor"></a><code>pull</code>
+<div class="section level2">
+<h2 id="pull">
+<code>pull</code><a class="anchor" aria-label="anchor" href="#pull"></a>
 </h2>
 <p><code>pull</code> pulls out an array from a stars object:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x8</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x8</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span>
 <span class="co">## [1] "array"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span>
 <span class="co">##    x    y band </span>
 <span class="co">##  349  352    6</span></code></pre></div>
 </div>
-<div id="mutate" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mutate" class="anchor"></a><code>mutate</code>
+<div class="section level2">
+<h2 id="mutate">
+<code>mutate</code><a class="anchor" aria-label="anchor" href="#mutate"></a>
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>band2 <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">L7_ETMs.tif</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x2</span> 
+<code class="sourceCode R"><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>band2 <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">L7_ETMs.tif</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x2</span> 
 <span class="va">x2</span>
 <span class="co">## stars object with 3 dimensions and 2 attributes</span>
 <span class="co">## attribute(s):</span>
@@ -230,13 +226,13 @@
 <span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></code></pre></div>
 </div>
-<div id="select" class="section level2">
-<h2 class="hasAnchor">
-<a href="#select" class="anchor"></a><code>select</code>
+<div class="section level2">
+<h2 id="select">
+<code>select</code><a class="anchor" aria-label="anchor" href="#select"></a>
 </h2>
 <p><code>select</code> selects an attribute, or a set of attributes:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">band2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x9</span>
+<code class="sourceCode R"><span class="va">x2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">band2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x9</span>
 <span class="va">x9</span>
 <span class="co">## stars object with 3 dimensions and 1 attribute</span>
 <span class="co">## attribute(s):</span>
@@ -248,9 +244,9 @@
 <span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
 <span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></code></pre></div>
 </div>
-<div id="geom_stars" class="section level2">
-<h2 class="hasAnchor">
-<a href="#geom_stars" class="anchor"></a><code>geom_stars</code>
+<div class="section level2">
+<h2 id="geom_stars">
+<code>geom_stars</code><a class="anchor" aria-label="anchor" href="#geom_stars"></a>
 </h2>
 <p><code>geom_raster</code> is a <code>ggplot2</code> geom function that accepts <code>stars</code> objects as its <code>data</code> argument and</p>
 <ul>
@@ -260,17 +256,17 @@
 </ul>
 <p>An example use is</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/">viridis</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span>
 <span class="co">## Loading required package: viridisLite</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="../reference/geom_stars.html">geom_stars</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_equal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">band</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html">scale_fill_viridis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_x_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html">scale_y_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">band</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html" class="external-link">scale_fill_viridis</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars3_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
   </div>
@@ -286,11 +282,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Edzer Pebesma.</p>
+  <p></p>
+<p>Developed by Edzer Pebesma.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
       </footer>
@@ -298,6 +296,8 @@
 
   
 
+
+  
 
   </body>
 </html>
