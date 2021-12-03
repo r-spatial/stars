@@ -5,6 +5,7 @@
 \alias{st_dimensions.stars}
 \alias{st_dimensions<-}
 \alias{st_dimensions<-.stars}
+\alias{st_dimensions<-.stars_proxy}
 \alias{st_dimensions<-.list}
 \alias{st_dimensions.array}
 \alias{st_dimensions.default}
@@ -19,6 +20,8 @@ st_dimensions(.x, ...)
 st_dimensions(x) <- value
 
 \method{st_dimensions}{stars}(x) <- value
+
+\method{st_dimensions}{stars_proxy}(x) <- value
 
 \method{st_dimensions}{list}(x) <- value
 

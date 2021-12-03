@@ -28,6 +28,15 @@ st_dimensions.dimensions = function(.x, ...) .x
 
 #' @export
 #' @name st_dimensions
+`st_dimensions<-.stars_proxy` = function(x, value) {
+	if (!is.null(attr(x, "call_list")))
+		stop("st_dimensions<- on a stars_proxy object only works if there is no call list")
+	NextMethod()
+}
+
+
+#' @export
+#' @name st_dimensions
 `st_dimensions<-.list` = function(x, value) {
 	st_as_stars(x, dimensions = value)
 }
