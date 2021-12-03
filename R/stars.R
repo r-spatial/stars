@@ -447,6 +447,11 @@ propagate_units = function(new, old) {
 #' c(x, x, along = 3)
 c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...)), tolerance = sqrt(.Machine$double.eps)) {
 	dots = list(...)
+	if (!all(sapply(dots, function(x) inherits(x, "stars"))))
+		stop("all arguments to c() should be stars objects")
+	if (any(sapply(dots, function(x) inherits(x, "stars_proxy"))))
+		stop("convert stars_proxy objects to stars first using st_as_stars()")
+
 	if (length(dots) == 1) {
 		if (!missing(along))
 			warning("along argument ignored; maybe you wanted to use st_redimension?")

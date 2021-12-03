@@ -84,6 +84,9 @@ add_resolution = function(lst) {
 c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, 
 						 nms = names(list(...)), tolerance = sqrt(.Machine$double.eps)) {
 	dots = list(...)
+	if (!all(sapply(dots, function(x) inherits(x, "stars_proxy"))))
+		stop("all arguments to c() should be stars_proxy objects")
+
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
 	if (length(dots) == 1) # do nothing
