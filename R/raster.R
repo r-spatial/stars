@@ -117,19 +117,27 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 	#0 360 -90  90
 	e = as.vector(terra::ext(.x)) # xmin xmax ymin ymax
 
-	RasterIO = if (dim(.x)[3] == 1)
-		list(bands = .x@ptr$getBands() + 1)
-	else
-		list()
+	src = terra::sources(.x, bands=TRUE)
 
 	if (!ignore_file) {
-		file = terra::sources(.x)$source
+	# there can be multiple files, but only the first one is used here.
+	# perhaps a warning should be given; better would be to iterate over "sid"
+	# but you might have a situation where some sources are filenames and others are not
+		file = src$source[1]
 		if (file != "") {
+		# 	RasterIO = if (dim(.x)[3] == 1)
+		# > 1 would be more sensible? 
+		# But this can only be ignored if the _file_ has 1 band
+			RasterIO = list(bands = src$bands[src$sid == 1]) # + 1)
+
 			r = try(read_stars(file, RasterIO = RasterIO, ...), silent = TRUE)
 			if (!inherits(r, "try-error")) {
 				if (is.na(st_crs(r)))
 					r = st_set_crs(r, st_crs(terra::crs(.x)))
 				r = fix_dims(r, e)
+			#transfer the layer/band names as well?
+			# ... = names(.x)[1:(dim(r)[3])]
+			# perhaps check whether they represent a time dimension (all(!is.na(time(.x))))
 				return(r)
 			}
 		}
