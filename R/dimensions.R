@@ -134,10 +134,12 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		if (! is.null(names) && length(names) == 1)
 			base::names(d)[which] = names
-		if (!is.matrix(values) && isTRUE(attr(d, "raster")$curvilinear)) {
+		r = attr(d, "raster")
+		if (isTRUE(r$curvilinear)) {
 			# FIXME: there's much more that should be checked for curvilinear grids...
 			# https://github.com/r-spatial/stars/issues/460
-			attr(d, "raster")$curvilinear = FALSE 
+			if (which %in% r$dimensions && !is.matrix(values))
+				attr(d, "raster")$curvilinear = FALSE 
 		}
 #		else if (inherits(values, "sfc"))
 #			base::names(d)[which] = "sfc"
