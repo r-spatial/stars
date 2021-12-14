@@ -37,6 +37,7 @@
 #' plot(buf, add = TRUE, col = NA)
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x)) {
 	missing.i = missing(i)
+
 	# special case:
 	if (! missing.i && inherits(i, c("sf", "sfc", "bbox"))) {
 		x = if (has_raster(x))

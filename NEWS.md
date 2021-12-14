@@ -1,5 +1,7 @@
 # version 0.5-5
 
+* `adrop.stars()` with missing dimensions no longer drops x/y raster dimensions; #485
+
 * `aggregate.stars()` propagates units of arrays; #477
 
 # version 0.5-4

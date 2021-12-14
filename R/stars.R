@@ -535,7 +535,12 @@ stopifnot_identical_units = function(lst) {
 
 
 #' @export
-adrop.stars = function(x, drop = which(dim(x) == 1), ...) {
+adrop.stars = function(x, drop = which(dim(x) == 1), ..., drop_xy = FALSE) {
+	if (missing(drop)) { # hanlde drop_xy: by default, don't drop x/y
+		d = st_dimensions(x)
+		xy = attr(d, "raster")$dimensions
+		drop = setdiff(drop, match(xy, names(d)))
+	}
 	if (is.logical(drop))
 		drop = which(drop)
 	if (any(dim(x) > 1) && length(drop) > 0) {
