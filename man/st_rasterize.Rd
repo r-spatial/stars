@@ -11,19 +11,23 @@ st_rasterize(
   file = tempfile(),
   driver = "GTiff",
   options = character(0),
+  align = FALSE,
   ...
 )
 }
 \arguments{
 \item{sf}{object of class \code{sf}}
 
-\item{template}{stars object with desired target geometry}
+\item{template}{stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}}
 
 \item{file}{temporary file name}
 
 \item{driver}{driver for temporary file}
 
 \item{options}{character; options vector for \code{GDALRasterize}}
+
+\item{align}{logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
+informing target resolution and offset only.}
 
 \item{...}{arguments passed on to \link{st_as_stars}}
 }

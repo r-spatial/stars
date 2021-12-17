@@ -1,12 +1,31 @@
+# align bb with the first two dimensions of d
+st_align = function(bb, d) {
+	up1 = function(x) ifelse(sign(x) < 0, -ceiling(abs(x)), floor(x))
+	up2 = function(x) ifelse(sign(x) > 0, ceiling(abs(x)), -floor(abs(x)))
+	dx = d[[1]]$delta
+	dy = d[[2]]$delta
+	ox = d[[1]]$offset
+	oy = d[[2]]$offset
+	dbbx = diff(bb[c("xmin", "xmax")])
+	dbby = diff(bb[c("ymin", "ymax")])
+	bb["xmin"] = ox - up2((ox - bb["xmin"])/dx) * dx
+	bb["ymin"] = oy - up1((oy - bb["ymin"])/dy) * dy
+	bb["xmax"] = ox - up1((ox - bb["xmax"])/dx) * dx
+	bb["ymax"] = oy - up2((oy - bb["ymax"])/dy) * dy
+	bb
+}
+
 #' rasterize simple feature geometries
 #' 
 #' rasterize simple feature geometries
 #' @export
 #' @param sf object of class \code{sf}
-#' @param template stars object with desired target geometry 
+#' @param template stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}
 #' @param file temporary file name
 #' @param driver driver for temporary file
 #' @param options character; options vector for \code{GDALRasterize}
+#' @param align logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
+#' informing target resolution and offset only.
 #' @param ... arguments passed on to \link{st_as_stars}
 #' @examples
 #' demo(nc, echo = FALSE, ask = FALSE)
@@ -32,8 +51,20 @@
 #' plot(ls, add = TRUE, col = "red")
 st_rasterize = function(sf, template = guess_raster(sf, ...) %||% 
 			st_as_stars(st_bbox(sf), values = NA_real_, ...), 
-		file = tempfile(), driver = "GTiff", options = character(0), ...) {
-	template = st_normalize(template)
+		file = tempfile(), driver = "GTiff", options = character(0),
+		align = FALSE, ...) {
+
+	if (align) {
+		if (missing(template))
+			stop("align=TRUE requires template to be specified")
+		stopifnot(has_regular_grid(template))
+		bb = st_align(st_bbox(sf), d <- st_dimensions(st_normalize(template)))
+		dx = d[[1]]$delta
+		dy = d[[2]]$delta
+		template = st_as_stars(bb, values = NA_real_, dx = dx, dy = dy,
+			nx = round(diff(bb[c("xmin", "xmax")])/dx), ny = round(diff(bb[c("ymin", "ymax")])/dx))
+	} else
+		template = st_normalize(template)
 	is_numeric = function(x) is.numeric(x) || is.factor(x)
 	isn = sapply(sf, is_numeric)
 	sf = if (!any(isn)) {
