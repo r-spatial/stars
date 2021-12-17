@@ -119,28 +119,37 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 
 	src = terra::sources(.x, bands=TRUE)
 
-	if (!ignore_file) {
+	if (!ignore_file && all(src$source != "")) {
 	# there can be multiple files, but only the first one is used here.
 	# perhaps a warning should be given; better would be to iterate over "sid"
 	# but you might have a situation where some sources are filenames and others are not
-		file = src$source[1]
-		if (file != "") {
-		# 	RasterIO = if (dim(.x)[3] == 1)
-		# > 1 would be more sensible? 
-		# But this can only be ignored if the _file_ has 1 band
-			RasterIO = list(bands = src$bands[src$sid == 1]) # + 1)
-
+		lst = vector("list", length(unique(src$sid)))
+		for (i in unique(src$sid)) {
+			file = unique(src$source[src$sid == i])
+			if (length(file) > 1)
+				stop("more than one file per sid: giving up; try ignore_file=FALSE")
+			# 	RasterIO = if (dim(.x)[3] == 1)
+			# > 1 would be more sensible? 
+			# But this can only be ignored if the _file_ has 1 band
+			RasterIO = list(bands = src$bands[src$sid == i])
 			r = try(read_stars(file, RasterIO = RasterIO, ...), silent = TRUE)
-			if (!inherits(r, "try-error")) {
+			if (! inherits(r, "try-error")) {
 				if (is.na(st_crs(r)))
 					r = st_set_crs(r, st_crs(terra::crs(.x)))
 				r = fix_dims(r, e)
-			#transfer the layer/band names as well?
-			# ... = names(.x)[1:(dim(r)[3])]
-			# perhaps check whether they represent a time dimension (all(!is.na(time(.x))))
-				return(r)
-			}
+				if (length(unique(src$sid)) > 1 && length(dim(r)) > 2)
+					r = split(r)
+				#transfer the layer/band names as well?
+				# ... = names(.x)[1:(dim(r)[3])]
+				# perhaps check whether they represent a time dimension (all(!is.na(time(.x))))
+			} else
+				stop(paste("error reading", file, "bands", paste0(RasterIO$bands, collapse = " ")))
+			lst[[i]] = r
 		}
+		if (length(lst) > 1)
+			merge(setNames(do.call(c, lst), names(.x)))
+		else
+			r
 	}
 
 	v = terra::values(.x, mat = FALSE)
