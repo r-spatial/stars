@@ -119,6 +119,10 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 
 	src = terra::sources(.x, bands=TRUE)
 
+	attr_name = basename(src$source[1])
+	if (attr_name == "")
+		attr_name = "values"
+
 	if (!ignore_file && all(src$source != "")) {
 	# there can be multiple files, but only the first one is used here.
 	# perhaps a warning should be given; better would be to iterate over "sid"
@@ -150,9 +154,10 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 				merge(setNames(do.call(c, lst), names(.x)))
 			else
 				r
-		if (!all(is.na(time(.x))))
-			ret = st_set_dimensions(ret, 3, values = time(.x), names = "time")
-		ret
+		if (!all(is.na(terra::time(.x))))
+			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
+
+		return(setNames(ret, attr_name))
 	}
 
 	v = terra::values(.x, mat = FALSE)
@@ -173,18 +178,17 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 		y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
 							 delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(terra::crs(.x))))
 	dimensions$band = create_dimension(values = names(.x))
-	l = if (length(names) > 1)
-		setNames(list(v), deparse(substitute(.x), 50))
-	else
-		setNames(list(v), names(.x)[1])
-	ret = st_as_stars(l, dimensions = create_dimensions(dimensions, get_raster()))
+#	l = if (length(names) > 1)
+#		setNames(list(v), deparse(substitute(.x), 50))
+#	else
+#		setNames(list(v), names(.x)[1])
+	ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
 	if (dim(ret)[3] == 1)
-		adrop(ret, 3)
-	else {
-		if (!all(is.na(time(.x))))
-			ret = st_set_dimensions(ret, 3, values = time(.x), names = "time")
-		ret
-	}
+		ret = adrop(ret, 3)
+	else if (!all(is.na(terra::time(.x))))
+		ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
+
+	setNames(ret, attr_name)
 }
 
 #' Coerce stars object into a terra SpatRaster
