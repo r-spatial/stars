@@ -146,10 +146,13 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 				stop(paste("error reading", file, "bands", paste0(RasterIO$bands, collapse = " ")))
 			lst[[i]] = r
 		}
-		if (length(lst) > 1)
-			merge(setNames(do.call(c, lst), names(.x)))
-		else
-			r
+		ret = if (length(lst) > 1)
+				merge(setNames(do.call(c, lst), names(.x)))
+			else
+				r
+		if (!all(is.na(time(.x))))
+			ret = st_set_dimensions(ret, 3, values = time(.x), names = "time")
+		ret
 	}
 
 	v = terra::values(.x, mat = FALSE)
@@ -177,8 +180,11 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 	ret = st_as_stars(l, dimensions = create_dimensions(dimensions, get_raster()))
 	if (dim(ret)[3] == 1)
 		adrop(ret, 3)
-	else
+	else {
+		if (!all(is.na(time(.x))))
+			ret = st_set_dimensions(ret, 3, values = time(.x), names = "time")
 		ret
+	}
 }
 
 #' Coerce stars object into a terra SpatRaster
