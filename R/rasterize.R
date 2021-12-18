@@ -57,7 +57,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 	if (align) {
 		if (missing(template))
 			stop("align=TRUE requires template to be specified")
-		stopifnot(has_regular_grid(template))
+		stopifnot(is_regular_grid(template))
 		bb = st_align(st_bbox(sf), d <- st_dimensions(st_normalize(template)))
 		dx = d[[1]]$delta
 		dy = d[[2]]$delta
