@@ -1,0 +1,58 @@
+
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> suppressPackageStartupMessages(library(stars))
+> set.seed(1331)
+> st_sample(st_as_sfc(st_bbox(L7_ETMs)), 1)
+Geometry set for 1 feature 
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 291430.8 ymin: 9111430 xmax: 291430.8 ymax: 9111430
+Projected CRS: SIRGAS 2000 / UTM zone 25S
+POINT (291430.8 9111430)
+> b = st_buffer(st_sample(st_as_sfc(st_bbox(L7_ETMs)), 1), 335)
+> bba = stars:::st_align(st_bbox(b), st_dimensions(L7_ETMs))
+> 
+> plot(L7_ETMs[,,,1], extent = st_buffer(b, 20), reset = FALSE, key.pos = NULL)
+> plot(b, add = TRUE, col = NA, border = 'red')
+> plot(st_as_sfc(st_bbox(b)), col = NA, border = 'red', add = TRUE)
+> plot(st_as_sfc(bba), col = NA, border = 'blue', add = TRUE)
+> st_bbox(b)
+     xmin      ymin      xmax      ymax 
+ 297116.8 9119404.1  297786.8 9120074.1 
+> bba
+     xmin      ymin      xmax      ymax 
+ 297098.3 9119392.8  297810.8 9120076.8 
+> 
+> plot(L7_ETMs[,,,1], reset = FALSE, key.pos = NULL)
+> plot(b, col = 'red', add = TRUE)
+> plot(st_as_sfc(bba), col = NA, border = 'blue', add = TRUE)
+> 
+> b0 = st_buffer(b, -100)
+> L7 = st_as_stars(L7_ETMs)[b0][,,,1] |> st_normalize()
+> bbb = stars:::st_align(st_bbox(b), st_dimensions(L7))
+> plot(L7, extent = st_buffer(b, 120), reset = FALSE, key.pos = NULL)
+> plot(st_as_sfc(st_bbox(L7)), col = NA, border = 'black', add = TRUE)
+> plot(st_as_sfc(bbb), col = NA, border = 'blue', add = TRUE)
+> plot(b, col = NA, border = 'red', add = TRUE)
+> 
+> all.equal(bbb, bba)
+[1] TRUE
+> 
+> proc.time()
+   user  system elapsed 
+  1.417   0.037   1.448 
