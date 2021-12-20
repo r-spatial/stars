@@ -26,6 +26,7 @@ st_align = function(bb, d) {
 #' @param options character; options vector for \code{GDALRasterize}
 #' @param align logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
 #' informing target resolution and offset only.
+#' @param proxy logical; should a proxy object be returned?
 #' @param ... arguments passed on to \link{st_as_stars}
 #' @examples
 #' demo(nc, echo = FALSE, ask = FALSE)
@@ -52,7 +53,7 @@ st_align = function(bb, d) {
 st_rasterize = function(sf, template = guess_raster(sf, ...) %||% 
 			st_as_stars(st_bbox(sf), values = NA_real_, ...), 
 		file = tempfile(), driver = "GTiff", options = character(0),
-		align = FALSE, ...) {
+		align = FALSE, proxy = FALSE, ...) {
 
 	if (align) {
 		if (missing(template))
@@ -80,15 +81,17 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 	for (i in which(sapply(sf, inherits, "factor"))) # factors:
 		sf[[i]] = as.numeric(sf[[i]])
 	sf::gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
-	ret = read_stars(file, driver = driver)
-	if (length(dim(ret)) > 2)
-		ret = split(ret)
-	for (i in seq_along(ret)) {
-		ret[[i]][is.nan(ret[[i]])] = NA_real_
-		if (inherits(sf[[i]], "units"))
-			units(ret[[i]]) = units(sf[[i]])
-		if (is.factor(attrs[[i]]))
-			ret[[i]] = structure(ret[[i]], class = "factor", levels = levels(attrs[[i]]))
+	ret = read_stars(file, driver = driver, proxy = proxy)
+	if (!proxy) {
+		if (length(dim(ret)) > 2)
+			ret = split(ret)
+		for (i in seq_along(ret)) {
+			ret[[i]][is.nan(ret[[i]])] = NA_real_
+			if (inherits(sf[[i]], "units"))
+				units(ret[[i]]) = units(sf[[i]])
+			if (is.factor(attrs[[i]]))
+				ret[[i]] = structure(ret[[i]], class = "factor", levels = levels(attrs[[i]]))
+		}
 	}
 	setNames(ret, names(attrs))
 }

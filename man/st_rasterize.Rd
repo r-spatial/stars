@@ -12,6 +12,7 @@ st_rasterize(
   driver = "GTiff",
   options = character(0),
   align = FALSE,
+  proxy = FALSE,
   ...
 )
 }
@@ -28,6 +29,8 @@ st_rasterize(
 
 \item{align}{logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
 informing target resolution and offset only.}
+
+\item{proxy}{logical; should a proxy object be returned?}
 
 \item{...}{arguments passed on to \link{st_as_stars}}
 }
