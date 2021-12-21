@@ -62,8 +62,10 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 		bb = st_align(st_bbox(sf), d <- st_dimensions(st_normalize(template)))
 		dx = d[[1]]$delta
 		dy = d[[2]]$delta
-		template = st_as_stars(bb, values = NA_real_, dx = dx, dy = dy,
-			nx = round(diff(bb[c("xmin", "xmax")])/dx), ny = round(diff(bb[c("ymin", "ymax")])/dx))
+		template = st_as_stars(bb, values = 0.0, dx = dx, dy = dy,
+			nx = round(diff(bb[c("xmin", "xmax")])/dx), 
+			ny = round(diff(bb[c("ymin", "ymax")])/dx),
+			proxy = proxy)
 	} else
 		template = st_normalize(template)
 	is_numeric = function(x) is.numeric(x) || is.factor(x)

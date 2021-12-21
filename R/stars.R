@@ -140,12 +140,14 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
+#' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
 #' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz) {
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz, 
+		proxy = FALSE) {
 
 	if (xor(missing(nx), missing(ny)))
 		stop("either specify both nx and ny, or none of them")
@@ -185,11 +187,24 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 			delta = unname(dy), refsys = st_crs(.x))
 	}
 	if (missing(nz)) # 2D:
-		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[1]] unnames
-			dims = create_dimensions(list(x = x, y = y), get_raster()))
+		if (proxy) {
+			f = tempfile(fileext = ".tif")
+			if (packageVersion("sf") < "1.0-6") {
+				cmd = paste("gdal_create -ot Byte -outsize", nx, ny, "-burn", values,
+					"-a_srs", paste0("'", st_crs(.x)$wkt, "'"), 
+					"-a_ullr", xlim[1], ylim[2], xlim[2], ylim[1], f)
+				print(paste("executing: ", cmd))
+				system(cmd)
+			} else
+				sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
+			read_stars(f, proxy = TRUE)
+		} else
+			st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
+				dims = create_dimensions(list(x = x, y = y), get_raster()))
 	else {
+		stopifnot(proxy == FALSE)
 		z = create_dimension(from = 1, to = nz[[1]])
-		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[1]] unnames
+		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[ unnames
 			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
 	}
 }

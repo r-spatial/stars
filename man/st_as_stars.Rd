@@ -38,7 +38,8 @@ st_as_stars(.x, ...)
   n = 64800,
   pretty = FALSE,
   inside = FALSE,
-  nz
+  nz,
+  proxy = FALSE
 )
 
 \method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
@@ -104,6 +105,8 @@ st_as_stars(.x, ...)
 \item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely?}
 
 \item{nz}{integer; number of cells in z direction; if missing no z-dimension is created.}
+
+\item{proxy}{logical; should a \code{stars_proxy} object be created? (requires gdal_create binary)}
 
 \item{name}{character; attribute name for array from an \code{xts} object}
 

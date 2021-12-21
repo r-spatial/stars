@@ -1,5 +1,7 @@
 # version 0.5-5
 
+* `st_as_stars.bbox()` creates an empy raster file if `proxy = TRUE`; #489
+
 * `st_rasterize()` has option `align = TRUE` to use a template for aligning the new raster to; #489
 
 * `adrop.stars()` with missing dimensions no longer drops x/y raster dimensions; #485
