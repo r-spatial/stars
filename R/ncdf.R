@@ -151,12 +151,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dimensions <- .get_nc_time(dimensions, make_time,
                             coord_var, rep_var, meta)
 
-  ret <- if (is.list(out_data[[1]])) {
+  if (is.list(out_data[[1]])) {
+
     # this is a proxy
-    st_stars_proxy(list(.x), dimensions, NA_value = NA_real_, resolutions = NULL)
+    ret <- st_stars_proxy(list(.x), dimensions, NA_value = NA_real_, resolutions = NULL)
+
+    # hacking the request info in as attributes.
+    attr(ret, "nc_request") <- out_data
+
   } else {
     # Make initial response data
-    ret = st_stars(out_data, dimensions)
+    ret <- st_stars(out_data, dimensions)
   }
 
   st_crs(ret) <- nc_prj
@@ -543,7 +548,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         if(is.numeric(data_list[[i]])) {
           units(data_list[[i]]) <- try_as_units(uval[1L])
         } else {
-          data_list[[i]]$units <- uval[1L]
+          data_list[[i]]$units <- try_as_units(uval[1L])
         }
       }
     }

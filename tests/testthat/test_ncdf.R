@@ -17,6 +17,11 @@ test_that("proxy", {
   expect_equal(nc[[1]], f)
   expect_s3_class(nc, "stars_proxy")
 
+  output <- capture_output(print(nc))
+
+  expect_true(grepl("^netcdf source", output))
+  expect_true(grepl("First nc_request", output))
+
   old_opts <- options("stars.n_proxy" = 100)
   nc <- read_ncdf(f)
   expect_equal(nc[[1]], f)
