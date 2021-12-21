@@ -1,3 +1,8 @@
+# version 0.5-6
+
+* Added a new helper function `get_blocks()` to specify the block parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`)
+  required by `RasterIO` argument in `read_stars()`
+
 # version 0.5-5
 
 * `st_as_stars.bbox()` creates an empy raster file if `proxy = TRUE`; #489
