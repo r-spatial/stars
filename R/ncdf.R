@@ -33,6 +33,9 @@
 #' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
 #' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
 #' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
+#' metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
+#' when the number of cells to be read is larger than \code{options(stars.n_proxy}, or to 1e8 if that option was not set.
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -58,7 +61,8 @@
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE) {
+    eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
+    proxy = NULL) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -71,6 +75,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if(.is_netcdf_cf_dsg(meta)) {
     if (!requireNamespace("ncdfgeom", quietly = TRUE))
       stop("package ncdfgeom required, please install it first") # nocov
+
+    if(proxy) warning("proxy behavior not supported for timeseries netcdf")
 
     geom <- .get_geom_name(meta)
 
@@ -123,7 +129,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     axis_matcher <- c(axis_matcher, 5:length(dims$axis))
   }
 
-  dimensions <- create_dimensions(setNames(dim(out_data[[1]]),
+  if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- out_data[[1]]$count
+
+  dimensions <- create_dimensions(setNames(nc_dim,
                                            dims$name[axis_matcher]),
                                   raster)
   dimensions <- .get_nc_dimensions(dimensions,
@@ -139,8 +147,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dimensions <- .get_nc_time(dimensions, make_time,
                             coord_var, rep_var, meta)
 
-  # Make initial response data
-  ret = st_stars(out_data, dimensions)
+  ret <- if (is.list(out_data[[1]])) {
+    # this is a proxy
+    st_stars_proxy(list(.x), dimensions, NA_value = NA_real_, resolutions = NULL)
+  } else {
+    # Make initial response data
+    ret = st_stars(out_data, dimensions)
+  }
 
   st_crs(ret) <- nc_prj
 
@@ -419,25 +432,55 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   var)
 }
 
-.get_data <- function(nc, var, dims, dimid_matcher) {
+.get_nc_var <- function(nc, .v, start, count) {
+  RNetCDF::var.get.nc(nc,
+                      variable = .v,
+                      start = start,
+                      count = count,
+                      collapse = FALSE, ## keep 1-dims
+                      unpack = TRUE,     ## offset and scale applied internally
+                      rawchar = TRUE)  ## needed for NC_CHAR, as per
+}
+
+.get_data <- function(nc, var, dims, dimid_matcher, pull = NULL, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
   out_data <- lapply(var, function(.v) {
 
     dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
                 dims[, "id", drop = TRUE])
     if(is.null(dm)) dm <- c(1:nrow(dims))
 
-    ret <- RNetCDF::var.get.nc(nc,
-                        variable = .v,
-                        start = dims[, "start", drop = TRUE][dm],
-                        count = dims[, "count", drop = TRUE][dm],
-                        collapse = FALSE, ## keep 1-dims
-                        unpack = TRUE,     ## offset and scale applied internally
-                        rawchar = TRUE)  ## needed for NC_CHAR, as per
+    request <- list(start = dims[, "start", drop = TRUE][dm],
+                    count = dims[, "count", drop = TRUE][dm])
 
-    if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
-      ret <- aperm(ret, dm)
+    request$size <- prod(request$count)
+
+    if(is.null(pull) && request$size > n_proxy) {
+      pull <- FALSE
+      message("Large netcdf source found, returning proxy object.")
+    } else {
+      pull <- TRUE
+      message(paste("Will return stars objsect with", request$size, "cells."))
     }
+
+    if(pull & request$size > n_proxy)
+      warning("Large netcdf source will be requested. Consider using stars proxy.")
+
+    if(pull) {
+
+      ret <- .get_nc_var(nc, .v, request$start, request$count)
+
+      if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
+        ret <- aperm(ret, dm)
+      }
+
+    } else {
+
+      ret <- request
+
+    }
+
     return(ret)
+
   })
   ## "../rasterwise/extdata/R13352.nc"
   ## https://github.com/hypertidy/tidync/issues/75
@@ -467,8 +510,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       stop("input ncsub doesn't match available dims")
     ix <- is.na(ncsub[, "count"])
     if (any(ix))  ncsub[ix, "count"] <- dims$length[ix] - ncsub[ix, "start"] + 1
-    if (any(ncsub[, "start"] < 1) || 
-        any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) 
+    if (any(ncsub[, "start"] < 1) ||
+        any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length))
       stop("start or count out of bounds")
     dims$start <- ncsub[, "start"]
     dims$count <- ncsub[, "count"]
@@ -482,9 +525,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if (!is.null(nc_units) && nrow(nc_units) > 0 && make_units) {
     for (i in names(data_list)) {
-      if (is.numeric(data_list[[i]]) && i %in% nc_units$variable) {
+      if (i %in% nc_units$variable) {
         uval <- unlist(nc_units$value[nc_units$variable == i])
-        units(data_list[[i]]) <- try_as_units(uval[1L])
+        if(is.numeric(data_list[[i]])) {
+          units(data_list[[i]]) <- try_as_units(uval[1L])
+        } else {
+          data_list[[i]]$units <- uval[1L]
+        }
       }
     }
   }
