@@ -106,7 +106,8 @@
   n <span class="op">=</span> <span class="fl">64800</span>,
   pretty <span class="op">=</span> <span class="cn">FALSE</span>,
   inside <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">nz</span>
+  <span class="va">nz</span>,
+  proxy <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
 
 <span class="co"># S3 method for sf</span>
@@ -183,6 +184,8 @@
 <dd><p>logical; should all cells entirely fall inside the bbox, potentially not covering it completely?</p></dd>
 <dt>nz</dt>
 <dd><p>integer; number of cells in z direction; if missing no z-dimension is created.</p></dd>
+<dt>proxy</dt>
+<dd><p>logical; should a <code>stars_proxy</code> object be created? (requires gdal_create binary)</p></dd>
 <dt>name</dt>
 <dd><p>character; attribute name for array from an <code>xts</code> object</p></dd>
 <dt>att</dt>
