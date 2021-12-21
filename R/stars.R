@@ -196,7 +196,7 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 				print(paste("executing: ", cmd))
 				system(cmd)
 			} else
-				sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
+				gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
 			read_stars(f, proxy = TRUE)
 		} else
 			st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
