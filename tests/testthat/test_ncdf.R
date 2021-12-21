@@ -12,6 +12,21 @@ test_that("basic reduced comes back as expected", {
   expect_equal(length(st_dim$time$values), 1)
 })
 
+test_that("proxy", {
+  nc <- read_ncdf(f, proxy = TRUE)
+  expect_equal(nc[[1]], f)
+  expect_s3_class(nc, "stars_proxy")
+
+  old_opts <- options("stars.n_proxy" = 100)
+  nc <- read_ncdf(f)
+  expect_equal(nc[[1]], f)
+
+  expect_warning(nc <- read_ncdf(f, proxy = FALSE))
+  expect_s3_class(nc, "stars")
+
+  options(old_opts)
+})
+
 test_that("variable subsetting", {
   nc <- read_ncdf(f, var = c("anom"))
   expect_equal(names(nc), "anom")
