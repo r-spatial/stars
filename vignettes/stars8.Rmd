@@ -1,0 +1,51 @@
+---
+title: "8. NetCDF Proxy Workflows"
+author: "David Blodgett"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{8. NetCDF Proxy Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+suppressPackageStartupMessages(library(dplyr))
+EVAL = suppressWarnings(require(starsdata, quietly = TRUE))
+```
+
+NetCDF data sources are available via more _and_ less granular files and/or OPeNDAP endpoints. This article demonstrates how `stars` enables discovery, access, and processing of NetCDF data across a wide range of such source-data organization schemes.
+
+We'll start with some basics using datasets included with the `stars` installation. A call to `read_ncdf()`, for a dataset smaller than the default threshold, will just read in all the data. Below we read in and display the `reduced.nc` NetCDF file.
+
+```{r}
+library(stars)
+f <- system.file("nc/reduced.nc", package = "stars")
+(nc <- read_ncdf(f))
+```
+
+Let's assume `reduced.nc` was 10 years of hourly data, rather than 1 time step. It would be over 10GB rather than about 130KB and we would not be able to just read it all into memory. In this case, we need a way to read the file's metadata such that we could iterate over it in a way that meets the needs of our workflow objectives. This is where `proxy = TRUE` comes in. Below, we'll lower the option that controls whether `read_ncdf()` defaults to proxy _and_ use `proxy = TRUE` to show both ways of getting the same result.
+
+```{r}
+old_options <- options("stars.n_proxy" = 100)
+(nc <- read_ncdf(f, proxy = TRUE))
+options(old_options)
+```
+
+The above shows that we have a NetCDF sourced stars proxy derived from the `reduced.nc` file. We see it has four variables and their units are displayed. The normal `stars` `dimension(s)` are available and a `nc_request` object is also available. The `nc_request` object contains the information needed to make requests for data according to the dimensions of the NetCDF data source. With this information, we have what we need to request a chunk of data that is what we want and not too large.
+
+```{r}
+
+(nc <- read_ncdf(f, 
+				 var = "sst", 
+				 ncsub = cbind(start = c(90, 45, 1 , 1), 
+				 			  count = c(90, 45, 1, 1))))
+
+plot(nc)
+```
