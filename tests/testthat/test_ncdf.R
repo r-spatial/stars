@@ -21,6 +21,7 @@ test_that("proxy", {
 
   expect_true(grepl("^netcdf source", output))
   expect_true(grepl("First nc_request", output))
+  expect_true(grepl("nc_request:", output))
 
   old_opts <- options("stars.n_proxy" = 100)
   nc <- read_ncdf(f)
@@ -30,6 +31,8 @@ test_that("proxy", {
   expect_s3_class(nc, "stars")
 
   options(old_opts)
+
+  output
 })
 
 test_that("variable subsetting", {

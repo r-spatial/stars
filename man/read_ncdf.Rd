@@ -13,7 +13,8 @@ read_ncdf(
   eps = 1e-12,
   ignore_bounds = FALSE,
   make_time = TRUE,
-  make_units = TRUE
+  make_units = TRUE,
+  proxy = NULL
 )
 }
 \arguments{
@@ -36,6 +37,10 @@ curvilinear coordinates if they are not supplied.}
 \item{make_time}{if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable}
 
 \item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
+
+\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
+metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
+when the number of cells to be read is larger than \code{options(stars.n_proxy}, or to 1e8 if that option was not set.}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.

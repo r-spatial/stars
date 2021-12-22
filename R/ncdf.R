@@ -156,8 +156,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     # this is a proxy
     ret <- st_stars_proxy(list(.x), dimensions, NA_value = NA_real_, resolutions = NULL)
 
+    attr(out_data, "class") <- "nc_request"
+
     # hacking the request info in as attributes.
     attr(ret, "nc_request") <- out_data
+
+    class(ret) <- c("nc_proxy", "stars_proxy", "stars")
 
   } else {
     # Make initial response data
@@ -216,7 +220,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       message("Large netcdf source found, returning proxy object.")
     } else {
       pull <- TRUE
-      message(paste("Will return stars object with", request$size, "cells."))
+      message(paste("Will return stars object with", array_size, "cells."))
     }
   } else {
     pull <- !proxy
@@ -474,14 +478,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 .get_data <- function(nc, var, dims, dimid_matcher, pull = pull) {
   out_data <- lapply(var, pull = pull, FUN = function(.v, pull) {
 
-    dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
-                dims[, "id", drop = TRUE])
-    if(is.null(dm)) dm <- c(1:nrow(dims))
+    dm <- dimid_matcher[.v][[1]]
 
     request <- list(start = dims[, "start", drop = TRUE][dm],
                     count = dims[, "count", drop = TRUE][dm])
 
     request$size <- prod(request$count)
+
+    request$dimid_match <- dm
 
     if(pull) {
 
