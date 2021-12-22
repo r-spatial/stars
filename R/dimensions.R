@@ -365,16 +365,22 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	if (!is.null(lst$band) && !is.null(pr$descriptions) && all(pr$descriptions != ""))
 		lst$band$values = pr$descriptions
 	# set up raster:
-	raster = get_raster(affine = pr$geotransform[c(3,5)], dimensions = c("x", "y"), curvilinear = FALSE)
+	raster = get_raster(affine = pr$geotransform[c(3,5)],
+						dimensions = c("x", "y"),
+						curvilinear = FALSE, 
+						blocksizes = pr$blocksizes)
 	create_dimensions(lst, raster)
 }
 
-get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE) {
-	if (any(is.na(affine))) {
-		# warning("setting NA affine values to zero")
+get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
+					  curvilinear = FALSE, blocksizes = NULL) {
+	if (any(is.na(affine)))
 		affine = c(0, 0)
-	}
-	structure(list(affine = affine, dimensions = dimensions, curvilinear = curvilinear), class = "stars_raster")
+	structure(list(affine = affine,
+				   dimensions = dimensions,
+				   curvilinear = curvilinear,
+				   blocksizes = blocksizes), 
+		  class = "stars_raster")
 }
 
 get_geotransform = function(x) {
