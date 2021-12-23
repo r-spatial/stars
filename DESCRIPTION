@@ -111,4 +111,4 @@ Collate:
     'sample.R'
     'extract.R'
     'datasets.R'
-    'get_blocks.R'
+    'tile.R'
