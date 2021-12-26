@@ -12,40 +12,18 @@ test_that("basic reduced comes back as expected", {
   expect_equal(length(st_dim$time$values), 1)
 })
 
-test_that("proxy", {
-  nc <- read_ncdf(f, proxy = TRUE)
-  expect_equal(nc[[1]], f)
-  expect_s3_class(nc, "stars_proxy")
-
-  output <- capture_output(print(nc))
-
-  expect_true(grepl("^netcdf source", output))
-  expect_true(grepl("First nc_request", output))
-  expect_true(grepl("nc_request:", output))
-
-  old_opts <- options("stars.n_proxy" = 100)
-  nc <- read_ncdf(f)
-  expect_equal(nc[[1]], f)
-
-  expect_warning(nc <- read_ncdf(f, proxy = FALSE))
-  expect_s3_class(nc, "stars")
-
-  options(old_opts)
-
-  output
-})
-
 test_that("variable subsetting", {
   nc <- read_ncdf(f, var = c("anom"))
   expect_equal(names(nc), "anom")
 })
 
 test_that("domain subsetting", {
-  nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
+  nc <- read_ncdf(f, ncsub = cbind(start = c(20, 1, 1, 1),
                                    count = c(10, 12, 1, 1)))
   st_dim <- st_dimensions(nc)
   expect_equal(st_dim$lon$to - st_dim$lon$from, 9)
   expect_equal(st_dim$lat$to - st_dim$lat$from, 11)
+  expect_equal(st_dim$lon$offset, 37)
 
   expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
                                    count = c(200, 12, 1, 1))),

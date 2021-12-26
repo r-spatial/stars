@@ -22,7 +22,7 @@
 #' read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 #'
 #'
-#' @param .x NetCDF file or source
+#' @param .x NetCDF file or source as a character vector or an nc_proxy object.
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns (see Details)
@@ -69,26 +69,34 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (!requireNamespace("RNetCDF", quietly = TRUE))
     stop("package RNetCDF required, please install it first") # nocov
 
+  if(inherits(.x, "nc_proxy")) {
+   # maybe do this as a method?
+    x <- .x[[1]]
+    nc_request <- attr(.x, "nc_request")
+  } else {
+    x <- .x
+    nc_request <- NULL
+  }
   # Get all the nc metadata
-  meta <- .fix_meta(ncmeta::nc_meta(.x))
+  meta <- .fix_meta(ncmeta::nc_meta(x))
 
   if(.is_netcdf_cf_dsg(meta)) {
     if (!requireNamespace("ncdfgeom", quietly = TRUE))
       stop("package ncdfgeom required, please install it first") # nocov
 
-    if(proxy) warning("proxy behavior not supported for timeseries netcdf")
+    if(!is.null(proxy) && proxy) warning("proxy behavior not supported for timeseries netcdf")
 
     geom <- .get_geom_name(meta)
 
-    return(st_as_stars(ncdfgeom::read_timeseries_dsg(.x), sf_geometry = geom))
+    return(st_as_stars(ncdfgeom::read_timeseries_dsg(x), sf_geometry = geom))
   }
 
   # Get relevant variables
-  var <- .get_vars(var, meta)
+  var <- .get_vars(var, meta, nc_request)
   rep_var <- var[1L]
 
   # Get coordinate variable info
-  all_coord_var <- ncmeta::nc_coord_var(.x)
+  all_coord_var <- ncmeta::nc_coord_var(x)
 
   if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA,
                                                            Z = NA, T = NA, bounds = NA)
@@ -104,9 +112,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
 
   # Validate that ncsub matches dims
-  dims <- .add_ncsub(dims, ncsub)
+  dims <- .add_ncsub(dims, ncsub, nc_request)
 
-  nc = RNetCDF::open.nc(.x)
+  nc = RNetCDF::open.nc(x)
   on.exit(RNetCDF::close.nc(nc), add = TRUE)
 
   pull <- .should_pull(proxy,
@@ -154,7 +162,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if (is.list(out_data[[1]])) {
 
     # this is a proxy
-    ret <- st_stars_proxy(list(.x), dimensions, NA_value = NA_real_, resolutions = NULL)
+    ret <- st_stars_proxy(list(x), dimensions, NA_value = NA_real_, resolutions = NULL)
 
     attr(out_data, "class") <- "nc_request"
 
@@ -232,7 +240,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   pull
 }
 
-.get_vars <- function(var, meta) {
+.get_vars <- function(var, meta, nc_request) {
+
+  if(is.null(var) && !is.null(nc_request)) {
+    var <- names(nc_request)
+  }
+
   if (is.null(var)) {
     ix <- 1
     if (meta$grid$grid[ix] == "S") {
@@ -478,7 +491,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 .get_data <- function(nc, var, dims, dimid_matcher, pull = pull) {
   out_data <- lapply(var, pull = pull, FUN = function(.v, pull) {
 
-    dm <- dimid_matcher[.v][[1]]
+    if(is.null(dm <- dimid_matcher[.v][[1]])) dm <- seq_len(nrow(dims))
 
     request <- list(start = dims[, "start", drop = TRUE][dm],
                     count = dims[, "count", drop = TRUE][dm])
@@ -523,7 +536,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
 }
 
-.add_ncsub <- function(dims, ncsub) {
+.add_ncsub <- function(dims, ncsub, nc_request) {
+
+  if(is.null(ncsub) && !is.null(nc_request)) {
+    ncsub <- cbind(start = nc_request[[1]]$start,
+                   count = nc_request[[1]]$count)
+    ncsub <- ncsub[nc_request[[1]]$dimid_match, ]
+  }
+
   if (is.null(ncsub)) {
     dims$start <- 1
     dims$count <- dims$length
@@ -643,9 +663,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         t_dim = NA_character_
       # https://github.com/r-spatial/stars/issues/378
       if (!is.na(t_dim) && names(coords)[i] == t_dim)
-        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]]
+        dimensions[[i]]$offset[1L] = coords[[i]][1]
       else
-        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]] - mdc/2
+        dimensions[[i]]$offset[1L] = coords[[i]][1] - mdc/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
       dimensions[[i]]$delta[1L]  = mdc
     } else {

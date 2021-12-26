@@ -47,7 +47,7 @@ print.nc_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	print(nc_request)
 }
 
-#' #' @export
-#' st_as_stars.nc_proxy = function(x, ...) {
-#'
-#' }
+#' @export
+st_as_stars.nc_proxy <- function(x, ...) {
+	read_ncdf(x, ...)
+}
