@@ -4,7 +4,7 @@
 \alias{st_tile}
 \title{Specify parameters to load raster in blocks}
 \usage{
-st_tile(img_rows, img_cols, x_window = NULL, y_window = NULL)
+st_tile(img_rows, img_cols, x_window, y_window, overlap = 0)
 }
 \arguments{
 \item{img_rows}{number of input raster rows (integer)}
@@ -14,6 +14,8 @@ st_tile(img_rows, img_cols, x_window = NULL, y_window = NULL)
 \item{x_window}{number of rows in block (integer)}
 
 \item{y_window}{number of columns in block (integer)}
+
+\item{overlap}{number of overlapping pixels (integer)}
 }
 \value{
 matrix with specified \code{nXOff}, \code{nYOff}, \code{nXsize},
