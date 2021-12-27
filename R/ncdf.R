@@ -35,7 +35,12 @@
 #' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
 #' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
 #' metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
-#' when the number of cells to be read is larger than \code{options(stars.n_proxy}, or to 1e8 if that option was not set.
+#' when the number of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8 if that option was not set.
+#' @param downsample integer; number of cells to omit between samples along each dimension. 
+#' e.g. \code{c(1,1,2)} would return every other cell in x and y and every third cell
+#' in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
+#' is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
+#' option is ignored.
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -62,7 +67,7 @@
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
     eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
-    proxy = NULL) {
+    proxy = NULL, downsample = 0) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
@@ -135,8 +140,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
 
+  canon_order <- c("X", "Y", "Z", "T")[!is.na(coord_var[c("X", "Y", "Z", "T")])]
   # Create stars dimensions object
-  axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], c("X", "Y", "Z", "T"))
+  axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], canon_order)
+  
   if(length(dims$axis) > 4) {
     axis_matcher <- c(axis_matcher, 5:length(dims$axis))
   }
@@ -181,9 +188,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
     curvi_coords = .get_curvilinear_coords(curvilinear, dimensions, nc, dims)
-    return(st_as_stars(ret, curvilinear = curvi_coords))
-  } else
-    return(ret)
+    ret <- st_as_stars(ret, curvilinear = curvi_coords)
+  }
+  
+  if(!all.equal(downsample, 0)) {
+    ret <- st_downsample(ret, downsample)
+  }
+  
+  ret
+  
 }
 
 .fix_meta <- function(meta) {
@@ -385,7 +398,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var],
                               meta$dimension$id), ]
 
-  canon_order <- c("X", "Y", "Z", "T")
+  canon_order <- c("X", "Y", "Z", "T")[!is.na(c_v[c("X", "Y", "Z", "T")])]
 
   dims$coord_var <- ""
   dims$axis <- canon_order[1:nrow(dims)]
@@ -499,6 +512,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     request$size <- prod(request$count)
 
     request$dimid_match <- dm
+    
+    request$axis <- dims$axis[dm]
 
     if(pull) {
 

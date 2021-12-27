@@ -41,7 +41,6 @@ options(old_options)
 The above shows that we have a NetCDF sourced stars proxy derived from the `reduced.nc` file. We see it has four variables and their units are displayed. The normal `stars` `dimension(s)` are available and a `nc_request` object is also available. The `nc_request` object contains the information needed to make requests for data according to the dimensions of the NetCDF data source. With this information, we have what we need to request a chunk of data that is what we want and not too large.
 
 ```{r}
-
 (nc <- read_ncdf(f, 
 				 var = "sst", 
 				 ncsub = cbind(start = c(90, 45, 1 , 1), 
@@ -49,3 +48,7 @@ The above shows that we have a NetCDF sourced stars proxy derived from the `redu
 
 plot(nc)
 ```
+
+The ability to view NetCDF metadata so we can make well formed requests against the data is useful, but the real power of a proxy object is that we can use it in a "lazy evaluation" coding style. That is, we can do virtual operations on the object, like subsetting with another dataset, prior to actually accessing the data volume. 
+
+

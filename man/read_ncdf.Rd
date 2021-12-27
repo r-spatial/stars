@@ -14,11 +14,12 @@ read_ncdf(
   ignore_bounds = FALSE,
   make_time = TRUE,
   make_units = TRUE,
-  proxy = NULL
+  proxy = NULL,
+  downsample = 0
 )
 }
 \arguments{
-\item{.x}{NetCDF file or source}
+\item{.x}{NetCDF file or source as a character vector or an nc_proxy object.}
 
 \item{...}{ignored}
 
@@ -40,7 +41,13 @@ curvilinear coordinates if they are not supplied.}
 
 \item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
 metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
-when the number of cells to be read is larger than \code{options(stars.n_proxy}, or to 1e8 if that option was not set.}
+when the number of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8 if that option was not set.}
+
+\item{downsample}{integer; number of cells to omit between samples along each dimension. 
+e.g. \code{c(1,1,2)} would return every other cell in x and y and every third cell
+in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
+is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
+option is ignored.}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.
