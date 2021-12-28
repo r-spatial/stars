@@ -1,6 +1,6 @@
 # version 0.5-6
 
-* Added a new helper function `get_blocks()` to specify the block parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`)
+* Added a new helper function `st_tile()` to specify the block parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`)
   required by `RasterIO` argument in `read_stars()`
 
 # version 0.5-5

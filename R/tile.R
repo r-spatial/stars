@@ -8,28 +8,32 @@
 #' @param img_cols number of input raster columns (integer)
 #' @param x_window number of rows in block (integer)
 #' @param y_window number of columns in block (integer)
+#' @param overlap number of overlapping pixels (integer)
 #'
 #' @return matrix with specified \code{nXOff}, \code{nYOff}, \code{nXsize},
 #' and \code{nYSize} parameters for every block
 #'
 #' @examples
+#' \dontrun{
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' r = read_stars(tif, proxy = TRUE)
-#' blocks = get_blocks(nrow(r), ncol(r), 256L, 256L)
-#' for (i in seq_len(nrow(blocks))) {
-#'   io = list(nXOff = blocks[i, 1], nYOff = blocks[i, 2],
-#'             nXSize = blocks[i, 3], nYSize = blocks[i, 4])
-#'   x = read_stars(tif, proxy = FALSE, RasterIO = io)
+#' tiles = st_tile(nrow(r), ncol(r), 256, 256)
+#' for (i in seq_len(nrow(tiles))) {
+#'   tile = read_stars(tif, proxy = FALSE, RasterIO = tiles[i, ])
+#'   # write tiles to separate files
+#'   write_stars(tile, dsn = paste0(i, ".tif"))
+#' }
 #' }
 #'
 #' @export
-get_blocks = function(img_rows, img_cols, x_window, y_window) {
+st_tile = function(img_rows, img_cols, x_window, y_window, overlap = 0) {
 
 	# make sure input values are integers
 	img_rows = as.integer(img_rows)
 	img_cols = as.integer(img_cols)
 	x_window = as.integer(x_window)
 	y_window = as.integer(y_window)
+	overlap = as.integer(overlap)
 
 	n = ceiling((img_rows / x_window)) * ceiling((img_cols / y_window))
 
@@ -39,16 +43,16 @@ get_blocks = function(img_rows, img_cols, x_window, y_window) {
 	i = 1L
 	for (x in seq.int(1L, img_rows, y_window)) {
 
-		if (x + y_window <= img_rows) {
-			nXSize = y_window
+		if (x + y_window + overlap <= img_rows) {
+			nXSize = y_window + overlap
 		} else {
 			nXSize = img_rows - x + 1L
 		}
 
 		for (y in seq.int(1L, img_cols, x_window)) {
 
-			if (y + x_window <= img_cols) {
-				nYSize = x_window
+			if (y + x_window + overlap <= img_cols) {
+				nYSize = x_window + overlap
 			} else {
 				nYSize = img_cols - y + 1L
 			}
