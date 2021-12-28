@@ -84,6 +84,26 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 	
 	structure(NextMethod(), class = class(x))
 }
+
+# "[[<-.nc_proxy" not needed.
 	
+#' @export
+c.nc_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FALSE, 
+						 nms = names(list(...)), tolerance = sqrt(.Machine$double.eps)) {
 	
+	dots = list(...)
+	if (!all(sapply(dots, function(x) inherits(x, "nc_proxy"))))
+		stop("all arguments to c() should be nc_proxy objects")
 	
+	x <- dots[[1]]
+	
+	structure(NextMethod(), class = class(x))
+}
+
+
+#' @export
+st_redimension.nc_proxy <- function() stop("st_redimension not support for nc_proxy")
+
+#' @export
+st_mosaic.nc_proxy = function() stop("st_mosaic not supported for nc_proxy")
+								 

@@ -57,13 +57,13 @@ There are two kinds of lazy operations possible with `stars_proxy` objects. Some
 
 Methods applied to a `stars_proxy` object:
 
-- `[`
-- `[[<-`
-- `print`
-- `dim`
-- `c`
-- `st_redimension`
-- `st_mosaic` * Calls read_stars on assembled list.
+- `[` - Nearly the same as stars_proxy
+- `[[<-` - stars_proxy method works
+- `print` - unique method for nc_proxy to facilitate unique workflows
+- `dim` - stars_proxy method works
+- `c` - stars_proxy method works
+- `st_redimension` - Not sure what this entails but it might not make sense for nc_proxy.
+- `st_mosaic` * Calls read_stars on assembled list. Not supported for now.
 - `st_set_bbox`
 
 
