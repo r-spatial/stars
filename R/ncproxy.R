@@ -82,9 +82,12 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 	
 	nc_request <- nc_request[1]
 			
-	nc_request[[1]]$count[nc_request[[1]]$axis == "T"] <- max_times
+	nc_request[[1]]$count[nc_request[[1]]$axis == "T"] <- 
+		min(max_times, nc_request[[1]]$count[nc_request[[1]]$axis == "T"])
 	
-	attr(x, "nc_request") <- nc_request
+	x <- x[1]
+	
+	x <- put_nc_request(x, nc_request)
 	
 	plot(st_as_stars(x, downsample = downsample, ...), ..., downsample = 0)
 }
