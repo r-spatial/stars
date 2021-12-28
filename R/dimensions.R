@@ -31,7 +31,7 @@ st_dimensions.dimensions = function(.x, ...) .x
 `st_dimensions<-.stars_proxy` = function(x, value) {
 	if (!is.null(attr(x, "call_list")))
 		stop("st_dimensions<- on a stars_proxy object only works if there is no call list")
-	NextMethod()
+	structure(NextMethod(), class = class(x))
 }
 
 

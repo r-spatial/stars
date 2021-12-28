@@ -106,7 +106,7 @@ st_as_stars(.x, ...)
 
 \item{nz}{integer; number of cells in z direction; if missing no z-dimension is created.}
 
-\item{proxy}{logical; should a \code{stars_proxy} object be created? (requires gdal_create binary)}
+\item{proxy}{logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)}
 
 \item{name}{character; attribute name for array from an \code{xts} object}
 
