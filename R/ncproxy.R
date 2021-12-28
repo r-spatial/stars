@@ -41,7 +41,7 @@ print.nc_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	cat("netcdf source stars proxy object from:\n")
 
 	if(simplify) print(shorten_names(x[[1]], nfiles))
-	nc_request <- get_nc_request(nc)
+	nc_request <- get_nc_request(x)
 
 	cat("\nAvailable nc variables:\n")
 	cat(paste(names(nc_request),
@@ -78,3 +78,12 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 	
 	plot(st_as_stars(x, downsample = downsample, ...), ..., downsample = 0)
 }
+
+#' @export
+"[.nc_proxy" <- function(x, i = TRUE, ...) {
+	
+	structure(NextMethod(), class = class(x))
+}
+	
+	
+	
