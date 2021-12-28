@@ -1,7 +1,11 @@
 # nc_proxy is a subclass of stars_proxy.
 
 get_nc_request <- function(x) {
-	attr(x, "nc_request")
+	out <- lapply(x, function(v) {
+		attr(v, "nc_request")[[1]]
+	})
+	attr(out, "class") <- "nc_request"
+	out
 }
 
 # nc_request is a class for "nc_request" attributes of an nc_proxy object.

@@ -167,14 +167,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                             coord_var, rep_var, meta)
 
   if (is.list(out_data[[1]])) {
-
+    
+    ret <- as.list(rep(x, length(out_data)))
+    names(ret) <- names(out_data)
+    
     # this is a proxy
-    ret <- st_stars_proxy(list(x), dimensions, NA_value = NA_real_, resolutions = NULL)
+    ret <- st_stars_proxy(ret, dimensions, NA_value = NA_real_, resolutions = NULL)
 
-    attr(out_data, "class") <- "nc_request"
-
-    # hacking the request info in as attributes.
-    attr(ret, "nc_request") <- out_data
+    ret <- .add_nc_request(ret, out_data)
 
     class(ret) <- c("nc_proxy", "stars_proxy", "stars")
 
@@ -197,6 +197,24 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   ret
   
+}
+
+.add_nc_request <- function(proxy, nc_request) {
+  ret <- unclass(proxy)
+  ret <- lapply(names(ret), function(p) {
+    nr <- nc_request[p]
+    
+    attr(nr, "class") <- "nc_request"
+    
+    out <- ret[[p]]
+    
+    attr(out, "nc_request") <- nr
+    
+    out
+  })
+  attributes(ret) <- attributes(proxy)
+  
+  ret
 }
 
 .fix_meta <- function(meta) {
