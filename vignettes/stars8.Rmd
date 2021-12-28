@@ -51,4 +51,57 @@ plot(nc)
 
 The ability to view NetCDF metadata so we can make well formed requests against the data is useful, but the real power of a proxy object is that we can use it in a "lazy evaluation" coding style. That is, we can do virtual operations on the object, like subsetting with another dataset, prior to actually accessing the data volume. 
 
+Lazy operations.
+
+There are two kinds of lazy operations possible with `stars_proxy` objects. Some can be applied to the `stars_proxy` object itself without accessing underlying data. Others must be composed as a chain of calls that will be applied when data is actually required. 
+
+Methods applied to a `stars_proxy` object:
+
+- `[`
+- `[[<-`
+- `print`
+- `dim`
+- `c`
+- `st_redimension`
+- `st_mosaic` * Calls read_stars on assembled list.
+- `st_set_bbox`
+
+
+Methods that add a call to the `call_list`.
+
+- `[<-`
+- `adrop`
+- `aperm`
+- `is.na`
+- `split`
+- `st_apply`
+- `predict`
+- `merge`
+- `st_crop`
+- `drop_levels`
+- `Ops` (group generic for +, -, etc.)
+- `Math` (group generic for abs, sqrt, tan, etc.)
+- `filter`
+- `mutate`
+- `tansmute`
+- `select`
+- `rename`
+- `pull`
+- `slice` * hyperslabbing for NetCDF could be as above?
+- `pull`
+- `replace_na`
+
+Methods that cause a `stars_proxy` object to be fetched and turned into a `stars` object.
+
+- `as.data.frame`
+- `plot`
+- `st_as_stars`
+- `aggregate`
+- `st_dimensions<-` * https://github.com/r-spatial/stars/issues/494
+- `hist`
+- `st_downsample`
+- `st_sample`
+- `st_as_sf`
+- `write_stars`
+
 
