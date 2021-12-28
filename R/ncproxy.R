@@ -8,6 +8,16 @@ get_nc_request <- function(x) {
 	out
 }
 
+put_nc_request <- function(x, nc_request) {
+	out_class <- class(x)
+	x <- unclass(x)
+	
+	for(s in seq_along(x)) attr(x[[s]], "nc_request") <- nc_request[s]
+	
+	class(x) <- out_class
+	x
+}
+
 # nc_request is a class for "nc_request" attributes of an nc_proxy object.
 #' @export
 print.nc_request <- function(x) {

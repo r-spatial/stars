@@ -29,7 +29,7 @@ test_that("st_as_stars.nc_proxy", {
 	nc_request$sst$count <- c(10, 10, 1, 1)
 	nc_request$sst$size <- prod(nc_request$sst$count)
 
-	nc2 <- nc
+	nc2 <- nc[1]
 
 	attr(nc2$sst, "nc_request") <- nc_request["sst"]
 
@@ -50,7 +50,7 @@ test_that("st_as_stars.nc_proxy", {
 
 	expect_s3_class(nc2, c("nc_proxy", "stars_proxy", "stars"), exact = TRUE)
 
-	expect_equal(names(attr(nc2, "nc_request")), "sst")
+	expect_equal(names(attr(nc2$sst, "nc_request")), "sst")
 
 	dim <- st_dimensions(nc2)
 

@@ -76,8 +76,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if(inherits(.x, "nc_proxy")) {
    # maybe do this as a method?
-    x <- .x[[1]]
-    nc_request <- attr(.x, "nc_request")
+    nc_request <- get_nc_request(.x)
+    x <- as.character(.x[[1]])
   } else {
     x <- .x
     nc_request <- NULL
@@ -174,7 +174,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     # this is a proxy
     ret <- st_stars_proxy(ret, dimensions, NA_value = NA_real_, resolutions = NULL)
 
-    ret <- .add_nc_request(ret, out_data)
+    ret <- put_nc_request(ret, out_data)
 
     class(ret) <- c("nc_proxy", "stars_proxy", "stars")
 
@@ -197,24 +197,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   ret
   
-}
-
-.add_nc_request <- function(proxy, nc_request) {
-  ret <- unclass(proxy)
-  ret <- lapply(names(ret), function(p) {
-    nr <- nc_request[p]
-    
-    attr(nr, "class") <- "nc_request"
-    
-    out <- ret[[p]]
-    
-    attr(out, "nc_request") <- nr
-    
-    out
-  })
-  attributes(ret) <- attributes(proxy)
-  
-  ret
 }
 
 .fix_meta <- function(meta) {
@@ -543,7 +525,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
     } else {
 
-      ret <- request
+      ret <- structure(request, class = "nc_request")
 
     }
 
