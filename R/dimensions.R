@@ -376,6 +376,8 @@ get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
 					  curvilinear = FALSE, blocksizes = NULL) {
 	if (any(is.na(affine)))
 		affine = c(0, 0)
+	if (!is.null(blocksizes))
+		colnames(blocksizes) = c("x", "y") # columns, rows!
 	structure(list(affine = affine,
 				   dimensions = dimensions,
 				   curvilinear = curvilinear,
