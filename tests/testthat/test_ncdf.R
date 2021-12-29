@@ -18,11 +18,12 @@ test_that("variable subsetting", {
 })
 
 test_that("domain subsetting", {
-  nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
+  nc <- read_ncdf(f, ncsub = cbind(start = c(20, 1, 1, 1),
                                    count = c(10, 12, 1, 1)))
   st_dim <- st_dimensions(nc)
   expect_equal(st_dim$lon$to - st_dim$lon$from, 9)
   expect_equal(st_dim$lat$to - st_dim$lat$from, 11)
+  expect_equal(st_dim$lon$offset, 37)
 
   expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
                                    count = c(200, 12, 1, 1))),
@@ -178,7 +179,7 @@ test_that("curvilinear 2", {
 test_that("lon cross 360", {
   f <- system.file("nc/test_adaptor.cams_regional_fc.nc", package = "stars")
 
-  nc <- read_ncdf(f)
+  suppressWarnings(nc <- read_ncdf(f))
 
   expect_true(head(st_dimensions(nc)$longitude$values, 1) < 0 &
                 tail(st_dimensions(nc)$longitude$values, 1) > 0)

@@ -22,7 +22,7 @@
 #' read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 #'
 #'
-#' @param .x NetCDF file or source
+#' @param .x NetCDF file or source as a character vector or an nc_proxy object.
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns (see Details)
@@ -33,6 +33,14 @@
 #' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
 #' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
 #' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
+#' metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
+#' when the number of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8 if that option was not set.
+#' @param downsample integer; number of cells to omit between samples along each dimension. 
+#' e.g. \code{c(1,1,2)} would return every other cell in x and y and every third cell
+#' in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
+#' is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
+#' option is ignored.
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
@@ -58,31 +66,42 @@
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE) {
+    eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
+    proxy = NULL, downsample = 0) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
     stop("package ncmeta required, please install it first") # nocov
   if (!requireNamespace("RNetCDF", quietly = TRUE))
     stop("package RNetCDF required, please install it first") # nocov
 
+  if(inherits(.x, "nc_proxy")) {
+   # maybe do this as a method?
+    nc_request <- get_nc_request(.x)
+    x <- as.character(.x[[1]])
+  } else {
+    x <- .x
+    nc_request <- NULL
+  }
   # Get all the nc metadata
-  meta <- .fix_meta(ncmeta::nc_meta(.x))
+  meta <- .fix_meta(ncmeta::nc_meta(x))
 
   if(.is_netcdf_cf_dsg(meta)) {
     if (!requireNamespace("ncdfgeom", quietly = TRUE))
       stop("package ncdfgeom required, please install it first") # nocov
 
+    if(!is.null(proxy) && proxy) warning("proxy behavior not supported for timeseries netcdf")
+
     geom <- .get_geom_name(meta)
 
-    return(st_as_stars(ncdfgeom::read_timeseries_dsg(.x), sf_geometry = geom))
+    return(st_as_stars(ncdfgeom::read_timeseries_dsg(x), sf_geometry = geom))
   }
 
   # Get relevant variables
-  var <- .get_vars(var, meta)
+  var <- .get_vars(var, meta, nc_request)
   rep_var <- var[1L]
 
   # Get coordinate variable info
-  all_coord_var <- ncmeta::nc_coord_var(.x)
+  all_coord_var <- ncmeta::nc_coord_var(x)
 
   if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA,
                                                            Z = NA, T = NA, bounds = NA)
@@ -91,17 +110,23 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, nc_prj, curvilinear)
 
+  canon_order <- c("X", "Y", "Z", "T")[!is.na(coord_var[c("X", "Y", "Z", "T")])]
+  
   curvilinear <- if(coord_var$curvilinear) {
     c(X = coord_var$X, Y = coord_var$Y) } else character(0)
 
   # Get dimensions for representative var in correct axis order.
-  dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
+  dims <- .get_dims(meta, rep_var, coord_var, meta$axis, canon_order)
 
   # Validate that ncsub matches dims
-  dims <- .add_ncsub(dims, ncsub)
+  dims <- .add_ncsub(dims, ncsub, nc_request)
 
-  nc = RNetCDF::open.nc(.x)
+  nc <- RNetCDF::open.nc(x)
   on.exit(RNetCDF::close.nc(nc), add = TRUE)
+
+  pull <- .should_pull(proxy,
+                       array_size = prod(dims[, "count", drop = TRUE]),
+                       num_vars = length(var))
 
   # Get coordinates from netcdf or create them
   coords <- .get_coords(nc, dims)
@@ -113,18 +138,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dimid_matcher <- .get_dimid_matcher(nc, coord_var, var)
 
   # Get all the data from the nc file
-  out_data <- .get_data(nc, var, dims, dimid_matcher)
+  out_data <- .get_data(nc, var, dims, dimid_matcher, pull = pull)
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
-
+  
   # Create stars dimensions object
-  axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], c("X", "Y", "Z", "T"))
-  if(length(dims$axis) > 4) {
-    axis_matcher <- c(axis_matcher, 5:length(dims$axis))
-  }
 
-  dimensions <- create_dimensions(setNames(dim(out_data[[1]]),
-                                           dims$name[axis_matcher]),
+  if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- out_data[[1]]$count
+
+  dimensions <- create_dimensions(setNames(nc_dim, dims$name),
                                   raster)
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
@@ -139,17 +161,37 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dimensions <- .get_nc_time(dimensions, make_time,
                             coord_var, rep_var, meta)
 
-  # Make initial response data
-  ret = st_stars(out_data, dimensions)
+  if (is.list(out_data[[1]])) {
+    
+    ret <- as.list(rep(x, length(out_data)))
+    names(ret) <- names(out_data)
+    
+    # this is a proxy
+    ret <- st_stars_proxy(ret, dimensions, NA_value = NA_real_, resolutions = NULL)
+
+    ret <- put_nc_request(ret, out_data)
+
+    class(ret) <- c("nc_proxy", "stars_proxy", "stars")
+
+  } else {
+    # Make initial response data
+    ret <- st_stars(out_data, dimensions)
+  }
 
   st_crs(ret) <- nc_prj
 
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
     curvi_coords = .get_curvilinear_coords(curvilinear, dimensions, nc, dims)
-    return(st_as_stars(ret, curvilinear = curvi_coords))
-  } else
-    return(ret)
+    ret <- st_as_stars(ret, curvilinear = curvi_coords)
+  }
+  
+  if(!all.equal(downsample, 0)) {
+    ret <- st_downsample(ret, downsample)
+  }
+  
+  ret
+  
 }
 
 .fix_meta <- function(meta) {
@@ -186,7 +228,32 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     d
 }
 
-.get_vars <- function(var, meta) {
+.should_pull <- function(proxy, array_size, num_vars,
+                         n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
+  if(is.null(proxy)) {
+    if(array_size > n_proxy) {
+      pull <- FALSE
+      message("Large netcdf source found, returning proxy object.")
+    } else {
+      pull <- TRUE
+      message(paste("Will return stars object with", array_size, "cells."))
+    }
+  } else {
+    pull <- !proxy
+  }
+
+  if(pull & array_size > n_proxy)
+    warning("Large netcdf source will be requested. Consider using stars proxy.")
+
+  pull
+}
+
+.get_vars <- function(var, meta, nc_request) {
+
+  if(is.null(var) && !is.null(nc_request)) {
+    var <- names(nc_request)
+  }
+
   if (is.null(var)) {
     ix <- 1
     if (meta$grid$grid[ix] == "S") {
@@ -322,14 +389,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 #' Gets dimension info ensuring they are in an order suited to coordinate
 #' variables that need to be subset appropriately.
 #' @noRd
-.get_dims <- function(meta, var, c_v, axis) {
+.get_dims <- function(meta, var, c_v, axis, canon_order) {
+  # This matches the axes of a given variable to the correct dimension
   dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var],
                               meta$dimension$id), ]
 
-  canon_order <- c("X", "Y", "Z", "T")
-
   dims$coord_var <- ""
-  dims$axis <- canon_order[1:nrow(dims)]
+  dims$axis <- ""
 
   rep_var_coordinates <- .get_attributes(meta$attribute, "coordinates", var)
   if(!is.null(rep_var_coordinates)) {
@@ -340,8 +406,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   y_cv <- axis[axis$variable == c_v$Y, ]
 
   if(nrow(x_cv) == 1 & nrow(y_cv) == 1) {
-    dims[dims$id == x_cv$dimension, ]$coord_var <- x_cv$variable
-    dims[dims$id == y_cv$dimension, ]$coord_var <- y_cv$variable
+    dims[dims$id == x_cv$dimension, ][c("coord_var", "axis")] <- list(x_cv$variable, "X")
+    dims[dims$id == y_cv$dimension, ][c("coord_var", "axis")] <- list(y_cv$variable, "Y")
   }
 
   dim_matcher <- axis[axis$variable == c_v$X, ]$dimension
@@ -353,15 +419,26 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   z_axis <- integer(0)
   if(!is.na(c_v$Z)) {
-    z_axis <- axis[axis$variable == c_v$Z, ]$dimension
+    z_cv <- axis[axis$variable == c_v$Z, ]
+    
+    z_axis <- z_cv$dimension
+    
+    dims[dims$id == z_cv$dimension, ][c("coord_var", "axis")] <- list(z_cv$variable, "Z")
+    
     dim_matcher <- c(dim_matcher, z_axis)
+    
   } else if(nrow(dims) == 4 & !c_v$curvilinear) {
     z_axis <- unique(axis[!axis$variable %in% c(c_v$X, c_v$Y, c_v$T) &
                             !axis$dimension %in% dim_matcher, ]$dimension)
   }
 
   if(!is.na(c_v$T)) {
-    t_axis <- axis[axis$variable == c_v$T, ]$dimension
+    t_cv <- axis[axis$variable == c_v$T, ]
+    
+    t_axis <- t_cv$dimension
+    
+    dims[dims$id == t_cv$dimension, ][c("coord_var", "axis")] <- list(t_cv$variable, "T")
+    
     if(length(z_axis) > 1) {
       z_axis <- z_axis[z_axis != t_axis]
     }
@@ -375,7 +452,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       dim_matcher <- unique(dim_matcher)
     }
     dims <- dims[match(dims$id, dim_matcher), ]
-    dims$axis <- canon_order[1:nrow(dims)]
   }
   return(dims)
 }
@@ -409,7 +485,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
 
       matcher <- match(coordvar_dimids, var_dimids)
-
+      
       if(!all(diff(matcher[1:2]) == 1)) {
         warning("Non-canonical axis order found, attempting to correct.")
       }
@@ -419,25 +495,48 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   var)
 }
 
-.get_data <- function(nc, var, dims, dimid_matcher) {
-  out_data <- lapply(var, function(.v) {
+.get_nc_var <- function(nc, .v, start, count) {
+  RNetCDF::var.get.nc(nc,
+                      variable = .v,
+                      start = start,
+                      count = count,
+                      collapse = FALSE, ## keep 1-dims
+                      unpack = TRUE,     ## offset and scale applied internally
+                      rawchar = TRUE)  ## needed for NC_CHAR, as per
+}
+
+.get_data <- function(nc, var, dims, dimid_matcher, pull = pull) {
+  out_data <- lapply(var, pull = pull, FUN = function(.v, pull) {
 
     dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
                 dims[, "id", drop = TRUE])
     if(is.null(dm)) dm <- c(1:nrow(dims))
 
-    ret <- RNetCDF::var.get.nc(nc,
-                        variable = .v,
-                        start = dims[, "start", drop = TRUE][dm],
-                        count = dims[, "count", drop = TRUE][dm],
-                        collapse = FALSE, ## keep 1-dims
-                        unpack = TRUE,     ## offset and scale applied internally
-                        rawchar = TRUE)  ## needed for NC_CHAR, as per
+    request <- list(start = dims[, "start", drop = TRUE][dm],
+                    count = dims[, "count", drop = TRUE][dm])
 
-    if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
-      ret <- aperm(ret, dm)
+    request$size <- prod(request$count)
+
+    request$dimid_match <- dm
+    
+    request$axis <- dims$axis[dm]
+
+    if(pull) {
+
+      ret <- .get_nc_var(nc, .v, request$start, request$count)
+
+      if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
+        ret <- aperm(ret, dm)
+      }
+
+    } else {
+
+      ret <- structure(request, class = "nc_request")
+
     }
+
     return(ret)
+
   })
   ## "../rasterwise/extdata/R13352.nc"
   ## https://github.com/hypertidy/tidync/issues/75
@@ -458,7 +557,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
 }
 
-.add_ncsub <- function(dims, ncsub) {
+.add_ncsub <- function(dims, ncsub, nc_request) {
+
+  if(is.null(ncsub) && !is.null(nc_request)) {
+    ncsub <- cbind(start = nc_request[[1]]$start,
+                   count = nc_request[[1]]$count)
+    ncsub <- ncsub[nc_request[[1]]$dimid_match, ]
+  }
+
   if (is.null(ncsub)) {
     dims$start <- 1
     dims$count <- dims$length
@@ -467,8 +573,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       stop("input ncsub doesn't match available dims")
     ix <- is.na(ncsub[, "count"])
     if (any(ix))  ncsub[ix, "count"] <- dims$length[ix] - ncsub[ix, "start"] + 1
-    if (any(ncsub[, "start"] < 1) || 
-        any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length)) 
+    if (any(ncsub[, "start"] < 1) ||
+        any((ncsub[, "count"] - ncsub[, "start"] + 1) > dims$length))
       stop("start or count out of bounds")
     dims$start <- ncsub[, "start"]
     dims$count <- ncsub[, "count"]
@@ -482,9 +588,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if (!is.null(nc_units) && nrow(nc_units) > 0 && make_units) {
     for (i in names(data_list)) {
-      if (is.numeric(data_list[[i]]) && i %in% nc_units$variable) {
+      if (i %in% nc_units$variable) {
         uval <- unlist(nc_units$value[nc_units$variable == i])
-        units(data_list[[i]]) <- try_as_units(uval[1L])
+        if(is.numeric(data_list[[i]])) {
+          units(data_list[[i]]) <- try_as_units(uval[1L])
+        } else {
+          data_list[[i]]$units <- try_as_units(uval[1L])
+        }
       }
     }
   }
@@ -574,9 +684,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         t_dim = NA_character_
       # https://github.com/r-spatial/stars/issues/378
       if (!is.na(t_dim) && names(coords)[i] == t_dim)
-        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]]
+        dimensions[[i]]$offset[1L] = coords[[i]][1]
       else
-        dimensions[[i]]$offset[1L] = coords[[i]][dims$start[i]] - mdc/2
+        dimensions[[i]]$offset[1L] = coords[[i]][1] - mdc/2
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
       dimensions[[i]]$delta[1L]  = mdc
     } else {
