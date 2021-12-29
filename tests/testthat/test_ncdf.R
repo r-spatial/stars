@@ -179,7 +179,7 @@ test_that("curvilinear 2", {
 test_that("lon cross 360", {
   f <- system.file("nc/test_adaptor.cams_regional_fc.nc", package = "stars")
 
-  nc <- read_ncdf(f)
+  suppressWarnings(nc <- read_ncdf(f))
 
   expect_true(head(st_dimensions(nc)$longitude$values, 1) < 0 &
                 tail(st_dimensions(nc)$longitude$values, 1) > 0)

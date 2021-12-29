@@ -110,16 +110,18 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, nc_prj, curvilinear)
 
+  canon_order <- c("X", "Y", "Z", "T")[!is.na(coord_var[c("X", "Y", "Z", "T")])]
+  
   curvilinear <- if(coord_var$curvilinear) {
     c(X = coord_var$X, Y = coord_var$Y) } else character(0)
 
   # Get dimensions for representative var in correct axis order.
-  dims <- .get_dims(meta, rep_var, coord_var, meta$axis)
+  dims <- .get_dims(meta, rep_var, coord_var, meta$axis, canon_order)
 
   # Validate that ncsub matches dims
   dims <- .add_ncsub(dims, ncsub, nc_request)
 
-  nc = RNetCDF::open.nc(x)
+  nc <- RNetCDF::open.nc(x)
   on.exit(RNetCDF::close.nc(nc), add = TRUE)
 
   pull <- .should_pull(proxy,
@@ -139,19 +141,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   out_data <- .get_data(nc, var, dims, dimid_matcher, pull = pull)
   out_data <- setNames(out_data, var)
   out_data <- .set_nc_units(out_data, meta$attribute, make_units)
-
-  canon_order <- c("X", "Y", "Z", "T")[!is.na(coord_var[c("X", "Y", "Z", "T")])]
-  # Create stars dimensions object
-  axis_matcher <- match(dims$axis[1:sum(!is.na(dims$axis))], canon_order)
   
-  if(length(dims$axis) > 4) {
-    axis_matcher <- c(axis_matcher, 5:length(dims$axis))
-  }
+  # Create stars dimensions object
 
   if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- out_data[[1]]$count
 
-  dimensions <- create_dimensions(setNames(nc_dim,
-                                           dims$name[axis_matcher]),
+  dimensions <- create_dimensions(setNames(nc_dim, dims$name),
                                   raster)
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
@@ -394,14 +389,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 #' Gets dimension info ensuring they are in an order suited to coordinate
 #' variables that need to be subset appropriately.
 #' @noRd
-.get_dims <- function(meta, var, c_v, axis) {
+.get_dims <- function(meta, var, c_v, axis, canon_order) {
+  # This matches the axes of a given variable to the correct dimension
   dims <-meta$dimension[match(meta$axis$dimension[meta$axis$variable == var],
                               meta$dimension$id), ]
 
-  canon_order <- c("X", "Y", "Z", "T")[!is.na(c_v[c("X", "Y", "Z", "T")])]
-
   dims$coord_var <- ""
-  dims$axis <- canon_order[1:nrow(dims)]
+  dims$axis <- ""
 
   rep_var_coordinates <- .get_attributes(meta$attribute, "coordinates", var)
   if(!is.null(rep_var_coordinates)) {
@@ -412,8 +406,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   y_cv <- axis[axis$variable == c_v$Y, ]
 
   if(nrow(x_cv) == 1 & nrow(y_cv) == 1) {
-    dims[dims$id == x_cv$dimension, ]$coord_var <- x_cv$variable
-    dims[dims$id == y_cv$dimension, ]$coord_var <- y_cv$variable
+    dims[dims$id == x_cv$dimension, ][c("coord_var", "axis")] <- list(x_cv$variable, "X")
+    dims[dims$id == y_cv$dimension, ][c("coord_var", "axis")] <- list(y_cv$variable, "Y")
   }
 
   dim_matcher <- axis[axis$variable == c_v$X, ]$dimension
@@ -425,15 +419,26 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   z_axis <- integer(0)
   if(!is.na(c_v$Z)) {
-    z_axis <- axis[axis$variable == c_v$Z, ]$dimension
+    z_cv <- axis[axis$variable == c_v$Z, ]
+    
+    z_axis <- z_cv$dimension
+    
+    dims[dims$id == z_cv$dimension, ][c("coord_var", "axis")] <- list(z_cv$variable, "Z")
+    
     dim_matcher <- c(dim_matcher, z_axis)
+    
   } else if(nrow(dims) == 4 & !c_v$curvilinear) {
     z_axis <- unique(axis[!axis$variable %in% c(c_v$X, c_v$Y, c_v$T) &
                             !axis$dimension %in% dim_matcher, ]$dimension)
   }
 
   if(!is.na(c_v$T)) {
-    t_axis <- axis[axis$variable == c_v$T, ]$dimension
+    t_cv <- axis[axis$variable == c_v$T, ]
+    
+    t_axis <- t_cv$dimension
+    
+    dims[dims$id == t_cv$dimension, ][c("coord_var", "axis")] <- list(t_cv$variable, "T")
+    
     if(length(z_axis) > 1) {
       z_axis <- z_axis[z_axis != t_axis]
     }
@@ -447,7 +452,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       dim_matcher <- unique(dim_matcher)
     }
     dims <- dims[match(dims$id, dim_matcher), ]
-    dims$axis <- canon_order[1:nrow(dims)]
   }
   return(dims)
 }
@@ -481,7 +485,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       var_dimids <- RNetCDF::var.inq.nc(nc, .v)$dimids
 
       matcher <- match(coordvar_dimids, var_dimids)
-
+      
       if(!all(diff(matcher[1:2]) == 1)) {
         warning("Non-canonical axis order found, attempting to correct.")
       }
@@ -504,7 +508,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 .get_data <- function(nc, var, dims, dimid_matcher, pull = pull) {
   out_data <- lapply(var, pull = pull, FUN = function(.v, pull) {
 
-    if(is.null(dm <- dimid_matcher[.v][[1]])) dm <- seq_len(nrow(dims))
+    dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
+                dims[, "id", drop = TRUE])
+    if(is.null(dm)) dm <- c(1:nrow(dims))
 
     request <- list(start = dims[, "start", drop = TRUE][dm],
                     count = dims[, "count", drop = TRUE][dm])
