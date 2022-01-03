@@ -20,7 +20,7 @@ put_nc_request <- function(x, nc_request) {
 
 # nc_request is a class for "nc_request" attributes of an nc_proxy object.
 #' @export
-print.nc_request <- function(x) {
+print.nc_request <- function(x, ...) {
 	r <- x[1]
 	selecter <- rep(1, length(x))
 	if(length(selecter) > 1) {
@@ -68,8 +68,8 @@ print.nc_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 # as.data.frame.stars_proxy works for nc_proxy.
 
 #' @export
-st_as_stars.nc_proxy <- function(x, downsample = 0, ...) {
-	read_ncdf(x, downsample = 0, ...)
+st_as_stars.nc_proxy <- function(.x, ..., downsample = 0) {
+	read_ncdf(.x, downsample = 0, ...)
 }
 
 #' @name plot
@@ -115,8 +115,8 @@ c.nc_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard = FA
 
 
 #' @export
-st_redimension.nc_proxy <- function() stop("st_redimension not support for nc_proxy")
+st_redimension.nc_proxy <- function(x, new_dims, along, ...) stop("st_redimension not support for nc_proxy")
 
 #' @export
-st_mosaic.nc_proxy = function() stop("st_mosaic not supported for nc_proxy")
+st_mosaic.nc_proxy = function(.x, ...) stop("st_mosaic not supported for nc_proxy")
 								 
