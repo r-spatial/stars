@@ -211,10 +211,11 @@
 <p>Dimension tables of <code>stars</code> objects carry a <code>raster</code> attribute:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## List of 3</span>
+<span class="co">## List of 4</span>
 <span class="co">##  $ affine     : num [1:2] 0 0</span>
 <span class="co">##  $ dimensions : chr [1:2] "x" "y"</span>
 <span class="co">##  $ curvilinear: logi FALSE</span>
+<span class="co">##  $ blocksizes : NULL</span>
 <span class="co">##  - attr(*, "class")= chr "stars_raster"</span></code></pre></div>
 <p>which is a list that holds</p>
 <ul>
