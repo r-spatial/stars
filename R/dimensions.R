@@ -377,7 +377,7 @@ get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
 	if (any(is.na(affine)))
 		affine = c(0, 0)
 	if (!is.null(blocksizes))
-		colnames(blocksizes) = c("x", "y") # columns, rows!
+		colnames(blocksizes) = dimensions # columns, rows!
 	structure(list(affine = affine,
 				   dimensions = dimensions,
 				   curvilinear = curvilinear,
@@ -628,6 +628,8 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 					d1[[j]]$delta = d1[[j]]$to = NA_real_
 				for (j in seq_along(di))
 					di[[j]]$delta = di[[j]]$to = NA_real_
+				attr(d1, "raster")$blocksizes = NULL
+				attr(di, "raster")$blocksizes = NULL
 			}
 			if (! isTRUE(all.equal(d1, di, tolerance = tolerance)))
 				return(FALSE)
