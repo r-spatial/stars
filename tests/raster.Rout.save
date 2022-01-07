@@ -175,7 +175,7 @@ resolution  : 28.5, 28.5  (x, y)
 extent      : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
 coord. ref. : SIRGAS 2000 / UTM zone 25S (EPSG:31985) 
 source      : L7_ETMs.tif 
-names       : L7__1, L7__2, L7__3, L7__4, L7__5, L7__6 
+names       : L7_ETMs_1, L7_ETMs_2, L7_ETMs_3, L7_ETMs_4, L7_ETMs_5, L7_ETMs_6 
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -199,4 +199,4 @@ band    1   6      NA    NA                         NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  6.617   0.154   6.781 
+  6.631   0.176   6.801 

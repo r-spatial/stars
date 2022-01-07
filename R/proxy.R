@@ -203,7 +203,9 @@ fetch = function(x, downsample = 0, ...) {
 	if (!is.null(bands)) {
 		if (!is.null(bands$values) && is.numeric(bands$values)) 
 			rasterio$bands = bands$values
-		else if (!is.na(bands$from) && !is.na(bands$to) && (bands$to - bands$from + 1) < length(x[[1]]))
+		else if (!is.na(bands$from) && !is.na(bands$to) 
+				 # && (bands$to - bands$from + 1) < length(x[[1]])
+			)
 			rasterio$bands = seq(bands$from, bands$to)
 	}
 
@@ -454,12 +456,14 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 				resolutions = resolutions)
 			lst[["i"]] = TRUE # this one has been handled now
 		}
-		for (ix in 1:3) { # FIXME: process further dimensions than 3?
-			if (length(lst) >= 4 && !is.null(r <- get_range(lst[[4]]))) {
+		ix = 1
+		while (length(lst) >= 4) { # https://github.com/r-spatial/stars/issues/496
+			if (!is.null(r <- get_range(lst[[4]]))) {
 				attr(x, "dimensions")[[ix]]$from = r[1]
 				attr(x, "dimensions")[[ix]]$to = r[2]
-				lst[[4]] = NULL # remove
 			}
+			ix = ix + 1
+			lst[[4]] = NULL # eat/remove
 		}
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
