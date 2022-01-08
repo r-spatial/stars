@@ -1,5 +1,7 @@
 # nc_proxy is a subclass of stars_proxy.
 
+#' @noRd
+#' @description gets the nc_request object(s) from a nc_proxy object. 
 get_nc_request <- function(x) {
 	out <- lapply(x, function(v) {
 		attr(v, "nc_request")[[1]]
@@ -8,7 +10,15 @@ get_nc_request <- function(x) {
 	out
 }
 
-put_nc_request <- function(x, nc_request) {
+#' @noRd
+#' @param x an object of class nc_proxy
+#' @param nc_request an existing nc_request object to put into x.
+#' If nc_request is not included, the nc_request object found in x is used
+#' and the dimensions 
+#' @description splits an nc_request object apart and adds it back to an 
+#' nc_proxy object. If the nc_proxy object no longer has the variable in 
+#' question that request is not added back.
+put_nc_request <- function(x, nc_request = get_nc_request(x)) {
 	out_class <- class(x)
 	x <- unclass(x)
 	
@@ -69,7 +79,7 @@ print.nc_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 
 #' @export
 st_as_stars.nc_proxy <- function(.x, ..., downsample = 0) {
-	read_ncdf(.x, downsample = 0, ...)
+	read_ncdf(.x, downsample = downsample, ...)
 }
 
 #' @name plot
@@ -119,4 +129,3 @@ st_redimension.nc_proxy <- function(x, new_dims, along, ...) stop("st_redimensio
 
 #' @export
 st_mosaic.nc_proxy = function(.x, ...) stop("st_mosaic not supported for nc_proxy")
-								 
