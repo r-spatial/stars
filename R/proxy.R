@@ -446,7 +446,7 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	cl = attr(x, "call_list")
 	if (length(lst) < 3)
 		return(x) # 
-	if (missing(i)) # insert:
+	if (missing(i) | !"i" %in% names(lst)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
 	if (inherits(i, c("character", "logical", "numeric")) && is.null(cl)) {
 		if (!is.null(unclass(x)[[i]])) { # can/should be selected now:
