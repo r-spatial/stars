@@ -5,10 +5,10 @@
 		pv <- st_get_dimension_values(proxy_dimensions, coord)
 		
 		between <- function(x, ymin, ymax, z = x) {
-			z[x >= ymin & x <= ymax]
+			z[x >= ymin & x <= ymax, drop = FALSE]
 		}
 		
-		if(inherits(proxy_dimensions[[coord]]$values, "POSIXt")) {
+		if(inherits(pv, "POSIXt")) {
 			uc[[coord]] <- between(tdim$values, min(pv), max(pv), uc[[coord]])
 		} else {
 			uc[[coord]] <- between(uc[[coord]], min(pv), max(pv))
@@ -51,16 +51,16 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 			
 	tdim <- which(sapply(st_dimensions(x), function(x) any(grepl("^POSIX|^PCIC", x$refsys))))
 	
-	if(tdim) {
+	if(length(tdim)) {
 		keep <- 1:min(max_times, length(tvals <- st_get_dimension_values(x, tdim)))
-		x <- if(tdim == 1) {
-			x[,keep] # T
+		if(tdim == 1) {
+			x <- x[,keep] # T
 		} else if(tdim == 2) {
-			x[,,keep] # XT
+			x <- x[,,keep] # XT
 		} else if(tdim == 3) {
-			x[,,,keep] # XYT
+			x <- x[,,,keep] # XYT
 		} else {
-			x[,,,,keep] # XYZT
+			x <- x[,,,,keep] # XYZT
 		}
 	}
 	

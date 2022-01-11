@@ -461,6 +461,10 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 			if (!is.null(r <- get_range(lst[[4]]))) {
 				attr(x, "dimensions")[[ix]]$from = r[1]
 				attr(x, "dimensions")[[ix]]$to = r[2]
+				if(!is.null(attr(x, "dimensions")[[ix]]$values)) {
+					attr(x, "dimensions")[[ix]]$values <- 
+						attr(x, "dimensions")[[ix]]$values[r[1]:r[2]]
+				}
 			}
 			ix = ix + 1
 			lst[[4]] = NULL # eat/remove
@@ -512,11 +516,16 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 		# crop x:
 		dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
 		dm[[ xd ]]$to = min(d_max[xd], cr[2, 1], na.rm = TRUE)
+		if(!is.null(dm[[ xd ]]$values))
+			dm[[ xd ]]$values = dm[[ xd ]]$values[dm[[ xd ]]$from:dm[[ xd ]]$to]
+		
 		# crop y:
-		if (dm[[ yd ]]$delta < 0)
+		if (!is.na(dm[[ yd ]]$delta) && dm[[ yd ]]$delta < 0) # FIXME: just subtract values to avoid NA miss?
 			cr[1:2, 2] = cr[2:1, 2]
 		dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
 		dm[[ yd ]]$to = min(d_max[yd], cr[2, 2], na.rm = TRUE)
+		if(!is.null(dm[[ yd ]]$values))
+			dm[[ yd ]]$values = dm[[ yd ]]$values[dm[[ yd ]]$from:dm[[ yd ]]$to]
 	}
 	x = st_stars_proxy(x, dm, NA_value = attr(x, "NA_value"), resolutions = attr(x, "resolutions")) # crop to bb
 	if (collect)

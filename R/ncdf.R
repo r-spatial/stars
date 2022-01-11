@@ -159,6 +159,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   	} else NULL
   	
   	dims <- .update_dims(dims, proxy_dimensions, coords, tdim)
+  	
+  	coords <- .get_coords(nc, dims)
   }
   
   pull <- .should_pull(proxy, 
@@ -180,8 +182,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- dims$length
 
-  dimensions <- create_dimensions(setNames(nc_dim, dims$name),
-                                  raster)
+  if(!is.null(proxy_dimensions)) {
+  	dimensions <- proxy_dimensions
+  } else {
+  	dimensions <- create_dimensions(setNames(nc_dim, dims$name),
+  									raster)
+  }
+  	
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
                                    coords = coords,
@@ -666,6 +673,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   regular <- .is_regular(coords, eps)
 
   for (i in seq_along(coords)) {
+  	
+  	from_to <- dimensions[[i]]$from:dimensions[[i]]$to
+  	
     if (names(coords)[i] %in% var_names && !ignore_bounds &&
         length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
         bounds %in% var_names) {
@@ -686,7 +696,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
         dimensions[[i]]$offset = bounds[1,1]
         dimensions[[i]]$delta = v
       } else {
-        dimensions[[i]]$values = make_intervals(bounds[1,], bounds[2,])
+        dimensions[[i]]$values = make_intervals(bounds[1, from_to], bounds[2,from_to])
         dimensions[[i]]$point = FALSE
         if (i %in% 1:2 && length(curvilinear) < 1) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
           to_rectilinear = TRUE
@@ -705,7 +715,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       ## NaN for singleton dims, but that seems ok unless we have explicit interval?
       dimensions[[i]]$delta[1L]  = mdc
     } else {
-      dimensions[[i]]$values = coords[[i]]
+      dimensions[[i]]$values = coords[[i]][from_to]
       ## offset/delta for fall-back index (and for NA test )
       ## https://github.com/r-spatial/stars/blob/master/R/dimensions.R#L294-L303
       dimensions[[i]]$offset[1L] = NA_real_
