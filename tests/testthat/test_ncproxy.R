@@ -32,8 +32,8 @@ test_that("st_as_stars.nc_proxy", {
 
 	dim <- st_dimensions(nc2)
 
-	expect_equal(dim$lon$to, 5)
-	expect_equal(dim$lon$offset, -1)
+	expect_equal(dim$lon$to, 35)
+	expect_equal(dim$lon$offset, 47)
 
 	nc2 <- st_as_stars(nc, var = "sst",
 					   proxy = TRUE)
@@ -42,7 +42,7 @@ test_that("st_as_stars.nc_proxy", {
 
 	dim <- st_dimensions(nc2)
 
-	expect_equal(dim$lon$to, 90)
+	expect_equal(dim$lon$to, 180)
 	expect_equal(dim$lon$offset, -1)
 
 })

@@ -169,14 +169,12 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   out_data <- if(pull) {
   	# Get all the data from the nc file
-  	.set_nc_units(.get_data(nc, var, dims, dimid_matcher, pull = pull), 
+  	.set_nc_units(.get_data(nc, var, dims, dimid_matcher, pull = pull),
   				  meta$attribute, make_units)
   } else {
   	# Just return the source file for each variable.
-  	as.list(rep(x, length(var)))
+  	setNames(as.list(rep(x, length(var))), var)
   }
-  
-  	out_data <- setNames(out_data, var)
   
   # Create stars dimensions object
 
@@ -562,18 +560,19 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       }
 
     }
-
+    
     return(ret)
 
   })
+  
   ## "../rasterwise/extdata/R13352.nc"
   ## https://github.com/hypertidy/tidync/issues/75
   ## check for NC_CHAR case
-  lapply(out_data, function(.v) {
-    if (mode(.v) == "raw") {
-      array(unlist(lapply(.v, rawToChar)), dims$length)
-    } else .v
-  })
+  setNames(lapply(out_data, function(.v) {
+  	if (mode(.v) == "raw") {
+  		array(unlist(lapply(.v, rawToChar)), dims$length)
+  	} else .v
+  }), var)
 }
 
 .get_attributes <- function(attribute, att, var = NULL) {
