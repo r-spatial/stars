@@ -57,7 +57,7 @@
   extent = x
 )
 
-\method{plot}{nc_proxy}(x, y, ..., downsample = get_downsample(dim(x)), max_times = 10)
+\method{plot}{nc_proxy}(x, y, ..., downsample = get_downsample(dim(x)), max_times = 16)
 
 \method{plot}{stars_proxy}(x, y, ..., downsample = get_downsample(dim(x)))
 }

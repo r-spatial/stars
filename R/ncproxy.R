@@ -32,35 +32,36 @@ print.nc_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	cat("\n\ndimension(s):\n")
 	print(st_dimensions(x), ...)
 	cat("\n")
+	if (!is.null(attr(x, "call_list"))) {
+		cat("call_list:\n")
+		print(unlist(attr(x, "call_list")))
+	}
 }
 
 # as.data.frame.stars_proxy works for nc_proxy.
 
 #' @export
-st_as_stars.nc_proxy <- function(.x, ..., downsample = 0) {
-	read_ncdf(.x, downsample = downsample, ...)
+st_as_stars.nc_proxy <- function(.x, ..., downsample = 0, envir = parent.frame()) {
+	process_call_list(read_ncdf(.x, downsample = downsample, ...), 
+					  attr(.x, "call_list"), envir = envir, downsample = downsample)
 }
 
 #' @name plot
 #' @param max_times integer; maximum number of time steps to attempt to plot. 
 #' @export
 #' @details when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.
-plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_times = 10) {
+plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_times = 16) {
 	
-	x <- x[1]
+	if(length(x) > 1) {
+		message("Plotting first variable only.")
+		x <- x[1]
+	}
 			
 	tdim <- which(sapply(st_dimensions(x), function(x) any(grepl("^POSIX|^PCIC", x$refsys))))
 	
 	if(length(tdim)) {
-		keep <- 1:min(max_times, length(tvals <- st_get_dimension_values(x, tdim)))
-		if(tdim == 1) {
-			x <- x[,keep] # T
-		} else if(tdim == 2) {
-			x <- x[,,keep] # XT
-		} else if(tdim == 3) {
-			x <- x[,,,keep] # XYT
-		} else {
-			x <- x[,,,,keep] # XYZT
+		if(length(st_get_dimension_values(x, tdim)) > max_times) {
+			stop("Time dimension of nc_proxy is longer than max_times in plot.nc_proxy.")
 		}
 	}
 	

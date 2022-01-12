@@ -79,6 +79,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     x <- as.character(.x[[1]]) # FIXME: only supports one data source.
     var <- names(.x)
     proxy_dimensions <- st_dimensions(.x)
+    nc_prj <- sf::st_crs(.x)
     
     if(!is.null(ncsub)) {
     	warning("ncsub ignored when .x is class nc_proxy")
@@ -114,7 +115,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA,
                                                            Z = NA, T = NA, bounds = NA)
 
-  nc_prj <- .get_nc_projection(meta$attribute, rep_var, all_coord_var)
+  if(is.null(proxy_dimensions)) {
+	  nc_prj <- .get_nc_projection(meta$attribute, rep_var, all_coord_var)
+  }
 
   coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, nc_prj, curvilinear)
 
@@ -179,13 +182,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Create stars dimensions object
 
   if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- dims$length
-
-  if(!is.null(proxy_dimensions)) {
-  	dimensions <- proxy_dimensions
-  } else {
-  	dimensions <- create_dimensions(setNames(nc_dim, dims$name),
-  									raster)
-  }
+  
+  dimensions <- create_dimensions(setNames(nc_dim, dims$name),
+  								  raster)
   	
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,

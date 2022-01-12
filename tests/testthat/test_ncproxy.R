@@ -32,7 +32,7 @@ test_that("st_as_stars.nc_proxy", {
 
 	dim <- st_dimensions(nc2)
 
-	expect_equal(dim$lon$to, 35)
+	expect_equal(dim$lon$to, 11)
 	expect_equal(dim$lon$offset, 47)
 
 	nc2 <- st_as_stars(nc, var = "sst",
@@ -73,4 +73,50 @@ test_that("basics", {
 	expect_error(st_mosaic(nc))
 	
 	expect_error(st_redimension(nc))
+})
+
+test_that("subset", {
+	nc <- read_ncdf(f, proxy = TRUE)
+	
+	nc2 <- nc[1, 80:100, 45:55, , ]
+	
+	nc3 <- nc["sst", 80:100, 45:55, , ]
+	
+	expect_equal(nc2, nc3)
+	
+	expect_equal(dim(nc2), 
+				 setNames(c(21, 11, 1, 1), 
+				 		 c("lon", "lat", "zlev", "time")))
+	
+	nc3 <- st_as_stars(nc2)
+	
+	expect_s3_class(nc3, "stars")
+	
+	expect_equal(as.numeric(dim(nc3)), dim(nc3$sst))
+	
+	nc <- read_ncdf(system.file("nc/bcsd_obs_1999.nc", package = "stars"),
+					proxy = TRUE)
+	
+	nc2 <- nc[ , , , 5]
+	expect_equal(st_dimensions(nc2)$time$from, 5)
+	expect_equal(st_dimensions(nc2)$time$values, 
+				 structure(928108800, class = c("POSIXct", "POSIXt"), tzone = "UTC"))
+	
+	nc3 <- st_as_stars(nc2)
+	
+	expect_equal(dim(nc3$pr), as.numeric(dim(nc2)))
+	
+	nc_sf <- sf::st_transform(
+		read_sf(system.file("gpkg/nc.gpkg", package="sf")),
+		sf::st_crs(nc))
+	
+	nc2 <- st_crop(nc, nc_sf[10, ])
+	nc2 <- nc2["pr", , , 1]
+	nc2 <- st_as_stars(nc2)
+
+	nc3 <- nc["pr", , , 1]	
+	nc3 <- st_crop(nc3, nc_sf[10, ])
+	nc3 <- st_as_stars(nc3)
+	
+	expect_equal(nc2, nc3)
 })
