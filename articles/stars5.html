@@ -108,9 +108,9 @@
     
     
 <p>This vignette shows how <code>stars</code> object can be moved from vector and raster representations.</p>
-<div class="section level1">
-<h1 id="rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object<a class="anchor" aria-label="anchor" href="#rasterizing-an-sf-vector-object"></a>
-</h1>
+<div class="section level2">
+<h2 id="rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object<a class="anchor" aria-label="anchor" href="#rasterizing-an-sf-vector-object"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
 <span class="co">## Loading required package: abind</span>
@@ -131,27 +131,27 @@
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
 </div>
-<div class="section level1">
-<h1 id="vectorizing-a-raster-object-to-an-sf-object">Vectorizing a raster object to an <code>sf</code> object<a class="anchor" aria-label="anchor" href="#vectorizing-a-raster-object-to-an-sf-object"></a>
-</h1>
+<div class="section level2">
+<h2 id="vectorizing-a-raster-object-to-an-sf-object">Vectorizing a raster object to an <code>sf</code> object<a class="anchor" aria-label="anchor" href="#vectorizing-a-raster-object-to-an-sf-object"></a>
+</h2>
 <p><code>stars</code> objects can be converted into an <code>sf</code> object using <code>st_as_sf</code>. It has a number of options, depending on whether pixels represent the point value at the pixel center, or small square polygons with a single value.</p>
 <p>We will work again with the landsat-7 6-band image, but will select the first band and round the values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
 <span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
-<div class="section level2">
-<h2 id="polygonizing">Polygonizing<a class="anchor" aria-label="anchor" href="#polygonizing"></a>
-</h2>
+<div class="section level3">
+<h3 id="polygonizing">Polygonizing<a class="anchor" aria-label="anchor" href="#polygonizing"></a>
+</h3>
 <p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
-<div class="section level2">
-<h2 id="exporting-to-points">Exporting to points<a class="anchor" aria-label="anchor" href="#exporting-to-points"></a>
-</h2>
+<div class="section level3">
+<h3 id="exporting-to-points">Exporting to points<a class="anchor" aria-label="anchor" href="#exporting-to-points"></a>
+</h3>
 <p>Alternatively, we can simply export all the pixels as points, and get them either as a wide table with all bands per point, and no replicated <code>POINT</code> geometries:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -194,9 +194,9 @@
 <span class="co">## 10    1          13   POINT (289047 9120747)</span></code></pre></div>
 <p>as we can see, an additional attribute <code>band</code> now indicates which band is concerned.</p>
 </div>
-<div class="section level2">
-<h2 id="exporting-to-polygons">Exporting to polygons<a class="anchor" aria-label="anchor" href="#exporting-to-polygons"></a>
-</h2>
+<div class="section level3">
+<h3 id="exporting-to-polygons">Exporting to polygons<a class="anchor" aria-label="anchor" href="#exporting-to-polygons"></a>
+</h3>
 <p>Alternatively, we can export to polygons and either get a single polygon per pixel, as in</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -227,9 +227,9 @@
 <p>A further option <code>connect8</code> can be set to <code>TRUE</code> to use 8 connectedness, rather than the default 4 connectedness algorithm. In both cases, the polygons returned will often be invalid according to the simple feature standard, but can be made valid using <code>lwgeom::st_make_valid</code>.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#switching-between-vector-and-raster-in-stars-objects"></a>
-</h1>
+<div class="section level2">
+<h2 id="switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#switching-between-vector-and-raster-in-stars-objects"></a>
+</h2>
 <p>We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a <code>stars</code> object by</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x.sf</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -247,9 +247,9 @@
 <span class="co">## band                                                    NULL</span></code></pre></div>
 <p>which also requires setting the <code>as_points</code> arguments as in <code>st_as_sf</code>.</p>
 </div>
-<div class="section level1">
-<h1 id="reprojecting-a-raster">Reprojecting a raster<a class="anchor" aria-label="anchor" href="#reprojecting-a-raster"></a>
-</h1>
+<div class="section level2">
+<h2 id="reprojecting-a-raster">Reprojecting a raster<a class="anchor" aria-label="anchor" href="#reprojecting-a-raster"></a>
+</h2>
 <p>If we accept that curvilinear rasters are rasters too, and that regular and rectilinear grids are special cases of curvilinear grids, reprojecting a raster is no longer a “problem”, it just recomputes new coordinates for every raster cell, and generally results in a curvilinear grid (that sometimes can be brought back to a regular or rectilinear grid). If curvilinear grid cells are represented by coordinates of the cell center, the actual shape of a grid cell gets lost, and this may be a larger effect if grid cells are large or if the transformation is stronger non-linear.</p>
 <p>An example of the reprojection of the grid created above is</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -271,9 +271,9 @@
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>where it should be noted that the dimensionality of the grid didn’t change: the same set of raster cells has been replotted in the new CRS, but now in a curvilinear grid.</p>
 </div>
-<div class="section level1">
-<h1 id="warping-a-raster">Warping a raster<a class="anchor" aria-label="anchor" href="#warping-a-raster"></a>
-</h1>
+<div class="section level2">
+<h2 id="warping-a-raster">Warping a raster<a class="anchor" aria-label="anchor" href="#warping-a-raster"></a>
+</h2>
 <p>Warping a raster means creating a new <em>regular</em> grid in a new CRS, based on a (usually regular) grid in another CRS. We can do the transformation of the previous section by first creating a target grid:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -313,7 +313,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
