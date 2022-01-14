@@ -58,6 +58,8 @@ is_functions = function(x) {
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
 #' has to be one of: "nearest_neighbour" (the default),
 #' "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".
+#'
+#' Data that are read into memory (\code{prolxy=FALSE}) are read into a numeric (double) array, except for categorical variables which are read into an numeric (integer) array of class \code{factor}.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
