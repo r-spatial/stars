@@ -1,7 +1,7 @@
 # version 0.5-6
 
 * Added a new helper function `st_tile()` to specify the block parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`)
-  required by `RasterIO` argument in `read_stars()`
+  required by `RasterIO` argument in `read_stars()`; #492 thanks to Krzysztof Dyba
 
 # version 0.5-5
 
