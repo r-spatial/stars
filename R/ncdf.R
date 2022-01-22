@@ -343,6 +343,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if(nrow(c_v) == 0) c_v[1, ] <- NA
 
+  if(length(curvilinear)) {
+  	 c_v$X <- rep(curvilinear[1], nrow(c_v))
+  	 c_v$Y <- rep(curvilinear[2], nrow(c_v))
+  }
+  
   not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
 
   c_v <- c_v[which(not_na == max(not_na)), ]
