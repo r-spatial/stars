@@ -88,9 +88,9 @@ test_that("euro cordex extra dimvars", {
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
 
-  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
+  out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat"))
 
-  expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
+  # expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
 
   st_dim <- st_dimensions(out)
 
@@ -99,7 +99,14 @@ test_that("curvilinear", {
   expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
 
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
-
+  
+  nc <- RNetCDF::open.nc(f)
+  
+  expect_equal(st_get_dimension_values(st_dim, "time"), 
+  			 RNetCDF::utcal.nc(RNetCDF::att.get.nc(nc, "time", "units"),
+  			 				  RNetCDF::var.get.nc(nc, "time"), type = "c"))
+  RNetCDF::close.nc(nc)
+  
   # Should also find the curvilinear grid.
   suppressWarnings(out <- read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
 
@@ -116,7 +123,7 @@ test_that("curvilinear broked", {
   expect_error(read_ncdf(f, curvilinear = c("time", "time_bounds")),
                "Specified curvilinear coordinates are not 2-dimensional.")
 
-  expect_warning(suppressMessages(read_ncdf(f, curvilinear = c("lon", "time_bounds"))),
+  expect_error(suppressMessages(read_ncdf(f, curvilinear = c("lon", "time_bounds"))),
                "Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
 
   warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
@@ -130,6 +137,9 @@ test_that("curvilinear broked", {
   expect_true(all(st_dim$x$values < 38 & st_dim$x$values > 32))
 
   expect_equal(dim(st_dim$y$values), setNames(c(118, 87), c("y", "x")))
+  
+  expect_equal(as.character(st_dim$time$values), "2018-09-14 05:00:00")
+  
 })
 
 test_that("high-dim from rasterwise", {

@@ -9,9 +9,15 @@
 		}
 		
 		if(inherits(pv, "POSIXt")) {
+			# Need to deal with the case where tdim isn't values but is from to.
 			uc[[coord]] <- between(tdim$values, min(pv), max(pv), uc[[coord]])
 		} else {
-			uc[[coord]] <- between(uc[[coord]], min(pv), max(pv))
+			if(attr(proxy_dimensions, "raster")$curvilinear) {
+				uc[[coord]] <- seq(proxy_dimensions[[coord]]$from, 
+								   proxy_dimensions[[coord]]$to)
+			} else {
+				uc[[coord]] <- between(uc[[coord]], min(pv), max(pv))
+			}
 		}
 		
 		dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]][1])
@@ -104,3 +110,49 @@ st_redimension.nc_proxy <- function(x, new_dims, along, ...) stop("st_redimensio
 
 #' @export
 st_mosaic.nc_proxy = function(.x, ...) stop("st_mosaic not supported for nc_proxy")
+
+#' @param .x stars object to add curvilinear coordinates too.
+#' @param curvilinear only for creating curvilinear grids: named length 
+#' 2 list holding longitude and latitude matrices; the names of this 
+#' list should correspond to raster dimensions referred to
+#' @param crs object of class \code{crs} with the coordinate reference 
+#' system of the values in \code{curvilinear}; see details
+#' @details if \code{curvilinear} is a \code{stars} object with longitude 
+#' and latitude values, its coordinate reference system is typically not 
+#' that of the latitude and longitude values.
+#' @noRd
+add_curvilinear <- function(.x, 
+							curvilinear = NULL, 
+							crs = st_crs(4326)) {
+	# so we can just call add_curvilinear regardless
+	if (is.null(curvilinear))
+		.x
+	else {
+		stopifnot(is.list(curvilinear), 
+				  names(curvilinear) %in% names(dim(.x)))
+		
+		if (inherits(curvilinear[[1]], "stars"))
+			curvilinear[[1]] = curvilinear[[1]][[1]]
+		
+		if (inherits(curvilinear[[2]], "stars"))
+			curvilinear[[2]] = curvilinear[[2]][[1]]
+		
+		dimensions = st_dimensions(.x)
+		xy = names(curvilinear)
+		
+		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
+		dimensions[[ xy[2] ]]$values = structure(curvilinear[[2]], dim = setNames(dim(curvilinear[[1]]), xy))
+		
+		# erase regular grid coefficients $offset and $delta:
+		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
+		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
+		
+		raster = get_raster(dimensions = names(curvilinear), 
+							curvilinear = TRUE)
+		
+		st_set_crs(st_stars(.x, 
+							create_dimensions(dimensions, raster),
+							class = class(.x)), 
+				   crs)
+	}
+}

@@ -216,7 +216,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Add curvilinear and return
   if (length(curvilinear) == 2) {
     curvi_coords = .get_curvilinear_coords(curvilinear, dimensions, nc, dims)
-    out_data <- st_as_stars(out_data, curvilinear = curvi_coords)
+    out_data <- add_curvilinear(out_data, curvilinear = curvi_coords, nc_prj)
   }
   
   if(!all(downsample == 0)) {
@@ -343,17 +343,17 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   if(nrow(c_v) == 0) c_v[1, ] <- NA
 
-  if(length(curvilinear)) {
-  	 c_v$X <- rep(curvilinear[1], nrow(c_v))
-  	 c_v$Y <- rep(curvilinear[2], nrow(c_v))
-  }
-  
-  not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
-
-  c_v <- c_v[which(not_na == max(not_na)), ]
-
   check_curvi <- .check_curvilinear(c_v, var, meta$variable, curvilinear)
 
+  if(length(curvilinear)) {
+  	c_v$X <- rep(check_curvi[1], nrow(c_v))
+  	c_v$Y <- rep(check_curvi[2], nrow(c_v))
+  }
+
+  not_na <- apply(c_v, 1, function(x) sum(!is.na(x)))
+  
+  c_v <- c_v[which(not_na == max(not_na)), ][1, ]
+  
   if(length(curvilinear) > 0) {
     if(length(check_curvi) == 0) stop("Curvilinear coordinate variables provided by not found in file.")
     c_v <- c_v[c_v$variable == var & c_v$X == check_curvi[1], ]
@@ -391,8 +391,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     if(all(variables$ndims[match(curvilinear, variables$name)] == 2)) {
       xy_coords <- coord_var[c("X", "Y")]
       if(!curvilinear[1] %in% c(xy_coords$X, xy_coords$Y) | !curvilinear[2] %in% c(xy_coords$X, xy_coords$Y)) {
-        warning("Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
-        return(stats::setNames(curvilinear, c("X", "Y")))
+        stop("Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
       } else {
         if(!curvilinear[1] %in% xy_coords$X) {
           curvilinear <- curvilinear[2:1]
@@ -679,32 +678,44 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   	
   	from_to <- dimensions[[i]]$from:dimensions[[i]]$to
   	
-    if (names(coords)[i] %in% var_names && !ignore_bounds &&
-        length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
-        bounds %in% var_names) {
-
-      bounds = RNetCDF::var.get.nc(nc, bounds)
-      if (!is.matrix(bounds)) # single instance, returns a vector
-        bounds = matrix(bounds, nrow = 2)
-      is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
-        length(v <- .unique_fuzz(diff(bounds[1,]), eps)) == 1
-
-      if (is_reg && abs(u + v) < eps) {
-        warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
-        bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
-        u = v
-      }
-
-      if (is_reg && abs(v - u) < eps) {
-        dimensions[[i]]$offset = bounds[1,1]
-        dimensions[[i]]$delta = v
-      } else {
-        dimensions[[i]]$values = make_intervals(bounds[1, from_to], bounds[2,from_to])
-        dimensions[[i]]$point = FALSE
-        if (i %in% 1:2 && length(curvilinear) < 1) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
-          to_rectilinear = TRUE
-      }
-    } else if (regular[i]) {
+  	try_bounds <- names(coords)[i] %in% var_names && 
+  		!ignore_bounds &&
+  		length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
+  		bounds %in% var_names
+  	
+  	if (try_bounds) {
+  		
+  		bounds = RNetCDF::var.get.nc(nc, bounds)
+  		if (!is.matrix(bounds)) # single instance, returns a vector
+  			bounds = matrix(bounds, nrow = 2)
+  		
+  		if(!bounds[1, 1] < coords[[i]][1] | !bounds[2, 1] > coords[[i]][1]) {
+  			warning(paste("bounds not enveloping", names(coords)[i], "coordinates. Ignoring."))
+  			try_bounds <- FALSE
+  		} else {
+  			
+  			is_reg = ncol(bounds) > 1 && length(u <- .unique_fuzz(apply(bounds, 2, diff), eps)) == 1 &&
+  				length(v <- .unique_fuzz(diff(bounds[1,]), eps)) == 1
+  			
+  			if (is_reg && abs(u + v) < eps) {
+  				warning(paste("bounds for", names(coords)[i], "seem to be reversed; reverting them"))
+  				bounds = apply(bounds, 2, sort) # should not be needed according to CF, but see #133
+  				u = v
+  			}
+  			
+  			if (is_reg && abs(v - u) < eps) {
+  				dimensions[[i]]$offset = bounds[1,1]
+  				dimensions[[i]]$delta = v
+  			} else {
+  				dimensions[[i]]$values = make_intervals(bounds[1, from_to], bounds[2,from_to])
+  				dimensions[[i]]$point = FALSE
+  				if (i %in% 1:2 && length(curvilinear) < 1) # FIXME: ? hard-coding here that lon lat are in the first two dimensions:
+  					to_rectilinear = TRUE
+  			}
+  		}
+  	}
+  	
+  	if (regular[i] & !try_bounds) {
       mdc = mean(diff(coords[[i]]))
       coord_name = names(coords)[i]
       t_dim = coord_var[coord_var$variable == coord_name,]$T

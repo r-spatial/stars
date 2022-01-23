@@ -120,3 +120,28 @@ test_that("subset", {
 	
 	expect_equal(nc2, nc3)
 })
+
+test_that("curvilinear", {
+	f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
+	
+	out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat"), 
+					proxy = TRUE)
+	
+	out <- st_as_stars(out)
+	
+	st_dim <- st_dimensions(out)
+	
+	expect_true(all(st_dim$x$values < -74 & st_dim$x$values > -81))
+	
+	expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
+	
+	expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
+	
+	# Should also find the curvilinear grid.
+	suppressWarnings(
+		out <- read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation",
+						 proxy = TRUE))
+	
+	expect_true(attr(st_dimensions(out), "raster")$curvilinear)
+	
+})

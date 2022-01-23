@@ -48,14 +48,14 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
 }
 
-st_stars = function(x, dimensions) {
+st_stars = function(x, dimensions, class = "stars") {
 	# sanity checks:
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
 	stopifnot(!is.null(attr(dimensions, "raster")))
 #	for (i in seq_along(x))
 #		names(dim(x[[i]])) = names(dimensions)
-	structure(x, dimensions = dimensions, class = "stars")
+	structure(x, dimensions = dimensions, class = class)
 }
 
 
