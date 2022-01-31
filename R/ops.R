@@ -80,6 +80,7 @@ Math.stars_proxy = function(x, ...) {
 	collect(x, match.call(), .Generic, env = environment())
 }
 
+# https://github.com/r-spatial/stars/issues/390
 has_single_arg = function(fun, dots) {
 	sum(!(names(as.list(args(fun))) %in% c("", "...", names(dots)))) <= 1
 }
