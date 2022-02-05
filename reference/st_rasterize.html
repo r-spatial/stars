@@ -118,14 +118,6 @@ informing target resolution and offset only.</p></dd>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">nc</span>, echo <span class="op">=</span> <span class="cn">FALSE</span>, ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `nc.gpkg' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 100 features and 14 fields</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Attribute-geometry relationship: 0 constant, 8 aggregate, 6 identity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  NAD27</span>
 <span class="r-in"><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu">st_rasterize</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span> <span class="co"># default grid:</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 12 attributes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
