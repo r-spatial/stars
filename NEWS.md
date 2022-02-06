@@ -1,9 +1,12 @@
 # version 0.5-6
 
+* `guess_raster()` accepts empty rows or columns; #509
+
 * speed up `rgb` plotting; #503
 
-* Added a new helper function `st_tile()` to specify the block parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`)
-  required by `RasterIO` argument in `read_stars()`; #492 thanks to Krzysztof Dyba
+* Added a new helper function `st_tile()` to specify the block
+  parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`) required by `RasterIO` 
+  argument in `read_stars()`; #492 thanks to Krzysztof Dyba
 
 # version 0.5-5
 

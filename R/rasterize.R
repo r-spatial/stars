@@ -99,7 +99,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 }
 
 guess_raster = function(x, ...) {
-	if (length(list(...)))
+	if (length(list(...))) # ... hints at other arguments meant at not guessing the raster
 		return(NULL)
 	if (all(st_dimension(x) == 0)) { # POINT
 		cc = st_coordinates(x)
@@ -109,6 +109,8 @@ guess_raster = function(x, ...) {
 		if (length(dux) > 1) {
 			if (var(dux)/mean(dux) < 1e-8)
 				dux = mean(dux)
+			else if (all(dux %% min(dux) == 0))
+				dux = min(dux)
 			else
 				return(NULL)
 		}
@@ -116,6 +118,8 @@ guess_raster = function(x, ...) {
 		if (length(duy) > 1) {
 			if (var(duy)/mean(duy) < 1e-8)
 				duy = mean(dux)
+			else if (all(duy %% min(duy) == 0))
+				duy = min(duy)
 			else
 				return(NULL)
 		}
