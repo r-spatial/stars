@@ -101,28 +101,26 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 guess_raster = function(x, ...) {
 	if (length(list(...))) # ... hints at other arguments meant at not guessing the raster
 		return(NULL)
+	get_cell_size = function(x) {
+		du = unique(diff(x))
+		if (length(du) > 1) {
+			if (var(du)/mean(du) < 1e-8) # some fuzz:
+				du = mean(du)
+			else if (all(du %% min(du) == 0)) # missing cols/rows:
+				du = min(du)
+			else
+				numeric(0) # no regular step size
+		} else
+			du
+	}
 	if (all(st_dimension(x) == 0)) { # POINT
 		cc = st_coordinates(x)
 		ux = sort(unique(cc[,1]))
+		if (length(dux <- get_cell_size(ux)) == 0)
+			return(NULL);
 		uy = sort(unique(cc[,2]))
-		dux = unique(diff(ux))
-		if (length(dux) > 1) {
-			if (var(dux)/mean(dux) < 1e-8)
-				dux = mean(dux)
-			else if (all(dux %% min(dux) == 0))
-				dux = min(dux)
-			else
-				return(NULL)
-		}
-		duy = unique(diff(uy))
-		if (length(duy) > 1) {
-			if (var(duy)/mean(duy) < 1e-8)
-				duy = mean(dux)
-			else if (all(duy %% min(duy) == 0))
-				duy = min(duy)
-			else
-				return(NULL)
-		}
+		if (length(duy <- get_cell_size(uy)) == 0)
+			return(NULL);
 		if (length(ux) * length(uy) <= 2 * nrow(cc)) {
 			bb = st_bbox(x)
 			bb = st_bbox(setNames(c(bb["xmin"] - 0.5 * dux, 
