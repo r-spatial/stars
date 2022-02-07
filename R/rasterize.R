@@ -121,14 +121,12 @@ guess_raster = function(x, ...) {
 		uy = sort(unique(cc[,2]))
 		if (length(duy <- get_cell_size(uy)) == 0)
 			return(NULL);
-		if (length(ux) * length(uy) <= 2 * nrow(cc)) {
-			bb = st_bbox(x)
-			bb = st_bbox(setNames(c(bb["xmin"] - 0.5 * dux, 
-				bb["ymin"] - 0.5 * duy, 
-				bb["xmax"] + 0.5 * dux, 
-				bb["ymax"] + 0.5 * duy), c("xmin", "ymin", "xmax", "ymax")), crs = st_crs(x))
-			return(st_as_stars(bb, dx = dux, dy = duy))
-		}
+		bb = st_bbox(x)
+		bb = st_bbox(setNames(c(bb["xmin"] - 0.5 * dux, 
+			bb["ymin"] - 0.5 * duy, 
+			bb["xmax"] + 0.5 * dux, 
+			bb["ymax"] + 0.5 * duy), c("xmin", "ymin", "xmax", "ymax")), crs = st_crs(x))
+		return(st_as_stars(bb, dx = dux, dy = duy))
 	}
 	NULL
 }
