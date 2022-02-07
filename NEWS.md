@@ -1,6 +1,6 @@
 # version 0.5-6
 
-* `guess_raster()` accepts empty rows or columns; #509
+* `guess_raster()` accepts empty rows/columns and sparse grids; #509
 
 * speed up `rgb` plotting; #503
 
