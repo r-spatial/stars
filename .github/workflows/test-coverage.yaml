@@ -22,7 +22,7 @@ jobs:
           use-public-rspm: true
 
       - name: Install starsdata
-        shell: 'R -e install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")'
+        run: 'install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")'
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
