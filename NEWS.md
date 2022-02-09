@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* `Ops.stars()` errors when (common) dimension are not identical; #506
+
 * `guess_raster()` accepts empty rows/columns and sparse grids; #509
 
 * speed up `rgb` plotting; #503
