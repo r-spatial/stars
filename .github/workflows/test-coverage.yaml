@@ -23,6 +23,7 @@ jobs:
 
       - name: Install starsdata
         run: 'install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")'
+        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
