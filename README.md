@@ -10,6 +10,8 @@
 checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 [![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
+[![Codecov test
+coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/stars?branch=main)
 <!-- badges: end -->
 
 Spatiotemporal data often comes in the form of dense arrays, with space
