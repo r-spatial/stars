@@ -3,8 +3,8 @@
 
 <!-- badges: start -->
 
-[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master)](https://github.com/r-spatial/stars/actions)
-[![codecov](https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
+[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/stars/actions)
+[![codecov](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
 checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
@@ -47,7 +47,7 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1
+# Linking to GEOS 3.10.1, GDAL 3.4.0, PROJ 8.2.0; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
   slice(index = 1, along = "band") %>%
@@ -105,14 +105,17 @@ The following methods are currently available for `stars_proxy` objects:
 
 ``` r
 methods(class = "stars_proxy")
-#  [1] [              [[<-           [<-            adrop          aggregate     
-#  [6] aperm          as.data.frame  c              coerce         dim           
-# [11] droplevels     filter         hist           initialize     is.na         
-# [16] Math           merge          mutate         Ops            plot          
-# [21] predict        print          pull           select         show          
-# [26] slice          slotsFromS3    split          st_apply       st_as_sf      
-# [31] st_as_stars    st_crop        st_mosaic      st_redimension st_sample     
-# [36] st_set_bbox    transmute      write_stars   
+#  [1] [               [[<-            [<-             adrop          
+#  [5] aggregate       aperm           as.data.frame   c              
+#  [9] coerce          dim             droplevels      filter         
+# [13] hist            initialize      is.na           Math           
+# [17] merge           mutate          Ops             plot           
+# [21] predict         print           pull            rename         
+# [25] select          show            slice           slotsFromS3    
+# [29] split           st_apply        st_as_sf        st_as_stars    
+# [33] st_crop         st_dimensions<- st_downsample   st_mosaic      
+# [37] st_redimension  st_sample       st_set_bbox     transmute      
+# [41] write_stars    
 # see '?methods' for accessing help and source code
 ```
 
