@@ -125,7 +125,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
 <span class="co"># Loading required package: abind</span>
 <span class="co"># Loading required package: sf</span>
-<span class="co"># Linking to GEOS 3.9.0, GDAL 3.2.1, PROJ 7.2.1</span>
+<span class="co"># Linking to GEOS 3.10.1, GDAL 3.4.0, PROJ 8.2.0; sf_use_s2() is TRUE</span>
 <span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
 <span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, along <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -152,14 +152,17 @@
 <p>The following methods are currently available for <code>stars_proxy</code> objects:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span>
-<span class="co">#  [1] [              [[&lt;-           [&lt;-            adrop          aggregate     </span>
-<span class="co">#  [6] aperm          as.data.frame  c              coerce         dim           </span>
-<span class="co"># [11] droplevels     filter         hist           initialize     is.na         </span>
-<span class="co"># [16] Math           merge          mutate         Ops            plot          </span>
-<span class="co"># [21] predict        print          pull           select         show          </span>
-<span class="co"># [26] slice          slotsFromS3    split          st_apply       st_as_sf      </span>
-<span class="co"># [31] st_as_stars    st_crop        st_mosaic      st_redimension st_sample     </span>
-<span class="co"># [36] st_set_bbox    transmute      write_stars   </span>
+<span class="co">#  [1] [               [[&lt;-            [&lt;-             adrop          </span>
+<span class="co">#  [5] aggregate       aperm           as.data.frame   c              </span>
+<span class="co">#  [9] coerce          dim             droplevels      filter         </span>
+<span class="co"># [13] hist            initialize      is.na           Math           </span>
+<span class="co"># [17] merge           mutate          Ops             plot           </span>
+<span class="co"># [21] predict         print           pull            rename         </span>
+<span class="co"># [25] select          show            slice           slotsFromS3    </span>
+<span class="co"># [29] split           st_apply        st_as_sf        st_as_stars    </span>
+<span class="co"># [33] st_crop         st_dimensions&lt;- st_downsample   st_mosaic      </span>
+<span class="co"># [37] st_redimension  st_sample       st_set_bbox     transmute      </span>
+<span class="co"># [41] write_stars    </span>
 <span class="co"># see '?methods' for accessing help and source code</span></code></pre></div>
 </div>
 <div class="section level2">
@@ -305,8 +308,8 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/r-spatial/stars/actions" class="external-link"><img src="https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=master" alt="tic"></a></li>
-<li><a href="https://codecov.io/gh/r-spatial/stars" class="external-link"><img src="https://codecov.io/gh/r-spatial/stars/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://github.com/r-spatial/stars/actions" class="external-link"><img src="https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main" alt="tic"></a></li>
+<li><a href="https://codecov.io/gh/r-spatial/stars" class="external-link"><img src="https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg" alt="codecov"></a></li>
 <li><a href="https://cran.r-project.org/package=stars" class="external-link"><img src="https://www.r-pkg.org/badges/version/stars" alt="CRAN"></a></li>
 <li><a href="https://cran.r-project.org/web/checks/check_results_stars.html" class="external-link"><img src="https://cranchecks.info/badges/worst/stars" alt="cran checks"></a></li>
 <li><a href="https://www.r-pkg.org/pkg/stars" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/stars?color=brightgreen" alt="Downloads"></a></li>
