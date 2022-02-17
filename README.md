@@ -4,7 +4,6 @@
 <!-- badges: start -->
 
 [![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/stars/actions)
-[![codecov](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://codecov.io/gh/r-spatial/stars)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
 checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
