@@ -66,7 +66,7 @@
 #' nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #' plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
-    eps = 1e-12, ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
+    eps = sqrt(.Machine$double.eps), ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
     proxy = NULL, downsample = 0) {
 
   if (!requireNamespace("ncmeta", quietly = TRUE))
@@ -137,6 +137,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
   # Get coordinates from netcdf or create them
   coords <- .get_coords(nc, dims)
+  coords <- .clean_coords(coords, coord_var, meta$attribute, eps)
 
   # Figure out if we have a raster or not
   raster <- .get_nc_raster(coords)
@@ -164,6 +165,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   	dims <- .update_dims(dims, proxy_dimensions, coords, tdim)
   	
   	coords <- .get_coords(nc, dims)
+  	coords <- .clean_coords(coords, coord_var, meta$attributes, eps)
   }
   
   pull <- .should_pull(proxy, 
@@ -655,22 +657,34 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   return(raster)
 }
 
+.clean_coords <- function(coords, coord_var, atts, eps) {
+	## hack longitudes for #277
+	if (any(lon_coord <- grepl("lon", coord_var$X, ignore.case = TRUE))) {
+		lon_coord <- coord_var$X[lon_coord][1]
+		lons <- coords[[lon_coord]]
+		if (!is.null(lons) && !regular_intervals(lons, epsilon = eps) &&
+			.is_degrees(atts, lon_coord) &&
+			lons[1L] > 180 && min(lons) > 0) {
+			coords[[lon_coord]] <- ((coords[[lon_coord]] + 180) %% 360) - 180
+		} else if(!is.null(lons) && .is_degrees(atts, lon_coord) &&
+				  max(lons) > 180 && min(lons) > 180) {
+			coords[[lon_coord]] <- ((coords[[lon_coord]] + 180) %% 360) - 180
+		} else if(!is.null(lons) && .is_degrees(atts, lon_coord) &&
+				  max(lons) > 180) {
+			message(paste0("0-360 longitude crossing the international date", 
+						   "line encountered.\nLongitude coordinates will be",
+						   "0-360 in output."))
+			
+		}
+	}
+	coords
+}
+
 .get_nc_dimensions <- function(dimensions, coord_var, coords, nc, dims,
                                var_names, curvilinear, eps, ignore_bounds,
                                atts) {
 
   to_rectilinear = FALSE
-
-  ## hack longitudes for #277
-  if (any(lon_coord <- grepl("lon", coord_var$X, ignore.case = TRUE))) {
-    lon_coord <- coord_var$X[lon_coord][1]
-    lons <- coords[[lon_coord]]
-    if (!is.null(lons) && !regular_intervals(lons, epsilon = eps) &&
-        .is_degrees(atts, lon_coord) &&
-        lons[1L] > 180 && min(lons) > 0) {
-      coords[[lon_coord]] <- ((coords[[lon_coord]] + 180) %% 360) - 180
-    }
-  }
 
   regular <- .is_regular(coords, eps)
 

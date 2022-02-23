@@ -45,11 +45,25 @@ test_that("domain subsetting", {
 })
 
 test_that("normal bcsd", {
-  nc <- read_ncdf(system.file("nc/bcsd_obs_1999.nc", package = "stars"))
+  f <- system.file("nc/bcsd_obs_1999.nc", package = "stars")
+  nc <- read_ncdf(f, package = "stars")
   expect_equal(names(nc), c("pr", "tas"))
   st_dim <- st_dimensions(nc)
   expect_equal(names(st_dim), c("longitude", "latitude", "time"))
   expect_equal(st_dim$longitude$delta, 0.125)
+  
+  file.copy(f, (tf <- tempfile()))
+  
+  nc_tf <- RNetCDF::open.nc(tf, write = TRUE)
+  
+  RNetCDF::var.put.nc(nc_tf, "longitude", 
+  					(360 + stars::st_get_dimension_values(nc, "longitude")))
+  
+  RNetCDF::close.nc(nc_tf)
+  
+  nc <- read_ncdf(tf, package = "stars")
+  
+  expect_equal(stars::st_get_dimension_values(nc, "longitude")[1], -84.9375)
 })
 
 test_that("non canonical axis order is handled right", {

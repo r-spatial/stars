@@ -10,7 +10,7 @@ read_ncdf(
   var = NULL,
   ncsub = NULL,
   curvilinear = character(0),
-  eps = 1e-12,
+  eps = sqrt(.Machine$double.eps),
   ignore_bounds = FALSE,
   make_time = TRUE,
   make_units = TRUE,
