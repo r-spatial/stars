@@ -112,3 +112,4 @@ Collate:
     'sample.R'
     'extract.R'
     'datasets.R'
+    'tile.R'

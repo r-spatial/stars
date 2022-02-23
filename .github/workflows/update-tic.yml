@@ -43,7 +43,7 @@ jobs:
             Rscript -e "tic::update_yml()"
 
       - name: "[Stage] Create Pull Request"
-        uses: peter-evans/create-pull-request@master
+        uses: peter-evans/create-pull-request@main
         with:
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           token: ${{ secrets.TIC_UPDATE }}

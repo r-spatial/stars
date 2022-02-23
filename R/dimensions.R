@@ -365,16 +365,24 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	if (!is.null(lst$band) && !is.null(pr$descriptions) && all(pr$descriptions != ""))
 		lst$band$values = pr$descriptions
 	# set up raster:
-	raster = get_raster(affine = pr$geotransform[c(3,5)], dimensions = c("x", "y"), curvilinear = FALSE)
+	raster = get_raster(affine = pr$geotransform[c(3,5)],
+						dimensions = c("x", "y"),
+						curvilinear = FALSE, 
+						blocksizes = pr$blocksizes)
 	create_dimensions(lst, raster)
 }
 
-get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"), curvilinear = FALSE) {
-	if (any(is.na(affine))) {
-		# warning("setting NA affine values to zero")
+get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
+					  curvilinear = FALSE, blocksizes = NULL) {
+	if (any(is.na(affine)))
 		affine = c(0, 0)
-	}
-	structure(list(affine = affine, dimensions = dimensions, curvilinear = curvilinear), class = "stars_raster")
+	if (!is.null(blocksizes))
+		colnames(blocksizes) = dimensions # columns, rows!
+	structure(list(affine = affine,
+				   dimensions = dimensions,
+				   curvilinear = curvilinear,
+				   blocksizes = blocksizes), 
+		  class = "stars_raster")
 }
 
 get_geotransform = function(x) {
@@ -620,6 +628,8 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 					d1[[j]]$delta = d1[[j]]$to = NA_real_
 				for (j in seq_along(di))
 					di[[j]]$delta = di[[j]]$to = NA_real_
+				attr(d1, "raster")$blocksizes = NULL
+				attr(di, "raster")$blocksizes = NULL
 			}
 			if (! isTRUE(all.equal(d1, di, tolerance = tolerance)))
 				return(FALSE)

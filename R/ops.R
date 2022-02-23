@@ -1,3 +1,10 @@
+first_dimensions_match = function(e1, e2) {
+	d1 = dim(e1)
+	d2 = dim(e2)
+	n = min(length(d1), length(d2))
+	all.equal(d1[n], d2[n])
+}
+
 #' S3 Ops Group Generic Functions for stars objects
 #'
 #' Ops functions for stars objects, including comparison, product and divide, add, subtract
@@ -22,13 +29,14 @@
 #' needs to make sure this is sensible; it may be needed to use \code{aperm}
 #' to permutate dimensions first. 
 Ops.stars <- function(e1, e2) {
+	if (inherits(e1, "stars") && inherits(e2, "stars") && !first_dimensions_match(e1, e2))
+		stop("(first) dimensions of e1 and e2 do not match")
 	ret = if (missing(e2))
 			lapply(e1, .Generic)
 		else if (!inherits(e2, "stars"))
 			lapply(e1, .Generic, e2 = e2)
-		else {
+		else { # both e1 and e2 are stars objects:
 			# https://github.com/r-spatial/stars/issues/187#issuecomment-834020710 :
-			# if (!all(dim(e1) == dim(e2))) { 
 			if (!is.null(dim(e1)) &&
 					!isTRUE(all.equal(dim(e1), dim(e2), check.attributes = FALSE))) {
 				stopifnot(length(e2) == 1)
@@ -80,6 +88,7 @@ Math.stars_proxy = function(x, ...) {
 	collect(x, match.call(), .Generic, env = environment())
 }
 
+# https://github.com/r-spatial/stars/issues/390
 has_single_arg = function(fun, dots) {
 	sum(!(names(as.list(args(fun))) %in% c("", "...", names(dots)))) <= 1
 }

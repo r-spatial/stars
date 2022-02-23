@@ -1,3 +1,15 @@
+# version 0.5-6
+
+* `Ops.stars()` errors when (common) dimension are not identical; #506
+
+* `guess_raster()` accepts empty rows/columns and sparse grids; #509
+
+* speed up `rgb` plotting; #503
+
+* Added a new helper function `st_tile()` to specify the block
+  parameters (`nXOff`, `nYOff`, `nXsize`, `nYSize`) required by `RasterIO` 
+  argument in `read_stars()`; #492 thanks to Krzysztof Dyba
+
 # version 0.5-5
 
 * `st_as_stars.bbox()` creates an empy raster file if `proxy = TRUE`; #489

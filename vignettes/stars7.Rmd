@@ -227,7 +227,7 @@ out = predict(i, k)
 plot(out, col = sf.colors(nclus, categorical=TRUE))
 ```
 
-This seems to pick up a fair number of land cover classes: water (2), rural (3, 1), and densely populated (5, 4).
+This seems to pick up a fair number of land cover classes: water (5), rural (3), and densely populated (1, 2).
 
 For the large(r) dataset:
 
@@ -241,7 +241,7 @@ plot(out, col = sf.colors(nclus, categorical=TRUE), reset = FALSE)
 plot(m, add = TRUE)
 ```
 
-we see that class 5 identifies with the unclouded area, the other classes seem to mainly catch aspects of the cloud signal.
+we see that class 1 and 3 identify with the unclouded area, 3 with land, the other classes seem to mainly catch aspects of the cloud signal.
 
 ## Supervised learners
 

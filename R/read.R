@@ -1,5 +1,5 @@
 maybe_normalizePath = function(.x, np = FALSE) {
-	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:")
+	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:", "/vsi", "http://", "https://")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
 	if (is.function(.x) || !np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
@@ -58,6 +58,8 @@ is_functions = function(x) {
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
 #' has to be one of: "nearest_neighbour" (the default),
 #' "bilinear", "cubic", "cubic_spline", "lanczos", "average", "mode", or "Gauss".
+#'
+#' Data that are read into memory (\code{proxy=FALSE}) are read into a numeric (double) array, except for categorical variables which are read into an numeric (integer) array of class \code{factor}.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
