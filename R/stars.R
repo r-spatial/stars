@@ -132,8 +132,8 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param nx integer; number of cells in x direction; see details
 #' @param ny integer; number of cells in y direction; see details
 #' @param nz integer; number of cells in z direction; if missing no z-dimension is created.
-#' @param dx numeric; cell size in x direction; see details
-#' @param dy numeric; cell size in y direction; see details
+#' @param dx numeric or object of class units; cell size in x direction; see details
+#' @param dy numeric or object of class units; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
 #' @param ylim length 2 numeric vector with extent (min, max) in y direction
 #' @param values value(s) to populate the raster values with
@@ -141,7 +141,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
@@ -161,6 +161,18 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		else {
 			dx = diff(xlim)/nx
 			dy = -diff(ylim)/ny
+		}
+	} else { 
+		u <- st_crs(.x)$ud_unit
+		if (inherits(u, "units")) {
+			if (inherits(dx, "units")) {
+				units(dx) = u # might convert value
+				dx = units::drop_units(dx)
+			}
+			if (inherits(dy, "units")) {
+				units(dy) = u # might convert value
+				dy = units::drop_units(dy)
+			}
 		}
 	}
 

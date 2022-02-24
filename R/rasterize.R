@@ -64,7 +64,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 		dy = d[[2]]$delta
 		template = st_as_stars(bb, values = 0.0, dx = dx, dy = dy,
 			nx = round(diff(bb[c("xmin", "xmax")])/dx), 
-			ny = round(diff(bb[c("ymin", "ymax")])/dx),
+			ny = round(diff(bb[c("ymin", "ymax")])/dy),
 			proxy = proxy)
 	} else
 		template = st_normalize(template)

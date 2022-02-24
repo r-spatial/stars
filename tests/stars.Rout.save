@@ -1,5 +1,5 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -278,6 +278,10 @@ xmin ymin xmax ymax
 > st_bbox(s)
 xmin ymin xmax ymax 
    0  -90  360   90 
+> x1 = x
+> st_crs(x1) = "OGC:CRS84"
+> identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree)))
+[1] TRUE
 > 
 > df = as.data.frame(x)
 > units::drop_units(x)
@@ -526,4 +530,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.106   0.329   6.427 
+  6.741   0.357   7.090 

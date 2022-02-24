@@ -1,5 +1,5 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
+R version 4.1.2 (2021-11-01) -- "Bird Hippie"
 Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -58,8 +58,21 @@ x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
 y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 band    1   6      NA    NA                         NA    NA   NULL    
 foo     1   4       1     1                         NA    NA   NULL    
-> #(rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
+> (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
+stars_proxy object with 1 attribute in 8 file(s):
+$a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
+[1] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[4] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+[7] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
+
+dimension(s):
+     from  to     offset    delta                     refsys point values x/y
+x       1 349     288776     28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352    9120761    -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6         NA       NA                         NA    NA   NULL    
+foo     1   4          1        1                         NA    NA   NULL    
+bar     1   2 2001-01-01 365 days                       Date    NA   NULL    
 > 
 > proc.time()
    user  system elapsed 
-  1.424   0.107   1.523 
+  1.598   0.117   1.709 

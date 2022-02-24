@@ -48,6 +48,9 @@ s = st_as_stars(st_bbox(x), dx = 10)
 st_bbox(s)
 s = st_as_stars(st_bbox(x), dx = 20)
 st_bbox(s)
+x1 = x
+st_crs(x1) = "OGC:CRS84"
+identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree)))
 
 df = as.data.frame(x)
 units::drop_units(x)
