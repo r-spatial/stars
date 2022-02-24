@@ -165,15 +165,13 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 	} else { 
 		u <- st_crs(.x)$ud_unit
 		if (inherits(u, "units")) {
-			if (inherits(dx, "units")) {
+			if (inherits(dx, "units"))
 				units(dx) = u # might convert value
-				dx = units::drop_units(dx)
-			}
-			if (inherits(dy, "units")) {
+			if (inherits(dy, "units"))
 				units(dy) = u # might convert value
-				dy = units::drop_units(dy)
-			}
 		}
+		dx = as.numeric(dx) # drop units if present
+		dy = as.numeric(dy) # drop units if present
 	}
 
 	if (missing(nx))
