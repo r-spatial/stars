@@ -451,7 +451,7 @@ parse_netcdf_meta = function(pr, name) {
 				cal = get_val(paste0(v, "#calendar"), meta)
 				u =   get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					if (v == "time" && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
+					if (v %in% c("t", "time") && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
 						origin = 0:1
 						units(origin) = try_as_units(u)
 						delta = if (grepl("months", u)) {
@@ -467,7 +467,7 @@ parse_netcdf_meta = function(pr, name) {
 						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
 					} else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
-						if (v == "time" && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
+						if (v %in% c("t", "time") && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
 								"try-error")) {
 							pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
 						}
