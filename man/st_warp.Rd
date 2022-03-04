@@ -15,7 +15,8 @@ st_warp(
   options = character(0),
   no_data_value = NA_real_,
   debug = FALSE,
-  method = "near"
+  method = "near",
+  threshold = ifelse(is.na(cellsize), Inf, cellsize/2)
 )
 }
 \arguments{
@@ -31,7 +32,7 @@ st_warp(
 
 \item{segments}{(total) number of segments for segmentizing the bounding box before transforming to the new crs}
 
-\item{use_gdal}{logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}}
+\item{use_gdal}{logical; if \code{TRUE}, use gdal's warp or warper, through \link[sf]{gdal_utils}}
 
 \item{options}{character vector with options, passed on to gdalwarp}
 
@@ -41,6 +42,8 @@ not setting this when \code{use_gdal} is \code{TRUE} leads to a warning}
 \item{debug}{logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name}
 
 \item{method}{character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}}
+
+\item{threshold}{numeric; distance threshold for warping curvilinear grids: new cells at distances larger than threshold are assigned NA values.}
 }
 \description{
 Warp (resample) grids in stars objects to a new grid, possibly in an new coordinate reference system
@@ -48,7 +51,7 @@ Warp (resample) grids in stars objects to a new grid, possibly in an new coordin
 \details{
 \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 
-For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
+For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster}. This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 }
 \examples{
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")

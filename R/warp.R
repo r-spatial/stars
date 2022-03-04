@@ -128,7 +128,7 @@ transform_grid_grid = function(x, target, threshold = Inf) {
 #' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing
 #' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
-#' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
+#' @param use_gdal logical; if \code{TRUE}, use gdal's warp or warper, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
 #' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file; 
 #'  not setting this when \code{use_gdal} is \code{TRUE} leads to a warning
@@ -156,7 +156,7 @@ transform_grid_grid = function(x, target, threshold = Inf) {
 #' r = read_stars(system.file("tif/olinda_dem_utm25s.tif", package = "stars"))
 #' r270 = st_as_stars(st_bbox(r), dx = 270)
 #' r270 = st_warp(r, r270)
-#' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
+#' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster}. This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
@@ -168,8 +168,14 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (!is.na(crs))
 		crs = st_crs(crs)
 
-	if (!missing(dest) && inherits(dest, "crs"))
-		stop("target crs should be specified with crs = ..., not as argument dest")
+	if (!missing(dest)) {
+		if (inherits(dest, "crs"))
+			stop("target crs should be specified with crs = ..., not as argument dest")
+	} else {
+		if (is.na(crs))
+			stop("either dest or crs should be specified")
+		dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
+	}
 
 	ret = if (use_gdal) {
 		if (!is.na(no_data_value))
@@ -220,11 +226,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	} else {
 		if (method != "near")
 			stop("methods other than \"near\" are only supported if use_gdal=TRUE")
-		if (missing(dest)) {
-			if (is.na(crs))
-				stop("either dest or crs should be specified")
-			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
-		} else if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
+		if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
 			stop("dest should be a stars object, or a dimensions object")
 		transform_grid_grid(st_as_stars(src), st_dimensions(dest), threshold)
 	}
