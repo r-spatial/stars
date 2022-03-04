@@ -203,8 +203,10 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
 		} else {  # dest exists, and should be used: should use warper rather than warp
 			# https://github.com/r-spatial/stars/issues/407
-			if (missing(dest))
-				dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
+			if (missing(dest)) {
+				dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments) # dimensions
+				dest = st_stars(list(values = array(NA_real_, dim(dest))), dest)
+			}
 			if (length(dim(src)) == 3 && length(dim(dest)) == 2)
 				dest = merge(do.call(c, lapply(seq_len(dim(src)[3]), function(x) dest)))
 			dest = if (! inherits(dest, "stars_proxy")) {
