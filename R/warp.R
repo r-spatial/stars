@@ -73,7 +73,7 @@ rename_xy_dimensions = function(x, dims) {
 
 # transform grid x to dimensions target
 # x is a stars object, target is a dimensions object
-transform_grid_grid = function(x, target) {
+transform_grid_grid = function(x, target, threshold = Inf) {
 	stopifnot(inherits(x, "stars"), inherits(target, "dimensions"))
 	x = rename_xy_dimensions(x, target) # so we can match by name
 	xy_names = attr(target, "raster")$dimensions
@@ -87,7 +87,18 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
+	xy = if (is_curvilinear(x)) {
+    		if (!requireNamespace("FNN", quietly = TRUE))
+        		stop("package FNN required, please install it first") #nocov
+			if (st_is_longlat(x))
+				warning("using Euclidean distance measures on geodetic coordinates")
+			fnn = FNN::get.knnx(st_coordinates(x)[,1:2], pts, 1)
+			i = fnn$nn.index - 1
+			i[fnn$nn.dist > threshold] = NA
+			ny = dim(x)[1]
+			cbind(i %% ny, i %/% ny) + 1
+		} else
+			colrow_from_xy(pts, x, NA_outside = TRUE)
 	dims = dim(x)
 	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	x = unclass(x) # avoid using [[<-.stars:
@@ -123,6 +134,7 @@ transform_grid_grid = function(x, target) {
 #'  not setting this when \code{use_gdal} is \code{TRUE} leads to a warning
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
 #' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}
+#' @param threshold numeric; distance threshold for warping curvilinear grids: new cells at distances larger than threshold are assigned NA values.
 #' @param ... ignored
 #' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples
@@ -148,7 +160,7 @@ transform_grid_grid = function(x, target) {
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
-		method = "near") {
+		method = "near", threshold = ifelse(is.na(cellsize), Inf, cellsize / 2)) {
 
 	if (!inherits(src, "stars_proxy"))
 		src = st_normalize(src)
@@ -214,7 +226,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
 		} else if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
 			stop("dest should be a stars object, or a dimensions object")
-		transform_grid_grid(st_as_stars(src), st_dimensions(dest))
+		transform_grid_grid(st_as_stars(src), st_dimensions(dest), threshold)
 	}
 	# restore attributes?
 	if (method %in% c("near", "mode")) {
