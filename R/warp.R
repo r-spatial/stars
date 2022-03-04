@@ -171,11 +171,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (!missing(dest)) {
 		if (inherits(dest, "crs"))
 			stop("target crs should be specified with crs = ..., not as argument dest")
-	} else {
-		if (is.na(crs))
-			stop("either dest or crs should be specified")
-		dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
-	}
+	} else if (is.na(crs))
+		stop("either dest or crs should be specified")
 
 	ret = if (use_gdal) {
 		if (!is.na(no_data_value))
@@ -206,6 +203,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
 		} else {  # dest exists, and should be used: should use warper rather than warp
 			# https://github.com/r-spatial/stars/issues/407
+			if (missing(dest))
+				dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
 			if (length(dim(src)) == 3 && length(dim(dest)) == 2)
 				dest = merge(do.call(c, lapply(seq_len(dim(src)[3]), function(x) dest)))
 			dest = if (! inherits(dest, "stars_proxy")) {
@@ -226,6 +225,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	} else {
 		if (method != "near")
 			stop("methods other than \"near\" are only supported if use_gdal=TRUE")
+		if (missing(dest))
+			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
 		if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
 			stop("dest should be a stars object, or a dimensions object")
 		transform_grid_grid(st_as_stars(src), st_dimensions(dest), threshold)
