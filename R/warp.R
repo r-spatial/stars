@@ -171,8 +171,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (!missing(dest)) {
 		if (inherits(dest, "crs"))
 			stop("target crs should be specified with crs = ..., not as argument dest")
-	} else if (is.na(crs))
-		stop("either dest or crs should be specified")
+	} else if (is.na(crs) && !use_gdal)
+		stop("when use_gdal is FALSE, either dest or crs need to be specified")
 
 	ret = if (use_gdal) {
 		if (!is.na(no_data_value))
