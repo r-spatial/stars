@@ -92,7 +92,8 @@
   options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
   no_data_value <span class="op">=</span> <span class="cn">NA_real_</span>,
   debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  method <span class="op">=</span> <span class="st">"near"</span>
+  method <span class="op">=</span> <span class="st">"near"</span>,
+  threshold <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">cellsize</span><span class="op">)</span>, <span class="cn">Inf</span>, <span class="va">cellsize</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -111,7 +112,7 @@
 <dt>segments</dt>
 <dd><p>(total) number of segments for segmentizing the bounding box before transforming to the new crs</p></dd>
 <dt>use_gdal</dt>
-<dd><p>logical; if <code>TRUE</code>, use gdalwarp, through <a href="https://r-spatial.github.io/sf/reference/gdal_utils.html" class="external-link">gdal_utils</a></p></dd>
+<dd><p>logical; if <code>TRUE</code>, use gdal's warp or warper, through <a href="https://r-spatial.github.io/sf/reference/gdal_utils.html" class="external-link">gdal_utils</a></p></dd>
 <dt>options</dt>
 <dd><p>character vector with options, passed on to gdalwarp</p></dd>
 <dt>no_data_value</dt>
@@ -121,11 +122,13 @@ not setting this when <code>use_gdal</code> is <code>TRUE</code> leads to a warn
 <dd><p>logical; if <code>TRUE</code>, do not remove the temporary gdalwarp destination file, and print its name</p></dd>
 <dt>method</dt>
 <dd><p>character; see details for options; methods other than <code>near</code> only work when <code>use_gdal=TRUE</code></p></dd>
+<dt>threshold</dt>
+<dd><p>numeric; distance threshold for warping curvilinear grids: new cells at distances larger than threshold are assigned NA values.</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
     <p><code>method</code> should be one of <code>near</code>, <code>bilinear</code>, <code>cubic</code>, <code>cubicspline</code>, <code>lanczos</code>, <code>average</code>, <code>mode</code>, <code>max</code>, <code>min</code>, <code>med</code>, <code>q1</code> or <code>q3</code>; see https://github.com/r-spatial/stars/issues/109</p>
-<p>For gridded spatial data (dimensions <code>x</code> and <code>y</code>), see figure; the existing grid is transformed into a regular grid defined by <code>dest</code>, possibly in a new coordinate reference system. If <code>dest</code> is not specified, but <code>crs</code> is, the procedure used to choose a target grid is similar to that of <a href="https://rdrr.io/pkg/raster/man/projectRaster.html" class="external-link">projectRaster</a> (currently only with <code>method='ngb'</code>). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of <code>src</code>, with an extent that at least covers <code>x</code>; (iii) for each cell center of this new grid, the matching grid cell of <code>x</code> is used; if there is no match, an <code>NA</code> value is used.</p>
+<p>For gridded spatial data (dimensions <code>x</code> and <code>y</code>), see figure; the existing grid is transformed into a regular grid defined by <code>dest</code>, possibly in a new coordinate reference system. If <code>dest</code> is not specified, but <code>crs</code> is, the procedure used to choose a target grid is similar to that of <a href="https://rdrr.io/pkg/raster/man/projectRaster.html" class="external-link">projectRaster</a>. This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of <code>src</code>, with an extent that at least covers <code>x</code>; (iii) for each cell center of this new grid, the matching grid cell of <code>x</code> is used; if there is no match, an <code>NA</code> value is used.</p>
     </div>
 
     <div id="ref-examples">
