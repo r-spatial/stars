@@ -171,11 +171,13 @@
 <p>In the following, a curvilinear grid with hourly precipitation values of a hurricane is imported and the first 12 time steps are plotted:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">prec_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/test_stageiv_xyt.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">prec_file</span><span class="op">)</span><span class="op">)</span>
+<span class="op">(</span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_subdatasets</a></span><span class="op">(</span><span class="va">prec_file</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># stars object with 3 dimensions and 1 attribute</span>
 <span class="co"># attribute(s):</span>
-<span class="co">#                              Min. 1st Qu. Median     Mean 3rd Qu.   Max.</span>
-<span class="co"># test_stageiv_xyt.nc [kg/m^2]    0       0   0.75 4.143009    4.63 163.75</span>
+<span class="co">#                                            Min. 1st Qu. Median     Mean 3rd Qu.</span>
+<span class="co"># Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63</span>
+<span class="co">#                                              Max.</span>
+<span class="co"># Total_precipitation_surface_1_... [kg/m^2] 163.75</span>
 <span class="co"># dimension(s):</span>
 <span class="co">#      from  to                  offset   delta  refsys point</span>
 <span class="co"># x       1  87                      NA      NA  WGS 84    NA</span>
