@@ -175,6 +175,8 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 		stop("when use_gdal is FALSE, either dest or crs need to be specified")
 
 	ret = if (use_gdal) {
+		if (is_curvilinear(src))
+			stop("use gdal_utils(\"warp\",...) directly on the source dataset of this object")
 		if (!is.na(no_data_value))
 			options = c(options, "-dstnodata", no_data_value)
 		else 

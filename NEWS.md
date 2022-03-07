@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* `read_stars()` detects curvilinear grids automatically; #513
+
 * `st_warp()` warps curvilinear grids (using Euclidean distances only on coordinates); #513
 
 * `Ops.stars()` errors when (common) dimension are not identical; #506

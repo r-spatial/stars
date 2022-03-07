@@ -196,22 +196,15 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		y = create_dimension(from = 1, to = ny, offset = unname(ylim[2]),
 			delta = unname(dy), refsys = st_crs(.x))
 	}
-	if (missing(nz)) # 2D:
+	if (missing(nz)) { # 2D:
 		if (proxy) {
 			f = tempfile(fileext = ".tif")
-			if (packageVersion("sf") < "1.0-6") {
-				cmd = paste("gdal_create -ot Byte -outsize", nx, ny, "-burn", values,
-					"-a_srs", paste0("'", st_crs(.x)$wkt, "'"), 
-					"-a_ullr", xlim[1], ylim[2], xlim[2], ylim[1], f)
-				print(paste("executing: ", cmd))
-				system(cmd)
-			} else
-				gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
+			sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
 			read_stars(f, proxy = TRUE)
 		} else
 			st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
 				dims = create_dimensions(list(x = x, y = y), get_raster()))
-	else {
+	} else {
 		stopifnot(proxy == FALSE)
 		z = create_dimension(from = 1, to = nz[[1]])
 		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[ unnames
