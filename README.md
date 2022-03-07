@@ -127,11 +127,13 @@ a hurricane is imported and the first 12 time steps are plotted:
 
 ``` r
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-(prec = read_stars(prec_file))
+(prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
-#                              Min. 1st Qu. Median     Mean 3rd Qu.   Max.
-# test_stageiv_xyt.nc [kg/m^2]    0       0   0.75 4.143009    4.63 163.75
+#                                            Min. 1st Qu. Median     Mean 3rd Qu.
+# Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63
+#                                              Max.
+# Total_precipitation_surface_1_... [kg/m^2] 163.75
 # dimension(s):
 #      from  to                  offset   delta  refsys point
 # x       1  87                      NA      NA  WGS 84    NA
