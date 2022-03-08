@@ -127,13 +127,7 @@ a hurricane is imported and the first 12 time steps are plotted:
 
 ``` r
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-(prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-# no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation
-# other available variables:
-#  time_bounds, lon, lat, time
-# No projection information found in nc file. 
-#  Coordinate variable units found to be degrees, 
-#  assuming WGS84 Lat/Lon.
+(prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
 #                                            Min. 1st Qu. Median     Mean 3rd Qu.
@@ -145,10 +139,10 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # x       1  87                      NA      NA  WGS 84    NA
 # y       1 118                      NA      NA  WGS 84    NA
 # time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct    NA
-#                              values x/y
-# x    [87x118] -80.6113,...,-74.8822 [x]
-# y      [87x118] 32.4413,...,37.6193 [y]
-# time                           NULL    
+#                                      values x/y
+# x    [87x118] -80.6113 [°],...,-74.8822 [°] [x]
+# y      [87x118] 32.4413 [°],...,37.6193 [°] [y]
+# time                                   NULL    
 # curvilinear grid
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84

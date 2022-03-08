@@ -153,7 +153,7 @@ a hurricane is imported and the first 12 time steps are plotted:
 
 ```{r plot3}
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-(prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
+(prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))

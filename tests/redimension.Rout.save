@@ -75,4 +75,4 @@ bar     1   2 2001-01-01 365 days                       Date    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.138   0.172   2.301 
+  1.598   0.117   1.709 

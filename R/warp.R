@@ -73,7 +73,7 @@ rename_xy_dimensions = function(x, dims) {
 
 # transform grid x to dimensions target
 # x is a stars object, target is a dimensions object
-transform_grid_grid = function(x, target) {
+transform_grid_grid = function(x, target, threshold = Inf) {
 	stopifnot(inherits(x, "stars"), inherits(target, "dimensions"))
 	x = rename_xy_dimensions(x, target) # so we can match by name
 	xy_names = attr(target, "raster")$dimensions
@@ -87,7 +87,18 @@ transform_grid_grid = function(x, target) {
 	# to array:
 	d = st_dimensions(x)
 	# get col/row from x/y:
-	xy = colrow_from_xy(pts, x, NA_outside = TRUE)
+	xy = if (is_curvilinear(x)) {
+    		if (!requireNamespace("FNN", quietly = TRUE))
+        		stop("package FNN required, please install it first") #nocov
+			if (st_is_longlat(x))
+				warning("using Euclidean distance measures on geodetic coordinates")
+			fnn = FNN::get.knnx(st_coordinates(x)[,1:2], pts, 1)
+			i = fnn$nn.index - 1
+			i[fnn$nn.dist > threshold] = NA
+			ny = dim(x)[1]
+			cbind(i %% ny, i %/% ny) + 1
+		} else
+			colrow_from_xy(pts, x, NA_outside = TRUE)
 	dims = dim(x)
 	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	x = unclass(x) # avoid using [[<-.stars:
@@ -117,12 +128,13 @@ transform_grid_grid = function(x, target) {
 #' @param crs coordinate reference system for destination grid, only used when \code{dest} is missing
 #' @param cellsize length 1 or 2 numeric; cellsize in target coordinate reference system units
 #' @param segments (total) number of segments for segmentizing the bounding box before transforming to the new crs
-#' @param use_gdal logical; if \code{TRUE}, use gdalwarp, through \link[sf]{gdal_utils}
+#' @param use_gdal logical; if \code{TRUE}, use gdal's warp or warper, through \link[sf]{gdal_utils}
 #' @param options character vector with options, passed on to gdalwarp
 #' @param no_data_value value used by gdalwarp for no_data (NA) when writing to temporary file; 
 #'  not setting this when \code{use_gdal} is \code{TRUE} leads to a warning
 #' @param debug logical; if \code{TRUE}, do not remove the temporary gdalwarp destination file, and print its name
 #' @param method character; see details for options; methods other than \code{near} only work when \code{use_gdal=TRUE}
+#' @param threshold numeric; distance threshold for warping curvilinear grids: new cells at distances larger than threshold are assigned NA values.
 #' @param ... ignored
 #' @details \code{method} should be one of \code{near}, \code{bilinear}, \code{cubic}, \code{cubicspline}, \code{lanczos}, \code{average}, \code{mode}, \code{max}, \code{min}, \code{med}, \code{q1} or \code{q3}; see https://github.com/r-spatial/stars/issues/109
 #' @examples
@@ -144,11 +156,11 @@ transform_grid_grid = function(x, target) {
 #' r = read_stars(system.file("tif/olinda_dem_utm25s.tif", package = "stars"))
 #' r270 = st_as_stars(st_bbox(r), dx = 270)
 #' r270 = st_warp(r, r270)
-#' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster} (currently only with \code{method='ngb'}). This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
+#' @details For gridded spatial data (dimensions \code{x} and \code{y}), see figure; the existing grid is transformed into a regular grid defined by \code{dest}, possibly in a new coordinate reference system. If \code{dest} is not specified, but \code{crs} is, the procedure used to choose a target grid is similar to that of \link[raster]{projectRaster}. This entails: (i) the envelope (bounding box polygon) is transformed into the new crs, possibly after segmentation (red box); (ii) a grid is formed in this new crs, touching the transformed envelope on its East and North side, with (if cellsize is not given) a cellsize similar to the cell size of \code{src}, with an extent that at least covers \code{x}; (iii) for each cell center of this new grid, the matching grid cell of \code{x} is used; if there is no match, an \code{NA} value is used.
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
-		method = "near") {
+		method = "near", threshold = ifelse(is.na(cellsize), Inf, cellsize / 2)) {
 
 	if (!inherits(src, "stars_proxy"))
 		src = st_normalize(src)
@@ -156,10 +168,15 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	if (!is.na(crs))
 		crs = st_crs(crs)
 
-	if (!missing(dest) && inherits(dest, "crs"))
-		stop("target crs should be specified with crs = ..., not as argument dest")
+	if (!missing(dest)) {
+		if (inherits(dest, "crs"))
+			stop("target crs should be specified with crs = ..., not as argument dest")
+	} else if (is.na(crs) && !use_gdal)
+		stop("when use_gdal is FALSE, either dest or crs need to be specified")
 
 	ret = if (use_gdal) {
+		if (is_curvilinear(src))
+			stop("use gdal_utils(\"warp\",...) directly on the source dataset of this object")
 		if (!is.na(no_data_value))
 			options = c(options, "-dstnodata", no_data_value)
 		else 
@@ -188,6 +205,10 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 			sf::gdal_utils("warp", src[[1]], dest, options = options)
 		} else {  # dest exists, and should be used: should use warper rather than warp
 			# https://github.com/r-spatial/stars/issues/407
+			if (missing(dest)) {
+				dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments) # dimensions
+				dest = st_stars(list(values = array(NA_real_, dim(dest))), dest)
+			}
 			if (length(dim(src)) == 3 && length(dim(dest)) == 2)
 				dest = merge(do.call(c, lapply(seq_len(dim(src)[3]), function(x) dest)))
 			dest = if (! inherits(dest, "stars_proxy")) {
@@ -208,13 +229,11 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	} else {
 		if (method != "near")
 			stop("methods other than \"near\" are only supported if use_gdal=TRUE")
-		if (missing(dest)) {
-			if (is.na(crs))
-				stop("either dest or crs should be specified")
+		if (missing(dest))
 			dest = default_target_grid(src, crs = crs, cellsize = cellsize, segments = segments)
-		} else if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
+		if (!inherits(dest, "stars") && !inherits(dest, "dimensions"))
 			stop("dest should be a stars object, or a dimensions object")
-		transform_grid_grid(st_as_stars(src), st_dimensions(dest))
+		transform_grid_grid(st_as_stars(src), st_dimensions(dest), threshold)
 	}
 	# restore attributes?
 	if (method %in% c("near", "mode")) {

@@ -197,7 +197,7 @@ done when cell boundaries are specified.
 
 ## Curvilinear grids
 
-Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or NetCDF) files in which they are found have two raster layers, one with the latitudes and one with the longitudes for every grid cell. Using the GDAL interface, we need to compose a `stars` object from the array and a long and lat matrix. The matrices with longitude and latitude values are stored in the `values` field of their respective dimensions.
+Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or NetCDF) files in which they are found have two raster layers with the longitudes and latitudes for every corresponding pixel of remaining layers. 
 
 As an example, we will use a Sentinel 5P dataset available from package `starsdata`; this package can be installed with
 ```{r eval=FALSE}
@@ -212,19 +212,29 @@ The dataset is found here:
 ```{r echo=FALSE}
 EVAL = s5p != ""
 ```
-We can construct the curvilinear `stars` raster by calling `st_as_stars` on three arrays, with data, longitude and latitudes:
+We can construct the curvilinear `stars` raster by calling `read_stars` on the right sub-array:
 ```{r eval=EVAL}
-nit.c = read_stars(s5p, sub = "//PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column",
-	curvilinear = c("//PRODUCT/longitude", "//PRODUCT/latitude"), driver = NULL)
-if (inherits(nit.c[[1]], "units")) {
-	threshold = units::set_units(9e+36, mol/m^2)
-} else {
-	threshold = 9e+36
-}
+subs = gdal_subdatasets(s5p)
+subs[[6]]
+```
+
+For this array, we can see the GDAL metadata under item `GEOLOCATION`:
+```{r eval=EVAL}
+gdal_metadata(subs[[6]], "GEOLOCATION")
+```
+
+which reveals where, in this dataset, the longitude and latitude arrays are kept.
+
+```{r eval=EVAL}
+nit.c = read_stars(subs[[6]]) 
+threshold = units::set_units(9e+36, mol/m^2)
 nit.c[[1]][nit.c[[1]] > threshold] = NA
-st_crs(nit.c) = 4326
 nit.c
 ```
+
+The curvilinear array has the actual arrays (raster layers, matrices)
+with longitude and latitude values read in its dimension table. We
+can plot this file:
 
 ```{r eval=EVAL}
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
@@ -240,15 +250,23 @@ maps::map('world', add = TRUE, col = 'red')
 
 We can downsample the data by
 ```{r eval=EVAL}
-(nit.c = stars:::st_downsample(nit.c, 8))
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
+(nit.c_ds = stars:::st_downsample(nit.c, 8))
+plot(nit.c_ds, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
 		 pch = 16, logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
 ```
 
 which doesn't look nice, but plotting the cells as polygons looks better:
 ```{r eval=EVAL}
-plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
+plot(nit.c_ds, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
 		 border = NA, logz = TRUE, key.length = 1)
 maps::map('world', add = TRUE, col = 'red')
+```
+
+Another approach would be to warp the curvilinear grid to a regular grid,
+e.g. by
+
+```{r eval=EVAL}
+w = st_warp(nit.c, crs = 4326, cellsize = 0.25)
+plot(w)
 ```

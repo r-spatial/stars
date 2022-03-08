@@ -31,7 +31,7 @@ LazyData: true
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 1.0.3)
+    sf (>= 1.0.7)
 Imports:
     methods,
     parallel,
@@ -48,6 +48,7 @@ Suggests:
     digest,
     dplyr (>= 0.7-0),
     exactextractr,
+    FNN,
     future.apply,
     ggforce,
     ggplot2,

@@ -134,8 +134,8 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param nx integer; number of cells in x direction; see details
 #' @param ny integer; number of cells in y direction; see details
 #' @param nz integer; number of cells in z direction; if missing no z-dimension is created.
-#' @param dx numeric; cell size in x direction; see details
-#' @param dy numeric; cell size in y direction; see details
+#' @param dx numeric or object of class units; cell size in x direction; see details
+#' @param dy numeric or object of class units; cell size in y direction; see details
 #' @param xlim length 2 numeric vector with extent (min, max) in x direction
 #' @param ylim length 2 numeric vector with extent (min, max) in y direction
 #' @param values value(s) to populate the raster values with
@@ -143,7 +143,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}.
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
@@ -164,6 +164,16 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 			dx = diff(xlim)/nx
 			dy = -diff(ylim)/ny
 		}
+	} else { 
+		u <- st_crs(.x)$ud_unit
+		if (inherits(u, "units")) {
+			if (inherits(dx, "units"))
+				units(dx) = u # might convert value
+			if (inherits(dy, "units"))
+				units(dy) = u # might convert value
+		}
+		dx = as.numeric(dx) # drop units if present
+		dy = as.numeric(dy) # drop units if present
 	}
 
 	if (missing(nx))
@@ -188,22 +198,15 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		y = create_dimension(from = 1, to = ny, offset = unname(ylim[2]),
 			delta = unname(dy), refsys = st_crs(.x))
 	}
-	if (missing(nz)) # 2D:
+	if (missing(nz)) { # 2D:
 		if (proxy) {
 			f = tempfile(fileext = ".tif")
-			if (packageVersion("sf") < "1.0-6") {
-				cmd = paste("gdal_create -ot Byte -outsize", nx, ny, "-burn", values,
-					"-a_srs", paste0("'", st_crs(.x)$wkt, "'"), 
-					"-a_ullr", xlim[1], ylim[2], xlim[2], ylim[1], f)
-				print(paste("executing: ", cmd))
-				system(cmd)
-			} else
-				gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
+			sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
 			read_stars(f, proxy = TRUE)
 		} else
 			st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
 				dims = create_dimensions(list(x = x, y = y), get_raster()))
-	else {
+	} else {
 		stopifnot(proxy == FALSE)
 		z = create_dimension(from = 1, to = nz[[1]])
 		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[ unnames
@@ -448,7 +451,7 @@ propagate_units = function(new, old) {
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.
 #' @param along integer; see \link{read_stars}
-#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, 
+#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, combine those that dimensions matching to the first array
 #' @param tolerance numeric; values used in \link{all.equal} to compare dimension values
 #' combine those that dimensions matching to the first array
 #' @param nms character; vector with array names

@@ -327,7 +327,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     }
   } else {
     ret <- try(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
-    if(class(ret) == "try-error") {
+    if(inherits(ret, "try-error")) {
       return(st_crs(NULL))
     } else {
       return(ret)

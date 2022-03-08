@@ -18,7 +18,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(collapse = TRUE)
 set.seed(13579)
-EVAL = x = suppressWarnings(require(starsdata, quietly = TRUE)) && sf::sf_extSoftVersion()["GDAL"] >= "2.2.0"
+EVAL = x = suppressWarnings(require(starsdata, quietly = TRUE))
 ```
 
 When your imagery or array data easily fits a couple of times in
