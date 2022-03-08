@@ -122,7 +122,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
 				st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
 		}
-	} else if (length(curvilinear) == 2 && is.character(curvilinear)) { # read them
+	} else if (length(curvilinear) == 2 && is.character(curvilinear)) { # user-set, read them
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
 			RasterIO = RasterIO, proxy = FALSE, ..., sub_required = TRUE))
 		lat = adrop(read_stars(.x, sub = curvilinear[2], driver = driver, quiet = quiet, NA_value = NA_value,
