@@ -94,9 +94,9 @@ merge(x.spl)
 ```
 We see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with `setNames`, and dimension names and values with `st_set_dimensions`:
 ```{r}
-merge(x.spl) %>% 
-  setNames(names(x)) %>%
-  st_set_dimensions(3, values = paste0("band", 1:6)) %>%
+merge(x.spl) |>
+  setNames(names(x)) |> 
+  st_set_dimensions(3, values = paste0("band", 1:6)) |>
   st_set_dimensions(names = c("x", "y", "band"))
 ```
 
@@ -165,7 +165,7 @@ image(x3[,,,1])
 
 Another example is when we read raster time series model outputs in a NetCDF file, e.g. by
 ```{r eval=ev}
-system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
+system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
 	read_stars() -> w
 ```
 
@@ -182,7 +182,7 @@ For this dataset we can see that
 
 Alternatively, this dataset can be read using `read_ncdf`, as in
 ```{r}
-system.file("nc/bcsd_obs_1999.nc", package = "stars") %>%
+system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
     read_ncdf()
 ```
 
@@ -222,7 +222,7 @@ Next, we select sea surface temperature (`sst`), and drop the singular `zlev` (d
 ```{r eval=ev}
 library(dplyr)
 library(abind)
-z <- y %>% select(sst) %>% adrop()
+z <- y |> select(sst) |> adrop()
 ```
 
 We can now graph the sea surface temperature (SST) using `ggplot`, which needs data in a long table form, and without units:
@@ -312,18 +312,49 @@ traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
 ```{r eval=FALSE}
-st %>% as.tbl_cube()
+st |> as.tbl_cube()
 ```
 
 The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
 ```{r eval=FALSE}
-b <- st %>% 
-  as.tbl_cube() %>%
-  filter(mode == "bike") %>%
-  group_by(hour) %>%
-  summarise(traffic = mean(traffic)) %>%
+b <- st |> 
+  as.tbl_cube() |> 
+  filter(mode == "bike") |> 
+  group_by(hour) |>
+  summarise(traffic = mean(traffic)) |> 
   as.data.frame()
 require(ggforce) # for plotting a units variable
 ggplot() +  
   geom_line(data = b, aes(x = hour, y = traffic))
+```
+
+# Extracting at point locations, aggregating over polygons
+
+Data cube values at point location can be extracted by `st_extract`, an example is found
+in [vignette 7](stars7.html)
+
+Aggregates, such as mean, maximum or modal values can be obtained by `aggregate`. In this
+example we use a categorical raster, and try to find the modal (most frequent) class within
+two circular polygons:
+
+```{r}
+s = system.file("tif/lc.tif", package = "stars")
+r = read_stars(s, proxy = FALSE) |> droplevels()
+st_point(c(3190631, 3125)) |> st_sfc(crs = st_crs(r)) |> st_buffer(25000) -> pol1
+st_point(c(3233847, 21027)) |> st_sfc(crs = st_crs(r)) |> st_buffer(10000) -> pol2
+plot(r, key.width = lcm(5), reset = FALSE, key.pos = 4)
+plot(pol1, col = NA, border = 'yellow', lwd = 2, add = TRUE)
+plot(pol2, col = NA, border = 'green', lwd = 2, add = TRUE)
+```
+
+To find the modal value, we need a function that gives back the label
+corresponding to the class which is most frequent, using `table`:
+```{r}
+f = function(x) { tb = table(x); names(tb)[which.max(tb)] }
+```
+
+We can then call `aggregate` on the raster map, and the set of the two
+circular polygons `pol1` and `pol2`, and pass the function `f`:
+```{r}
+aggregate(r, c(pol1, pol2), f) |> st_as_sf()
 ```
