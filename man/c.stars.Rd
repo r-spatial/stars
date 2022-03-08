@@ -27,7 +27,7 @@
 
 \item{along}{integer; see \link{read_stars}}
 
-\item{try_hard}{logical; if \code{TRUE} and some arrays have different dimensions,}
+\item{try_hard}{logical; if \code{TRUE} and some arrays have different dimensions, combine those that dimensions matching to the first array}
 
 \item{nms}{character; vector with array names}
 

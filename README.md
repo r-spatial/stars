@@ -144,6 +144,7 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # y      [87x118] 32.4413 [°],...,37.6193 [°] [y]
 # time                                   NULL    
 # curvilinear grid
+# or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
 sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
