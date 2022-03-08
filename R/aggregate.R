@@ -195,7 +195,9 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 					NULL
 			} else
 				NULL
-		x[[i]] = units::set_units(agr_grps(a, grps, seq_along(by), FUN, ...), u, mode = "standard")
+		x[[i]] = agr_grps(a, grps, seq_along(by), FUN, ...)
+		if (is.numeric(x[[i]]) && !is.null(u))
+			x[[i]] = units::set_units(x[[i]], u, mode = "standard")
 	}
 
 	# reconstruct dimensions table:
