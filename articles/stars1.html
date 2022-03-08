@@ -70,6 +70,9 @@
     <li>
       <a href="../articles/stars7.html">7. Statistical modelling with stars objects</a>
     </li>
+    <li>
+      <a href="../articles/stars8.html">8. NetCDF Proxy Workflows</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -368,6 +371,7 @@
 <span class="co">## No projection information found in nc file. </span>
 <span class="co">##  Coordinate variable units found to be degrees, </span>
 <span class="co">##  assuming WGS84 Lat/Lon.</span>
+<span class="co">## Will return stars object with 32076 cells.</span>
 <span class="co">## stars object with 3 dimensions and 2 attributes</span>
 <span class="co">## attribute(s):</span>
 <span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span>
@@ -462,12 +466,11 @@
 <span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">prec_file</span>, curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span>
 <span class="co">## other available variables:</span>
-<span class="co">##  time_bounds, lon, lat, time</span>
+<span class="co">##  lat, lon, time</span>
 <span class="co">## No projection information found in nc file. </span>
 <span class="co">##  Coordinate variable units found to be degrees, </span>
 <span class="co">##  assuming WGS84 Lat/Lon.</span>
-<span class="co">## Warning in .get_nc_dimensions(dimensions, coord_var = all_coord_var, coords =</span>
-<span class="co">## coords, : bounds for time seem to be reversed; reverting them</span>
+<span class="co">## Will return stars object with 236118 cells.</span>
 <span class="co">##plot(prec) ## gives error about unique breaks</span>
 <span class="co">## remove NAs, zeros, and give a large number</span>
 <span class="co">## of breaks (used for validating in detail)</span>
@@ -522,8 +525,8 @@
 <span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
-<span class="co">## traffic     0       8     10 9.99498      12   25</span>
+<span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
+<span class="co">## traffic     0       8     10 10.00493      12   26</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>

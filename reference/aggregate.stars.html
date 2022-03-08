@@ -52,6 +52,9 @@
     <li>
       <a href="../articles/stars7.html">7. Statistical modelling with stars objects</a>
     </li>
+    <li>
+      <a href="../articles/stars8.html">8. NetCDF Proxy Workflows</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -186,11 +189,11 @@
 <span class="r-in"><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">prec_file</span>, curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> other available variables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  time_bounds, lon, lat, time</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>  lat, lon, time</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No projection information found in nc file. </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  Coordinate variable units found to be degrees, </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  assuming WGS84 Lat/Lon.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds for time seem to be reversed; reverting them</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Will return stars object with 236118 cells.</span>
 <span class="r-in"><span class="va">prec_slice</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">prec</span>, index <span class="op">=</span> <span class="fl">17</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">nc</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">nc</span> <span class="op">=</span> <span class="fu"><a href="st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">prec_slice</span><span class="op">)</span><span class="op">)</span></span>

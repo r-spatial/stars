@@ -52,6 +52,9 @@
     <li>
       <a href="../articles/stars7.html">7. Statistical modelling with stars objects</a>
     </li>
+    <li>
+      <a href="../articles/stars8.html">8. NetCDF Proxy Workflows</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -153,7 +156,9 @@
     <dl><dt>.x</dt>
 <dd><p>object to convert</p></dd>
 <dt>...</dt>
-<dd><p>in case <code>.x</code> is of class <code>bbox</code>, arguments passed on to <a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty</a></p></dd>
+<dd><p>in case <code>.x</code> is of class <code>bbox</code>, arguments passed on to 
+<a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty</a>. In case <code>.x</code> is of class <code>nc_proxy</code>, arguments
+passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 <dt>dimensions</dt>
 <dd><p>object of class dimensions</p></dd>
 <dt>raster</dt>
