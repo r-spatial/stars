@@ -448,7 +448,7 @@ propagate_units = function(new, old) {
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' @param ... object(s) of class \code{star}: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.
 #' @param along integer; see \link{read_stars}
-#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, 
+#' @param try_hard logical; if \code{TRUE} and some arrays have different dimensions, combine those that dimensions matching to the first array
 #' @param tolerance numeric; values used in \link{all.equal} to compare dimension values
 #' combine those that dimensions matching to the first array
 #' @param nms character; vector with array names
