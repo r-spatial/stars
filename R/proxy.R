@@ -203,7 +203,9 @@ fetch = function(x, downsample = 0, ...) {
 	if (!is.null(bands)) {
 		if (!is.null(bands$values) && is.numeric(bands$values)) 
 			rasterio$bands = bands$values
-		else if (!is.na(bands$from) && !is.na(bands$to) && (bands$to - bands$from + 1) < length(x[[1]]))
+		else if (!is.na(bands$from) && !is.na(bands$to) 
+				 # && (bands$to - bands$from + 1) < length(x[[1]])
+			)
 			rasterio$bands = seq(bands$from, bands$to)
 	}
 
@@ -444,7 +446,7 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	cl = attr(x, "call_list")
 	if (length(lst) < 3)
 		return(x) # 
-	if (missing(i)) # insert:
+	if (missing(i) | !"i" %in% names(lst)) # insert:
 		lst = c(lst[1:2], i = TRUE, lst[-(1:2)])
 	if (inherits(i, c("character", "logical", "numeric")) && is.null(cl)) {
 		if (!is.null(unclass(x)[[i]])) { # can/should be selected now:
@@ -454,12 +456,18 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 				resolutions = resolutions)
 			lst[["i"]] = TRUE # this one has been handled now
 		}
-		for (ix in 1:3) { # FIXME: process further dimensions than 3?
-			if (length(lst) >= 4 && !is.null(r <- get_range(lst[[4]]))) {
+		ix = 1
+		while (length(lst) >= 4) { # https://github.com/r-spatial/stars/issues/496
+			if (!is.null(r <- get_range(lst[[4]]))) {
 				attr(x, "dimensions")[[ix]]$from = r[1]
 				attr(x, "dimensions")[[ix]]$to = r[2]
-				lst[[4]] = NULL # remove
+				if(!is.null(attr(x, "dimensions")[[ix]]$values)) {
+					attr(x, "dimensions")[[ix]]$values <- 
+						attr(x, "dimensions")[[ix]]$values[r[1]:r[2]]
+				}
 			}
+			ix = ix + 1
+			lst[[4]] = NULL # eat/remove
 		}
 	} else if (crop && inherits(i, c("sf", "sfc", "stars", "bbox"))) {
 		x = st_crop(x, i, ..., collect = FALSE) # does bounding box cropping only
@@ -508,11 +516,16 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 		# crop x:
 		dm[[ xd ]]$from = max(1, cr[1, 1], na.rm = TRUE)
 		dm[[ xd ]]$to = min(d_max[xd], cr[2, 1], na.rm = TRUE)
+		if(!is.null(dm[[ xd ]]$values))
+			dm[[ xd ]]$values = dm[[ xd ]]$values[dm[[ xd ]]$from:dm[[ xd ]]$to]
+		
 		# crop y:
-		if (dm[[ yd ]]$delta < 0)
+		if (!is.na(dm[[ yd ]]$delta) && dm[[ yd ]]$delta < 0) # FIXME: just subtract values to avoid NA miss?
 			cr[1:2, 2] = cr[2:1, 2]
 		dm[[ yd ]]$from = max(1, cr[1, 2], na.rm = TRUE)
 		dm[[ yd ]]$to = min(d_max[yd], cr[2, 2], na.rm = TRUE)
+		if(!is.null(dm[[ yd ]]$values))
+			dm[[ yd ]]$values = dm[[ yd ]]$values[dm[[ yd ]]$from:dm[[ yd ]]$to]
 	}
 	x = st_stars_proxy(x, dm, NA_value = attr(x, "NA_value"), resolutions = attr(x, "resolutions")) # crop to bb
 	if (collect)

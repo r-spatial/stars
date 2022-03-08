@@ -74,7 +74,9 @@ st_as_stars(.x, ...)
 \arguments{
 \item{.x}{object to convert}
 
-\item{...}{in case \code{.x} is of class \code{bbox}, arguments passed on to \link{pretty}}
+\item{...}{in case \code{.x} is of class \code{bbox}, arguments passed on to 
+\link{pretty}. In case \code{.x} is of class \code{nc_proxy}, arguments
+passed on to \code{\link{read_ncdf}}.}
 
 \item{dimensions}{object of class dimensions}
 

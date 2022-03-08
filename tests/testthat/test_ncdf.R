@@ -18,11 +18,12 @@ test_that("variable subsetting", {
 })
 
 test_that("domain subsetting", {
-  nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
+  nc <- read_ncdf(f, ncsub = cbind(start = c(20, 1, 1, 1),
                                    count = c(10, 12, 1, 1)))
   st_dim <- st_dimensions(nc)
   expect_equal(st_dim$lon$to - st_dim$lon$from, 9)
   expect_equal(st_dim$lat$to - st_dim$lat$from, 11)
+  expect_equal(st_dim$lon$offset, 37)
 
   expect_error(nc <- read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1),
                                    count = c(200, 12, 1, 1))),
@@ -44,11 +45,25 @@ test_that("domain subsetting", {
 })
 
 test_that("normal bcsd", {
-  nc <- read_ncdf(system.file("nc/bcsd_obs_1999.nc", package = "stars"))
+  f <- system.file("nc/bcsd_obs_1999.nc", package = "stars")
+  nc <- read_ncdf(f, package = "stars")
   expect_equal(names(nc), c("pr", "tas"))
   st_dim <- st_dimensions(nc)
   expect_equal(names(st_dim), c("longitude", "latitude", "time"))
   expect_equal(st_dim$longitude$delta, 0.125)
+  
+  file.copy(f, (tf <- tempfile()))
+  
+  nc_tf <- RNetCDF::open.nc(tf, write = TRUE)
+  
+  RNetCDF::var.put.nc(nc_tf, "longitude", 
+  					(360 + stars::st_get_dimension_values(nc, "longitude")))
+  
+  RNetCDF::close.nc(nc_tf)
+  
+  nc <- read_ncdf(tf, package = "stars")
+  
+  expect_equal(stars::st_get_dimension_values(nc, "longitude")[1], -84.9375)
 })
 
 test_that("non canonical axis order is handled right", {
@@ -87,9 +102,9 @@ test_that("euro cordex extra dimvars", {
 test_that("curvilinear", {
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
 
-  warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
+  out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat"))
 
-  expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
+  # expect_match(warn[1], "bounds for time seem to be reversed; reverting them")
 
   st_dim <- st_dimensions(out)
 
@@ -98,7 +113,14 @@ test_that("curvilinear", {
   expect_true(all(st_dim$y$values < 38 & st_dim$y$values > 32))
 
   expect_equal(dim(st_dim$y$values), setNames(c(87, 118), c("x", "y")))
-
+  
+  nc <- RNetCDF::open.nc(f)
+  
+  expect_equal(st_get_dimension_values(st_dim, "time"), 
+  			 RNetCDF::utcal.nc(RNetCDF::att.get.nc(nc, "time", "units"),
+  			 				  RNetCDF::var.get.nc(nc, "time"), type = "c"))
+  RNetCDF::close.nc(nc)
+  
   # Should also find the curvilinear grid.
   suppressWarnings(out <- read_ncdf(f, var = "Total_precipitation_surface_1_Hour_Accumulation"))
 
@@ -115,7 +137,7 @@ test_that("curvilinear broked", {
   expect_error(read_ncdf(f, curvilinear = c("time", "time_bounds")),
                "Specified curvilinear coordinates are not 2-dimensional.")
 
-  expect_warning(suppressMessages(read_ncdf(f, curvilinear = c("lon", "time_bounds"))),
+  expect_error(suppressMessages(read_ncdf(f, curvilinear = c("lon", "time_bounds"))),
                "Specified curvilinear coordinate variables not found as X/Y coordinate variables.")
 
   warn <- capture_warnings(out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat")))
@@ -129,6 +151,9 @@ test_that("curvilinear broked", {
   expect_true(all(st_dim$x$values < 38 & st_dim$x$values > 32))
 
   expect_equal(dim(st_dim$y$values), setNames(c(118, 87), c("y", "x")))
+  
+  expect_equal(as.character(st_dim$time$values), "2018-09-14 05:00:00")
+  
 })
 
 test_that("high-dim from rasterwise", {
@@ -178,7 +203,7 @@ test_that("curvilinear 2", {
 test_that("lon cross 360", {
   f <- system.file("nc/test_adaptor.cams_regional_fc.nc", package = "stars")
 
-  nc <- read_ncdf(f)
+  suppressWarnings(nc <- read_ncdf(f))
 
   expect_true(head(st_dimensions(nc)$longitude$values, 1) < 0 &
                 tail(st_dimensions(nc)$longitude$values, 1) > 0)

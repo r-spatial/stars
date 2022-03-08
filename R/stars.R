@@ -9,7 +9,9 @@ split_strings = function(md, split = "=") {
 #' convert objects into a stars object
 #' @export
 #' @param .x object to convert
-#' @param ... in case \code{.x} is of class \code{bbox}, arguments passed on to \link{pretty}
+#' @param ... in case \code{.x} is of class \code{bbox}, arguments passed on to 
+#' \link{pretty}. In case \code{.x} is of class \code{nc_proxy}, arguments
+#' passed on to \code{\link{read_ncdf}}.
 st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 
 #' @name st_as_stars
@@ -46,14 +48,14 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
 }
 
-st_stars = function(x, dimensions) {
+st_stars = function(x, dimensions, class = "stars") {
 	# sanity checks:
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
 	stopifnot(!is.null(attr(dimensions, "raster")))
 #	for (i in seq_along(x))
 #		names(dim(x[[i]])) = names(dimensions)
-	structure(x, dimensions = dimensions, class = "stars")
+	structure(x, dimensions = dimensions, class = class)
 }
 
 
@@ -374,12 +376,13 @@ as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
 		lapply(x, function(y) structure(y, dim = NULL)))
 }
 
+add_units = function(x) {
+	f = function(obj) if (inherits(obj, "units")) paste0("[", enc2utf8(as.character(units(obj))), "]") else ""
+	paste(names(x), sapply(x, f))
+}
+
 #' @export
 print.stars = function(x, ..., n = 1e5, abbrev = 30) {
-	add_units = function(x) {
-		f = function(obj) if (inherits(obj, "units")) paste0("[", enc2utf8(as.character(units(obj))), "]") else ""
-		paste(names(x), sapply(x, f))
-	}
 	shorten = function(s) {
 		if (nchar(s) > abbrev)
 			paste0(substr(s, 1, abbrev), "...")

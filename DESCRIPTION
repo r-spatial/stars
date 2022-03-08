@@ -97,6 +97,7 @@ Collate:
     'sp.R'
     'spacetime.R'
     'ncdf.R'
+    'ncproxy.R'
     'proxy.R'
     'factors.R'
     'rasterize.R'

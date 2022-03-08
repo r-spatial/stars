@@ -199,4 +199,4 @@ band    1   6      NA    NA                         NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  5.537   0.101   5.631 
+  6.631   0.176   6.801 
