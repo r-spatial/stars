@@ -246,7 +246,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		text_color = 'black', axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
 		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
-		useRaster = isTRUE(dev.capabilities("rasterImage")$rasterImage == "yes"), extent = x) {
+		useRaster = isTRUE(dev.capabilities()$rasterImage == "yes"), extent = x) {
 
 	dots = list(...)
 

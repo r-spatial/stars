@@ -342,9 +342,10 @@ s = system.file("tif/lc.tif", package = "stars")
 r = read_stars(s, proxy = FALSE) |> droplevels()
 st_point(c(3190631, 3125)) |> st_sfc(crs = st_crs(r)) |> st_buffer(25000) -> pol1
 st_point(c(3233847, 21027)) |> st_sfc(crs = st_crs(r)) |> st_buffer(10000) -> pol2
-plot(r, key.width = lcm(5), reset = FALSE, key.pos = 4)
-plot(pol1, col = NA, border = 'yellow', lwd = 2, add = TRUE)
-plot(pol2, col = NA, border = 'green', lwd = 2, add = TRUE)
+if (dev.capabilities()$rasterImage == "yes") {
+  plot(r, key.width = lcm(4), reset = FALSE, key.pos = 4)
+  plot(c(pol1, pol2), col = NA, border = c('yellow', 'green'), lwd = 2, add = TRUE)
+}
 ```
 
 To find the modal value, we need a function that gives back the label
