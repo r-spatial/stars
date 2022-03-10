@@ -23,8 +23,8 @@ jobs:
       matrix:
         config:
           # use a different tic template type if you do not want to build on all listed platforms
-          - { os: ubuntu-latest, r: "devel" }
-          - { os: ubuntu-latest, r: "release", latex: "true", pkgdown: "true" }
+          - { os: ubuntu-latest, r: "release" }
+          - { os: ubuntu-latest, r: "devel", latex: "true", pkgdown: "true" }
           - { os: windows-latest, r: "release" }
           # - { os: macOS-latest, r: "release" }
 
