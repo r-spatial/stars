@@ -53,7 +53,7 @@
   key.length = 0.618,
   add.geom = NULL,
   border = NA,
-  useRaster = isTRUE(dev.capabilities("rasterImage")$rasterImage == "yes"),
+  useRaster = isTRUE(dev.capabilities()$rasterImage == "yes"),
   extent = x
 )
 
