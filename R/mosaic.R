@@ -31,11 +31,14 @@ st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext),
 	}
 	objs = if (missing(.x)) list(...) else append(list(.x), list(...))
 	src = sapply(objs, lst_write)
-	on.exit(unlink(src))
-	if (missing(dst))
-		on.exit(unlink(dst))
 	st_mosaic(src, dst = dst, file_ext = file_ext, options = options)
-	setNames(read_stars(dst), names(objs[[1]])[1])
+	ret = setNames(read_stars(dst), names(objs[[1]])[1])
+	if (!inherits(ret, "stars_proxy")) {
+		unlink(src)
+		if (missing(dst))
+			unlink(dst)
+	}
+	ret
 }
 
 #' @export
