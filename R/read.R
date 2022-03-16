@@ -136,7 +136,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	if (length(x) > 1) { # loop over data sources and RETURNS:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
-			along = if (length(along) > 1) along[-1] else NA_integer_)
+			along = if (length(along) > 1) along[-1] else NA_integer_, normalize_path = normalize_path)
 		return(do.call(c, append(ret, list(along = along, tolerance = tolerance))))
 	}
 
