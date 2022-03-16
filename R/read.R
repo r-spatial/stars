@@ -130,6 +130,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
 			st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
 	}
+	if (length(curvilinear) && proxy)
+		warning("proxy = TRUE may not work for curvilinear rasters")
 
 	if (length(x) > 1) { # loop over data sources and RETURNS:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
