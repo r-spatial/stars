@@ -107,9 +107,9 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		} else
 			enc2utf8char(maybe_normalizePath(.x, np = normalize_path))
 
-	if (missing(curvilinear)) { # see if we can get it from metadat-item "GEOLOCATION":
+	if (missing(curvilinear)) { # see if we can get it from metadata item "GEOLOCATION":
 		geolocation <- try(gdal_metadata(.x, "GEOLOCATION"), silent = TRUE)
-		if (!inherits(geolocation, "try-error")) { # the thing is curvilinear:
+		if (!inherits(geolocation, "try-error")) { # the thing has x and y arrays:
 			gxy = if (packageVersion("sf") >= "1.0-8") # read coordinate arrays
 					c(geolocation$X_DATASET, geolocation$Y_DATASET)
 				else 
@@ -119,8 +119,15 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				RasterIO = RasterIO, proxy = FALSE, curvilinear = character(0), ...))
 			lat = adrop(read_stars(gxy[2], driver = driver, quiet = quiet, NA_value = NA_value,
 				RasterIO = RasterIO, proxy = FALSE, curvilinear = character(0), ...))
-			curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
-				st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
+			if (all(dim(lon) > 1) && all(dim(lat) > 1)) # both are 2-D matrices:
+				curvilinear = setNames(c(st_set_dimensions(lon, names = c("x", "y")),
+					st_set_dimensions(lat, names = c("x", "y"))), c("x", "y"))
+			else {
+				ulon = unique(diff(as.vector(lon[[1]])))
+				ulat = unique(diff(as.vector(lat[[1]])))
+				if (length(ulon) > 1 || length(ulat) > 1)
+					warning("ignoring irregular (rectilinear) x and/or y coordinates!")
+			}
 		}
 	} else if (length(curvilinear) == 2 && is.character(curvilinear)) { # user-set, read them
 		lon = adrop(read_stars(.x, sub = curvilinear[1], driver = driver, quiet = quiet, NA_value = NA_value,
