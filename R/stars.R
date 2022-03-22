@@ -141,14 +141,14 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param values value(s) to populate the raster values with
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
-#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely?
+#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or allways cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the ceiling of the ratio of the (x or y) range divided by (dx or dy), unless \code{inside} is \code{TRUE}, in which case ceiling is replaced by floor. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of \code{inside}. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz, 
+		values = 0., n = 64800, pretty = FALSE, inside = NA, nz, 
 		proxy = FALSE) {
 
 	if (xor(missing(nx), missing(ny)))
@@ -176,13 +176,21 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		dy = as.numeric(dy) # drop units if present
 	}
 
+	consider_inside = function(x, inside) {
+		if (is.na(inside))
+			round(x)
+		else if (inside)
+			floor(x)
+		else
+			ceiling(x)
+	}
 	if (missing(nx))
-		nx = ifelse(inside, floor(diff(xlim) / dx), ceiling(diff(xlim) / dx))
+		nx = consider_inside(diff(xlim) / dx, inside)
 
 	if (missing(ny)) {
 		if (dy > 0)
 			dy = -dy
-		ny = ifelse(inside, floor(-diff(ylim) / dy), ceiling(-diff(ylim) / dy))
+		ny = consider_inside(-diff(ylim) / dy, inside)
 	}
 
 	if (pretty) {
