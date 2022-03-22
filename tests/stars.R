@@ -37,9 +37,11 @@ st_coordinates(x)[1:10,]
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
 st_bbox(x)
-s = st_as_stars(st_bbox(x))
+s = st_as_stars(st_bbox(x)) # inside = NA
 st_bbox(s)
 s = st_as_stars(st_bbox(x), inside = TRUE)
+st_bbox(s)
+s = st_as_stars(st_bbox(x), inside = FALSE)
 st_bbox(s)
 (s = st_as_stars(st_bbox(x), dy = 1))
 st_bbox(s)

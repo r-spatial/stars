@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.1.3 (2022-03-10) -- "One Push-Up"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -248,7 +248,7 @@ time    1  24 2001-01-16 30 days  PCICt    NA   NULL
 > st_bbox(x)
 xmin ymin xmax ymax 
    0  -80  360   90 
-> s = st_as_stars(st_bbox(x))
+> s = st_as_stars(st_bbox(x)) # inside = NA
 > st_bbox(s)
      xmin      ymin      xmax      ymax 
   0.00000 -80.06943 360.54719  90.00000 
@@ -256,6 +256,10 @@ xmin ymin xmax ymax
 > st_bbox(s)
     xmin     ymin     xmax     ymax 
   0.0000 -79.0976 359.5754  90.0000 
+> s = st_as_stars(st_bbox(x), inside = FALSE)
+> st_bbox(s)
+     xmin      ymin      xmax      ymax 
+  0.00000 -80.06943 360.54719  90.00000 
 > (s = st_as_stars(st_bbox(x), dy = 1))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -530,4 +534,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.741   0.357   7.090 
+  6.840   0.440   7.275 
