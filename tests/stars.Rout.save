@@ -251,7 +251,7 @@ xmin ymin xmax ymax
 > s = st_as_stars(st_bbox(x)) # inside = NA
 > st_bbox(s)
      xmin      ymin      xmax      ymax 
-  0.00000 -80.06943 360.54719  90.00000 
+  0.00000 -80.06943 359.57537  90.00000 
 > s = st_as_stars(st_bbox(x), inside = TRUE)
 > st_bbox(s)
     xmin     ymin     xmax     ymax 
@@ -281,7 +281,7 @@ xmin ymin xmax ymax
 > s = st_as_stars(st_bbox(x), dx = 20)
 > st_bbox(s)
 xmin ymin xmax ymax 
-   0  -90  360   90 
+   0  -70  360   90 
 > x1 = x
 > st_crs(x1) = "OGC:CRS84"
 > identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree)))
@@ -534,4 +534,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  6.840   0.440   7.275 
+  6.706   0.336   7.041 
