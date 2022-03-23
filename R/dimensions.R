@@ -132,8 +132,6 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 					") does not match length of dimension", which, "(", dim(.x)[which], ")"))
 		}
 		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
-		if (! is.null(names) && length(names) == 1)
-			base::names(d)[which] = names
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
 			# FIXME: there's much more that should be checked for curvilinear grids...
@@ -143,9 +141,17 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 #		else if (inherits(values, "sfc"))
 #			base::names(d)[which] = "sfc"
-	} else if (!is.null(point) && is.logical(point)) {
+	}
+	if (!is.null(point) && is.logical(point)) {
 		d[[which]]$point = point
-	} else if (!missing(names)) {
+	}
+	if (! missing(xy)) {
+		stopifnot(length(xy) == 2)
+		r = attr(d, "raster")
+		r$dimensions = as.character(xy)
+		attr(d, "raster") = r
+	}
+	if (!missing(names)) {
 		if (length(d) != length(names) && length(names) != 1)
 			stop("length of names should match number of dimensions")
 		r = attr(d, "raster")
@@ -163,13 +169,10 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		attr(d, "raster") = r
 		base::names(d) = new_names
-	} else if (! missing(xy)) {
-		stopifnot(length(xy) == 2)
-		r = attr(d, "raster")
-		r$dimensions = as.character(xy)
-		attr(d, "raster") = r
-	} else
+	}
+	if (length(list(...)))
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
+
 	if (inherits(.x, "stars_proxy"))
 		structure(.x, dimensions = d)
 	else
