@@ -66,15 +66,14 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
 
-	if (inherits(by, "stars")) {
-		by = st_as_sfc(by, as_points = FALSE)
-		# and if not, then use st_normalize(by)
-	}
-
-	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function")
+	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function", "stars")
 	if (!is.function(by) && !inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
 			paste(classes, collapse= ", "), "supported"))
+	if (inherits(by, "stars"))
+		by = st_as_sfc(by, as_points = FALSE) # and if not, then use st_normalize(by)
+	if (inherits(by, "sf"))
+		by = st_geometry(by) # sfc
 
 	if (missing(FUN))
 		stop("missing FUN argument")
