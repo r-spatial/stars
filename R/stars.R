@@ -53,8 +53,8 @@ st_stars = function(x, dimensions, class = "stars") {
 	stopifnot(is.list(x))
 	stopifnot(inherits(dimensions, "dimensions"))
 	stopifnot(!is.null(attr(dimensions, "raster")))
-#	for (i in seq_along(x))
-#		names(dim(x[[i]])) = names(dimensions)
+# 	for (i in seq_along(x))
+# 		names(dim(x[[i]])) = names(dimensions)
 	structure(x, dimensions = dimensions, class = class)
 }
 

@@ -398,7 +398,8 @@ get_geotransform = function(x) {
 	else {
 		xd = x[[ r$dimensions[1] ]]
 		yd = x[[ r$dimensions[2] ]]
-		c(xd$offset, xd$delta, r$affine[1], yd$offset, r$affine[2], yd$delta)
+		c(as.numeric(xd$offset), as.numeric(xd$delta), r$affine[1], 
+		  as.numeric(yd$offset), r$affine[2], as.numeric(yd$delta))
 	}
 }
 
