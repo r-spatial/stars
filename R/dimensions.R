@@ -119,6 +119,8 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 	if (! is.null(values)) {
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
+		if (inherits(values, "units") && !is.na(st_crs(.x)))
+			stop("units in dimension values only allowed if object has no CRS")
 		if (inherits(values, "dimensions")) {
 			if (is.null(names))
 				names <- names(values)
