@@ -75,6 +75,12 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	if (inherits(by, "sf"))
 		by = st_geometry(by) # sfc
 
+	if (inherits(by, "sf")) {
+		geom = attr(by, "sf_column")
+		by = st_geometry(by)
+	} else
+		geom = "geometry"
+
 	if (missing(FUN))
 		stop("missing FUN argument")
 	if (exact && inherits(by, c("sf", "sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
@@ -101,17 +107,16 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			x = lapply(x, function(y) { y[is.na(y)] = 0.0; y })
 		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
 		# %*% dropped units, so to propagate units, if present we need to copy (mean/sum):
+		d = create_dimensions(append(setNames(list(create_dimension(values = by)), geom),
+			st_dimensions(x)[-(1:2)]))
 		for (i in seq_along(x)) {
 			if (inherits(x[[i]], "units")) 
 				agg[[i]] = units::set_units(agg[[i]], units(x[[i]]), mode = "standard")
+			names(dim(agg[[i]])) = names(d)
 		}
-		ret = st_as_stars(agg, dimensions = 
-			create_dimensions(append(list(sfc = create_dimension(values = by)),
-			st_dimensions(x)[-(1:2)])))
-		return(ret)
+		return(st_as_stars(agg, dimensions = d))
 	}
 
-	geom = "geometry"
 	drop_y = FALSE
 	grps = if (inherits(by, c("sf", "sfc"))) {
 			x = if (has_raster(x)) {
@@ -122,11 +127,6 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 					ndims = 1
 					st_upfront(x, which_sfc(x))
 				}
-
-			if (inherits(by, "sf")) {
-				geom = attr(by, "sf_column")
-				by = st_geometry(by)
-			}
 	
 			# find groups:
 			# don't use unlist(join(x_geoms, by)) as this would miss the empty groups, 
@@ -208,7 +208,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	if (drop_y)
 		d = d[-2] # y
 
-	newdim = c(sfc = length(by), dims[-(1:ndims)])
+	newdim = setNames(c(sfc = length(by), dims[-(1:ndims)]), names(d))
 	st_stars(lapply(x, structure, dim = newdim), dimensions = d)
 }
 
