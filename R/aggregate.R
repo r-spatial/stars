@@ -26,7 +26,8 @@
 #' by_t = "2 days"
 #' x_agg_time2 = aggregate(x, by = by_t, FUN = max) 
 #' st_get_dimension_values(x_agg_time2, "time")
-#' x_agg_time - x_agg_time2
+#' #TBD:
+#' #x_agg_time - x_agg_time2
 #'
 #' # aggregate time dimension in format POSIXct
 #' x = st_set_dimensions(x, 4, values = as.POSIXct(c("2018-07-31", 
@@ -37,7 +38,8 @@
 #' by_t = as.POSIXct(c("2018-07-31", "2018-08-02"))
 #' x_agg_posix = aggregate(x, by = by_t, FUN = max)
 #' st_get_dimension_values(x_agg_posix, "time")
-#' x_agg_time - x_agg_posix
+#' #TBD:
+#' # x_agg_time - x_agg_posix
 #' aggregate(x, "2 days", mean)
 #' # Spatial aggregation, see https://github.com/r-spatial/stars/issues/299
 #' prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
