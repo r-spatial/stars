@@ -283,7 +283,7 @@
 <span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code><span class="co">##    user  system elapsed </span>
-<span class="co">##   2.563   0.225   2.457</span></code></pre>
+<span class="co">##   2.735   0.137   2.548</span></code></pre>
 <p>This takes only around 1 second, since only those pixels are read that can be seen on the plot. If we read the entire image in memory first, as we would do with</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
@@ -377,12 +377,12 @@
 <span class="co">## [[1]]</span>
 <span class="co">## adrop(x = x, drop = drop)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x561d909098a0&gt;</span>
+<span class="co">## &lt;environment: 0x563efbdaf910&gt;</span>
 <span class="co">## </span>
 <span class="co">## [[2]]</span>
 <span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x561d90894b50&gt;</span></code></pre></div>
+<span class="co">## &lt;environment: 0x563efbd3abf8&gt;</span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are done. As an example, for <code>st_apply</code>, reading can be done sequentially over the dimensions over which the function is applied:</p>
 <ul>
 <li>If for example a function is applied to each band (such as: compute band quantiles), bands can be read sequentially, and discarded after the quantiles have been computed.</li>
@@ -433,12 +433,12 @@
 <span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span>
 <span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span>
 <span class="co">## attr(,".Environment")</span>
-<span class="co">## &lt;environment: 0x561d9099e900&gt;</span>
+<span class="co">## &lt;environment: 0x563efbe43668&gt;</span>
 <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span>
 <span class="co">## downsample set to 18</span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code><span class="co">##    user  system elapsed </span>
-<span class="co">##   1.764   0.153   1.561</span></code></pre>
+<span class="co">##   1.618   0.164   1.449</span></code></pre>
 </div>
 </div>
 </div>
