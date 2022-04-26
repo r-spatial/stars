@@ -175,7 +175,7 @@ slice.stars_proxy <- function(.data, along, index, ...) {
   # Can we assume, that all elements of .data are the same?
   first_concat_dim <- max(which(vecsize == length(.data[[1]])))
   stopifnot(first_concat_dim > 0)
-  all_dims <- stars::st_dimensions(.data)
+  all_dims <- st_dimensions(.data)
   file_dims <- all_dims[seq_len(first_concat_dim - 1)]
   concat_dims <- all_dims[first_concat_dim:length(dim(.data))]
   d_concat_dims <- dim(concat_dims)
@@ -202,9 +202,10 @@ slice.stars_proxy <- function(.data, along, index, ...) {
   all_dims[[along]] <- all_dims[[along]][index]
 
   # construct stars_proxy
-  stars:::st_stars_proxy(as.list(file_list_new), all_dims,
-                         NA_value = attr(.data, "NA_value"),
-                         resolutions = attr(.data, "resolutions"))
+  st_stars_proxy(as.list(file_list_new), all_dims,
+                 NA_value = attr(.data, "NA_value"),
+                 resolutions = attr(.data, "resolutions"),
+                 RasterIO = attr(.data, "RasterIO"))
 }
 
 #' @name st_coordinates
