@@ -154,8 +154,57 @@ slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
 }
 
 #' @name dplyr
-slice.stars_proxy = function(.data, ...) {
-	collect(.data, match.call(), "slice", ".data", env = parent.frame())
+slice.stars_proxy <- function(.data, along, index, ...) {
+  # TODO: add adrop argument, this requires an eager implementation of
+  # adrop.stars_proxy
+
+  # If there are already operations queued, just add to the queue
+  if (!is.null(attr(.data, "call_list")))
+    return(collect(.data, match.call(), "slice", ".data",
+                   env = parent.frame(), ...))
+
+  # figure out which dimensions are part of the files
+  vecsize <- rev(cumprod(rev(dim(.data))))
+
+  # NOTE: The first set of dimensions corresponds to the dimensions in the
+  # files. The second set of dimensions corresponds to the list of files. It may
+  # be undecided where exactly the break is (at least without reading in the
+  # files) if there are a singleton dimensions, I am not sure if this matters,
+  # for now just assume the maximum index.
+
+  # Can we assume, that all elements of .data are the same?
+  first_concat_dim <- max(which(vecsize == length(.data[[1]])))
+  stopifnot(first_concat_dim > 0)
+  all_dims <- stars::st_dimensions(.data)
+  file_dims <- all_dims[seq_len(first_concat_dim - 1)]
+  concat_dims <- all_dims[first_concat_dim:length(dim(.data))]
+  d_concat_dims <- dim(concat_dims)
+  l_concat_vec <- prod(d_concat_dims)
+
+  # what is the dimension we have to subset
+  ix <- which(names(all_dims) == along) - length(file_dims)
+  stopifnot(length(ix) == 1)
+
+  # if the slice is on file dimensions we have to queue the operation
+  if (ix <= 0)
+    return(collect(.data, match.call(), "slice", ".data",
+                   env = parent.frame(), ...))
+
+  # subset indices for the files, it may be faster to calculate these and not
+  # take them from an array.
+  d <- array(seq_len(l_concat_vec), d_concat_dims)
+  idx <- rep(list(quote(expr = )), length(d_concat_dims))
+  idx[[ix]] <- index
+  vidx <- as.vector(do.call(`[`, c(list(d), idx)))
+
+  # The actual subsetting of files and dimensions
+  file_list_new <- lapply(.data, function(x) x[vidx])
+  all_dims[[along]] <- all_dims[[along]][index]
+
+  # construct stars_proxy
+  stars:::st_stars_proxy(as.list(file_list_new), all_dims,
+                         NA_value = attr(.data, "NA_value"),
+                         resolutions = attr(.data, "resolutions"))
 }
 
 #' @name st_coordinates
