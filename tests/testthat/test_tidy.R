@@ -19,6 +19,7 @@ test_that("slice", {
   expect_null(attr(nc5, "call_list"))
   expect_equal(st_dimensions(nc), st_dimensions(nc5))
 
+  # concatenate to simulate an extra dimension
   nc6 <- c(nc, nc, nc, nc, along = "dummy")
   expect_equal(dim(nc6)["dummy"], c(dummy = 4))
   expect_s3_class(nc6, "stars_proxy")

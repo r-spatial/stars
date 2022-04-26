@@ -170,7 +170,9 @@ slice.stars_proxy <- function(.data, along, index, ...) {
   # files. The second set of dimensions corresponds to the list of files. It may
   # be undecided where exactly the break is (at least without reading in the
   # files) if there are a singleton dimensions, I am not sure if this matters,
-  # for now just assume the maximum index.
+  # for now just assume the maximum index, this should be the safe choice. Not
+  # sure if singleton dimensions that are part of files probably need some logic
+  # somewhere else and cannot just be ignored.
 
   # Can we assume, that all elements of .data are the same?
   first_concat_dim <- max(which(vecsize == length(.data[[1]])))
