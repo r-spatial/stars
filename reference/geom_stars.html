@@ -84,7 +84,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">geom_stars</span><span class="op">(</span>mapping <span class="op">=</span> <span class="cn">NULL</span>, data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fl">0</span>, sf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">geom_stars</span><span class="op">(</span>
+  mapping <span class="op">=</span> <span class="cn">NULL</span>,
+  data <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>,
+  downsample <span class="op">=</span> <span class="fl">0</span>,
+  sf <span class="op">=</span> <span class="cn">FALSE</span>,
+  na.action <span class="op">=</span> <span class="va">na.pass</span>
+<span class="op">)</span>
 
 <span class="fu">theme_stars</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
@@ -101,6 +108,8 @@
 <dd><p>downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample; can be specified for each dimension, e.g. <code>c(5,5,0)</code> to downsample the first two dimensions but not the third.</p></dd>
 <dt>sf</dt>
 <dd><p>logical; if <code>TRUE</code> rasters will be converted to polygons and plotted using <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a>.</p></dd>
+<dt>na.action</dt>
+<dd><p>function; if <code>NA</code> values need to be removed before plotting use the value <code>na.omit</code> here (only applies to objects with raster dimensions)</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
