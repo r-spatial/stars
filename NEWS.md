@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* passing `na.action = na.omit` to `geom_stars()` removes `NA` values; #532
+
 * `read_stars()` detects curvilinear grids automatically; #513
 
 * `st_warp()` warps curvilinear grids (using Euclidean distances only on coordinates); #513

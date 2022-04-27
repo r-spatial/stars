@@ -5,7 +5,14 @@
 \alias{theme_stars}
 \title{ggplot geom for stars objects}
 \usage{
-geom_stars(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE)
+geom_stars(
+  mapping = NULL,
+  data = NULL,
+  ...,
+  downsample = 0,
+  sf = FALSE,
+  na.action = na.pass
+)
 
 theme_stars(...)
 }
@@ -19,6 +26,8 @@ theme_stars(...)
 \item{downsample}{downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample; can be specified for each dimension, e.g. \code{c(5,5,0)} to downsample the first two dimensions but not the third.}
 
 \item{sf}{logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2:ggsf]{geom_sf}.}
+
+\item{na.action}{function; if \code{NA} values need to be removed before plotting use the value \code{na.omit} here (only applies to objects with raster dimensions)}
 }
 \description{
 ggplot geom for stars objects

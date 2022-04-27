@@ -203,6 +203,7 @@ replace_na.stars_proxy = function(data, ...) {
 #' @param ... see \link[ggplot2:geom_tile]{geom_raster}
 #' @param downsample downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample; can be specified for each dimension, e.g. \code{c(5,5,0)} to downsample the first two dimensions but not the third.
 #' @param sf logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2:ggsf]{geom_sf}.
+#' @param na.action function; if \code{NA} values need to be removed before plotting use the value \code{na.omit} here (only applies to objects with raster dimensions)
 #' @details \code{geom_stars} returns (a call to) either \link[ggplot2:geom_tile]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2:ggsf]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2:coord_fixed]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples.
 #' @export
 #' @examples
@@ -214,7 +215,8 @@ replace_na.stars_proxy = function(data, ...) {
 #'     theme_void() +
 #'     scale_x_discrete(expand=c(0,0))+
 #'     scale_y_discrete(expand=c(0,0))
-geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE) {
+geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE, 
+					  na.action = na.pass) {
 
 	if (!requireNamespace("ggplot2", quietly = TRUE))
 		stop("package ggplot2 required, please install it first") # nocov
@@ -231,7 +233,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 		data = st_downsample(data, downsample)
 
 	if (is_curvilinear(data) || sf)
-		data = st_xy2sfc(data, as_points = FALSE)
+		data = st_xy2sfc(data, as_points = FALSE) # removes NA's by default
 
 	d = st_dimensions(data)
 
@@ -241,14 +243,16 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 			if (is.null(mapping))
 				mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
 					fill = !!rlang::sym(names(data)[1]))
-			ggplot2::geom_raster(mapping = mapping, data = dplyr::as_tibble(data), ...)
+			data = na.action(dplyr::as_tibble(data))
+			ggplot2::geom_raster(mapping = mapping, data = data, ...)
 		} else {  # rectilinear: use geom_rect, passing on cell boundaries
 			xy_max = paste0(xy, "_max")
 			if (is.null(mapping))
 				mapping = ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
 					xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
 					fill = !!rlang::sym(names(data)[1]))
-			ggplot2::geom_rect(mapping = mapping, data = dplyr::as_tibble(data, add_max = TRUE), ...)
+			data = na.action(dplyr::as_tibble(data, add_max = TRUE))
+			ggplot2::geom_rect(mapping = mapping, data = data, ...)
 		}
 	} else if (has_sfc(d)) {
 		if (is.null(mapping))

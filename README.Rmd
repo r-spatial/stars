@@ -19,8 +19,11 @@ is_online = curl::has_internet()
 [![cran checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 [![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
+<!--
 [![Codecov test coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/stars?branch=main)
+-->
 <!-- badges: end -->
+
 
 Spatiotemporal data often comes in the form of dense arrays, with space and time being array dimensions. Examples include
 
@@ -178,7 +181,7 @@ index, and then the corresponding time value:
 
 ```{r plot5, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geom", index_max) %>%
+st_apply(a, "geometry", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
