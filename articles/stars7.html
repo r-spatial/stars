@@ -225,9 +225,7 @@
 <p>but only <em>computed</em> by the following command, where the computations are restricted to the pixels plotted:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, main <span class="op">=</span> <span class="st">"9-day time trend (slope)"</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; downsample set to 1</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span></code></pre></div>
+<span class="co">#&gt; downsample set to 1</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>An interisting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, <em>changes</em> in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguis positive from negative trends.</p>
 </div>
@@ -256,8 +254,6 @@
 <span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">p</span>, <span class="fl">1000</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="va">pc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>,<span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># based on all data</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">pc</span><span class="op">)</span></code></pre></div>
 <p>Before plotting this, we’ll add country borders that delineate sea, obtained from the <code>mapdata</code> package:</p>
@@ -275,9 +271,7 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plt_boundary</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, border <span class="op">=</span> <span class="st">'orange'</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>, hook <span class="op">=</span> <span class="va">plt_boundary</span>, join_zlim <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; downsample set to 18</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span></code></pre></div>
+<span class="co">#&gt; downsample set to 18</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>This suggests that PC1 picks up the difference cloud signal (difference between clouds and non-clouds), PC2 the difference between sea and land areas, and PC4 some sensor artefacts (striping in swath direction).</p>
 <p>To compute full resolution (10000 x 10000 pixels) results and write them to a file, use</p>
@@ -300,13 +294,9 @@
 <span class="va">nclus</span> <span class="op">=</span> <span class="fl">5</span>
 
 <span class="va">sam</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">i</span>, <span class="fl">1000</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="va">k</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">sam</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, <span class="va">nclus</span><span class="op">)</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, col <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">sf.colors</a></span><span class="op">(</span><span class="va">nclus</span>, categorical<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span></code></pre></div>
+<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, col <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">sf.colors</a></span><span class="op">(</span><span class="va">nclus</span>, categorical<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 <p>This seems to pick up a fair number of land cover classes: water (5), rural (3), and densely populated (1, 2).</p>
 <p>For the large(r) dataset:</p>
@@ -314,14 +304,10 @@
 <code class="sourceCode R"><span class="va">i</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s2</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span>, NA_value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
     <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">sam</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">i</span>, <span class="fl">1000</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="va">k</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">sam</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, <span class="va">nclus</span><span class="op">)</span>
 <span class="va">out</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, col <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">sf.colors</a></span><span class="op">(</span><span class="va">nclus</span>, categorical<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="co">#&gt; downsample set to 18</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>we see that class 1 and 3 identify with the unclouded area, 3 with land, the other classes seem to mainly catch aspects of the cloud signal.</p>
@@ -402,9 +388,7 @@
 <span class="va">rf</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">use</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train</span><span class="op">)</span> <span class="co"># ~ . : use all other attributes</span>
 <span class="va">pr</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">rf</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">pr</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, key.pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="co">#&gt; downsample set to 8</span>
-<span class="co">#&gt; Object has pending lazy operations, the result of dim(.) may not reflect these.</span>
 <span class="co"># add country outline:</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">m</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
