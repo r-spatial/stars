@@ -32,11 +32,14 @@ print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	if (!is.null(attr(x, "call_list"))) {
 		cat("call_list:\n")
 		print(unlist(attr(x, "call_list")))
+		cat("Object has pending lazy operations, its dimensions may not reflect these.\n")
 	}
 }
 
 #' @export
 dim.stars_proxy = function(x) {
+	if (!is.null(attr(x, "call_list")))
+		message("Object has pending lazy operations, the result of dim(.) may not reflect these.")
 	dim(st_dimensions(x))
 }
 
