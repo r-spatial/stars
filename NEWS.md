@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* print message that dimensions of proxy objects do not reflect unevaluated operations; #530
+
 * passing `na.action = na.omit` to `geom_stars()` removes `NA` values; #532
 
 * `read_stars()` detects curvilinear grids automatically; #513
