@@ -1,3 +1,4 @@
+library(dplyr)
 
 test_that("slice", {
 
