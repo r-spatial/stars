@@ -49,7 +49,7 @@ as.tbl_cube.stars(x, ...)
 
 slice.stars(.data, along, index, ..., drop = length(index) == 1)
 
-slice.stars_proxy(.data, ...)
+slice.stars_proxy(.data, along, index, ...)
 
 replace_na.stars(data, replace, ...)
 
