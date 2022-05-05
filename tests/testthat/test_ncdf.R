@@ -93,6 +93,8 @@ test_that("euro cordex extra dimvars", {
   out1 <- suppressWarnings(read_ncdf(f, var = "mask", curvilinear = c("xlat", "xlon")))
   out2 <- suppressWarnings(read_ncdf(f, var = "mask", curvilinear = c("xlon", "xlat")))
 
+  expect_equal(sf::st_crs(out1), sf::st_crs(NULL))
+  
   expect_true(attr(st_dimensions(out1), "raster")$curvilinear)
   expect_true(attr(st_dimensions(out2), "raster")$curvilinear)
 
@@ -220,4 +222,12 @@ test_that("4d not 4d", {
 
   expect_equal(dim$level$to, 2)
 
+})
+
+test_that("units are right with lcc km", {
+	f <- system.file("nc/lcc_km.nc", package = "stars")
+	
+	nc <- read_ncdf(f)
+	
+	expect_equal(units(sf::st_crs(nc)$ud_unit)$numerator, "km")
 })
