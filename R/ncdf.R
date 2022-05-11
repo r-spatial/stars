@@ -115,11 +115,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA,
                                                            Z = NA, T = NA, bounds = NA)
 
-  if(is.null(proxy_dimensions)) {
-	  nc_prj <- .get_nc_projection(meta$attribute, rep_var, all_coord_var)
-  }
-
-  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, nc_prj, curvilinear)
+  coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, curvilinear)
 
   canon_order <- c("X", "Y", "Z", "T")[!is.na(coord_var[c("X", "Y", "Z", "T")])]
   
@@ -213,6 +209,18 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     out_data <- st_stars(out_data, dimensions)
   }
 
+  if(is.null(proxy_dimensions)) {
+  	if(length(curvilinear) == 2) {
+  		cv <- curvilinear[1]
+  	} else if (length(attr(coords, "cv")) > 0) {
+  		cv <- attr(coords, "cv")[1]
+  	} else {
+  		cv <- all_coord_var[all_coord_var$variable == rep_var, ]$X
+  	}
+  	
+  	nc_prj <- .get_nc_projection(meta$attribute, rep_var, cv)
+  }
+  
   st_crs(out_data) <- nc_prj
 
   # Add curvilinear and return
@@ -303,20 +311,21 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   return(var)
 }
 
-.get_nc_projection <- function(atts, rep_var, coord_var) {
-  if(!is.null(atts)) {
-    nc_grid_mapping <- suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
-  } else {
-    nc_grid_mapping <- list()
-  }
+.get_grid_mapping <- function(atts, rep_var) {
+	if(!is.null(atts)) {
+		suppressWarnings(ncmeta::nc_grid_mapping_atts(atts, rep_var))
+	} else {
+		list()
+	}
+}
 
+.get_nc_projection <- function(atts, rep_var, rep_coord_var) {
+
+  nc_grid_mapping <- .get_grid_mapping(atts, rep_var)
+  
   if(length(nc_grid_mapping) == 0) {
-    rep_coord_var <- coord_var[coord_var$variable == rep_var, ]
-
-    if(nrow(rep_coord_var) == 0) rep_coord_var[1, ] <- NA
-
-
-    if(.is_degrees(atts, rep_coord_var$X)) {
+    
+    if(.is_degrees(atts, rep_coord_var)) {
       message(paste("No projection information found in nc file. \n",
                     "Coordinate variable units found to be degrees, \n",
                     "assuming WGS84 Lat/Lon."))
@@ -326,12 +335,21 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       return(st_crs(NULL))
     }
   } else {
-    ret <- try(st_crs(ncmeta::nc_gm_to_prj(nc_grid_mapping)))
-    if(inherits(ret, "try-error")) {
-      return(st_crs(NULL))
-    } else {
-      return(ret)
-    }
+  	tryCatch({
+  		cv_units <- .get_gm_units(atts, rep_coord_var)
+  	
+  		base_gm <- ncmeta::nc_gm_to_prj(nc_grid_mapping)
+  	
+  		base_gm <- paste0(gsub("\\+units=m ", "", base_gm), 
+  						  " +units=", cv_units)
+  	
+    	st_crs(base_gm)
+  	}, error = function(e) {
+  		warning(paste0("failed to create crs based on grid mapping\n",
+  					  "and coordinate variable units. Will return NULL crs.\n",
+  					  "Original error: \n", e))
+  		st_crs(NULL)
+  	})
   }
 }
 
@@ -340,7 +358,15 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   !is.null(units) && grepl("degrees", units, ignore.case = TRUE)
 }
 
-.clean_coord_var <- function(c_v, var, meta, prj, curvilinear) {
+.get_gm_units <- function(atts, var) {
+	if(.is_degrees(atts, var)) {
+		"degrees"
+	} else {
+		.get_attributes(atts, "units", var)$value[[1]]	
+	}
+}
+
+.clean_coord_var <- function(c_v, var, meta, curvilinear) {
   c_v <- c_v[c_v$variable == var, ]
 
   if(nrow(c_v) == 0) c_v[1, ] <- NA
@@ -356,6 +382,8 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   c_v <- c_v[which(not_na == max(not_na)), ][1, ]
   
+  has_prj <- length(.get_grid_mapping(meta$attribute, var)) != 0
+  
   if(length(curvilinear) > 0) {
     if(length(check_curvi) == 0) stop("Curvilinear coordinate variables provided by not found in file.")
     c_v <- c_v[c_v$variable == var & c_v$X == check_curvi[1], ]
@@ -368,7 +396,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 
     if(length(auxiliary_x) > 0 && length(auxiliary_y) > 0 &&
        auxiliary_x %in% c_v$X && auxiliary_y %in% c_v$Y &
-       !is.na(prj)) {
+       has_prj) {
       c_v <- c_v[c_v$variable == var & c_v$X == auxiliary_x, ]
       c_v$curvilinear <- FALSE
     } else if (length(check_curvi) == 2) {
@@ -631,6 +659,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   ## cannot assume we have COORDS style coordinate varibales
   ## - so create them as 1:length if needed
   coords = setNames(vector("list", length(dims$name)), dims$name)
+  
+  attr(coords, "cv") <- c()
+  
   for (ic in seq_along(coords)) {
     subidx <- seq(dims$start[ic], length = dims$count[ic])
 
@@ -638,7 +669,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     ## test checks if there's actuall a variable of the dim name
     if (dims$name[ic] %in% ncmeta::nc_vars(nc)$name) {
       coords[[ic]] <- RNetCDF::var.get.nc(nc, variable = dims$name[ic])[subidx]
-
+		
+      attr(coords, "cv") <- c(attr(coords, "cv"), dims$name[ic])
+      
     } else {
       coords[[ic]] <- subidx
     }
