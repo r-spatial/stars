@@ -164,7 +164,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 	dim(v) = dim(.x)[c(2,1,3)]
 	if (all(terra::is.factor(.x))) {
 		l = terra::levels(.x)[[1]]
-		colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255))
+		colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
 		if (inherits(colors, "try-error") || length(colors) == 0)
 			colors = NULL
 		else
