@@ -51,8 +51,13 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	x = st_normalize(x)
 	if (is.character(x[[1]])) # rgb values
 		key.pos = NULL
-	if (missing(col) && is.factor(x[[1]]))
-		col = attr(x[[1]], "colors") %||% sf.colors(length(levels(x[[1]])), categorical = TRUE)
+	if (is.factor(x[[1]])) {
+		if (missing(col))
+			col = attr(x[[1]], "colors") %||% sf.colors(length(levels(x[[1]])), categorical = TRUE)
+		else
+			attr(x[[1]], "colors") = col
+	}
+	
 	key.pos.missing = missing(key.pos)
 	breaks.missing = missing(breaks)
 	if (missing(nbreaks) && !missing(col))

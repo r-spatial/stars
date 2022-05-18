@@ -167,7 +167,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 		colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
 		if (inherits(colors, "try-error") || length(colors) == 0)
 			colors = NULL
-		else
+		else if (length(colors) == length(levels) + 1) # remove last color?
 			colors = colors[-length(colors)]
 		v = structure(v + 1, class = "factor", levels = l, colors = colors)
 		# FIXME: should we handle levels for all layers here, or break on multiple different ones?
