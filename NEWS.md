@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* `plot()` handles auto colors better for factor arrays
+
 * `read_ncdf()` handles units more formally in setting crs; #533
 
 * print message that dimensions of proxy objects do not reflect unevaluated operations; #530

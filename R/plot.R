@@ -71,7 +71,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		x = droplevels(x) # https://github.com/r-spatial/stars/issues/339
 
 	if (join_zlim && !is.character(x[[1]]) && is.null(dots$rgb)) {
-		breaks = get_breaks(x, breaks, nbreaks, dots$logz)
+		breaks = if (is.factor(x[[1]]))
+					seq(.5, length.out = length(levels(x[[1]])) + 1)
+				else
+					get_breaks(x, breaks, nbreaks, dots$logz)
 		if (!inherits(breaks, c("POSIXt", "Date")))
 			breaks = as.numeric(breaks)
 		if (length(breaks) > 2)
