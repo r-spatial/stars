@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -89,6 +89,38 @@ band    1   6      NA    NA                         NA    NA   NULL
 + 	coord_equal()
 > ggplot() + geom_stars(data = x[,1:10,1:10,1:2], sf = TRUE) + facet_wrap(~band)
 > 
+> 
+> # see https://github.com/r-spatial/stars/issues/539 :
+> x <- read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
+> y <- transmute(x, L7_ETMs.tif = units::set_units(L7_ETMs.tif, degree_C)) # same as x but with units
+> 
+> x - slice(x, 'band', 1) # runs as expected, recycling the second object
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif  -184     -19     -8 -10.2353       0  131
+dimension(s):
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
+> try(y - slice(x, 'band', 1)) # fails as expected because x is unitless
+Error in Ops.units(X[[i]], ...) : 
+  both operands of the expression should be "units" objects
+> try(x - slice(y, 'band', 1)) # fails as expected 
+Error in Ops.units(X[[i]], ...) : 
+  both operands of the expression should be "units" objects
+> y - slice(y, 'band', 1) # runs as expected
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+                 Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif [°C] -184     -19     -8 -10.2353       0  131
+dimension(s):
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
+> 
 > proc.time()
    user  system elapsed 
-  4.224   0.149   4.365 
+  5.412   0.180   5.584 
