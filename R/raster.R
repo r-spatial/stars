@@ -34,7 +34,6 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 
 				return(r)
 			}
-
 		}
 	}
 
@@ -157,38 +156,39 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 		if (!all(is.na(terra::time(.x))))
 			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
 
-		return(setNames(ret, attr_name))
+		setNames(ret, attr_name)
+	} else { # ignore_file TRUE:
+		v = terra::values(.x, mat = FALSE)
+		dim(v) = dim(.x)[c(2,1,3)]
+		if (all(terra::is.factor(.x))) {
+			l = terra::levels(.x)[[1]]
+			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
+			if (inherits(colors, "try-error") || length(colors) == 0)
+				colors = NULL
+			else if (length(colors) == length(levels) + 1) # remove last color?
+				colors = colors[-length(colors)]
+			if (min(v) == 0)
+				v = v + 1
+			v = structure(v, class = "factor", levels = l, colors = colors)
+			# FIXME: should we handle levels for all layers here, or break on multiple different ones?
+		}
+		dimensions = list(
+			x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
+							 	delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(terra::crs(.x))),
+			y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
+							 	delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(terra::crs(.x))))
+		dimensions$band = create_dimension(values = names(.x))
+	#	l = if (length(names) > 1)
+	#		setNames(list(v), deparse(substitute(.x), 50))
+	#	else
+	#		setNames(list(v), names(.x)[1])
+		ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
+		if (dim(ret)[3] == 1)
+			ret = adrop(ret, 3)
+		else if (!all(is.na(terra::time(.x))))
+			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
+		setNames(ret, attr_name)
 	}
-
-	v = terra::values(.x, mat = FALSE)
-	dim(v) = dim(.x)[c(2,1,3)]
-	if (all(terra::is.factor(.x))) {
-		l = terra::levels(.x)[[1]]
-		colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
-		if (inherits(colors, "try-error") || length(colors) == 0)
-			colors = NULL
-		else if (length(colors) == length(levels) + 1) # remove last color?
-			colors = colors[-length(colors)]
-		v = structure(v + 1, class = "factor", levels = l, colors = colors)
-		# FIXME: should we handle levels for all layers here, or break on multiple different ones?
-	}
-	dimensions = list(
-		x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
-							 delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(terra::crs(.x))),
-		y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
-							 delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(terra::crs(.x))))
-	dimensions$band = create_dimension(values = names(.x))
-#	l = if (length(names) > 1)
-#		setNames(list(v), deparse(substitute(.x), 50))
-#	else
-#		setNames(list(v), names(.x)[1])
-	ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
-	if (dim(ret)[3] == 1)
-		ret = adrop(ret, 3)
-	else if (!all(is.na(terra::time(.x))))
-		ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
-
-	setNames(ret, attr_name)
 }
 
 #' Coerce stars object into a terra SpatRaster
