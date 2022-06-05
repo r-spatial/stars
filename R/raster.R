@@ -169,7 +169,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 				colors = colors[-length(colors)]
 			if (min(v) == 0)
 				v = v + 1
-			v = structure(v, class = "factor", levels = l, colors = colors)
+			v = structure(v, class = "factor", levels = as.character(l), colors = colors)
 			# FIXME: should we handle levels for all layers here, or break on multiple different ones?
 		}
 		dimensions = list(
