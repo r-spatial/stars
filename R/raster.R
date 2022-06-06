@@ -161,16 +161,19 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 		v = terra::values(.x, mat = FALSE)
 		dim(v) = dim(.x)[c(2,1,3)]
 		if (all(terra::is.factor(.x))) {
+			if (length(terra::levels(.x)) > 1)
+				warning("ignoring categories/levels for all but first layer")
 			l = terra::levels(.x)[[1]]
+			if (inherits(l, "data.frame"))
+				l = l[[2]]
 			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
 			if (inherits(colors, "try-error") || length(colors) == 0)
 				colors = NULL
 			else if (length(colors) == length(levels) + 1) # remove last color?
 				colors = colors[-length(colors)]
-			if (min(v) == 0)
+			if (min(v) == 0) # +warn here?
 				v = v + 1
 			v = structure(v, class = "factor", levels = as.character(l), colors = colors)
-			# FIXME: should we handle levels for all layers here, or break on multiple different ones?
 		}
 		dimensions = list(
 			x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
