@@ -142,6 +142,8 @@ plot stars object, with subplots for each level of first non-spatial dimension, 
 \details{
 Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
 
+To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
+
 use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 
 when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.
