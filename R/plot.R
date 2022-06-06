@@ -30,7 +30,9 @@ make_label = function(x, i = 1) {
 #' @param hook NULL or function; hook function that will be called on every sub-plot.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details
-#' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. 
+#' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
+#'
+#' To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
