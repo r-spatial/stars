@@ -35,7 +35,6 @@ stars_to_Spatial = function(from) {
 }
 setAs("stars", "Spatial", stars_to_Spatial)
 
-
 #' @export
 st_as_stars.Spatial = function(.x, ...) {
     if (!requireNamespace("sp", quietly = TRUE))

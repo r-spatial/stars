@@ -1,6 +1,8 @@
 #' @export
 st_as_stars.STSDF = function(.x, ...) st_as_stars(as(.x, "STFDF"), ...)
 
+#' @export
+st_as_stars.STS = function(.x, ...) st_as_stars(as(.x, "STF"), ...)
 
 #' @export
 st_as_stars.STFDF = function(.x, ...) {
@@ -41,6 +43,32 @@ st_as_stars.STFDF = function(.x, ...) {
 				time = create_dimension(values = zoo::index(.x@time))))
 	vals = lapply(.x@data, function(y) { dim(y) = dim(d); y })
 	st_set_crs(st_as_stars(vals, dimensions = d), st_crs(.x@sp))
+}
+
+#' @export
+st_as_stars.STF = function(.x, ...) {
+    if (!requireNamespace("sp", quietly = TRUE))
+        stop("package sp required, please install it first") #nocov
+    if (!requireNamespace("zoo", quietly = TRUE))
+        stop("package zoo required, please install it first") #nocov
+	#ix = 1:prod(dim(.x)[c("space", "time")])
+	d = if (sp::gridded(.x@sp)) {
+			gp = sp::gridparameters(.x@sp)
+			nx = gp[1,3]
+			ny = gp[2,3]
+			# offs_x dx 0 offs_y 0 dy
+			gt = c(gp[1,1] - gp[1,2]/2, gp[1,2], 0.0, gp[2,1] + (gp[2,3] - 0.5) * gp[2,2], 0.0, -gp[2,2])
+			vals = lapply(seq_len(nrow(gp)), function(i) seq(gp[i,1], by = gp[i,2], length.out = gp[i,3]))
+			create_dimensions(list(
+				x = create_dimension(values = vals[[1]] - gp[1,2]/2),
+				y = create_dimension(values = rev(vals[[2]]) + gp[2,2]/2),
+				time = create_dimension(values = zoo::index(.x@time))),
+				raster = get_raster())
+		} else
+			create_dimensions(list(
+				sfc = create_dimension(values = st_as_sfc(.x@sp)), # FIXME: doesn't do SpatialPixels -> x/y
+				time = create_dimension(values = zoo::index(.x@time))))
+	st_set_crs(st_as_stars(list(), dimensions = d), st_crs(.x@sp))
 }
 
 st_as_STFDF = function(x) {
