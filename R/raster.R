@@ -185,7 +185,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 				colors = NULL
 			else if (length(colors) == length(levels) + 1) # remove last color?
 				colors = colors[-length(colors)]
-			if (min(v) == 0) # +warn here?
+			if (min(v, na.rm=TRUE) == 0) # +warn here?
 				v = v + 1
 			v = structure(v, class = "factor", levels = as.character(l), colors = colors)
 		}
