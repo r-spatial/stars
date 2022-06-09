@@ -229,21 +229,34 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			at = list() # skip it: https://github.com/r-spatial/stars/issues/435
 		# FIXME: how to handle multiple color, category or attribute tables?
 		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0))) {
-			min_value = if (!is.null(meta_data$ranges) && meta_data$ranges[1,2] == 1)
+			r = range(data, na.rm = TRUE)
+			min_value = if (meta_data$ranges[1,2] == 1)
 					meta_data$ranges[1,1]
 				else
-					min(data, na.rm = TRUE)
-			data[data < min_value] = NA
+					r[1]
+			max_value = if (meta_data$ranges[1,4] == 1)
+					meta_data$ranges[1,3]
+				else
+					r[2]
+			if (any(meta_data$ranges[1, c(2,4)] == 1))
+				data[data < min_value | data > max_value] = NA
 			if (min_value < 0)
 				stop("categorical values should have minimum value >= 0")
+
 			if (any(lengths(ct) > 0)) {
 				ct = ct[[ which(length(ct) > 0)[1] ]]
 				co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
 				if (min_value > 0)
 					co = co[-seq_len(min_value)] # removes [0,...,(min_value-1)]
-				f = factor(as.vector(data), levels = seq(min_value, length.out = length(co)))
-				data = structure(f, dim = dim(data), colors = co)
+				levels = seq(min_value, length.out = length(co))
+			} else
+				co = NULL
+
+			if (min_value == 0) {
+				data = data + 1
+				warning("categorical data values starting at 0 are shifted with one to start at 1")
 			}
+
 			if (any(lengths(at) > 0)) {
 				which.at = which(lengths(at) > 0)[1]
 				which.column = if (length(RAT))
@@ -253,13 +266,14 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				at = at[[ which.at ]][[ which.column ]]
 				if (min_value > 0)
 					at = at[-seq_len(min_value)]
-				if (!is.factor(data) && min_value == 0) {
-					data = data + 1
-					warning("categorical data values starting at 0 are shifted with one to start at 1")
+				if (min_value == 0) {
+					max_value = max_value + 1
+					min_value = 1
 				}
-				attr(data, "levels") = at
+				levels = at[min_value:max_value]
 			}
-			data = structure(data, class = "factor")
+
+			data = structure(data, class = "factor", levels = levels, colors = co)
 		}
 
 		dims = if (proxy) {
