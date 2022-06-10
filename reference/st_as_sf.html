@@ -107,24 +107,43 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
+
 <dt>as_points</dt>
 <dd><p>logical; should cells be converted to points or to polygons? See details.</p></dd>
+
+
 <dt>which</dt>
 <dd><p>linear index of cells to keep (this argument is not recommended to be used)</p></dd>
+
+
 <dt>merge</dt>
 <dd><p>logical; if <code>TRUE</code>, cells with identical values are merged (using <code>GDAL_Polygonize</code> or <code>GDAL_FPolygonize</code>); if <code>FALSE</code>, a polygon for each raster cell is returned; see details</p></dd>
+
+
 <dt>na.rm</dt>
 <dd><p>logical; should missing valued cells be removed, or also be converted to features?</p></dd>
+
+
 <dt>use_integer</dt>
 <dd><p>(relevant only if <code>merge</code> is <code>TRUE</code>): if <code>TRUE</code>, before polygonizing values are rounded to 32-bits signed integer values (GDALPolygonize), otherwise they are converted to 32-bit floating point values (GDALFPolygonize).</p></dd>
+
+
 <dt>long</dt>
 <dd><p>logical; if <code>TRUE</code>, return a long table form <code>sf</code>, with geometries and other dimensions recycled</p></dd>
+
+
 <dt>connect8</dt>
 <dd><p>logical; if <code>TRUE</code>, use 8 connectedness. Otherwise the 4 connectedness algorithm will be applied.</p></dd>
+
+
 <dt>downsample</dt>
 <dd><p>see <a href="st_as_stars.html">st_as_stars</a></p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -225,7 +244,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

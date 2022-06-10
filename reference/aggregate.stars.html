@@ -103,24 +103,43 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class <code>stars</code> with information to be aggregated</p></dd>
+
+
 <dt>by</dt>
 <dd><p>object of class <code>sf</code> or <code>sfc</code> for spatial aggregation, for temporal aggregation a vector with time values (<code>Date</code>, <code>POSIXct</code>, or <code>PCICt</code>) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see <a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.POSIXt</a>); if by is an object of class <code>stars</code>, it is converted to sfc by <code>st_as_sfc(by, as_points = FALSE)</code> thus ignoring its time component.</p></dd>
+
+
 <dt>FUN</dt>
 <dd><p>aggregation function, such as <code>mean</code></p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed on to <code>FUN</code>, such as <code>na.rm=TRUE</code></p></dd>
+
+
 <dt>drop</dt>
 <dd><p>logical; ignored</p></dd>
+
+
 <dt>join</dt>
 <dd><p>function; function used to find matches of <code>x</code> to <code>by</code></p></dd>
+
+
 <dt>as_points</dt>
 <dd><p>see <a href="st_as_sf.html">st_as_sf</a>: shall raster pixels be taken as points, or small square polygons?</p></dd>
+
+
 <dt>rightmost.closed</dt>
 <dd><p>see <a href="https://rdrr.io/r/base/findInterval.html" class="external-link">findInterval</a></p></dd>
+
+
 <dt>left.open</dt>
 <dd><p>logical; used for time intervals, see <a href="https://rdrr.io/r/base/findInterval.html" class="external-link">findInterval</a> and <a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.POSIXt</a></p></dd>
+
+
 <dt>exact</dt>
 <dd><p>logical; if <code>TRUE</code>, use <a href="https://isciences.gitlab.io/exactextractr/reference/coverage_fraction.html" class="external-link">coverage_fraction</a> to compute exact overlap fractions of polygons with raster cells</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
@@ -210,7 +229,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

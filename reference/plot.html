@@ -146,78 +146,151 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>y</dt>
 <dd><p>ignored</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further arguments: for <code>plot</code>, passed on to <code>image.stars</code>; for <code>image</code>, passed on to <code>image.default</code> or <code>rasterImage</code>.</p></dd>
+
+
 <dt>join_zlim</dt>
 <dd><p>logical; if <code>TRUE</code>, compute a single, joint zlim (color scale) for all subplots from <code>x</code></p></dd>
+
+
 <dt>main</dt>
 <dd><p>character; subplot title prefix; use <code>""</code> to get only time, use <code>NULL</code> to suppress subplot titles</p></dd>
+
+
 <dt>axes</dt>
 <dd><p>logical; should axes and box be added to the plot?</p></dd>
+
+
 <dt>downsample</dt>
 <dd><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.</p></dd>
+
+
 <dt>nbreaks</dt>
 <dd><p>number of color breaks; should be one more than number of colors. If missing and <code>col</code> is specified, it is derived from that.</p></dd>
+
+
 <dt>breaks</dt>
 <dd><p>actual color breaks, or a method name used for <a href="https://r-spatial.github.io/classInt/reference/classIntervals.html" class="external-link">classIntervals</a>.</p></dd>
+
+
 <dt>col</dt>
 <dd><p>colors to use for grid cells</p></dd>
+
+
 <dt>key.pos</dt>
 <dd><p>integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to <code>NULL</code> to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter <code>asp</code>.</p></dd>
+
+
 <dt>key.width</dt>
 <dd><p>amount of space reserved for width of the key (labels); relative or absolute (using lcm)</p></dd>
+
+
 <dt>key.length</dt>
 <dd><p>amount of space reserved for length of the key (labels); relative or absolute (using lcm)</p></dd>
+
+
 <dt>reset</dt>
 <dd><p>logical; if <code>FALSE</code>, keep the plot in a mode that allows adding further map elements; if <code>TRUE</code> restore original mode after plotting</p></dd>
+
+
 <dt>box_col</dt>
 <dd><p>color for box around sub-plots; use <code>0</code> to suppress plotting of boxes around sub-plots.</p></dd>
+
+
 <dt>center_time</dt>
 <dd><p>logical; if <code>TRUE</code>, sub-plot titles will show the center of time intervals, otherwise their start</p></dd>
+
+
 <dt>hook</dt>
 <dd><p>NULL or function; hook function that will be called on every sub-plot.</p></dd>
+
+
 <dt>mfrow</dt>
 <dd><p>length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout</p></dd>
+
+
 <dt>band</dt>
 <dd><p>integer; which band (dimension) to plot</p></dd>
+
+
 <dt>attr</dt>
 <dd><p>integer; which attribute to plot</p></dd>
+
+
 <dt>asp</dt>
 <dd><p>numeric; aspect ratio of image</p></dd>
+
+
 <dt>rgb</dt>
 <dd><p>integer; specify three bands to form an rgb composite. Experimental: rgb color table; see Details.</p></dd>
+
+
 <dt>maxColorValue</dt>
 <dd><p>numeric; passed on to <a href="https://rdrr.io/r/grDevices/rgb.html" class="external-link">rgb</a></p></dd>
+
+
 <dt>xlab</dt>
 <dd><p>character; x axis label</p></dd>
+
+
 <dt>ylab</dt>
 <dd><p>character; y axis label</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>x axis limits</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>y axis limits</p></dd>
+
+
 <dt>text_values</dt>
 <dd><p>logical; print values as text on image?</p></dd>
+
+
 <dt>text_color</dt>
 <dd><p>character; color for printed text values</p></dd>
+
+
 <dt>interpolate</dt>
 <dd><p>logical; when using <a href="https://rdrr.io/r/graphics/rasterImage.html" class="external-link">rasterImage</a> (rgb), should pixels be interpolated?</p></dd>
+
+
 <dt>as_points</dt>
 <dd><p>logical; for curvilinear or sheared grids: parameter passed on to <a href="st_as_sf.html">st_as_sf</a>, determining whether raster cells will be plotted as symbols (fast, approximate) or small polygons (slow, exact)</p></dd>
+
+
 <dt>logz</dt>
 <dd><p>logical; if <code>TRUE</code>, use log10-scale for the attribute variable. In that case, <code>breaks</code> and <code>at</code> need to be given as log10-values; see examples.</p></dd>
+
+
 <dt>add.geom</dt>
 <dd><p>object of class <code>sfc</code>, or list with arguments to <code>plot</code>, that will be added to an image or sub-image</p></dd>
+
+
 <dt>border</dt>
 <dd><p>color used for cell borders (only in case <code>x</code> is a curvilinear or rotated/sheared grid)</p></dd>
+
+
 <dt>useRaster</dt>
 <dd><p>logical; use the rasterImage capabilities of the graphics device?</p></dd>
+
+
 <dt>extent</dt>
 <dd><p>object which has a <code>st_bbox</code> method; sets the plotting extent</p></dd>
+
+
 <dt>max_times</dt>
 <dd><p>integer; maximum number of time steps to attempt to plot.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -250,7 +323,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -109,44 +109,79 @@
     <h2>Arguments</h2>
     <dl><dt>.x</dt>
 <dd><p>character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector</p></dd>
+
+
 <dt>...</dt>
 <dd><p>passed on to <a href="st_as_stars.html">st_as_stars</a> if <code>curvilinear</code> was set</p></dd>
+
+
 <dt>options</dt>
 <dd><p>character; opening options</p></dd>
+
+
 <dt>driver</dt>
 <dd><p>character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use <code>NULL</code>.</p></dd>
+
+
 <dt>sub</dt>
 <dd><p>character, integer or logical; name, index or indicator of sub-dataset(s) to be read</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>logical; print progress output?</p></dd>
+
+
 <dt>NA_value</dt>
 <dd><p>numeric value to be used for conversion into NA values; by default this is read from the input file</p></dd>
+
+
 <dt>along</dt>
 <dd><p>length-one character or integer, or list; determines how several arrays are combined, see Details.</p></dd>
+
+
 <dt>RasterIO</dt>
 <dd><p>list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.</p></dd>
+
+
 <dt>proxy</dt>
 <dd><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array
 metadata only; if <code>FALSE</code> the full array data is read in memory. Always <code>FALSE</code> for curvilinear girds.
 If not set, defaults to <code>TRUE</code> when the number of cells to be read is larger than <code>options(stars.n_proxy</code>,
 or to 1e8 if that option was not set.</p></dd>
+
+
 <dt>curvilinear</dt>
 <dd><p>length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to</p></dd>
+
+
 <dt>normalize_path</dt>
 <dd><p>logical; if <code>FALSE</code>, suppress a call to <a href="https://rdrr.io/r/base/normalizePath.html" class="external-link">normalizePath</a> on <code>.x</code></p></dd>
+
+
 <dt>RAT</dt>
 <dd><p>character; raster attribute table column name to use as factor levels</p></dd>
+
+
 <dt>tolerance</dt>
 <dd><p>numeric; passed on to <a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a> for comparing dimension parameters.</p></dd>
+
+
 <dt>x</dt>
 <dd><p>object to be read with read_stars</p></dd>
+
+
 <dt>n_proxy</dt>
 <dd><p>integer; number of cells above which .x will be read as stars
 proxy object, i.e. not as in-memory arrays but left on disk</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>object of class <code>stars</code></p>
+    
+
+<p>object of class <code>stars</code></p>
+
+
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -249,7 +284,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file3fdc68c212fb.tif     1   30.75   60.5 60.5   90.25  120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file3f9a330a972b.tif     1   30.75   60.5 60.5   90.25  120</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta refsys point values x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1 10      0     1     NA    NA   NULL [x]</span>
@@ -264,7 +299,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file3fdc68c212fb.tif    33   36.75   65.5 65.5   94.25   98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file3f9a330a972b.tif    33   36.75   65.5 65.5   94.25   98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta refsys point values x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1  2      0     5     NA    NA   NULL [x]</span>
@@ -296,7 +331,7 @@ has to be one of: "nearest_neighbour" (the default),
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

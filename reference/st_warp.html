@@ -104,29 +104,52 @@
     <h2>Arguments</h2>
     <dl><dt>src</dt>
 <dd><p>object of class <code>stars</code> with source raster</p></dd>
+
+
 <dt>dest</dt>
 <dd><p>object of class <code>stars</code> with target raster geometry</p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
+
 <dt>crs</dt>
 <dd><p>coordinate reference system for destination grid, only used when <code>dest</code> is missing</p></dd>
+
+
 <dt>cellsize</dt>
 <dd><p>length 1 or 2 numeric; cellsize in target coordinate reference system units</p></dd>
+
+
 <dt>segments</dt>
 <dd><p>(total) number of segments for segmentizing the bounding box before transforming to the new crs</p></dd>
+
+
 <dt>use_gdal</dt>
 <dd><p>logical; if <code>TRUE</code>, use gdal's warp or warper, through <a href="https://r-spatial.github.io/sf/reference/gdal_utils.html" class="external-link">gdal_utils</a></p></dd>
+
+
 <dt>options</dt>
 <dd><p>character vector with options, passed on to gdalwarp</p></dd>
+
+
 <dt>no_data_value</dt>
 <dd><p>value used by gdalwarp for no_data (NA) when writing to temporary file; 
 not setting this when <code>use_gdal</code> is <code>TRUE</code> leads to a warning</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>logical; if <code>TRUE</code>, do not remove the temporary gdalwarp destination file, and print its name</p></dd>
+
+
 <dt>method</dt>
 <dd><p>character; see details for options; methods other than <code>near</code> only work when <code>use_gdal=TRUE</code></p></dd>
+
+
 <dt>threshold</dt>
 <dd><p>numeric; distance threshold for warping curvilinear grids: new cells at distances larger than threshold are assigned NA values.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -181,7 +204,7 @@ not setting this when <code>use_gdal</code> is <code>TRUE</code> leads to a warn
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

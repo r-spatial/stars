@@ -104,35 +104,58 @@
     <h2>Arguments</h2>
     <dl><dt>X</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>MARGIN</dt>
 <dd><p>see <a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a>; index number(s) or name(s) of the dimensions over which <code>FUN</code> will be applied</p></dd>
+
+
 <dt>FUN</dt>
 <dd><p>see <a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a> and see Details.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments passed on to <code>FUN</code></p></dd>
+
+
 <dt>CLUSTER</dt>
 <dd><p>cluster to use for parallel apply; see <a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></p></dd>
+
+
 <dt>PROGRESS</dt>
 <dd><p>logical; if <code>TRUE</code>, use <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html" class="external-link">pbapply::pbapply</a></code> to show progress bar</p></dd>
+
+
 <dt>FUTURE</dt>
 <dd><p>logical;if <code>TRUE</code>, use <code><a href="https://future.apply.futureverse.org/reference/future_apply.html" class="external-link">future.apply::future_apply</a></code></p></dd>
+
+
 <dt>rename</dt>
 <dd><p>logical; if <code>TRUE</code> and <code>X</code> has only one attribute and 
 <code>FUN</code> is a simple function name, rename the attribute of the returned object 
 to the function name</p></dd>
+
+
 <dt>.fname</dt>
 <dd><p>function name for the new attribute name (if one or more 
 dimensions are reduced) or the new dimension (if a new dimension is created); 
 if missing, the name of <code>FUN</code> is used</p></dd>
+
+
 <dt>single_arg</dt>
 <dd><p>logical; if <code>TRUE</code>, FUN takes a single argument (like <code>fn_ndvi1</code> below), 
 if <code>FALSE</code> FUN takes multiple arguments (like <code>fn_ndvi2</code> below).</p></dd>
+
+
 <dt>keep</dt>
 <dd><p>logical; if <code>TRUE</code>, preserve dimension metadata (e.g. time stamps)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>object of class <code>stars</code> with accordingly reduced number of dimensions; 
+    
+
+<p>object of class <code>stars</code> with accordingly reduced number of dimensions; 
 in case <code>FUN</code> returns more than one value, a new dimension is created carrying 
 the name of the function used; see the examples. Following the logic of 
 <a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a>, This new dimension is put before the
@@ -211,7 +234,7 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

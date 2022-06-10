@@ -122,31 +122,56 @@
     <h2>Arguments</h2>
     <dl><dt>obj</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>dsn</dt>
 <dd><p>gdal dataset (file) name</p></dd>
+
+
 <dt>layer</dt>
 <dd><p>attribute name; if missing, the first attribute is written</p></dd>
+
+
 <dt>...</dt>
 <dd><p>passed on to <a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_write</a></p></dd>
+
+
 <dt>driver</dt>
 <dd><p>driver driver name; see <a href="https://r-spatial.github.io/sf/reference/st_drivers.html" class="external-link">st_drivers</a></p></dd>
+
+
 <dt>options</dt>
 <dd><p>character vector with dataset creation options, passed on to GDAL</p></dd>
+
+
 <dt>type</dt>
 <dd><p>character; output binary type, one of: <code>Byte</code> for eight bit unsigned integer, <code>UInt16</code> for sixteen bit unsigned integer, <code>Int16</code> for sixteen bit signed integer, <code>UInt32</code> for thirty two bit unsigned integer, <code>Int32</code> for thirty two bit signed integer, <code>Float32</code> for thirty two bit floating point, <code>Float64</code> for sixty four bit floating point.</p></dd>
+
+
 <dt>NA_value</dt>
 <dd><p>non-NA value that should represent R's <code>NA</code> value in the target raster file; if set to <code>NA</code>, it will be ignored.</p></dd>
+
+
 <dt>update</dt>
 <dd><p>logical; if <code>TRUE</code>, an existing file is being updated</p></dd>
+
+
 <dt>normalize_path</dt>
 <dd><p>logical; see <a href="read_stars.html">read_stars</a></p></dd>
+
+
 <dt>chunk_size</dt>
 <dd><p>length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.</p></dd>
+
+
 <dt>progress</dt>
 <dd><p>logical; if <code>TRUE</code>, a progress bar is shown</p></dd>
+
+
 <dt>filename</dt>
 <dd><p>character; used for guessing driver short name based on file 
 extension; see examples</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -172,7 +197,7 @@ extension; see examples</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

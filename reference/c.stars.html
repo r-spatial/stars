@@ -108,21 +108,34 @@
     <h2>Arguments</h2>
     <dl><dt>...</dt>
 <dd><p>object(s) of class <code>star</code>: in case of multiple arguments, these are combined into a single stars object, in case of a single argument, its attributes are combined into a single attribute. In case of multiple objects, all objects should have the same dimensionality.</p></dd>
+
+
 <dt>along</dt>
 <dd><p>integer; see <a href="read_stars.html">read_stars</a></p></dd>
+
+
 <dt>try_hard</dt>
 <dd><p>logical; if <code>TRUE</code> and some arrays have different dimensions, combine those that dimensions matching to the first array</p></dd>
+
+
 <dt>nms</dt>
 <dd><p>character; vector with array names</p></dd>
+
+
 <dt>tolerance</dt>
 <dd><p>numeric; values used in <a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a> to compare dimension values
 combine those that dimensions matching to the first array</p></dd>
+
+
 <dt>along_crs</dt>
 <dd><p>logical; if <code>TRUE</code>, combine arrays along a CRS dimension</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a single <code>stars</code> object with merged (binded) arrays.</p>
+    
+
+<p>a single <code>stars</code> object with merged (binded) arrays.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -181,7 +194,7 @@ can be used to remove units of a <code>stars</code> object before merging.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

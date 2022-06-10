@@ -97,24 +97,41 @@ st_flip(x, which = 1)</code></pre></div>
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>i</dt>
 <dd><p>first selector: integer, logical or character vector indicating attributes to select, or object of class <code>sf</code> or <code>sfc</code> used as spatial selector; see details</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further (logical or integer vector) selectors, matched by order, to select on individual dimensions</p></dd>
+
+
 <dt>drop</dt>
 <dd><p>logical; if <code>TRUE</code>, degenerate dimensions (with only one value) are dropped</p></dd>
+
+
 <dt>crop</dt>
 <dd><p>logical; if <code>TRUE</code> and parameter <code>i</code> is a spatial geometry (<code>sf</code> or <code>sfc</code>) object, the extent (bounding box) of the result is cropped to match the extent of <code>i</code> using <a href="st_crop.html">st_crop</a>. Cropping curvilinear grids is not supported.</p></dd>
+
+
 <dt>downsample</dt>
 <dd><p>downsampling rate used in case <code>i</code> is a <code>stars_proxy</code> object</p></dd>
+
+
 <dt>value</dt>
 <dd><p>array of dimensions equal to those in <code>x</code>, or a vector or value that will be recycled to such an array</p></dd>
+
+
 <dt>which</dt>
 <dd><p>character or integer; dimension(s) to be flipped</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>st_flip</code> flips (reverts) the array values along the chosen dimension 
+    
+
+<p><code>st_flip</code> flips (reverts) the array values along the chosen dimension 
 without(s) changing the dimension properties</p>
     </div>
     <div id="details">
@@ -214,7 +231,7 @@ without(s) changing the dimension properties</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

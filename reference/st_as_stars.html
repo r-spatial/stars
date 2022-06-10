@@ -155,67 +155,126 @@
     <h2>Arguments</h2>
     <dl><dt>.x</dt>
 <dd><p>object to convert</p></dd>
+
+
 <dt>...</dt>
 <dd><p>in case <code>.x</code> is of class <code>bbox</code>, arguments passed on to 
 <a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty</a>. In case <code>.x</code> is of class <code>nc_proxy</code>, arguments
 passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
+
+
 <dt>dimensions</dt>
 <dd><p>object of class dimensions</p></dd>
+
+
 <dt>raster</dt>
 <dd><p>character; the names of the dimensions that denote raster dimensions</p></dd>
+
+
 <dt>curvilinear</dt>
 <dd><p>only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to</p></dd>
+
+
 <dt>crs</dt>
 <dd><p>object of class <code>crs</code> with the coordinate reference system of the values in <code>curvilinear</code>; see details</p></dd>
+
+
 <dt>nx</dt>
 <dd><p>integer; number of cells in x direction; see details</p></dd>
+
+
 <dt>ny</dt>
 <dd><p>integer; number of cells in y direction; see details</p></dd>
+
+
 <dt>dx</dt>
 <dd><p>numeric or object of class units; cell size in x direction; see details</p></dd>
+
+
 <dt>dy</dt>
 <dd><p>numeric or object of class units; cell size in y direction; see details</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>length 2 numeric vector with extent (min, max) in x direction</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>length 2 numeric vector with extent (min, max) in y direction</p></dd>
+
+
 <dt>values</dt>
 <dd><p>value(s) to populate the raster values with</p></dd>
+
+
 <dt>n</dt>
 <dd><p>the (approximate) target number of grid cells</p></dd>
+
+
 <dt>pretty</dt>
 <dd><p>logical; should cell coordinates have <a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty</a> values?</p></dd>
+
+
 <dt>inside</dt>
 <dd><p>logical; should all cells entirely fall inside the bbox, potentially not covering it completely (<code>TRUE</code>), or allways cover the bbox (<code>FALSE</code>), or find a good approximation (<code>NA</code>, default)?</p></dd>
+
+
 <dt>nz</dt>
 <dd><p>integer; number of cells in z direction; if missing no z-dimension is created.</p></dd>
+
+
 <dt>proxy</dt>
 <dd><p>logical; should a <code>stars_proxy</code> object be created? (requires gdal_create binary when sf &lt; 1.0-6)</p></dd>
+
+
 <dt>name</dt>
 <dd><p>character; attribute name for array from an <code>xts</code> object</p></dd>
+
+
 <dt>att</dt>
 <dd><p>see factorValues; column in the RasterLayer's attribute table</p></dd>
+
+
 <dt>ignore_file</dt>
 <dd><p>logical; if <code>TRUE</code>, ignore the SpatRaster object file name</p></dd>
+
+
 <dt>sf_geometry</dt>
 <dd><p>sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.</p></dd>
+
+
 <dt>downsample</dt>
 <dd><p>integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.</p></dd>
+
+
 <dt>url</dt>
 <dd><p>character; URL of the stars endpoint where the data reside</p></dd>
+
+
 <dt>envir</dt>
 <dd><p>environment to resolve objects in</p></dd>
+
+
 <dt>dims</dt>
 <dd><p>the column names or indices that form the cube dimensions</p></dd>
+
+
 <dt>xy</dt>
 <dd><p>the x and y raster dimension names or indices; only takes effect after dims has been specified</p></dd>
+
+
 <dt>y_decreasing</dt>
 <dd><p>logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)</p></dd>
+
+
 <dt>coords</dt>
 <dd><p>same as dims, for symmetry with <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></p></dd>
+
+
 <dt>as_col</dt>
 <dd><p>logical; return rgb numbers (FALSE) or (character) color values (TRUE)?</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -273,7 +332,7 @@ Must have same number of rows as timeseries instances.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

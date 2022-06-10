@@ -109,18 +109,31 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class <code>stars</code></p></dd>
+
+
 <dt>y</dt>
 <dd><p>object of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>; see Details below.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
+
 <dt>crop</dt>
 <dd><p>logical; if <code>TRUE</code>, the spatial extent of the returned object is cropped to still cover <code>obj</code>, if <code>FALSE</code>, the extent remains the same but cells outside <code>y</code> are given <code>NA</code> values.</p></dd>
+
+
 <dt>epsilon</dt>
 <dd><p>numeric; factor to shrink the bounding box of <code>y</code> towards its center before cropping.</p></dd>
+
+
 <dt>collect</dt>
 <dd><p>logical; if <code>TRUE</code>, repeat cropping on <code>stars</code> object, i.e. after data has been read</p></dd>
+
+
 <dt>as_points</dt>
 <dd><p>logical; only relevant if <code>y</code> is of class <code>sf</code> or <code>sfc</code>: if <code>FALSE</code>, treat <code>x</code> as a set of points, else as a set of small polygons. Default: <code>TRUE</code> if <code>y</code> is two-dimensional, else <code>FALSE</code>; see Details</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -244,7 +257,7 @@ If <code>y</code> is of class <code>stars</code>, <code>x</code> raster cells ar
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

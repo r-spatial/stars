@@ -103,34 +103,55 @@
     <h2>Arguments</h2>
     <dl><dt>.x</dt>
 <dd><p>NetCDF file or source as a character vector or an nc_proxy object.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
+
 <dt>var</dt>
 <dd><p>variable name or names (they must be on matching grids)</p></dd>
+
+
 <dt>ncsub</dt>
 <dd><p>matrix of start, count columns (see Details)</p></dd>
+
+
 <dt>curvilinear</dt>
 <dd><p>length two character named vector with names of variables holding
 longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
 curvilinear coordinates if they are not supplied.</p></dd>
+
+
 <dt>eps</dt>
 <dd><p>numeric; dimension value increases are considered identical when they differ less than <code>eps</code></p></dd>
+
+
 <dt>ignore_bounds</dt>
 <dd><p>logical; should bounds values for dimensions, if present, be ignored?</p></dd>
+
+
 <dt>make_time</dt>
 <dd><p>if <code>TRUE</code> (the default), an atttempt is made to provide a date-time class from the "time" variable</p></dd>
+
+
 <dt>make_units</dt>
 <dd><p>if <code>TRUE</code> (the default), an attempt is made to set the units property of each variable</p></dd>
+
+
 <dt>proxy</dt>
 <dd><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array
 metadata only; if <code>FALSE</code> the full array data is read in memory. If not set, defaults to <code>TRUE</code>
 when the number of cells to be read is larger than <code>options(stars.n_proxy)</code>, or to 1e8 if that option was not set.</p></dd>
+
+
 <dt>downsample</dt>
 <dd><p>integer; number of cells to omit between samples along each dimension. 
 e.g. <code>c(1,1,2)</code> would return every other cell in x and y and every third cell
 in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
 is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
 option is ignored.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -255,7 +276,7 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -100,22 +100,37 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>object of class stars</p></dd>
+
+
 <dt>y</dt>
 <dd><p>object of class sf, or one that can be coerced into that by <a href="st_as_sf.html">st_as_sf</a></p></dd>
+
+
 <dt>join</dt>
 <dd><p>the join function, which should return an sgbp object; see details</p></dd>
+
+
 <dt>...</dt>
 <dd><p>arguments that will be passed on to the join function</p></dd>
+
+
 <dt>what</dt>
 <dd><p>"left1", "right" or "inner"; see details</p></dd>
+
+
 <dt>as_points</dt>
 <dd><p>logical; controls whether grid cells in <code>x</code> will be treated as points, or as cell areas; the <a href="st_intersects.stars.html">st_intersects.stars</a> method by default will derive this from <code>x</code>'s metadata, or else assume areas.</p></dd>
+
+
 <dt>warn</dt>
 <dd><p>logical; if TRUE, warn on 1-to-many matches when <code>what</code> is <code>"left1"</code></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If what is "left1", an object of class stars with the (first) value of y at spatial instances of x</p>
+    
+
+<p>If what is "left1", an object of class stars with the (first) value of y at spatial instances of x</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -134,7 +149,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
