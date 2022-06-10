@@ -106,16 +106,22 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
-get_terra_levels = function(x) {
+get_terra_levels = function(x, min_v) {
 # create factor levels, as used by stars, from SpatRaster levels in a data.frame
 # see https://github.com/r-spatial/stars/pull/484
 	IDs = x[[1]]
 	if (any(IDs < 0))
 		stop("negative IDs in SpatRaster levels not supported")
-	if (min(IDs) == 0)
-		IDs = IDs + 1 # as we will shift values as well...
-	ct = rep("_", max(IDs))
 	categories = x[[2]]
+	if (min(IDs) == 0) {
+		if (min_v == 0) # shift all:
+			IDs = IDs + 1
+		else { # remove ID 0:
+			categories = categories[IDs != 0]
+			IDs = IDs[IDs != 0]
+		}
+	}
+	ct = rep("_", max(IDs))
 	ct[IDs] = categories
 	make.unique(ct)
 }
@@ -177,16 +183,16 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 		if (all(terra::is.factor(.x))) {
 			if (length(terra::levels(.x)) > 1)
 				warning("ignoring categories/levels for all but first layer")
+			if ((min_v <- min(v, na.rm = TRUE)) == 0) # +warn here?
+				v = v + 1
 			l = terra::levels(.x)[[1]]
 			if (inherits(l, "data.frame"))
-				l = get_terra_levels(l)
+				l = get_terra_levels(l, min_v)
 			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
 			if (inherits(colors, "try-error") || length(colors) == 0)
 				colors = NULL
 			else if (length(colors) == length(levels) + 1) # remove last color?
 				colors = colors[-length(colors)]
-			if (min(v, na.rm=TRUE) == 0) # +warn here?
-				v = v + 1
 			v = structure(v, class = "factor", levels = as.character(l), colors = colors)
 		}
 		dimensions = list(
