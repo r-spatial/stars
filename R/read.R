@@ -265,12 +265,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 						which(sapply(at[[which.at]], class) == "character")[1]
 				at = at[[ which.at ]][[ which.column ]]
 				if (min_value > 0)
-					at = at[-seq_len(min_value)]
-				if (min_value == 0) {
+					at = at[-1]
+				if (min_value == 0)
 					max_value = max_value + 1
-					min_value = 1
-				}
-				levels = at[min_value:max_value]
+				levels = at[1:max_value]
 			}
 
 			data = structure(data, class = "factor", levels = levels, colors = co)
