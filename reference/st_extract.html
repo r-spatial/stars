@@ -137,72 +137,72 @@ to <code>at</code> may be much faster than passing an <code>sf</code> or <code>s
 <span class="r-in"><span class="fu">st_extract</span><span class="op">(</span><span class="va">r</span>, <span class="va">pnt</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L7_ETMs.tif    13   54.75   69.5 68.41667      81  130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L7_ETMs.tif    31    58.5     71 72.8   86.25  124</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          from to offset delta                     refsys point</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10     NA    NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> band        1  6     NA    NA                         NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                         values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (292593.9 9110904),...,POINT (289089.4 9115693)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (296276.1 9116678),...,POINT (289799.5 9111268)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> band                                                      NULL</span>
 <span class="r-in"><span class="fu">st_extract</span><span class="op">(</span><span class="va">r</span>, <span class="va">pnt</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 6 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 289089.4 ymin: 9110769 xmax: 298360.8 ymax: 9118997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 289126 ymin: 9111268 xmax: 297382.3 ymax: 9119645</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    L7_ETMs.tif.V1 L7_ETMs.tif.V2 L7_ETMs.tif.V3 L7_ETMs.tif.V4 L7_ETMs.tif.V5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              81             68             75             57            114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2              71             57             60             47            103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              63             54             46             81             82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4             100             91             61             13             13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5              85             72             88             61            130</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6              67             54             44             76             74</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              73             58             58             55             80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8              72             58             63             52            105</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9              77             69             75             75            114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10             58             46             31            101             70</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              68             60             51             94            105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              70             57             60             57            107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              86             75             81             57             96</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              89             76             88             57            114</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              60             47             34             73             71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6              63             47             36             66             59</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              81             67             77             54            124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8              80             65             71             48            121</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              75             65             65             73            100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             86             67             68             44            101</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    L7_ETMs.tif.V6                 geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1              95 POINT (292593.9 9110904)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2              80 POINT (290512.7 9113146)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3              48 POINT (289277.1 9118717)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4              13 POINT (298360.8 9110769)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5             112 POINT (297554.8 9118997)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6              39 POINT (289825.2 9115556)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7              54 POINT (290807.4 9115043)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8              82   POINT (292132 9111922)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9              72 POINT (289774.1 9113998)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10             32 POINT (289089.4 9115693)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              55 POINT (296276.1 9116678)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              87 POINT (295796.5 9113468)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              73   POINT (289126 9113783)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              95 POINT (291662.2 9119645)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              34 POINT (289858.3 9119590)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6              31 POINT (292120.6 9111673)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              99 POINT (290469.7 9113727)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8              99 POINT (290484.4 9115595)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              73 POINT (297382.3 9117256)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             86 POINT (289799.5 9111268)</span>
 <span class="r-in"><span class="fu">st_extract</span><span class="op">(</span><span class="va">r</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">]</span>, <span class="va">pnt</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 1 field</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 289089.4 ymin: 9110769 xmax: 298360.8 ymax: 9118997</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 289126 ymin: 9111268 xmax: 297382.3 ymax: 9119645</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    L7_ETMs.tif                 geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           81 POINT (292593.9 9110904)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           71 POINT (290512.7 9113146)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           63 POINT (289277.1 9118717)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4          100 POINT (298360.8 9110769)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           85 POINT (297554.8 9118997)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           67 POINT (289825.2 9115556)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7           73 POINT (290807.4 9115043)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8           72   POINT (292132 9111922)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9           77 POINT (289774.1 9113998)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10          58 POINT (289089.4 9115693)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1           68 POINT (296276.1 9116678)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           70 POINT (295796.5 9113468)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           86   POINT (289126 9113783)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           89 POINT (291662.2 9119645)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           60 POINT (289858.3 9119590)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6           63 POINT (292120.6 9111673)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7           81 POINT (290469.7 9113727)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8           80 POINT (290484.4 9115595)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9           75 POINT (297382.3 9117256)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10          86 POINT (289799.5 9111268)</span>
 <span class="r-in"><span class="fu">st_extract</span><span class="op">(</span><span class="va">r</span>, <span class="fu"><a href="st_coordinates.html">st_coordinates</a></span><span class="op">(</span><span class="va">pnt</span><span class="op">)</span><span class="op">)</span> <span class="co"># "at" is a matrix: return a matrix</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       [,1] [,2] [,3] [,4] [,5] [,6]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]   81   68   75   57  114   95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]   71   57   60   47  103   80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]   63   54   46   81   82   48</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]  100   91   61   13   13   13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]   85   72   88   61  130  112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]   67   54   44   76   74   39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]   73   58   58   55   80   54</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]   72   58   63   52  105   82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]   77   69   75   75  114   72</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   58   46   31  101   70   32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]   68   60   51   94  105   55</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]   70   57   60   57  107   87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]   86   75   81   57   96   73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]   89   76   88   57  114   95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]   60   47   34   73   71   34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]   63   47   36   66   59   31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]   81   67   77   54  124   99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]   80   65   71   48  121   99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]   75   65   65   73  100   73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   86   67   68   44  101   86</span>
 </code></pre></div>
     </div>
   </div>
