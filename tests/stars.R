@@ -35,31 +35,35 @@ y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
-(x = read_stars(nc))
-st_bbox(x)
-s = st_as_stars(st_bbox(x)) # inside = NA
-st_bbox(s)
-s = st_as_stars(st_bbox(x), inside = TRUE)
-st_bbox(s)
-s = st_as_stars(st_bbox(x), inside = FALSE)
-st_bbox(s)
-(s = st_as_stars(st_bbox(x), dy = 1))
-st_bbox(s)
-identical(st_as_stars(st_bbox(x), dx = 1), st_as_stars(st_bbox(x), dy = 1))
-s = st_as_stars(st_bbox(x), dx = 10)
-st_bbox(s)
-s = st_as_stars(st_bbox(x), dx = 20)
-st_bbox(s)
-x1 = x
-st_crs(x1) = "OGC:CRS84"
-identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree)))
+if (require(PCICt, quietly = TRUE)) {
+  print(x <- read_stars(nc))
+  print(st_bbox(x))
+  s = st_as_stars(st_bbox(x)) # inside = NA
+  print(st_bbox(s))
+  s = st_as_stars(st_bbox(x), inside = TRUE)
+  print(st_bbox(s))
+  s = st_as_stars(st_bbox(x), inside = FALSE)
+  print(st_bbox(s))
+  (s = st_as_stars(st_bbox(x), dy = 1))
+  print(st_bbox(s))
+  print(identical(st_as_stars(st_bbox(x), dx = 1), st_as_stars(st_bbox(x), dy = 1)))
+  s = st_as_stars(st_bbox(x), dx = 10)
+  print(st_bbox(s))
+  s = st_as_stars(st_bbox(x), dx = 20)
+  print(st_bbox(s))
+  x1 = x
+  st_crs(x1) = "OGC:CRS84"
+  print(identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree))))
 
-df = as.data.frame(x)
-units::drop_units(x)
+  df = as.data.frame(x)
+  if (require(units, quietly = TRUE))
+    print(units::drop_units(x))
 
-dimnames(x)
-dimnames(x) <- letters[1:3]
-dimnames(x)
+  print(dimnames(x))
+  dimnames(x) <- letters[1:3]
+  print(dimnames(x))
+}
+
 st_as_stars()
 
 # multiple sub-datasets:
@@ -117,7 +121,7 @@ if (f != "") {
 
 st_dimensions(list(matrix(1, 4, 4))) # st_dimensions.default
 
-if (FALSE && require("starsdata")) {
+if (FALSE && require("starsdata", quietly = TRUE)) {
   # curvilinear:
   s5p = system.file(
       "sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc",

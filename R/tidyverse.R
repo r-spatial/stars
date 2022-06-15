@@ -135,9 +135,10 @@ as.tbl_cube.stars = function(x, ...) {
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x1 = read_stars(tif)
-#' library(dplyr)
-#' x1 %>% slice("band", 2:3)
-#' x1 %>% slice("x", 50:100)
+#' if (require(dplyr, quietly = TRUE)) {
+#'   x1 %>% slice("band", 2:3)
+#'   x1 %>% slice("x", 50:100)
+#' }
 slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   #stopifnot(length(index) == 1)
   if (!requireNamespace("rlang", quietly = TRUE))
@@ -260,13 +261,14 @@ replace_na.stars_proxy = function(data, ...) {
 #' @export
 #' @examples
 #' system.file("tif/L7_ETMs.tif", package = "stars") %>% read_stars() -> x
-#' library(ggplot2)
-#' ggplot() + geom_stars(data = x) +
+#' if (require(ggplot2, quietly = TRUE)) {
+#'   ggplot() + geom_stars(data = x) +
 #'     coord_equal() +
 #'     facet_wrap(~band) +
 #'     theme_void() +
 #'     scale_x_discrete(expand=c(0,0))+
 #'     scale_y_discrete(expand=c(0,0))
+#' }
 geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE, 
 					  na.action = na.pass) {
 

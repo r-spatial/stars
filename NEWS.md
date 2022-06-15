@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* `read_stars()` reads factor levels better from attribute table; #484 thanks to @ailich
+
 * `plot()` handles auto colors better for factor arrays
 
 * `read_ncdf()` handles units more formally in setting crs; #533

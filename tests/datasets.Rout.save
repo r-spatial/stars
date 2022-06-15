@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -39,10 +39,9 @@ dimension(s):
 x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
 y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 band    1   6      NA    NA                         NA    NA   NULL    
-> if (require(starsdata)) {
+> if (require(starsdata, quietly = TRUE)) {
 + 	print(stars_sentinel2)
 + }
-Loading required package: starsdata
 stars_proxy object with 1 attribute in 1 file(s):
 $`MTD_MSIL1C.xml:10m:EPSG_32632`
 [1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"
@@ -55,4 +54,4 @@ band    1     4     NA    NA                    NA    NA B4,...,B8
 > 
 > proc.time()
    user  system elapsed 
-  0.911   0.048   0.950 
+  1.107   0.031   1.131 

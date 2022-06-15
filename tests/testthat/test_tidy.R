@@ -1,6 +1,6 @@
-library(dplyr)
-
 test_that("slice", {
+  skip_if_not_installed("dplyr", "1.0.0")
+  library(dplyr)
 
   f <- system.file("nc/reduced.nc", package = "stars")
   nc <- read_ncdf(f, proxy = TRUE)

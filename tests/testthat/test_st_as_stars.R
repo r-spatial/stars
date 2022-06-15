@@ -4,6 +4,7 @@ options(rgdal_show_exportToProj4_warnings = "none")
 
 test_that("basic st_as_stars", {
   skip_on_os("solaris")
+  skip_if_not_installed("ncdfgeom")
 
   f <- system.file("nc/timeseries.nc", package = "stars")
 
@@ -55,6 +56,8 @@ test_that("basic st_as_stars", {
 })
 
 test_that("st_as_stars.Raster", {
+  skip_if_not_installed("raster")
+
   tif = system.file("tif/L7_ETMs.tif", package = "stars")
   x = raster::raster(tif)
   stars_obj <- st_as_stars(x)

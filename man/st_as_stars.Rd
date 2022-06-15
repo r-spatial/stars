@@ -148,6 +148,8 @@ For the \code{ncdfgeom} method: objects are point-timeseries with optional line 
 for the \code{xts} methods, if \code{dimensions} are provided, time has to be the first dimension.
 }
 \examples{
-data(Produc, package = "plm")
-st_as_stars(Produc, y_decreasing = FALSE)
+if (require(plm, quietly = TRUE)) {
+  data(Produc, package = "plm")
+  st_as_stars(Produc, y_decreasing = FALSE)
+}
 }

@@ -139,8 +139,10 @@ guess_raster = function(x, ...) {
 #' @param y_decreasing logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)
 #' @name st_as_stars
 #' @examples
-#' data(Produc, package = "plm")
-#' st_as_stars(Produc, y_decreasing = FALSE)
+#' if (require(plm, quietly = TRUE)) {
+#'   data(Produc, package = "plm")
+#'   st_as_stars(Produc, y_decreasing = FALSE)
+#' }
 st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decreasing = TRUE, coords = 1:2) {
 
 	if (missing(dims) && !missing(xy))

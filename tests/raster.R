@@ -1,6 +1,7 @@
 options(rgdal_show_exportToProj4_warnings = "none")
 suppressPackageStartupMessages(library(stars))
 
+if (require(raster, quietly = TRUE)) {
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))
 (r = as(x, "Raster"))
@@ -16,7 +17,9 @@ r = as(x, "Raster")
 (r = as(x, "Raster"))
 (y = st_as_stars(r))
 (y2 = st_as_stars(r, proxy = TRUE))
+}
 
+if (require(terra, quietly = TRUE)) {
 ## terra -------------
 (x = read_stars(tif))
 (r = as(x, "SpatRaster"))
@@ -32,3 +35,4 @@ r = as(x, "SpatRaster")
 (r = as(x, "SpatRaster"))
 (y = st_as_stars(r))
 (y2 = st_as_stars(r, proxy = TRUE))
+}

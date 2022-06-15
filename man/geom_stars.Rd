@@ -37,11 +37,12 @@ ggplot geom for stars objects
 }
 \examples{
 system.file("tif/L7_ETMs.tif", package = "stars") \%>\% read_stars() -> x
-library(ggplot2)
-ggplot() + geom_stars(data = x) +
+if (require(ggplot2, quietly = TRUE)) {
+  ggplot() + geom_stars(data = x) +
     coord_equal() +
     facet_wrap(~band) +
     theme_void() +
     scale_x_discrete(expand=c(0,0))+
     scale_y_discrete(expand=c(0,0))
+}
 }

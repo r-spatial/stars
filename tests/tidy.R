@@ -1,5 +1,6 @@
 suppressPackageStartupMessages(library(stars))
-suppressPackageStartupMessages(library(dplyr))
+
+if (require(dplyr, quietly = TRUE)) {
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))
 
@@ -25,3 +26,4 @@ x - slice(x, 'band', 1) # runs as expected, recycling the second object
 try(y - slice(x, 'band', 1)) # fails as expected because x is unitless
 try(x - slice(y, 'band', 1)) # fails as expected 
 y - slice(y, 'band', 1) # runs as expected
+}

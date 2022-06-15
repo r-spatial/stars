@@ -1,6 +1,6 @@
 
-R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,7 +21,10 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
+
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
 > 
 > proc.time()
    user  system elapsed 
-  7.462   0.137   7.531 
+ 23.827   0.175  24.024 

@@ -1,6 +1,6 @@
 library(stars)
 
-library(spacetime)
+if (require(spacetime, quietly = TRUE)) {
 data(air) # this loads several datasets in .GlobalEnv
 dim(air)
 d = st_dimensions(station = st_set_crs(st_as_sfc(stations), 4326), time = dates)
@@ -39,3 +39,4 @@ pt = st_point(c(-10,-10))
 (a = aggregate(st, sfc, mean))
 
 (a = aggregate(st, st, mean))
+}

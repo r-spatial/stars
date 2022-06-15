@@ -2,6 +2,7 @@ context("read ncdf")
 f <- system.file("nc/reduced.nc", package = "stars")
 
 test_that("basic reduced comes back as expected", {
+  skip_if_not_installed("ncmeta")
   nc <- read_ncdf(f)
   expect_equal(names(nc), c("sst", "anom", "err", "ice"))
   st_dim <- st_dimensions(nc)
@@ -13,11 +14,13 @@ test_that("basic reduced comes back as expected", {
 })
 
 test_that("variable subsetting", {
+  skip_if_not_installed("ncmeta")
   nc <- read_ncdf(f, var = c("anom"))
   expect_equal(names(nc), "anom")
 })
 
 test_that("domain subsetting", {
+  skip_if_not_installed("ncmeta")
   nc <- read_ncdf(f, ncsub = cbind(start = c(20, 1, 1, 1),
                                    count = c(10, 12, 1, 1)))
   st_dim <- st_dimensions(nc)
@@ -45,6 +48,7 @@ test_that("domain subsetting", {
 })
 
 test_that("normal bcsd", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/bcsd_obs_1999.nc", package = "stars")
   nc <- read_ncdf(f, package = "stars")
   expect_equal(names(nc), c("pr", "tas"))
@@ -67,6 +71,7 @@ test_that("normal bcsd", {
 })
 
 test_that("non canonical axis order is handled right", {
+  skip_if_not_installed("ncmeta")
   expect_warning(nc <- read_ncdf(system.file("nc/3B42_Daily.19991231.7.test.nc",
                                              package = "stars")),
                  "Non-canonical axis order found, attempting to correct.")
@@ -77,6 +82,7 @@ test_that("non canonical axis order is handled right", {
 
 
 test_that("euro cordex extra dimvars", {
+  skip_if_not_installed("ncmeta")
   f <- unzip(zipfile = system.file("nc/EURO-CORDEX_81_DOMAIN000_mask_int.nc.zip", package = "stars"), exdir = tempdir())
 
   expect_warning(out <- read_ncdf(f, var = "mask"),
@@ -102,6 +108,7 @@ test_that("euro cordex extra dimvars", {
 })
 
 test_that("curvilinear", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
 
   out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat"))
@@ -131,6 +138,7 @@ test_that("curvilinear", {
 })
 
 test_that("curvilinear broked", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/test_stageiv_xyt_borked.nc", package = "stars")
 
   expect_error(suppressMessages(read_ncdf(f, curvilinear = c("lon", "lat", "time"))),
@@ -159,6 +167,7 @@ test_that("curvilinear broked", {
 })
 
 test_that("high-dim from rasterwise", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/test-1.nc", package = "stars")
   out <- suppressWarnings(read_ncdf(f, var = "a"))
 
@@ -166,6 +175,7 @@ test_that("high-dim from rasterwise", {
 })
 
 test_that("timeseries.nc", {
+  skip_if_not_installed("ncmeta")
   skip_on_os("solaris")
 
   f <- system.file("nc/timeseries.nc", package = "stars")
@@ -192,6 +202,7 @@ test_that("timeseries.nc", {
 })
 
 test_that("curvilinear 2", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/c201923412.out1_4.nc", package = "stars")
   nc <- read_ncdf(f)
 
@@ -203,6 +214,7 @@ test_that("curvilinear 2", {
 })
 
 test_that("lon cross 360", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/test_adaptor.cams_regional_fc.nc", package = "stars")
 
   suppressWarnings(nc <- read_ncdf(f))
@@ -212,6 +224,7 @@ test_that("lon cross 360", {
 })
 
 test_that("4d not 4d", {
+  skip_if_not_installed("ncmeta")
   f <- system.file("nc/sub.nc", package = "stars")
 
   nc <- read_ncdf(f)
@@ -225,6 +238,7 @@ test_that("4d not 4d", {
 })
 
 test_that("units are right with lcc km", {
+  skip_if_not_installed("ncmeta")
 	f <- system.file("nc/lcc_km.nc", package = "stars")
 	
 	nc <- read_ncdf(f)

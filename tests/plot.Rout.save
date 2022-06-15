@@ -1,6 +1,6 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,43 +15,32 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(spacetime)
-> suppressPackageStartupMessages(library(stars))
-> data(air) # this loads several datasets in .GlobalEnv
-> dim(air)
-space  time 
-   70  4383 
-> d = st_dimensions(station = st_as_sfc(stations), time = dates)
-> aq = st_as_stars(list(PM10 = air), dimensions = d)
-> image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
-> st_geometry(aq)
-Geometry set for 70 features 
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
-CRS:           +proj=longlat +datum=WGS84 +no_defs
-First 5 geometries:
-POINT (9.585911 53.67057)
-POINT (9.68503 53.52418)
-POINT (9.791584 54.07312)
-POINT (13.64701 52.44775)
-POINT (13.29635 52.65315)
-> 
-> csv = system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata")
-> if (csv != "") {
+> if (require(spacetime)) {
++ suppressPackageStartupMessages(library(stars))
++ data(air) # this loads several datasets in .GlobalEnv
++ dim(air)
++ d = st_dimensions(station = st_as_sfc(stations), time = dates)
++ aq = st_as_stars(list(PM10 = air), dimensions = d)
++ image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
++ st_geometry(aq)
++ 
++ csv = system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata")
++ if (csv != "") {
 + 	rgb = read.csv(csv, header = TRUE, sep = ";")
 + 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
 + 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
 + }
-> 
-> # https://github.com/r-spatial/stars/issues/233 :
-> nc = read_sf(system.file("shape/nc.shp", package = "sf"))
-> output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
-> plot(output)
++ 
++ # https://github.com/r-spatial/stars/issues/233 :
++ nc = read_sf(system.file("shape/nc.shp", package = "sf"))
++ output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
++ plot(output)
++ }
+Loading required package: spacetime
 Warning message:
 In plot.stars(output) :
   breaks="quantile" leads to a single class; maybe try breaks="equal" instead?
 > 
 > proc.time()
    user  system elapsed 
-  2.558   0.068   2.618 
+  3.017   0.122   3.136 
