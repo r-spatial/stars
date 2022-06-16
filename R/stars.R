@@ -862,7 +862,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 		}
 		value = if (inherits(value, c("factor", "POSIXct")))
 				structure(rep(value, length.out = prod(dim(x))), dim = dim(x), colors = attr(value, "colors"),
-					rgba = attr(value, "rgba"))
+					rgba = attr(value, "rgba"), exclude = attr(value, "exclude"))
 			else if (!is.array(value) || !isTRUE(all.equal(dim(value), dim(x), check.attributes = FALSE)))
 				array(value, dim(x))
 			else

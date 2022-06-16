@@ -46,6 +46,7 @@ is_functions = function(x) {
 #' @param RAT character; raster attribute table column name to use as factor levels
 #' @param tolerance numeric; passed on to \link{all.equal} for comparing dimension parameters.
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set
+#' param exclude character; vector with category values to exclude
 #' @return object of class \code{stars}
 #' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 #'
@@ -99,7 +100,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) &&
 				is_big(.x, sub = sub, driver=driver, normalize_path = normalize_path, ...)),
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
-		tolerance = 1e-10) {
+		tolerance = 1e-10, exclude = "") {
 
 	x = if (is.list(.x)) {
 			f = function(y, np) enc2utf8char(maybe_normalizePath(y, np))
@@ -229,49 +230,50 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			at = list() # skip it: https://github.com/r-spatial/stars/issues/435
 		# FIXME: how to handle multiple color, category or attribute tables?
 		if (!proxy && (any(lengths(ct) > 0) || any(lengths(at) > 0))) {
-			r = range(data, na.rm = TRUE)
-			min_value = if (meta_data$ranges[1,2] == 1)
-					meta_data$ranges[1,1]
-				else
-					r[1]
-			max_value = if (meta_data$ranges[1,4] == 1)
-					meta_data$ranges[1,3]
-				else
-					r[2]
-			if (any(meta_data$ranges[1, c(2,4)] == 1))
+			if (any(meta_data$ranges[1, c(2,4)] == 1)) { # adjust data to min/max values from image metadata
+				r = range(data, na.rm = TRUE)
+				min_value = if (meta_data$ranges[1,2] == 1)
+						meta_data$ranges[1,1]
+					else
+						r[1]
+				max_value = if (meta_data$ranges[1,4] == 1)
+						meta_data$ranges[1,3]
+					else
+						r[2]
 				data[data < min_value | data > max_value] = NA
-			if (min_value < 0)
-				stop("categorical values should have minimum value >= 0")
-
-			if (any(lengths(ct) > 0)) {
-				ct = ct[[ which(length(ct) > 0)[1] ]]
-				co = apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
-				if (min_value > 0)
-					co = co[-seq_len(min_value)] # removes [0,...,(min_value-1)]
-				levels = seq(min_value, length.out = length(co))
-			} else
-				co = NULL
-
-			if (min_value == 0) {
-				data = data + 1
-				warning("categorical data values starting at 0 are shifted with one to start at 1")
 			}
 
+			# convert color table ct to a vector of R colors:
+			co = if (any(lengths(ct) > 0)) {
+				ct = ct[[ which(length(ct) > 0)[1] ]]
+				apply(ct, 1, function(x) rgb(x[1], x[2], x[3], x[4], maxColorValue = 255))
+			} else
+				NULL
+
 			if (any(lengths(at) > 0)) {
+				# select attribute table:
 				which.at = which(lengths(at) > 0)[1]
 				which.column = if (length(RAT))
 						RAT
 					else
 						which(sapply(at[[which.at]], class) == "character")[1]
-				at = at[[ which.at ]][[ which.column ]]
-				if (min_value > 0)
-					at = at[-1]
-				if (min_value == 0)
-					max_value = max_value + 1
-				levels = at[1:max_value]
+				labels = at = at[[ which.at ]][[ which.column ]]
+				levels = 0:(length(at) - 1)
+				if (length(exclude)) {
+					ex = at %in% exclude
+					labels = labels[!ex]
+					levels = levels[!ex]
+					min_value = min(levels)
+					if (!is.null(co))
+						co = co[!ex]
+				} else
+					ex = rep(FALSE, length(levels))
+				f = factor(as.vector(data), levels = levels, labels = labels)
+			} else {
+				f = factor(as.vector(data))
+				ex = rep(FALSE, length(levels(f)))
 			}
-
-			data = structure(data, class = "factor", levels = levels, colors = co)
+			data = structure(f, dim = dim(data), colors = co, exclude = ex)
 		}
 
 		dims = if (proxy) {
