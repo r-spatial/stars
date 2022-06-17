@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* improve handling of categorical rasters, and their exchange with `terra`; #484
+
 * `plot()` handles auto colors better for factor arrays
 
 * `read_ncdf()` handles units more formally in setting crs; #533
