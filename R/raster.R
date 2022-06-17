@@ -109,15 +109,14 @@ setAs("stars_proxy", "Raster", function(from) {
 get_terra_levels = function(x, min_v) {
 # create factor levels, as used by stars, from SpatRaster levels in a data.frame
 # see https://github.com/r-spatial/stars/pull/484
+	x = x[order(x[[1]]), ] # sort table on level
 	levels = x[[1]]
-	o = order(levels) # may be arbitrary
-	levels = levels[o] # sorts
 	if (any(levels < 0))
 		stop("negative IDs in SpatRaster levels not supported")
 	ex = setdiff(0:max(levels), levels)
 	exclude = rep(FALSE, max(levels) + 1)
 	exclude[ex + 1] = TRUE # 0-based vector
-	list(levels = levels, labels = x[[2]][o], exclude = exclude)
+	list(levels = levels, labels = x[[2]], exclude = exclude)
 }
 
 #' @name st_as_stars
