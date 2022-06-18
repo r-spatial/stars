@@ -835,8 +835,11 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 			dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
 			if (length(names(along)) == 1)
 				names(dims)[names(dims) == "new_dim"] = names(along)
-			ret = list(attr = do.call(abind, c(unclass(x), along = length(dim(x)) + 1)))
-			st_stars(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
+			ret = if (is.factor(x[[1]])) # assume all factors:
+					structure(do.call(c, x), dim = dim(dims))
+				else
+					do.call(abind, c(unclass(x), along = length(dim(x)) + 1))
+			st_stars(setNames(list(ret), paste(names(x), collapse = ".")), dimensions = dims)
 		}
 	}
 }
