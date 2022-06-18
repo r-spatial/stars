@@ -121,8 +121,10 @@ get_terra_levels = function(x, min_v) {
 
 #' @name st_as_stars
 #' @param ignore_file logical; if \code{TRUE}, ignore the SpatRaster object file name
+#' @param as_attributes logical; if \code{TRUE} and \code{.x} has more than one layer, load these as separate attributes rather than as a band or time dimension (only implemented for the case where \code{ignore_file} is \code{TRUE})
 #' @export
-st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
+st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
+			  as_attributes = all(terra::is.factor(.x))) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
 
@@ -132,13 +134,13 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 	src = terra::sources(.x, bands=TRUE)
 
 	attr_name = basename(src$source[1])
-	if (attr_name == "")
-		attr_name = "values"
 
 	if (!ignore_file && all(src$source != "")) {
 	# there can be multiple files, but only the first one is used here.
 	# perhaps a warning should be given; better would be to iterate over "sid"
 	# but you might have a situation where some sources are filenames and others are not
+		if (attr_name == "")
+			attr_name = "values"
 		lst = vector("list", length(unique(src$sid)))
 		for (i in unique(src$sid)) {
 			file = unique(src$source[src$sid == i])
@@ -171,34 +173,35 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 
 		setNames(ret, attr_name)
 	} else { # ignore_file TRUE:
+		if (terra::nlyr(.x) > 1 && as_attributes)
+			return(do.call(c, lapply(seq_len(nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE))))
+		if (attr_name == "") {
+			if (all(names(.x) == ""))
+				attr_name = "values"
+			else
+				attr_name = paste(names(.x)[1], collapse = ".")
+		}
 		v = terra::values(.x, mat = FALSE)
 		dimv = dim(v) = dim(.x)[c(2,1,3)]
 		if (all(terra::is.factor(.x))) {
 			if (length(terra::levels(.x)) > 1)
 				warning("ignoring categories/levels for all but first layer")
-			l = terra::levels(.x)[[1]]
-			if (inherits(l, "data.frame"))
+			if (inherits(l <- terra::levels(.x)[[1]], "data.frame"))
 				l = get_terra_levels(l, min_v)
 			else
 				stop("terra levels should return a list of data.frame's; pls update terra")
 			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
 			if (inherits(colors, "try-error") || length(colors) == 0)
 				colors = NULL
-			#else if (length(colors) == length(levels) + 1) # remove last color?
-			#	colors = colors[-length(colors)]
-			v = factor(as.vector(v), levels = l$levels, labels = l$labels)
-			v = structure(v, dim = dimv, colors = colors, exclude = l$exclude)
+			v = structure(factor(as.vector(v), levels = l$levels, labels = l$labels),
+					dim = dimv, colors = colors, exclude = l$exclude)
 		}
 		dimensions = list(
-			x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
+				x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
 							 	delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(terra::crs(.x))),
-			y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
+				y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
 							 	delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(terra::crs(.x))))
 		dimensions$band = create_dimension(values = names(.x))
-	#	l = if (length(names) > 1)
-	#		setNames(list(v), deparse(substitute(.x), 50))
-	#	else
-	#		setNames(list(v), names(.x)[1])
 		ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
 		if (dim(ret)[3] == 1)
 			ret = adrop(ret, 3)

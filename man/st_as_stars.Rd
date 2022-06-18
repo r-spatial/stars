@@ -46,7 +46,12 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{Raster}(.x, ..., att = 1, ignore_file = FALSE)
 
-\method{st_as_stars}{SpatRaster}(.x, ..., ignore_file = FALSE)
+\method{st_as_stars}{SpatRaster}(
+  .x,
+  ...,
+  ignore_file = FALSE,
+  as_attributes = all(terra::is.factor(.x))
+)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 
@@ -115,6 +120,8 @@ passed on to \code{\link{read_ncdf}}.}
 \item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 
 \item{ignore_file}{logical; if \code{TRUE}, ignore the SpatRaster object file name}
+
+\item{as_attributes}{logical; if \code{TRUE} and \code{.x} has more than one layer, load these as separate attributes rather than as a band or time dimension (only implemented for the case where \code{ignore_file} is \code{TRUE})}
 
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.}

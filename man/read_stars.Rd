@@ -20,7 +20,8 @@ read_stars(
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0),
-  tolerance = 1e-10
+  tolerance = 1e-10,
+  exclude = ""
 )
 
 is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
@@ -28,7 +29,8 @@ is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector}
 
-\item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set}
+\item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set
+param exclude character; vector with category values to exclude}
 
 \item{options}{character; opening options}
 

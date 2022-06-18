@@ -728,6 +728,14 @@ st_geometry.stars = function(obj,...) {
 	d[[ which_sfc(obj) ]]$values
 }
 
+# make sure asub works for factor too:
+asub.factor = function(x, idx, dims, drop = NULL, ...) {
+	l = levels(x)
+	x = unclass(x)
+	ret = NextMethod()
+	structure(ret, class = "factor", levels = l)
+}
+
 #' @name merge
 #' @aliases split
 #' @param f the name or index of the dimension to split; by default the last dimension
