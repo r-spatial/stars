@@ -772,9 +772,7 @@ merge.stars = function(x, y, ..., name = "attributes") {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = do.call(abind, st_redimension(x))
-	if (is.factor(x[[1]]) && is.character(out))
-		out = structure(factor(as.vector(out), levels = levels(x[[1]])), dim = dim(out))
+	out = st_redimension(x)
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -843,10 +841,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 			dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
 			if (length(names(along)) == 1)
 				names(dims)[names(dims) == "new_dim"] = names(along)
-			ret = if (is.factor(x[[1]])) # assume all factors:
-					structure(do.call(c, x), dim = dim(dims))
-				else
-					do.call(abind, c(unclass(x), along = length(dim(x)) + 1))
+			ret = structure(do.call(c, x), dim = dim(dims))
 			st_stars(setNames(list(ret), paste(names(x), collapse = ".")), dimensions = dims)
 		}
 	}
