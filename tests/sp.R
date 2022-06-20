@@ -1,5 +1,5 @@
 options(rgdal_show_exportToProj4_warnings = "none")
-library(sp)
+if (require(sp, quietly = TRUE)) {
 demo(meuse)
 # remove +init=xxx
 meuse@proj4string = CRS(
@@ -24,3 +24,4 @@ all.equal(meuse.grid, gr2, check.attributes = FALSE)
 
 #all.equal(meuse, m2)
 #all.equal(meuse.grid, gr2)
+}

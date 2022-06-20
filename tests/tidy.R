@@ -1,8 +1,8 @@
 suppressPackageStartupMessages(library(stars))
-suppressPackageStartupMessages(library(dplyr))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))
 
+if (require(dplyr, quietly = TRUE)) {
 (y <- x %>% select(L7_ETMs.tif))
 (y <- x %>% filter(band > 2))
 (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
@@ -25,3 +25,4 @@ x - slice(x, 'band', 1) # runs as expected, recycling the second object
 try(y - slice(x, 'band', 1)) # fails as expected because x is unitless
 try(x - slice(y, 'band', 1)) # fails as expected 
 y - slice(y, 'band', 1) # runs as expected
+}

@@ -34,6 +34,7 @@ x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
+if (require(PCICt, quietly = TRUE)) {
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 (x = read_stars(nc))
 st_bbox(x)
@@ -60,6 +61,8 @@ units::drop_units(x)
 dimnames(x)
 dimnames(x) <- letters[1:3]
 dimnames(x)
+} # PCICt
+
 st_as_stars()
 
 # multiple sub-datasets:

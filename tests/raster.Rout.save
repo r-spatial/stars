@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -41,6 +41,8 @@ min values :      47,      32,      21,       9,       1,       1
 max values :     255,     255,     255,     255,     255,     255 
 time       : 1, 2, 3, 4, 5, 6 
 
+Warning message:
+no function found corresponding to methods exports from 'raster' for: 'area' 
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
@@ -132,8 +134,8 @@ max values  :   255,   255,   255,   255,   255,   255
 > (y = st_as_stars(r))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-        Min. 1st Qu. Median     Mean 3rd Qu. Max.
-values     1      54     69 68.91242      86  255
+       Min. 1st Qu. Median     Mean 3rd Qu. Max.
+band1     1      54     69 68.91242      86  255
 dimension(s):
      from  to  offset delta                     refsys point          values
 x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA            NULL
@@ -150,8 +152,8 @@ band
 > (y = st_as_stars(r))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-        Min. 1st Qu. Median     Mean 3rd Qu. Max.
-values    47      67     78 79.14772      89  255
+       Min. 1st Qu. Median     Mean 3rd Qu. Max.
+lyr.1    47      67     78 79.14772      89  255
 dimension(s):
   from  to  offset delta                     refsys point values x/y
 x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
@@ -199,4 +201,4 @@ band    1   6      NA    NA                         NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
-  6.631   0.176   6.801 
+  5.848   0.121   5.961 

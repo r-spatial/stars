@@ -29,8 +29,7 @@ is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector}
 
-\item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set
-param exclude character; vector with category values to exclude}
+\item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set}
 
 \item{options}{character; opening options}
 
@@ -58,6 +57,8 @@ or to 1e8 if that option was not set.}
 \item{RAT}{character; raster attribute table column name to use as factor levels}
 
 \item{tolerance}{numeric; passed on to \link{all.equal} for comparing dimension parameters.}
+
+\item{exclude}{character; vector with category value(s) to exclude}
 
 \item{x}{object to be read with \link{read_stars}}
 

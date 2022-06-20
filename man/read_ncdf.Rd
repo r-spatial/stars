@@ -75,13 +75,15 @@ is \code{NA} then all steps are included. Axis order must match that of the vari
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
-read_ncdf(f)
-read_ncdf(f, var = c("anom"))
-read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
-
+if (require(ncmeta, quietly = TRUE)) {
+ read_ncdf(f)
+ read_ncdf(f, var = c("anom"))
+ read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
+}
 
 #' precipitation data in a curvilinear NetCDF
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
+if (require(ncmeta, quietly = TRUE)) {
 prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
 
 ##plot(prec) ## gives error about unique breaks
@@ -91,9 +93,10 @@ qu_0_omit = function(x, ..., n = 22) {
   x = units::drop_units(na.omit(x))
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
-library(dplyr)
+if (require(dplyr, quietly = TRUE)) {
 prec_slice = slice(prec, index = 17, along = "time")
 plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
+}}
 }

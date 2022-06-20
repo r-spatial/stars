@@ -106,7 +106,7 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
-get_terra_levels = function(x, min_v) {
+get_terra_levels = function(x) {
 # create factor levels, as used by stars, from SpatRaster levels in a data.frame
 # see https://github.com/r-spatial/stars/pull/484
 	x = x[order(x[[1]]), ] # sort table on level
@@ -174,7 +174,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 		setNames(ret, attr_name)
 	} else { # ignore_file TRUE:
 		if (terra::nlyr(.x) > 1 && as_attributes)
-			return(do.call(c, lapply(seq_len(nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE))))
+			return(do.call(c, lapply(seq_len(terra::nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE))))
 		if (attr_name == "") {
 			if (all(names(.x) == ""))
 				attr_name = "values"
@@ -187,7 +187,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 			if (length(terra::levels(.x)) > 1)
 				warning("ignoring categories/levels for all but first layer")
 			if (inherits(l <- terra::levels(.x)[[1]], "data.frame"))
-				l = get_terra_levels(l, min_v)
+				l = get_terra_levels(l)
 			else
 				stop("terra levels should return a list of data.frame's; pls update terra")
 			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
