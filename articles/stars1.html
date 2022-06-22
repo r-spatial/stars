@@ -207,12 +207,7 @@
 <p>The data structure <code>stars</code> is a generalisation of the <code>tbl_cube</code> found in <code>cubelyr</code>; we can convert to that by</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hadley/cubelyr" class="external-link">cubelyr</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="co">## Source: local array [737,088 x 3]</span>
-<span class="co">## D: x [dbl, 349]</span>
-<span class="co">## D: y [dbl, 352]</span>
-<span class="co">## D: band [int, 6]</span>
-<span class="co">## M: L7_ETMs.tif [dbl[,352,6]]</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <p>but this will cause a loss of certain properties (cell size, reference system, vector geometries)</p>
 <div class="section level3">
 <h3 id="switching-attributes-to-dimensions-and-back">Switching attributes to dimensions and back<a class="anchor" aria-label="anchor" href="#switching-attributes-to-dimensions-and-back"></a>
@@ -341,21 +336,10 @@
 <p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/bcsd_obs_1999.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> |&gt;
-    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">w</span>
-<span class="co">## pr, tas,</span></code></pre></div>
+    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">w</span></code></pre></div>
 <p>We see that</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">w</span>
-<span class="co">## stars object with 3 dimensions and 2 attributes</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span>
-<span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span>
-<span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from to offset  delta  refsys point                    values x/y</span>
-<span class="co">## x       1 81    -85  0.125      NA    NA                      NULL [x]</span>
-<span class="co">## y       1 33 37.125 -0.125      NA    NA                      NULL [y]</span>
-<span class="co">## time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31</span></code></pre></div>
+<code class="sourceCode R"><span class="va">w</span></code></pre></div>
 <p>For this dataset we can see that</p>
 <ul>
 <li>variables have units associated (and a wrong unit, <code>C</code> is assigned to temperature)</li>
@@ -403,31 +387,10 @@
 <span class="co"># see the second vignette:</span>
 <span class="co"># install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de", type = "source")</span>
 <span class="va">file_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"netcdf/"</span>, <span class="va">x</span><span class="op">)</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## stars object with 4 dimensions and 4 attributes</span>
-<span class="co">## attribute(s), summary of first 1e+05 cells:</span>
-<span class="co">##                Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's</span>
-<span class="co">## sst [°*C]     -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360</span>
-<span class="co">## anom [°*C]    -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360</span>
-<span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span>
-<span class="co">## ice [percent]  0.01    0.73   0.83  0.7657695    0.87 1.00 27377</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##      from   to         offset  delta  refsys point values x/y</span>
-<span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span>
-<span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span>
-<span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span>
-<span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></code></pre></div>
+<span class="op">(</span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-<span class="co">## </span>
-<span class="co">## Attaching package: 'dplyr'</span>
-<span class="co">## The following objects are masked from 'package:stats':</span>
-<span class="co">## </span>
-<span class="co">##     filter, lag</span>
-<span class="co">## The following objects are masked from 'package:base':</span>
-<span class="co">## </span>
-<span class="co">##     intersect, setdiff, setequal, union</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">abind</span><span class="op">)</span>
 <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">y</span> |&gt; <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span> |&gt; <span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html" class="external-link">adrop</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>We can now graph the sea surface temperature (SST) using <code>ggplot</code>, which needs data in a long table form, and without units:</p>
@@ -436,7 +399,6 @@
 <span class="va">z1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span><span class="op">(</span><span class="va">z</span>, <span class="fl">3</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">z</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span>
-<span class="co">## Loading required package: viridisLite</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jrnold/ggthemes" class="external-link">ggthemes</a></span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>  
   <span class="fu"><a href="../reference/geom_stars.html">geom_stars</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">z1</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, alpha <span class="op">=</span> <span class="fl">0.8</span>, downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -446,7 +408,6 @@
   <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_map.html" class="external-link">theme_map</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="stars1_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -480,6 +441,14 @@
   <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co"># loads slice generic</span>
+<span class="co">## </span>
+<span class="co">## Attaching package: 'dplyr'</span>
+<span class="co">## The following objects are masked from 'package:stats':</span>
+<span class="co">## </span>
+<span class="co">##     filter, lag</span>
+<span class="co">## The following objects are masked from 'package:base':</span>
+<span class="co">## </span>
+<span class="co">##     intersect, setdiff, setequal, union</span>
 <span class="va">prec_slice</span> <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">prec</span>, index <span class="op">=</span> <span class="fl">17</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prec_slice</span>, border <span class="op">=</span> <span class="cn">NA</span>, breaks <span class="op">=</span> <span class="fu">qu_0_omit</span><span class="op">(</span><span class="va">prec_slice</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">nc</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span>
@@ -526,7 +495,7 @@
 <span class="co">## stars object with 5 dimensions and 1 attribute</span>
 <span class="co">## attribute(s), summary of first 1e+05 cells:</span>
 <span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span>
-<span class="co">## traffic     0       8     10 10.01321      12   26</span>
+<span class="co">## traffic     0       8     10 10.00727      12   25</span>
 <span class="co">## dimension(s):</span>
 <span class="co">##             from  to                      offset                       delta</span>
 <span class="co">## origin         1 100                          NA                          NA</span>
