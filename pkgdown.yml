@@ -1,5 +1,5 @@
 pandoc: 2.14.2
-pkgdown: 2.0.4
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles:
   stars1: stars1.html
@@ -10,5 +10,5 @@ articles:
   stars6: stars6.html
   stars7: stars7.html
   stars8: stars8.html
-last_built: 2022-06-23T04:50Z
+last_built: 2022-06-24T05:01Z
 
