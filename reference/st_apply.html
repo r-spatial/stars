@@ -84,20 +84,20 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for stars</span>
-<span class="fu">st_apply</span><span class="op">(</span>
-  <span class="va">X</span>,
-  <span class="va">MARGIN</span>,
-  <span class="va">FUN</span>,
-  <span class="va">...</span>,
-  CLUSTER <span class="op">=</span> <span class="cn">NULL</span>,
-  PROGRESS <span class="op">=</span> <span class="cn">FALSE</span>,
-  FUTURE <span class="op">=</span> <span class="cn">FALSE</span>,
-  rename <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">.fname</span>,
-  single_arg <span class="op">=</span> <span class="fu">has_single_arg</span><span class="op">(</span><span class="va">FUN</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">||</span> <span class="fu">can_single_arg</span><span class="op">(</span><span class="va">FUN</span><span class="op">)</span>,
-  keep <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu">st_apply</span><span class="op">(</span></span>
+<span>  <span class="va">X</span>,</span>
+<span>  <span class="va">MARGIN</span>,</span>
+<span>  <span class="va">FUN</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  CLUSTER <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  PROGRESS <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  FUTURE <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rename <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">.fname</span>,</span>
+<span>  single_arg <span class="op">=</span> <span class="fu">has_single_arg</span><span class="op">(</span><span class="va">FUN</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span> <span class="op">||</span> <span class="fu">can_single_arg</span><span class="op">(</span><span class="va">FUN</span><span class="op">)</span>,</span>
+<span>  keep <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -174,9 +174,9 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># mean band value for each pixel</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># mean band value for each pixel</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Min.  1st Qu.   Median     Mean 3rd Qu. Max.</span>
@@ -185,7 +185,7 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point values x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
-<span class="r-in"><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span>
+<span class="r-in"><span><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Min.  1st Qu.   Median     Mean 3rd Qu. Max.</span>
@@ -194,7 +194,7 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point values x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
-<span class="r-in"><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span>, <span class="va">mean</span><span class="op">)</span>   <span class="co"># mean of all pixels for each band</span></span>
+<span class="r-in"><span><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span>, <span class="va">mean</span><span class="op">)</span>   <span class="co"># mean of all pixels for each band</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Min.  1st Qu.   Median     Mean  3rd Qu.     Max.</span>
@@ -202,24 +202,24 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      from to offset delta refsys point values</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> band    1  6     NA    NA     NA    NA   NULL</span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="st">"band"</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span>
-<span class="r-in"> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="co"># min and max band value for each pixel</span></span>
-<span class="r-in"> <span class="va">fn_ndvi1</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">-</span><span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">+</span><span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="co"># ONE argument: will be called for each pixel</span></span>
-<span class="r-in"> <span class="va">fn_ndvi2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">red</span>,<span class="va">nir</span><span class="op">)</span> <span class="op">(</span><span class="va">nir</span><span class="op">-</span><span class="va">red</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">nir</span><span class="op">+</span><span class="va">red</span><span class="op">)</span> <span class="co"># n arguments: will be called only once</span></span>
-<span class="r-in"> <span class="va">ndvi1</span> <span class="op">=</span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">fn_ndvi1</span><span class="op">)</span></span>
-<span class="r-in">   <span class="co"># note that we can select bands 3 and 4 in the first argument:</span></span>
-<span class="r-in"> <span class="va">ndvi2</span> <span class="op">=</span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span><span class="op">[</span>,,,<span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">fn_ndvi2</span><span class="op">)</span> </span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">ndvi1</span>, <span class="va">ndvi2</span><span class="op">)</span></span>
-<span class="r-in"> <span class="co"># compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430</span></span>
-<span class="r-in"> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># as.vector is required!</span></span>
-<span class="r-in"> <span class="co"># to get a progress bar also in non-interactive mode, specify:</span></span>
-<span class="r-in"> <span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/psolymos/pbapply" class="external-link">pbapply</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> <span class="co"># install it, if FALSE</span></span>
-<span class="r-in">   <span class="fu"><a href="https://rdrr.io/pkg/pbapply/man/pboptions.html" class="external-link">pboptions</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"timer"</span><span class="op">)</span></span>
-<span class="r-in"> <span class="op">}</span></span>
-<span class="r-in"> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="co"># dimension "range" is first; rearrange by:</span></span>
-<span class="r-in"> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html" class="external-link">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="st">"band"</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span></span>
+<span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="co"># min and max band value for each pixel</span></span></span>
+<span class="r-in"><span> <span class="va">fn_ndvi1</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">-</span><span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">+</span><span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="co"># ONE argument: will be called for each pixel</span></span></span>
+<span class="r-in"><span> <span class="va">fn_ndvi2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">red</span>,<span class="va">nir</span><span class="op">)</span> <span class="op">(</span><span class="va">nir</span><span class="op">-</span><span class="va">red</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">nir</span><span class="op">+</span><span class="va">red</span><span class="op">)</span> <span class="co"># n arguments: will be called only once</span></span></span>
+<span class="r-in"><span> <span class="va">ndvi1</span> <span class="op">=</span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">fn_ndvi1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="co"># note that we can select bands 3 and 4 in the first argument:</span></span></span>
+<span class="r-in"><span> <span class="va">ndvi2</span> <span class="op">=</span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span><span class="op">[</span>,,,<span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">fn_ndvi2</span><span class="op">)</span> </span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">ndvi1</span>, <span class="va">ndvi2</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="co"># compute the (spatial) variance of each band; https://github.com/r-spatial/stars/issues/430</span></span></span>
+<span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">as.vector</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># as.vector is required!</span></span></span>
+<span class="r-in"><span> <span class="co"># to get a progress bar also in non-interactive mode, specify:</span></span></span>
+<span class="r-in"><span> <span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/psolymos/pbapply" class="external-link">pbapply</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> <span class="co"># install it, if FALSE</span></span></span>
+<span class="r-in"><span>   <span class="fu"><a href="https://rdrr.io/pkg/pbapply/man/pboptions.html" class="external-link">pboptions</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"timer"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="op">}</span></span></span>
+<span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="co"># dimension "range" is first; rearrange by:</span></span></span>
+<span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html" class="external-link">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

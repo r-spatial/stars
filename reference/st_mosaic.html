@@ -84,34 +84,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">st_mosaic</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for stars</span>
-<span class="fu">st_mosaic</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span>, <span class="st">"-srcnodata"</span>, <span class="st">"nan"</span><span class="op">)</span>,
-  file_ext <span class="op">=</span> <span class="st">".tif"</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">st_mosaic</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span><span class="op">)</span>,
-  file_ext <span class="op">=</span> <span class="st">".tif"</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for stars_proxy</span>
-<span class="fu">st_mosaic</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,
-  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span><span class="op">)</span>,
-  file_ext <span class="op">=</span> <span class="st">".tif"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">st_mosaic</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu">st_mosaic</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span>, <span class="st">"-srcnodata"</span>, <span class="st">"nan"</span><span class="op">)</span>,</span>
+<span>  file_ext <span class="op">=</span> <span class="st">".tif"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">st_mosaic</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span><span class="op">)</span>,</span>
+<span>  file_ext <span class="op">=</span> <span class="st">".tif"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars_proxy</span></span>
+<span><span class="fu">st_mosaic</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="va">file_ext</span><span class="op">)</span>,</span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-vrtnodata"</span>, <span class="st">"-9999"</span><span class="op">)</span>,</span>
+<span>  file_ext <span class="op">=</span> <span class="st">".tif"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -152,10 +152,10 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span>,<span class="fl">100</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">100</span><span class="op">:</span><span class="fl">200</span>,<span class="op">]</span></span>
-<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span>,<span class="fl">150</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">150</span><span class="op">:</span><span class="fl">300</span>,<span class="op">]</span></span>
-<span class="r-in"><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="fu">st_mosaic</span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span>,<span class="fl">100</span><span class="op">:</span><span class="fl">200</span>,<span class="fl">100</span><span class="op">:</span><span class="fl">200</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">=</span> <span class="va">x</span><span class="op">[</span>,<span class="fl">150</span><span class="op">:</span><span class="fl">300</span>,<span class="fl">150</span><span class="op">:</span><span class="fl">300</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="fu">st_mosaic</span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="st_mosaic-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

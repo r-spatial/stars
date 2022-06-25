@@ -84,62 +84,62 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for stars</span>
-<span class="fu">plot</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">y</span>,
-  <span class="va">...</span>,
-  join_zlim <span class="op">=</span> <span class="cn">TRUE</span>,
-  main <span class="op">=</span> <span class="fu">make_label</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span>,
-  axes <span class="op">=</span> <span class="cn">FALSE</span>,
-  downsample <span class="op">=</span> <span class="cn">TRUE</span>,
-  nbreaks <span class="op">=</span> <span class="fl">11</span>,
-  breaks <span class="op">=</span> <span class="st">"quantile"</span>,
-  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">nbreaks</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">/</span><span class="va">nbreaks</span><span class="op">)</span>,
-  key.pos <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">get_key_pos</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>,
-  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,
-  key.length <span class="op">=</span> <span class="fl">0.618</span>,
-  reset <span class="op">=</span> <span class="cn">TRUE</span>,
-  box_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="fl">0.8</span><span class="op">)</span>,
-  center_time <span class="op">=</span> <span class="cn">FALSE</span>,
-  hook <span class="op">=</span> <span class="cn">NULL</span>,
-  mfrow <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for stars</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">...</span>,
-  band <span class="op">=</span> <span class="fl">1</span>,
-  attr <span class="op">=</span> <span class="fl">1</span>,
-  asp <span class="op">=</span> <span class="cn">NULL</span>,
-  rgb <span class="op">=</span> <span class="cn">NULL</span>,
-  maxColorValue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">rgb</span>, <span class="st">"data.frame"</span><span class="op">)</span>, <span class="fl">255</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="va">attr</span><span class="op">]</span><span class="op">]</span>, na.rm <span class="op">=</span>
-    <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,
-  xlab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">axes</span><span class="op">)</span> <span class="st">""</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,
-  ylab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">axes</span><span class="op">)</span> <span class="st">""</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,
-  xlim <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">$</span><span class="va">xlim</span>,
-  ylim <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">$</span><span class="va">ylim</span>,
-  text_values <span class="op">=</span> <span class="cn">FALSE</span>,
-  text_color <span class="op">=</span> <span class="st">"black"</span>,
-  axes <span class="op">=</span> <span class="cn">FALSE</span>,
-  interpolate <span class="op">=</span> <span class="cn">FALSE</span>,
-  as_points <span class="op">=</span> <span class="cn">FALSE</span>,
-  key.pos <span class="op">=</span> <span class="cn">NULL</span>,
-  logz <span class="op">=</span> <span class="cn">FALSE</span>,
-  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,
-  key.length <span class="op">=</span> <span class="fl">0.618</span>,
-  add.geom <span class="op">=</span> <span class="cn">NULL</span>,
-  border <span class="op">=</span> <span class="cn">NA</span>,
-  useRaster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.capabilities.html" class="external-link">dev.capabilities</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">rasterImage</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span>,
-  extent <span class="op">=</span> <span class="va">x</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for nc_proxy</span>
-<span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, max_times <span class="op">=</span> <span class="fl">16</span><span class="op">)</span>
-
-<span class="co"># S3 method for stars_proxy</span>
-<span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu">plot</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  join_zlim <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  main <span class="op">=</span> <span class="fu">make_label</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  downsample <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  nbreaks <span class="op">=</span> <span class="fl">11</span>,</span>
+<span>  breaks <span class="op">=</span> <span class="st">"quantile"</span>,</span>
+<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">nbreaks</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">/</span><span class="va">nbreaks</span><span class="op">)</span>,</span>
+<span>  key.pos <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">get_key_pos</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>,</span>
+<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,</span>
+<span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
+<span>  reset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  box_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="fl">0.8</span><span class="op">)</span>,</span>
+<span>  center_time <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  hook <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mfrow <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  band <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  attr <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  asp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rgb <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  maxColorValue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">rgb</span>, <span class="st">"data.frame"</span><span class="op">)</span>, <span class="fl">255</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="va">attr</span><span class="op">]</span><span class="op">]</span>, na.rm <span class="op">=</span></span>
+<span>    <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  xlab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">axes</span><span class="op">)</span> <span class="st">""</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>  ylab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">axes</span><span class="op">)</span> <span class="st">""</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">$</span><span class="va">xlim</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">extent</span><span class="op">)</span><span class="op">$</span><span class="va">ylim</span>,</span>
+<span>  text_values <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  text_color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  axes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  interpolate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  as_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  logz <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,</span>
+<span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
+<span>  add.geom <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  border <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  useRaster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.capabilities.html" class="external-link">dev.capabilities</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">rasterImage</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span>,</span>
+<span>  extent <span class="op">=</span> <span class="va">x</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nc_proxy</span></span>
+<span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, max_times <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars_proxy</span></span>
+<span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -303,11 +303,11 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">3</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">3</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x</span>, rgb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># rgb composite</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x</span>, rgb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span>,<span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># rgb composite</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in image.stars(x, rgb = c(1, 3, 5)):</span> rgb plotting not supported on this device</span>
 </code></pre></div>
     </div>

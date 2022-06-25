@@ -84,71 +84,71 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for list</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dimensions <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">st_as_stars</span><span class="op">(</span>.x <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, raster <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="co"># S3 method for stars</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, curvilinear <span class="op">=</span> <span class="cn">NULL</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># S3 method for bbox</span>
-<span class="fu">st_as_stars</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  <span class="va">nx</span>,
-  <span class="va">ny</span>,
-  dx <span class="op">=</span> <span class="va">dy</span>,
-  dy <span class="op">=</span> <span class="va">dx</span>,
-  xlim <span class="op">=</span> <span class="va">.x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xmin"</span>, <span class="st">"xmax"</span><span class="op">)</span><span class="op">]</span>,
-  ylim <span class="op">=</span> <span class="va">.x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ymin"</span>, <span class="st">"ymax"</span><span class="op">)</span><span class="op">]</span>,
-  values <span class="op">=</span> <span class="fl">0</span>,
-  n <span class="op">=</span> <span class="fl">64800</span>,
-  pretty <span class="op">=</span> <span class="cn">FALSE</span>,
-  inside <span class="op">=</span> <span class="cn">NA</span>,
-  <span class="va">nz</span>,
-  proxy <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for sf</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># S3 method for Raster</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># S3 method for SpatRaster</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="co"># S3 method for ncdfgeom</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-
-<span class="co"># S3 method for stars_proxy</span>
-<span class="fu">st_as_stars</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  downsample <span class="op">=</span> <span class="fl">0</span>,
-  url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"url"</span><span class="op">)</span>,
-  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">st_as_stars</span><span class="op">(</span>
-  <span class="va">.x</span>,
-  <span class="va">...</span>,
-  dims <span class="op">=</span> <span class="va">coords</span>,
-  xy <span class="op">=</span> <span class="va">dims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>,
-  y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>,
-  coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for xts</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, <span class="va">dimensions</span>, name <span class="op">=</span> <span class="st">"attr"</span><span class="op">)</span>
-
-<span class="co"># S3 method for OpenStreetMap</span>
-<span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for list</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dimensions <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span>.x <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, raster <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, curvilinear <span class="op">=</span> <span class="cn">NULL</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for bbox</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  <span class="va">nx</span>,</span>
+<span>  <span class="va">ny</span>,</span>
+<span>  dx <span class="op">=</span> <span class="va">dy</span>,</span>
+<span>  dy <span class="op">=</span> <span class="va">dx</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="va">.x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"xmin"</span>, <span class="st">"xmax"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="va">.x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ymin"</span>, <span class="st">"ymax"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  values <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">64800</span>,</span>
+<span>  pretty <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  inside <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">nz</span>,</span>
+<span>  proxy <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for sf</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for Raster</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for SpatRaster</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for ncdfgeom</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars_proxy</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  downsample <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"url"</span><span class="op">)</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  dims <span class="op">=</span> <span class="va">coords</span>,</span>
+<span>  xy <span class="op">=</span> <span class="va">dims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>,</span>
+<span>  y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for xts</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, <span class="va">dimensions</span>, name <span class="op">=</span> <span class="st">"attr"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for OpenStreetMap</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -286,10 +286,10 @@ Must have same number of rows as timeseries instances.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘plm’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:dplyr’:</span>

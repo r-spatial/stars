@@ -115,22 +115,22 @@
 <h2 id="rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object<a class="anchor" aria-label="anchor" href="#rasterizing-an-sf-vector-object"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span>
-<span class="co">## Loading required package: abind</span>
-<span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">32119</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span>
-<span class="va">nc</span><span class="op">$</span><span class="va">dens</span> <span class="op">=</span> <span class="va">nc</span><span class="op">$</span><span class="va">BIR79</span> <span class="op">/</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">km</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>
-<span class="op">(</span><span class="va">nc.st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span><span class="op">(</span><span class="va">nc</span><span class="op">[</span><span class="st">"dens"</span><span class="op">]</span>, dx <span class="op">=</span> <span class="fl">5000</span>, dy <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span><span class="op">)</span>
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span>
-<span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4747</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset delta                 refsys point values x/y</span>
-<span class="co">## x    1 161 123829  5000 NAD83 / North Carolina FALSE   NULL [x]</span>
-<span class="co">## y    1  61 318260 -5000 NAD83 / North Carolina FALSE   NULL [y]</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.st</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
+<span><span class="co">## Loading required package: abind</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fl">32119</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span></span>
+<span><span class="va">nc</span><span class="op">$</span><span class="va">dens</span> <span class="op">=</span> <span class="va">nc</span><span class="op">$</span><span class="va">BIR79</span> <span class="op">/</span> <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">km</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">nc.st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span><span class="op">(</span><span class="va">nc</span><span class="op">[</span><span class="st">"dens"</span><span class="op">]</span>, dx <span class="op">=</span> <span class="fl">5000</span>, dy <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
+<span><span class="co">## attribute(s):</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4747</span></span>
+<span><span class="co">## dimension(s):</span></span>
+<span><span class="co">##   from  to offset delta                 refsys point values x/y</span></span>
+<span><span class="co">## x    1 161 123829  5000 NAD83 / North Carolina FALSE   NULL [x]</span></span>
+<span><span class="co">## y    1  61 318260 -5000 NAD83 / North Carolina FALSE   NULL [y]</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.st</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
 </div>
@@ -140,16 +140,16 @@
 <p><code>stars</code> objects can be converted into an <code>sf</code> object using <code>st_as_sf</code>. It has a number of options, depending on whether pixels represent the point value at the pixel center, or small square polygons with a single value.</p>
 <p>We will work again with the landsat-7 6-band image, but will select the first band and round the values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
-<span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
+<span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="polygonizing">Polygonizing<a class="anchor" aria-label="anchor" href="#polygonizing"></a>
 </h3>
 <p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -157,44 +157,44 @@
 </h3>
 <p>Alternatively, we can simply export all the pixels as points, and get them either as a wide table with all bands per point, and no replicated <code>POINT</code> geometries:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">## Simple feature collection with 2500 features and 2 fields</span>
-<span class="co">## Geometry type: POINT</span>
-<span class="co">## Dimension:     XY</span>
-<span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
-<span class="co">## First 10 features:</span>
-<span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</span>
-<span class="co">## 1              14             11 POINT (288790.5 9120747)</span>
-<span class="co">## 2              14             11   POINT (288819 9120747)</span>
-<span class="co">## 3              13             10 POINT (288847.5 9120747)</span>
-<span class="co">## 4              12              9   POINT (288876 9120747)</span>
-<span class="co">## 5              12             10 POINT (288904.5 9120747)</span>
-<span class="co">## 6              12             10   POINT (288933 9120747)</span>
-<span class="co">## 7              12             10 POINT (288961.5 9120747)</span>
-<span class="co">## 8              12             10   POINT (288990 9120747)</span>
-<span class="co">## 9              13             10 POINT (289018.5 9120747)</span>
-<span class="co">## 10             13             10   POINT (289047 9120747)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">## Simple feature collection with 2500 features and 2 fields</span></span>
+<span><span class="co">## Geometry type: POINT</span></span>
+<span><span class="co">## Dimension:     XY</span></span>
+<span><span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span></span>
+<span><span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span></span>
+<span><span class="co">## First 10 features:</span></span>
+<span><span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                 geometry</span></span>
+<span><span class="co">## 1              14             11 POINT (288790.5 9120747)</span></span>
+<span><span class="co">## 2              14             11   POINT (288819 9120747)</span></span>
+<span><span class="co">## 3              13             10 POINT (288847.5 9120747)</span></span>
+<span><span class="co">## 4              12              9   POINT (288876 9120747)</span></span>
+<span><span class="co">## 5              12             10 POINT (288904.5 9120747)</span></span>
+<span><span class="co">## 6              12             10   POINT (288933 9120747)</span></span>
+<span><span class="co">## 7              12             10 POINT (288961.5 9120747)</span></span>
+<span><span class="co">## 8              12             10   POINT (288990 9120747)</span></span>
+<span><span class="co">## 9              13             10 POINT (289018.5 9120747)</span></span>
+<span><span class="co">## 10             13             10   POINT (289047 9120747)</span></span></code></pre></div>
 <p>or as a long table with a single attribute and all points replicated:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span>, long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">## Simple feature collection with 5000 features and 2 fields</span>
-<span class="co">## Geometry type: POINT</span>
-<span class="co">## Dimension:     XY</span>
-<span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span>
-<span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
-<span class="co">## First 10 features:</span>
-<span class="co">##    band L7_ETMs.tif                 geometry</span>
-<span class="co">## 1     1          14 POINT (288790.5 9120747)</span>
-<span class="co">## 2     1          14   POINT (288819 9120747)</span>
-<span class="co">## 3     1          13 POINT (288847.5 9120747)</span>
-<span class="co">## 4     1          12   POINT (288876 9120747)</span>
-<span class="co">## 5     1          12 POINT (288904.5 9120747)</span>
-<span class="co">## 6     1          12   POINT (288933 9120747)</span>
-<span class="co">## 7     1          12 POINT (288961.5 9120747)</span>
-<span class="co">## 8     1          12   POINT (288990 9120747)</span>
-<span class="co">## 9     1          13 POINT (289018.5 9120747)</span>
-<span class="co">## 10    1          13   POINT (289047 9120747)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span>, long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">## Simple feature collection with 5000 features and 2 fields</span></span>
+<span><span class="co">## Geometry type: POINT</span></span>
+<span><span class="co">## Dimension:     XY</span></span>
+<span><span class="co">## Bounding box:  xmin: 288790.5 ymin: 9119350 xmax: 290187 ymax: 9120747</span></span>
+<span><span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span></span>
+<span><span class="co">## First 10 features:</span></span>
+<span><span class="co">##    band L7_ETMs.tif                 geometry</span></span>
+<span><span class="co">## 1     1          14 POINT (288790.5 9120747)</span></span>
+<span><span class="co">## 2     1          14   POINT (288819 9120747)</span></span>
+<span><span class="co">## 3     1          13 POINT (288847.5 9120747)</span></span>
+<span><span class="co">## 4     1          12   POINT (288876 9120747)</span></span>
+<span><span class="co">## 5     1          12 POINT (288904.5 9120747)</span></span>
+<span><span class="co">## 6     1          12   POINT (288933 9120747)</span></span>
+<span><span class="co">## 7     1          12 POINT (288961.5 9120747)</span></span>
+<span><span class="co">## 8     1          12   POINT (288990 9120747)</span></span>
+<span><span class="co">## 9     1          13 POINT (289018.5 9120747)</span></span>
+<span><span class="co">## 10    1          13   POINT (289047 9120747)</span></span></code></pre></div>
 <p>as we can see, an additional attribute <code>band</code> now indicates which band is concerned.</p>
 </div>
 <div class="section level3">
@@ -202,30 +202,30 @@
 </h3>
 <p>Alternatively, we can export to polygons and either get a single polygon per pixel, as in</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">## Simple feature collection with 2500 features and 2 fields</span>
-<span class="co">## Geometry type: POLYGON</span>
-<span class="co">## Dimension:     XY</span>
-<span class="co">## Bounding box:  xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span>
-<span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
-<span class="co">## First 10 features:</span>
-<span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</span>
-<span class="co">## 1              14             11 POLYGON ((288776.3 9120761,...</span>
-<span class="co">## 2              14             11 POLYGON ((288804.8 9120761,...</span>
-<span class="co">## 3              13             10 POLYGON ((288833.3 9120761,...</span>
-<span class="co">## 4              12              9 POLYGON ((288861.8 9120761,...</span>
-<span class="co">## 5              12             10 POLYGON ((288890.3 9120761,...</span>
-<span class="co">## 6              12             10 POLYGON ((288918.8 9120761,...</span>
-<span class="co">## 7              12             10 POLYGON ((288947.3 9120761,...</span>
-<span class="co">## 8              12             10 POLYGON ((288975.8 9120761,...</span>
-<span class="co">## 9              13             10 POLYGON ((289004.3 9120761,...</span>
-<span class="co">## 10             13             10 POLYGON ((289032.8 9120761,...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">## Simple feature collection with 2500 features and 2 fields</span></span>
+<span><span class="co">## Geometry type: POLYGON</span></span>
+<span><span class="co">## Dimension:     XY</span></span>
+<span><span class="co">## Bounding box:  xmin: 288776.3 ymin: 9119336 xmax: 290201.3 ymax: 9120761</span></span>
+<span><span class="co">## Projected CRS: SIRGAS 2000 / UTM zone 25S</span></span>
+<span><span class="co">## First 10 features:</span></span>
+<span><span class="co">##    L7_ETMs.tif.V1 L7_ETMs.tif.V2                       geometry</span></span>
+<span><span class="co">## 1              14             11 POLYGON ((288776.3 9120761,...</span></span>
+<span><span class="co">## 2              14             11 POLYGON ((288804.8 9120761,...</span></span>
+<span><span class="co">## 3              13             10 POLYGON ((288833.3 9120761,...</span></span>
+<span><span class="co">## 4              12              9 POLYGON ((288861.8 9120761,...</span></span>
+<span><span class="co">## 5              12             10 POLYGON ((288890.3 9120761,...</span></span>
+<span><span class="co">## 6              12             10 POLYGON ((288918.8 9120761,...</span></span>
+<span><span class="co">## 7              12             10 POLYGON ((288947.3 9120761,...</span></span>
+<span><span class="co">## 8              12             10 POLYGON ((288975.8 9120761,...</span></span>
+<span><span class="co">## 9              13             10 POLYGON ((289004.3 9120761,...</span></span>
+<span><span class="co">## 10             13             10 POLYGON ((289032.8 9120761,...</span></span></code></pre></div>
 <p>or merge polygons that have identical pixel values;</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>When plotted with boundaries, we see the resolved boundaries of areas with the same pixel value:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>A further option <code>connect8</code> can be set to <code>TRUE</code> to use 8 connectedness, rather than the default 4 connectedness algorithm. In both cases, the polygons returned will often be invalid according to the simple feature standard, but can be made valid using <code>lwgeom::st_make_valid</code>.</p>
 </div>
@@ -235,19 +235,19 @@
 </h2>
 <p>We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a <code>stars</code> object by</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x.sf</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">x.sf</span>
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##              Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
-<span class="co">## L7_ETMs.tif     7       9     11 11.2548      12   28</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##          from   to offset delta                     refsys point</span>
-<span class="co">## geometry    1 2500     NA    NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
-<span class="co">## band        1    2     NA    NA                         NA    NA</span>
-<span class="co">##                                                       values</span>
-<span class="co">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</span>
-<span class="co">## band                                                    NULL</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x.sf</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">x.sf</span></span>
+<span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
+<span><span class="co">## attribute(s):</span></span>
+<span><span class="co">##              Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
+<span><span class="co">## L7_ETMs.tif     7       9     11 11.2548      12   28</span></span>
+<span><span class="co">## dimension(s):</span></span>
+<span><span class="co">##          from   to offset delta                     refsys point</span></span>
+<span><span class="co">## geometry    1 2500     NA    NA SIRGAS 2000 / UTM zone 25S  TRUE</span></span>
+<span><span class="co">## band        1    2     NA    NA                         NA    NA</span></span>
+<span><span class="co">##                                                       values</span></span>
+<span><span class="co">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</span></span>
+<span><span class="co">## band                                                    NULL</span></span></code></pre></div>
 <p>which also requires setting the <code>as_points</code> arguments as in <code>st_as_sf</code>.</p>
 </div>
 <div class="section level2">
@@ -256,21 +256,21 @@
 <p>If we accept that curvilinear rasters are rasters too, and that regular and rectilinear grids are special cases of curvilinear grids, reprojecting a raster is no longer a “problem”, it just recomputes new coordinates for every raster cell, and generally results in a curvilinear grid (that sometimes can be brought back to a regular or rectilinear grid). If curvilinear grid cells are represented by coordinates of the cell center, the actual shape of a grid cell gets lost, and this may be a larger effect if grid cells are large or if the transformation is stronger non-linear.</p>
 <p>An example of the reprojection of the grid created above is</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.curv</span>
-<span class="va">nc.curv</span>
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span>
-<span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4747</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from  to offset delta                       refsys point</span>
-<span class="co">## x    1 161     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
-<span class="co">## y    1  61     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span>
-<span class="co">##                           values x/y</span>
-<span class="co">## x [161x61] -2210936,...,-1376490 [x]</span>
-<span class="co">## y    [161x61] 91577.3,...,538204 [y]</span>
-<span class="co">## curvilinear grid</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.curv</span>, border <span class="op">=</span> <span class="cn">NA</span>, graticule <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.curv</span></span>
+<span><span class="va">nc.curv</span></span>
+<span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
+<span><span class="co">## attribute(s):</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4747</span></span>
+<span><span class="co">## dimension(s):</span></span>
+<span><span class="co">##   from  to offset delta                       refsys point</span></span>
+<span><span class="co">## x    1 161     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span></span>
+<span><span class="co">## y    1  61     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span></span>
+<span><span class="co">##                           values x/y</span></span>
+<span><span class="co">## x [161x61] -2210936,...,-1376490 [x]</span></span>
+<span><span class="co">## y    [161x61] 91577.3,...,538204 [y]</span></span>
+<span><span class="co">## curvilinear grid</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.curv</span>, border <span class="op">=</span> <span class="cn">NA</span>, graticule <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>where it should be noted that the dimensionality of the grid didn’t change: the same set of raster cells has been replotted in the new CRS, but now in a curvilinear grid.</p>
 </div>
@@ -279,21 +279,21 @@
 </h2>
 <p>Warping a raster means creating a new <em>regular</em> grid in a new CRS, based on a (usually regular) grid in another CRS. We can do the transformation of the previous section by first creating a target grid:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">newgrid</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">newgrid</span></span></code></pre></div>
 <p>and then warping the old raster to the new</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">newgrid</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.new</span>
-<span class="va">nc.new</span> 
-<span class="co">## stars object with 2 dimensions and 1 attribute</span>
-<span class="co">## attribute(s):</span>
-<span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.  NA's</span>
-<span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.344805 3.825745 21.24828 35984</span>
-<span class="co">## dimension(s):</span>
-<span class="co">##   from  to   offset    delta                       refsys point values x/y</span>
-<span class="co">## x    1 379 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</span>
-<span class="co">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [y]</span>
-<span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.new</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">newgrid</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.new</span></span>
+<span><span class="va">nc.new</span> </span>
+<span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
+<span><span class="co">## attribute(s):</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.  NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.344805 3.825745 21.24828 35984</span></span>
+<span><span class="co">## dimension(s):</span></span>
+<span><span class="co">##   from  to   offset    delta                       refsys point values x/y</span></span>
+<span><span class="co">## x    1 379 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</span></span>
+<span><span class="co">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [y]</span></span>
+<span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.new</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>This new object has a regular grid in the new CRS, aligned with the new x- and y-axes.</p>
 </div>
