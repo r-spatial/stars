@@ -196,7 +196,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 			else
 				ret
 		}
-	} else { # we have one single array:
+	} else { # we have one single array: read it
 		if (!isTRUE(sub)) {
 			sub_required = if (is.null(list(...)$sub_required))
 					FALSE
