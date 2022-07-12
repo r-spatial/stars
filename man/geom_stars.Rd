@@ -45,4 +45,7 @@ if (require(ggplot2, quietly = TRUE)) {
     scale_x_discrete(expand=c(0,0))+
     scale_y_discrete(expand=c(0,0))
 }
+# plot rgb composite:
+st_as_stars(L7_ETMs)[,,,1:3] |> st_rgb() -> x # x contains colors as pixel values
+ggplot() + geom_stars(data = x)
 }

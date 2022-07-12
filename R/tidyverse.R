@@ -269,6 +269,9 @@ replace_na.stars_proxy = function(data, ...) {
 #'     scale_x_discrete(expand=c(0,0))+
 #'     scale_y_discrete(expand=c(0,0))
 #' }
+#' # plot rgb composite:
+#' st_as_stars(L7_ETMs)[,,,1:3] |> st_rgb() -> x # x contains colors as pixel values
+#' ggplot() + geom_stars(data = x)
 geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE, 
 					  na.action = na.pass) {
 
@@ -285,6 +288,12 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 		data = st_as_stars(data, downsample = downsample) # fetches data
 	else if (any(downsample > 0))
 		data = st_downsample(data, downsample)
+	
+	all_colors = function (x) {
+		is.character(x) && all(nchar(x) %in% c(7, 9) & substr(x, 1, 1) == "#", na.rm = TRUE)
+	}
+	if (is.null(list(...)$fill) && all_colors(fill <- as.vector(data[[1]])))
+		return(geom_stars(mapping = mapping, data = data, sf = sf, na.action = na.action, ..., fill = fill))
 
 	if (is_curvilinear(data) || sf)
 		data = st_xy2sfc(data, as_points = FALSE) # removes NA's by default
