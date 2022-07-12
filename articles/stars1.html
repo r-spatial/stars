@@ -235,17 +235,13 @@
 <span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##    Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## X     1      54     69 68.91242      86  255</span></span>
+<span><span class="co">##                    Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
+<span><span class="co">## X1.X2.X3.X4.X5.X6     1      54     69 68.91242      86  255</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##            from  to  offset delta                     refsys point    values</span></span>
-<span><span class="co">## x             1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL</span></span>
-<span><span class="co">## y             1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL</span></span>
-<span><span class="co">## attributes    1   6      NA    NA                         NA    NA X1,...,X6</span></span>
-<span><span class="co">##            x/y</span></span>
-<span><span class="co">## x          [x]</span></span>
-<span><span class="co">## y          [y]</span></span>
-<span><span class="co">## attributes</span></span></code></pre></div>
+<span><span class="co">##         from  to  offset delta                     refsys point    values x/y</span></span>
+<span><span class="co">## x          1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL [x]</span></span>
+<span><span class="co">## y          1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL [y]</span></span>
+<span><span class="co">## new_dim    1   6      NA    NA                         NA    NA X1,...,X6</span></span></code></pre></div>
 <p>We see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with <code>setNames</code>, and dimension names and values with <code>st_set_dimensions</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -525,8 +521,8 @@
 <span><span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
-<span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 9.99691      12   25</span></span>
+<span><span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
+<span><span class="co">## traffic     0       8     10 10.00971      12   26</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
@@ -570,8 +566,6 @@
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/lc.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## Warning in read_stars(s, proxy = FALSE): categorical data values starting at 0</span></span>
-<span><span class="co">## are shifted with one to start at 1</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3190631</span>, <span class="fl">3125</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fl">25000</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pol1</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3233847</span>, <span class="fl">21027</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pol2</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.capabilities.html" class="external-link">dev.capabilities</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">rasterImage</span> <span class="op">==</span> <span class="st">"yes"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>

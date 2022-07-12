@@ -124,7 +124,7 @@
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>geom_stars</code> returns (a call to) either <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a>, or <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a>, depending on the raster or vector geometry; for the first to, an <a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a> call is constructed with the raster dimension names and the first array as fill variable. Further calls to <a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a> and <a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a> are needed to control aspect ratio and the layers to be plotted; see examples.</p>
+    <p><code>geom_stars</code> returns (a call to) either <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_raster</a>, <a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile</a>, or <a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a>, depending on the raster or vector geometry; for the first to, an <a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a> call is constructed with the raster dimension names and the first array as fill variable. Further calls to <a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a> and <a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a> are needed to control aspect ratio and the layers to be plotted; see examples. If a <code>stars</code> array contains hex color values, and no <code>fill</code> parameter is given, the color values are used as fill color; see the example below.</p>
     </div>
 
     <div id="ref-examples">
@@ -139,6 +139,10 @@
 <span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_y_discrete</a></span><span class="op">(</span>expand<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-plt img"><img src="geom_stars-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># plot rgb composite:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="st_rgb.html">st_rgb</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x</span> <span class="co"># x contains colors as pixel values</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_stars</span><span class="op">(</span>data <span class="op">=</span> <span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="geom_stars-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

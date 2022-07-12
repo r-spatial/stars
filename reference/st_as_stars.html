@@ -120,7 +120,12 @@
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for SpatRaster</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  ignore_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  as_attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/factors.html" class="external-link">is.factor</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for ncdfgeom</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
@@ -239,6 +244,10 @@ passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 <dd><p>logical; if <code>TRUE</code>, ignore the SpatRaster object file name</p></dd>
 
 
+<dt>as_attributes</dt>
+<dd><p>logical; if <code>TRUE</code> and <code>.x</code> has more than one layer, load these as separate attributes rather than as a band or time dimension (only implemented for the case where <code>ignore_file</code> is <code>TRUE</code>)</p></dd>
+
+
 <dt>sf_geometry</dt>
 <dd><p>sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.</p></dd>
@@ -289,6 +298,8 @@ Must have same number of rows as timeseries instances.</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘plm’</span>
