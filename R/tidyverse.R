@@ -257,7 +257,7 @@ replace_na.stars_proxy = function(data, ...) {
 #' @param downsample downsampling rate: e.g. 3 keeps rows and cols 1, 4, 7, 10 etc.; a value of 0 does not downsample; can be specified for each dimension, e.g. \code{c(5,5,0)} to downsample the first two dimensions but not the third.
 #' @param sf logical; if \code{TRUE} rasters will be converted to polygons and plotted using \link[ggplot2:ggsf]{geom_sf}.
 #' @param na.action function; if \code{NA} values need to be removed before plotting use the value \code{na.omit} here (only applies to objects with raster dimensions)
-#' @details \code{geom_stars} returns (a call to) either \link[ggplot2:geom_tile]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2:ggsf]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2:coord_fixed]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples.
+#' @details \code{geom_stars} returns (a call to) either \link[ggplot2:geom_tile]{geom_raster}, \link[ggplot2]{geom_tile}, or \link[ggplot2:ggsf]{geom_sf}, depending on the raster or vector geometry; for the first to, an \link[ggplot2]{aes} call is constructed with the raster dimension names and the first array as fill variable. Further calls to \link[ggplot2:coord_fixed]{coord_equal} and \link[ggplot2]{facet_wrap} are needed to control aspect ratio and the layers to be plotted; see examples. If a \code{stars} array contains hex color values, and no \code{fill} parameter is given, the color values are used as fill color; see the example below.
 #' @export
 #' @examples
 #' system.file("tif/L7_ETMs.tif", package = "stars") %>% read_stars() -> x
@@ -293,7 +293,8 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 		is.character(x) && all(nchar(x) %in% c(7, 9) & substr(x, 1, 1) == "#", na.rm = TRUE)
 	}
 	if (is.null(list(...)$fill) && all_colors(fill <- as.vector(data[[1]])))
-		return(geom_stars(mapping = mapping, data = data, sf = sf, na.action = na.action, ..., fill = fill))
+		return(geom_stars(mapping = mapping, data = data, sf = sf, na.action = na.action, 
+						  ..., fill = fill)) # RETURNS/recurses
 
 	if (is_curvilinear(data) || sf)
 		data = st_xy2sfc(data, as_points = FALSE) # removes NA's by default
