@@ -176,6 +176,7 @@ test_that("high-dim from rasterwise", {
 
 test_that("timeseries.nc", {
   skip_if_not_installed("ncmeta")
+  skip_if_not_installed("ncdfgeom")
   skip_on_os("solaris")
 
   f <- system.file("nc/timeseries.nc", package = "stars")
