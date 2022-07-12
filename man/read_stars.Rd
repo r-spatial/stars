@@ -20,7 +20,8 @@ read_stars(
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0),
-  tolerance = 1e-10
+  tolerance = 1e-10,
+  exclude = ""
 )
 
 is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
@@ -56,6 +57,8 @@ or to 1e8 if that option was not set.}
 \item{RAT}{character; raster attribute table column name to use as factor levels}
 
 \item{tolerance}{numeric; passed on to \link{all.equal} for comparing dimension parameters.}
+
+\item{exclude}{character; vector with category value(s) to exclude}
 
 \item{x}{object to be read with \link{read_stars}}
 

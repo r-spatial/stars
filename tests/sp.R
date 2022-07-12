@@ -1,5 +1,5 @@
 options(rgdal_show_exportToProj4_warnings = "none")
-if (require(sp)) {
+if (require(sp, quietly = TRUE)) {
 demo(meuse)
 # remove +init=xxx
 meuse@proj4string = CRS(

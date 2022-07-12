@@ -176,6 +176,7 @@ test_that("high-dim from rasterwise", {
 
 test_that("timeseries.nc", {
   skip_if_not_installed("ncmeta")
+  skip_if_not_installed("ncdfgeom")
   skip_on_os("solaris")
 
   f <- system.file("nc/timeseries.nc", package = "stars")
@@ -238,7 +239,11 @@ test_that("4d not 4d", {
 })
 
 test_that("units are right with lcc km", {
+<<<<<<< HEAD
   skip_if_not_installed("ncmeta")
+=======
+	skip_if_not_installed("ncmeta")
+>>>>>>> factor
 	f <- system.file("nc/lcc_km.nc", package = "stars")
 	
 	nc <- read_ncdf(f)

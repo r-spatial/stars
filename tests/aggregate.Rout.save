@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+=======
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+>>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -28,6 +32,7 @@ Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.0; sf_use_s2() is TRUE
 + blocks = st_make_grid(st_as_sfc("POLYGON ((5.871619 47.26986, 15.03811 47.26986, 15.03811 55.05653, 5.871619 55.05653, 5.871619 47.26986))", crs = 4326),
 + 	n = c(3,3))
 + 
+<<<<<<< HEAD
 + (aq = st_as_stars(list(PM10 = air), dimensions = d))
 + (a = aggregate(aq, blocks, mean, na.rm = TRUE))
 + 
@@ -60,6 +65,118 @@ Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.0; sf_use_s2() is TRUE
 + 
 + (a = aggregate(st, st, mean))
 + }
+=======
++ print(aq <- st_as_stars(list(PM10 = air), dimensions = d))
++ print(a <- aggregate(aq, blocks, mean, na.rm = TRUE))
++ }
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+      Min. 1st Qu. Median     Mean 3rd Qu.    Max.   NA's
+PM10     0   9.921 14.792 17.69728  21.992 274.333 157659
+dimension(s):
+        from   to     offset  delta refsys point
+station    1   70         NA     NA WGS 84  TRUE
+time       1 4383 1998-01-01 1 days   Date FALSE
+                                                         values
+station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
+time                                                       NULL
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+      Min. 1st Qu.   Median    Mean  3rd Qu.    Max. NA's
+PM10     1      11 15.57425 18.1715 22.17197 183.271 8429
+dimension(s):
+         from   to     offset  delta refsys point
+geometry    1    9         NA     NA WGS 84 FALSE
+time        1 4383 1998-01-01 1 days   Date FALSE
+                                                                    values
+geometry POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
+time                                                                  NULL
+> 
+> # adapted from ?read_stars:
+> m = array(1:720, dim = c(x = 10, y = 12, t = 6)) # named dim
+> st = st_as_stars(m)
+> attr(st, "dimensions")$y$delta = -1
+> attr(st, "dimensions")$y$offset = 12
+> tm = as.Date("2019-02-19") + 1:6
+> st = st_set_crs(st_set_dimensions(st, 3, values = tm), 4326)
+> 
+> tmp = tempfile(fileext = ".tif")
+> write_stars(st, tmp)
+> 
+> (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
++    nBufXSize = 2, nBufYSize = 2)))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+                        Min. 1st Qu. Median  Mean 3rd Qu. Max.
+file39802e48e7fd2c.tif    33  199.25  365.5 365.5  531.75  698
+dimension(s):
+     from to offset delta refsys point values x/y
+x       1  2      0     5 WGS 84 FALSE   NULL [x]
+y       1  2     12    -6 WGS 84 FALSE   NULL [y]
+band    1  6     NA    NA     NA    NA   NULL    
+> 
+> sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
+> (a = aggregate(st, sfc, mean))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1    28  194.25  360.5 360.5  526.75  693
+dimension(s):
+         from to     offset  delta refsys point
+geometry    1  4         NA     NA WGS 84 FALSE
+t           1  6 2019-02-20 1 days   Date FALSE
+                                                                    values
+geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POLYGON ((5 6, 10 6, 10 0, ...
+t                                                                     NULL
+> a[[1]]
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]   28  148  268  388  508  628
+[2,]   33  153  273  393  513  633
+[3,]   88  208  328  448  568  688
+[4,]   93  213  333  453  573  693
+> sum(a[[1]])*30 == sum(1:720)
+[1] TRUE
+> 
+> tm0 = as.Date("2019-02-19") + -1:8
+> (a = aggregate(st, tm0, mean, na.rm = TRUE))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+A1     1  180.75  360.5 360.5  540.25  720  480
+dimension(s):
+     from to     offset  delta refsys point values x/y
+time    1 10 2019-02-18 1 days   Date    NA   NULL    
+x       1 10          0      1 WGS 84 FALSE   NULL [x]
+y       1 12         12     -1 WGS 84 FALSE   NULL [y]
+> 
+> # with "by" geometry not overlapping x
+> pt = st_point(c(-10,-10))
+> (sfc = c(sfc, st_sfc(pt, crs = st_crs(sfc))))
+Geometry set for 5 features 
+Geometry type: GEOMETRY
+Dimension:     XY
+Bounding box:  xmin: -10 ymin: -10 xmax: 10 ymax: 12
+Geodetic CRS:  WGS 84
+POLYGON ((0 12, 5 12, 5 6, 0 6, 0 12))
+POLYGON ((5 12, 10 12, 10 6, 5 6, 5 12))
+POLYGON ((0 6, 5 6, 5 0, 0 0, 0 6))
+POLYGON ((5 6, 10 6, 10 0, 5 0, 5 6))
+POINT (-10 -10)
+> (a = aggregate(st, sfc, mean))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+A1    28  194.25  360.5 360.5  526.75  693    6
+dimension(s):
+         from to     offset  delta refsys point
+geometry    1  5         NA     NA WGS 84 FALSE
+t           1  6 2019-02-20 1 days   Date FALSE
+                                                     values
+geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POINT (-10 -10)
+t                                                      NULL
+> 
+> (a = aggregate(st, st, mean))
+>>>>>>> factor
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -74,4 +191,8 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
   1.833   0.048   1.877 
+=======
+  1.627   0.093   1.713 
+>>>>>>> factor

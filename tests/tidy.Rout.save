@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -16,11 +16,27 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
+<<<<<<< HEAD
 > 
 > if (require(dplyr, quietly = TRUE)) {
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
 + (x = read_stars(tif))
 + 
+=======
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x = read_stars(tif))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
+dimension(s):
+     from  to  offset delta                     refsys point values x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+band    1   6      NA    NA                         NA    NA   NULL    
+> 
+> if (require(dplyr, quietly = TRUE)) {
+>>>>>>> factor
 + (y <- x %>% select(L7_ETMs.tif))
 + (y <- x %>% filter(band > 2))
 + (z <- x %>% mutate(foo = 2* L7_ETMs.tif))
@@ -71,4 +87,8 @@ band    1   6      NA    NA                         NA    NA   NULL
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
   1.419   0.067   1.481 
+=======
+  1.577   0.069   1.636 
+>>>>>>> factor

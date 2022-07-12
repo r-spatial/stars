@@ -2,6 +2,10 @@
 
 * `read_stars()` reads factor levels better from attribute table; #484 thanks to @ailich
 
+* `read_stars()` puts band names from `band_meta` DESCRIPTION= tags into `values`;
+
+* improve handling of categorical rasters, and their exchange with `terra`; #484
+
 * `plot()` handles auto colors better for factor arrays
 
 * `read_ncdf()` handles units more formally in setting crs; #533

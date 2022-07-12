@@ -96,7 +96,7 @@
 	args[["drop"]] = FALSE
 	for (i in names(x))
 		x[[i]] = structure(eval(rlang::expr(x[[i]][ !!!args ])), levels = attr(x[[i]], "levels"),
-			colors = attr(x[[i]], "colors"))
+			colors = attr(x[[i]], "colors"), exclude = attr(x[[i]], "exclude"))
 
 	# now do dimensions:
 	if (do_select) {

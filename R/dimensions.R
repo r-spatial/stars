@@ -370,6 +370,11 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	# handle band descriptions, if present:
 	if (!is.null(lst$band) && !is.null(pr$descriptions) && all(pr$descriptions != ""))
 		lst$band$values = pr$descriptions
+	else if (!is.null(pr$band_meta)) {
+		bm = unlist(pr$band_meta)
+		if (any(a <- grepl("DESCRIPTION=", bm)))
+			lst$band$values = substring(bm[a], 13)
+	}
 	# set up raster:
 	raster = get_raster(affine = pr$geotransform[c(3,5)],
 						dimensions = c("x", "y"),

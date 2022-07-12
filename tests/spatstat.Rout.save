@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+=======
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+>>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -16,6 +20,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(sf))
+<<<<<<< HEAD
 > 
 > if (require(spatstat.geom, quietly = TRUE)) {
 + library(stars)
@@ -28,10 +33,27 @@ Type 'q()' to quit R.
 + }
 spatstat.geom 2.4-0
 Loading required package: abind
+=======
+> library(stars)
+Loading required package: abind
+> if (require(spatstat.geom, quietly = TRUE)) {
++ tif = system.file("tif/L7_ETMs.tif", package = "stars")
++ s = adrop(read_stars(tif)[,,,1]) > 70
++ plot(s)
++ m = as.owin(s)
++ plot(m)
++ print(table(m$m))
++ }
+spatstat.geom 2.4-0
+>>>>>>> factor
 
 FALSE  TRUE 
 39494 83354 
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
   2.245   0.097   2.339 
+=======
+  2.225   0.093   2.307 
+>>>>>>> factor

@@ -21,6 +21,7 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
+<<<<<<< HEAD
 [ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
 
 [ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
@@ -28,3 +29,12 @@ Type 'q()' to quit R.
 > proc.time()
    user  system elapsed 
  23.827   0.175  24.024 
+=======
+[ FAIL 0 | WARN 2 | SKIP 0 | PASS 167 ]
+
+[ FAIL 0 | WARN 2 | SKIP 0 | PASS 167 ]
+> 
+> proc.time()
+   user  system elapsed 
+ 21.277   0.189  21.444 
+>>>>>>> factor

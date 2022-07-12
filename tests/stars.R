@@ -34,6 +34,7 @@ x = read_stars(geomatrix)
 y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
+if (require(PCICt, quietly = TRUE)) {
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 if (require(PCICt, quietly = TRUE)) {
   print(x <- read_stars(nc))
@@ -62,7 +63,7 @@ if (require(PCICt, quietly = TRUE)) {
   print(dimnames(x))
   dimnames(x) <- letters[1:3]
   print(dimnames(x))
-}
+} # PCICt
 
 st_as_stars()
 

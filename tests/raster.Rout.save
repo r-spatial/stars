@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+=======
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+>>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -18,7 +22,12 @@ Type 'q()' to quit R.
 > options(rgdal_show_exportToProj4_warnings = "none")
 > suppressPackageStartupMessages(library(stars))
 > 
+<<<<<<< HEAD
 > if (require(raster, quietly = TRUE)) {
+=======
+> if (require("raster", quietly = TRUE)) {
++ 
+>>>>>>> factor
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
 + (x = read_stars(tif))
 + (r = as(x, "Raster"))
@@ -34,6 +43,7 @@ Type 'q()' to quit R.
 + (r = as(x, "Raster"))
 + (y = st_as_stars(r))
 + (y2 = st_as_stars(r, proxy = TRUE))
+<<<<<<< HEAD
 + }
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
@@ -47,6 +57,11 @@ band    1   6      NA    NA                         NA    NA   NULL
 > 
 > if (require(terra, quietly = TRUE)) {
 + ## terra -------------
+=======
++ 
++ ## terra -------------
++ stopifnot(require(terra))
+>>>>>>> factor
 + (x = read_stars(tif))
 + (r = as(x, "SpatRaster"))
 + (y = st_as_stars(r))
@@ -61,18 +76,42 @@ band    1   6      NA    NA                         NA    NA   NULL
 + (r = as(x, "SpatRaster"))
 + (y = st_as_stars(r))
 + (y2 = st_as_stars(r, proxy = TRUE))
+<<<<<<< HEAD
 + }
 terra 1.5.34
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
+=======
++ 
++ f = system.file("tif/lc.tif", package = "stars")
++ lc = read_stars(system.file("tif/lc.tif", package = "stars"))
++ levels(lc[[1]])
++ r = rast(lc)
++ e = attr(lc[[1]], "exclude")
++ print(all.equal(terra::levels(r)[[1]], terra::levels(rast(f))[[1]][!e]))
++ print(all.equal(terra::coltab(r)[[1]][!e,], terra::coltab(rast(f))[[1]][!e,], check.attributes = FALSE))
++ 
++ }
+Loading required package: terra
+terra 1.5.34
 
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
+Attaching package: 'terra'
+
+The following object is masked from 'package:raster':
+
+    area
+>>>>>>> factor
+
+[1] TRUE
+[1] TRUE
+Warning message:
+multiple methods tables found for 'area' 
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
   5.741   0.167   5.901 
+=======
+  4.802   0.123   4.931 
+>>>>>>> factor

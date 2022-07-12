@@ -728,6 +728,14 @@ st_geometry.stars = function(obj,...) {
 	d[[ which_sfc(obj) ]]$values
 }
 
+# make sure asub works for factor too:
+asub.factor = function(x, idx, dims, drop = NULL, ...) {
+	l = levels(x)
+	x = unclass(x)
+	ret = NextMethod()
+	structure(ret, class = "factor", levels = l)
+}
+
 #' @name merge
 #' @aliases split
 #' @param f the name or index of the dimension to split; by default the last dimension
@@ -764,9 +772,7 @@ merge.stars = function(x, y, ..., name = "attributes") {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = do.call(abind, st_redimension(x))
-	if (is.factor(x[[1]]) && is.character(out))
-		out = structure(factor(as.vector(out), levels = levels(x[[1]])), dim = dim(out))
+	out = st_redimension(x)
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -835,8 +841,8 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 			dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
 			if (length(names(along)) == 1)
 				names(dims)[names(dims) == "new_dim"] = names(along)
-			ret = list(attr = do.call(abind, c(unclass(x), along = length(dim(x)) + 1)))
-			st_stars(setNames(ret, paste(names(x), collapse = ".")), dimensions = dims)
+			ret = structure(do.call(c, x), dim = dim(dims))
+			st_stars(setNames(list(ret), paste(names(x), collapse = ".")), dimensions = dims)
 		}
 	}
 }
@@ -862,7 +868,7 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 		}
 		value = if (inherits(value, c("factor", "POSIXct")))
 				structure(rep(value, length.out = prod(dim(x))), dim = dim(x), colors = attr(value, "colors"),
-					rgba = attr(value, "rgba"))
+					rgba = attr(value, "rgba"), exclude = attr(value, "exclude"))
 			else if (!is.array(value) || !isTRUE(all.equal(dim(value), dim(x), check.attributes = FALSE)))
 				array(value, dim(x))
 			else

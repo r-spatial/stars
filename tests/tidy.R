@@ -2,8 +2,7 @@ suppressPackageStartupMessages(library(stars))
 
 if (require(dplyr, quietly = TRUE)) {
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-(x = read_stars(tif))
-
+x <- read_stars(tif)
 (y <- x %>% select(L7_ETMs.tif))
 (y <- x %>% filter(band > 2))
 (z <- x %>% mutate(foo = 2* L7_ETMs.tif))

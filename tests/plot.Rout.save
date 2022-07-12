@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+=======
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+>>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -15,6 +19,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
+<<<<<<< HEAD
 > if (require(spacetime)) {
 + suppressPackageStartupMessages(library(stars))
 + data(air) # this loads several datasets in .GlobalEnv
@@ -26,6 +31,31 @@ Type 'q()' to quit R.
 + 
 + csv = system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata")
 + if (csv != "") {
+=======
+> suppressPackageStartupMessages(library(stars))
+> if (require(spacetime, quietly = TRUE)) {
++  data(air) # this loads several datasets in .GlobalEnv
++  dim(air)
++  d = st_dimensions(station = st_as_sfc(stations), time = dates)
++  aq = st_as_stars(list(PM10 = air), dimensions = d)
++  image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
++  st_geometry(aq)
++ }
+Geometry set for 70 features 
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: 6.28107 ymin: 47.80847 xmax: 14.78617 ymax: 54.92497
+CRS:           +proj=longlat +datum=WGS84 +no_defs
+First 5 geometries:
+POINT (9.585911 53.67057)
+POINT (9.68503 53.52418)
+POINT (9.791584 54.07312)
+POINT (13.64701 52.44775)
+POINT (13.29635 52.65315)
+> 
+> csv = system.file("tif/ESACCI-LC-Legend.csv", package = "starsdata")
+> if (csv != "") {
+>>>>>>> factor
 + 	rgb = read.csv(csv, header = TRUE, sep = ";")
 + 	luc = read_stars(system.file("tif/LUC3.tif", package = "starsdata"))
 + 	plot(luc, rgb = rgb, axes = TRUE, key.pos = NULL)
@@ -43,4 +73,8 @@ In plot.stars(output) :
 > 
 > proc.time()
    user  system elapsed 
+<<<<<<< HEAD
   3.017   0.122   3.136 
+=======
+  2.600   0.108   2.707 
+>>>>>>> factor

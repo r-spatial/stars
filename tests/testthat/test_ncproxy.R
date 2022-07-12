@@ -1,7 +1,7 @@
 f <- system.file("nc/reduced.nc", package = "stars")
 
 test_that("proxy", {
-    skip_if_not_installed("ncmeta")
+	skip_if_not_installed("ncmeta")
 	nc <- read_ncdf(f, proxy = TRUE)
 	expect_equal(as.character(nc[[1]]), f)
 	expect_s3_class(nc, "stars_proxy")
@@ -79,7 +79,7 @@ test_that("basics", {
 })
 
 test_that("subset", {
-    skip_if_not_installed("ncmeta")
+	skip_if_not_installed("ncmeta")
 	nc <- read_ncdf(f, proxy = TRUE)
 	
 	nc2 <- nc[1, 80:100, 45:55, , ]
@@ -126,7 +126,7 @@ test_that("subset", {
 })
 
 test_that("curvilinear", {
-    skip_if_not_installed("ncmeta")
+	skip_if_not_installed("ncmeta")
 	f <- system.file("nc/test_stageiv_xyt.nc", package = "stars")
 	
 	out <-read_ncdf(f, curvilinear = c(X = "lon", Y = "lat"), 
