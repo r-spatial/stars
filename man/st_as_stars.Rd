@@ -156,12 +156,9 @@ for the \code{xts} methods, if \code{dimensions} are provided, time has to be th
 }
 \examples{
 if (require(plm, quietly = TRUE)) {
-<<<<<<< HEAD
   data(Produc, package = "plm")
   st_as_stars(Produc, y_decreasing = FALSE)
-=======
  data(Produc, package = "plm")
  st_as_stars(Produc, y_decreasing = FALSE)
->>>>>>> factor
 }
 }

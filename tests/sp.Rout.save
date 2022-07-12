@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
-=======
 R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
->>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -20,11 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > options(rgdal_show_exportToProj4_warnings = "none")
-<<<<<<< HEAD
-> if (require(sp)) {
-=======
 > if (require(sp, quietly = TRUE)) {
->>>>>>> factor
 + demo(meuse)
 + # remove +init=xxx
 + meuse@proj4string = CRS(
@@ -50,10 +42,6 @@ Type 'q()' to quit R.
 + #all.equal(meuse, m2)
 + #all.equal(meuse.grid, gr2)
 + }
-<<<<<<< HEAD
-Loading required package: sp
-=======
->>>>>>> factor
 
 
 	demo(meuse)
@@ -92,8 +80,4 @@ Loading required package: sp
 > 
 > proc.time()
    user  system elapsed 
-<<<<<<< HEAD
-  1.291   0.064   1.351 
-=======
-  1.112   0.051   1.156 
->>>>>>> factor
+  1.087   0.065   1.144 

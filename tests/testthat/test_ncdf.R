@@ -239,11 +239,7 @@ test_that("4d not 4d", {
 })
 
 test_that("units are right with lcc km", {
-<<<<<<< HEAD
-  skip_if_not_installed("ncmeta")
-=======
 	skip_if_not_installed("ncmeta")
->>>>>>> factor
 	f <- system.file("nc/lcc_km.nc", package = "stars")
 	
 	nc <- read_ncdf(f)

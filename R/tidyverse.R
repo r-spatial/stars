@@ -136,13 +136,8 @@ as.tbl_cube.stars = function(x, ...) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x1 = read_stars(tif)
 #' if (require(dplyr, quietly = TRUE)) {
-<<<<<<< HEAD
-#'   x1 %>% slice("band", 2:3)
-#'   x1 %>% slice("x", 50:100)
-=======
 #'  x1 %>% slice("band", 2:3)
 #'  x1 %>% slice("x", 50:100)
->>>>>>> factor
 #' }
 slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   #stopifnot(length(index) == 1)
@@ -267,23 +262,16 @@ replace_na.stars_proxy = function(data, ...) {
 #' @examples
 #' system.file("tif/L7_ETMs.tif", package = "stars") %>% read_stars() -> x
 #' if (require(ggplot2, quietly = TRUE)) {
-<<<<<<< HEAD
 #'   ggplot() + geom_stars(data = x) +
-=======
-#'  ggplot() + geom_stars(data = x) +
->>>>>>> factor
 #'     coord_equal() +
 #'     facet_wrap(~band) +
 #'     theme_void() +
 #'     scale_x_discrete(expand=c(0,0))+
 #'     scale_y_discrete(expand=c(0,0))
 #' }
-<<<<<<< HEAD
-=======
 #' # plot rgb composite:
 #' st_as_stars(L7_ETMs)[,,,1:3] |> st_rgb() -> x # x contains colors as pixel values
 #' ggplot() + geom_stars(data = x)
->>>>>>> factor
 geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FALSE, 
 					  na.action = na.pass) {
 

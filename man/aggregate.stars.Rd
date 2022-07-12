@@ -69,15 +69,9 @@ st_get_dimension_values(x_agg_posix, "time")
 #TBD:
 # x_agg_time - x_agg_posix
 aggregate(x, "2 days", mean)
-<<<<<<< HEAD
 if (require(ncmeta, quietly = TRUE)) {
  # Spatial aggregation, see https://github.com/r-spatial/stars/issues/299
  prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-=======
-# Spatial aggregation, see https://github.com/r-spatial/stars/issues/299
-prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-if (require(ncmeta, quietly = TRUE)) {
->>>>>>> factor
  prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
  prec_slice = dplyr::slice(prec, index = 17, along = "time")
  nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")

@@ -38,21 +38,14 @@ ggplot geom for stars objects
 \examples{
 system.file("tif/L7_ETMs.tif", package = "stars") \%>\% read_stars() -> x
 if (require(ggplot2, quietly = TRUE)) {
-<<<<<<< HEAD
   ggplot() + geom_stars(data = x) +
-=======
- ggplot() + geom_stars(data = x) +
->>>>>>> factor
     coord_equal() +
     facet_wrap(~band) +
     theme_void() +
     scale_x_discrete(expand=c(0,0))+
     scale_y_discrete(expand=c(0,0))
 }
-<<<<<<< HEAD
-=======
 # plot rgb composite:
 st_as_stars(L7_ETMs)[,,,1:3] |> st_rgb() -> x # x contains colors as pixel values
 ggplot() + geom_stars(data = x)
->>>>>>> factor
 }

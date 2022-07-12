@@ -37,8 +37,6 @@ r = as(x, "SpatRaster")
 (r = as(x, "SpatRaster"))
 (y = st_as_stars(r))
 (y2 = st_as_stars(r, proxy = TRUE))
-<<<<<<< HEAD
-=======
 
 f = system.file("tif/lc.tif", package = "stars")
 lc = read_stars(system.file("tif/lc.tif", package = "stars"))
@@ -69,5 +67,4 @@ r3_stars<- st_as_stars(r3)
 st_redimension(r3_stars) |> print()
 rast(r3_stars) |> levels() |> print()
 }
->>>>>>> factor
 }

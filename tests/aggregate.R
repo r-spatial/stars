@@ -38,6 +38,4 @@ tm0 = as.Date("2019-02-19") + -1:8
 pt = st_point(c(-10,-10))
 (sfc = c(sfc, st_sfc(pt, crs = st_crs(sfc))))
 (a = aggregate(st, sfc, mean))
-
 (a = aggregate(st, st, mean))
-}

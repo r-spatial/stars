@@ -81,18 +81,11 @@ if (require(ncmeta, quietly = TRUE)) {
  read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 }
 
-<<<<<<< HEAD
 if (require(ncmeta, quietly = TRUE)) {
  #' precipitation data in a curvilinear NetCDF
  prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
  prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
 }
-=======
-#' precipitation data in a curvilinear NetCDF
-prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
-if (require(ncmeta, quietly = TRUE)) {
-prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE)
->>>>>>> factor
 
 ##plot(prec) ## gives error about unique breaks
 ## remove NAs, zeros, and give a large number
@@ -102,17 +95,9 @@ qu_0_omit = function(x, ..., n = 22) {
   c(0, quantile(x[x > 0], seq(0, 1, length.out = n)))
 }
 if (require(dplyr, quietly = TRUE)) {
-<<<<<<< HEAD
   prec_slice = slice(prec, index = 17, along = "time")
   plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
   nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
   plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 }
-=======
-prec_slice = slice(prec, index = 17, along = "time")
-plot(prec_slice, border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
-nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
-plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
-}}
->>>>>>> factor
 }

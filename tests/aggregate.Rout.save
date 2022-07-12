@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
-=======
 R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
->>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -32,40 +28,6 @@ Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.0; sf_use_s2() is TRUE
 + blocks = st_make_grid(st_as_sfc("POLYGON ((5.871619 47.26986, 15.03811 47.26986, 15.03811 55.05653, 5.871619 55.05653, 5.871619 47.26986))", crs = 4326),
 + 	n = c(3,3))
 + 
-<<<<<<< HEAD
-+ (aq = st_as_stars(list(PM10 = air), dimensions = d))
-+ (a = aggregate(aq, blocks, mean, na.rm = TRUE))
-+ 
-+ # adapted from ?read_stars:
-+ m = array(1:720, dim = c(x = 10, y = 12, t = 6)) # named dim
-+ st = st_as_stars(m)
-+ attr(st, "dimensions")$y$delta = -1
-+ attr(st, "dimensions")$y$offset = 12
-+ tm = as.Date("2019-02-19") + 1:6
-+ st = st_set_crs(st_set_dimensions(st, 3, values = tm), 4326)
-+ 
-+ tmp = tempfile(fileext = ".tif")
-+ write_stars(st, tmp)
-+ 
-+ (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
-+    nBufXSize = 2, nBufYSize = 2)))
-+ 
-+ sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
-+ (a = aggregate(st, sfc, mean))
-+ a[[1]]
-+ sum(a[[1]])*30 == sum(1:720)
-+ 
-+ tm0 = as.Date("2019-02-19") + -1:8
-+ (a = aggregate(st, tm0, mean, na.rm = TRUE))
-+ 
-+ # with "by" geometry not overlapping x
-+ pt = st_point(c(-10,-10))
-+ (sfc = c(sfc, st_sfc(pt, crs = st_crs(sfc))))
-+ (a = aggregate(st, sfc, mean))
-+ 
-+ (a = aggregate(st, st, mean))
-+ }
-=======
 + print(aq <- st_as_stars(list(PM10 = air), dimensions = d))
 + print(a <- aggregate(aq, blocks, mean, na.rm = TRUE))
 + }
@@ -107,8 +69,8 @@ time                                                                  NULL
 +    nBufXSize = 2, nBufYSize = 2)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                        Min. 1st Qu. Median  Mean 3rd Qu. Max.
-file39802e48e7fd2c.tif    33  199.25  365.5 365.5  531.75  698
+                       Min. 1st Qu. Median  Mean 3rd Qu. Max.
+file1c66f3213a48d.tif    33  199.25  365.5 365.5  531.75  698
 dimension(s):
      from to offset delta refsys point values x/y
 x       1  2      0     5 WGS 84 FALSE   NULL [x]
@@ -174,9 +136,7 @@ t           1  6 2019-02-20 1 days   Date FALSE
                                                      values
 geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POINT (-10 -10)
 t                                                      NULL
-> 
 > (a = aggregate(st, st, mean))
->>>>>>> factor
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -191,8 +151,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-<<<<<<< HEAD
-  1.833   0.048   1.877 
-=======
-  1.627   0.093   1.713 
->>>>>>> factor
+  1.716   0.043   1.749 

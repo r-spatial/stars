@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -21,20 +21,10 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-<<<<<<< HEAD
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
-
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
-> 
-> proc.time()
-   user  system elapsed 
- 23.827   0.175  24.024 
-=======
 [ FAIL 0 | WARN 2 | SKIP 0 | PASS 167 ]
 
 [ FAIL 0 | WARN 2 | SKIP 0 | PASS 167 ]
 > 
 > proc.time()
    user  system elapsed 
- 21.277   0.189  21.444 
->>>>>>> factor
+ 21.227   0.171  21.394 

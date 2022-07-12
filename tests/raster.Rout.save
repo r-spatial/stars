@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
-=======
 R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
->>>>>>> factor
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -22,12 +18,8 @@ Type 'q()' to quit R.
 > options(rgdal_show_exportToProj4_warnings = "none")
 > suppressPackageStartupMessages(library(stars))
 > 
-<<<<<<< HEAD
-> if (require(raster, quietly = TRUE)) {
-=======
-> if (require("raster", quietly = TRUE)) {
+> if (require("raster", quietly = TRUE) && require("terra", quietly = TRUE)) {
 + 
->>>>>>> factor
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
 + (x = read_stars(tif))
 + (r = as(x, "Raster"))
@@ -43,8 +35,15 @@ Type 'q()' to quit R.
 + (r = as(x, "Raster"))
 + (y = st_as_stars(r))
 + (y2 = st_as_stars(r, proxy = TRUE))
-<<<<<<< HEAD
 + }
+terra 1.6.0
+
+Attaching package: 'terra'
+
+The following object is masked from 'package:raster':
+
+    area
+
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
@@ -54,14 +53,12 @@ dimension(s):
 x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
 y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 band    1   6      NA    NA                         NA    NA   NULL    
+Warning message:
+multiple methods tables found for 'area' 
 > 
 > if (require(terra, quietly = TRUE)) {
 + ## terra -------------
-=======
-+ 
-+ ## terra -------------
 + stopifnot(require(terra))
->>>>>>> factor
 + (x = read_stars(tif))
 + (r = as(x, "SpatRaster"))
 + (y = st_as_stars(r))
@@ -76,42 +73,66 @@ band    1   6      NA    NA                         NA    NA   NULL
 + (r = as(x, "SpatRaster"))
 + (y = st_as_stars(r))
 + (y2 = st_as_stars(r, proxy = TRUE))
-<<<<<<< HEAD
-+ }
-terra 1.5.34
-stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
-=======
 + 
 + f = system.file("tif/lc.tif", package = "stars")
 + lc = read_stars(system.file("tif/lc.tif", package = "stars"))
 + levels(lc[[1]])
 + r = rast(lc)
 + e = attr(lc[[1]], "exclude")
-+ print(all.equal(terra::levels(r)[[1]], terra::levels(rast(f))[[1]][!e]))
++ 
++ if (packageVersion("terra") >= "1.5.48") {
++ 
++ print(all.equal(terra::levels(r)[[1]][,2], terra::levels(rast(f))[[1]][!e,2]))
 + print(all.equal(terra::coltab(r)[[1]][!e,], terra::coltab(rast(f))[[1]][!e,], check.attributes = FALSE))
 + 
++ r<- rast(nrow=10, ncol=10)
++ set.seed(5)
++ values(r)<- sample(1:3, size = ncell(r), replace = TRUE)
++ levels(r) <- data.frame(ID=1:3, category = c("c1", "c2", "c3"))
++ 
++ r2<- rast(nrow=10, ncol=10)
++ set.seed(6)
++ values(r2)<- sample(c(0,2,3), size = ncell(r2), replace = TRUE)
++ levels(r2) <- data.frame(ID=c(0,2,3), category = c("x1", "x2", "x3"))
++ 
++ r3<- c(r,r2)
++ names(r3)<- c("lyr.1", "lyr.2")
++ 
++ r3_stars<- st_as_stars(r3)
++ 
++ st_redimension(r3_stars) |> print()
++ rast(r3_stars) |> levels() |> print()
 + }
-Loading required package: terra
-terra 1.5.34
-
-Attaching package: 'terra'
-
-The following object is masked from 'package:raster':
-
-    area
->>>>>>> factor
-
++ }
 [1] TRUE
 [1] TRUE
-Warning message:
-multiple methods tables found for 'area' 
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+ lyr.1.lyr.2 
+ c1:34       
+ c2:32       
+ c3:34       
+ x1:28       
+ x2:37       
+ x3:35       
+dimension(s):
+        from to offset delta refsys point       values x/y
+x          1 10   -180    36 WGS 84    NA         NULL [x]
+y          1 10     90   -18 WGS 84    NA         NULL [y]
+new_dim    1  2     NA    NA     NA    NA lyr.1, lyr.2    
+[[1]]
+  IDs categories
+1   1         c1
+2   2         c2
+3   3         c3
+
+[[2]]
+  IDs categories
+1   0         x1
+2   2         x2
+3   3         x3
+
 > 
 > proc.time()
    user  system elapsed 
-<<<<<<< HEAD
-  5.741   0.167   5.901 
-=======
-  4.802   0.123   4.931 
->>>>>>> factor
+  5.155   0.120   5.268 
