@@ -173,8 +173,12 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 
 		setNames(ret, attr_name)
 	} else { # ignore_file TRUE:
-		if (terra::nlyr(.x) > 1 && as_attributes)
-			return(do.call(c, lapply(seq_len(terra::nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE))))
+		if (terra::nlyr(.x) > 1 && as_attributes) {
+			ret = do.call(c, lapply(seq_len(terra::nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE)))
+			if (!is.null(names(.x)))
+				names(ret) = names(.x)
+			return(ret) # RETURNS
+		}
 		if (attr_name == "") {
 			if (all(names(.x) == ""))
 				attr_name = "values"
@@ -297,11 +301,33 @@ st_as_raster = function(x, class, ...) {
 	dxy = attr(d, "raster")$dimensions
 	stopifnot(all(dxy %in% names(d)))
 	bb = st_bbox(x)
-	values = if (is.factor(x[[1]])) {
-		structure(x[[1]], dim = NULL)
-	} else {
-		as.vector(x[[1]]) # would convert factor into character
-	}
+	levels = NULL
+	coltab = vector("list", length(x))
+	values = if (all(sapply(x, is.factor))) {
+			ex = attr(x[[1]], "exclude")
+			if (is.null(ex) || class != "SpatRaster")
+				structure(merge(x)[[1]], dim = NULL) # return the factor
+			else {
+				v = vector("list", length(x))
+				levels = vector("list", length(x))
+				for (i in seq_along(v)) {
+					ex = attr(x[[i]], "exclude")
+					ix = which(!ex) - 1 # 0-based index
+					n = as.numeric(structure(x[[i]], dim = NULL)) # factor -> numeric
+					v[[i]] = ix[n]
+					levels[[i]] = data.frame(IDs = ix, categories = levels(x[[i]]))
+					if (!is.null(ct <- attr(x[[i]], "colors"))) {
+						coltab[[i]] = t(col2rgb(rep("#000000", length(ex)), alpha = TRUE))
+						coltab[[i]][which(!ex),] = t(col2rgb(ct, alpha = TRUE))
+					}
+				}
+				do.call(c, v)
+			}
+		} else  {
+			if (any(sapply(x, is.factor)))
+				warning("mix of factor and non-factor attributes: all factor levels are ignored")
+			as.vector(merge(x)[[1]])
+		}
 	if (class == "SpatRaster"){
 		third = setdiff(names(d), dxy)
 		b = terra::rast(nrows = dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
@@ -309,8 +335,11 @@ st_as_raster = function(x, class, ...) {
 						nlyrs = ifelse(length(dim(x)) == 2, 1, dim(x)[third]),
 						crs = x_crs$wkt)
 		terra::values(b) = values
-		if (all(vapply(x, is.factor, FUN.VALUE = logical(1)))) {
-			terra::coltab(b) = lapply(x, function(x) t(col2rgb(attr(x, "colors"), alpha = TRUE)))
+		if (!is.null(levels)) {
+			levels(b) = levels
+			if (!all(sapply(coltab, is.null)))
+				for (i in seq_len(terra::nlyr(b)))
+					terra::coltab(b, layer = i) = coltab[[i]]
 		}
 		if (length(dim(x)) != 2){
 			z = seq(d[[third]])

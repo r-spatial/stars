@@ -1,6 +1,6 @@
 
-R version 3.6.2 (2019-12-12) -- "Dark and Stormy Night"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,21 +15,22 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> suppressPackageStartupMessages(library(spatstat.geom))
 > suppressPackageStartupMessages(library(sf))
-> 
 > library(stars)
 Loading required package: abind
-> tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> s = adrop(read_stars(tif)[,,,1]) > 70
-> plot(s)
-> m = as.owin(s)
-> plot(m)
-> table(m$m)
+> if (require(spatstat.geom, quietly = TRUE)) {
++ tif = system.file("tif/L7_ETMs.tif", package = "stars")
++ s = adrop(read_stars(tif)[,,,1]) > 70
++ plot(s)
++ m = as.owin(s)
++ plot(m)
++ print(table(m$m))
++ }
+spatstat.geom 2.4-0
 
 FALSE  TRUE 
 39494 83354 
 > 
 > proc.time()
    user  system elapsed 
-  1.461   0.080   1.541 
+  2.225   0.093   2.307 

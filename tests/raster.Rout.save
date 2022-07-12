@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -18,187 +18,64 @@ Type 'q()' to quit R.
 > options(rgdal_show_exportToProj4_warnings = "none")
 > suppressPackageStartupMessages(library(stars))
 > 
-> tif = system.file("tif/L7_ETMs.tif", package = "stars")
-> (x = read_stars(tif))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median     Mean 3rd Qu. Max.
-L7_ETMs.tif     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (r = as(x, "Raster"))
-class      : RasterBrick 
-dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
-resolution : 28.5, 28.5  (x, y)
-extent     : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-crs        : +proj=utm +zone=25 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs 
-source     : memory
-names      : layer.1, layer.2, layer.3, layer.4, layer.5, layer.6 
-min values :      47,      32,      21,       9,       1,       1 
-max values :     255,     255,     255,     255,     255,     255 
-time       : 1, 2, 3, 4, 5, 6 
+> if (require("raster", quietly = TRUE)) {
++ 
++ tif = system.file("tif/L7_ETMs.tif", package = "stars")
++ (x = read_stars(tif))
++ (r = as(x, "Raster"))
++ (y = st_as_stars(r))
++ 
++ # single band:
++ x = adrop(x[,,,1])
++ r = as(x, "Raster")
++ (y = st_as_stars(r))
++ 
++ # proxy:
++ (x = read_stars(tif, proxy = TRUE))
++ (r = as(x, "Raster"))
++ (y = st_as_stars(r))
++ (y2 = st_as_stars(r, proxy = TRUE))
++ 
++ ## terra -------------
++ stopifnot(require(terra))
++ (x = read_stars(tif))
++ (r = as(x, "SpatRaster"))
++ (y = st_as_stars(r))
++ 
++ # single band:
++ x = adrop(x[,,,1])
++ r = as(x, "SpatRaster")
++ (y = st_as_stars(r))
++ 
++ # proxy:
++ (x = read_stars(tif, proxy = TRUE))
++ (r = as(x, "SpatRaster"))
++ (y = st_as_stars(r))
++ (y2 = st_as_stars(r, proxy = TRUE))
++ 
++ f = system.file("tif/lc.tif", package = "stars")
++ lc = read_stars(system.file("tif/lc.tif", package = "stars"))
++ levels(lc[[1]])
++ r = rast(lc)
++ e = attr(lc[[1]], "exclude")
++ print(all.equal(terra::levels(r)[[1]], terra::levels(rast(f))[[1]][!e]))
++ print(all.equal(terra::coltab(r)[[1]][!e,], terra::coltab(rast(f))[[1]][!e,], check.attributes = FALSE))
++ 
++ }
+Loading required package: terra
+terra 1.5.34
 
+Attaching package: 'terra'
+
+The following object is masked from 'package:raster':
+
+    area
+
+[1] TRUE
+[1] TRUE
 Warning message:
-no function found corresponding to methods exports from 'raster' for: 'area' 
-> (y = st_as_stars(r))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-         Min. 1st Qu. Median     Mean 3rd Qu. Max.
-layer.1     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [y]
-band    1   6       1     1                         NA    NA   NULL    
-> 
-> # single band:
-> x = adrop(x[,,,1])
-> r = as(x, "Raster")
-> (y = st_as_stars(r))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-       Min. 1st Qu. Median     Mean 3rd Qu. Max.
-layer    47      67     78 79.14772      89  255
-dimension(s):
-  from  to  offset delta                     refsys point values x/y
-x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
-y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [y]
-> 
-> # proxy:
-> (x = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
-
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (r = as(x, "Raster"))
-class      : RasterBrick 
-dimensions : 352, 349, 122848, 6  (nrow, ncol, ncell, nlayers)
-resolution : 28.5, 28.5  (x, y)
-extent     : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-crs        : +proj=utm +zone=25 +south +ellps=GRS80 +units=m +no_defs 
-source     : L7_ETMs.tif 
-names      : L7_ETMs.1, L7_ETMs.2, L7_ETMs.3, L7_ETMs.4, L7_ETMs.5, L7_ETMs.6 
-min values :         0,         0,         0,         0,         0,         0 
-max values :       255,       255,       255,       255,       255,       255 
-
-> (y = st_as_stars(r))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median     Mean 3rd Qu. Max.
-L7_ETMs.tif     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (y2 = st_as_stars(r, proxy = TRUE))
-stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
-
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> 
-> ## terra -------------
-> (x = read_stars(tif))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median     Mean 3rd Qu. Max.
-L7_ETMs.tif     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (r = as(x, "SpatRaster"))
-class       : SpatRaster 
-dimensions  : 352, 349, 6  (nrow, ncol, nlyr)
-resolution  : 28.5, 28.5  (x, y)
-extent      : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-coord. ref. : SIRGAS 2000 / UTM zone 25S (EPSG:31985) 
-source      : memory 
-names       : band1, band2, band3, band4, band5, band6 
-min values  :    47,    32,    21,     9,     1,     1 
-max values  :   255,   255,   255,   255,   255,   255 
-> (y = st_as_stars(r))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-       Min. 1st Qu. Median     Mean 3rd Qu. Max.
-band1     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point          values
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA            NULL
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA            NULL
-band    1   6      NA    NA                         NA    NA band1,...,band6
-     x/y
-x    [x]
-y    [y]
-band    
-> 
-> # single band:
-> x = adrop(x[,,,1])
-> r = as(x, "SpatRaster")
-> (y = st_as_stars(r))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-       Min. 1st Qu. Median     Mean 3rd Qu. Max.
-lyr.1    47      67     78 79.14772      89  255
-dimension(s):
-  from  to  offset delta                     refsys point values x/y
-x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [x]
-y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S    NA   NULL [y]
-> 
-> # proxy:
-> (x = read_stars(tif, proxy = TRUE))
-stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
-
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (r = as(x, "SpatRaster"))
-class       : SpatRaster 
-dimensions  : 352, 349, 6  (nrow, ncol, nlyr)
-resolution  : 28.5, 28.5  (x, y)
-extent      : 288776.3, 298722.8, 9110729, 9120761  (xmin, xmax, ymin, ymax)
-coord. ref. : SIRGAS 2000 / UTM zone 25S (EPSG:31985) 
-source      : L7_ETMs.tif 
-names       : L7_ETMs_1, L7_ETMs_2, L7_ETMs_3, L7_ETMs_4, L7_ETMs_5, L7_ETMs_6 
-> (y = st_as_stars(r))
-stars object with 3 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median     Mean 3rd Qu. Max.
-L7_ETMs.tif     1      54     69 68.91242      86  255
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-> (y2 = st_as_stars(r, proxy = TRUE))
-stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
-
-dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
+multiple methods tables found for 'area' 
 > 
 > proc.time()
    user  system elapsed 
-  5.848   0.121   5.961 
+  4.802   0.123   4.931 

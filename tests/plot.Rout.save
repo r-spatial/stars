@@ -1,6 +1,6 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -15,16 +15,15 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(spacetime)
 > suppressPackageStartupMessages(library(stars))
-> data(air) # this loads several datasets in .GlobalEnv
-> dim(air)
-space  time 
-   70  4383 
-> d = st_dimensions(station = st_as_sfc(stations), time = dates)
-> aq = st_as_stars(list(PM10 = air), dimensions = d)
-> image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
-> st_geometry(aq)
+> if (require(spacetime, quietly = TRUE)) {
++  data(air) # this loads several datasets in .GlobalEnv
++  dim(air)
++  d = st_dimensions(station = st_as_sfc(stations), time = dates)
++  aq = st_as_stars(list(PM10 = air), dimensions = d)
++  image(aperm(log(aq), 2:1), main = "NA pattern (white) in PM10 station time series")
++  st_geometry(aq)
++ }
 Geometry set for 70 features 
 Geometry type: POINT
 Dimension:     XY
@@ -54,4 +53,4 @@ In plot.stars(output) :
 > 
 > proc.time()
    user  system elapsed 
-  2.558   0.068   2.618 
+  2.600   0.108   2.707 
