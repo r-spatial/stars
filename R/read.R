@@ -111,11 +111,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	if (missing(curvilinear)) { # see if we can get it from metadata item "GEOLOCATION":
 		geolocation <- try(gdal_metadata(.x, "GEOLOCATION"), silent = TRUE)
 		if (!inherits(geolocation, "try-error")) { # the thing has x and y arrays:
-			gxy = if (packageVersion("sf") >= "1.0-8") # read coordinate arrays
-					c(geolocation$X_DATASET, geolocation$Y_DATASET)
-				else 
-					c(gdal_metadata(.x, c("GEOLOCATION", "X_DATASET"), parse = FALSE),
-						gdal_metadata(.x, c("GEOLOCATION", "Y_DATASET"), parse = FALSE))
+			# read coordinate arrays:
+			gxy = c(geolocation$X_DATASET, geolocation$Y_DATASET)
 			lon = adrop(read_stars(gxy[1], driver = driver, quiet = quiet, NA_value = NA_value,
 				RasterIO = RasterIO, proxy = FALSE, curvilinear = character(0), ...))
 			lat = adrop(read_stars(gxy[2], driver = driver, quiet = quiet, NA_value = NA_value,

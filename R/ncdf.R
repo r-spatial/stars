@@ -989,7 +989,7 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
                            values = as.POSIXct(.x$time))
   dim <- list(time = tdim, points = gdim)
 
-  if("sf" %in% class(sf_geometry)) {
+  if(inherits(sf_geometry, "sf")) {
     if(length(gdim$values) != length(st_geometry(sf_geometry)))
       stop("geometry must be same length as instance dimension of timeseries")
 
