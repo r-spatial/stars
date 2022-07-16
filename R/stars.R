@@ -940,6 +940,12 @@ predict.stars = function(object, model, ..., drop_dimensions = FALSE) {
 		obj_df = obj_df[-seq_along(dim(object))]
 	na_ids = which(is.na(obj_df), arr.ind = TRUE) # identify rows with NA's in the predictors
 	obj_df[na_ids] = 0  # fill with something valid (e.g. 0)
+	has_method = function(generic, cls) {
+		m = row.names(attr(methods(generic), "info"))
+		cls %in% substring(m, nchar(generic) + 2, 1e4)
+	}
+	if (!has_method("predict", class(model)))
+		warning(paste("No predict method found for objects of class", class(model)))
 	pr = try(predict(model, obj_df, ...), silent = TRUE)
 	if (inherits(pr, "try-error")) { # https://github.com/r-spatial/stars/issues/448
 		m = paste0("prediction on array(s) `", paste(names(object), collapse = ","), "' failed; will try to split() dimension `", tail(names(dim(object)), 1), "' over attributes")
