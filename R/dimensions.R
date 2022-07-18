@@ -234,7 +234,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 	if (length(x) <= 1)
 		FALSE
 	else {
-		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date"))))
+		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date", "PCICt"))))
 				unique(diff(x))
 			else {
 				if (inherits(x, "intervals") && identical(tail(x$end, -1), head(x$start, -1)))
@@ -281,7 +281,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		else if (inherits(example, "Date"))
 			refsys = "Date"
 		else if (inherits(example, "PCICt"))
-			refsys = "PCICt"
+			refsys = paste0("PCICt_", attr(example, "cal"))
 		else if (inherits(example, "units"))
 			refsys = "udunits"
 
@@ -431,6 +431,23 @@ get_val = function(pattern, meta) {
 		NA_character_
 }
 
+get_pcict = function(values, unts, calendar) {
+	stopifnot(calendar %in% c("360_day", "365_day", "noleap"))
+	if (!requireNamespace("PCICt", quietly = TRUE))
+		stop("package PCICt required, please install it first") # nocov
+	origin = 0:1
+	units(origin) = try_as_units(unts)
+	delta = if (grepl("months", unts)) { # for these calendars, length of months are different from udunits representation
+			if (calendar == "360_day")
+				set_units(30 * 24 * 3600, "s", mode = "standard")
+			else
+				set_units((365./12) * 24 * 3600, "s", mode = "standard")
+		} else
+			set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
+	origin_txt = as.character(as.POSIXct(origin[1]))
+	PCICt::as.PCICt(values * as.numeric(delta), calendar, origin_txt)
+}
+
 parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
 	spl = strsplit(name, ":")[[1]] # "C:\..." results in length 2:
@@ -459,30 +476,16 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta) # nocov # FIXME: find example?
 					pr$dim_extra[[v]] = as.numeric(rhs)           # nocov
 				}
-
 				cal = get_val(paste0(v, "#calendar"), meta)
 				u =   get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					if (v %in% c("t", "time") && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap")) {
-						origin = 0:1
-						units(origin) = try_as_units(u)
-						delta = if (grepl("months", u)) {
-								if (cal == "360_day")
-									set_units(30 * 24 * 3600, "s", mode = "standard")
-								else
-									set_units((365/12) * 24 * 3600, "s", mode = "standard")
-							} else
-								set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
-						origin_txt = as.character(as.POSIXct(origin[1]))
-						if (!requireNamespace("PCICt", quietly = TRUE))
-							stop("package PCICt required, please install it first") # nocov
-						pr$dim_extra[[v]] = PCICt::as.PCICt(pr$dim_extra[[v]] * as.numeric(delta), cal, origin_txt)
-					} else {
+					if (v %in% c("t", "time") && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap"))
+						pr$dim_extra[[v]] = get_pcict(pr$dim_extra[[v]], u, cal)
+					else {
 						units(pr$dim_extra[[v]]) = try_as_units(u)
 						if (v %in% c("t", "time") && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
-								"try-error")) {
+								"try-error"))
 							pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
-						}
 					}
 				}
 			}
@@ -605,7 +608,7 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs 
 		}
 	)
 	mformat = function(x, ..., digits) {
-		if (inherits(x, c("PCICt", "POSIXct"))) 
+		if (inherits(x, c("PCICt", "POSIXct")))
 			format(x, ..., usetz = usetz)
 		else
 			format(x, digits = digits, ...) 

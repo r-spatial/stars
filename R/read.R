@@ -343,12 +343,17 @@ read_mdim = function(x, variable = character(0), ..., options = character(0), ra
 		if (is.null(u) || u == "")
 			x
 		else {
-			u = units::set_units(x, u, mode = "standard")
-			p = try(as.POSIXct(u), silent = TRUE)
-			if (inherits(p, "POSIXct"))
-				p
-			else
-				u
+			if (!is.null(a <- attr(x, "attributes")) && !is.na(cal <- a["calendar"]) && 
+						cal %in% c("360_day", "365_day", "noleap"))
+				get_pcict(x, u, cal)
+			else {
+				u = units::set_units(x, u, mode = "standard")
+				p = try(as.POSIXct(u), silent = TRUE)
+				if (inherits(p, "POSIXct"))
+					p
+				else
+					u
+			}
 		}
 	}
 	l = lapply(ret$dimensions, function(x) create_units(x$values[[1]]))

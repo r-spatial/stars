@@ -781,7 +781,7 @@ merge.stars = function(x, y, ..., name = "attributes") {
 	d = create_dimensions(dims, raster = attr(old_dim, "raster"))
 	if (!is.null(names(dots)))
 		names(d)[length(d)] = names(dots)
-	st_as_stars(out, dimensions = d)
+	st_stars(out, dimensions = d) # overwrite dimensions of out
 }
 
 sort_out_along = function(ret) { 
