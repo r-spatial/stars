@@ -1,5 +1,7 @@
 # version 0.5-6
 
+* remove `tos_O1_2001-2002.nc` from packaged datasets
+
 * `as.POSIXct.stars()` converts `PCICt` dimensions to `POSIXct` values.
 
 * improve handling of `PCICt` 360 or 365 day calendars; read them in `read_mdim` (requires sf >= 1.0-9)

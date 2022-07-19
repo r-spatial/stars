@@ -148,7 +148,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		xlim = .x[c("xmin", "xmax")], ylim = .x[c("ymin", "ymax")], 
-		values = 0., n = 64800, pretty = FALSE, inside = NA, nz, 
+		values = 0., n = 64800, pretty = FALSE, inside = FALSE, nz, 
 		proxy = FALSE) {
 
 	if (xor(missing(nx), missing(ny)))
