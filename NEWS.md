@@ -1,6 +1,12 @@
+# version 0.5-7
+
+* export `read_mdim()`, a reader using GDAL's multidimensional array API
+
+* arguments `offset`, `count` and `step` allow `read_mdim()` to read sub-arrays (requires sf >= 1.0-9)
+
 # version 0.5-6
 
-* remove `tos_O1_2001-2002.nc` from packaged datasets
+* remove `tos_O1_2001-2002.nc` from packaged datasets to keep source package size below 5 Mb
 
 * `as.POSIXct.stars()` converts `PCICt` dimensions to `POSIXct` values.
 
