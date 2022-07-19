@@ -275,7 +275,7 @@ time    1  24 2001-01-16 30 days  PCICt    NA   NULL
 xmin ymin xmax ymax 
    0  -80  360   90 
      xmin      ymin      xmax      ymax 
-  0.00000 -80.06943 359.57537  90.00000 
+  0.00000 -80.06943 360.54719  90.00000 
     xmin     ymin     xmax     ymax 
   0.0000 -79.0976 359.5754  90.0000 
      xmin      ymin      xmax      ymax 
@@ -286,7 +286,7 @@ xmin ymin xmax ymax
 xmin ymin xmax ymax 
    0  -80  360   90 
 xmin ymin xmax ymax 
-   0  -70  360   90 
+   0  -90  360   90 
 [1] TRUE
 udunits database from /usr/share/xml/udunits/udunits2.xml
 stars object with 3 dimensions and 1 attribute
@@ -344,10 +344,14 @@ attribute(s):
                    Min. 1st Qu. Median     Mean 3rd Qu. Max.
 X1.X2.X3.X4.X5.X6     1      54     69 68.91242      86  255
 dimension(s):
-        from  to  offset delta                     refsys point    values x/y
-x          1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL [x]
-y          1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL [y]
-new_dim    1   6      NA    NA                         NA    NA X1,...,X6    
+           from  to  offset delta                     refsys point    values
+x             1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL
+y             1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE      NULL
+attributes    1   6      NA    NA                         NA    NA X1,...,X6
+           x/y
+x          [x]
+y          [y]
+attributes    
 > 
 > read_stars(c(tif,tif)) # merges as attributes
 stars object with 3 dimensions and 2 attributes
@@ -527,4 +531,4 @@ X1 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  7.815   0.253   8.060 
+  7.021   0.324   7.334 

@@ -37,7 +37,7 @@ st_as_stars(.x, ...)
   values = 0,
   n = 64800,
   pretty = FALSE,
-  inside = NA,
+  inside = FALSE,
   nz,
   proxy = FALSE
 )

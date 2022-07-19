@@ -35,7 +35,7 @@ y = st_transform(x, st_crs(4326))
 st_coordinates(x)[1:10,]
 
 nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
-if (require(PCICt, quietly = TRUE)) {
+if (nc != "" && require(PCICt, quietly = TRUE)) {
   print(x <- read_stars(nc))
   print(st_bbox(x))
   s = st_as_stars(st_bbox(x)) # inside = NA
