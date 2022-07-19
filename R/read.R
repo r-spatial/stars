@@ -336,8 +336,9 @@ get_data_units = function(data) {
 	}
 }
 
-read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL) {
-	ret = gdal_read_mdim(x, variable, options)
+read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL,
+					 offset = integer(0), count = integer(0), step = integer(0)) {
+	ret = gdal_read_mdim(x, variable, options, offset, count, step)
 	create_units = function(x) {
 		u <- attr(x, "units")
 		if (is.null(u) || u == "")
