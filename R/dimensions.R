@@ -732,3 +732,14 @@ dimnames.stars = function(x) {
 	names(attr(x, "dimensions")) = value
 	x
 }
+
+#' @export
+as.POSIXct.stars = function(x, ...) {
+	d = st_dimensions(x)
+	if (any(w <- sapply(d, function(i) any(grepl("PCICt", i$refsys))))) {
+		e = expand_dimensions(d)
+		for (i in which(w))
+			d[[i]] = create_dimension(values = as.POSIXct(e[[i]]))
+	}
+	structure(x, dimensions = d)
+}

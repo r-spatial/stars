@@ -1,6 +1,8 @@
 # version 0.5-6
 
-* improve handling of `PCICt` 360 or 365 day calendars; read them in `read_mdim` (needs sf >= 1.0-9)
+* `as.POSIXct.stars()` converts `PCICt` dimensions to `POSIXct` values.
+
+* improve handling of `PCICt` 360 or 365 day calendars; read them in `read_mdim` (requires sf >= 1.0-9)
 
 * `read_stars()` reads factor levels better from attribute table; #484 thanks to @ailich
 
