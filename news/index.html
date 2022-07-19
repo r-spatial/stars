@@ -80,7 +80,9 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5-6" id="version-05-6">version 0.5-6<a class="anchor" aria-label="anchor" href="#version-05-6"></a></h2>
-<ul><li><p>improve handling of <code>PCICt</code> 360 or 365 day calendars; read them in <code>read_mdim</code> (needs sf &gt;= 1.0-9)</p></li>
+<ul><li><p>remove <code>tos_O1_2001-2002.nc</code> from packaged datasets</p></li>
+<li><p><code>as.POSIXct.stars()</code> converts <code>PCICt</code> dimensions to <code>POSIXct</code> values.</p></li>
+<li><p>improve handling of <code>PCICt</code> 360 or 365 day calendars; read them in <code>read_mdim</code> (requires sf &gt;= 1.0-9)</p></li>
 <li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> reads factor levels better from attribute table; <a href="https://github.com/r-spatial/stars/issues/484" class="external-link">#484</a> thanks to <a href="https://github.com/ailich" class="external-link">@ailich</a></p></li>
 <li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> puts band names from <code>band_meta</code> DESCRIPTION= tags into <code>values</code>;</p></li>
 <li><p>improve handling of categorical rasters, and their exchange with <code>terra</code>; <a href="https://github.com/r-spatial/stars/issues/484" class="external-link">#484</a></p></li>
