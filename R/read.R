@@ -346,13 +346,16 @@ get_data_units = function(data) {
 #' @param offset integer; offset for each dimension (pixels) of sub-array to read (default: 0,0,0,...) (requires sf >= 1.0-9)
 #' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all) (requires sf >= 1.0-9)
 #' @param step integer; step size for each dimension (pixels) of sub-aray to read (requires sf >= 1.0-9)
+#' @param proxy logical; return proxy object? (not functional yet)
+#' @param debug logical; print debug info?
 #' @details it is assumed that the first two dimensions are easting / northing
 #' @param ... ignored
 #' @export
 read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL,
-					 offset = integer(0), count = integer(0), step = integer(0)) {
+					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
+					 debug = FALSE) {
 	ret = if (packageVersion("sf") >= "1.0-9")
-			gdal_read_mdim(x, variable, options, rev(offset), rev(count), rev(step))
+			gdal_read_mdim(x, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 		else
 			gdal_read_mdim(x, variable, options)
 	create_units = function(x) {
@@ -392,11 +395,13 @@ read_mdim = function(x, variable = character(0), ..., options = character(0), ra
 	else
 		raster = get_raster(dimensions = raster)
 
+	if (proxy)
+		stop("proxy not yet implemented in read_mdim()")
+
 	# handle array units:
 	for (i in seq_along(ret$array_list))
 		if (nchar(u <- attr(ret$array_list[[i]], "units")))
 			ret$array_list[[i]] = units::set_units(ret$array_list[[i]], u, mode = "standard")
-
 	lst = lapply(ret$array_list, function(x) structure(x, dim = rev(dim(x))))
 	st_set_crs(st_stars(lst, dimensions = structure(d, raster = raster, class = "dimensions")),
 		ret$srs)
