@@ -1,3 +1,7 @@
+# version 0.5-7
+
+* `read_mdim()` uses arguments `offset`, `count` and `step` to read sub-arrays or strided arrays (requires sf >= 1.0-9)
+
 # version 0.5-6
 
 * export `read_mdim()`, a reader using GDAL's multidimensional array API (for sf <= 1.0-8)
