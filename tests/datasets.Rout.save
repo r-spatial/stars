@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -42,16 +42,7 @@ band    1   6      NA    NA                         NA    NA   NULL
 > if (require(starsdata, quietly = TRUE)) {
 + 	print(stars_sentinel2)
 + }
-stars_proxy object with 1 attribute in 1 file(s):
-$`MTD_MSIL1C.xml:10m:EPSG_32632`
-[1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"
-
-dimension(s):
-     from    to offset delta                refsys point    values x/y
-x       1 10980  3e+05    10 WGS 84 / UTM zone 32N    NA      NULL [x]
-y       1 10980  6e+06   -10 WGS 84 / UTM zone 32N    NA      NULL [y]
-band    1     4     NA    NA                    NA    NA B4,...,B8    
 > 
 > proc.time()
    user  system elapsed 
-  1.107   0.031   1.131 
+  1.113   0.696   0.930 

@@ -23,8 +23,8 @@ st = st_set_crs(st_set_dimensions(st, 3, values = tm), 4326)
 tmp = tempfile(fileext = ".tif")
 write_stars(st, tmp)
 
-(red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
-   nBufXSize = 2, nBufYSize = 2)))
+(red <- setNames(read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
+   nBufXSize = 2, nBufYSize = 2)), "foo"))
 
 sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 (a = aggregate(st, sfc, mean))

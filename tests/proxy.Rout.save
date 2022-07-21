@@ -1,5 +1,5 @@
 
-R version 4.2.0 (2022-04-22) -- "Vigorous Calisthenics"
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -57,7 +57,7 @@ call_list:
 [[1]]
 e1 + e2
 attr(,".Environment")
-<environment: 0x5586bc3eedf8>
+<environment: 0x56103a1e6678>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > st_as_stars(sin(r), downsample = 2)
@@ -84,7 +84,7 @@ call_list:
 [[1]]
 aperm(a = a, perm = perm)
 attr(,".Environment")
-<environment: 0x5586b93d4b88>
+<environment: 0x56103abd6f48>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > plot(r)
@@ -142,7 +142,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5586baab8730>
+<environment: 0x56103d529228>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -169,12 +169,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5586c0fe5cc0>
+<environment: 0x56103e532978>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x5586c0feb550>
+<environment: 0x56103e53df58>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -202,12 +202,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5586c1426720>
+<environment: 0x56103f0fc890>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x5586c1431778>
+<environment: 0x56103f103038>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -286,85 +286,6 @@ band    1   6      NA    NA                         NA    NA   NULL
 +   ret <- st_redimension(l[[1]], along = list(times = as.Date("1981-09-01") + 0:1))
 +   print(ret)
 + }
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-stars_proxy object with 2 attributes in 18 file(s):
-$sst
-[1] "[...]/avhrr-only-v2.19810901.nc:sst" "[...]/avhrr-only-v2.19810902.nc:sst"
-[3] "[...]/avhrr-only-v2.19810903.nc:sst" "[...]/avhrr-only-v2.19810904.nc:sst"
-[5] "[...]/avhrr-only-v2.19810905.nc:sst" "[...]/avhrr-only-v2.19810906.nc:sst"
-[7] "[...]/avhrr-only-v2.19810907.nc:sst" "[...]/avhrr-only-v2.19810908.nc:sst"
-[9] "[...]/avhrr-only-v2.19810909.nc:sst"
-
-$anom
-[1] "[...]/avhrr-only-v2.19810901.nc:anom"
-[2] "[...]/avhrr-only-v2.19810902.nc:anom"
-[3] "[...]/avhrr-only-v2.19810903.nc:anom"
-[4] "[...]/avhrr-only-v2.19810904.nc:anom"
-[5] "[...]/avhrr-only-v2.19810905.nc:anom"
-[6] "[...]/avhrr-only-v2.19810906.nc:anom"
-[7] "[...]/avhrr-only-v2.19810907.nc:anom"
-[8] "[...]/avhrr-only-v2.19810908.nc:anom"
-[9] "[...]/avhrr-only-v2.19810909.nc:anom"
-
-dimension(s):
-     from   to         offset  delta  refsys point values x/y
-x       1 1440              0   0.25      NA    NA   NULL [x]
-y       1  720             90  -0.25      NA    NA   NULL [y]
-zlev    1    1          0 [m]     NA      NA    NA   NULL    
-time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL    
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-sst, anom, 
-stars object with 4 dimensions and 2 attributes
-attribute(s), summary of first 1e+05 cells:
-            Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's
-sst [C*°]  -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360
-anom [C*°] -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360
-dimension(s):
-     from   to         offset  delta  refsys point values x/y
-x       1 1440              0   0.25      NA    NA   NULL [x]
-y       1  720             90  -0.25      NA    NA   NULL [y]
-zlev    1    1          0 [m]     NA      NA    NA   NULL    
-time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL    
-stars object with 5 dimensions and 1 attribute
-attribute(s), summary of first 1e+05 cells:
-               Min. 1st Qu. Median      Mean 3rd Qu. Max.  NA's
-sst.anom [C*°] -1.8   -1.19  -1.05 -0.320167    -0.2 9.36 13360
-dimension(s):
-        from   to         offset  delta  refsys point     values x/y
-x          1 1440              0   0.25      NA    NA       NULL [x]
-y          1  720             90  -0.25      NA    NA       NULL [y]
-zlev       1    1          0 [m]     NA      NA    NA       NULL    
-time       1    9 1981-09-01 UTC 1 days POSIXct    NA       NULL    
-new_dim    1    2             NA     NA      NA    NA sst , anom    
-Error in c.stars_proxy(l[[1]], l[[2]], l[[3]], along = list(times = as.Date("1981-09-01") +  : 
-  for proxy objects, along argument as list is not implemented
-stars_proxy object with 1 attribute in 2 file(s):
-$sst.anom
-[1] "[...]/avhrr-only-v2.19810901.nc:sst" 
-[2] "[...]/avhrr-only-v2.19810901.nc:anom"
-
-dimension(s):
-      from   to         offset  delta  refsys point values x/y
-x        1 1440              0   0.25      NA    NA   NULL [x]
-y        1  720             90  -0.25      NA    NA   NULL [y]
-zlev     1    1          0 [m]     NA      NA    NA   NULL    
-time     1    1 1981-09-01 UTC     NA POSIXct    NA   NULL    
-times    1    2     1981-09-01 1 days    Date    NA   NULL    
 > 
 > # demonstrate that environments work:
 > x = read_stars(tif, proxy = TRUE)
@@ -390,7 +311,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5586bda27b40>
+<environment: 0x56103e741388>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > st_as_stars(x)
@@ -405,4 +326,4 @@ y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
 > 
 > proc.time()
    user  system elapsed 
- 14.936   0.767  15.696 
+  3.837   0.735   3.688 

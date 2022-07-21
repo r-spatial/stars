@@ -354,10 +354,15 @@ get_data_units = function(data) {
 read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL,
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE) {
-	ret = if (packageVersion("sf") >= "1.0-9")
-			gdal_read_mdim(x, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
-		else
-			gdal_read_mdim(x, variable, options)
+#	ret = if (packageVersion("sf") >= "1.0-9")
+#			gdal_read_mdim(x, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
+#		else
+#			gdal_read_mdim(x, variable, options)
+	if (packageVersion("sf") >= "1.0-9") {
+		message("update stars to > 0.5-6")
+		return(NULL)
+	}
+	ret = gdal_read_mdim(x, variable, options)
 	create_units = function(x) {
 		u <- attr(x, "units")
 		if (is.null(u) || u == "")

@@ -25,3 +25,4 @@ vignettes.awk
 ^tic\.R$
 ^data-raw$
 ^codecov\.yml$
+vignettes/sst.tif

@@ -65,12 +65,12 @@ time                                                                  NULL
 > tmp = tempfile(fileext = ".tif")
 > write_stars(st, tmp)
 > 
-> (red <- read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
-+    nBufXSize = 2, nBufYSize = 2)))
+> (red <- setNames(read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXsize = 10, nYSize = 12,
++    nBufXSize = 2, nBufYSize = 2)), "foo"))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-                       Min. 1st Qu. Median  Mean 3rd Qu. Max.
-file1c66f3213a48d.tif    33  199.25  365.5 365.5  531.75  698
+     Min. 1st Qu. Median  Mean 3rd Qu. Max.
+foo    33  199.25  365.5 365.5  531.75  698
 dimension(s):
      from to offset delta refsys point values x/y
 x       1  2      0     5 WGS 84 FALSE   NULL [x]
@@ -151,4 +151,4 @@ t                                                                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.716   0.043   1.749 
+  2.040   0.780   1.949 
