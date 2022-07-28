@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* `write_mdim()` uses GDAL multidimensional array API;
+
 * `read_mdim()` uses arguments `offset`, `count` and `step` to read sub-arrays or strided arrays (requires sf >= 1.0-9)
 
 # version 0.5-6

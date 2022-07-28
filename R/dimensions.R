@@ -588,12 +588,18 @@ dim.dimensions = function(x) {
 
 #' @export
 as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28) {
+	mformat = function(x, ..., digits) {
+		if (inherits(x, c("PCICt", "POSIXct")))
+			format(x, ..., usetz = usetz)
+		else
+			format(x, digits = digits, ...) 
+	}
 	lst = lapply(x, function(y) {
 			if (length(y$values) > 3) {
 				y$values = if (is.array(y$values))
 						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
-							format(min(y$values), digits = digits), ",...,", 
-							format(max(y$values), digits = digits))
+							mformat(min(y$values), digits = digits), ",...,", 
+							mformat(max(y$values), digits = digits))
 					else if (inherits(y$values[[1]], "crs"))
 						paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
 					else
@@ -607,12 +613,6 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs 
 			y
 		}
 	)
-	mformat = function(x, ..., digits) {
-		if (inherits(x, c("PCICt", "POSIXct")))
-			format(x, ..., usetz = usetz)
-		else
-			format(x, digits = digits, ...) 
-	}
 	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	r = attr(x, "raster")

@@ -114,3 +114,4 @@ Collate:
     'extract.R'
     'datasets.R'
     'tile.R'
+    'mdim.R'
