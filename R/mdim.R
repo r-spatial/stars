@@ -111,20 +111,24 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...) {
 		else
 			st_crs(x)$wkt
 	e = add_units_attr(expand_dimensions(d))
+	r = add_units_attr(x) # unclasses, so that r$lat <- ... doesn't use the $<-.stars method
 	if (is_curvilinear(x)) {
-		r = add_units_attr(x) # so that r$lat <- ... doesn't use the stars method
 		stopifnot(!inherits(r, "stars"))
 		# att lat and lon as data arrays
-		r$lat = d$y$values
+		arrs = names(r)
+		r$lat = d$y$values # FIXME: could overwrite? use raster attr to identify x/y?
 		r$lon = d$x$values
 		d$x$values = numeric(0)
 		d$y$values = numeric(0)
-		r[["lat"]] = add_attr(r[["lat"]], c(units = "degrees_north", "_CoordinateAxisType" = "Lat"))
-		r[["lon"]] = add_attr(r[["lon"]], c(units = "degrees_east", "_CoordinateAxisType" = "Lon"))
-		r[[1]] = add_attrs(r[[1]], c(coordinates = "time lat lon", units = "kg m^-2")) # FIXME: all arrays?
+		r[["lat"]] = add_attr(r[["lat"]], c(units = "degrees_north", "_CoordinateAxisType" = "Lat", axis = "Y"))
+		r[["lon"]] = add_attr(r[["lon"]], c(units = "degrees_east",  "_CoordinateAxisType" = "Lon", axis = "X"))
+		cc = paste(rev(setdiff(names(d), c("x", "y", "lat", "lon"))), "lat lon")
+		for (i in arrs)
+			r[[i]] = add_attr(r[[i]], c(coordinates = cc))
 		curvilinear = c("lon", "lat")
+		e$x = e$y = numeric(0);
 	} else {
-		r = add_units_attr(x)
+		# FIXME: use raster attr to identify x/y:
 		e[[1]] = add_attr(e[[1]], c(axis = "X"))
 		e[[2]] = add_attr(e[[2]], c(axis = "Y"))
 	}

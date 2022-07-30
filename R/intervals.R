@@ -45,7 +45,7 @@ format.intervals = function(x, ...) {
 		else
 			format(x, digits = digits, ...) 
 	}
-	if (inherits(x$start, "units")) {
+	if (inherits(x$start, "units") && inherits(x$end, "units")) {
 		stopifnot(units(x$start) == units(x$end))
 		paste0("[", format(as.numeric(x$start), ...), ",", format(as.numeric(x$end), ...), ") ",
 			"[", as.character(units(x$start)), "]")
