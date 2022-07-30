@@ -119,8 +119,8 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE) {
 
 	RasterIO = list()
 	if (!ignore_file) {
-		file = terra::sources(.x)$source
-		if (file != "") {
+		file = terra::sources(.x)
+		if (file[1] != "") {
 			r = try(read_stars(file, RasterIO = RasterIO, ...), silent = TRUE)
 			if (!inherits(r, "try-error")) {
 				if (is.na(st_crs(r)))

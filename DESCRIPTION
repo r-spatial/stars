@@ -79,7 +79,7 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Collate: 
     'init.R'
     'stars.R'
@@ -111,3 +111,4 @@ Collate:
     'sample.R'
     'extract.R'
     'datasets.R'
+    'stars-package.R'
