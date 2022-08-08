@@ -138,7 +138,7 @@
 	if (inherits(i, "stars_proxy"))
 		i = st_as_stars(i, downsample = downsample)
 	if (!inherits(i, "stars"))
-		stop("selector should be a stars object")
+		stop("selector i should be a stars object")
 	fun = function(x, y, value) { x[y] = value; x }
 	st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
 }
