@@ -12,8 +12,9 @@ st_redimension(x, new_dims, along, ...)
 \method{st_redimension}{stars}(
   x,
   new_dims = st_dimensions(x),
-  along = list(new_dim = names(x)),
-  ...
+  along = setNames(list(names(x)), name),
+  ...,
+  name = "new_dim"
 )
 
 \method{st_redimension}{stars_proxy}(
@@ -31,6 +32,8 @@ st_redimension(x, new_dims, along, ...)
 \item{along}{named list with new dimension name and values}
 
 \item{...}{ignored}
+
+\item{name}{character name of the new dimension}
 }
 \description{
 redimension array, or collapse attributes into a new dimension

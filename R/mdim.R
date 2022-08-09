@@ -102,6 +102,13 @@ add_units_attr = function(l) {
 		lapply(l, f)
 }
 
+#' Write stars object using GDAL multidimensional array interface
+#'
+#' Write stars object using GDAL multidimensional array interface
+#' @param x stars object 
+#' @param filename destination file name
+#' @param driver character; driver name
+#' @param ... ignored
 #' @export
 write_mdim = function(x, filename, driver = detect.driver(filename), ...) {
 	d = st_dimensions(x)

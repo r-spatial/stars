@@ -772,7 +772,7 @@ merge.stars = function(x, y, ..., name = "attributes") {
 	if (!missing(y))
 		stop("argument y needs to be missing: merging attributes of x")
 	old_dim = st_dimensions(x)
-	out = st_redimension(x)
+	out = st_redimension(x, name = name)
 	new_dim = if (length(dots))
 			create_dimension(values = dots[[1]])
 		else
@@ -812,9 +812,10 @@ st_redimension = function(x, new_dims, along, ...) UseMethod("st_redimension")
 #' @param x object of class \code{stars}
 #' @param new_dims target dimensions: either a `dimensions` object or an integer vector with the dimensions' sizes
 #' @param along named list with new dimension name and values
+#' @param name character name of the new dimension
 #' @param ... ignored
 st_redimension.stars = function(x, new_dims = st_dimensions(x), 
-		along = list(new_dim = names(x)), ...) {
+		along = setNames(list(names(x)), name), ..., name = "new_dim") {
 
 	d = st_dimensions(x)
 	if (inherits(new_dims, "dimensions")) {
