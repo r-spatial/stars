@@ -23,11 +23,6 @@ read_mdim = function(x, variable = character(0), ..., options = character(0), ra
 		else
 			gdal_read_mdim(x, variable, options)
 
-#	if (packageVersion("sf") >= "1.0-9") {
-#		message("update stars to > 0.5-6")
-#		return(NULL)
-#	}
-#	ret = gdal_read_mdim(x, variable, options)
 	create_units = function(x) {
 		u <- attr(x, "units")
 		if (is.null(u) || u == "")
@@ -91,7 +86,7 @@ add_units_attr = function(l) {
 				if (all(as.numeric(x) %% 86400 == 0))
 					add_attr(as.numeric(x)/86400, c(units = "days since 1970-01-01", cal))
 				else if (all(as.numeric(x) %% 3600 == 0))
-					add_attr(as.numeric(x)/3600, c(cal, units = "hours since 1970-01-01 00:00:00", cal))
+					add_attr(as.numeric(x)/3600, c(units = "hours since 1970-01-01 00:00:00", cal))
 				else
 					add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
 			} else if (inherits(x, "Date"))
@@ -102,93 +97,63 @@ add_units_attr = function(l) {
 		lapply(l, f)
 }
 
+# convert stars object into a list of CDL-like variables with named dimensions
+st_as_cdl = function(x) {
+	e = add_units_attr(expand_dimensions(x)) # TODO: handle sfc dimensions
+	d = st_dimensions(x)
+	dimx = dim(x)
+	xy = attr(st_dimensions(x), "raster")$dimensions
+	for (i in seq_along(e)) {
+		if (is.null(dim(e[[i]])))
+			e[[i]] = structure(e[[i]], dim = setNames(length(e[[i]]), names(e)[i]))
+		else { # curvilinear coordinate matrices:
+			if (names(e)[i] == xy[1]) names(e)[i] = "lon"
+			if (names(e)[i] == xy[2]) names(e)[i] = "lat"
+		}
+	}
+
+	if (is_curvilinear(x)) {
+		e[["lat"]] = add_attr(e[["lat"]], c(units = "degrees_north", "_CoordinateAxisType" = "Lat", axis = "Y"))
+		e[["lon"]] = add_attr(e[["lon"]], c(units = "degrees_east",  "_CoordinateAxisType" = "Lon", axis = "X"))
+		cc = paste(rev(setdiff(names(d), c("x", "y", "lat", "lon"))), "lat lon")
+		for (i in seq_along(x))
+			x[[i]] = add_attr(x[[i]], c(coordinates = cc))
+	} else {
+		e[[ xy[1] ]] = add_attr(e[[ xy[1] ]], c(axis = "X"))
+		e[[ xy[2] ]] = add_attr(e[[ xy[2] ]], c(axis = "Y"))
+	}
+
+	x = add_units_attr(x) # unclasses
+	for (i in seq_along(x))
+		if (is.null(names(dim(x[[i]])))) # FIXME: read_ncdf() doesn't name dim
+			names(dim(x[[i]])) = names(d)
+	for (i in names(e))
+		x[[i]] = e[[i]]
+	ret = lapply(x, function(a) structure(a, which_dims = match(names(dim(a)), names(dimx)) - 1))
+	structure(ret, which_crs = !(names(ret) %in% names(x)))
+}
+
+
 #' Write stars object using GDAL multidimensional array interface
 #'
 #' Write stars object using GDAL multidimensional array interface
 #' @param x stars object 
 #' @param filename destination file name
 #' @param driver character; driver name
+#' @param root_group_options character; driver specific options regarding the creation of the root group
+#' @param options character; driver specific options regarding the creation of the dataset
 #' @param ... ignored
 #' @export
-write_mdim = function(x, filename, driver = detect.driver(filename), ...) {
-	d = st_dimensions(x)
-	curvilinear = character(0)
+write_mdim = function(x, filename, driver = detect.driver(filename), ..., 
+					  root_group_options = character(0), options = character(0)) {
+
+	cdl = st_as_cdl(x)
 	wkt = if (is.na(st_crs(x)))
 			character(0)
 		else
 			st_crs(x)$wkt
-	e = add_units_attr(expand_dimensions(d))
-	r = add_units_attr(x) # unclasses, so that r$lat <- ... doesn't use the $<-.stars method
-	if (is_curvilinear(x)) {
-		stopifnot(!inherits(r, "stars"))
-		# att lat and lon as data arrays
-		arrs = names(r)
-		r$lat = d$y$values # FIXME: could overwrite? use raster attr to identify x/y?
-		r$lon = d$x$values
-		d$x$values = numeric(0)
-		d$y$values = numeric(0)
-		r[["lat"]] = add_attr(r[["lat"]], c(units = "degrees_north", "_CoordinateAxisType" = "Lat", axis = "Y"))
-		r[["lon"]] = add_attr(r[["lon"]], c(units = "degrees_east",  "_CoordinateAxisType" = "Lon", axis = "X"))
-		cc = paste(rev(setdiff(names(d), c("x", "y", "lat", "lon"))), "lat lon")
-		for (i in arrs)
-			r[[i]] = add_attr(r[[i]], c(coordinates = cc))
-		curvilinear = c("lon", "lat")
-		e$x = e$y = numeric(0);
-	} else {
-		# FIXME: use raster attr to identify x/y:
-		e[[1]] = add_attr(e[[1]], c(axis = "X"))
-		e[[2]] = add_attr(e[[2]], c(axis = "Y"))
-	}
-
-	ret = sf:::write_mdim(filename, driver, r, d, e, wkt, curvilinear)
-	invisible(ret)
-}
-
-write_mdim_old = function(x, filename, ...) {
-
-	stopifnot(inherits(x, "stars"), is.character(filename), length(filename) == 1)
-	if (length(x) > 1) {
-		warning("only writing of the first attribute is supported")
-		x = x[1]
-	}
-	x = st_upfront(x)
-	d = st_dimensions(x)
-	e = expand_dimensions(d)
-	mdi = character(0) # metadataitems
-	mdi["NETCDF_VARNAME"] = names(x)[1] # doesn't help!
-	if (inherits(x[[1]], "units"))
-		mdi["Band1#units"] = as.character(units(x[[1]]))
-	if (length(d) > 2) {
-		mdi["NETCDF_DIM_EXTRA"] = paste0("{", paste0(rev(names(d)[-(1:2)]), collapse=","), "}")
-		for (i in setdiff(seq_along(d), 1:2)) {
-			name = names(d)[i]
-			mdi[paste0("NETCDF_DIM_", name, "_DEF")] = paste0("{", length(e[[i]]), ",6}")
-			values = paste0(as.numeric(e[[i]]), collapse = ",")
-			if (name == "time" || inherits(e[[i]], c("POSIXt", "Date", "PCICt"))) {
-				mdi["time#axis"] = "T"
-				if (inherits(e[[i]], c("POSIXt", "PCICt"))) {
-					if (all(as.numeric(e[[i]]) %% 86400 == 0)) {
-						values = paste0(as.numeric(e[[i]])/86400, collapse = ",")
-						mdi["time#units"] = "days since 1970-01-01"
-					} else
-						mdi["time#units"] = "seconds since 1970-01-01 00:00:00"
-					if (inherits(e[[i]], "PCICt")) {
-						if (!is.null(cal <- attr(e[[i]], "cal")))
-							mdi["time#calendar"] = paste0(cal, "_day")
-					}
-				}
-				if (inherits(e[[i]], "Date"))
-					mdi["time#units"] = "days since 1970-01-01"
-			}
-			mdi[paste0("NETCDF_DIM_", name, "_VALUES")] = paste0("{", values, "}")
-			# handle Z?
-		}
-	}
-	wkt = if (is.na(st_crs(x)))
-			character(0)
-		else
-			st_crs(x)$wkt
-	gt = get_geotransform(d)
-	sf::gdal_write_mdim_old(x, filename, mdi, wkt, gt)
+	xy = attr(st_dimensions(x), "raster")$dimensions
+	gdal_write_mdim(filename, driver, dim(x), cdl, wkt, xy, 
+					root_group_options = root_group_options, options = options)
 	invisible(x)
 }
