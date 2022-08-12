@@ -39,7 +39,7 @@ s = st_as_stars(list(Precipitation = m)) |>
  st_set_dimensions(1, values = pts) |>
  st_set_dimensions(2, values = times)
 nc = tempfile(fileext=".nc")
-if (compareVersion(sf_extSoftVersion()["GDAL"], "2.5.0") > -1) {
+if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
   write_mdim(s, nc)
   # try ncdump on the generated file
   print(read_mdim(nc))

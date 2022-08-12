@@ -714,8 +714,10 @@ st_crs.dimensions = function(x, ...) {
 	}
 
 	# set crs of sfc's, if any:
-	for (j in which_sfc(x))
+	for (j in which_sfc(x)) {
 		x[[ j ]]$refsys = value
+		st_crs(x[[ j ]]$values) = value
+	}
 	x
 }
 

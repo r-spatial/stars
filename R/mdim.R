@@ -114,7 +114,7 @@ cdl_add_polygons = function(e, i, sfc) {
 	e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
 		c(geometry_type = "polygon", node_count = "node_count", node_coordinates = "x y",
 		  part_node_count = "part_node_count", interior_ring = "interior_ring",
-		  grid_mapping = if (is.na(st_crs(sfc))) "crs" else NULL))
+		  grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
 	e
 }
 
@@ -210,7 +210,7 @@ st_as_cdl = function(x) {
 #'  st_set_dimensions(1, values = pts) |>
 #'  st_set_dimensions(2, values = times)
 #' nc = tempfile(fileext=".nc")
-#' if (compareVersion(sf_extSoftVersion()["GDAL"], "2.5.0") > -1) {
+#' if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
 #'   write_mdim(s, nc)
 #'   # try ncdump on the generated file
 #'   print(read_mdim(nc))
