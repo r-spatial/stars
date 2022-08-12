@@ -137,8 +137,15 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
-		if (!is.null(lev <- attr(x[[1]], "levels")))
-			ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
+		if (!is.null(lev <- attr(x[[1]], "levels"))) {
+			ex = attr(x[[1]], "exclude")
+			if(any(ex)){
+				id = (seq_along(ex) - 1)[!ex] # index-values matching to levels
+				ret[[1]] = structure(match(ret[[1]], id), class = "factor", levels = lev)
+			} else {
+				ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
+			}
+		}
 		st_set_crs(ret, crs)
 	} else {
 		if (merge)
