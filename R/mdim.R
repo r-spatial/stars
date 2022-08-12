@@ -210,8 +210,11 @@ st_as_cdl = function(x) {
 #'  st_set_dimensions(1, values = pts) |>
 #'  st_set_dimensions(2, values = times)
 #' nc = tempfile(fileext=".nc")
-#' write_mdim(s, nc)
-#' # try ncdump on the generated file
+#' if (compareVersion(sf_extSoftVersion()["GDAL"], "2.5.0") > -1) {
+#'   write_mdim(s, nc)
+#'   # try ncdump on the generated file
+#'   print(read_mdim(nc))
+#' }
 write_mdim = function(x, filename, driver = detect.driver(filename), ..., 
 					  root_group_options = character(0), options = character(0)) {
 
