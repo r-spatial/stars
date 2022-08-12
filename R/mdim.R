@@ -154,6 +154,18 @@ st_as_cdl = function(x) {
 #' @param options character; driver specific options regarding the creation of the dataset
 #' @param ... ignored
 #' @export
+#' @examples
+#' set.seed(135)
+#' m = matrix(runif(10), 2, 5)
+#' names(dim(m)) = c("stations", "time")
+#' times = as.Date("2022-05-01") + 1:5
+#' pts = st_as_sfc(c("POINT(0 1)", "POINT(3 5)"))
+#' s = st_as_stars(list(Precipitation = m)) |>
+#'  st_set_dimensions(1, values = pts) |>
+#'  st_set_dimensions(2, values = times)
+#' nc = tempfile(fileext=".nc")
+#' write_mdim(s, nc)
+#' # try ncdump on the generated file
 write_mdim = function(x, filename, driver = detect.driver(filename), ..., 
 					  root_group_options = character(0), options = character(0)) {
 
