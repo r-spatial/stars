@@ -104,11 +104,19 @@ st_as_cdl = function(x) {
 	dimx = dim(x)
 	xy = attr(st_dimensions(x), "raster")$dimensions
 	for (i in seq_along(e)) {
-		if (is.null(dim(e[[i]])))
+		if (is.null(dim(e[[i]])) && !is.list(e[[i]]))
 			e[[i]] = structure(e[[i]], dim = setNames(length(e[[i]]), names(e)[i]))
-		else { # curvilinear coordinate matrices:
+		else if (is_curvilinear(x)) { # curvilinear coordinate matrices:
 			if (names(e)[i] == xy[1]) names(e)[i] = "lon"
 			if (names(e)[i] == xy[2]) names(e)[i] = "lat"
+		} else if (inherits(e[[i]], "sfc")) { # vector data cube:
+			sfc = e[[i]]
+			e[[i]] = structure(seq_along(sfc), dim = setNames(length(sfc), names(e)[i]))
+			if (!inherits(sfc, "sfc_POINT"))
+				stop("only support for sfc_POINT so far")
+			cc = st_coordinates(sfc)
+			e$x = structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i]))
+			e$y = structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i]))
 		}
 	}
 
@@ -119,8 +127,10 @@ st_as_cdl = function(x) {
 		for (i in seq_along(x))
 			x[[i]] = add_attr(x[[i]], c(coordinates = cc))
 	} else {
-		e[[ xy[1] ]] = add_attr(e[[ xy[1] ]], c(axis = "X"))
-		e[[ xy[2] ]] = add_attr(e[[ xy[2] ]], c(axis = "Y"))
+		if (!any(is.na(xy))) {
+			e[[ xy[1] ]] = add_attr(e[[ xy[1] ]], c(axis = "X"))
+			e[[ xy[2] ]] = add_attr(e[[ xy[2] ]], c(axis = "Y"))
+		}
 	}
 
 	x = add_units_attr(x) # unclasses
