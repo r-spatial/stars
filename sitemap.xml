@@ -82,6 +82,9 @@
     <loc>/reference/make_intervals.html</loc>
   </url>
   <url>
+    <loc>/reference/mdim.html</loc>
+  </url>
+  <url>
     <loc>/reference/merge.html</loc>
   </url>
   <url>
@@ -92,9 +95,6 @@
   </url>
   <url>
     <loc>/reference/predict.stars.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_mdim.html</loc>
   </url>
   <url>
     <loc>/reference/read_ncdf.html</loc>
@@ -179,9 +179,6 @@
   </url>
   <url>
     <loc>/reference/stars_subset.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_mdim.html</loc>
   </url>
   <url>
     <loc>/reference/write_stars.html</loc>
