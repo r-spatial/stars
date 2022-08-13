@@ -97,24 +97,37 @@ add_units_attr = function(l) {
 		lapply(l, f)
 }
 
-cdl_add_polygons = function(e, i, sfc) {
-	stopifnot(inherits(sfc, "sfc_MULTIPOLYGON"))
+cdl_add_geometry = function(e, i, sfc) {
+	stopifnot(inherits(sfc, c("sfc_POINT", "sfc_POLYGON", "sfc_MULTIPOLYGON")))
+
 	cc = st_coordinates(sfc)
-	e$node = structure(seq_len(nrow(cc)), dim = c(node = nrow(cc)))
-	e$x = structure(cc[, 1], dim = c(node = nrow(cc)))
-	e$y = structure(cc[, 2], dim = c(node = nrow(cc)))
- # int node_count(instance) ;
- # int part_node_count(part) ;
- # int interior_ring(part) ;
-	e$node_count = structure(rle(cc[,"L3"])$lengths, dim = setNames(length(sfc), names(e)[i]))
-	part = rle(cc[,"L3"] * 2 * max(cc[,"L2"]) + 2 * (cc[,"L2"] - 1) + cc[,"L1"])$lengths
-	e$part_node_count = structure(part, dim = c(part = length(part)))
-	e$interior_ring = structure(as.numeric(cc[cumsum(part), "L1"] > 1), dim = c(part = length(part)))
-	attr(e, "dims") = c(node = nrow(cc), part = length(part))
-	e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
-		c(geometry_type = "polygon", node_count = "node_count", node_coordinates = "x y",
-		  part_node_count = "part_node_count", interior_ring = "interior_ring",
-		  grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
+	if (inherits(sfc, c("sfc_POLYGON", "sfc_MULTIPOLYGON"))) {
+		sfc = st_cast(sfc, "MULTIPOLYGON")
+		e$node = structure(seq_len(nrow(cc)), dim = c(node = nrow(cc)))
+		e$x = structure(cc[, 1], dim = c(node = nrow(cc)))
+		e$y = structure(cc[, 2], dim = c(node = nrow(cc)))
+		e$node_count = structure(rle(cc[,"L3"])$lengths, dim = setNames(length(sfc), names(e)[i]))
+		part = rle(cc[,"L3"] * 2 * max(cc[,"L2"]) + 2 * (cc[,"L2"] - 1) + cc[,"L1"])$lengths
+		e$part_node_count = structure(part, dim = c(part = length(part)))
+		e$interior_ring = structure(as.numeric(cc[cumsum(part), "L1"] > 1), dim = c(part = length(part)))
+		attr(e, "dims") = c(node = nrow(cc), part = length(part))
+		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
+			c(geometry_type = "polygon", node_count = "node_count", node_coordinates = "x y",
+		  	part_node_count = "part_node_count", interior_ring = "interior_ring",
+		  	grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
+	} else { # POINT:
+		if (isTRUE(st_is_longlat(sfc))) {
+			e$lon = add_attr(structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i])), 
+						 	c(units = "degrees_north", standard_name = "longitude"))
+			e$lat = add_attr(structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i])), 
+						 	c(units = "degrees_east", standard_name = "latitude"))
+		} else {
+			e$x = structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i]))
+			e$y = structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i]))
+		}
+		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
+			c(geometry_type = "point", grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
+	}
 	e
 }
 
@@ -134,28 +147,20 @@ st_as_cdl = function(x) {
 		} else if (inherits(e[[i]], "sfc")) { # vector data cube:
 			sfc = e[[i]]
 			e[[i]] = structure(seq_along(sfc), dim = setNames(length(sfc), names(e)[i]))
+			e = cdl_add_geometry(e, i, sfc)
 			if (inherits(sfc, "sfc_POINT")) {
-				cc = st_coordinates(sfc)
 				if (isTRUE(st_is_longlat(x))) {
-					e$lon = add_attr(structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i])), 
-								 	c(units = "degrees_north", standard_name = "longitude"))
-					e$lat = add_attr(structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i])), 
-								 	c(units = "degrees_east", standard_name = "latitude"))
 					co = c(coordinates = "lat lon")
 					xy = c("lon", "lat") # hack
 				} else {
-					e$x = structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i]))
-					e$y = structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i]))
 					co = c(coordinates = "x y")
 					xy = c("x", "y") # hack
 				}
-			} else if (inherits(sfc, c("sfc_MULTIPOLYGON", "sfc_POLYGON"))) {
-				e = cdl_add_polygons(e, i, st_cast(sfc, "MULTIPOLYGON"))
+			} else {
 				dimx = c(dimx, attr(e, "dims"))
 				co = c(coordinates = "x y")
 				xy = c("x", "y") # hack
-			} else
-				stop("only support for sfc_POINT so far")
+			} 
 		}
 	}
 
