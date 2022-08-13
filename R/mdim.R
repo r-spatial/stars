@@ -1,10 +1,11 @@
-#' Read data using GDAL's multidimensional array API
-#' 
-#' Read data using GDAL's multidimensional array API
-#' @param x data source name
+#' Read or write data using GDAL's multidimensional array API
+#'
+#' Read or write data using GDAL's multidimensional array API
+#' @name mdim
+#' @param filename name of the source or destination file or data source
 #' @param variable name of the array to be read
-#' @param options array opening options
-#' @param raster names of the raster variables (default: first two)
+#' @param options character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset
+#' @param raster names of the raster variables (default: first two dimensions)
 #' @param offset integer; offset for each dimension (pixels) of sub-array to read (default: 0,0,0,...) (requires sf >= 1.0-9)
 #' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all) (requires sf >= 1.0-9)
 #' @param step integer; step size for each dimension (pixels) of sub-aray to read (requires sf >= 1.0-9)
@@ -13,15 +14,15 @@
 #' @details it is assumed that the first two dimensions are easting / northing
 #' @param ... ignored
 #' @export
-read_mdim = function(x, variable = character(0), ..., options = character(0), raster = NULL,
+read_mdim = function(filename, variable = character(0), ..., options = character(0), raster = NULL,
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE) {
 
 	# when releasing to CRAN, require sf 1.0-9 and drop second option
 	ret = if (packageVersion("sf") >= "1.0-9")
-			gdal_read_mdim(x, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
+			gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 		else
-			gdal_read_mdim(x, variable, options)
+			gdal_read_mdim(filename, variable, options)
 
 	create_units = function(x) {
 		u <- attr(x, "units")
@@ -195,14 +196,10 @@ st_as_cdl = function(x) {
 }
 
 
-#' Write stars object using GDAL multidimensional array interface
-#'
-#' Write stars object using GDAL multidimensional array interface
+#' @name mdim
 #' @param x stars object 
-#' @param filename destination file name
 #' @param driver character; driver name
 #' @param root_group_options character; driver specific options regarding the creation of the root group
-#' @param options character; driver specific options regarding the creation of the dataset
 #' @param ... ignored
 #' @export
 #' @examples
