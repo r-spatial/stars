@@ -91,7 +91,7 @@ add_units_attr = function(l) {
 				else
 					add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
 			} else if (inherits(x, "Date"))
-				add_attr(x, c(units = "days since 1970-01-01"))
+				add_attr(as.numeric(x), c(units = "days since 1970-01-01"))
 			else
 				x
 		}
@@ -192,7 +192,9 @@ st_as_cdl = function(x) {
 			m
 	}
 	ret = lapply(x, function(a) structure(a, which_dims = which_dims(a, dimx)))
-	structure(ret, which_crs = !(names(ret) %in% names(e)), dims = attr(e, "dims"))
+	structure(ret, which_crs = !(names(ret) %in% names(e)), 
+			  is_numeric = sapply(ret, is.numeric),
+			  dims = attr(e, "dims"))
 }
 
 
