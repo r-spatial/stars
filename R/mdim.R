@@ -99,11 +99,15 @@ add_units_attr = function(l) {
 }
 
 cdl_add_geometry = function(e, i, sfc) {
-	stopifnot(inherits(sfc, c("sfc_POINT", "sfc_POLYGON", "sfc_MULTIPOLYGON")))
+	stopifnot(inherits(sfc, c("sfc_POINT", "sfc_POLYGON", "sfc_MULTIPOLYGON", "sfc_LINESTRING", "sfc_MULTILINESTRING")))
+
+	if (inherits(sfc, "sfc_POLYGON"))
+		sfc = st_cast(sfc, "MULTIPOLYGON")
+	if (inherits(sfc, "sfc_LINESTRING"))
+		sfc = st_cast(sfc, "MULTILINESTRING")
 
 	cc = st_coordinates(sfc)
-	if (inherits(sfc, c("sfc_POLYGON", "sfc_MULTIPOLYGON"))) {
-		sfc = st_cast(sfc, "MULTIPOLYGON")
+	if (inherits(sfc, c("sfc_MULTIPOLYGON"))) {
 		e$node = structure(seq_len(nrow(cc)), dim = c(node = nrow(cc)))
 		e$x = structure(cc[, 1], dim = c(node = nrow(cc)))
 		e$y = structure(cc[, 2], dim = c(node = nrow(cc)))
@@ -115,6 +119,18 @@ cdl_add_geometry = function(e, i, sfc) {
 		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
 			c(geometry_type = "polygon", node_count = "node_count", node_coordinates = "x y",
 		  	part_node_count = "part_node_count", interior_ring = "interior_ring",
+		  	grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
+	} else if (inherits(sfc, "sfc_MULTILINESTRING")) { # LINE:
+		e$node = structure(seq_len(nrow(cc)), dim = c(node = nrow(cc)))
+		e$x = structure(cc[, 1], dim = c(node = nrow(cc)))
+		e$y = structure(cc[, 2], dim = c(node = nrow(cc)))
+		e$node_count = structure(rle(cc[,"L2"])$lengths, dim = setNames(length(sfc), names(e)[i]))
+		part = rle((cc[,"L2"] - 1) * max(cc[,"L1"]) + cc[,"L1"])$lengths
+		e$part_node_count = structure(part, dim = c(part = length(part)))
+		attr(e, "dims") = c(node = nrow(cc), part = length(part))
+		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
+			c(geometry_type = "line", node_count = "node_count", node_coordinates = "x y",
+		  	part_node_count = "part_node_count",
 		  	grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
 	} else { # POINT:
 		if (isTRUE(st_is_longlat(sfc))) {
