@@ -73,6 +73,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		ret$srs)
 }
 
+
+# WRITE helper functions:
+
 add_attr = function(x, at) { # append at to attribute "attrs"
 		structure(x, attrs = c(attr(x, "attrs"), at))
 }
@@ -218,6 +221,7 @@ st_as_cdl = function(x) {
 #' @param x stars object 
 #' @param driver character; driver name
 #' @param root_group_options character; driver specific options regarding the creation of the root group
+#' @param as_float logical; if \code{TRUE} write 4-byte floating point numbers, if \code{FALSE} write 8-byte doubles
 #' @param ... ignored
 #' @export
 #' @examples
@@ -236,7 +240,8 @@ st_as_cdl = function(x) {
 #'   print(read_mdim(nc))
 #' }
 write_mdim = function(x, filename, driver = detect.driver(filename), ..., 
-					  root_group_options = character(0), options = character(0)) {
+					  root_group_options = character(0), options = character(0),
+					  as_float = TRUE) {
 
 	cdl = st_as_cdl(x)
 	wkt = if (is.na(st_crs(x)))
@@ -245,6 +250,7 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 			st_crs(x)$wkt
 	xy = attr(st_dimensions(x), "raster")$dimensions
 	gdal_write_mdim(filename, driver, c(dim(x), attr(cdl, "dims")), cdl, wkt, xy, 
-					root_group_options = root_group_options, options = options)
+					root_group_options = root_group_options, options = options,
+					as_float = as_float)
 	invisible(x)
 }

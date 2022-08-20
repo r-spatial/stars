@@ -25,7 +25,8 @@ write_mdim(
   driver = detect.driver(filename),
   ...,
   root_group_options = character(0),
-  options = character(0)
+  options = character(0),
+  as_float = TRUE
 )
 }
 \arguments{
@@ -54,6 +55,8 @@ write_mdim(
 \item{driver}{character; driver name}
 
 \item{root_group_options}{character; driver specific options regarding the creation of the root group}
+
+\item{as_float}{logical; if \code{TRUE} write 4-byte floating point numbers, if \code{FALSE} write 8-byte doubles}
 }
 \description{
 Read or write data using GDAL's multidimensional array API
