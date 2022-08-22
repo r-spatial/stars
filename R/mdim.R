@@ -1,3 +1,56 @@
+regrp = function(grp, i) {
+	# work on single MULTIPOLYGON, group outer rings or outer rings+holes
+	if (all(i == 0)) # only outer rings
+		lapply(grp, list) # add one list level
+	else {
+		starts = which(i == 0)
+		lst = vector("list", length(starts))
+		for (j in seq_along(lst)) {
+			end = start = starts[j]
+			while (end < length(i) && i[end + 1] == 1)
+				end = end + 1 # consume holes from start to end
+			lst[j] = list(grp[start:end])
+		}
+		lst
+	}
+}
+
+regroup = function(grps, ir) {
+	mapply(regrp, grps, ir, SIMPLIFY = FALSE)
+}
+
+recreate_geometry = function(l) {
+	if (length(geom <- l$geometry)) {
+		cc = cbind(geom$x[[1]], geom$y[[1]])
+		if (geom$geometry_type == "point") {
+			sfc = do.call(st_sfc, lapply(seq_len(nrow(cc)), function(i) st_point(cc[i,])))
+			dimension = attr(geom$x[[1]], "d_names")
+		} else { 
+			nc = geom$node_count[[1]]
+			pnc = c(0, cumsum(geom$part_node_count[[1]]))
+			parts = vector("list", length(geom$part_node_count[[1]]))
+			for (i in seq_along(parts))
+				parts[[i]] = cc[(pnc[i]+1):pnc[i+1],]
+			i = findInterval(pnc[-1], cumsum(c(0, nc)), left.open = TRUE)
+			grps = lapply(split(seq_along(parts), i), function(x) parts[x])
+			dimension = attr(nc, "d_names")
+			if (geom$geometry_type == "line")
+				sfc = do.call(st_sfc, lapply(grps, st_multilinestring))
+			else if (geom$geometry_type == "polygon") {
+				ir = geom$interior_ring[[1]]
+				grps = regroup(grps, split(ir, i))
+				sfc = do.call(st_sfc, lapply(grps, st_multipolygon))
+					# if all rings are exterior rings: add one list level to each
+					# do.call(st_sfc, lapply(lapply(grps, function(x) lapply(x, list)), st_multipolygon))
+			} else
+				stop(paste("unsupported geometry type:", geom$geometry_type))
+		}
+		l$dimensions[[dimension]] = sfc
+	}
+	l
+}
+
+
 #' Read or write data using GDAL's multidimensional array API
 #'
 #' Read or write data using GDAL's multidimensional array API
@@ -18,11 +71,14 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE) {
 
+	stopifnot(is.character(filename), is.character(variable), is.character(options));
 	# when releasing to CRAN, require sf 1.0-9 and drop second option
 	ret = if (packageVersion("sf") >= "1.0-9")
 			gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 		else
 			gdal_read_mdim(filename, variable, options)
+
+	ret = recreate_geometry(ret)
 
 	create_units = function(x) {
 		u <- attr(x, "units")
@@ -42,7 +98,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			}
 		}
 	}
-	l = rev(lapply(ret$dimensions, function(x) create_units(x$values[[1]])))
+	l = rev(lapply(ret$dimensions, function(x) { 
+			   if (inherits(x, "sfc")) x else create_units(x$values[[1]])
+			}))
 	if (length(offset) != 0 || length(step) != 0 || length(count) != 0) {
 		if (length(offset) == 0)
 			offset = rep(0, length(l))
@@ -54,11 +112,15 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			l[[i]] = l[[i]][seq(from = offset[i]+1, length.out = count[i], by = step[i])]
 		}
 	}
-	d = mapply(function(x, i) create_dimension(values = x, is_raster = i %in% 1:2), l, seq_along(l),
+	sf = any(sapply(l, function(x) inherits(x, "sfc")))
+	d = mapply(function(x, i) create_dimension(values = x, is_raster = !sf && i %in% 1:2), l, seq_along(l),
 			SIMPLIFY = FALSE)
-	if (is.null(raster))
-		raster = get_raster(dimensions = names(d)[1:2])
-	else
+	if (is.null(raster)) {
+		raster = if (sf)
+					get_raster(dimensions = rep(NA_character_,2))
+				else
+					get_raster(dimensions = names(d)[1:2])
+	} else
 		raster = get_raster(dimensions = raster)
 
 	if (proxy)
@@ -146,7 +208,8 @@ cdl_add_geometry = function(e, i, sfc) {
 			e$y = structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i]))
 		}
 		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
-			c(geometry_type = "point", grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
+				c(geometry_type = "point", node_coordinates = "x y",
+				grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
 	}
 	e
 }
@@ -181,6 +244,7 @@ st_as_cdl = function(x) {
 				co = c(coordinates = "x y")
 				xy = c("x", "y") # hack
 			} 
+			co = c(co, geometry = "geometry")
 		}
 	}
 
