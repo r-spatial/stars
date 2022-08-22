@@ -80,7 +80,8 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5-7" id="version-05-7">version 0.5-7<a class="anchor" aria-label="anchor" href="#version-05-7"></a></h2>
-<ul><li><p><code><a href="../reference/mdim.html">write_mdim()</a></code> uses GDAL multidimensional array API;</p></li>
+<ul><li><p>reading &amp; writing vector data cubes: <code><a href="../reference/mdim.html">read_mdim()</a></code> reads CF compliant vector geometries, and reconstructs them into an <code>sfc</code> dimension; <code><a href="../reference/mdim.html">write_mdim()</a></code> writes them.</p></li>
+<li><p><code><a href="../reference/mdim.html">write_mdim()</a></code> uses GDAL multidimensional array API;</p></li>
 <li><p><code><a href="../reference/mdim.html">read_mdim()</a></code> uses arguments <code>offset</code>, <code>count</code> and <code>step</code> to read sub-arrays or strided arrays (requires sf &gt;= 1.0-9)</p></li>
 </ul></div>
     <div class="section level2">
