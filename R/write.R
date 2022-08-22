@@ -153,7 +153,6 @@ detect.driver = function(filename) { #nocov start
 			tif  = ,
 			tiff = 'GTiff',
 			grd  = 'rraster',
-			asc  = 'ascii',
 			nc   = ,
 			cdf  = ,
 			ncdf = 'NetCDF',
