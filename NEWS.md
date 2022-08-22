@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* reading & writing vector data cubes: `read_mdim()` reads CF compliant vector geometries, and reconstructs them into an `sfc` dimension; `write_mdim()` writes them.
+
 * `write_mdim()` uses GDAL multidimensional array API;
 
 * `read_mdim()` uses arguments `offset`, `count` and `step` to read sub-arrays or strided arrays (requires sf >= 1.0-9)
