@@ -1,8 +1,18 @@
+close_mat = function(m) {
+	if (any(m[1,] != m[nrow(m),]))
+		m = rbind(m, m[1,])
+	if (nrow(m) < 4)
+		stop("polygons require at least 4 points")
+	unclass(m)
+}
+
 regrp = function(grp, i) {
 	# work on single MULTIPOLYGON, group outer rings or outer rings+holes
 	if (all(i == 0)) # only outer rings
-		lapply(grp, list) # add one list level
+		lapply(grp, function(x) list(close_mat(x))) # add one list level
 	else {
+		for (j in seq_along(grp))
+			grp[[j]] = close_mat(grp[[j]])
 		starts = which(i == 0)
 		lst = vector("list", length(starts))
 		for (j in seq_along(lst)) {
