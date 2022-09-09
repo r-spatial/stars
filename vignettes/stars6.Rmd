@@ -238,7 +238,7 @@ tribble(
   "colFromX", "", "*",
   "rowFromY", "", "*", 
   "rowColFromCell", "", "",
-  "cellFromXY", "", "",
+  "cellFromXY", "st_cells()", "",
   "cellFromRowCol", "", "",
   "cellsFromExtent", "", "",
   "coordinates", "st_coordinates", "",
