@@ -646,7 +646,7 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 				attr(d1, "raster")$blocksizes = NULL
 				attr(di, "raster")$blocksizes = NULL
 			}
-			if (! isTRUE(all.equal(d1, di, tolerance = tolerance)))
+			if (! isTRUE(all.equal(d1, di, tolerance = tolerance, check.attributes = FALSE)))
 				return(FALSE)
 		}
 	}
