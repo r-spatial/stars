@@ -255,7 +255,7 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		inv_gt = gdal_inv_geotransform(gt)
 		if (any(is.na(inv_gt)))
 			stop("geotransform not invertible")
-		ret = floor(xy_from_colrow(x, inv_gt) + 1.)# will return floating point col/row numbers!!
+		ret = floor(xy_from_colrow(x, inv_gt) + 1.) # will return floating point col/row numbers!!
 		if (NA_outside)
 			ret[ ret[,1] < 1 | ret[,1] > obj[[ xy[1] ]]$to | ret[,2] < 1 | ret[,2] > obj[[ xy[2] ]]$to, ] = NA
 		ret
@@ -273,6 +273,29 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		stop("colrow_from_xy not supported for curvilinear objects")
 	} else
 		stop("colrow_from_xy not supported for this object")
+}
+
+st_cells_from_row_col = function(x, rows, cols) {
+	nc = dim(x)[1] # ncols
+	(rows - 1) * nc + cols
+}
+
+st_cells_from_xy = function(x, xy) {
+	x = st_upfront(x)
+	cr = colrow_from_xy(xy, x, NA_outside = TRUE)
+	st_cells_from_row_col(x, cr[,2], cr[,1])
+}
+
+
+#' return the cell index corresponding to the location of a set of points
+#' 
+#' return the cell index corresponding to the location of a set of points
+#' @param x object of class \code{stars}
+#' @param sf object of class \code{sf} or \code{sfc}
+#' @export
+st_cells = function(x, sf) {
+	stopifnot(inherits(x, "stars"), inherits(sf, c("sf", "sfc")), st_crs(x) == st_crs(sf))
+	st_cells_from_xy(x, st_coordinates(sf))
 }
 
 has_rotate_or_shear = function(x) {

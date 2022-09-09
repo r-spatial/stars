@@ -99,7 +99,10 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 						cal %in% c("360_day", "365_day", "noleap"))
 				get_pcict(x, u, cal)
 			else {
-				u = units::set_units(x, u, mode = "standard")
+				if (inherits(try(tr <- units::set_units(x, u, mode = "standard"), silent = TRUE), "try-error"))
+						return(u)
+					else
+						u = tr
 				p = try(as.POSIXct(u), silent = TRUE)
 				if (inherits(p, "POSIXct"))
 					p
@@ -138,7 +141,8 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 
 	# handle array units:
 	for (i in seq_along(ret$array_list))
-		if (nchar(u <- attr(ret$array_list[[i]], "units")))
+		if (nchar(u <- attr(ret$array_list[[i]], "units")) && 
+				!inherits(try(units::set_units(1.0, u, mode = "standard"), silent = TRUE), "try-error"))
 			ret$array_list[[i]] = units::set_units(ret$array_list[[i]], u, mode = "standard")
 	lst = lapply(ret$array_list, function(x) structure(x, dim = rev(dim(x))))
 	st_set_crs(st_stars(lst, dimensions = structure(d, raster = raster, class = "dimensions")),
