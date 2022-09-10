@@ -347,6 +347,17 @@ which_time = function(x) {
 		(is.character(i$refsys) && i$refsys %in% c("POSIXct", "Date", "PCICt"))))
 }
 
+#' @export
+time.stars = function(x, ..., which = 1) {
+	w = which_time(x)
+	if (length(w) > 1 && missing(which))
+		warning(paste("using the first of", length(w), "time dimensions"))
+	if (length(w) == 0)
+		error("object does not have a time dimensions")
+	stopifnot(length(which) == 1)
+	expand_dimensions(x)[[ w[which] ]]
+}
+
 has_sfc = function(x) {
 	length(which_sfc(x)) > 0
 }

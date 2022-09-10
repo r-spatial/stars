@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* `time()` returns time stamps of a time dimension
+
 * `st_cells()` returns the cell index for a set of point coordinates, provided as `sf` or `sfc` object; #558
 
 * reading & writing vector data cubes: `read_mdim()` reads CF compliant vector geometries, and reconstructs them into an `sfc` dimension; `write_mdim()` writes them.
