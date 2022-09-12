@@ -16,7 +16,8 @@ read_mdim(
   count = integer(0),
   step = integer(0),
   proxy = FALSE,
-  debug = FALSE
+  debug = FALSE,
+  bounds = TRUE
 )
 
 write_mdim(
@@ -49,6 +50,9 @@ write_mdim(
 \item{proxy}{logical; return proxy object? (not functional yet)}
 
 \item{debug}{logical; print debug info?}
+
+\item{bounds}{logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
+named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names}
 
 \item{x}{stars object}
 

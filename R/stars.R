@@ -344,7 +344,8 @@ which_time = function(x) {
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
 		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
-		(is.character(i$refsys) && i$refsys %in% c("POSIXct", "Date", "PCICt"))))
+		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "PCICt") ||
+									grepl("PCICt", i$refsys)))))
 }
 
 #' @export
@@ -353,7 +354,7 @@ time.stars = function(x, ..., which = 1) {
 	if (length(w) > 1 && missing(which))
 		warning(paste("using the first of", length(w), "time dimensions"))
 	if (length(w) == 0)
-		error("object does not have a time dimensions")
+		stop("object does not have a time dimensions")
 	stopifnot(length(which) == 1)
 	expand_dimensions(x)[[ w[which] ]]
 }
@@ -959,7 +960,13 @@ st_area.stars = function(x, ...) {
 
 #' @export
 drop_units.stars = function(x) {
-	st_stars(lapply(x, drop_units), dimensions = st_dimensions(x))
+	try_drop_units = function(x) {
+		if (inherits(x, "units"))
+			units::drop_units(x)
+		else
+			x
+	}
+	st_stars(lapply(x, try_drop_units), dimensions = st_dimensions(x))
 }
 
 #' Predict values, given a model object, for a stars or stars_proxy object

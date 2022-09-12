@@ -60,6 +60,43 @@ recreate_geometry = function(l) {
 	l
 }
 
+get_values_from_bounds = function(x, bnd, center) {
+	a = gdal_read_mdim(x, bnd)$array_list[[1]]
+	dim(a) = rev(dim(a))
+	a = t(a)
+	if (length(dim(a)) == 2) {
+		if (!dim(a)[2] %in% 1:2)
+			warning(paste("bounds variable", bnd, "has", dim(a)[2], "vertices and may be treated incorrectly"))
+		if (center) {
+			m = apply(a, 1, mean)
+			if (regular_intervals(m))
+				m
+			else
+				make_intervals(a[,1], a[,2])
+		} else # start of bound:
+			a[,1]
+	} else
+		a
+}
+
+mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
+	if (isTRUE(bnds)) {
+		bnds = character()
+		for (d in names(dims))
+			if (d != "time" && !is.null(b <- attr(dims[[d]]$values[[1]], "attributes")["bounds"]))
+				bnds = c(bnds, setNames(b, d))
+	}
+	if (length(bnds) && is.null(names(bnds)))
+		stop("bounds must be a named vector, names indicating the non-bounds dimension variables")
+	for (b in names(bnds))
+		if (!is.na(bnds[b])) {
+			v <- try(get_values_from_bounds(x, bnds[b], center = TRUE), silent = TRUE)
+			if (!inherits(v, "try-error"))
+				dims[[b]]$values[[1]] = v
+		}
+	dims
+}
+
 
 #' Read or write data using GDAL's multidimensional array API
 #'
@@ -74,12 +111,14 @@ recreate_geometry = function(l) {
 #' @param step integer; step size for each dimension (pixels) of sub-aray to read (requires sf >= 1.0-9)
 #' @param proxy logical; return proxy object? (not functional yet)
 #' @param debug logical; print debug info?
+#' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
+#' named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names
 #' @details it is assumed that the first two dimensions are easting / northing
 #' @param ... ignored
 #' @export
 read_mdim = function(filename, variable = character(0), ..., options = character(0), raster = NULL,
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
-					 debug = FALSE) {
+					 debug = FALSE, bounds = TRUE) {
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options));
 	# when releasing to CRAN, require sf 1.0-9 and drop second option
@@ -89,6 +128,8 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			gdal_read_mdim(filename, variable, options)
 
 	ret = recreate_geometry(ret)
+	if (isTRUE(bounds) || is.character(bounds))
+		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)
 
 	create_units = function(x) {
 		u <- attr(x, "units")
@@ -111,7 +152,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			}
 		}
 	}
-	l = rev(lapply(ret$dimensions, function(x) { 
+	l = rev(lapply(ret$dimensions, function(x) {
 			   if (inherits(x, "sfc")) x else create_units(x$values[[1]])
 			}))
 	if (length(offset) != 0 || length(step) != 0 || length(count) != 0) {

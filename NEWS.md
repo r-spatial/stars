@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* `read_mdim()` will read bounds arrays for coordinates using the `bounds` attribute, and accepts a `bounds` argument to specify them when that attribute is missing
+
 * `time()` returns time stamps of a time dimension
 
 * `st_cells()` returns the cell index for a set of point coordinates, provided as `sf` or `sfc` object; #558
