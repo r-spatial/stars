@@ -106,9 +106,9 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @param variable name of the array to be read
 #' @param options character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset
 #' @param raster names of the raster variables (default: first two dimensions)
-#' @param offset integer; offset for each dimension (pixels) of sub-array to read (default: 0,0,0,...) (requires sf >= 1.0-9)
-#' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all) (requires sf >= 1.0-9)
-#' @param step integer; step size for each dimension (pixels) of sub-aray to read (requires sf >= 1.0-9)
+#' @param offset integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
+#' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)
+#' @param step integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
 #' @param proxy logical; return proxy object? (not functional yet)
 #' @param debug logical; print debug info?
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
@@ -160,8 +160,11 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			offset = rep(0, length(l))
 		if (length(step) == 0)
 			step = rep(1, length(l))
+		ll = lengths(lapply(l, as.list)) # take care of dimensions of class intervals
 		if (length(count) == 0)
-			count = floor((lengths(l) - offset)/step)
+			count = floor((ll - offset)/step)
+		else if (any(a <- is.na(count)))
+			count[a] = floor((ll[a] - offset[a])/step[a])
 		for (i in seq_along(l)) {
 			l[[i]] = l[[i]][seq(from = offset[i]+1, length.out = count[i], by = step[i])]
 		}
