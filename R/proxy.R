@@ -248,7 +248,7 @@ fetch = function(x, downsample = 0, ...) {
 			list(new_dim = names(x))
 	
 	ret = if (length(ret) == 1)
-		st_redimension(ret[[1]], along = along)
+		st_redimension(ret[[1]], name = along)
 	else
 		do.call(c, lapply(ret, st_redimension, along = along))
 	
