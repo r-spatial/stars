@@ -246,10 +246,11 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 # not sure whether this introduces new problems.
 #		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
 #		x[,1] = x[,1] + sign * 360.
-		if (x[1,1] > bb["xmax"])
-				x[1,1] = x[1,1] - 360.
-		if (x[2,1] < bb["xmin"])
-				x[2,1] = x[2,1] + 360.
+		# one more try: https://github.com/r-spatial/stars/issues/563
+		ix = x[,1] > bb["xmax"]
+		x[ix,1] = x[ix,1] - 360.
+		ix = x[,1] < bb["xmin"]
+		x[ix,1] = x[ix,1] + 360.
 	}
 	if (!any(is.na(gt))) { # have geotransform
 		inv_gt = gdal_inv_geotransform(gt)
