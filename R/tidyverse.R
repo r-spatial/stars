@@ -278,7 +278,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 	if (!requireNamespace("ggplot2", quietly = TRUE))
 		stop("package ggplot2 required, please install it first") # nocov
 
-	if (is.null(data)) stop("argument data should not set to a stars or stars_proxy object")
+	if (is.null(data)) stop("argument data should be a stars or stars_proxy object")
 
 	for (i in seq_along(data)) {
 		if (inherits(data[[i]], "units"))
