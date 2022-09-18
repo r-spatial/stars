@@ -53,7 +53,7 @@ named elements
 * `refsys`: (character, or `crs`): object describing the reference system; e.g. the PROJ string, or string `POSIXct` or `PCICt` (for 360 and 365 days/year calendars), or object of class `crs` (containing both EPSG code and proj4string)
 * `point`: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)
 * `values`: one of 
-    * `NULL`, 
+    * `NULL` (missing), 
     * a vector with coordinate values (numeric, `POSIXct`, `PCICt`, or `sfc`), 
     * an object of class `intervals` (a list with two vectors, `start` and `end`, with interval start- and end-values), or
     * a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)

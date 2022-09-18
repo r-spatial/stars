@@ -586,8 +586,13 @@ dim.dimensions = function(x) {
 		lengths(expand_dimensions(x)) # FIXME: optimise?
 }
 
+#' @name print_stars
+#' @param digits number of digits to print numbers
+#' @param usetz logical; used to format \code{PCICt} or \code{POSIXct} values
+#' @param stars_crs maximum width of string for CRS objects
+#' @param all logical; if \code{TRUE} print also fields entirely filled with \code{NA} or \code{NULL}
 #' @export
-as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28) {
+as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28, all = FALSE) {
 	mformat = function(x, ..., digits) {
 		if (inherits(x, c("PCICt", "POSIXct")))
 			format(x, ..., usetz = usetz)
@@ -602,6 +607,9 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs 
 							mformat(max(y$values), digits = digits))
 					else if (inherits(y$values[[1]], "crs"))
 						paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
+					else if (inherits(y$values[[1]], "sfg"))
+						paste0(format(y$values[[1]], width = stars_crs), ",...,", 
+							   format(y$values[[length(y$values)]], width = stars_crs))
 					else
 						paste0(format(head(y$values, 1)), ",...,", 
 							format(tail(y$values, 1)))
@@ -615,16 +623,29 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs 
 	)
 	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
+	if (! all) { # remove fields entirely NA or NULL:
+		if (all(ret$offset == "NA"))
+			ret$offset = NULL
+		if (all(ret$delta == "NA"))
+			ret$delta = NULL
+		if (all(ret$refsys == "NA"))
+			ret$refsys = NULL
+		if (all(ret$point == "NA"))
+			ret$point = NULL
+		if (all(ret$values == "NULL"))
+			ret$values = NULL
+	}
 	r = attr(x, "raster")
 	if (! any(is.na(r$dimensions))) {
 		ret$raster = rep("", nrow(ret))
 		ret[r$dimensions[1], "raster"] = "[x]"
 		ret[r$dimensions[2], "raster"] = "[y]"
-		names(ret) = c(names(lst[[1]]), "x/y")
+		names(ret)[ncol(ret)] = "x/y"
 	}
 	ret
 }
 
+#' @name print_stars
 #' @export
 print.dimensions = function(x, ...) {
 	ret = as.data.frame(x, ...)

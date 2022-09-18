@@ -431,6 +431,14 @@ add_units = function(x) {
 	paste(names(x), sapply(x, f))
 }
 
+#' print stars or dimensions object
+#' 
+#' print stars or dimensions object
+#' @name print_stars
+#' @param x object of class stars or of class dimensions
+#' @param n when prod(dim(x)) > 10 * n, the first n cells are used for attribute summary statistics
+#' @param abbrev number of characters to abbreviate attribute names to
+#' @param ... passed on to \code{as.data.frame.dimensions}
 #' @export
 print.stars = function(x, ..., n = 1e5, abbrev = 30) {
 	shorten = function(s) {
