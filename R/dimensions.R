@@ -599,28 +599,28 @@ as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs 
 		else
 			format(x, digits = digits, ...) 
 	}
-	lst = lapply(x, function(y) {
-			if (length(y$values) > 3) {
-				y$values = if (is.array(y$values))
-						paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
-							mformat(min(y$values), digits = digits), ",...,", 
-							mformat(max(y$values), digits = digits))
-					else if (inherits(y$values[[1]], "crs"))
-						paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
-					else if (inherits(y$values[[1]], "sfg"))
-						paste0(format(y$values[[1]], width = stars_crs), ",...,", 
-							   format(y$values[[length(y$values)]], width = stars_crs))
-					else
-						paste0(format(head(y$values, 1)), ",...,", 
-							format(tail(y$values, 1)))
-			}
-			if (is.na(y$refsys))
-				y$refsys = NA_character_
-			else if (nchar(tail(format(y$refsys), 1)) > stars_crs)
-				y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, stars_crs - 3),"...")
-			y
+	abbrev_dim = function(y) {
+		if (length(y$values) > 3 || (inherits(y$values, "sfc") && length(y$values) > 2)) {
+			y$values = if (is.array(y$values))
+					paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
+						mformat(min(y$values), digits = digits), ",...,", 
+						mformat(max(y$values), digits = digits))
+				else if (inherits(y$values[[1]], "crs"))
+					paste0(format(y$values[[1]]), ",...,", format(y$values[[length(y$values)]]))
+				else if (inherits(y$values, "sfc"))
+					paste0(format(y$values[[1]], width = stars_crs), ",...,", 
+						   format(y$values[[length(y$values)]], width = stars_crs))
+				else
+					paste0(format(head(y$values, 1)), ",...,", 
+						format(tail(y$values, 1)))
 		}
-	)
+		if (is.na(y$refsys))
+			y$refsys = NA_character_
+		else if (nchar(tail(format(y$refsys), 1)) > stars_crs)
+			y$refsys = paste0(substr(tail(format(y$refsys), 1), 1L, stars_crs - 3), "...")
+		y
+	}
+	lst = lapply(x, abbrev_dim)
 	lst = lapply(lst, function(x) sapply(x, mformat, digits = digits))
 	ret = data.frame(do.call(rbind, lst), stringsAsFactors = FALSE)
 	if (! all) { # remove fields entirely NA or NULL:
