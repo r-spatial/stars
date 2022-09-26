@@ -264,17 +264,17 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 						co = co[!ex]
 				} else
 					ex = rep(FALSE, length(levels))
-				# f = factor(as.vector(data), levels = levels, labels = labels) # is too costly;
-				# https://github.com/r-spatial/stars/issues/565:
-				f = structure(match(as.vector(as.integer(data)), levels),
-						levels = labels, class = "factor")
 			} else {
-				f = as.integer(as.vector(data))
-				levels = sort(unique(f))
-				f = structure(match(f, levels), levels = as.character(levels), class = "factor")
+				levels = sort(unique(data))
+				labels = as.character(levels)
 				ex = rep(FALSE, length(levels))
 			}
-			data = structure(f, dim = dim(data), colors = co, exclude = ex)
+			# f = factor(as.vector(data), levels = levels, labels = labels) # is too costly;
+			# see https://github.com/r-spatial/stars/issues/565:
+			# construct factor array manually:
+			data = structure(match(as.integer(as.vector(data)), levels),
+							 levels = labels, dim = dim(data), 
+							 colors = co, exclude = ex, class = "factor")
 		}
 
 		dims = if (proxy) {
