@@ -264,20 +264,15 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 						co = co[!ex]
 				} else
 					ex = rep(FALSE, length(levels))
-				# f = factor(as.vector(data), levels = levels, labels = labels) # too costly, shortcut:
-				f = if (all(diff(levels) == 1)) { # skip match(): https://github.com/r-spatial/stars/issues/565
-						offset = min(levels) - 1 # offset
-						f = as.integer(as.vector(data)) - offset
-						if (offset > -1)
-							f[f < 1] = NA_integer_
-						structure(f, levels = labels, class = "factor")
-					} else { # don't skip match:
-						m = match(as.vector(as.integer(data)), levels)
-						structure(m, levels = labels, class = "factor")
-					}
-			} else { # TODO: use match() rather than factor()
-				f = factor(as.vector(data))
-				ex = rep(FALSE, length(levels(f)))
+				# f = factor(as.vector(data), levels = levels, labels = labels) # is too costly;
+				# https://github.com/r-spatial/stars/issues/565:
+				f = structure(match(as.vector(as.integer(data)), levels),
+						levels = labels, class = "factor")
+			} else {
+				f = as.integer(as.vector(data))
+				levels = sort(unique(f))
+				f = structure(match(f, levels), levels = as.character(levels), class = "factor")
+				ex = rep(FALSE, length(levels))
 			}
 			data = structure(f, dim = dim(data), colors = co, exclude = ex)
 		}
