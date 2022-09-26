@@ -25,7 +25,7 @@
 
 \item{...}{passed on to \code{as.data.frame.dimensions}}
 
-\item{n}{max number of cells to sample for attribute summary statistics}
+\item{n}{when prod(dim(x)) > 10 * n, the first n cells are used for attribute summary statistics}
 
 \item{abbrev}{number of characters to abbreviate attribute names to}
 
