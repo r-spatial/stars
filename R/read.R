@@ -266,10 +266,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 					ex = rep(FALSE, length(levels))
 				f = if (all(diff(levels) == 1)) { # can skip match(): https://github.com/r-spatial/stars/issues/565
 						offset = min(levels) - 1 # offset
-						data = as.integer(as.vector(data)) - offset
+						f = as.integer(as.vector(data)) - offset
 						if (offset > 0)
-							data[data < 1] = NA_integer_
-						structure(data, levels = labels, class = "factor")
+							f[f < 1] = NA_integer_
+						structure(f, levels = labels, class = "factor")
 					} else
 						factor(as.vector(data), levels = levels, labels = labels)
 			} else {
