@@ -1,5 +1,9 @@
 # version 0.5-7
 
+* printing `stars` dimension tables omits fields with only `NULL` or `NA` values, unless `print(..., all = TRUE)` is given
+
+* improve reading categorical rasters, which now avoids calling `factor()`; #565 thanks to Krzysztof Dyba
+
 * `read_mdim()` will read bounds arrays for coordinates using the `bounds` attribute, and accepts a `bounds` argument to specify them when that attribute is missing
 
 * `time()` returns time stamps of a time dimension
