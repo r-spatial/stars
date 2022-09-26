@@ -270,8 +270,11 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 						if (offset > 0)
 							f[f < 1] = NA_integer_
 						structure(f, levels = labels, class = "factor")
-					} else
-						factor(as.vector(data), levels = levels, labels = labels)
+					} else { # can't skip match:
+						#factor(as.vector(data), levels = levels, labels = labels)
+						m = match(as.vector(as.integer(data)), levels)
+						structure(m, levels = labels, class = "factor")
+					}
 			} else {
 				f = factor(as.vector(data))
 				ex = rep(FALSE, length(levels(f)))
