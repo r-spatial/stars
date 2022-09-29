@@ -280,6 +280,8 @@ fix_dims = function(r, e){
 
 st_as_raster = function(x, class, ...) {
 	stopifnot(inherits(x, "stars"))
+	if (is.null(names(x)))
+		names(x) = make.names(seq_along(x)) # FIXME: why? sdsr_exercises
 	x_crs = st_crs(x)
 	x = st_upfront(x) # x/y dimensions first
 	if (length(dim(x)) > 3) {
