@@ -240,5 +240,5 @@ This project has been realized with financial
 from the
 
 <a href="https://www.r-consortium.org/all-projects/awarded-projects/2017-group-1">
-<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400">
+<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300">
 </a>
