@@ -16,12 +16,12 @@ checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/
 Spatiotemporal data often comes in the form of dense arrays, with space
 and time being array dimensions. Examples include
 
-  - socio-economic or demographic data,
-  - environmental variables monitored at fixed stations,
-  - raster maps
-  - time series of satellite images with multiple spectral bands,
-  - spatial simulations, and
-  - climate or weather model output.
+-   socio-economic or demographic data,
+-   environmental variables monitored at fixed stations,
+-   raster maps
+-   time series of satellite images with multiple spectral bands,
+-   spatial simulations, and
+-   climate or weather model output.
 
 This R package provides classes and methods for reading, manipulating,
 plotting and writing such data cubes, to the extent that there are
@@ -48,7 +48,7 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.10.1, GDAL 3.4.0, PROJ 8.2.0; sf_use_s2() is TRUE
+# Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) %>%
   slice(index = 1, along = "band") %>%
@@ -135,10 +135,10 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 #                                              Max.
 # Total_precipitation_surface_1_... [kg/m^2] 163.75
 # dimension(s):
-#      from  to                  offset   delta  refsys point
-# x       1  87                      NA      NA  WGS 84    NA
-# y       1 118                      NA      NA  WGS 84    NA
-# time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct    NA
+#      from  to                  offset   delta  refsys
+# x       1  87                      NA      NA  WGS 84
+# y       1 118                      NA      NA  WGS 84
+# time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct
 #                                      values x/y
 # x    [87x118] -80.6113 [°],...,-74.8822 [°] [x]
 # y      [87x118] 32.4413 [°],...,37.6193 [°] [y]
@@ -173,7 +173,7 @@ and then the corresponding time value:
 
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geometry", index_max) %>%
+st_apply(a, "geom", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
@@ -188,10 +188,10 @@ st_apply(a, "geometry", index_max) %>%
 Package `gdalcubes` can be used to create data cubes (or functions from
 them) from image collections, sets of multi-band images with varying
 
-  - spatial resolution
-  - spatial extent
-  - coordinate reference systems (e.g., spread over multiple UTM zones)
-  - observation times
+-   spatial resolution
+-   spatial extent
+-   coordinate reference systems (e.g., spread over multiple UTM zones)
+-   observation times
 
 and does this by resampling and/or aggregating over space and/or time.
 It reuses GDAL VRT’s and gdalwarp for spatial resampling and/or warping,
@@ -207,11 +207,11 @@ in a standards-compliant way.
 Package `raster` is a powerful package for handling raster maps and
 stacks of raster maps both in memory and on disk, but does not address
 
-  - non-raster time series,
-  - multi-attribute rasters time series
-  - rasters with mixed type attributes (e.g., numeric, logical, factor,
+-   non-raster time series,
+-   multi-attribute rasters time series
+-   rasters with mixed type attributes (e.g., numeric, logical, factor,
     POSIXct)
-  - rectilinear or curvilinear rasters
+-   rectilinear or curvilinear rasters
 
 A list of `stars` commands matching existing `raster` commands is found
 in this
@@ -221,16 +221,16 @@ A list of translations in the opposite direction (from `stars` to
 
 ## Other `stars` resources:
 
-  - blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
+-   blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
     [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
     [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
-  - vignettes:
+-   vignettes:
     [first](https://r-spatial.github.io/stars/articles/stars1.html),
     [second](https://r-spatial.github.io/stars/articles/stars2.html),
     [third](https://r-spatial.github.io/stars/articles/stars3.html),
     [fourth](https://r-spatial.github.io/stars/articles/stars4.html),
     [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
-  - the original [R Consortium
+-   the original [R Consortium
     proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
 ### Acknowledgment
@@ -239,6 +239,6 @@ This project has been realized with financial
 [support](https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants)
 from the
 
-<a href="https://www.r-consortium.org/projects/awarded-projects">
+<a href="https://www.r-consortium.org/all-projects/awarded-projects/2017-group-1">
 <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400">
 </a>

@@ -181,7 +181,7 @@ index, and then the corresponding time value:
 
 ```{r plot5, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geometry", index_max) %>%
+st_apply(a, "geom", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
   select(when) %>%
   plot(key.pos = 1, main = "time of maximum precipitation")
@@ -240,6 +240,6 @@ This project has been realized with financial
 [support](https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants)
 from the
 
-<a href="https://www.r-consortium.org/projects/awarded-projects">
+<a href="https://www.r-consortium.org/all-projects/awarded-projects/2017-group-1">
 <img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="400">
 </a>
