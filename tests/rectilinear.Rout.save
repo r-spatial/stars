@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -24,10 +24,10 @@ attribute(s):
              Min. 1st Qu. Median    Mean 3rd Qu. Max.
 L7_ETMs.tif     1      54     69 68.9915      86  255
 dimension(s):
-     from  to offset delta                     refsys point
-x       1 348     NA    NA SIRGAS 2000 / UTM zone 25S FALSE
-y       1 351     NA    NA SIRGAS 2000 / UTM zone 25S FALSE
-band    1   6     NA    NA                         NA    NA
+     from  to                     refsys point
+x       1 348 SIRGAS 2000 / UTM zone 25S FALSE
+y       1 351 SIRGAS 2000 / UTM zone 25S FALSE
+band    1   6                         NA    NA
                                       values x/y
 x    [288790.5,288819),...,[298708.5,298737) [x]
 y    [9120747,9120718),...,[9110743,9110715) [y]
@@ -44,9 +44,9 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 m     1    4.75    8.5  8.5   12.25   16
 dimension(s):
-  from to offset delta refsys point values x/y
-x    1  4      1     1     NA FALSE   NULL [x]
-y    1  4      2     1     NA FALSE   NULL [y]
+  from to offset delta point x/y
+x    1  4      1     1 FALSE [x]
+y    1  4      2     1 FALSE [y]
 > st = st_set_dimensions(st, 1, values = c(1,2,3,4,6))
 > st = st_set_dimensions(st, 2, values = c(2,3,4,5,8))
 > try(st_set_dimensions(st, 2, values = c(2,3,4,5,8,20))) # one too many
@@ -62,9 +62,9 @@ attribute(s):
 m       1    4.75    8.5  8.5   12.25   16
 foo     2    9.50   17.0 17.0   24.50   32
 dimension(s):
-  from to offset delta refsys point          values x/y
-x    1  4     NA    NA     NA FALSE [1,2),...,[4,6) [x]
-y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
+  from to point          values x/y
+x    1  4 FALSE [1,2),...,[4,6) [x]
+y    1  4 FALSE [2,3),...,[5,8) [y]
 > 
 > # st_as_sf:
 > 
@@ -76,4 +76,4 @@ y    1  4     NA    NA     NA FALSE [2,3),...,[5,8) [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.098   0.064   1.163 
+  1.450   0.750   1.316 

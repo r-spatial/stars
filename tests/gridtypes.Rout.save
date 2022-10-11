@@ -1,6 +1,6 @@
 
-R version 4.0.5 (2021-03-31) -- "Shake and Throw"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -25,10 +25,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point   values
-a       1  3      1     1     NA FALSE     NULL
-b       1  3      1     1     NA FALSE     NULL
-band    1  2     NA    NA     NA FALSE foo, bar
+     from to offset delta point   values
+a       1  3      1     1 FALSE     NULL
+b       1  3      1     1 FALSE     NULL
+band    1  2     NA    NA FALSE foo, bar
 > as.data.frame(st, add_max=FALSE)[1:4,]
   a b band X
 1 1 1  foo 1
@@ -47,10 +47,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point   values x/y
-x       1  3      1     1     NA FALSE     NULL [x]
-y       1  3      1     1     NA FALSE     NULL [y]
-band    1  2     NA    NA     NA FALSE foo, bar    
+     from to offset delta point   values x/y
+x       1  3      1     1 FALSE     NULL [x]
+y       1  3      1     1 FALSE     NULL [y]
+band    1  2     NA    NA FALSE foo, bar    
 > as.data.frame(st, add_max=FALSE)[1:4,]
     x   y band X
 1 1.5 1.5  foo 1
@@ -76,10 +76,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point              values x/y
-x       1  3     NA    NA     NA FALSE [1,2), [2,4), [4,6) [x]
-y       1  3      1     1     NA FALSE                NULL [y]
-band    1  2     NA    NA     NA FALSE            foo, bar    
+     from to offset delta point              values x/y
+x       1  3     NA    NA FALSE [1,2), [2,4), [4,6) [x]
+y       1  3      1     1 FALSE                NULL [y]
+band    1  2     NA    NA FALSE            foo, bar    
 > as.data.frame(st, add_max=FALSE)[1:4,]
     x   y band X
 1 1.5 1.5  foo 1
@@ -105,10 +105,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point                          values x/y
-x       1  3     NA    NA     NA FALSE [0.5,1.5), [1.5,3.0), [3.0,5.0) [x]
-y       1  3    0.5     1     NA FALSE                            NULL [y]
-band    1  2     NA    NA     NA FALSE                        foo, bar    
+     from to offset delta point                          values x/y
+x       1  3     NA    NA FALSE [0.5,1.5), [1.5,3.0), [3.0,5.0) [x]
+y       1  3    0.5     1 FALSE                            NULL [y]
+band    1  2     NA    NA FALSE                        foo, bar    
 > as.data.frame(st, add_max=FALSE)[1:4,]
      x y band X
 1 1.00 1  foo 1
@@ -134,10 +134,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point   values x/y
-x       1  3     NA    NA     NA  TRUE  1, 2, 4 [x]
-y       1  3    0.5     1     NA  TRUE     NULL [y]
-band    1  2     NA    NA     NA  TRUE foo, bar    
+     from to offset delta point   values x/y
+x       1  3     NA    NA  TRUE  1, 2, 4 [x]
+y       1  3    0.5     1  TRUE     NULL [y]
+band    1  2     NA    NA  TRUE foo, bar    
 > as.data.frame(st, add_max=FALSE)[1:4,]
   x y band X
 1 1 1  foo 1
@@ -164,10 +164,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point              values x/y
-x       1  3     NA    NA     NA FALSE [1,2), [2,4), [4,8) [x]
-y       1  3      1     1     NA FALSE                NULL [y]
-band    1  2     NA    NA     NA FALSE            foo, bar    
+     from to offset delta point              values x/y
+x       1  3     NA    NA FALSE [1,2), [2,4), [4,8) [x]
+y       1  3      1     1 FALSE                NULL [y]
+band    1  2     NA    NA FALSE            foo, bar    
 > as.data.frame(st, add_max=FALSE)[1:4,]
     x   y band X
 1 1.5 1.5  foo 1
@@ -193,10 +193,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point                                values
-x       1  3     NA    NA     NA  TRUE POINT (0 1), POINT (2 1), POINT (4 3)
-y       1  3      1     1     NA FALSE                                  NULL
-band    1  2     NA    NA     NA FALSE                              foo, bar
+     from to offset delta point                      values
+x       1  3     NA    NA  TRUE POINT (0 1),...,POINT (4 3)
+y       1  3      1     1 FALSE                        NULL
+band    1  2     NA    NA FALSE                    foo, bar
 > as.data.frame(st, add_max=FALSE)[1:4,]
             x y band X
 1 POINT (0 1) 1  foo 1
@@ -226,10 +226,10 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1    5.25    9.5  9.5   13.75   18
 dimension(s):
-     from to offset delta refsys point   values x/y
-x       1  3      1     1     NA FALSE     NULL [x]
-y       1  3      1     1     NA FALSE     NULL [y]
-band    1  2     NA    NA     NA FALSE foo, bar    
+     from to offset delta point   values x/y
+x       1  3      1     1 FALSE     NULL [x]
+y       1  3      1     1 FALSE     NULL [y]
+band    1  2     NA    NA FALSE foo, bar    
 sheared raster with parameters: 0.2 -0.2 
 > as.data.frame(st, add_max=FALSE)[1:4,]
     x   y X
@@ -257,9 +257,9 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 X     1       3      5    5       7    9
 dimension(s):
-    from to offset delta refsys point               values x/y
-lon    1  3     NA    NA WGS 84 FALSE  [3x3] 0.03,...,0.89 [x]
-lat    1  3     NA    NA WGS 84 FALSE [3x3] 0.021,...,0.89 [y]
+    from to refsys point               values x/y
+lon    1  3 WGS 84 FALSE  [3x3] 0.03,...,0.89 [x]
+lat    1  3 WGS 84 FALSE [3x3] 0.021,...,0.89 [y]
 curvilinear grid
 > as.data.frame(st)
    lon   lat X
@@ -285,9 +285,9 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 a     1    3.75    6.5  6.5    9.25   12
 dimension(s):
-   from to     offset  delta refsys point                                values
-X1    1  4 2019-01-20 1 days   Date FALSE                                  NULL
-X2    1  3         NA     NA     NA  TRUE POINT (0 1), POINT (2 1), POINT (4 3)
+   from to     offset  delta refsys point                      values
+X1    1  4 2019-01-20 1 days   Date FALSE                        NULL
+X2    1  3         NA     NA     NA  TRUE POINT (0 1),...,POINT (4 3)
 > as.data.frame(st)
            X1          X2  a
 1  2019-01-20 POINT (0 1)  1
@@ -312,9 +312,9 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 a     1    3.75    6.5  6.5    9.25   12
 dimension(s):
-   from to offset delta refsys point                                values
-X1    1  4     NA    NA   Date FALSE             2019-01-20,...,2019-01-30
-X2    1  3     NA    NA     NA  TRUE POINT (0 1), POINT (2 1), POINT (4 3)
+   from to refsys point                      values
+X1    1  4   Date FALSE   2019-01-20,...,2019-01-30
+X2    1  3     NA  TRUE POINT (0 1),...,POINT (4 3)
 > as.data.frame(st)
            X1          X2  a
 1  2019-01-20 POINT (0 1)  1
@@ -332,4 +332,4 @@ X2    1  3     NA    NA     NA  TRUE POINT (0 1), POINT (2 1), POINT (4 3)
 > 
 > proc.time()
    user  system elapsed 
-  0.731   0.053   0.776 
+  1.121   0.746   0.972 

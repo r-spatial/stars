@@ -1,6 +1,6 @@
 
-R version 4.1.2 (2021-11-01) -- "Bird Hippie"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -25,11 +25,11 @@ $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
 [4] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-foo     1   4       1     1                         NA    NA   NULL    
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+foo     1   4       1     1                         NA    NA    
 > (rr = c(xx, xx))
 stars_proxy object with 2 attributes in 8 file(s):
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
@@ -41,11 +41,11 @@ $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
 [4] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-foo     1   4       1     1                         NA    NA   NULL    
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+foo     1   4       1     1                         NA    NA    
 > st_as_stars(rr)
 stars object with 4 dimensions and 2 attributes
 attribute(s), summary of first 1e+05 cells:
@@ -53,11 +53,11 @@ attribute(s), summary of first 1e+05 cells:
 a.L7_ETMs.tif.a.L7_ETMs.tif.b....    47      65     76 77.3419      87  255
 a.L7_ETMs.tif.a.L7_ETMs.tif.b....    47      65     76 77.3419      87  255
 dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
-foo     1   4       1     1                         NA    NA   NULL    
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+foo     1   4       1     1                         NA    NA    
 > (rrr = st_redimension(rr, along = list(bar = as.Date(c("2001-01-01", "2002-01-01")))))
 stars_proxy object with 1 attribute in 8 file(s):
 $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif
@@ -66,13 +66,13 @@ $a.L7_ETMs.tif.a.L7_ETMs.tif.b.L7_ETMs.tif.b.L7_ETMs.tif.a.L7_ETMs.tif.a.L7_ETMs
 [7] "[...]/L7_ETMs.tif" "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to     offset    delta                     refsys point values x/y
-x       1 349     288776     28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352    9120761    -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6         NA       NA                         NA    NA   NULL    
-foo     1   4          1        1                         NA    NA   NULL    
-bar     1   2 2001-01-01 365 days                       Date    NA   NULL    
+     from  to     offset    delta                     refsys point x/y
+x       1 349     288776     28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352    9120761    -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6         NA       NA                         NA    NA    
+foo     1   4          1        1                         NA    NA    
+bar     1   2 2001-01-01 365 days                       Date    NA    
 > 
 > proc.time()
    user  system elapsed 
-  1.598   0.117   1.709 
+  5.242   0.898   5.245 

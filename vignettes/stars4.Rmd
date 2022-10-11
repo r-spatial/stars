@@ -26,8 +26,8 @@ This vignette explains the data model of `stars` objects, illustrated using arti
 
 `stars` objects consist of 
 
-* a (possibly empty) named list of arrays, each having named dimensions
-* an attribute called `dimensions` with a `dimensions` object carrying dimension metadata
+* a (possibly empty) named list of arrays, each having named dimensions (`dim`) attribute
+* an attribute called `dimensions` of class `dimensions` that carries dimension metadata
 * a class name that includes `stars`
 
 A `dimensions` object is a named list of `dimension` elements, each
@@ -58,15 +58,22 @@ named elements
     * an object of class `intervals` (a list with two vectors, `start` and `end`, with interval start- and end-values), or
     * a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)
 
-Clearly, `offset` and `delta` only apply to _regularly_ discretized
-dimensions, and are `NA` if this is not the case. `from` and
-`to` will usually be 1 and the dimension size, but `from` may
-be larger than 1 in case a regular sub-grid got cut out or was
-cropped. Rectilinear and curvilinear grids need grid values in
-`values`; this can be irregularly _spaced_ coordinate values, or
-coordinate _intervals_ of irregular width, or spatial geometries
-encoded in an `sfc` vector ("list-column"), or a matrix with grid
-cell centre values (longitude or latitude) for curvilinear grids.
+`from` and `to` will usually be 1 and the dimension size, but
+`from` may be larger than 1 in case a sub-grid got was selected
+(or cropped).
+
+`offset` and `delta` only apply to _regularly_ discretized
+dimensions, and are `NA` if this is not the case. If they are `NA`,
+dimension values may be held in the `values` field.  Rectilinear and
+curvilinear grids need grid values in `values` that can be either:
+
+* for rectilinear grids: irregularly _spaced_ coordinate values, or coordinate _intervals_ of irregular width 
+  (a rectilinear grid _can_ have one dimension that is regular), 
+* for curvilinear grids: or a matrix with grid cell centre values for _all_ row/col combinations (usually in longitude or latitude).
+
+Alternatively, `values` can contains a set of spatial geometries
+encoded in an `sfc` vector ("list-column"), in which case we have a
+[vector data cube](https://r-spatial.org/r/2022/09/12/vdc.html).
 
 ## Grid type
 

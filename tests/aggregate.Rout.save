@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.0; sf_use_s2() is TRUE
+Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE
 > 
 > if (require(spacetime, quietly = TRUE)) {
 + data(air) # this loads several datasets in .GlobalEnv
@@ -50,9 +50,9 @@ dimension(s):
          from   to     offset  delta refsys point
 geometry    1    9         NA     NA WGS 84 FALSE
 time        1 4383 1998-01-01 1 days   Date FALSE
-                                                                    values
-geometry POLYGON ((5.871619 47.26986...,...,POLYGON ((11.98261 52.46097...
-time                                                                  NULL
+                                                                values
+geometry POLYGON ((5.871619 47.269...,...,POLYGON ((11.98261 52.460...
+time                                                              NULL
 > 
 > # adapted from ?read_stars:
 > m = array(1:720, dim = c(x = 10, y = 12, t = 6)) # named dim
@@ -72,10 +72,10 @@ attribute(s):
      Min. 1st Qu. Median  Mean 3rd Qu. Max.
 foo    33  199.25  365.5 365.5  531.75  698
 dimension(s):
-     from to offset delta refsys point values x/y
-x       1  2      0     5 WGS 84 FALSE   NULL [x]
-y       1  2     12    -6 WGS 84 FALSE   NULL [y]
-band    1  6     NA    NA     NA    NA   NULL    
+     from to offset delta refsys point x/y
+x       1  2      0     5 WGS 84 FALSE [x]
+y       1  2     12    -6 WGS 84 FALSE [y]
+band    1  6     NA    NA     NA    NA    
 > 
 > sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 > (a = aggregate(st, sfc, mean))
@@ -87,9 +87,9 @@ dimension(s):
          from to     offset  delta refsys point
 geometry    1  4         NA     NA WGS 84 FALSE
 t           1  6 2019-02-20 1 days   Date FALSE
-                                                                    values
-geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POLYGON ((5 6, 10 6, 10 0, ...
-t                                                                     NULL
+                                                                values
+geometry POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
+t                                                                 NULL
 > a[[1]]
      [,1] [,2] [,3] [,4] [,5] [,6]
 [1,]   28  148  268  388  508  628
@@ -106,10 +106,10 @@ attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
 A1     1  180.75  360.5 360.5  540.25  720  480
 dimension(s):
-     from to     offset  delta refsys point values x/y
-time    1 10 2019-02-18 1 days   Date    NA   NULL    
-x       1 10          0      1 WGS 84 FALSE   NULL [x]
-y       1 12         12     -1 WGS 84 FALSE   NULL [y]
+     from to     offset  delta refsys point x/y
+time    1 10 2019-02-18 1 days   Date    NA    
+x       1 10          0      1 WGS 84 FALSE [x]
+y       1 12         12     -1 WGS 84 FALSE [y]
 > 
 > # with "by" geometry not overlapping x
 > pt = st_point(c(-10,-10))
@@ -133,9 +133,9 @@ dimension(s):
          from to     offset  delta refsys point
 geometry    1  5         NA     NA WGS 84 FALSE
 t           1  6 2019-02-20 1 days   Date FALSE
-                                                     values
-geometry POLYGON ((0 12, 5 12, 5 6, ...,...,POINT (-10 -10)
-t                                                      NULL
+                                                   values
+geometry POLYGON ((0 12, 5 12, 5 6...,...,POINT (-10 -10)
+t                                                    NULL
 > (a = aggregate(st, st, mean))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
@@ -145,10 +145,10 @@ dimension(s):
          from  to     offset  delta refsys point
 geometry    1 120         NA     NA WGS 84 FALSE
 t           1   6 2019-02-20 1 days   Date FALSE
-                                                                    values
-geometry POLYGON ((0 12, 1 12, 1 11,...,...,POLYGON ((9 1, 10 1, 10 0, ...
-t                                                                     NULL
+                                                                values
+geometry POLYGON ((0 12, 1 12, 1 1...,...,POLYGON ((9 1, 10 1, 10 0...
+t                                                                 NULL
 > 
 > proc.time()
    user  system elapsed 
-  2.040   0.780   1.949 
+  1.818   0.752   1.672 

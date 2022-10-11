@@ -25,24 +25,33 @@ $bar
 [1] "[...]/bcsd_obs_1999.nc:tas"
 
 dimension(s):
-     from to offset  delta  refsys point                    values x/y
-x       1 81    -85  0.125      NA    NA                      NULL [x]
-y       1 33 37.125 -0.125      NA    NA                      NULL [y]
-time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31    
+     from to offset  delta  refsys                    values x/y
+x       1 81    -85  0.125      NA                      NULL [x]
+y       1 33 37.125 -0.125      NA                      NULL [y]
+time    1 12     NA     NA POSIXct 1999-01-31,...,1999-12-31    
 > L7_ETMs
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs
 [1] "[...]/L7_ETMs.tif"
 
 dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
 > if (require(starsdata, quietly = TRUE)) {
 + 	print(stars_sentinel2)
 + }
+stars_proxy object with 1 attribute in 1 file(s):
+$`MTD_MSIL1C.xml:10m:EPSG_32632`
+[1] "[...]/MTD_MSIL1C.xml:10m:EPSG_32632"
+
+dimension(s):
+     from    to offset delta                refsys    values x/y
+x       1 10980  3e+05    10 WGS 84 / UTM zone 32N      NULL [x]
+y       1 10980  6e+06   -10 WGS 84 / UTM zone 32N      NULL [y]
+band    1     4     NA    NA                    NA B4,...,B8    
 > 
 > proc.time()
    user  system elapsed 
-  1.113   0.696   0.930 
+  1.134   0.778   1.019 

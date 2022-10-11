@@ -63,11 +63,11 @@ attribute(s):
                  Min. 1st Qu. Median     Mean 3rd Qu. Max.
 L7_ETMs.tif [°C] -184     -19     -8 -10.2353       0  131
 dimension(s):
-     from  to  offset delta                     refsys point values x/y
-x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
-band    1   6      NA    NA                         NA    NA   NULL    
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
 > 
 > proc.time()
    user  system elapsed 
-  1.221   0.071   1.284 
+  1.400   0.759   1.269 

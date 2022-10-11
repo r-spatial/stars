@@ -21,10 +21,10 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 162 ]
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
 
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 162 ]
+[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
 > 
 > proc.time()
    user  system elapsed 
- 19.071   0.888  19.076 
+ 18.760   0.820  18.748 

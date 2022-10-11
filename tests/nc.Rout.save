@@ -1,6 +1,6 @@
 
-R version 4.1.0 (2021-05-18) -- "Camp Pontanezen"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,10 +29,10 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu.  Max.
 pop     0       8    538 1657.032    1784 30757
 dimension(s):
-       from  to offset delta refsys point              values
-county    1 100     NA    NA     NA    NA  Ashe,...,Brunswick
-var       1   3     NA    NA     NA    NA BIR  , SID  , NWBIR
-year      1   2     NA    NA     NA    NA          1974, 1979
+       from  to              values
+county    1 100  Ashe,...,Brunswick
+var       1   3 BIR  , SID  , NWBIR
+year      1   2          1974, 1979
 > foo <- st %>% st_set_dimensions(1, st_geometry(nc)) # %>% st_set_dimensions(3, c(1974, 1979))
 > st %>% st_set_dimensions(1, st_geometry(nc)) %>% st_set_dimensions(names = c("geometries", "var", "year"))
 stars object with 3 dimensions and 1 attribute
@@ -40,28 +40,28 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu.  Max.
 pop     0       8    538 1657.032    1784 30757
 dimension(s):
-           from  to offset delta refsys point
-geometries    1 100     NA    NA  NAD27 FALSE
-var           1   3     NA    NA     NA    NA
-year          1   2     NA    NA     NA    NA
-                                                                      values
-geometries MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-var                                                      BIR  , SID  , NWBIR
-year                                                              1974, 1979
+           from  to refsys point
+geometries    1 100  NAD27 FALSE
+var           1   3     NA    NA
+year          1   2     NA    NA
+                                                                  values
+geometries MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+var                                                  BIR  , SID  , NWBIR
+year                                                          1974, 1979
 > foo
 stars object with 3 dimensions and 1 attribute
 attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu.  Max.
 pop     0       8    538 1657.032    1784 30757
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-var       1   3     NA    NA     NA    NA
-year      1   2     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-var                                                  BIR  , SID  , NWBIR
-year                                                          1974, 1979
+       from  to refsys point
+county    1 100  NAD27 FALSE
+var       1   3     NA    NA
+year      1   2     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+var                                              BIR  , SID  , NWBIR
+year                                                      1974, 1979
 > st_bbox(foo)
      xmin      ymin      xmax      ymax 
 -84.32385  33.88199 -75.45698  36.58965 
@@ -103,40 +103,40 @@ attribute(s):
       Min.     1st Qu.      Median        Mean     3rd Qu.       Max.
 frac     0 0.001197874 0.001930504 0.002042241 0.002599348 0.00955414
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-year      1   2     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-year                                                          1974, 1979
+       from  to refsys point
+county    1 100  NAD27 FALSE
+year      1   2     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+year                                                      1974, 1979
 > st_apply(foo, c(1,3), frac2)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
      Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
 pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
-       from  to offset delta refsys point
-frac2     1   2     NA    NA     NA    NA
-county    1 100     NA    NA  NAD27 FALSE
-year      1   2     NA    NA     NA    NA
-                                                                  values
-frac2                                             sidsr.SID , nwbr.NWBIR
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-year                                                          1974, 1979
+       from  to refsys point
+frac2     1   2     NA    NA
+county    1 100  NAD27 FALSE
+year      1   2     NA    NA
+                                                              values
+frac2                                         sidsr.SID , nwbr.NWBIR
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+year                                                      1974, 1979
 > st_apply(foo, c(1,3), frac2an)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
      Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
 pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
-        from  to offset delta refsys point
-frac2an    1   2     NA    NA     NA    NA
-county     1 100     NA    NA  NAD27 FALSE
-year       1   2     NA    NA     NA    NA
-                                                                   values
-frac2an                                                      SID  , NWBIR
-county  MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-year                                                           1974, 1979
+        from  to refsys point
+frac2an    1   2     NA    NA
+county     1 100  NAD27 FALSE
+year       1   2     NA    NA
+                                                               values
+frac2an                                                  SID  , NWBIR
+county  MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+year                                                       1974, 1979
 > library(abind)
 > (x = aperm(st_apply(foo, c(1,3), frac2), c(2,3,1)))
 stars object with 3 dimensions and 1 attribute
@@ -144,14 +144,14 @@ attribute(s):
      Min.     1st Qu.      Median      Mean   3rd Qu.      Max.
 pop     0 0.001923331 0.005119673 0.1567576 0.3065298 0.7727273
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-year      1   2     NA    NA     NA    NA
-frac2     1   2     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-year                                                          1974, 1979
-frac2                                             sidsr.SID , nwbr.NWBIR
+       from  to refsys point
+county    1 100  NAD27 FALSE
+year      1   2     NA    NA
+frac2     1   2     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+year                                                      1974, 1979
+frac2                                         sidsr.SID , nwbr.NWBIR
 > y = aperm(st_apply(foo, c(1,3), frac2), c("county","year","frac2"))
 > all.equal(st_dimensions(x), st_dimensions(y))
 [1] TRUE
@@ -164,12 +164,12 @@ BIR     248 1176.75   2265 3761.770 4450.75 30757
 SID       0    2.00      5    7.515    9.00    57
 NWBIR     1  206.00    742 1201.810 1315.75 11631
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-year      1   2     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-year                                                          1974, 1979
+       from  to refsys point
+county    1 100  NAD27 FALSE
+year      1   2     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+year                                                      1974, 1979
 > split(foo, 3)
 stars object with 2 dimensions and 2 attributes
 attribute(s):
@@ -177,12 +177,12 @@ attribute(s):
 1974     0       8  501.5 1452.367 1580.50 21588
 1979     0       9  614.0 1861.697 2040.25 30757
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-var       1   3     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-var                                                  BIR  , SID  , NWBIR
+       from  to refsys point
+county    1 100  NAD27 FALSE
+var       1   3     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+var                                              BIR  , SID  , NWBIR
 > 
 > st_crs(foo)
 Coordinate Reference System:
@@ -215,15 +215,15 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu.  Max.
 pop     0       8    538 1657.032    1784 30757
 dimension(s):
-       from  to offset delta refsys point
-county    1 100     NA    NA  NAD27 FALSE
-var       1   3     NA    NA     NA    NA
-year      1   2     NA    NA     NA    NA
-                                                                  values
-county MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...
-var                                                  BIR  , SID  , NWBIR
-year                                                          1974, 1979
+       from  to refsys point
+county    1 100  NAD27 FALSE
+var       1   3     NA    NA
+year      1   2     NA    NA
+                                                              values
+county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
+var                                              BIR  , SID  , NWBIR
+year                                                      1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  1.042   0.060   1.092 
+  1.387   0.767   1.298 

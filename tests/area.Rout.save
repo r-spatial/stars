@@ -24,9 +24,9 @@ attribute(s):
              Min. 1st Qu. Median   Mean 3rd Qu.   Max.
 area [m^2] 812.25  812.25 812.25 812.25  812.25 812.25
 dimension(s):
-  from  to  offset delta                     refsys point values x/y
-x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]
-y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]
+  from  to  offset delta                     refsys point x/y
+x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 > 
 > m = matrix(1:20, nrow = 5, ncol = 4)
 > x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
@@ -37,9 +37,9 @@ attribute(s):
    Min. 1st Qu. Median Mean 3rd Qu. Max.
 m     1    5.75   10.5 10.5   15.25   20
 dimension(s):
-  from to offset delta refsys point                values x/y
-x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
-y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
+  from to point                values x/y
+x    1  5 FALSE     [0,0.5),...,[4,5) [x]
+y    1  4 FALSE [0.3,0.5),...,[2,2.2) [y]
 > # image(r, axes = TRUE, col = grey((1:20)/20))
 > (a = st_area(r))
 Missing coordinate reference system: assuming Cartesian coordinates
@@ -48,9 +48,9 @@ attribute(s):
       Min. 1st Qu. Median  Mean 3rd Qu. Max.
 area   0.1     0.2  0.325 0.475     0.5    2
 dimension(s):
-  from to offset delta refsys point                values x/y
-x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]
-y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
+  from to point                values x/y
+x    1  5 FALSE     [0,0.5),...,[4,5) [x]
+y    1  4 FALSE [0.3,0.5),...,[2,2.2) [y]
 > plot(a, axes = TRUE)
 > 
 > s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata")
@@ -64,7 +64,20 @@ y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]
 + print((a <- st_area(nit.c)))
 + plot(a, axes = TRUE, border = NA)
 + }
+/PRODUCT/longitude, 
+/PRODUCT/latitude, 
+/PRODUCT/SUPPORT_DATA/DETAILED_RESULTS/nitrogendioxide_summed_total_column, 
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+               Min.  1st Qu.   Median     Mean  3rd Qu.      Max.
+area [m^2] 25983110 28008871 35690854 42912281 54562137 100943458
+dimension(s):
+  from  to refsys                                 values x/y
+x    1 450 WGS 84 [450x278] -5.81066 [°],...,30.9468 [°] [x]
+y    1 278 WGS 84  [450x278] 28.3605 [°],...,51.4686 [°] [y]
+curvilinear grid
+There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  1.154   0.769   1.035 
+  8.345   0.879   8.344 
