@@ -76,8 +76,6 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			paste(classes, collapse= ", "), "supported"))
 	if (inherits(by, "stars"))
 		by = st_as_sfc(by, as_points = FALSE) # and if not, then use st_normalize(by)
-	if (inherits(by, "sf"))
-		by = st_geometry(by) # sfc
 
 	if (inherits(by, "sf")) {
 		geom = attr(by, "sf_column")
@@ -85,8 +83,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	} else
 		geom = "geometry"
 
-	if (missing(FUN))
-		stop("missing FUN argument")
+	stopifnot(!missing(FUN), is.function(FUN))
 	if (exact && inherits(by, c("sf", "sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
     	if (!requireNamespace("raster", quietly = TRUE))
         	stop("package raster required, please install it first") # nocov
