@@ -106,17 +106,21 @@ setAs("stars_proxy", "Raster", function(from) {
 	raster::brick(unlist(from))
 })
 
-get_terra_levels = function(x) {
-# create factor levels, as used by stars, from SpatRaster levels in a data.frame
-# see https://github.com/r-spatial/stars/pull/484
+get_terra_levels = function(x, colors) {
+	# create factor levels, as used by stars, from SpatRaster levels in a data.frame
+	# see https://github.com/r-spatial/stars/pull/484
 	x = x[order(x[[1]]), ] # sort table on level
+	missing_labels = x[[2]] == ""
 	levels = x[[1]]
 	if (any(levels < 0))
 		stop("negative IDs in SpatRaster levels not supported")
 	ex = setdiff(0:max(levels), levels)
 	exclude = rep(FALSE, max(levels) + 1)
 	exclude[ex + 1] = TRUE # 0-based vector
-	list(levels = levels, labels = x[[2]], exclude = exclude)
+	list(levels = levels[!missing_labels],
+		 labels = x[[2]][!missing_labels],
+		 exclude = exclude,
+		 colors = colors[!missing_labels])
 }
 
 #' @name st_as_stars
@@ -190,15 +194,15 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 		if (all(terra::is.factor(.x))) {
 			if (length(terra::levels(.x)) > 1)
 				warning("ignoring categories/levels for all but first layer")
-			if (inherits(l <- terra::levels(.x)[[1]], "data.frame"))
-				l = get_terra_levels(l)
-			else
-				stop("terra levels should return a list of data.frame's; pls update terra")
-			colors = try(rgb(terra::coltab(.x)[[1]], maxColorValue = 255), silent = TRUE)
+			colors = try(rgb(terra::coltab(.x)[[1]][-1], maxColorValue = 255), silent = TRUE)
 			if (inherits(colors, "try-error") || length(colors) == 0)
 				colors = NULL
+			if (inherits(l <- terra::levels(.x)[[1]], "data.frame"))
+				l = get_terra_levels(l, colors)
+			else
+				stop("terra levels should return a list of data.frame's; pls update terra")
 			v = structure(factor(as.vector(v), levels = l$levels, labels = l$labels),
-					dim = dimv, colors = colors, exclude = l$exclude)
+					dim = dimv, colors = l$colors, exclude = l$exclude)
 		}
 		dimensions = list(
 				x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
