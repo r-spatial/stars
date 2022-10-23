@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* `read_stars()` shortens band or array names if they all contain a common start or ending, unless `shorten=FALSE`; `shorten="B"` puts a `B` before shortened array names
+
 * printing `stars` dimension tables omits fields with only `NULL` or `NA` values, unless `print(..., all = TRUE)` is given
 
 * improve reading categorical rasters, which now avoids calling `factor()`; #565 thanks to Krzysztof Dyba

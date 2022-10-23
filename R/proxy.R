@@ -78,7 +78,6 @@ add_resolution = function(lst) {
 	structure(lst, resolutions = resolutions)
 }
 
-
 #' @export
 #' @param along_crs logical; if \code{TRUE}, combine arrays along a CRS dimension
 #' @name c.stars
@@ -96,13 +95,15 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 		combine_along_crs_proxy(dots)
 	else if (identical(along, NA_integer_)) { 
 		if (identical_dimensions(dots))
-			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
-				NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL)
+			st_stars_proxy(setNamesIfnn(do.call(c, lapply(dots, unclass)), nms),
+						   dimensions = st_dimensions(dots[[1]]), 
+						   NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL)
 		else if (identical_dimensions(dots, ignore_resolution = TRUE, tolerance = tolerance)) {
 			dots = add_resolution(dots)
-			st_stars_proxy(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]),
-				resolutions = attr(dots, "resolutions"),
-				NA_value = attr(dots[[1]], "NA_value"))
+			st_stars_proxy(setNamesIfnn(do.call(c, lapply(dots, unclass)), nms),
+						   dimensions = st_dimensions(dots[[1]]), 
+						   resolutions = attr(dots, "resolutions"),
+						   NA_value = attr(dots[[1]], "NA_value"))
 		} else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
@@ -118,10 +119,11 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 					"ignored subdataset(s) with dimensions different from first subdataset:", 
 					paste(which(!ident), collapse = ", "), 
 					"\nuse gdal_subdatasets() to find all subdataset names"))
-				setNames(st_stars_proxy(do.call(c, 
-						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]]),
-						NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL),
-						nms[ident])
+				if (!is.null(nms))
+					nms = nms[ident]
+				st_stars_proxy(setNamesIfnn(do.call(c, lapply(dots[ident], unclass)), nms),
+							   dimensions = st_dimensions(dots[[1]]), 
+							   NA_value = attr(dots[[1]], "NA_value"), resolutions = NULL)
 			}
 		}
 	} else {

@@ -4,7 +4,7 @@ maybe_normalizePath = function(.x, np = FALSE) {
 	if (is.function(.x) || !np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
 	else
-		normalizePath(.x, mustWork = FALSE)
+		setNames(normalizePath(.x, mustWork = FALSE), names(.x))
 }
 
 enc2utf8char = function(x) {
@@ -23,6 +23,22 @@ get_names = function(x) {
 
 is_functions = function(x) {
 	is.function(x) || all(sapply(x, is.function))
+}
+
+# strip common start & end parts of x, if remainder != ""
+unique_part = function(x, prefix) {
+	stopifnot(is.character(x), length(x) > 1)
+	original = x
+	while (nchar(x[1]) && all(grepl(paste0("^", substr(x[1], 1, 1)), x[-1])))
+		x = sapply(x, substring, 2)
+	while ((n <- nchar(x[1])) && all(grepl(paste0(substr(x[1], n, n), "$"), x[-1])))
+		x = sapply(x, substring, 1, n - 1)
+	if (any(x == ""))
+		original
+	else if (is.character(prefix))
+		paste0(prefix, x)
+	else
+		x
 }
 
 
@@ -47,6 +63,7 @@ is_functions = function(x) {
 #' @param tolerance numeric; passed on to \link{all.equal} for comparing dimension parameters.
 #' @param ... passed on to \link{st_as_stars} if \code{curvilinear} was set
 #' @param exclude character; vector with category value(s) to exclude
+#' @param shorten logical or character; if \code{TRUE} and \code{length(.x) > 1}, remove common start and end parts of array names; if character a new prefix
 #' @return object of class \code{stars}
 #' @details In case \code{.x} contains multiple files, they will all be read and combined with \link{c.stars}. Along which dimension, or how should objects be merged? If \code{along} is set to \code{NA} it will merge arrays as new attributes if all objects have identical dimensions, or else try to merge along time if a dimension called \code{time} indicates different time stamps. A single name (or positive value) for \code{along} will merge along that dimension, or create a new one if it does not already exist. If the arrays should be arranged along one of more dimensions with values (e.g. time stamps), a named list can passed to \code{along} to specify them; see example.
 #'
@@ -100,7 +117,12 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) &&
 				is_big(.x, sub = sub, driver = driver, normalize_path = normalize_path, ...)),
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
-		tolerance = 1e-10, exclude = "") {
+		tolerance = 1e-10, exclude = "", shorten = TRUE) {
+
+	is_false = function(x) { length(x) == 1 && is.logical(x) && !x }
+	if (!is.list(.x) && length(.x) > 1 && is.null(names(.x)) && !is_false(shorten) &&
+				any((short_names <- unique_part(.x, shorten)) != .x))
+		names(.x) = short_names
 
 	x = if (is.list(.x)) {
 			f = function(y, np) enc2utf8char(maybe_normalizePath(y, np))

@@ -504,6 +504,14 @@ propagate_units = function(new, old) {
 	new
 }
 
+setNamesIfnn = function(x, nms) { # set names if not NULL
+	stopifnot(is.character(nms) || is.null(nms))
+	if (is.null(nms) || length(nms) != length(x))
+		x
+	else 
+		setNames(x, nms)
+}
+
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
 #' 
 #' combine multiple stars objects, or combine multiple attributes in a single stars object into a single array
@@ -538,15 +546,10 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	} else if (identical(along, NA_integer_)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
-		if (identical_dimensions(dots, tolerance = tolerance)) {
-			ret = st_as_stars(do.call(c, lapply(dots, unclass)), dimensions = st_dimensions(dots[[1]]))
-			if (!missing(nms)) {
-				if (length(nms) != length(ret))
-					stop("length of argument nms must equal the number of attributes")
-				names(ret) = nms
-			}
-			ret
-		} else {
+		if (identical_dimensions(dots, tolerance = tolerance))
+			st_as_stars(setNamesIfnn(do.call(c, lapply(dots, unclass)), nms),
+						dimensions = st_dimensions(dots[[1]]))
+		else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
 			if (!is.na(along))
@@ -556,14 +559,16 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 			else {
 				d = lapply(dots, st_dimensions)
 				ident = c(TRUE, sapply(d[-1], identical, d[[1]]))
-				if (!all(ident))
+				if (!all(ident)) {
 					warning(paste(
 					"ignored subdataset(s) with dimensions different from first subdataset:", 
 					paste(which(!ident), collapse = ", "), 
 					"\nuse gdal_subdatasets() to find all subdataset names"))
-				setNames(st_as_stars(do.call(c, 
-						lapply(dots[ident], unclass)), dimensions = st_dimensions(dots[[1]])),
-						nms[ident])
+					if (!is.null(nms))
+						nms = nms[ident]
+				}
+				st_as_stars(setNamesIfnn(do.call(c, lapply(dots[ident], unclass)), nms),
+							dimensions = st_dimensions(dots[[1]]))
 			}
 		}
 	} else {

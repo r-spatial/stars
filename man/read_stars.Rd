@@ -21,7 +21,8 @@ read_stars(
   normalize_path = TRUE,
   RAT = character(0),
   tolerance = 1e-10,
-  exclude = ""
+  exclude = "",
+  shorten = TRUE
 )
 
 is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
@@ -59,6 +60,8 @@ or to 1e8 if that option was not set.}
 \item{tolerance}{numeric; passed on to \link{all.equal} for comparing dimension parameters.}
 
 \item{exclude}{character; vector with category value(s) to exclude}
+
+\item{shorten}{logical or character; if \code{TRUE} and \code{length(.x) > 1}, remove common start and end parts of array names; if character a new prefix}
 
 \item{x}{object to be read with \link{read_stars}}
 
