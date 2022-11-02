@@ -1,6 +1,6 @@
 # version 0.5-7
 
-* `read_stars()` shortens band or array names if they all contain a common start or ending, unless `shorten=FALSE`; `shorten="B"` puts a `B` before shortened array names
+* `read_stars()` shortens band or array names that contain a common start or ending, unless names would become empty or `shorten=FALSE` was set; e.g. `shorten="B"` puts a `B` before shortened array names
 
 * printing `stars` dimension tables omits fields with only `NULL` or `NA` values, unless `print(..., all = TRUE)` is given
 

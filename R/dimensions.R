@@ -558,10 +558,6 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	names(lst) = names(dimensions)
 	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
 		where[xy] = ifelse(!max[xy] & (is.na(center[xy]) | center[xy]), 0.5, where[xy])
-#		where_xy = if (!max && (is.na(center) || center))
-#				0.5
-#			else
-#				where
 		if (xy[1] %in% names(lst)) # x
 			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where[[ xy[1] ]], gt, "x")
 		if (xy[2] %in% names(lst))  # y

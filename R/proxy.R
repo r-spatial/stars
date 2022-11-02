@@ -229,7 +229,7 @@ fetch = function(x, downsample = 0, ...) {
 		} else
 			offset = c(0,0)
 		file_name = unclass(x)[[i]]
-		if (is.function(file_name)) # realise:
+		if (is.function(file_name)) # realise/evaluate:
 			file_name = file_name()
 		ret[[i]] = read_stars(file_name, RasterIO = rasterio, 
 			NA_value = attr(x, "NA_value") %||% NA_real_, normalize_path = FALSE,

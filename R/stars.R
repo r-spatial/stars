@@ -422,7 +422,7 @@ st_coordinates.dimensions = function(x, ...) {
 #' @name st_coordinates
 #' @export
 as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
-	data.frame(st_coordinates(x, add_max = add_max, center = center), 
+	data.frame(st_coordinates(x, add_max = add_max, center = center, ...), 
 		lapply(x, function(y) structure(y, dim = NULL)))
 }
 
@@ -539,11 +539,9 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	if (any(sapply(dots, function(x) inherits(x, "stars_proxy"))))
 		stop("convert stars_proxy objects to stars first using st_as_stars()")
 
-	if (length(dots) == 1) {
-		if (!missing(along))
-			warning("along argument ignored; maybe you wanted to use st_redimension?")
+	if (length(dots) == 1)
 		dots[[1]]
-	} else if (identical(along, NA_integer_)) { 
+	else if (identical(along, NA_integer_)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
 		if (identical_dimensions(dots, tolerance = tolerance))

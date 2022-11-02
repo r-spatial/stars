@@ -1,3 +1,4 @@
+# close rings by repeating the first point
 close_mat = function(m) {
 	if (any(m[1,] != m[nrow(m),]))
 		m = rbind(m, m[1,])
