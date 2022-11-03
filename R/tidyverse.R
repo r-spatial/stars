@@ -304,26 +304,33 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 	if (has_raster(d) && (is_regular_grid(d) || is_rectilinear(d))) {
 		xy = attr(d, "raster")$dimensions
 		if (is_regular_grid(d)) {
-			if (is.null(mapping))
+			if (is.null(mapping)) {
 				mapping = ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
-					fill = !!rlang::sym(names(data)[1]))
+					fill = !!rlang::sym(names(data)[1])) } else {
+                                mapping = modifyList( ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
+					fill = !!rlang::sym(names(data)[1])), mapping) }
 			data = na.action(dplyr::as_tibble(data))
 			ggplot2::geom_raster(mapping = mapping, data = data, ...)
 		} else {  # rectilinear: use geom_rect, passing on cell boundaries
 			xy_max = paste0(xy, "_max")
-			if (is.null(mapping))
+			if (is.null(mapping)) {
 				mapping = ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
 					xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
-					fill = !!rlang::sym(names(data)[1]))
+					fill = !!rlang::sym(names(data)[1])) } else {
+				mapping = modifyList(ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
+					xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
+					fill = !!rlang::sym(names(data)[1])), mapping }
 			data = na.action(dplyr::as_tibble(data, add_max = TRUE))
 			ggplot2::geom_rect(mapping = mapping, data = data, ...)
 		}
 	} else if (has_sfc(d)) {
-		if (is.null(mapping))
-			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1]))
+		if (is.null(mapping)) {
+			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1])) } else {
+		        mapping = modifyList( ggplot2::aes(fill = !!rlang::sym(names(data)[1])), mapping) }
 		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), color = NA, mapping = mapping, ...)
 	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
+						     
 }
 
 #' @name geom_stars
