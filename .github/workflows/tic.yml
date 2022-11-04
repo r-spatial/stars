@@ -74,6 +74,10 @@ jobs:
           key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{steps.date.outputs.date}}
           restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-${{steps.date.outputs.date}}
 
+      - name: "[Stage] Install spatial libraries on macOS"
+        if: runner.os == 'macOS'
+        run: brew install gdal proj
+
 #     - name: "[Stage] Install pak"
 #       run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable')"
 
