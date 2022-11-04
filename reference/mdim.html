@@ -94,7 +94,8 @@
 <span>  count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  step <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  proxy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  bounds <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">write_mdim</span><span class="op">(</span></span>
@@ -131,15 +132,15 @@
 
 
 <dt>offset</dt>
-<dd><p>integer; offset for each dimension (pixels) of sub-array to read (default: 0,0,0,...) (requires sf &gt;= 1.0-9)</p></dd>
+<dd><p>integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf &gt;= 1.0-9)</p></dd>
 
 
 <dt>count</dt>
-<dd><p>integer; size for each dimension (pixels) of sub-array to read (default: read all) (requires sf &gt;= 1.0-9)</p></dd>
+<dd><p>integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf &gt;= 1.0-9)</p></dd>
 
 
 <dt>step</dt>
-<dd><p>integer; step size for each dimension (pixels) of sub-aray to read (requires sf &gt;= 1.0-9)</p></dd>
+<dd><p>integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf &gt;= 1.0-9)</p></dd>
 
 
 <dt>proxy</dt>
@@ -148,6 +149,11 @@
 
 <dt>debug</dt>
 <dd><p>logical; print debug info?</p></dd>
+
+
+<dt>bounds</dt>
+<dd><p>logical or character: if <code>TRUE</code> tries to infer from "bounds" attribute; if character, 
+named vector of the form <code>c(longitude="lon_bnds", latitude="lat_bnds")</code> with names dimension names</p></dd>
 
 
 <dt>x</dt>

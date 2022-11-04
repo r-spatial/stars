@@ -99,8 +99,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>6. How <code>raster</code> functions map to <code>stars</code> functions</h1>
-                        <h4 data-toc-skip class="author">Sébastien Rochette, Adriano Fantini, Edzer Pebesma</h4>
+      <h1 data-toc-skip>6. How <code>raster</code> functions map to
+<code>stars</code> functions</h1>
+                        <h4 data-toc-skip class="author">Sébastien
+Rochette, Adriano Fantini, Edzer Pebesma</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars6.Rmd" class="external-link"><code>vignettes/stars6.Rmd</code></a></small>
@@ -110,8 +112,16 @@
 
     
     
-<p>Here’s an attempt at the table describing how <code>raster</code> functions map to <code>stars</code> functions, discussed in <a href="https://github.com/r-spatial/stars/issues/122" class="external-link">issue #122</a>. This table uses the functionality of the <code>raster</code> package as a template; it may be incomplete, imprecise or plain wrong, so take it with a pinch of salt. Any comment or correction is hugely appreciated, please contribute!</p>
-<p>Some of the functions (<code>filter</code>, <code>slice</code>, <code>mutate</code>, <code>select</code>, <code>pull</code>, …) are provided via <code>dplyr</code>, which must be loaded. See <code><a href="../reference/dplyr.html">?stars::dplyr</a></code>.</p>
+<p>Here’s an attempt at the table describing how <code>raster</code>
+functions map to <code>stars</code> functions, discussed in <a href="https://github.com/r-spatial/stars/issues/122" class="external-link">issue #122</a>.
+This table uses the functionality of the <code>raster</code> package as
+a template; it may be incomplete, imprecise or plain wrong, so take it
+with a pinch of salt. Any comment or correction is hugely appreciated,
+please contribute!</p>
+<p>Some of the functions (<code>filter</code>, <code>slice</code>,
+<code>mutate</code>, <code>select</code>, <code>pull</code>, …) are
+provided via <code>dplyr</code>, which must be loaded. See
+<code><a href="../reference/dplyr.html">?stars::dplyr</a></code>.</p>
 <div class="section level2">
 <h2 id="comment-legend">COMMENT LEGEND<a class="anchor" aria-label="anchor" href="#comment-legend"></a>
 </h2>
@@ -124,6 +134,11 @@
 <h2 id="creating-objects">Creating objects<a class="anchor" aria-label="anchor" href="#creating-objects"></a>
 </h2>
 <table class="table">
+<colgroup>
+<col width="40%">
+<col width="45%">
+<col width="14%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">raster</th>
 <th align="left">stars</th>
@@ -206,7 +221,8 @@
 <tr class="even">
 <td align="left">aggregate</td>
 <td align="left">aggregate</td>
-<td align="left">WIP; raster’s aggregate with fact=2 will not work, use st_warp in that case?</td>
+<td align="left">WIP; raster’s aggregate with fact=2 will not work, use
+st_warp in that case?</td>
 </tr>
 <tr class="odd">
 <td align="left">disaggregate</td>
@@ -329,6 +345,11 @@
 <h2 id="spatial-contextual-computation">Spatial contextual computation<a class="anchor" aria-label="anchor" href="#spatial-contextual-computation"></a>
 </h2>
 <table class="table">
+<colgroup>
+<col width="16%">
+<col width="44%">
+<col width="38%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">raster</th>
 <th align="left">stars</th>
@@ -368,14 +389,16 @@
 </tr>
 <tr class="odd">
 <td align="left">boundaries</td>
-<td align="left">st_as_sf(as_points=FALSE, merge=TRUE, connect8=TRUE)</td>
+<td align="left">st_as_sf(as_points=FALSE, merge=TRUE,
+connect8=TRUE)</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
 <td align="left">clump</td>
 <td align="left">st_as_sf(r, merge = TRUE)</td>
 <td align="left">
-<code>st_as_sf</code> returns polygons, <code>clump</code> a raster</td>
+<code>st_as_sf</code> returns polygons,
+<code>clump</code> a raster</td>
 </tr>
 <tr class="odd">
 <td align="left">adjacent</td>
@@ -424,7 +447,8 @@
 <td align="left">interpolate</td>
 <td align="left">gstat::idw, gstat::krige</td>
 <td align="left">
-<code>st_warp</code> has raster-raster interpolations of <code>gdalwarp</code>
+<code>st_warp</code> has raster-raster interpolations
+of <code>gdalwarp</code>
 </td>
 </tr>
 </tbody>
@@ -434,6 +458,11 @@
 <h2 id="data-type-conversion">Data type conversion<a class="anchor" aria-label="anchor" href="#data-type-conversion"></a>
 </h2>
 <table class="table">
+<colgroup>
+<col width="19%">
+<col width="53%">
+<col width="26%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">raster</th>
 <th align="left">stars</th>
@@ -568,7 +597,8 @@
 </tr>
 <tr class="even">
 <td align="left">extract (by point)</td>
-<td align="left">aggregate(stars_object, sf_object, function(x) x[1], as_points = FALSE)</td>
+<td align="left">aggregate(stars_object, sf_object, function(x) x[1],
+as_points = FALSE)</td>
 <td align="left"></td>
 </tr>
 <tr class="odd">
@@ -695,12 +725,14 @@
 <tr class="odd">
 <td align="left">ncol</td>
 <td align="left">dim(x)[1]</td>
-<td align="left">or use name instead of 1; cols may be the second dimension!</td>
+<td align="left">or use name instead of 1; cols may be the second
+dimension!</td>
 </tr>
 <tr class="even">
 <td align="left">nrow</td>
 <td align="left">dim(x)[2]</td>
-<td align="left">or use name instead of 2; rows may be the first dimension!</td>
+<td align="left">or use name instead of 2; rows may be the first
+dimension!</td>
 </tr>
 <tr class="odd">
 <td align="left">ncell</td>
@@ -710,7 +742,8 @@
 <tr class="even">
 <td align="left">res</td>
 <td align="left">st_dimensions</td>
-<td align="left">can also not be a constant in case of rectilinear or curvilinear grids</td>
+<td align="left">can also not be a constant in case of rectilinear or
+curvilinear grids</td>
 </tr>
 <tr class="odd">
 <td align="left">nlayers</td>
@@ -725,12 +758,14 @@
 <tr class="odd">
 <td align="left">xres</td>
 <td align="left">st_dimensions, look for delta</td>
-<td align="left">may not be a constant in case of rectilinear or curvilinear grids</td>
+<td align="left">may not be a constant in case of rectilinear or
+curvilinear grids</td>
 </tr>
 <tr class="even">
 <td align="left">yres</td>
 <td align="left">st_dimensions, look for delta</td>
-<td align="left">may not be a constant in case of rectilinear or curvilinear grids</td>
+<td align="left">may not be a constant in case of rectilinear or
+curvilinear grids</td>
 </tr>
 <tr class="odd">
 <td align="left">xmin</td>
@@ -775,7 +810,8 @@
 <tr class="odd">
 <td align="left">filename</td>
 <td align="left"></td>
-<td align="left">stars_proxy objects carry file names where otherwise the array data is</td>
+<td align="left">stars_proxy objects carry file names where otherwise
+the array data is</td>
 </tr>
 <tr class="even">
 <td align="left">bandnr</td>
@@ -785,7 +821,8 @@
 <tr class="odd">
 <td align="left">nbands</td>
 <td align="left">dim(x)[3]</td>
-<td align="left">may also be time; bands may also be in another dimension, or have another name</td>
+<td align="left">may also be time; bands may also be in another
+dimension, or have another name</td>
 </tr>
 <tr class="even">
 <td align="left">compareRaster</td>
@@ -818,12 +855,14 @@
 <tr class="odd">
 <td align="left">xFromCol</td>
 <td align="left">st_get_dimension_values(., ‘x’)[col]</td>
-<td align="left">I am not sure how to generally get the x dimension name - here it is x</td>
+<td align="left">I am not sure how to generally get the x dimension name
+- here it is x</td>
 </tr>
 <tr class="even">
 <td align="left">yFromRow</td>
 <td align="left">st_get_dimension_values(., ‘y’)[row]</td>
-<td align="left">I am not sure how to generally get the y dimension name - here it is y</td>
+<td align="left">I am not sure how to generally get the y dimension name
+- here it is y</td>
 </tr>
 <tr class="odd">
 <td align="left">xFromCell</td>
@@ -857,7 +896,7 @@
 </tr>
 <tr class="odd">
 <td align="left">cellFromXY</td>
-<td align="left"></td>
+<td align="left">st_cells()</td>
 <td align="left"></td>
 </tr>
 <tr class="even">
@@ -907,7 +946,9 @@
 </tr>
 </tbody>
 </table>
-<p>The format of this table follows the <code>raster-package</code> entry in the raster manual, found at <code>https://cran.r-project.org/web/packages/raster/raster.pdf</code>.</p>
+<p>The format of this table follows the <code>raster-package</code>
+entry in the raster manual, found at
+<code>https://cran.r-project.org/web/packages/raster/raster.pdf</code>.</p>
 </div>
   </div>
 

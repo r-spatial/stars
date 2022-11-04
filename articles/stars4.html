@@ -100,7 +100,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>4. stars data model</h1>
-                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
+                        <h4 data-toc-skip class="author">Edzer
+Pebesma</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars4.Rmd" class="external-link"><code>vignettes/stars4.Rmd</code></a></small>
@@ -110,53 +111,99 @@
 
     
     
-<p>This vignette explains the data model of <code>stars</code> objects, illustrated using artificial and real datasets.</p>
+<p>This vignette explains the data model of <code>stars</code> objects,
+illustrated using artificial and real datasets.</p>
 <div class="section level2">
 <h2 id="stars-objects">Stars objects<a class="anchor" aria-label="anchor" href="#stars-objects"></a>
 </h2>
 <p><code>stars</code> objects consist of</p>
 <ul>
-<li>a (possibly empty) named list of arrays, each having named dimensions</li>
-<li>an attribute called <code>dimensions</code> with a <code>dimensions</code> object carrying dimension metadata</li>
+<li>a (possibly empty) named list of arrays, each having named
+dimensions (<code>dim</code>) attribute</li>
+<li>an attribute called <code>dimensions</code> of class
+<code>dimensions</code> that carries dimension metadata</li>
 <li>a class name that includes <code>stars</code>
 </li>
 </ul>
-<p>A <code>dimensions</code> object is a named list of <code>dimension</code> elements, each describing the semantics a dimension of the data arrays (space, time, type etc). In addition to that, a <code>dimensions</code> object has an attribute called <code>raster</code> of class <code>stars_raster</code>, which is a named list with three elements:</p>
+<p>A <code>dimensions</code> object is a named list of
+<code>dimension</code> elements, each describing the semantics a
+dimension of the data arrays (space, time, type etc). In addition to
+that, a <code>dimensions</code> object has an attribute called
+<code>raster</code> of class <code>stars_raster</code>, which is a named
+list with three elements:</p>
 <ul>
 <li>
-<code>dimensions</code> length 2 character; the dimension names that constitute a spatial raster (or NA)</li>
+<code>dimensions</code> length 2 character; the dimension names that
+constitute a spatial raster (or NA)</li>
 <li>
-<code>affine</code> length 2 numeric; the two affine parameters of the geotransform (or NA)</li>
+<code>affine</code> length 2 numeric; the two affine parameters of
+the geotransform (or NA)</li>
 <li>
-<code>curvilinear</code> a boolean indicating whether a raster is a curvilinear raster (or NA)</li>
+<code>curvilinear</code> a boolean indicating whether a raster is a
+curvilinear raster (or NA)</li>
 </ul>
-<p>The <code>affine</code> and <code>curvilinear</code> values are only relevant in case of raster data, indicated by <code>dimensions</code> to have non-NA values.</p>
-<p>A <code>dimension</code> object describes a <em>single</em> dimension; it is a list with named elements</p>
+<p>The <code>affine</code> and <code>curvilinear</code> values are only
+relevant in case of raster data, indicated by <code>dimensions</code> to
+have non-NA values.</p>
+<p>A <code>dimension</code> object describes a <em>single</em>
+dimension; it is a list with named elements</p>
 <ul>
 <li>
-<code>from</code>: (numeric length 1): the start index of the array</li>
+<code>from</code>: (numeric length 1): the start index of the
+array</li>
 <li>
 <code>to</code>: (numeric length 1): the end index of the array</li>
 <li>
-<code>offset</code>: (numeric length 1): the start coordinate (or time) value of the first pixel (i.e., a pixel/cell boundary)</li>
+<code>offset</code>: (numeric length 1): the start coordinate (or
+time) value of the first pixel (i.e., a pixel/cell boundary)</li>
 <li>
-<code>delta</code>: (numeric length 1): the increment, or cell size</li>
+<code>delta</code>: (numeric length 1): the increment, or cell
+size</li>
 <li>
-<code>refsys</code>: (character, or <code>crs</code>): object describing the reference system; e.g. the PROJ string, or string <code>POSIXct</code> or <code>PCICt</code> (for 360 and 365 days/year calendars), or object of class <code>crs</code> (containing both EPSG code and proj4string)</li>
+<code>refsys</code>: (character, or <code>crs</code>): object
+describing the reference system; e.g. the PROJ string, or string
+<code>POSIXct</code> or <code>PCICt</code> (for 360 and 365 days/year
+calendars), or object of class <code>crs</code> (containing both EPSG
+code and proj4string)</li>
 <li>
-<code>point</code>: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)</li>
+<code>point</code>: (logical length 1): boolean indicating whether
+cells/pixels refer to areas/periods, or to points/instances (may be
+NA)</li>
 <li>
 <code>values</code>: one of
 <ul>
 <li>
-<code>NULL</code>,</li>
-<li>a vector with coordinate values (numeric, <code>POSIXct</code>, <code>PCICt</code>, or <code>sfc</code>),</li>
-<li>an object of class <code>intervals</code> (a list with two vectors, <code>start</code> and <code>end</code>, with interval start- and end-values), or</li>
-<li>a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)</li>
+<code>NULL</code> (missing),</li>
+<li>a vector with coordinate values (numeric, <code>POSIXct</code>,
+<code>PCICt</code>, or <code>sfc</code>),</li>
+<li>an object of class <code>intervals</code> (a list with two vectors,
+<code>start</code> and <code>end</code>, with interval start- and
+end-values), or</li>
+<li>a matrix with longitudes or latitudes for all cells (in case of
+curvilinear grids)</li>
 </ul>
 </li>
 </ul>
-<p>Clearly, <code>offset</code> and <code>delta</code> only apply to <em>regularly</em> discretized dimensions, and are <code>NA</code> if this is not the case. <code>from</code> and <code>to</code> will usually be 1 and the dimension size, but <code>from</code> may be larger than 1 in case a regular sub-grid got cut out or was cropped. Rectilinear and curvilinear grids need grid values in <code>values</code>; this can be irregularly <em>spaced</em> coordinate values, or coordinate <em>intervals</em> of irregular width, or spatial geometries encoded in an <code>sfc</code> vector (“list-column”), or a matrix with grid cell centre values (longitude or latitude) for curvilinear grids.</p>
+<p><code>from</code> and <code>to</code> will usually be 1 and the
+dimension size, but <code>from</code> may be larger than 1 in case a
+sub-grid got was selected (or cropped).</p>
+<p><code>offset</code> and <code>delta</code> only apply to
+<em>regularly</em> discretized dimensions, and are <code>NA</code> if
+this is not the case. If they are <code>NA</code>, dimension values may
+be held in the <code>values</code> field. Rectilinear and curvilinear
+grids need grid values in <code>values</code> that can be either:</p>
+<ul>
+<li>for rectilinear grids: irregularly <em>spaced</em> coordinate
+values, or coordinate <em>intervals</em> of irregular width (a
+rectilinear grid <em>can</em> have one dimension that is regular),</li>
+<li>for curvilinear grids: or a matrix with grid cell centre values for
+<em>all</em> row/col combinations (usually in longitude or
+latitude).</li>
+</ul>
+<p>Alternatively, <code>values</code> can contains a set of spatial
+geometries encoded in an <code>sfc</code> vector (“list-column”), in
+which case we have a <a href="https://r-spatial.org/r/2022/09/12/vdc.html" class="external-link">vector data
+cube</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="grid-type">Grid type<a class="anchor" aria-label="anchor" href="#grid-type"></a>
@@ -164,7 +211,8 @@
 <div class="section level3">
 <h3 id="regular-grids">Regular grids<a class="anchor" aria-label="anchor" href="#regular-grids"></a>
 </h3>
-<p>With a very simple file created from a <span class="math inline">\(4 \times 5\)</span> matrix</p>
+<p>With a very simple file created from a <span class="math inline">\(4
+\times 5\)</span> matrix</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, nrow <span class="op">=</span> <span class="fl">5</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
@@ -175,43 +223,58 @@
 <span><span class="co">##     Min. 1st Qu. Median Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## A1     1    5.75   10.5 10.5   15.25   20</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from to offset delta refsys point values x/y</span></span>
-<span><span class="co">## x    1  5      0     1     NA FALSE   NULL [x]</span></span>
-<span><span class="co">## y    1  4      0     1     NA FALSE   NULL [y]</span></span></code></pre></div>
+<span><span class="co">##   from to offset delta point x/y</span></span>
+<span><span class="co">## x    1  5      0     1 FALSE [x]</span></span>
+<span><span class="co">## y    1  4      0     1 FALSE [y]</span></span></code></pre></div>
 <p>we see that</p>
 <ul>
-<li>the rows (5) are mapped to the first dimension, the x-coordinate</li>
-<li>the columns (4) are mapped to the second dimension, the y-coordinate</li>
-<li>the <code>from</code> and <code>to</code> fields of each dimension define a range that corresponds to the array dimension:</li>
+<li>the rows (5) are mapped to the first dimension, the
+x-coordinate</li>
+<li>the columns (4) are mapped to the second dimension, the
+y-coordinate</li>
+<li>the <code>from</code> and <code>to</code> fields of each dimension
+define a range that corresponds to the array dimension:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">s</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">## x y </span></span>
 <span><span class="co">## 5 4</span></span></code></pre></div>
 <ul>
-<li>offset and delta specify how increasing row and column index maps to x and y coordinate values respectively.</li>
+<li>offset and delta specify how increasing row and column index maps to
+x and y coordinate values respectively.</li>
 </ul>
-<p>When we plot this object, using the <code>image</code> method for <code>stars</code> objects,</p>
+<p>When we plot this object, using the <code>image</code> method for
+<code>stars</code> objects,</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-3-1.png" width="432"></p>
-<p>we see that <span class="math inline">\((0,0)\)</span> is the origin of the grid (grid corner), and <span class="math inline">\(1\)</span> the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are <strong>regular</strong>: grid cell size is constant everywhere.</p>
-<p>Many actual grid datasets have y coordinates (grid rows) going from North to South (top to bottom); this is realised with a negative value for <code>delta</code>. We see that the grid origing <span class="math inline">\((0,0)\)</span> did not change:</p>
+<p>we see that <span class="math inline">\((0,0)\)</span> is the origin
+of the grid (grid corner), and <span class="math inline">\(1\)</span>
+the coordinate value increase from one index (row, col) to the next. It
+means that consecutive matrix columns represent grid lines, going from
+south to north. Grids defined this way are <strong>regular</strong>:
+grid cell size is constant everywhere.</p>
+<p>Many actual grid datasets have y coordinates (grid rows) going from
+North to South (top to bottom); this is realised with a negative value
+for <code>delta</code>. We see that the grid origing <span class="math inline">\((0,0)\)</span> did not change:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-4-1.png" width="432"></p>
-<p>An example is the GeoTIFF carried in the package, which, as probably all data sources read through GDAL, has a negative <code>delta</code> for the <code>y</code>-coordinate:</p>
+<p>An example is the GeoTIFF carried in the package, which, as probably
+all data sources read through GDAL, has a negative <code>delta</code>
+for the <code>y</code>-coordinate:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">"y"</span><span class="op">]</span></span>
-<span><span class="co">##   from  to  offset delta                     refsys point values</span></span>
-<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL</span></span></code></pre></div>
+<span><span class="co">##   from  to  offset delta                     refsys point</span></span>
+<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="raster-attributes-rotated-and-sheared-grids">Raster attributes, rotated and sheared grids<a class="anchor" aria-label="anchor" href="#raster-attributes-rotated-and-sheared-grids"></a>
 </h3>
-<p>Dimension tables of <code>stars</code> objects carry a <code>raster</code> attribute:</p>
+<p>Dimension tables of <code>stars</code> objects carry a
+<code>raster</code> attribute:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## List of 4</span></span>
@@ -223,17 +286,31 @@
 <p>which is a list that holds</p>
 <ul>
 <li>
-<code>dimensions</code>: character, the names of raster dimensions (if any), as opposed to e.g. spectral, temporal or other dimensions</li>
+<code>dimensions</code>: character, the names of raster dimensions
+(if any), as opposed to e.g. spectral, temporal or other dimensions</li>
 <li>
 <code>affine</code>: numeric, the affine parameters</li>
 <li>
-<code>curvilinear</code>: a logical indicating whether the raster is curvilinear</li>
+<code>curvilinear</code>: a logical indicating whether the raster is
+curvilinear</li>
 </ul>
-<p>These fields are needed at this level, because they describe properties of the array at a higher level than individual dimensions do: a pair of dimensions forms a raster, both <code>affine</code> and <code>curvilinear</code> describe how x and y <em>as a pair</em> are derived from grid indexes (see below) when this cannot be done on a per-dimension basis.</p>
-<p>With two affine parameters <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates are derived from (1-based) grid indexes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, grid offset values <span class="math inline">\(o_x\)</span> and <span class="math inline">\(o_y\)</span>, and grid cell sizes <span class="math inline">\(d_x\)</span> and <span class="math inline">\(d_y\)</span> by</p>
-<p><span class="math display">\[x = o_x + (i-1) d_x + (j-1) a_1\]</span></p>
-<p><span class="math display">\[y = o_y + (i-1) a_2 + (j-1) d_y\]</span> Clearly, when <span class="math inline">\(a_1=a_2=0\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are entirely derived from their respective index, offset and cellsize.</p>
-<p>Note that for integer indexes, the coordinates are that of the starting edge of a grid cell; to get the grid cell center of the top left grid cell (in case of a negative <span class="math inline">\(d_y\)</span>), use <span class="math inline">\(i=1.5\)</span> and <span class="math inline">\(j=1.5\)</span>.</p>
+<p>These fields are needed at this level, because they describe
+properties of the array at a higher level than individual dimensions do:
+a pair of dimensions forms a raster, both <code>affine</code> and
+<code>curvilinear</code> describe how x and y <em>as a pair</em> are
+derived from grid indexes (see below) when this cannot be done on a
+per-dimension basis.</p>
+<p>With two affine parameters <span class="math inline">\(a_1\)</span>
+and <span class="math inline">\(a_2\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates are derived from (1-based)
+grid indexes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, grid offset values <span class="math inline">\(o_x\)</span> and <span class="math inline">\(o_y\)</span>, and grid cell sizes <span class="math inline">\(d_x\)</span> and <span class="math inline">\(d_y\)</span> by</p>
+<p><span class="math display">\[x = o_x + (i-1) d_x + (j-1)
+a_1\]</span></p>
+<p><span class="math display">\[y = o_y + (i-1) a_2 + (j-1) d_y\]</span>
+Clearly, when <span class="math inline">\(a_1=a_2=0\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are entirely derived from their
+respective index, offset and cellsize.</p>
+<p>Note that for integer indexes, the coordinates are that of the
+starting edge of a grid cell; to get the grid cell center of the top
+left grid cell (in case of a negative <span class="math inline">\(d_y\)</span>), use <span class="math inline">\(i=1.5\)</span> and <span class="math inline">\(j=1.5\)</span>.</p>
 <p>We can rotate grids by setting <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span> to a non-zero value:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span></span>
@@ -248,7 +325,8 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>Now, the y-axis and x-axis have different rotation in degrees of respectively</p>
+<p>Now, the y-axis and x-axis have different rotation in degrees of
+respectively</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">atan2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span></span>
 <span><span class="co">## [1]  5.710593 11.309932</span></span></code></pre></div>
@@ -257,8 +335,12 @@
 <div class="section level2">
 <h2 id="rectilinear-grids">Rectilinear grids<a class="anchor" aria-label="anchor" href="#rectilinear-grids"></a>
 </h2>
-<p><a href="https://en.wikipedia.org/wiki/Regular_grid" class="external-link">Rectilinear grids</a> have orthogonal axes, but do not have congruent (equally sized and shaped) cells: each axis has its own irregular subdivision.</p>
-<p>We can define a rectilinear grid by specifying the cell <em>boundaries</em>, meaning for every dimension we specify <em>one more</em> value than the dimension size:</p>
+<p><a href="https://en.wikipedia.org/wiki/Regular_grid" class="external-link">Rectilinear
+grids</a> have orthogonal axes, but do not have congruent (equally sized
+and shaped) cells: each axis has its own irregular subdivision.</p>
+<p>We can define a rectilinear grid by specifying the cell
+<em>boundaries</em>, meaning for every dimension we specify <em>one
+more</em> value than the dimension size:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span>  <span class="co"># 6 numbers: boundaries!</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2.2</span><span class="op">)</span> <span class="co"># 5 numbers: boundaries!</span></span>
@@ -268,15 +350,17 @@
 <span><span class="co">##    Min. 1st Qu. Median Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## m     1    5.75   10.5 10.5   15.25   20</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from to offset delta refsys point                values x/y</span></span>
-<span><span class="co">## x    1  5     NA    NA     NA FALSE     [0,0.5),...,[4,5) [x]</span></span>
-<span><span class="co">## y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,2.2) [y]</span></span>
+<span><span class="co">##   from to point                values x/y</span></span>
+<span><span class="co">## x    1  5 FALSE     [0,0.5),...,[4,5) [x]</span></span>
+<span><span class="co">## y    1  4 FALSE [0.3,0.5),...,[2,2.2) [y]</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
 <span><span class="co">## xmin ymin xmax ymax </span></span>
 <span><span class="co">##  0.0  0.3  5.0  2.2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">r</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">/</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>Would we leave out the last value, than <code>stars</code> may come up with a <em>different</em> cell boundary for the last cell, as this is now derived from the width of the one-but-last cell:</p>
+<p>Would we leave out the last value, than <code>stars</code> may come
+up with a <em>different</em> cell boundary for the last cell, as this is
+now derived from the width of the one-but-last cell:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>   <span class="co"># 4 numbers: offsets only!</span></span>
@@ -286,13 +370,16 @@
 <span><span class="co">##    Min. 1st Qu. Median Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## m     1    5.75   10.5 10.5   15.25   20</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from to offset delta refsys point              values x/y</span></span>
-<span><span class="co">## x    1  5     NA    NA     NA FALSE   [0,0.5),...,[4,6) [x]</span></span>
-<span><span class="co">## y    1  4     NA    NA     NA FALSE [0.3,0.5),...,[2,3) [y]</span></span>
+<span><span class="co">##   from to point              values x/y</span></span>
+<span><span class="co">## x    1  5 FALSE   [0,0.5),...,[4,6) [x]</span></span>
+<span><span class="co">## y    1  4 FALSE [0.3,0.5),...,[2,3) [y]</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
 <span><span class="co">## xmin ymin xmax ymax </span></span>
 <span><span class="co">##  0.0  0.3  6.0  3.0</span></span></code></pre></div>
-<p>This is not problematic if cells have a constant width, in which case the boundaries are reduced to an <code>offset</code> and <code>delta</code> value, irrespective whether an upper boundary is given:</p>
+<p>This is not problematic if cells have a constant width, in which case
+the boundaries are reduced to an <code>offset</code> and
+<code>delta</code> value, irrespective whether an upper boundary is
+given:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>  <span class="co"># 5 numbers: offsets only!</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">2</span><span class="op">)</span>   <span class="co"># 4 numbers: offsets only!</span></span>
@@ -302,35 +389,47 @@
 <span><span class="co">##    Min. 1st Qu. Median Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## m     1    5.75   10.5 10.5   15.25   20</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from to offset delta refsys point values x/y</span></span>
-<span><span class="co">## x    1  5      0     1     NA FALSE   NULL [x]</span></span>
-<span><span class="co">## y    1  4    0.5   0.5     NA FALSE   NULL [y]</span></span>
+<span><span class="co">##   from to offset delta point x/y</span></span>
+<span><span class="co">## x    1  5      0     1 FALSE [x]</span></span>
+<span><span class="co">## y    1  4    0.5   0.5 FALSE [y]</span></span>
 <span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span>
 <span><span class="co">## xmin ymin xmax ymax </span></span>
 <span><span class="co">##  0.0  0.5  5.0  2.5</span></span></code></pre></div>
-<p>Alternatively, one can also set the <em>cell midpoints</em> by specifying arguments <code>cell_midpoints</code> to the <code>st_dimensions</code> call:</p>
+<p>Alternatively, one can also set the <em>cell midpoints</em> by
+specifying arguments <code>cell_midpoints</code> to the
+<code>st_dimensions</code> call:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>, </span>
 <span>                <span class="fu"><a href="../reference/st_dimensions.html">st_dimensions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">10</span><span class="op">)</span>, cell_midpoints <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>When the dimension is regular, this results in <code>offset</code> being shifted back with half a <code>delta</code>, or else in intervals derived from the distances between cell centers. This should obviously not be done when cell boundaries are specified.</p>
+<p>When the dimension is regular, this results in <code>offset</code>
+being shifted back with half a <code>delta</code>, or else in intervals
+derived from the distances between cell centers. This should obviously
+not be done when cell boundaries are specified.</p>
 </div>
 <div class="section level2">
 <h2 id="curvilinear-grids">Curvilinear grids<a class="anchor" aria-label="anchor" href="#curvilinear-grids"></a>
 </h2>
-<p>Curvilinear grids are grids whose grid lines are not straight. Rather than describing the curvature parametrically, the typical (HDF5 or NetCDF) files in which they are found have two raster layers with the longitudes and latitudes for every corresponding pixel of remaining layers.</p>
-<p>As an example, we will use a Sentinel 5P dataset available from package <code>starsdata</code>; this package can be installed with</p>
+<p>Curvilinear grids are grids whose grid lines are not straight. Rather
+than describing the curvature parametrically, the typical (HDF5 or
+NetCDF) files in which they are found have two raster layers with the
+longitudes and latitudes for every corresponding pixel of remaining
+layers.</p>
+<p>As an example, we will use a Sentinel 5P dataset available from
+package <code>starsdata</code>; this package can be installed with</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"starsdata"</span>, repos <span class="op">=</span> <span class="st">"http://pebesma.staff.ifgi.de"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span> </span></code></pre></div>
 <p>The dataset is found here:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">s5p</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"</span></span></code></pre></div>
-<p>We can construct the curvilinear <code>stars</code> raster by calling <code>read_stars</code> on the right sub-array:</p>
+<p>We can construct the curvilinear <code>stars</code> raster by calling
+<code>read_stars</code> on the right sub-array:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">subs</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_subdatasets</a></span><span class="op">(</span><span class="va">s5p</span><span class="op">)</span></span>
 <span><span class="va">subs</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">## [1] "NETCDF:\"/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc\":/PRODUCT/nitrogendioxide_tropospheric_column"</span></span></code></pre></div>
-<p>For this array, we can see the GDAL metadata under item <code>GEOLOCATION</code>:</p>
+<p>For this array, we can see the GDAL metadata under item
+<code>GEOLOCATION</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_metadata</a></span><span class="op">(</span><span class="va">subs</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span>, <span class="st">"GEOLOCATION"</span><span class="op">)</span></span>
 <span><span class="co">## $LINE_OFFSET</span></span>
@@ -362,7 +461,8 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "gdal_metadata"</span></span></code></pre></div>
-<p>which reveals where, in this dataset, the longitude and latitude arrays are kept.</p>
+<p>which reveals where, in this dataset, the longitude and latitude
+arrays are kept.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nit.c</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">subs</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> </span>
 <span><span class="co">## Warning in CPL_read_gdal(as.character(x), as.character(options),</span></span>
@@ -406,16 +506,14 @@
 <span><span class="co">##                                                  3rd Qu.         Max. NA's</span></span>
 <span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 3.629641e-05 0.0003924858  330</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to         offset delta  refsys point</span></span>
-<span><span class="co">## x       1 450             NA    NA  WGS 84    NA</span></span>
-<span><span class="co">## y       1 278             NA    NA  WGS 84    NA</span></span>
-<span><span class="co">## time    1   1 2018-07-17 UTC    NA POSIXct    NA</span></span>
-<span><span class="co">##                                      values x/y</span></span>
-<span><span class="co">## x    [450x278] -5.81066 [°],...,30.9468 [°] [x]</span></span>
-<span><span class="co">## y     [450x278] 28.3605 [°],...,51.4686 [°] [y]</span></span>
-<span><span class="co">## time                                   NULL    </span></span>
+<span><span class="co">##      from  to         offset  refsys                                 values x/y</span></span>
+<span><span class="co">## x       1 450             NA  WGS 84 [450x278] -5.81066 [°],...,30.9468 [°] [x]</span></span>
+<span><span class="co">## y       1 278             NA  WGS 84  [450x278] 28.3605 [°],...,51.4686 [°] [y]</span></span>
+<span><span class="co">## time    1   1 2018-07-17 UTC POSIXct                                   NULL    </span></span>
 <span><span class="co">## curvilinear grid</span></span></code></pre></div>
-<p>The curvilinear array has the actual arrays (raster layers, matrices) with longitude and latitude values read in its dimension table. We can plot this file:</p>
+<p>The curvilinear array has the actual arrays (raster layers, matrices)
+with longitude and latitude values read in its dimension table. We can
+plot this file:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>         pch <span class="op">=</span> <span class="fl">16</span>,  logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -442,14 +540,10 @@
 <span><span class="co">##                                                  3rd Qu.         Max. NA's</span></span>
 <span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 3.642568e-05 0.0001363282   32</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from to         offset delta  refsys point</span></span>
-<span><span class="co">## x       1 50             NA    NA  WGS 84    NA</span></span>
-<span><span class="co">## y       1 31             NA    NA  WGS 84    NA</span></span>
-<span><span class="co">## time    1  1 2018-07-17 UTC    NA POSIXct    NA</span></span>
-<span><span class="co">##                                    values x/y</span></span>
-<span><span class="co">## x    [50x31] -5.81066 [°],...,30.1405 [°] [x]</span></span>
-<span><span class="co">## y     [50x31] 28.7828 [°],...,51.4686 [°] [y]</span></span>
-<span><span class="co">## time                                 NULL    </span></span>
+<span><span class="co">##      from to         offset  refsys                               values x/y</span></span>
+<span><span class="co">## x       1 50             NA  WGS 84 [50x31] -5.81066 [°],...,30.1405 [°] [x]</span></span>
+<span><span class="co">## y       1 31             NA  WGS 84  [50x31] 28.7828 [°],...,51.4686 [°] [y]</span></span>
+<span><span class="co">## time    1  1 2018-07-17 UTC POSIXct                                 NULL    </span></span>
 <span><span class="co">## curvilinear grid</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c_ds</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>         pch <span class="op">=</span> <span class="fl">16</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -457,7 +551,8 @@
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
-<p>which doesn’t look nice, but plotting the cells as polygons looks better:</p>
+<p>which doesn’t look nice, but plotting the cells as polygons looks
+better:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c_ds</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>         border <span class="op">=</span> <span class="cn">NA</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
@@ -465,7 +560,8 @@
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
-<p>Another approach would be to warp the curvilinear grid to a regular grid, e.g. by</p>
+<p>Another approach would be to warp the curvilinear grid to a regular
+grid, e.g. by</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">w</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">nit.c</span>, crs <span class="op">=</span> <span class="fl">4326</span>, cellsize <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span>
 <span><span class="co">## Warning in transform_grid_grid(st_as_stars(src), st_dimensions(dest),</span></span>

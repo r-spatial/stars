@@ -182,26 +182,26 @@ setting this to the right value when <code>st_apply</code> gives an error.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Min.  1st Qu.   Median     Mean 3rd Qu. Max.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mean  25.5 53.33333 68.33333 68.91242      82  255</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span>
 <span class="r-in"><span><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Min.  1st Qu.   Median     Mean 3rd Qu. Max.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mean  25.5 53.33333 68.33333 68.91242      82  255</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from  to  offset delta                     refsys point x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span>
 <span class="r-in"><span><span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span>, <span class="va">mean</span><span class="op">)</span>   <span class="co"># mean of all pixels for each band</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           Min.  1st Qu.   Median     Mean  3rd Qu.     Max.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mean  59.23541 61.07112 65.96675 68.91242 76.25445 83.18266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from to offset delta refsys point values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> band    1  6     NA    NA     NA    NA   NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from to</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band    1  6</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="st">"band"</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># equivalent to the above</span></span></span>
 <span class="r-in"><span> <span class="fu">st_apply</span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">range</span><span class="op">)</span> <span class="co"># min and max band value for each pixel</span></span></span>

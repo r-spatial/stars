@@ -100,7 +100,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3. stars tidyverse methods</h1>
-                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
+                        <h4 data-toc-skip class="author">Edzer
+Pebesma</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars3.Rmd" class="external-link"><code>vignettes/stars3.Rmd</code></a></small>
@@ -110,8 +111,10 @@
 
     
     
-<p>This vignette shows how some of the tidyverse verbs can be used on <code>stars</code> objects.</p>
-<p>The <code>stars</code> and <code>tidyverse</code> packages are loaded by</p>
+<p>This vignette shows how some of the tidyverse verbs can be used on
+<code>stars</code> objects.</p>
+<p>The <code>stars</code> and <code>tidyverse</code> packages are loaded
+by</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">## Loading required package: abind</span></span>
@@ -144,8 +147,8 @@
 <span><span class="co">## [49] st_dimensions     st_dimensions&lt;-   st_downsample     st_extract       </span></span>
 <span><span class="co">## [53] st_geometry       st_interpolate_aw st_intersects     st_join          </span></span>
 <span><span class="co">## [57] st_mosaic         st_normalize      st_redimension    st_sample        </span></span>
-<span><span class="co">## [61] st_set_bbox       st_transform_proj st_transform      transmute        </span></span>
-<span><span class="co">## [65] write_stars      </span></span>
+<span><span class="co">## [61] st_set_bbox       st_transform_proj st_transform      time             </span></span>
+<span><span class="co">## [65] transmute         write_stars      </span></span>
 <span><span class="co">## see '?methods' for accessing help and source code</span></span></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -157,15 +160,16 @@
 <span><span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## L7_ETMs.tif     1      54     69 68.91242      86  255</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   6      NA    NA                         NA    NA</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="slice">
 <code>slice</code><a class="anchor" aria-label="anchor" href="#slice"></a>
 </h2>
-<p><code>slice</code> slices a sub-array out of the cube; this is done by specifying the dimension on which to act, and the slice number.</p>
+<p><code>slice</code> slices a sub-array out of the cube; this is done
+by specifying the dimension on which to act, and the slice number.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">band</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x6</span></span>
 <span><span class="va">x6</span></span>
@@ -174,16 +178,18 @@
 <span><span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## L7_ETMs.tif     1      32     60 59.97521      88  255</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span></code></pre></div>
-<p>It returns a lower-dimensional array if a single element is selected along the slice dimension.</p>
+<span><span class="co">##   from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span></code></pre></div>
+<p>It returns a lower-dimensional array if a single element is selected
+along the slice dimension.</p>
 </div>
 <div class="section level2">
 <h2 id="filter">
 <code>filter</code><a class="anchor" aria-label="anchor" href="#filter"></a>
 </h2>
-<p>Similar to <code>slice</code>, <code>filter</code> selects on dimensions but evaluates their values rather than their index: in</p>
+<p>Similar to <code>slice</code>, <code>filter</code> selects on
+dimensions but evaluates their values rather than their index: in</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">289000</span>, <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">291000</span>, <span class="va">band</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x7</span></span>
 <span><span class="va">x7</span></span>
@@ -192,12 +198,19 @@
 <span><span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## L7_ETMs.tif     5      54     70 71.79194      88  252</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1  70  289004  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   3       4     1                         NA    NA   NULL</span></span></code></pre></div>
-<p>the subarray is created based on the x <em>coordinate</em> values.</p>
-<p>Note that <code>filter</code> converts the object to a <code>tbl_cube</code>, and uses the <code>dplyr</code> <code>filter</code> method for <code>tbl_cube</code> objects. This has the limitation that <code>stars</code> objects with rectilinear, curvilinear or simple feature geometries cannot be handled. For such objects, using regular <code>[</code> selection or using <code>st_crop</code> may be an alternative.</p>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1  70  289004  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   3       4     1                         NA    NA</span></span></code></pre></div>
+<p>the subarray is created based on the x <em>coordinate</em>
+values.</p>
+<p>Note that <code>filter</code> converts the object to a
+<code>tbl_cube</code>, and uses the <code>dplyr</code>
+<code>filter</code> method for <code>tbl_cube</code> objects. This has
+the limitation that <code>stars</code> objects with rectilinear,
+curvilinear or simple feature geometries cannot be handled. For such
+objects, using regular <code>[</code> selection or using
+<code>st_crop</code> may be an alternative.</p>
 </div>
 <div class="section level2">
 <h2 id="pull">
@@ -225,10 +238,10 @@
 <span><span class="co">## L7_ETMs.tif     1      54     69  68.91242      86  255</span></span>
 <span><span class="co">## band2           2     108    138 137.82484     172  510</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   6      NA    NA                         NA    NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="select">
@@ -243,20 +256,26 @@
 <span><span class="co">##        Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## band2     2     108    138 137.8248     172  510</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   6      NA    NA                         NA    NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="geom_stars">
 <code>geom_stars</code><a class="anchor" aria-label="anchor" href="#geom_stars"></a>
 </h2>
-<p><code>geom_raster</code> is a <code>ggplot2</code> geom function that accepts <code>stars</code> objects as its <code>data</code> argument and</p>
+<p><code>geom_raster</code> is a <code>ggplot2</code> geom function that
+accepts <code>stars</code> objects as its <code>data</code> argument
+and</p>
 <ul>
-<li>sets up the raster or vector spatial coordinates as plot dimensions, and the first attribute as the fill variable</li>
-<li>allows for downsampling (without choosing a suitable downsampling level)</li>
-<li>chooses between using <code>geom_raster</code>, <code>geom_rect</code> and <code>geom_sf</code> depending on whether the geometry is regular, rectilinear or has vector geometries</li>
+<li>sets up the raster or vector spatial coordinates as plot dimensions,
+and the first attribute as the fill variable</li>
+<li>allows for downsampling (without choosing a suitable downsampling
+level)</li>
+<li>chooses between using <code>geom_raster</code>,
+<code>geom_rect</code> and <code>geom_sf</code> depending on whether the
+geometry is regular, rectilinear or has vector geometries</li>
 </ul>
 <p>An example use is</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">

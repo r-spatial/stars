@@ -100,7 +100,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>8. NetCDF Proxy Workflows</h1>
-                        <h4 data-toc-skip class="author">David Blodgett</h4>
+                        <h4 data-toc-skip class="author">David
+Blodgett</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars8.Rmd" class="external-link"><code>vignettes/stars8.Rmd</code></a></small>
@@ -110,8 +111,15 @@
 
     
     
-<p>NetCDF data sources are available via more <em>and</em> less granular files and/or OPeNDAP endpoints. This article demonstrates how <code>stars</code> enables discovery, access, and processing of NetCDF data across a wide range of such source-data organization schemes.</p>
-<p>We’ll start with some basics using datasets included with the <code>stars</code> installation. A call to <code><a href="../reference/read_ncdf.html">read_ncdf()</a></code>, for a dataset smaller than the default threshold, will just read in all the data. Below we read in and display the <code>reduced.nc</code> NetCDF file.</p>
+<p>NetCDF data sources are available via more <em>and</em> less granular
+files and/or OPeNDAP endpoints. This article demonstrates how
+<code>stars</code> enables discovery, access, and processing of NetCDF
+data across a wide range of such source-data organization schemes.</p>
+<p>We’ll start with some basics using datasets included with the
+<code>stars</code> installation. A call to <code><a href="../reference/read_ncdf.html">read_ncdf()</a></code>, for
+a dataset smaller than the default threshold, will just read in all the
+data. Below we read in and display the <code>reduced.nc</code> NetCDF
+file.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: abind</span></span>
@@ -136,12 +144,20 @@
 <span><span class="co">#&gt; err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span></span>
 <span><span class="co">#&gt; ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span></span>
 <span><span class="co">#&gt; dimension(s):</span></span>
-<span><span class="co">#&gt;      from  to offset delta  refsys point         values x/y</span></span>
-<span><span class="co">#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]</span></span>
-<span><span class="co">#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]</span></span>
-<span><span class="co">#&gt; zlev    1   1     NA    NA      NA    NA              0    </span></span>
-<span><span class="co">#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC</span></span></code></pre></div>
-<p>Let’s assume <code>reduced.nc</code> was 10 years of hourly data, rather than 1 time step. It would be over 10GB rather than about 130KB and we would not be able to just read it all into memory. In this case, we need a way to read the file’s metadata such that we could iterate over it in a way that meets the needs of our workflow objectives. This is where <code>proxy = TRUE</code> comes in. Below, we’ll lower the option that controls whether <code><a href="../reference/read_ncdf.html">read_ncdf()</a></code> defaults to proxy <em>and</em> use <code>proxy = TRUE</code> to show both ways of getting the same result.</p>
+<span><span class="co">#&gt;      from  to offset delta  refsys         values x/y</span></span>
+<span><span class="co">#&gt; lon     1 180     -1     2  WGS 84           NULL [x]</span></span>
+<span><span class="co">#&gt; lat     1  90    -90     2  WGS 84           NULL [y]</span></span>
+<span><span class="co">#&gt; zlev    1   1     NA    NA      NA              0    </span></span>
+<span><span class="co">#&gt; time    1   1     NA    NA POSIXct 1981-12-31 UTC</span></span></code></pre></div>
+<p>Let’s assume <code>reduced.nc</code> was 10 years of hourly data,
+rather than 1 time step. It would be over 10GB rather than about 130KB
+and we would not be able to just read it all into memory. In this case,
+we need a way to read the file’s metadata such that we could iterate
+over it in a way that meets the needs of our workflow objectives. This
+is where <code>proxy = TRUE</code> comes in. Below, we’ll lower the
+option that controls whether <code><a href="../reference/read_ncdf.html">read_ncdf()</a></code> defaults to proxy
+<em>and</em> use <code>proxy = TRUE</code> to show both ways of getting
+the same result.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old_options</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"stars.n_proxy"</span> <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">f</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -163,13 +179,21 @@
 <span><span class="co">#&gt; ice</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; dimension(s):</span></span>
-<span><span class="co">#&gt;      from  to offset delta  refsys point         values x/y</span></span>
-<span><span class="co">#&gt; lon     1 180     -1     2  WGS 84    NA           NULL [x]</span></span>
-<span><span class="co">#&gt; lat     1  90    -90     2  WGS 84    NA           NULL [y]</span></span>
-<span><span class="co">#&gt; zlev    1   1     NA    NA      NA    NA              0    </span></span>
-<span><span class="co">#&gt; time    1   1     NA    NA POSIXct    NA 1981-12-31 UTC</span></span>
+<span><span class="co">#&gt;      from  to offset delta  refsys         values x/y</span></span>
+<span><span class="co">#&gt; lon     1 180     -1     2  WGS 84           NULL [x]</span></span>
+<span><span class="co">#&gt; lat     1  90    -90     2  WGS 84           NULL [y]</span></span>
+<span><span class="co">#&gt; zlev    1   1     NA    NA      NA              0    </span></span>
+<span><span class="co">#&gt; time    1   1     NA    NA POSIXct 1981-12-31 UTC</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="va">old_options</span><span class="op">)</span></span></code></pre></div>
-<p>The above shows that we have a NetCDF sourced stars proxy derived from the <code>reduced.nc</code> file. We see it has four variables and their units are displayed. The normal <code>stars</code> <code>dimension(s)</code> are available and a <code>nc_request</code> object is also available. The <code>nc_request</code> object contains the information needed to make requests for data according to the dimensions of the NetCDF data source. With this information, we have what we need to request a chunk of data that is what we want and not too large.</p>
+<p>The above shows that we have a NetCDF sourced stars proxy derived
+from the <code>reduced.nc</code> file. We see it has four variables and
+their units are displayed. The normal <code>stars</code>
+<code>dimension(s)</code> are available and a <code>nc_request</code>
+object is also available. The <code>nc_request</code> object contains
+the information needed to make requests for data according to the
+dimensions of the NetCDF data source. With this information, we have
+what we need to request a chunk of data that is what we want and not too
+large.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">f</span>, </span>
 <span>                 var <span class="op">=</span> <span class="st">"sst"</span>, </span>
@@ -186,17 +210,25 @@
 <span><span class="co">#&gt;          Min. 1st Qu. Median     Mean 3rd Qu.  Max. NA's</span></span>
 <span><span class="co">#&gt; sst [°C] -1.8   -1.04     14 12.92722   25.13 29.81  757</span></span>
 <span><span class="co">#&gt; dimension(s):</span></span>
-<span><span class="co">#&gt;      from to offset delta  refsys point         values x/y</span></span>
-<span><span class="co">#&gt; lon     1 90    177     2  WGS 84    NA           NULL [x]</span></span>
-<span><span class="co">#&gt; lat     1 45     -2     2  WGS 84    NA           NULL [y]</span></span>
-<span><span class="co">#&gt; zlev    1  1     NA    NA      NA    NA              0    </span></span>
-<span><span class="co">#&gt; time    1  1     NA    NA POSIXct    NA 1981-12-31 UTC</span></span>
+<span><span class="co">#&gt;      from to offset delta  refsys         values x/y</span></span>
+<span><span class="co">#&gt; lon     1 90    177     2  WGS 84           NULL [x]</span></span>
+<span><span class="co">#&gt; lat     1 45     -2     2  WGS 84           NULL [y]</span></span>
+<span><span class="co">#&gt; zlev    1  1     NA    NA      NA              0    </span></span>
+<span><span class="co">#&gt; time    1  1     NA    NA POSIXct 1981-12-31 UTC</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars8_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>The ability to view NetCDF metadata so we can make well formed requests against the data is useful, but the real power of a proxy object is that we can use it in a “lazy evaluation” coding style. That is, we can do virtual operations on the object, like subsetting with another dataset, prior to actually accessing the data volume.</p>
+<p>The ability to view NetCDF metadata so we can make well formed
+requests against the data is useful, but the real power of a proxy
+object is that we can use it in a “lazy evaluation” coding style. That
+is, we can do virtual operations on the object, like subsetting with
+another dataset, prior to actually accessing the data volume.</p>
 <p>Lazy operations.</p>
-<p>There are two kinds of lazy operations possible with <code>stars_proxy</code> objects. Some can be applied to the <code>stars_proxy</code> object itself without accessing underlying data. Others must be composed as a chain of calls that will be applied when data is actually required.</p>
+<p>There are two kinds of lazy operations possible with
+<code>stars_proxy</code> objects. Some can be applied to the
+<code>stars_proxy</code> object itself without accessing underlying
+data. Others must be composed as a chain of calls that will be applied
+when data is actually required.</p>
 <p>Methods applied to a <code>stars_proxy</code> object:</p>
 <ul>
 <li>
@@ -204,15 +236,18 @@
 <li>
 <code>[[&lt;-</code> - stars_proxy method works</li>
 <li>
-<code>print</code> - unique method for nc_proxy to facilitate unique workflows</li>
+<code>print</code> - unique method for nc_proxy to facilitate unique
+workflows</li>
 <li>
 <code>dim</code> - stars_proxy method works</li>
 <li>
 <code>c</code> - stars_proxy method works</li>
 <li>
-<code>st_redimension</code> - Not sure what this entails but it might not make sense for nc_proxy.</li>
+<code>st_redimension</code> - Not sure what this entails but it
+might not make sense for nc_proxy.</li>
 <li>
-<code>st_mosaic</code> * Calls read_stars on assembled list. Not supported for now.</li>
+<code>st_mosaic</code> * Calls read_stars on assembled list. Not
+supported for now.</li>
 <li><code>st_set_bbox</code></li>
 </ul>
 <p>Methods that add a call to the <code>call_list</code>.</p>
@@ -238,11 +273,13 @@
 <li><code>rename</code></li>
 <li><code>pull</code></li>
 <li>
-<code>slice</code> * hyperslabbing for NetCDF could be as above?</li>
+<code>slice</code> * hyperslabbing for NetCDF could be as
+above?</li>
 <li><code>pull</code></li>
 <li><code>replace_na</code></li>
 </ul>
-<p>Methods that cause a <code>stars_proxy</code> object to be fetched and turned into a <code>stars</code> object.</p>
+<p>Methods that cause a <code>stars_proxy</code> object to be fetched
+and turned into a <code>stars</code> object.</p>
 <ul>
 <li><code>as.data.frame</code></li>
 <li><code>plot</code></li>

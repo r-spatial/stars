@@ -100,7 +100,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>1. introduction</h1>
-                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
+                        <h4 data-toc-skip class="author">Edzer
+Pebesma</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars1.Rmd" class="external-link"><code>vignettes/stars1.Rmd</code></a></small>
@@ -110,15 +111,26 @@
 
     
     
-<p>Package <code>stars</code> provides infrastructure for <em>data cubes</em>, array data with labeled dimensions, with emphasis on arrays where some of the dimensions relate to time and/or space.</p>
-<p>Spatial data cubes are arrays with one or more spatial dimensions. Raster data cubes have at least two spatial dimensions that form the raster tesselation. Vector data cubes have at least one spatial dimension that may for instance reflect a polygon tesselation, or a set of point locations. Conversions between the two (rasterization, polygonization) are provided. Vector data are represented by simple feature geometries (packages <code>sf</code>). Tidyverse methods are provided.</p>
+<p>Package <code>stars</code> provides infrastructure for <em>data
+cubes</em>, array data with labeled dimensions, with emphasis on arrays
+where some of the dimensions relate to time and/or space.</p>
+<p>Spatial data cubes are arrays with one or more spatial dimensions.
+Raster data cubes have at least two spatial dimensions that form the
+raster tesselation. Vector data cubes have at least one spatial
+dimension that may for instance reflect a polygon tesselation, or a set
+of point locations. Conversions between the two (rasterization,
+polygonization) are provided. Vector data are represented by simple
+feature geometries (packages <code>sf</code>). Tidyverse methods are
+provided.</p>
 <p>The <code>stars</code> package is loaded by</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">## Loading required package: abind</span></span>
 <span><span class="co">## Loading required package: sf</span></span>
 <span><span class="co">## Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1; sf_use_s2() is TRUE</span></span></code></pre></div>
-<p>Spatiotemporal arrays are stored in objects of class <code>stars</code>; methods for class <code>stars</code> currently available are</p>
+<p>Spatiotemporal arrays are stored in objects of class
+<code>stars</code>; methods for class <code>stars</code> currently
+available are</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="co">##  [1] [                 [[&lt;-              [&lt;-               %in%             </span></span>
@@ -135,19 +147,24 @@
 <span><span class="co">## [45] st_downsample     st_extract        st_geometry       st_interpolate_aw</span></span>
 <span><span class="co">## [49] st_intersects     st_join           st_mosaic         st_normalize     </span></span>
 <span><span class="co">## [53] st_redimension    st_sample         st_set_bbox       st_transform_proj</span></span>
-<span><span class="co">## [57] st_transform      write_stars      </span></span>
+<span><span class="co">## [57] st_transform      time              write_stars      </span></span>
 <span><span class="co">## see '?methods' for accessing help and source code</span></span></code></pre></div>
-<p>(tidyverse methods are only visible after loading package <code>tidyverse</code>).</p>
+<p>(tidyverse methods are only visible after loading package
+<code>tidyverse</code>).</p>
 <div class="section level2">
 <h2 id="reading-a-satellite-image">Reading a satellite image<a class="anchor" aria-label="anchor" href="#reading-a-satellite-image"></a>
 </h2>
-<p>We can read a satellite image through GDAL, e.g. from a GeoTIFF file in the package:</p>
+<p>We can read a satellite image through GDAL, e.g. from a GeoTIFF file
+in the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>We see that the image is geographically referenced (has coordinate values along axes), and that the object returned (<code>x</code>) has three dimensions called <code>x</code>, <code>y</code> and <code>band</code>, and has one attribute:</p>
+<p>We see that the image is geographically referenced (has coordinate
+values along axes), and that the object returned (<code>x</code>) has
+three dimensions called <code>x</code>, <code>y</code> and
+<code>band</code>, and has one attribute:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
@@ -155,11 +172,12 @@
 <span><span class="co">##              Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## L7_ETMs.tif     1      54     69 68.91242      86  255</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
-<p>Each dimension has a name; the meaning of the fields of a single dimension are:</p>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   6      NA    NA                         NA    NA</span></span></code></pre></div>
+<p>Each dimension has a name; the meaning of the fields of a single
+dimension are:</p>
 <table class="table">
 <colgroup>
 <col width="11%">
@@ -196,15 +214,32 @@
 </tr>
 <tr class="odd">
 <td>values</td>
-<td>the sequence of values for this dimension (e.g., geometries), if irregular</td>
+<td>the sequence of values for this dimension (e.g., geometries), if
+irregular</td>
 </tr>
 </tbody>
 </table>
-<p>This means that for an index i (starting at <span class="math inline">\(i=1\)</span>) along a certain dimension, the corresponding dimension value (coordinate, time) is <span class="math inline">\(\mbox{offset} + (i-1) \times \mbox{delta}\)</span>. This value then refers to the start (edge) of the cell or interval; in order to get the interval middle or cell centre, one needs to add half an offset.</p>
-<p>Dimension <code>band</code> is a simple sequence from 1 to 6. Since bands refer to colors, one could put their wavelength values in the <code>values</code> field.</p>
-<p>For this particular dataset (and most other raster datasets), we see that offset for dimension <code>y</code> is negative: this means that consecutive array values have decreasing <span class="math inline">\(y\)</span> values: cell indexes increase from top to bottom, in the direction opposite to the <span class="math inline">\(y\)</span> axis.</p>
-<p><code>read_stars</code> reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single <code>stars</code> array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.</p>
-<p>The data structure <code>stars</code> is a generalisation of the <code>tbl_cube</code> found in <code>cubelyr</code>; we can convert to that by</p>
+<p>This means that for an index i (starting at <span class="math inline">\(i=1\)</span>) along a certain dimension, the
+corresponding dimension value (coordinate, time) is <span class="math inline">\(\mbox{offset} + (i-1) \times
+\mbox{delta}\)</span>. This value then refers to the start (edge) of the
+cell or interval; in order to get the interval middle or cell centre,
+one needs to add half an offset.</p>
+<p>Dimension <code>band</code> is a simple sequence from 1 to 6. Since
+bands refer to colors, one could put their wavelength values in the
+<code>values</code> field.</p>
+<p>For this particular dataset (and most other raster datasets), we see
+that offset for dimension <code>y</code> is negative: this means that
+consecutive array values have decreasing <span class="math inline">\(y\)</span> values: cell indexes increase from top
+to bottom, in the direction opposite to the <span class="math inline">\(y\)</span> axis.</p>
+<p><code>read_stars</code> reads all bands from a raster dataset, or
+optionally a subset of raster datasets, into a single <code>stars</code>
+array structure. While doing so, raster values (often UINT8 or UINT16)
+are converted to double (numeric) values, and scaled back to their
+original values if needed if the file encodes the scaling
+parameters.</p>
+<p>The data structure <code>stars</code> is a generalisation of the
+<code>tbl_cube</code> found in <code>cubelyr</code>; we can convert to
+that by</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hadley/cubelyr" class="external-link">cubelyr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -213,7 +248,8 @@
 <span><span class="co">## D: y [dbl, 352]</span></span>
 <span><span class="co">## D: band [int, 6]</span></span>
 <span><span class="co">## M: L7_ETMs.tif [dbl[,352,6]]</span></span></code></pre></div>
-<p>but this will cause a loss of certain properties (cell size, reference system, vector geometries)</p>
+<p>but this will cause a loss of certain properties (cell size,
+reference system, vector geometries)</p>
 <div class="section level3">
 <h3 id="switching-attributes-to-dimensions-and-back">Switching attributes to dimensions and back<a class="anchor" aria-label="anchor" href="#switching-attributes-to-dimensions-and-back"></a>
 </h3>
@@ -229,9 +265,9 @@
 <span><span class="co">## X5     1      63     89 83.18266     112  255</span></span>
 <span><span class="co">## X6     1      32     60 59.97521      88  255</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
+<span><span class="co">##   from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
 <span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
@@ -246,7 +282,10 @@
 <span><span class="co">## x          [x]</span></span>
 <span><span class="co">## y          [y]</span></span>
 <span><span class="co">## attributes</span></span></code></pre></div>
-<p>We see that the newly created dimension lost its name, and the single attribute got a default name. We can set attribute names with <code>setNames</code>, and dimension names and values with <code>st_set_dimensions</code>:</p>
+<p>We see that the newly created dimension lost its name, and the single
+attribute got a default name. We can set attribute names with
+<code>setNames</code>, and dimension names and values with
+<code>st_set_dimensions</code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="va">x.spl</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -269,8 +308,12 @@
 <div class="section level3">
 <h3 id="subsetting">Subsetting<a class="anchor" aria-label="anchor" href="#subsetting"></a>
 </h3>
-<p>Besides the <code>tidyverse</code> subsetting and selection operators explained in <a href="stars3.html">this vignette</a>, we can also use <code>[</code> and <code>[[</code>.</p>
-<p>Since <code>stars</code> objects are a list of <code>array</code>s with a metadata table describing dimensions, list extraction (and assignment) works as expected:</p>
+<p>Besides the <code>tidyverse</code> subsetting and selection operators
+explained in <a href="stars3.html">this vignette</a>, we can also use
+<code>[</code> and <code>[[</code>.</p>
+<p>Since <code>stars</code> objects are a list of <code>array</code>s
+with a metadata table describing dimensions, list extraction (and
+assignment) works as expected:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">x</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">## [1] "array"</span></span>
@@ -285,12 +328,14 @@
 <span><span class="co">## L7_ETMs.tif     1      54     69  68.91242      86  255</span></span>
 <span><span class="co">## two             2     108    138 137.82484     172  510</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    1   6      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
-<p>At this level, we can work with <code>array</code> objects directly.</p>
-<p>The <code>stars</code> subset operator <code>[</code> works a bit different: its</p>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    1   6      NA    NA                         NA    NA</span></span></code></pre></div>
+<p>At this level, we can work with <code>array</code> objects
+directly.</p>
+<p>The <code>stars</code> subset operator <code>[</code> works a bit
+different: its</p>
 <ul>
 <li>first argument selects attributes</li>
 <li>second argument selects the first dimension</li>
@@ -304,12 +349,15 @@
 <span><span class="co">##      Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## two    36     100    116 119.7326     136  470</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to  offset delta                     refsys point values x/y</span></span>
-<span><span class="co">## x       1  10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [x]</span></span>
-<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE   NULL [y]</span></span>
-<span><span class="co">## band    2   4      NA    NA                         NA    NA   NULL</span></span></code></pre></div>
-<p>selects the second attribute, the first 10 columns (x-coordinate), all rows, and bands 2-4.</p>
-<p>Alternatively, when <code>[</code> is given a single argument of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, <code>[</code> will work as a crop operator:</p>
+<span><span class="co">##      from  to  offset delta                     refsys point x/y</span></span>
+<span><span class="co">## x       1  10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span></span>
+<span><span class="co">## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span></span>
+<span><span class="co">## band    2   4      NA    NA                         NA    NA</span></span></code></pre></div>
+<p>selects the second attribute, the first 10 columns (x-coordinate),
+all rows, and bands 2-4.</p>
+<p>Alternatively, when <code>[</code> is given a single argument of
+class <code>sf</code>, <code>sfc</code> or <code>bbox</code>,
+<code>[</code> will work as a crop operator:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">circle</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">293749.5</span>, <span class="fl">9115745</span><span class="op">)</span><span class="op">)</span>, <span class="fl">400</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">circle</span><span class="op">]</span><span class="op">[</span>, , , <span class="fl">1</span><span class="op">]</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -319,9 +367,13 @@
 <div class="section level3">
 <h3 id="overviews">Overviews<a class="anchor" aria-label="anchor" href="#overviews"></a>
 </h3>
-<p>We can read rasters at a lower resolution when they contain so-called overviews. For this GeoTIFF file, they were created with the <code>gdaladdo</code> utility, in particular</p>
+<p>We can read rasters at a lower resolution when they contain so-called
+overviews. For this GeoTIFF file, they were created with the
+<code>gdaladdo</code> utility, in particular</p>
 <pre><code>gdaladdo -r average L7_ETMs.tif  2 4 8 16</code></pre>
-<p>which adds coarse resolution versions by using the <em>average</em> resampling method to compute values based on blocks of pixels. These can be read by</p>
+<p>which adds coarse resolution versions by using the <em>average</em>
+resampling method to compute values based on blocks of pixels. These can
+be read by</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OVERVIEW_LEVEL=1"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OVERVIEW_LEVEL=2"</span><span class="op">)</span><span class="op">)</span></span>
@@ -338,7 +390,8 @@
 <div class="section level2">
 <h2 id="reading-a-raster-time-series-netcdf">Reading a raster time series: NetCDF<a class="anchor" aria-label="anchor" href="#reading-a-raster-time-series-netcdf"></a>
 </h2>
-<p>Another example is when we read raster time series model outputs in a NetCDF file, e.g. by</p>
+<p>Another example is when we read raster time series model outputs in a
+NetCDF file, e.g. by</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/bcsd_obs_1999.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">w</span></span>
@@ -352,16 +405,18 @@
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from to offset  delta  refsys point                    values x/y</span></span>
-<span><span class="co">## x       1 81    -85  0.125      NA    NA                      NULL [x]</span></span>
-<span><span class="co">## y       1 33 37.125 -0.125      NA    NA                      NULL [y]</span></span>
-<span><span class="co">## time    1 12     NA     NA POSIXct    NA 1999-01-31,...,1999-12-31</span></span></code></pre></div>
+<span><span class="co">##      from to offset  delta  refsys                    values x/y</span></span>
+<span><span class="co">## x       1 81    -85  0.125      NA                      NULL [x]</span></span>
+<span><span class="co">## y       1 33 37.125 -0.125      NA                      NULL [y]</span></span>
+<span><span class="co">## time    1 12     NA     NA POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
 <p>For this dataset we can see that</p>
 <ul>
-<li>variables have units associated (and a wrong unit, <code>C</code> is assigned to temperature)</li>
+<li>variables have units associated (and a wrong unit, <code>C</code> is
+assigned to temperature)</li>
 <li>time is now a dimension, with proper units and time steps</li>
 </ul>
-<p>Alternatively, this dataset can be read using <code>read_ncdf</code>, as in</p>
+<p>Alternatively, this dataset can be read using <code>read_ncdf</code>,
+as in</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/bcsd_obs_1999.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -378,16 +433,24 @@
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##           from to offset delta  refsys point                    values x/y</span></span>
-<span><span class="co">## longitude    1 81    -85 0.125  WGS 84    NA                      NULL [x]</span></span>
-<span><span class="co">## latitude     1 33     33 0.125  WGS 84    NA                      NULL [y]</span></span>
-<span><span class="co">## time         1 12     NA    NA POSIXct    NA 1999-01-31,...,1999-12-31</span></span></code></pre></div>
-<p>The difference between <code>read_ncdf</code> and <code>read_stars</code> for NetCDF files is that the former uses package RNetCDF to directly read the NetCDF file, where the latter uses the GDAL driver for NetCDF files.</p>
+<span><span class="co">##           from to offset delta  refsys                    values x/y</span></span>
+<span><span class="co">## longitude    1 81    -85 0.125  WGS 84                      NULL [x]</span></span>
+<span><span class="co">## latitude     1 33     33 0.125  WGS 84                      NULL [y]</span></span>
+<span><span class="co">## time         1 12     NA    NA POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
+<p>The difference between <code>read_ncdf</code> and
+<code>read_stars</code> for NetCDF files is that the former uses package
+RNetCDF to directly read the NetCDF file, where the latter uses the GDAL
+driver for NetCDF files.</p>
 <div class="section level3">
 <h3 id="reading-datasets-from-multiple-files">Reading datasets from multiple files<a class="anchor" aria-label="anchor" href="#reading-datasets-from-multiple-files"></a>
 </h3>
-<p>Model data are often spread across many files. An example of a 0.25 degree grid, global daily sea surface temperature product is found <a href="https://psl.noaa.gov/data/gridded/data.noaa.oisst.v2.highres.html" class="external-link">here</a>; the subset from 1981 used below was downloaded from a NOAA ftp site that is no longer available in this form. (ftp site used to be eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).</p>
-<p>We read the data by giving <code>read_stars</code> a vector with character names:</p>
+<p>Model data are often spread across many files. An example of a 0.25
+degree grid, global daily sea surface temperature product is found <a href="https://psl.noaa.gov/data/gridded/data.noaa.oisst.v2.highres.html" class="external-link">here</a>;
+the subset from 1981 used below was downloaded from a NOAA ftp site that
+is no longer available in this form. (ftp site used to be
+eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).</p>
+<p>We read the data by giving <code>read_stars</code> a vector with
+character names:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span><span class="st">"avhrr-only-v2.19810901.nc"</span>,</span>
@@ -412,12 +475,14 @@
 <span><span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span></span>
 <span><span class="co">## ice [percent]  0.01    0.73   0.83  0.7657695    0.87 1.00 27377</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from   to         offset  delta  refsys point values x/y</span></span>
-<span><span class="co">## x       1 1440              0   0.25      NA    NA   NULL [x]</span></span>
-<span><span class="co">## y       1  720             90  -0.25      NA    NA   NULL [y]</span></span>
-<span><span class="co">## zlev    1    1          0 [m]     NA      NA    NA   NULL    </span></span>
-<span><span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct    NA   NULL</span></span></code></pre></div>
-<p>Next, we select sea surface temperature (<code>sst</code>), and drop the singular <code>zlev</code> (depth) dimension using <code>adrop</code>:</p>
+<span><span class="co">##      from   to         offset  delta  refsys x/y</span></span>
+<span><span class="co">## x       1 1440              0   0.25      NA [x]</span></span>
+<span><span class="co">## y       1  720             90  -0.25      NA [y]</span></span>
+<span><span class="co">## zlev    1    1          0 [m]     NA      NA    </span></span>
+<span><span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct</span></span></code></pre></div>
+<p>Next, we select sea surface temperature (<code>sst</code>), and drop
+the singular <code>zlev</code> (depth) dimension using
+<code>adrop</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">## </span></span>
@@ -430,7 +495,9 @@
 <span><span class="co">##     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">abind</span><span class="op">)</span></span>
 <span><span class="va">z</span> <span class="op">&lt;-</span> <span class="va">y</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sst</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html" class="external-link">adrop</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>We can now graph the sea surface temperature (SST) using <code>ggplot</code>, which needs data in a long table form, and without units:</p>
+<p>We can now graph the sea surface temperature (SST) using
+<code>ggplot</code>, which needs data in a long table form, and without
+units:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># convert POSIXct time to character, to please ggplot's facet_wrap()</span></span>
 <span><span class="va">z1</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_dimensions.html">st_set_dimensions</a></span><span class="op">(</span><span class="va">z</span>, <span class="fl">3</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">z</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -452,15 +519,21 @@
 <div class="section level2">
 <h2 id="writing-stars-objects-to-disk">Writing stars objects to disk<a class="anchor" aria-label="anchor" href="#writing-stars-objects-to-disk"></a>
 </h2>
-<p>We can write a stars object to disk by using <code>write_stars</code>; this used the GDAL write engine. Writing NetCDF files without going through the GDAL interface is currently not supported. <code>write_stars</code> currently writes only a single attribute:</p>
+<p>We can write a stars object to disk by using
+<code>write_stars</code>; this used the GDAL write engine. Writing
+NetCDF files without going through the GDAL interface is currently not
+supported. <code>write_stars</code> currently writes only a single
+attribute:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/write_stars.html">write_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/abind/man/adrop.html" class="external-link">adrop</a></span><span class="op">(</span><span class="va">y</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, <span class="st">"sst.tif"</span><span class="op">)</span></span></code></pre></div>
-<p>See the explanation of <code>merge</code> above to see how multiple attributes can be merged (folded) into a dimension.</p>
+<p>See the explanation of <code>merge</code> above to see how multiple
+attributes can be merged (folded) into a dimension.</p>
 </div>
 <div class="section level2">
 <h2 id="cropping-a-rasters-extent">Cropping a raster’s extent<a class="anchor" aria-label="anchor" href="#cropping-a-rasters-extent"></a>
 </h2>
-<p>Using a curvilinear grid, taken from the example of <code>read_ncdf</code>:</p>
+<p>Using a curvilinear grid, taken from the example of
+<code>read_ncdf</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prec_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/test_stageiv_xyt.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">prec_file</span>, curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span><span class="op">)</span></span>
@@ -491,16 +564,27 @@
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">prec_slice</span><span class="op">[</span><span class="va">nc</span><span class="op">]</span>, border <span class="op">=</span> <span class="cn">NA</span>, breaks <span class="op">=</span> <span class="fu">qu_0_omit</span><span class="op">(</span><span class="va">prec_slice</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, col <span class="op">=</span> <span class="cn">NA</span>, border <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars1_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
-<p>The selection <code>prec_slice[nc]</code> essentially calls <code>st_crop(prec_slice, nc)</code> to get a cropped selection. What happened here is that all cells not intersecting with North Carolina (sea) are set to <code>NA</code> values. For regular grids, the extent of the resulting <code>stars</code> object is also be reduced (cropped) by default; this can be controlled with the <code>crop</code> parameter to <code>st_crop</code> and <code>[.stars</code>.</p>
+<p>The selection <code>prec_slice[nc]</code> essentially calls
+<code>st_crop(prec_slice, nc)</code> to get a cropped selection. What
+happened here is that all cells not intersecting with North Carolina
+(sea) are set to <code>NA</code> values. For regular grids, the extent
+of the resulting <code>stars</code> object is also be reduced (cropped)
+by default; this can be controlled with the <code>crop</code> parameter
+to <code>st_crop</code> and <code>[.stars</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="vector-data-cube-example">Vector data cube example<a class="anchor" aria-label="anchor" href="#vector-data-cube-example"></a>
 </h2>
-<p>Like <code>tbl_cube</code>, <code>stars</code> arrays have no limits to the number of dimensions they handle. An example is the origin-destination (OD) matrix, by time and travel mode.</p>
+<p>Like <code>tbl_cube</code>, <code>stars</code> arrays have no limits
+to the number of dimensions they handle. An example is the
+origin-destination (OD) matrix, by time and travel mode.</p>
 <div class="section level3">
 <h3 id="od-space-x-space-x-travel-mode-x-time-x-time">OD: space x space x travel mode x time x time<a class="anchor" aria-label="anchor" href="#od-space-x-space-x-travel-mode-x-time-x-time"></a>
 </h3>
-<p>We create a 5-dimensional matrix of traffic between regions, by day, by time of day, and by travel mode. Having day and time of day each as dimension is an advantage when we want to compute patterns over the day, for a certain period.</p>
+<p>We create a 5-dimensional matrix of traffic between regions, by day,
+by time of day, and by travel mode. Having day and time of day each as
+dimension is an advantage when we want to compute patterns over the day,
+for a certain period.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co">## Reading layer `nc.gpkg' from data source </span></span>
@@ -526,7 +610,7 @@
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
 <span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 9.99222      12   27</span></span>
+<span><span class="co">## traffic     0       8     10 9.99998      12   26</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
@@ -540,16 +624,21 @@
 <span><span class="co">## mode             NA FALSE</span></span>
 <span><span class="co">## day         udunits FALSE</span></span>
 <span><span class="co">## hour        udunits FALSE</span></span>
-<span><span class="co">##                                                                        values</span></span>
-<span><span class="co">## origin      MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...</span></span>
-<span><span class="co">## destination MULTIPOLYGON (((-81.47276 3...,...,MULTIPOLYGON (((-78.65572 3...</span></span>
-<span><span class="co">## mode                                                         car , bike, foot</span></span>
-<span><span class="co">## day                                                                      NULL</span></span>
-<span><span class="co">## hour                                                                     NULL</span></span></code></pre></div>
-<p>This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a <code>tbl_cube</code>, the simple feature geometry dimensions need to be replaced by indexes:</p>
+<span><span class="co">##                                                                    values</span></span>
+<span><span class="co">## origin      MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span></span>
+<span><span class="co">## destination MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span></span>
+<span><span class="co">## mode                                                     car , bike, foot</span></span>
+<span><span class="co">## day                                                                  NULL</span></span>
+<span><span class="co">## hour                                                                 NULL</span></span></code></pre></div>
+<p>This array contains the simple feature geometries of origin and
+destination so that we can directly plot every slice without additional
+table joins. If we want to represent such an array as a
+<code>tbl_cube</code>, the simple feature geometry dimensions need to be
+replaced by indexes:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">st</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The following demonstrates how <code>dplyr</code> can filter bike travel, and compute mean bike traffic by hour of day:</p>
+<p>The following demonstrates how <code>dplyr</code> can filter bike
+travel, and compute mean bike traffic by hour of day:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">st</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -565,8 +654,12 @@
 <div class="section level2">
 <h2 id="extracting-at-point-locations-aggregating-over-polygons">Extracting at point locations, aggregating over polygons<a class="anchor" aria-label="anchor" href="#extracting-at-point-locations-aggregating-over-polygons"></a>
 </h2>
-<p>Data cube values at point location can be extracted by <code>st_extract</code>, an example is found in <a href="stars7.html">vignette 7</a></p>
-<p>Aggregates, such as mean, maximum or modal values can be obtained by <code>aggregate</code>. In this example we use a categorical raster, and try to find the modal (most frequent) class within two circular polygons:</p>
+<p>Data cube values at point location can be extracted by
+<code>st_extract</code>, an example is found in <a href="stars7.html">vignette 7</a></p>
+<p>Aggregates, such as mean, maximum or modal values can be obtained by
+<code>aggregate</code>. In this example we use a categorical raster, and
+try to find the modal (most frequent) class within two circular
+polygons:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/lc.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">s</span>, proxy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -576,10 +669,14 @@
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, key.pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pol1</span>, <span class="va">pol2</span><span class="op">)</span>, col <span class="op">=</span> <span class="cn">NA</span>, border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'yellow'</span>, <span class="st">'green'</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>To find the modal value, we need a function that gives back the label corresponding to the class which is most frequent, using <code>table</code>:</p>
+<p>To find the modal value, we need a function that gives back the label
+corresponding to the class which is most frequent, using
+<code>table</code>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> <span class="va">tb</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tb</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">tb</span><span class="op">)</span><span class="op">]</span> <span class="op">}</span></span></code></pre></div>
-<p>We can then call <code>aggregate</code> on the raster map, and the set of the two circular polygons <code>pol1</code> and <code>pol2</code>, and pass the function <code>f</code>:</p>
+<p>We can then call <code>aggregate</code> on the raster map, and the
+set of the two circular polygons <code>pol1</code> and
+<code>pol2</code>, and pass the function <code>f</code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/aggregate.stars.html">aggregate</a></span><span class="op">(</span><span class="va">r</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pol1</span>, <span class="va">pol2</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">## Simple feature collection with 2 features and 1 field</span></span>

@@ -97,6 +97,9 @@
     <loc>/reference/predict.stars.html</loc>
   </url>
   <url>
+    <loc>/reference/print_stars.html</loc>
+  </url>
+  <url>
     <loc>/reference/read_ncdf.html</loc>
   </url>
   <url>
@@ -116,6 +119,9 @@
   </url>
   <url>
     <loc>/reference/st_as_stars.html</loc>
+  </url>
+  <url>
+    <loc>/reference/st_cells.html</loc>
   </url>
   <url>
     <loc>/reference/st_contour.html</loc>

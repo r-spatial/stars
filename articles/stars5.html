@@ -99,8 +99,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>5. vector-raster conversions, reprojection, warping</h1>
-                        <h4 data-toc-skip class="author">Edzer Pebesma</h4>
+      <h1 data-toc-skip>5. vector-raster conversions, reprojection,
+warping</h1>
+                        <h4 data-toc-skip class="author">Edzer
+Pebesma</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/vignettes/stars5.Rmd" class="external-link"><code>vignettes/stars5.Rmd</code></a></small>
@@ -110,7 +112,8 @@
 
     
     
-<p>This vignette shows how <code>stars</code> object can be moved from vector and raster representations.</p>
+<p>This vignette shows how <code>stars</code> object can be moved from
+vector and raster representations.</p>
 <div class="section level2">
 <h2 id="rasterizing-an-sf-vector-object">Rasterizing an <code>sf</code> vector object<a class="anchor" aria-label="anchor" href="#rasterizing-an-sf-vector-object"></a>
 </h2>
@@ -127,18 +130,27 @@
 <span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
 <span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4808</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from  to offset delta                 refsys point values x/y</span></span>
-<span><span class="co">## x    1 162 123829  5000 NAD83 / North Carolina FALSE   NULL [x]</span></span>
-<span><span class="co">## y    1  61 318260 -5000 NAD83 / North Carolina FALSE   NULL [y]</span></span>
+<span><span class="co">##   from  to offset delta                 refsys point x/y</span></span>
+<span><span class="co">## x    1 162 123829  5000 NAD83 / North Carolina FALSE [x]</span></span>
+<span><span class="co">## y    1  61 318260 -5000 NAD83 / North Carolina FALSE [y]</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.st</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
-<p>The algorithm used is the GDAL <code>rasterize</code> utility, all options of this utility can be passed to <code>st_rasterize</code>. The geometry of the final raster can be controlled by passing a target bounding box and either the raster dimensions <code>nx</code> and <code>ny</code>, or pixel size by the <code>dx</code> and <code>dy</code> parameters.</p>
+<p>The algorithm used is the GDAL <code>rasterize</code> utility, all
+options of this utility can be passed to <code>st_rasterize</code>. The
+geometry of the final raster can be controlled by passing a target
+bounding box and either the raster dimensions <code>nx</code> and
+<code>ny</code>, or pixel size by the <code>dx</code> and
+<code>dy</code> parameters.</p>
 </div>
 <div class="section level2">
 <h2 id="vectorizing-a-raster-object-to-an-sf-object">Vectorizing a raster object to an <code>sf</code> object<a class="anchor" aria-label="anchor" href="#vectorizing-a-raster-object-to-an-sf-object"></a>
 </h2>
-<p><code>stars</code> objects can be converted into an <code>sf</code> object using <code>st_as_sf</code>. It has a number of options, depending on whether pixels represent the point value at the pixel center, or small square polygons with a single value.</p>
-<p>We will work again with the landsat-7 6-band image, but will select the first band and round the values:</p>
+<p><code>stars</code> objects can be converted into an <code>sf</code>
+object using <code>st_as_sf</code>. It has a number of options,
+depending on whether pixels represent the point value at the pixel
+center, or small square polygons with a single value.</p>
+<p>We will work again with the landsat-7 6-band image, but will select
+the first band and round the values:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">50</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
@@ -146,7 +158,10 @@
 <div class="section level3">
 <h3 id="polygonizing">Polygonizing<a class="anchor" aria-label="anchor" href="#polygonizing"></a>
 </h3>
-<p>In case raster cells reflect point values and we want to get a vector representation of the whole field, we can draw contour lines and export the contour sets (only available when the GDAL version is at least 2.4.0):</p>
+<p>In case raster cells reflect point values and we want to get a vector
+representation of the whole field, we can draw contour lines and export
+the contour sets (only available when the GDAL version is at least
+2.4.0):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l</span> <span class="op">=</span>  <span class="fu"><a href="../reference/st_contour.html">st_contour</a></span><span class="op">(</span><span class="va">x</span>, contour_lines <span class="op">=</span> <span class="cn">TRUE</span>, breaks <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">l</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, pal <span class="op">=</span> <span class="va">sf.colors</span>, lwd <span class="op">=</span> <span class="fl">2</span>, key.length <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
@@ -155,7 +170,9 @@
 <div class="section level3">
 <h3 id="exporting-to-points">Exporting to points<a class="anchor" aria-label="anchor" href="#exporting-to-points"></a>
 </h3>
-<p>Alternatively, we can simply export all the pixels as points, and get them either as a wide table with all bands per point, and no replicated <code>POINT</code> geometries:</p>
+<p>Alternatively, we can simply export all the pixels as points, and get
+them either as a wide table with all bands per point, and no replicated
+<code>POINT</code> geometries:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">## Simple feature collection with 2500 features and 2 fields</span></span>
@@ -175,7 +192,8 @@
 <span><span class="co">## 8              12             10   POINT (288990 9120747)</span></span>
 <span><span class="co">## 9              13             10 POINT (289018.5 9120747)</span></span>
 <span><span class="co">## 10             13             10   POINT (289047 9120747)</span></span></code></pre></div>
-<p>or as a long table with a single attribute and all points replicated:</p>
+<p>or as a long table with a single attribute and all points
+replicated:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span>, long <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">## Simple feature collection with 5000 features and 2 fields</span></span>
@@ -195,12 +213,14 @@
 <span><span class="co">## 8     1          12   POINT (288990 9120747)</span></span>
 <span><span class="co">## 9     1          13 POINT (289018.5 9120747)</span></span>
 <span><span class="co">## 10    1          13   POINT (289047 9120747)</span></span></code></pre></div>
-<p>as we can see, an additional attribute <code>band</code> now indicates which band is concerned.</p>
+<p>as we can see, an additional attribute <code>band</code> now
+indicates which band is concerned.</p>
 </div>
 <div class="section level3">
 <h3 id="exporting-to-polygons">Exporting to polygons<a class="anchor" aria-label="anchor" href="#exporting-to-polygons"></a>
 </h3>
-<p>Alternatively, we can export to polygons and either get a single polygon per pixel, as in</p>
+<p>Alternatively, we can export to polygons and either get a single
+polygon per pixel, as in</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">## Simple feature collection with 2500 features and 2 fields</span></span>
@@ -223,17 +243,24 @@
 <p>or merge polygons that have identical pixel values;</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, merge <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>When plotted with boundaries, we see the resolved boundaries of areas with the same pixel value:</p>
+<p>When plotted with boundaries, we see the resolved boundaries of areas
+with the same pixel value:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>A further option <code>connect8</code> can be set to <code>TRUE</code> to use 8 connectedness, rather than the default 4 connectedness algorithm. In both cases, the polygons returned will often be invalid according to the simple feature standard, but can be made valid using <code>lwgeom::st_make_valid</code>.</p>
+<p>A further option <code>connect8</code> can be set to
+<code>TRUE</code> to use 8 connectedness, rather than the default 4
+connectedness algorithm. In both cases, the polygons returned will often
+be invalid according to the simple feature standard, but can be made
+valid using <code>lwgeom::st_make_valid</code>.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code> objects<a class="anchor" aria-label="anchor" href="#switching-between-vector-and-raster-in-stars-objects"></a>
+<h2 id="switching-between-vector-and-raster-in-stars-objects">Switching between vector and raster in <code>stars</code>
+objects<a class="anchor" aria-label="anchor" href="#switching-between-vector-and-raster-in-stars-objects"></a>
 </h2>
-<p>We can convert a raster dimension to a vector dimension while keeping other dimensions as they are in a <code>stars</code> object by</p>
+<p>We can convert a raster dimension to a vector dimension while keeping
+other dimensions as they are in a <code>stars</code> object by</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x.sf</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_xy2sfc.html">st_xy2sfc</a></span><span class="op">(</span><span class="va">x</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">x.sf</span></span>
@@ -242,18 +269,27 @@
 <span><span class="co">##              Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
 <span><span class="co">## L7_ETMs.tif     7       9     11 11.2548      12   28</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##          from   to offset delta                     refsys point</span></span>
-<span><span class="co">## geometry    1 2500     NA    NA SIRGAS 2000 / UTM zone 25S  TRUE</span></span>
-<span><span class="co">## band        1    2     NA    NA                         NA    NA</span></span>
+<span><span class="co">##          from   to                     refsys point</span></span>
+<span><span class="co">## geometry    1 2500 SIRGAS 2000 / UTM zone 25S  TRUE</span></span>
+<span><span class="co">## band        1    2                         NA    NA</span></span>
 <span><span class="co">##                                                       values</span></span>
 <span><span class="co">## geometry POINT (288790.5 9120747),...,POINT (290187 9119350)</span></span>
 <span><span class="co">## band                                                    NULL</span></span></code></pre></div>
-<p>which also requires setting the <code>as_points</code> arguments as in <code>st_as_sf</code>.</p>
+<p>which also requires setting the <code>as_points</code> arguments as
+in <code>st_as_sf</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="reprojecting-a-raster">Reprojecting a raster<a class="anchor" aria-label="anchor" href="#reprojecting-a-raster"></a>
 </h2>
-<p>If we accept that curvilinear rasters are rasters too, and that regular and rectilinear grids are special cases of curvilinear grids, reprojecting a raster is no longer a “problem”, it just recomputes new coordinates for every raster cell, and generally results in a curvilinear grid (that sometimes can be brought back to a regular or rectilinear grid). If curvilinear grid cells are represented by coordinates of the cell center, the actual shape of a grid cell gets lost, and this may be a larger effect if grid cells are large or if the transformation is stronger non-linear.</p>
+<p>If we accept that curvilinear rasters are rasters too, and that
+regular and rectilinear grids are special cases of curvilinear grids,
+reprojecting a raster is no longer a “problem”, it just recomputes new
+coordinates for every raster cell, and generally results in a
+curvilinear grid (that sometimes can be brought back to a regular or
+rectilinear grid). If curvilinear grid cells are represented by
+coordinates of the cell center, the actual shape of a grid cell gets
+lost, and this may be a larger effect if grid cells are large or if the
+transformation is stronger non-linear.</p>
 <p>An example of the reprojection of the grid created above is</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nc.st</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc.curv</span></span>
@@ -263,21 +299,26 @@
 <span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
 <span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4808</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from  to offset delta                       refsys point</span></span>
-<span><span class="co">## x    1 162     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span></span>
-<span><span class="co">## y    1  61     NA    NA +proj=laea +lat_0=34 +lon... FALSE</span></span>
-<span><span class="co">##                           values x/y</span></span>
-<span><span class="co">## x [162x61] -2210936,...,-1371611 [x]</span></span>
-<span><span class="co">## y    [162x61] 90650.2,...,538204 [y]</span></span>
+<span><span class="co">##   from  to                       refsys point                         values</span></span>
+<span><span class="co">## x    1 162 +proj=laea +lat_0=34 +lon... FALSE [162x61] -2210936,...,-1371611</span></span>
+<span><span class="co">## y    1  61 +proj=laea +lat_0=34 +lon... FALSE    [162x61] 90650.2,...,538204</span></span>
+<span><span class="co">##   x/y</span></span>
+<span><span class="co">## x [x]</span></span>
+<span><span class="co">## y [y]</span></span>
 <span><span class="co">## curvilinear grid</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.curv</span>, border <span class="op">=</span> <span class="cn">NA</span>, graticule <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>where it should be noted that the dimensionality of the grid didn’t change: the same set of raster cells has been replotted in the new CRS, but now in a curvilinear grid.</p>
+<p>where it should be noted that the dimensionality of the grid didn’t
+change: the same set of raster cells has been replotted in the new CRS,
+but now in a curvilinear grid.</p>
 </div>
 <div class="section level2">
 <h2 id="warping-a-raster">Warping a raster<a class="anchor" aria-label="anchor" href="#warping-a-raster"></a>
 </h2>
-<p>Warping a raster means creating a new <em>regular</em> grid in a new CRS, based on a (usually regular) grid in another CRS. We can do the transformation of the previous section by first creating a target grid:</p>
+<p>Warping a raster means creating a new <em>regular</em> grid in a new
+CRS, based on a (usually regular) grid in another CRS. We can do the
+transformation of the previous section by first creating a target
+grid:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="st">"+proj=laea +lat_0=34 +lon_0=-60"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">newgrid</span></span></code></pre></div>
@@ -290,12 +331,13 @@
 <span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.  NA's</span></span>
 <span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.344805 3.825745 21.24828 36155</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##   from  to   offset    delta                       refsys point values x/y</span></span>
-<span><span class="co">## x    1 380 -2188110  2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [x]</span></span>
-<span><span class="co">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon...    NA   NULL [y]</span></span>
+<span><span class="co">##   from  to   offset    delta                       refsys x/y</span></span>
+<span><span class="co">## x    1 380 -2188110  2098.09 +proj=laea +lat_0=34 +lon... [x]</span></span>
+<span><span class="co">## y    1 171   494924 -2098.09 +proj=laea +lat_0=34 +lon... [y]</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc.new</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars5_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
-<p>This new object has a regular grid in the new CRS, aligned with the new x- and y-axes.</p>
+<p>This new object has a regular grid in the new CRS, aligned with the
+new x- and y-axes.</p>
 </div>
   </div>
 
