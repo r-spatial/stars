@@ -79,7 +79,6 @@ jobs:
 
       - name: "[Stage] Manual installation"
         run: |
-          pak::pkg_install("r-spatial/sf")
           options(timeout = 1000)
           install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")
         shell: Rscript {0}
