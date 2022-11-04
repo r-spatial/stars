@@ -79,8 +79,8 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install gdal proj
 
-#     - name: "[Stage] Install pak"
-#       run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable')"
+      - name: "[Stage] Install pak"
+        run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable'); pak::pkg_install('r-lib/pak')"
 
 #     - name: "[Stage] Manual installation"
 #       run: |
