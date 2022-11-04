@@ -80,7 +80,7 @@ jobs:
         run: brew install gdal proj
 
       - name: "[Stage] Install pak"
-        run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable'); pak::pkg_install('r-lib/pak')"
+        run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/devel/')"
 
 #     - name: "[Stage] Manual installation"
 #       run: |
