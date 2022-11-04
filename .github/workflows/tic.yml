@@ -52,6 +52,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           Ncpus: 4
+          extra-repositories: http://gis-bigdata.uni-muenster.de/pebesma/
 
       - uses: r-lib/actions/setup-tinytex@v2
         if: matrix.config.latex == 'true'
@@ -81,11 +82,11 @@ jobs:
 #     - name: "[Stage] Install pak"
 #       run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable')"
 
-      - name: "[Stage] Manual installation"
-        run: |
-          options(timeout = 1000)
-          install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")
-        shell: Rscript {0}
+#     - name: "[Stage] Manual installation"
+#       run: |
+#         options(timeout = 1000)
+#         install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")
+#       shell: Rscript {0}
 
       - name: "[Stage] Install"
         run: Rscript -e "if (grepl('Ubuntu', Sys.info()[['version']]) && !grepl('Under development', R.version[['status']])) {options(repos = c(CRAN = sprintf('https://packagemanager.rstudio.com/all/__linux__/%s/latest', system('lsb_release -cs', intern = TRUE))))}else{options(repos = c(CRAN = 'cloud.r-project.org'))}; pak::pkg_install('ropensci/tic')" -e "print(tic::dsl_load())" -e "tic::prepare_all_stages()" -e "tic::before_install()" -e "tic::install()"

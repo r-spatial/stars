@@ -73,6 +73,7 @@ Suggests:
     spacetime,
     spatstat (>= 2.0-1),
     spatstat.geom, 
+    starsdata,
     terra (>= 1.4-22),
     testthat,
     tidyr,
