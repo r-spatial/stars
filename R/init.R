@@ -1,6 +1,6 @@
 #' @importFrom graphics image.default image par plot title box text axis plot.new plot.window rasterImage layout lcm contour hist
 #' @importFrom grDevices dev.capabilities dev.size grey rgb col2rgb
-#' @importFrom utils head tail setTxtProgressBar txtProgressBar packageVersion methods
+#' @importFrom utils head tail setTxtProgressBar txtProgressBar packageVersion methods modifyList
 #' @importFrom stats na.omit runif aggregate setNames predict quantile var complete.cases na.pass time
 #' @importFrom tools file_ext
 #' @importFrom methods as slotNames new slot
