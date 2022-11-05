@@ -609,8 +609,8 @@ for a certain period.</p>
 <span><span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
-<span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 9.99879      12   27</span></span>
+<span><span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
+<span><span class="co">## traffic     0       8     10 10.00355      12   28</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
@@ -669,6 +669,7 @@ polygons:</p>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span>, key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, key.pos <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pol1</span>, <span class="va">pol2</span><span class="op">)</span>, col <span class="op">=</span> <span class="cn">NA</span>, border <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'yellow'</span>, <span class="st">'green'</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<p><img src="stars1_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
 <p>To find the modal value, we need a function that gives back the label
 corresponding to the class which is most frequent, using
 <code>table</code>:</p>
