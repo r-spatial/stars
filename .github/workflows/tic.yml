@@ -108,7 +108,7 @@ jobs:
           Rscript -e "tic::before_deploy()"
 
       - name: "[Stage] Deploy"
-        run: Rscript -e "remove.packages('ragg')" -e "tic::deploy()"
+        run: Rscript -e "tic::deploy()"
 
       - name: "[Stage] After Deploy"
         run: Rscript -e "tic::after_deploy()"
