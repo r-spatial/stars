@@ -17,13 +17,13 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(collapse = TRUE)
-knitr::opts_knit$set(dev.args = list(type = "cairo"))
+knitr::opts_chunk$set(dev = "CairoPNG")
 set.seed(13579)
 EVAL = x = suppressWarnings(require(starsdata, quietly = TRUE))
 ```
 
 ```{r}
-knitr::opts_knit$get("dev.args")
+knitr::opts_chunk$get("dev")
 ```
 
 When your imagery or array data easily fits a couple of times in
@@ -223,7 +223,8 @@ Fetching the data now involves reading the whole array and then evaluating the `
 For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can compute NDVI by
 ```{r,eval=EVAL}
 # S2 10m: band 4: near infrared, band 1: red.
-ndvi = function(x) (x[4] - x[1])/(x[4] + x[1])
+#ndvi = function(x) (x[4] - x[1])/(x[4] + x[1])
+ndvi = function(x1, x2, x3, x4) (x4 - x1)/(x4 + x1)
 rm(x)
 (s2.ndvi = st_apply(p, c("x", "y"), ndvi))
 system.time(plot(s2.ndvi)) # read - compute ndvi - plot 
