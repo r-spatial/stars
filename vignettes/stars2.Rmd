@@ -17,13 +17,8 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(collapse = TRUE)
-knitr::opts_chunk$set(dev = "CairoPNG")
 set.seed(13579)
 EVAL = x = suppressWarnings(require(starsdata, quietly = TRUE))
-```
-
-```{r}
-knitr::opts_chunk$get("dev")
 ```
 
 When your imagery or array data easily fits a couple of times in
