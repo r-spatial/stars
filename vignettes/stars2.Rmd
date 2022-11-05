@@ -22,6 +22,10 @@ set.seed(13579)
 EVAL = x = suppressWarnings(require(starsdata, quietly = TRUE))
 ```
 
+```{r}
+knitr::opts_knit$get("dev.args")
+```
+
 When your imagery or array data easily fits a couple of times in
 R's working memory (RAM), consider yourself lucky. This document
 was not written for you.  If your imagery is too large, or for
