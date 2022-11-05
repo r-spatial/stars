@@ -143,6 +143,8 @@ Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after ever
 
 To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
 
+When bitmaps show visual artefacts (Moiré effects), make sure that device \link{png} is used rather than \code{ragg::agg_png} as the latter uses antialiasing for filled polygons which causes this; see also https://github.com/r-spatial/stars/issues/573 .
+
 use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208
 
 when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.

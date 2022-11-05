@@ -33,6 +33,8 @@ make_label = function(x, i = 1) {
 #' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
 #'
 #' To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
+#'
+#' When bitmaps show visual artefacts (Moiré effects), make sure that device \link{png} is used rather than \code{ragg::agg_png} as the latter uses antialiasing for filled polygons which causes this; see also https://github.com/r-spatial/stars/issues/573 .
 #' @export
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
