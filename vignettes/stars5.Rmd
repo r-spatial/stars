@@ -15,10 +15,9 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(collapse = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, dev = "png")
 suppressPackageStartupMessages(library(sf))
-ev = sf_extSoftVersion()["GDAL"] >= "2.4.0"
+ev = TRUE
 ```
 
 This vignette shows how `stars` object can be moved from vector

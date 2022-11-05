@@ -15,9 +15,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(collapse = TRUE)
-#ev = FALSE
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, dev = "png")
 ev = TRUE
 ```
 
