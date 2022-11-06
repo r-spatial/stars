@@ -293,6 +293,18 @@ st_cells_from_xy = function(x, xy) {
 #' return the cell index corresponding to the location of a set of points
 #' @param x object of class \code{stars}
 #' @param sf object of class \code{sf} or \code{sfc}
+#' @examples
+#' set.seed(1345)
+#' st_bbox(L7_ETMs) |> 
+#'   st_as_sfc() |> 
+#'   st_sample(10) -> pts 
+#' (x <- st_cells(L7_ETMs, pts))
+#' # get the pixel values (first band only):
+#' st_as_stars(L7_ETMs)[[1]][x]
+#' # get pixel values for all bands:
+#' st_as_stars(L7_ETMs) |> split() |> sapply(`[`, x)
+#' # compare with st_extract():
+#' st_as_stars(L7_ETMs) |> split() |> st_extract(pts)
 #' @export
 st_cells = function(x, sf) {
 	stopifnot(inherits(x, "stars"), inherits(sf, c("sf", "sfc")), st_crs(x) == st_crs(sf))
