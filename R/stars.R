@@ -1126,6 +1126,16 @@ st_raster_type = function(x, dimension = character(0)) {
 #' st_res(L7_ETMs)
 #' st_res(L7_ETMs, absolute = FALSE)
 #' st_res(L7_ETMs, all = TRUE)
+#' if (require(starsdata)) {
+#'   paste0("netcdf/", c("avhrr-only-v2.19810901.nc", 
+#'     "avhrr-only-v2.19810902.nc",
+#'     "avhrr-only-v2.19810903.nc",
+#'     "avhrr-only-v2.19810904.nc")) |>
+#'   system.file(package = "starsdata") |>
+#'   read_stars(quiet = TRUE) -> x
+#'   st_res(x) |> print()
+#'   st_res(x, all = TRUE) |> print()
+#' }
 #' @export
 st_res = function(x, all = FALSE, absolute = !all) {
 	stopifnot(inherits(x, "stars"))
