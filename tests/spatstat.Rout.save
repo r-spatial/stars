@@ -27,11 +27,11 @@ Loading required package: abind
 + plot(m)
 + print(table(m$m))
 + }
-spatstat.geom 2.4-0
+spatstat.geom 3.0-3
 
 FALSE  TRUE 
 39494 83354 
 > 
 > proc.time()
    user  system elapsed 
-  1.923   0.068   1.987 
+  2.037   0.852   2.008 
