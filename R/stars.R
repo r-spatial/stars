@@ -1114,3 +1114,28 @@ st_raster_type = function(x, dimension = character(0)) {
 	else
 		"regular"
 }
+
+#' obtain (spatial) resolution of a stars object
+#'
+#' obtain resolution(s) of a stars object: by default only the (absolute) x/y raster dimensions, optionally all \code{delta} dimension parameters 
+#' @param x an object of class \code{stars}
+#' @param all logical; if FALSE return a vector with the x/y raster resolution
+#' @param absolute logical; only works when \code{all = FALSE}; if TRUE return absolute resolution values, if FALSE return \code{delta} values
+#' @returns if \code{all = FALSE} a vector with x/y raster resolutions, otherwise a list with delta values
+#' @examples
+#' st_res(L7_ETMs)
+#' st_res(L7_ETMs, absolute = FALSE)
+#' st_res(L7_ETMs, all = TRUE)
+#' @export
+st_res = function(x, all = FALSE, absolute = !all) {
+	stopifnot(inherits(x, "stars"))
+	d = st_dimensions(x)
+	l = lapply(d, `[[`, "delta")
+	if (!all) {
+		xy = attr(d, "raster")$dimensions
+		l = unlist(l[xy])
+		if (absolute)
+			l = abs(l)
+	}
+	l
+}

@@ -1,5 +1,7 @@
 # version 0.5-7
 
+* `st_res()` returns spatial resolutions, and optionally all dimension resolutions; #557 thanks to Krzysztof Dyba
+
 * `read_stars()` shortens band or array names that contain a common start or ending, unless names would become empty or `shorten=FALSE` was set; e.g. `shorten="B"` puts a `B` before shortened array names
 
 * printing `stars` dimension tables omits fields with only `NULL` or `NA` values, unless `print(..., all = TRUE)` is given
