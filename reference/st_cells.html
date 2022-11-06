@@ -98,6 +98,51 @@
 
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1345</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pts</span> </span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">st_cells</span><span class="op">(</span><span class="va">L7_ETMs</span>, <span class="va">pts</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      1      2      3      4      5      6      7      8      9     10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102496 112324  74862  56976 112862 105242  75593  11784  91245  63885 </span>
+<span class="r-in"><span><span class="co"># get the pixel values (first band only):</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">x</span><span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  92  92  89  76  67  94  77  98 113  56</span>
+<span class="r-in"><span><span class="co"># get pixel values for all bands:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">`[`</span>, <span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        X1 X2  X3 X4  X5  X6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  92 81  60 14  14  11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]  92 83  59 13  13  12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [3,]  89 83  88 66 113  92</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [4,]  76 63  66 61 108  78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [5,]  67 55  50 65  69  38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6,]  94 81  92 60 125 105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7,]  77 63  65 58 114  93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  98 85  88 57  93  80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9,] 113 98 104 66 110  94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [10,]  56 40  27 68  50  24</span>
+<span class="r-in"><span><span class="co"># compare with st_extract():</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="st_extract.html">st_extract</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 6 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 289267.4 ymin: 9111549 xmax: 297166.8 ymax: 9119794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X1 X2  X3 X4  X5  X6                 geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   92 81  60 14  14  11 POINT (295582.2 9112406)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   92 83  59 13  13  12 POINT (297166.8 9111599)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   89 83  88 66 113  92 POINT (293775.8 9114659)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   76 63  66 61 108  78 POINT (291294.7 9116093)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   67 55  50 65  69  38 POINT (292609.8 9111549)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   94 81  92 60 125 105 POINT (294276.2 9112159)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   77 63  65 58 114  93   POINT (294731 9114598)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   98 85  88 57  93  80 POINT (296360.6 9119794)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  113 98 104 66 110  94 POINT (293206.5 9113313)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  56 40  27 68  50  24 POINT (289267.4 9115521)</span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
