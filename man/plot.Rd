@@ -79,7 +79,7 @@
 
 \item{breaks}{actual color breaks, or a method name used for \link[classInt]{classIntervals}.}
 
-\item{col}{colors to use for grid cells}
+\item{col}{colors to use for grid cells, or color palette function}
 
 \item{key.pos}{integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.}
 

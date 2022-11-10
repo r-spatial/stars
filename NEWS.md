@@ -1,4 +1,6 @@
-# version 0.5-7
+# version 0.6-0
+
+* in `plot.stars()`, `col` can also be a palette function
 
 * `st_res()` returns spatial resolutions, and optionally all dimension resolutions; #557 thanks to Krzysztof Dyba
 

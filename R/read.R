@@ -29,9 +29,9 @@ is_functions = function(x) {
 unique_part = function(x, prefix) {
 	stopifnot(is.character(x), length(x) > 1)
 	original = x
-	while (nchar(x[1]) && all(grepl(paste0("^", substr(x[1], 1, 1)), x[-1])))
+	while (nchar(x[1]) && length(unique(substr(x, 1, 1))) == 1)
 		x = sapply(x, substring, 2)
-	while ((n <- nchar(x[1])) && all(grepl(paste0(substr(x[1], n, n), "$"), x[-1])))
+	while ((n <- nchar(x[1])) && length(unique(substr(x, n, n))) == 1)
 		x = sapply(x, substring, 1, n - 1)
 	if (any(x == ""))
 		original
