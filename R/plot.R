@@ -537,7 +537,7 @@ st_rgb <- function (x,
 		if(stretch){
 			stretch.method = "percent"
 		} else {
-			maxColorValue = max(maxColorValue, max(x[[1]]))
+			maxColorValue = max(maxColorValue, max(x[[1]], na.rm = TRUE))
 		}
 	}
 
