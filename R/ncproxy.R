@@ -20,7 +20,7 @@
 			}
 		}
 		
-		dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]])[1]
+		dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]][1])[1]
 		dims$count[dims$name == coord] <- dims$length[dims$name == coord] <- length(uc[[coord]])
 		
 	}
