@@ -444,6 +444,7 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 		else
 			NULL
 	}
+	dim_orig = dim(x)
 	mc = match.call()
 	lst = as.list(mc)
 	cl = attr(x, "call_list")
@@ -479,9 +480,15 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 	}
 
 	# return:
-	if (length(lst) == 3 && isTRUE(lst[["i"]]) && is.null(cl)) # all is done
+	if (length(lst) == 3 && isTRUE(lst[["i"]]) && is.null(cl)) {
+		if (length(x) && length(dim(x)) >= 3 && length(x[[1]]) == dim_orig[3]) { # https://github.com/r-spatial/stars/issues/561
+			d3 = st_dimensions(x)[[3]]
+			r3 = seq(d3$from, d3$to)
+			for (i in seq_along(x))
+				x[[i]] = x[[i]][r3]
+		}
 		x 
-	else # still processing the geometries inside the bbox:
+	} else # still processing the geometries inside the bbox:
 		collect(x, as.call(lst), "[", c("x", "i", "drop", "crop"), 
 			env = environment()) # postpone every arguments > 3 to after reading cells
 }
