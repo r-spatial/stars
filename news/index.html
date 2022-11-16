@@ -80,7 +80,8 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6-0" id="version-06-0">version 0.6-0<a class="anchor" aria-label="anchor" href="#version-06-0"></a></h2>
-<ul><li><p>in <code><a href="../reference/plot.html">plot.stars()</a></code>, <code>col</code> can also be a palette function</p></li>
+<ul><li><p>fix <code>[.stars_proxy</code> when selecting dimension 3 and higher; <a href="https://github.com/r-spatial/stars/issues/561" class="external-link">#561</a></p></li>
+<li><p>in <code><a href="../reference/plot.html">plot.stars()</a></code>, <code>col</code> can also be a palette function</p></li>
 <li><p><code><a href="../reference/st_res.html">st_res()</a></code> returns spatial resolutions, and optionally all dimension resolutions; <a href="https://github.com/r-spatial/stars/issues/557" class="external-link">#557</a> thanks to Krzysztof Dyba</p></li>
 <li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> shortens band or array names that contain a common start or ending, unless names would become empty or <code>shorten=FALSE</code> was set; e.g. <code>shorten="B"</code> puts a <code>B</code> before shortened array names</p></li>
 <li><p>printing <code>stars</code> dimension tables omits fields with only <code>NULL</code> or <code>NA</code> values, unless <code>print(..., all = TRUE)</code> is given</p></li>
