@@ -481,11 +481,24 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 
 	# return:
 	if (length(lst) == 3 && isTRUE(lst[["i"]]) && is.null(cl)) {
-		if (length(x) && length(dim(x)) >= 3 && length(x[[1]]) == dim_orig[3]) { # https://github.com/r-spatial/stars/issues/561
-			d3 = st_dimensions(x)[[3]]
-			r3 = seq(d3$from, d3$to)
+		# select from the vectors of proxy object names?
+		if (length(x) && length(dim(x)) >= 3 && length(x[[1]]) == prod(dim_orig[-(1:2)])) { # https://github.com/r-spatial/stars/issues/561
+			get_ix = function(d) {
+				stopifnot(inherits(d, "dimension"))
+				if (!is.na(d$from))
+					seq(d$from, d$to)
+				else
+					d$values
+			}
+			d = st_dimensions(x)[-(1:2)] # non x/y dimensions
+			e = do.call(expand.grid, lapply(dim_orig[-(1:2)], seq_len)) # all combinations
+			e$rn = seq_len(nrow(e))
+			f = do.call(expand.grid, lapply(d, get_ix))
+			if (!requireNamespace("dplyr", quietly = TRUE))
+				stop("package dplyr required, please install it first") # nocov
+			sel = dplyr::inner_join(e, f, by = colnames(f))$rn
 			for (i in seq_along(x))
-				x[[i]] = x[[i]][r3]
+				x[[i]] = x[[i]][sel]
 		}
 		x 
 	} else # still processing the geometries inside the bbox:

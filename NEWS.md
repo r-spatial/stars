@@ -1,5 +1,7 @@
 # version 0.6-0
 
+* fix `[.stars_proxy` when selecting dimension 3 and higher; #561
+
 * in `plot.stars()`, `col` can also be a palette function
 
 * `st_res()` returns spatial resolutions, and optionally all dimension resolutions; #557 thanks to Krzysztof Dyba
