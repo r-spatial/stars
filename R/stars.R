@@ -765,6 +765,9 @@ st_crs.dimensions = function(x, ...) {
 		else
 			stop(paste("crs of class", class(value), "not recognized"))
 
+	if (!is.na(st_crs(x)) && !is.na(value) && st_crs(x) != value)
+		warning("replacing crs does not reproject data; use st_transform for that")
+
 	# set CRS in dimensions:
 	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
