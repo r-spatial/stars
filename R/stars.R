@@ -247,9 +247,9 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 #		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
 #		x[,1] = x[,1] + sign * 360.
 		# one more try: https://github.com/r-spatial/stars/issues/563
-		ix = x[,1] > bb["xmax"]
+		ix = x[,1] > bb["xmax"] & !is.na(x[,1])
 		x[ix,1] = x[ix,1] - 360.
-		ix = x[,1] < bb["xmin"]
+		ix = x[,1] < bb["xmin"] & !is.na(x[,1])
 		x[ix,1] = x[ix,1] + 360.
 	}
 	if (!any(is.na(gt))) { # have geotransform
