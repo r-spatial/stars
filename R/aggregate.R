@@ -231,18 +231,20 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 #' @export
 aggregate.stars_proxy = function(x, by, FUN, ...) {
-	if (inherits(by, "stars"))
-		by = st_as_sfc(by, as_points = FALSE)
-	if (!inherits(by, c("sf", "sfc", "sfg")))
-		stop("aggregate.stars_proxy only implemented for spatial `by' arguments")
-	by = st_geometry(by)
+	if (!inherits(by, c("sf", "sfc", "sfg", "stars")))
+		collect(x, match.call(), "aggregate", c("x", "by", "FUN"), env = environment(), ...)
+	else {
+		if (inherits(by, "stars"))
+			by = st_as_sfc(by, as_points = FALSE)
+		by = st_geometry(by)
 
-	# this assumes each result of a [ selection is small enough to hold in memory
-	l = lapply(seq_along(by), 
-		   function(i) {
-			   sel_i = st_normalize(st_as_stars(x[by[i]]))
-			   aggregate(sel_i, by[i], FUN, ...)
-		   }
-	)
-	do.call(c, c(l, along = list(which_sfc(l[[1]]))))
+		# this assumes each result of a [ selection is small enough to hold in memory
+		l = lapply(seq_along(by), 
+		   	function(i) {
+			   	sel_i = st_normalize(st_as_stars(x[by[i]]))
+			   	aggregate(sel_i, by[i], FUN, ...)
+		   	}
+		)
+		do.call(c, c(l, along = list(which_sfc(l[[1]]))))
+	}
 }

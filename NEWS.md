@@ -1,5 +1,7 @@
 # version 0.6-0
 
+* `aggregate.stars_proxy()` implements aggregation with non-spatial `by` objects (lazily)
+
 * fix `[.stars_proxy()` when selecting dimension 3 and higher; #561
 
 * in `plot.stars()`, `col` can also be a palette function
