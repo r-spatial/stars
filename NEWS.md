@@ -1,6 +1,6 @@
 # version 0.6-0
 
-* fix `[.stars_proxy` when selecting dimension 3 and higher; #561
+* fix `[.stars_proxy()` when selecting dimension 3 and higher; #561
 
 * in `plot.stars()`, `col` can also be a palette function
 

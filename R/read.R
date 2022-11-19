@@ -323,7 +323,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		ret = if (proxy) { # no data present, subclass of "stars":
 				st_stars_proxy(setNames(list(x), names(.x) %||% name_x),
 					create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
-					resolutions = NULL, RasterIO = RasterIO)
+					resolutions = NULL, RasterIO = RasterIO, file_dim = dims)
 			} else
 				st_stars(setNames(list(data), names(.x) %||% name_x),
 					create_dimensions_from_gdal_meta(dim(data), meta_data))
