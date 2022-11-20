@@ -40,14 +40,17 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
 #' @param update logical; if \code{TRUE}, an existing file is being updated
 #' @param normalize_path logical; see \link{read_stars}
+#' @param scale_offset; length 2 numeric vector with scale and offset values; raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
 		options = character(0), 
 		type = if (is.factor(obj[[1]]) && length(levels(obj[[1]])) < 256) "Byte" else "Float32", 
-		NA_value = NA_real_, update = FALSE, normalize_path = TRUE) {
+		NA_value = NA_real_, update = FALSE, normalize_path = TRUE, scale_offset = c(1.0, 0.0)) {
 	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
+	if (length(layer) > 1)
+		stop("layer should have length 1; for writing multi-band images use merge() to merge layers into a dimension")
 	obj = st_upfront(obj[layer])
 	if (! update) # new file: should not be a sub-array
 		obj = reset_sub(obj)
@@ -57,7 +60,7 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 		dsn = enc2utf8(maybe_normalizePath(dsn, TRUE))
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
 		type = type, NA_value = NA_value, geotransform = get_geotransform(obj), 
-		update = update)
+		update = update, scale_offset = scale_offset)
 	invisible(obj)
 }
 
@@ -68,7 +71,7 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 #' @details in case \code{obj} is a multi-file \code{stars_proxy} object, all files are written as layers into the output file \code{dsn}
 #' @export
 write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 
-		options = character(0), type = "Float32", NA_value = NA_real_, 
+		options = character(0), scale_offset = c(1.0, 0.0), type = "Float32", NA_value = NA_real_, 
 		chunk_size = c(dim(obj)[1], floor(25e6 / dim(obj)[1])), progress = TRUE) {
 
 	if (!missing(layer))
@@ -89,7 +92,7 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 	dim_obj = dim(obj)
 	if (prod(chunk_size) > prod(dim_obj[1:2]))
 		write_stars(st_as_stars(obj), dsn, layer, ..., driver = driver, options = options,
-			type = type, NA_value = NA_value)
+			scale_offset = scale_offset, type = type, NA_value = NA_value)
 	else { # write chunked: https://github.com/r-spatial/stars/pull/291/files
 
 		di_write = di_read = st_dimensions(obj)
@@ -121,11 +124,12 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 					d[[2]]$to = d[[2]]$from + dim_obj[2] - 1
 					gt = get_geotransform(structure(obj, dimensions = d))
 					sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options,
-						type = type, NA_value = NA_value, geotransform = gt) # branches on stars_proxy
+						type = type, scale_offset = scale_offset, NA_value = NA_value, geotransform = gt) # branches on stars_proxy
 				}
 				created = TRUE
 				write_stars(chunk, dsn = dsn, layer = layer, driver = driver,
-					options = options, type = type, update = TRUE, NA_value = NA_value)
+					options = options, type = type, scale_offset = scale_offset,
+					update = TRUE, NA_value = NA_value)
 				if (progress)
 					setTxtProgressBar(pb, ((col-1) * nrow + row) / (ncol * nrow))
 			}
