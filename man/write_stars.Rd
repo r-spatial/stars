@@ -19,7 +19,8 @@ write_stars(obj, dsn, layer, ...)
   type = if (is.factor(obj[[1]]) && length(levels(obj[[1]])) < 256) "Byte" else "Float32",
   NA_value = NA_real_,
   update = FALSE,
-  normalize_path = TRUE
+  normalize_path = TRUE,
+  scale_offset = c(1, 0)
 )
 
 \method{write_stars}{stars_proxy}(
@@ -29,6 +30,7 @@ write_stars(obj, dsn, layer, ...)
   ...,
   driver = detect.driver(dsn),
   options = character(0),
+  scale_offset = c(1, 0),
   type = "Float32",
   NA_value = NA_real_,
   chunk_size = c(dim(obj)[1], floor(2.5e+07/dim(obj)[1])),
@@ -64,6 +66,8 @@ detect.driver(filename)
 
 \item{filename}{character; used for guessing driver short name based on file 
 extension; see examples}
+
+\item{scale_offset;}{length 2 numeric vector with scale and offset values; raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised}
 }
 \description{
 write stars object to gdal dataset (typically: to file)

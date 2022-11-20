@@ -1,8 +1,12 @@
 first_dimensions_match = function(e1, e2) {
 	d1 = st_dimensions(e1)
 	d2 = st_dimensions(e2)
+	crs1 = st_crs(d1)
+	crs2 = st_crs(d2)
+	st_crs(d1) = st_crs(NA)
+	st_crs(d2) = st_crs(NA)
 	n = min(length(d1), length(d2))
-	isTRUE(all.equal(d1[1:n], d2[1:n], check.attributes = FALSE))
+	isTRUE(all.equal(d1[1:n], d2[1:n], check.attributes = FALSE)) && crs1 == crs2
 }
 
 #' S3 Ops Group Generic Functions for stars objects
