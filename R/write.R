@@ -40,7 +40,7 @@ write_stars = function(obj, dsn, layer, ...) UseMethod("write_stars")
 #' @param NA_value non-NA value that should represent R's \code{NA} value in the target raster file; if set to \code{NA}, it will be ignored.
 #' @param update logical; if \code{TRUE}, an existing file is being updated
 #' @param normalize_path logical; see \link{read_stars}
-#' @param scale_offset; length 2 numeric vector with scale and offset values; raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised
+#' @param scale_offset length 2 numeric vector with scale, offset values: raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised
 #' @name write_stars
 #' @export
 write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(dsn), 

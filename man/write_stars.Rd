@@ -60,14 +60,14 @@ detect.driver(filename)
 
 \item{normalize_path}{logical; see \link{read_stars}}
 
+\item{scale_offset}{length 2 numeric vector with scale, offset values: raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised}
+
 \item{chunk_size}{length two integer vector with the number of pixels (x, y) used in the read/write loop; see details.}
 
 \item{progress}{logical; if \code{TRUE}, a progress bar is shown}
 
 \item{filename}{character; used for guessing driver short name based on file 
 extension; see examples}
-
-\item{scale_offset;}{length 2 numeric vector with scale and offset values; raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised}
 }
 \description{
 write stars object to gdal dataset (typically: to file)
