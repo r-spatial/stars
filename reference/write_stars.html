@@ -97,7 +97,8 @@
 <span>  type <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">is.factor</a></span><span class="op">(</span><span class="va">obj</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">obj</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">256</span><span class="op">)</span> <span class="st">"Byte"</span> <span class="kw">else</span> <span class="st">"Float32"</span>,</span>
 <span>  NA_value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  update <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  normalize_path <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  normalize_path <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scale_offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stars_proxy</span></span>
@@ -108,6 +109,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  driver <span class="op">=</span> <span class="fu">detect.driver</span><span class="op">(</span><span class="va">dsn</span><span class="op">)</span>,</span>
 <span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  scale_offset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"Float32"</span>,</span>
 <span>  NA_value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  chunk_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fl">2.5e+07</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -157,6 +159,10 @@
 
 <dt>normalize_path</dt>
 <dd><p>logical; see <a href="read_stars.html">read_stars</a></p></dd>
+
+
+<dt>scale_offset</dt>
+<dd><p>length 2 numeric vector with scale, offset values: raw values computed by raw = (value - offset) / scale are written to dsn; scale and offset values are written to dsn or else a warning is raised</p></dd>
 
 
 <dt>chunk_size</dt>
