@@ -1,3 +1,4 @@
+skip_on_cran()
 context("read ncdf")
 f <- system.file("nc/reduced.nc", package = "stars")
 

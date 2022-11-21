@@ -86,6 +86,7 @@ test_that("one more cell coordinate than matrix cells", {
 })
 
 test_that("st_as_sf works for these", {
+  skip_on_cran() # too costly?
   sf_cell_edge <- sf::st_as_sf(r_cell_edge)
 
   expect_s3_class(sf_cell_edge, "sf")

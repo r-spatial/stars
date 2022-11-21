@@ -24,7 +24,7 @@ all.equal(nit.c0, nit.c)
 st_crs(nit.c) = 4326
 print(nit.c)
 
-if (capabilities()["png"]) {
+if (FALSE && capabilities()["png"]) {
  png("nit1.png", 800, 800)
  plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, pch = 16)
  maps::map('world', add = TRUE, col = 'red')

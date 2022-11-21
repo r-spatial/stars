@@ -3,13 +3,17 @@ suppressPackageStartupMessages(library(sf))
 suppressPackageStartupMessages(library(stars))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (r = read_stars(tif, proxy = TRUE))
-plot(r)
+if (interactive()) {
+	plot(r)
+}
 dim(r)
 r[,,,2:3]
 r+r
 st_as_stars(sin(r), downsample = 2)
 aperm(r, c(3,2,1))
-plot(r)
+if (interactive()) {
+	plot(r)
+}
 (xx = c(r,r))
 st_redimension(xx)
 st_as_stars(r)
@@ -34,7 +38,7 @@ r = r[buf, epsilon = 1e-5] # crops with shrinked bounding box
 
 # c:
 f = system.file("netcdf/avhrr-only-v2.19810902.nc", package = "starsdata")
-if (f != "") {
+if (FALSE && f != "") {
   files = c("avhrr-only-v2.19810901.nc",
   "avhrr-only-v2.19810902.nc",
   "avhrr-only-v2.19810903.nc",
@@ -68,7 +72,7 @@ if (f != "") {
 x = read_stars(tif, proxy = TRUE)
 f = function(x) {
 	g = function(xx) {
-		ndvi = function(z) (z[2]-z[1])/(z[2]+z[1])
+		ndvi = function(z1, z2, z3, z4, z5, z6) (z2-z1)/(z2+z1)
 		st_apply(xx, 1:2, ndvi)
 	}
 	g(x)

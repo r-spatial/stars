@@ -4,7 +4,7 @@ set.seed(13521) # runif
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x_ = read_stars(c(tif,tif))) # FIXME: not what you'd expect
 (x = read_stars(tif))
-image(x)
+# image(x)
 gdal_crs(tif)
 plot(x)
 plot(x, join_zlim = FALSE)
@@ -96,7 +96,7 @@ x[is.na(x)] = 0
 
 # c:
 f = system.file("netcdf/avhrr-only-v2.19810902.nc", package = "starsdata")
-if (f != "") {
+if (FALSE && f != "") {
   files = c("avhrr-only-v2.19810901.nc",
   "avhrr-only-v2.19810902.nc",
   "avhrr-only-v2.19810903.nc",

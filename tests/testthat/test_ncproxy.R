@@ -1,3 +1,4 @@
+skip_on_cran()
 f <- system.file("nc/reduced.nc", package = "stars")
 
 test_that("proxy", {
