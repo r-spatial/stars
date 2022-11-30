@@ -1,3 +1,5 @@
+# version 0.6-1
+
 # version 0.6-0
 
 * `write_stars()` writes scaled and/or shifted values when using argument `scale_offset`; #589
