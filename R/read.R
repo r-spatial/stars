@@ -287,8 +287,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				} else
 					ex = rep(FALSE, length(levels))
 			} else {
-				levels = sort(unique(data))
+				levels = sort(unique(as.vector(data)))
 				labels = as.character(levels)
+				if (!is.null(co))
+					co = co[levels + 1]
 				ex = rep(FALSE, length(levels))
 			}
 			# f = factor(as.vector(data), levels = levels, labels = labels) # is too costly;

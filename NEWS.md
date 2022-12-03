@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* fix handling of categorical rasters with colors but no category labels; #595, fallout of #565
+
 * fix subsetting of proxy objects over a time range; #596
 
 # version 0.6-0
