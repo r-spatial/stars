@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* fix subsetting of proxy objects over a time range; #596
+
 # version 0.6-0
 
 * `write_stars()` writes scaled and/or shifted values when using argument `scale_offset`; #589

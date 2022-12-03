@@ -321,9 +321,10 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				x
 		name_x = tail(strsplit(name_x, '[\\\\/:]+')[[1]], 1)
 		ret = if (proxy) { # no data present, subclass of "stars":
-				st_stars_proxy(setNames(list(x), names(.x) %||% name_x),
-					create_dimensions_from_gdal_meta(dims, meta_data), NA_value = NA_value,
-					resolutions = NULL, RasterIO = RasterIO, file_dim = dims)
+				dims = create_dimensions_from_gdal_meta(dims, meta_data)
+				st_stars_proxy(setNames(list(x), names(.x) %||% name_x), dims,
+					NA_value = NA_value, resolutions = NULL, RasterIO = RasterIO, 
+					file_dim = matrix(dim(dims), 1, dimnames = list(NULL, names(dims))))
 			} else
 				st_stars(setNames(list(data), names(.x) %||% name_x),
 					create_dimensions_from_gdal_meta(dim(data), meta_data))
