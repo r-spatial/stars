@@ -6,7 +6,7 @@
 [![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/stars/actions)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
-checks](https://cranchecks.info/badges/worst/stars)](https://cran.r-project.org/web/checks/check_results_stars.html)
+checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
 [![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
 [![Codecov test
