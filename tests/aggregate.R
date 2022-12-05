@@ -27,12 +27,17 @@ write_stars(st, tmp)
    nBufXSize = 2, nBufYSize = 2)), "foo"))
 
 sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
+(a = aggregate(st, st_sf(a = 1, geom = sfc), mean))
 (a = aggregate(st, sfc, mean))
+(a = aggregate(st, sfc, mean, exact = TRUE))
 a[[1]]
 sum(a[[1]])*30 == sum(1:720)
 
 tm0 = as.Date("2019-02-19") + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))
+(a = aggregate(st, "days", mean, na.rm = TRUE))
+yd = function(x) as.POSIXlt(x)$yday
+(a = aggregate(st, yd, mean, na.rm = TRUE))
 
 # with "by" geometry not overlapping x
 pt = st_point(c(-10,-10))

@@ -146,7 +146,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			ndims = 1
 			x = st_upfront(x, which_time(x))
 			values = expand_dimensions(x)[[1]]
-			if (inherits(by, "function")) {
+			if (is.function(by)) {
 				i = by(values)
 				if (!is.factor(i))
 					i = as.factor(i)
@@ -202,7 +202,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 
 	# reconstruct dimensions table:
 	d[[1]] = create_dimension(values = by)
-	names(d)[1] = if (inherits(by, c("POSIXct", "Date", "PCICt", "function")))
+	names(d)[1] = if (is.function(by) || inherits(by, c("POSIXct", "Date", "PCICt", "function")))
 			"time"
 		else
 			geom
