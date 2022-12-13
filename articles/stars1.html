@@ -597,7 +597,7 @@ for a certain period.</p>
 <span><span class="va">to</span> <span class="op">=</span> <span class="va">from</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> <span class="co"># 100 polygons: O and D regions</span></span>
 <span><span class="va">mode</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"car"</span>, <span class="st">"bike"</span>, <span class="st">"foot"</span><span class="op">)</span> <span class="co"># travel mode</span></span>
 <span><span class="va">day</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span> <span class="co"># arbitrary</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-quantities/units/" class="external-link">units</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-quantities/units" class="external-link">units</a></span><span class="op">)</span></span>
 <span><span class="co">## udunits database from /usr/share/xml/udunits/udunits2.xml</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">units</a></span><span class="op">(</span><span class="va">day</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">as_units</a></span><span class="op">(</span><span class="st">"days since 2015-01-01"</span><span class="op">)</span></span>
 <span><span class="va">hour</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">23</span>, <span class="va">h</span><span class="op">)</span> <span class="co"># hour of day</span></span>
@@ -610,7 +610,7 @@ for a certain period.</p>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
 <span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 9.99775      12   26</span></span>
+<span><span class="co">## traffic     0       8     10 10.0192      12   26</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
