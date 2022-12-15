@@ -276,7 +276,7 @@ fetch = function(x, downsample = 0, ...) {
 	ret = unclass(ret)
 	for (i in seq_along(ret)) {
 		file_dim = attr(x, "file_dim")
-		if (!is.null(file_dim) && ncol(file_dim) == length(dim(new_dim)) 
+		if (is.null(bands) && !is.null(file_dim) && ncol(file_dim) == length(dim(new_dim)) 
 				&& ncol(file_dim) == 3) { # https://github.com/r-spatial/stars/issues/596
 			r = new_dim[[3]]$from:new_dim[[3]]$to # FIXME: or else use $values?
 			ret[[i]] = ret[[i]][,,r]
