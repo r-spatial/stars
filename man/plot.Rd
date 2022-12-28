@@ -158,7 +158,7 @@ hook1 = function() {
 }
 plot(L7_ETMs, hook = hook1)
 x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
-hook2 = function(..., row, col, nr, value, bbox) {
+hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
    str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
    bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)

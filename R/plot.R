@@ -43,7 +43,7 @@ make_label = function(x, i = 1) {
 #' }
 #' plot(L7_ETMs, hook = hook1)
 #' x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
-#' hook2 = function(..., row, col, nr, value, bbox) {
+#' hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
 #'    str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
 #'    bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
 #'    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
@@ -195,6 +195,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 						nc = ncol(lt$m) # nr of columns in the plot
 						hook(row = ((i - 1) %/% nc) + 1,
 							 col = ((i - 1)  %% nc) + 1, 
+							 nrow = nrow(lt$m),
+							 ncol = nc,
 							 nr = i, value = labels[i],
 							 bbox = st_bbox(x))
 					}
