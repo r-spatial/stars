@@ -93,7 +93,7 @@
 
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
 
-\item{hook}{NULL or function; hook function that will be called on every sub-plot.}
+\item{hook}{NULL or function; hook function that will be called on every sub-plot; see examples.}
 
 \item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
 
@@ -152,6 +152,18 @@ when plotting a subsetted \code{stars_proxy} object, the default value for argum
 when plotting a subsetted \code{stars_proxy} object, the default value for argument \code{downsample} will not be computed correctly, and has to be set manually.
 }
 \examples{
+st_bbox(L7_ETMs) |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
+hook1 = function() {
+    text(pt[,"X"], pt[,"Y"], "foo", col = 'orange', cex = 2)
+}
+plot(L7_ETMs, hook = hook1)
+x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
+hook2 = function(..., row, col, nr, value, bbox) {
+   str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
+   bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
+   text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
+}
+plot(x, hook = hook2)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 image(x, col = grey((3:9)/10))

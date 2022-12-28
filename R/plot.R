@@ -27,7 +27,7 @@ make_label = function(x, i = 1) {
 #' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
-#' @param hook NULL or function; hook function that will be called on every sub-plot.
+#' @param hook NULL or function; hook function that will be called on every sub-plot; see examples.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details
 #' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
@@ -36,6 +36,19 @@ make_label = function(x, i = 1) {
 #'
 #' When bitmaps show visual artefacts (Moiré effects), make sure that device \link{png} is used rather than \code{ragg::agg_png} as the latter uses antialiasing for filled polygons which causes this; see also https://github.com/r-spatial/stars/issues/573 .
 #' @export
+#' @examples
+#' st_bbox(L7_ETMs) |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
+#' hook1 = function() {
+#'     text(pt[,"X"], pt[,"Y"], "foo", col = 'orange', cex = 2)
+#' }
+#' plot(L7_ETMs, hook = hook1)
+#' x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
+#' hook2 = function(..., row, col, nr, value, bbox) {
+#'    str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
+#'    bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
+#'    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
+#' }
+#' plot(x, hook = hook2)
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618,
@@ -175,8 +188,17 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					else # user-defined
 						title(paste(main, format(labels[i])))
 				}
-				if (!is.null(hook) && is.function(hook))
-					hook()
+				if (!is.null(hook) && is.function(hook)) {
+					if (is.null(formals(hook)))
+						hook()
+					else {
+						nc = ncol(lt$m) # nr of columns in the plot
+						hook(row = ((i - 1) %/% nc) + 1,
+							 col = ((i - 1)  %% nc) + 1, 
+							 nr = i, value = labels[i],
+							 bbox = st_bbox(x))
+					}
+				}
 				box(col = box_col)
 			}
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:

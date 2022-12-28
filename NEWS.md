@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* `plot.stars()` hook function can handle arguments `row`, `col`, `nr`, `value` and `bbox`; #600
+
 * fix handling of categorical rasters with colors but no category labels; #595, fallout of #565
 
 * fix subsetting of proxy objects over a time range; #596
