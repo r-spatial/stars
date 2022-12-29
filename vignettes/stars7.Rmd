@@ -15,7 +15,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>", dev = "png")
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, dev = "png")
 suppressPackageStartupMessages(library(dplyr))
 EVAL = suppressWarnings(require(starsdata, quietly = TRUE))
 ```
