@@ -159,11 +159,11 @@ hook1 = function() {
 plot(L7_ETMs, hook = hook1)
 x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
 hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
-   str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
+   str = paste0("row ", row, "/", nrow, ", col ", col, "/", ncol, "\nnr: ", nr, " value: ", value)
    bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
 }
-plot(x, hook = hook2)
+plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 image(x, col = grey((3:9)/10))

@@ -44,11 +44,11 @@ make_label = function(x, i = 1) {
 #' plot(L7_ETMs, hook = hook1)
 #' x = st_set_dimensions(L7_ETMs, 3, paste0("B_", 1:6))
 #' hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
-#'    str = paste("row:", row, "col:", col, "\nnr:", nr, "value:", value)
+#'    str = paste0("row ", row, "/", nrow, ", col ", col, "/", ncol, "\nnr: ", nr, " value: ", value)
 #'    bbox |> st_as_sfc() |> st_centroid() |> st_coordinates() -> pt
 #'    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
 #' }
-#' plot(x, hook = hook2)
+#' plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618,
@@ -192,10 +192,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					if (is.null(formals(hook)))
 						hook()
 					else {
-						nc = ncol(lt$m) # nr of columns in the plot
+						nc = lt$mfrow[[2]] # nr of columns in the plot
 						hook(row = ((i - 1) %/% nc) + 1,
 							 col = ((i - 1)  %% nc) + 1, 
-							 nrow = nrow(lt$m),
+							 nrow = lt$mfrow[[1]],
 							 ncol = nc,
 							 nr = i, value = labels[i],
 							 bbox = st_bbox(x))
