@@ -316,6 +316,10 @@ head(tiles)
 
 Now we need to setup a parallel backend by defining the number of available cores in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function.
 
+```{r include=FALSE}
+install.packages(c("foreach", "doParallel"))
+```
+
 ```{r}
 library("foreach")
 library("doParallel")
