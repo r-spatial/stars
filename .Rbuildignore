@@ -26,4 +26,4 @@ vignettes.awk
 ^data-raw$
 ^codecov\.yml$
 vignettes/sst.tif
-^pkgdown$
+^_pkgdown\.yml$
