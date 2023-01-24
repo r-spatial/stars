@@ -89,6 +89,7 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 	}
 	if (!all(sapply(dots, function(x) inherits(x, "stars_proxy"))))
 		stop("all arguments to c() should be stars_proxy objects")
+	rio = attr(dots[[1]], "RasterIO")
 
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
@@ -102,14 +103,16 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 						   dimensions = st_dimensions(dots[[1]]), 
 						   NA_value = attr(dots[[1]], "NA_value"), 
 						   resolutions = NULL,
-						   file_dim = get_file_dim(dots))
+						   file_dim = get_file_dim(dots),
+						   RasterIO = rio)
 		else if (identical_dimensions(dots, ignore_resolution = TRUE, tolerance = tolerance)) {
 			dots = add_resolution(dots)
 			st_stars_proxy(setNamesIfnn(do.call(c, lapply(dots, unclass)), nms),
 						   dimensions = st_dimensions(dots[[1]]), 
 						   resolutions = attr(dots, "resolutions"),
 						   NA_value = attr(dots[[1]], "NA_value"), 
-						   file_dim = get_file_dim(dots))
+						   file_dim = get_file_dim(dots),
+						   RasterIO = rio)
 		} else {
 			# currently catches only the special case of ... being a broken up time series:
 			along = sort_out_along(dots)
@@ -131,7 +134,8 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 							   dimensions = st_dimensions(dots[[1]]), 
 							   NA_value = attr(dots[[1]], "NA_value"), 
 							   resolutions = NULL, 
-							   file_dim = get_file_dim(dots))
+							   file_dim = get_file_dim(dots),
+							   RasterIO = rio)
 			}
 		}
 	} else { # arrange along "along" dimension:
@@ -161,7 +165,8 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 				names(dims)[along_dim] = if (is.character(along)) along else "new_dim"
 			st_stars_proxy(ret, dimensions = dims, NA_value = attr(dots[[1]], "NA_value"),
 				resolutions = NULL,
-				file_dim = get_file_dim(dots))
+				file_dim = get_file_dim(dots),
+				RasterIO = rio)
 		}
 	}
 }
@@ -219,6 +224,9 @@ fetch = function(x, downsample = 0, ...) {
 				 # && (bands$to - bands$from + 1) < length(x[[1]])
 			)
 			rasterio$bands = seq(bands$from, bands$to)
+		if (!is.null(rasterio$bands) && length(rasterio$bands) > 1 && 
+				length(rasterio$bands) == length(x[[1]])) # one band in each file
+			rasterio$bands = NULL # https://github.com/r-spatial/stars/issues/608
 	}
 
 	# do it:
@@ -460,6 +468,7 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 		else
 			NULL
 	}
+	rio = attr(x, "RasterIO")
 	dim_orig = dim(x)
 	mc = match.call()
 	lst = as.list(mc)
@@ -473,7 +482,8 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 			if (!is.null(resolutions <- attr(x, "resolutions")))
 				resolutions = resolutions[i, ]
 			x = st_stars_proxy(unclass(x)[i], st_dimensions(x), NA_value = attr(x, "NA_value"),
-				resolutions = resolutions, file_dim = attr(x, "file_dim"))
+				resolutions = resolutions, file_dim = attr(x, "file_dim"),
+				RasterIO = rio)
 			lst[["i"]] = TRUE # this one has been handled now
 		}
 		ix = 1

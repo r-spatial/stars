@@ -527,6 +527,12 @@ st_rgb <- function (x,
 					maxColorValue = 255L,
 					probs = c(0, 1),
 					stretch = NULL) {
+
+	if (inherits(x, "stars_proxy"))
+		return(collect(x, match.call(), "st_rgb", 
+					   c("x", "dimension", "use_alpha", "maxColorValue", "probs", "stretch"), env = environment())) # RETURNS!!
+
+	# if not stars_proxy:
 	if (is.character(dimension))
 		dimension = match(dimension, names(dim(x)))
 	stopifnot(is.numeric(dimension), length(dimension) == 1)
