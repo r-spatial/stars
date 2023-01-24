@@ -1,7 +1,8 @@
 options(rgdal_show_exportToProj4_warnings = "none")
 suppressPackageStartupMessages(library(stars))
 
-if (require("raster", quietly = TRUE) && require("terra", quietly = TRUE)) {
+if (require("raster", quietly = TRUE) && 
+	suppressPackageStartupMessages(require("terra", quietly = TRUE))) {
 
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x = read_stars(tif))

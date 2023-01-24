@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -18,7 +18,8 @@ Type 'q()' to quit R.
 > options(rgdal_show_exportToProj4_warnings = "none")
 > suppressPackageStartupMessages(library(stars))
 > 
-> if (require("raster", quietly = TRUE) && require("terra", quietly = TRUE)) {
+> if (require("raster", quietly = TRUE) && 
++ 	suppressPackageStartupMessages(require("terra", quietly = TRUE))) {
 + 
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
 + (x = read_stars(tif))
@@ -36,7 +37,6 @@ Type 'q()' to quit R.
 + (y = st_as_stars(r))
 + (y2 = st_as_stars(r, proxy = TRUE))
 + }
-terra 1.6.29
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
 [1] "[...]/L7_ETMs.tif"
@@ -126,4 +126,4 @@ new_dim    1  2     NA    NA     NA lyr.1, lyr.2
 > 
 > proc.time()
    user  system elapsed 
-  5.363   0.842   5.315 
+  6.806   0.789   6.845 

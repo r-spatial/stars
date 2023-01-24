@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE
+Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
 > 
 > if (require(spacetime, quietly = TRUE)) {
 + data(air) # this loads several datasets in .GlobalEnv
@@ -78,7 +78,31 @@ y       1  2     12    -6 WGS 84 FALSE [y]
 band    1  6     NA    NA     NA    NA    
 > 
 > sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
+> (a = aggregate(st, st_sf(a = 1, geom = sfc), mean))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1    28  194.25  360.5 360.5  526.75  693
+dimension(s):
+     from to     offset  delta refsys point
+geom    1  4         NA     NA WGS 84 FALSE
+t       1  6 2019-02-20 1 days   Date FALSE
+                                                            values
+geom POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
+t                                                             NULL
 > (a = aggregate(st, sfc, mean))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1    28  194.25  360.5 360.5  526.75  693
+dimension(s):
+         from to     offset  delta refsys point
+geometry    1  4         NA     NA WGS 84 FALSE
+t           1  6 2019-02-20 1 days   Date FALSE
+                                                                values
+geometry POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
+t                                                                 NULL
+> (a = aggregate(st, sfc, mean, exact = TRUE))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -110,6 +134,27 @@ dimension(s):
 time    1 10 2019-02-18 1 days   Date    NA    
 x       1 10          0      1 WGS 84 FALSE [x]
 y       1 12         12     -1 WGS 84 FALSE [y]
+> (a = aggregate(st, "days", mean, na.rm = TRUE))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1     1  180.75  360.5 360.5  540.25  720
+dimension(s):
+     from to     offset  delta refsys point x/y
+time    1  6 2019-02-20 1 days   Date    NA    
+x       1 10          0      1 WGS 84 FALSE [x]
+y       1 12         12     -1 WGS 84 FALSE [y]
+> yd = function(x) as.POSIXlt(x)$yday
+> (a = aggregate(st, yd, mean, na.rm = TRUE))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.
+A1     1  180.75  360.5 360.5  540.25  720
+dimension(s):
+         from to offset delta refsys point    values x/y
+geometry    1  6     NA    NA     NA    NA 50,...,55    
+x           1 10      0     1 WGS 84 FALSE      NULL [x]
+y           1 12     12    -1 WGS 84 FALSE      NULL [y]
 > 
 > # with "by" geometry not overlapping x
 > pt = st_point(c(-10,-10))
@@ -151,4 +196,4 @@ t                                                                 NULL
 > 
 > proc.time()
    user  system elapsed 
-  1.818   0.752   1.672 
+  6.263   0.848   6.223 

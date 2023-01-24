@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -21,10 +21,13 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
+[ FAIL 0 | WARN 0 | SKIP 4 | PASS 74 ]
 
-[ FAIL 0 | WARN 1 | SKIP 0 | PASS 167 ]
+══ Skipped tests ═══════════════════════════════════════════════════════════════
+• On CRAN (4)
+
+[ FAIL 0 | WARN 0 | SKIP 4 | PASS 74 ]
 > 
 > proc.time()
    user  system elapsed 
- 18.760   0.820  18.748 
+  6.459   0.832   6.330 
