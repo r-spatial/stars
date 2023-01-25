@@ -80,7 +80,9 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6-1" id="version-06-1">version 0.6-1<a class="anchor" aria-label="anchor" href="#version-06-1"></a></h2>
-<ul><li><p><code><a href="../reference/plot.html">plot.stars()</a></code> hook function can handle arguments <code>row</code>, <code>col</code>, <code>nrow</code>, <code>ncol</code>, <code>nr</code>, <code>value</code> and <code>bbox</code>; <a href="https://github.com/r-spatial/stars/issues/600" class="external-link">#600</a></p></li>
+<ul><li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> avoids reading a raster twice to determine how to choose <code>proxy</code>; <code>proxy</code> can now be set as (and defaults to) the number of cells (bands * rows * columns) above which data will not be read in memory but returned as <code>stars_proxy</code> object; <a href="https://github.com/r-spatial/stars/issues/609" class="external-link">#609</a></p></li>
+<li><p>fix using <code>RasterIO</code> in <code><a href="../reference/read_stars.html">read_stars()</a></code> when <code>proxy=TRUE</code>; <a href="https://github.com/r-spatial/stars/issues/608" class="external-link">#608</a></p></li>
+<li><p><code><a href="../reference/plot.html">plot.stars()</a></code> hook function can handle arguments <code>row</code>, <code>col</code>, <code>nrow</code>, <code>ncol</code>, <code>nr</code>, <code>value</code> and <code>bbox</code>; <a href="https://github.com/r-spatial/stars/issues/600" class="external-link">#600</a></p></li>
 <li><p>fix handling of categorical rasters with colors but no category labels; <a href="https://github.com/r-spatial/stars/issues/595" class="external-link">#595</a>, fallout of <a href="https://github.com/r-spatial/stars/issues/565" class="external-link">#565</a></p></li>
 <li><p>fix subsetting of proxy objects over a time range; <a href="https://github.com/r-spatial/stars/issues/596" class="external-link">#596</a></p></li>
 </ul></div>

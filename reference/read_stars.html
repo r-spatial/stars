@@ -94,17 +94,14 @@
 <span>  NA_value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  along <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
 <span>  RasterIO <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  proxy <span class="op">=</span> <span class="fu">is_functions</span><span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">curvilinear</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu">is_big</span><span class="op">(</span><span class="va">.x</span>, sub <span class="op">=</span> <span class="va">sub</span>, driver <span class="op">=</span></span>
-<span>    <span class="va">driver</span>, normalize_path <span class="op">=</span> <span class="va">normalize_path</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  proxy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"stars.n_proxy"</span><span class="op">)</span> <span class="op">%||%</span> <span class="fl">1e+08</span>,</span>
 <span>  curvilinear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  normalize_path <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  RAT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fl">1e-10</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  shorten <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">is_big</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, sub <span class="op">=</span> <span class="va">sub</span>, n_proxy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"stars.n_proxy"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%||%</span> <span class="fl">1e+08</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -148,8 +145,7 @@
 <dt>proxy</dt>
 <dd><p>logical; if <code>TRUE</code>, an object of class <code>stars_proxy</code> is read which contains array
 metadata only; if <code>FALSE</code> the full array data is read in memory. Always <code>FALSE</code> for curvilinear girds.
-If not set, defaults to <code>TRUE</code> when the number of cells to be read is larger than <code>options(stars.n_proxy</code>,
-or to 1e8 if that option was not set.</p></dd>
+If set to a number, defaults to <code>TRUE</code> when the number of cells to be read is larger than that number.</p></dd>
 
 
 <dt>curvilinear</dt>
@@ -174,15 +170,6 @@ or to 1e8 if that option was not set.</p></dd>
 
 <dt>shorten</dt>
 <dd><p>logical or character; if <code>TRUE</code> and <code>length(.x) &gt; 1</code>, remove common start and end parts of array names; if character a new prefix</p></dd>
-
-
-<dt>x</dt>
-<dd><p>object to be read with read_stars</p></dd>
-
-
-<dt>n_proxy</dt>
-<dd><p>integer; number of cells above which .x will be read as stars
-proxy object, i.e. not as in-memory arrays but left on disk</p></dd>
 
 </dl></div>
     <div id="value">
@@ -289,7 +276,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file545571341730.tif     1   30.75   60.5 60.5   90.25  120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file444d68ca67cb.tif     1   30.75   60.5 60.5   90.25  120</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1 10      0     1 [x]</span>
@@ -304,7 +291,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file545571341730.tif    33   36.75   65.5 65.5   94.25   98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file444d68ca67cb.tif    33   36.75   65.5 65.5   94.25   98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1  2      0     5 [x]</span>
