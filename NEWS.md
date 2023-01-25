@@ -1,5 +1,9 @@
 # version 0.6-1
 
+* `read_stars()` avoids reading a raster twice to determine how to choose `proxy`; `proxy` can now be set as (and defaults to) the number of cells (bands * rows * columns) above which data will not be read in memory but returned as `stars_proxy` object; #609
+
+* fix using `RasterIO` in `read_stars()` when `proxy=TRUE`; #608
+
 * `plot.stars()` hook function can handle arguments `row`, `col`, `nrow`, `ncol`, `nr`, `value` and `bbox`; #600
 
 * fix handling of categorical rasters with colors but no category labels; #595, fallout of #565

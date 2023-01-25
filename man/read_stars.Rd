@@ -2,7 +2,6 @@
 % Please edit documentation in R/read.R
 \name{read_stars}
 \alias{read_stars}
-\alias{is_big}
 \title{read raster/array dataset from file or connection}
 \usage{
 read_stars(
@@ -15,8 +14,7 @@ read_stars(
   NA_value = NA_real_,
   along = NA_integer_,
   RasterIO = list(),
-  proxy = is_functions(.x) || (!length(curvilinear) && is_big(.x, sub = sub, driver =
-    driver, normalize_path = normalize_path, ...)),
+  proxy = getOption("stars.n_proxy") \%||\% 1e+08,
   curvilinear = character(0),
   normalize_path = TRUE,
   RAT = character(0),
@@ -24,8 +22,6 @@ read_stars(
   exclude = "",
   shorten = TRUE
 )
-
-is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 }
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector}
@@ -48,8 +44,7 @@ is_big(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] \%||\% 1e+08)
 
 \item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
 metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds.
-If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
-or to 1e8 if that option was not set.}
+If set to a number, defaults to \code{TRUE} when the number of cells to be read is larger than that number.}
 
 \item{curvilinear}{length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to}
 
@@ -62,11 +57,6 @@ or to 1e8 if that option was not set.}
 \item{exclude}{character; vector with category value(s) to exclude}
 
 \item{shorten}{logical or character; if \code{TRUE} and \code{length(.x) > 1}, remove common start and end parts of array names; if character a new prefix}
-
-\item{x}{object to be read with \link{read_stars}}
-
-\item{n_proxy}{integer; number of cells above which .x will be read as stars
-proxy object, i.e. not as in-memory arrays but left on disk}
 }
 \value{
 object of class \code{stars}

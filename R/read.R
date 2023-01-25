@@ -25,6 +25,10 @@ is_functions = function(x) {
 	is.function(x) || all(sapply(x, is.function))
 }
 
+is_big = function(x, ..., sub = sub, n_proxy) {
+	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE, quiet = TRUE))) > n_proxy
+}
+
 # strip common start & end parts of x, if remainder != ""
 unique_part = function(x, prefix) {
 	stopifnot(is.character(x), length(x) > 1)
@@ -55,8 +59,7 @@ unique_part = function(x, prefix) {
 #' @param RasterIO list with named parameters for GDAL's RasterIO, to further control the extent, resolution and bands to be read from the data source; see details.
 #' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
 #' metadata only; if \code{FALSE} the full array data is read in memory. Always \code{FALSE} for curvilinear girds.
-#' If not set, defaults to \code{TRUE} when the number of cells to be read is larger than \code{options(stars.n_proxy},
-#' or to 1e8 if that option was not set.
+#' If set to a number, defaults to \code{TRUE} when the number of cells to be read is larger than that number.
 #' @param curvilinear length two character vector with names of subdatasets holding longitude and latitude values for all raster cells, or named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
 #' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{.x}
 #' @param RAT character; raster attribute table column name to use as factor levels
@@ -114,8 +117,7 @@ unique_part = function(x, prefix) {
 #' file.remove(tmp)
 read_stars = function(.x, ..., options = character(0), driver = character(0),
 		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
-		RasterIO = list(), proxy = is_functions(.x) || (!length(curvilinear) &&
-				is_big(.x, sub = sub, driver = driver, normalize_path = normalize_path, ...)),
+		RasterIO = list(), proxy = getOption("stars.n_proxy") %||% 1.e8,
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
 		tolerance = 1e-10, exclude = "", shorten = TRUE) {
 
@@ -123,6 +125,14 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 	if (!is.list(.x) && length(.x) > 1 && is.null(names(.x)) && !is_false(shorten) &&
 				any((short_names <- unique_part(.x, shorten)) != .x))
 		names(.x) = short_names
+	if (is.numeric(proxy)) {
+		if (is_functions(.x))
+			proxy = TRUE
+		else if (length(curvilinear))
+			proxy = FALSE
+		else if (packageVersion("sf") <= "1.0-9")
+			proxy = is_big(.x, sub = sub, driver = driver, normalize_path = normalize_path, n_proxy = proxy, ...)
+	}
 
 	x = if (is.list(.x)) {
 			f = function(y, np) enc2utf8char(maybe_normalizePath(y, np))
@@ -169,7 +179,7 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 
 	# else:
 	data = sf::gdal_read(get_names(x),
-		options = options, driver = driver, read_data = !proxy,
+		options = options, driver = driver, read_data = ifelse(is.logical(proxy), !proxy, proxy),
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
 	if (!is.null(data$default_geotransform) && data$default_geotransform == 1) {
 		## we have the 0 1 0 0 0 1 transform indicated
@@ -227,6 +237,8 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 				warning("only one array present: argument 'sub' will be ignored")
 		}
 		meta_data = structure(data, data = NULL) # take meta_data only
+		if (is.numeric(proxy) && !is.null(data$proxy))
+			proxy = data$proxy
 		data = if (proxy)
 				.x
 			else
@@ -336,15 +348,6 @@ read_stars = function(.x, ..., options = character(0), driver = character(0),
 		else
 			ret
 	}
-}
-
-#' @export
-#' @name read_stars
-#' @param x object to be read with \link{read_stars}
-#' @param n_proxy integer; number of cells above which .x will be read as stars
-#' proxy object, i.e. not as in-memory arrays but left on disk
-is_big = function(x, ..., sub = sub, n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
-	prod(dim(read_stars(x, ..., sub = sub, proxy = TRUE, quiet = TRUE))) > n_proxy
 }
 
 get_data_units = function(data) {
