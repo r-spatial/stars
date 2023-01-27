@@ -417,8 +417,8 @@ need to extract the satellite spectral data</p>
 <code class="sourceCode R"><span><span class="va">pts</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">cl</span>, <span class="fl">1000</span>, <span class="st">"regular"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html" class="external-link">st_intersection</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
-<span><span class="co">## Warning: attribute variables are assumed to be spatially constant throughout all</span></span>
-<span><span class="co">## geometries</span></span>
+<span><span class="co">## Warning: attribute variables are assumed to be spatially constant throughout</span></span>
+<span><span class="co">## all geometries</span></span>
 <span><span class="va">train</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_extract.html">st_extract</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">pts</span><span class="op">)</span></span>
 <span><span class="va">train</span><span class="op">$</span><span class="va">use</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">pts</span><span class="op">$</span><span class="va">use</span><span class="op">)</span> <span class="co"># no need for join, since the order did not change</span></span>
 <span><span class="va">train</span></span>
