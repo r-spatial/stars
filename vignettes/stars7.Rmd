@@ -341,12 +341,12 @@ Next, we make the prediction using the previously developed model and save the r
 if (!dir.exists("tiles")) dir.create("tiles")
 packages = c("stars", "randomForest")
 foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
-	tile = read_stars(r, proxy = FALSE, RasterIO = tiles[i, ], NA_value = 0)
-    pr = predict(tile, rf)
-    save_path = file.path("tiles", paste0("tile_", i, ".tif"))
-    write_stars(pr, save_path, NA_value = 0, options = "COMPRESS=NONE",
-                type = "Byte", chunk_size = dim(tile))
-    return(0) # don't return pr object as default
+  tile = read_stars(r, proxy = FALSE, RasterIO = tiles[i, ], NA_value = 0)
+  pr = predict(tile, rf)
+  save_path = file.path("tiles", paste0("tile_", i, ".tif"))
+  write_stars(pr, save_path, NA_value = 0, options = "COMPRESS=NONE",
+              type = "Byte", chunk_size = dim(tile))
+  return(0) # don't return pr object as default
 }
 ```
 
