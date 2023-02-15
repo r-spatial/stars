@@ -3,11 +3,11 @@
 #' subset stars objects
 #' @name stars_subset
 #' @param x object of class \code{stars}
-#' @param i first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf} or \code{sfc} used as spatial selector; see details
+#' @param i first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf}, \code{sfc}, \code{bbox}, or \code{stars} used as spatial selector; see details
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
-#' @details if \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}.
+#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. 
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -35,10 +35,13 @@
 #' plot(buf, add = TRUE, col = NA)
 #' image(x[buf, crop=FALSE])
 #' plot(buf, add = TRUE, col = NA)
+#' # with i of class stars:
+#' x[x > 75] # generates lots of NA's; pattern for each band
+#' x[x[,,,1] > 75] # recycles a single band template for all bands
 "[.stars" = function(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x)) {
 	missing.i = missing(i)
 
-	# special case:
+	# special case: i is sf/sfc/bbox
 	if (! missing.i && inherits(i, c("sf", "sfc", "bbox"))) {
 		x = if (has_raster(x))
 			st_crop(x, i, crop = crop, ...)
@@ -48,6 +51,13 @@
 			x[, sel]
 		}
 		return(x)
+	}
+	# special case: i is stars
+	if (! missing.i && inherits(i, "stars")) {
+		stopifnot(all(sapply(i, is.logical)))
+		fun = function(x, y) { x[is.na(y) | !y] = NA; x }
+		ret = mapply(fun, x, i, SIMPLIFY = FALSE)
+		return(st_as_stars(ret, dimensions = st_dimensions(x)))
 	}
 
 	d = st_dimensions(x)
@@ -133,7 +143,7 @@
 #' @param downsample downsampling rate used in case \code{i} is a \code{stars_proxy} object
 #' @param value array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array
 #' @export
-#' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
+#' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with logical attribute(s) that has dimensions matching (possibly after recycling) those of \code{x}; \code{i} and/or \code{value} will be recycled to the dimensions of the arrays in \code{x}.
 "[<-.stars" = function(x, i, value) {
 	if (!inherits(i, "stars"))
 		stop("selector i should be a stars object")

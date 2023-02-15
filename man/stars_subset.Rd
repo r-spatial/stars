@@ -19,7 +19,7 @@ st_flip(x, which = 1)
 \arguments{
 \item{x}{object of class \code{stars}}
 
-\item{i}{first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf} or \code{sfc} used as spatial selector; see details}
+\item{i}{first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf}, \code{sfc}, \code{bbox}, or \code{stars} used as spatial selector; see details}
 
 \item{downsample}{downsampling rate used in case \code{i} is a \code{stars_proxy} object}
 
@@ -41,9 +41,9 @@ without(s) changing the dimension properties
 subset stars objects
 }
 \details{
-if \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}.
+If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}.
 
-in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with dimensions identical to \code{x}, and \code{value} will be recycled to the dimensions of the arrays in \code{x}.
+in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with logical attribute(s) that has dimensions matching (possibly after recycling) those of \code{x}; \code{i} and/or \code{value} will be recycled to the dimensions of the arrays in \code{x}.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -71,6 +71,9 @@ image(x[buf])
 plot(buf, add = TRUE, col = NA)
 image(x[buf, crop=FALSE])
 plot(buf, add = TRUE, col = NA)
+# with i of class stars:
+x[x > 75] # generates lots of NA's; pattern for each band
+x[x[,,,1] > 75] # recycles a single band template for all bands
 lc = read_stars(system.file("tif/lc.tif", package = "stars"))
 x = c(orig = lc, 
       flip_x = st_flip(lc, "x"), 
