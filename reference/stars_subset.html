@@ -75,7 +75,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>subset stars objects</h1>
-    <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/subset.R" class="external-link"><code>R/subset.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/proxy.R" class="external-link"><code>R/proxy.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/subset.R" class="external-link"><code>R/subset.R</code></a></small>
     <div class="hidden name"><code>stars_subset.Rd</code></div>
     </div>
 
@@ -84,11 +84,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre><code># S3 method for stars
+    <div class="sourceCode"><pre><code># S3 method for stars_proxy
+[(x, i, downsample = 0) &lt;- value
+
+# S3 method for stars
 [(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
 # S3 method for stars
-[(x, i, downsample = 0) &lt;- value
+[(x, i) &lt;- value
 
 st_flip(x, which = 1)</code></pre></div>
     </div>
@@ -103,6 +106,14 @@ st_flip(x, which = 1)</code></pre></div>
 <dd><p>first selector: integer, logical or character vector indicating attributes to select, or object of class <code>sf</code> or <code>sfc</code> used as spatial selector; see details</p></dd>
 
 
+<dt>downsample</dt>
+<dd><p>downsampling rate used in case <code>i</code> is a <code>stars_proxy</code> object</p></dd>
+
+
+<dt>value</dt>
+<dd><p>array of dimensions equal to those in <code>x</code>, or a vector or value that will be recycled to such an array</p></dd>
+
+
 <dt>...</dt>
 <dd><p>further (logical or integer vector) selectors, matched by order, to select on individual dimensions</p></dd>
 
@@ -113,14 +124,6 @@ st_flip(x, which = 1)</code></pre></div>
 
 <dt>crop</dt>
 <dd><p>logical; if <code>TRUE</code> and parameter <code>i</code> is a spatial geometry (<code>sf</code> or <code>sfc</code>) object, the extent (bounding box) of the result is cropped to match the extent of <code>i</code> using <a href="st_crop.html">st_crop</a>. Cropping curvilinear grids is not supported.</p></dd>
-
-
-<dt>downsample</dt>
-<dd><p>downsampling rate used in case <code>i</code> is a <code>stars_proxy</code> object</p></dd>
-
-
-<dt>value</dt>
-<dd><p>array of dimensions equal to those in <code>x</code>, or a vector or value that will be recycled to such an array</p></dd>
 
 
 <dt>which</dt>
