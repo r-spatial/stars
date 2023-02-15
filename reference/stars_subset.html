@@ -103,7 +103,7 @@ st_flip(x, which = 1)</code></pre></div>
 
 
 <dt>i</dt>
-<dd><p>first selector: integer, logical or character vector indicating attributes to select, or object of class <code>sf</code> or <code>sfc</code> used as spatial selector; see details</p></dd>
+<dd><p>first selector: integer, logical or character vector indicating attributes to select, or object of class <code>sf</code>, <code>sfc</code>, <code>bbox</code>, or <code>stars</code> used as spatial selector; see details</p></dd>
 
 
 <dt>downsample</dt>
@@ -139,8 +139,8 @@ without(s) changing the dimension properties</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>if <code>i</code> is an object of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned <code>NA</code>.</p>
-<p>in an assignment (or replacement form, <code>[&lt;-</code>), argument <code>i</code> needs to be a <code>stars</code> object with dimensions identical to <code>x</code>, and <code>value</code> will be recycled to the dimensions of the arrays in <code>x</code>.</p>
+    <p>If <code>i</code> is an object of class <code>sf</code>, <code>sfc</code> or <code>bbox</code>, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned <code>NA</code>. If <code>i</code> is of class <code>stars</code>, and attributes of <code>i</code> are <code>logical</code>, cells in <code>x</code> corresponding to <code>NA</code> or <code>FALSE</code> cells in <code>i</code> are assigned an <code>NA</code>.</p>
+<p>in an assignment (or replacement form, <code>[&lt;-</code>), argument <code>i</code> needs to be a <code>stars</code> object with logical attribute(s) that has dimensions matching (possibly after recycling) those of <code>x</code>; <code>i</code> and/or <code>value</code> will be recycled to the dimensions of the arrays in <code>x</code>.</p>
     </div>
 
     <div id="ref-examples">
@@ -211,6 +211,27 @@ without(s) changing the dimension properties</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="va">buf</span>, crop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">buf</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="stars_subset-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># with i of class stars:</span></span></span>
+<span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">75</span><span class="op">]</span> <span class="co"># generates lots of NA's; pattern for each band</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Min. 1st Qu. Median     Mean 3rd Qu. Max.   NA's</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L7_ETMs.tif    76      82     90 94.40052     101  255 443210</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to  offset delta                     refsys point x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band    1   6      NA    NA                         NA    NA    </span>
+<span class="r-in"><span><span class="va">x</span><span class="op">[</span><span class="va">x</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">]</span> <span class="op">&gt;</span> <span class="fl">75</span><span class="op">]</span> <span class="co"># recycles a single band template for all bands</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Min. 1st Qu. Median     Mean 3rd Qu. Max.   NA's</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L7_ETMs.tif     1      63     79 74.98075      93  255 318960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to  offset delta                     refsys point x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band    1   6      NA    NA                         NA    NA    </span>
 <span class="r-in"><span><span class="va">lc</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/lc.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>orig <span class="op">=</span> <span class="va">lc</span>, </span></span>
 <span class="r-in"><span>      flip_x <span class="op">=</span> <span class="fu">st_flip</span><span class="op">(</span><span class="va">lc</span>, <span class="st">"x"</span><span class="op">)</span>, </span></span>
