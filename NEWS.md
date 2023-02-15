@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* `[<-.stars_proxy()` clones environment, so that after `r[r > 100]<-NA` we don't get infinite recursion when realizing `r`
+
 * `read_stars()` avoids reading a raster twice to determine how to choose `proxy`; `proxy` can now be set as (and defaults to) the number of cells (bands * rows * columns) above which data will not be read in memory but returned as `stars_proxy` object; #609
 
 * fix using `RasterIO` in `read_stars()` when `proxy=TRUE`; #608

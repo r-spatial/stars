@@ -425,9 +425,15 @@ is.na.stars_proxy = function(x) {
 	collect(x, match.call(), "is.na", "x", env = environment())
 }
 
+#' @name stars_subset
 #' @export
 "[<-.stars_proxy" = function(x, i, downsample = 0, value) {
-	collect(x, match.call(), "[<-", c("x", "i", "value", "downsample"), env = environment())
+	# https://stackoverflow.com/questions/9965577/copy-move-one-environment-to-another
+	# copy the environment, to avoid side effect later on:
+	# FIXME: to investigate - should this be done to env in every call to collect()?
+	env = as.environment(as.list(environment(), all.names = TRUE)) # copies
+	parent.env(env) = parent.env(environment())
+	collect(x, match.call(), "[<-", c("x", "i", "value", "downsample"), env)
 }
 
 
