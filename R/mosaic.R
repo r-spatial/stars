@@ -45,7 +45,7 @@ st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext),
 #' @name st_mosaic
 st_mosaic.character = function(.x, ...,  dst = tempfile(fileext = file_ext), 
 		options = c("-vrtnodata", "-9999"), file_ext = ".tif") {
-	sf::gdal_utils("buildvrt", .x, dst, options)
+	sf::gdal_utils("buildvrt", .x, dst, options = options, ...)
 	dst
 }
 
@@ -56,6 +56,6 @@ st_mosaic.stars_proxy = function(.x, ..., dst = tempfile(fileext = file_ext),
 	if (length(.x) > 1 || length(.x[[1]]) > 1)
 		stop("st_mosaic.stars_proxy only implemented for single-file proxy objects")
 	objs = if (missing(.x)) list(...) else append(list(.x), list(...))
-	files = sapply(objs, function(sp) sp[[1]])	
+	files = sapply(objs, function(sp) sp[[1]])
 	read_stars(st_mosaic(files, dst = dst, options = options, file_ext = file_ext), proxy = TRUE)
 }
