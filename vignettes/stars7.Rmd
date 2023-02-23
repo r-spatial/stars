@@ -1,6 +1,6 @@
 ---
 title: "7. Statistical modelling with stars objects"
-author: "Edzer Pebesma"
+author: Edzer Pebesma, Krzysztof Dyba
 output:
   html_document:
     toc: true
@@ -143,13 +143,13 @@ computations are restricted to the pixels plotted:
 plot(out, breaks = "equal", main = "9-day time trend (slope)")
 ```
 
-An interisting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, _changes_ in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguis positive from negative trends.
+An interesting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, _changes_ in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguish positive from negative trends.
 
 ## Unsupervised learners
 
 ### Principal components
 
-In the first example, we build principal components on the entire data set,
+In the first example, we build principal components on the entire dataset,
 because it is rather small.
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -162,7 +162,7 @@ plot(merge(out), breaks = "equal", join_zlim = FALSE)
 We see, amongst others, that PC1 picks up the difference between sea (dark) and land, and PC2 and 3 structures in sea and coastal waters.
 
 In the second example, we build principal components from a sample
-of the entire data set, because the entire dataset is rather large.
+of the entire dataset, because the entire dataset is rather large.
 We apply it, using `predict`, to pixels shown in the plot (i.e. at 
 reduced rather than full resolution) 
 
@@ -251,13 +251,13 @@ The following example is purely for educational purposes; the classified "land u
 
 We have polygon areas where the land use was classified, residing in a GeoPackage file. (This file was created using QGIS, using the instructions found [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
 ```{r eval=EVAL}
+bands = c("B04", "B03", "B02", "B08")
 # for all, multi-resolution, use:
-bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
-# bands = c("B04", "B03", "B02", "B08")
+# bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
 s2 = paste0("/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
 r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
-	setNames(bands) 
+	setNames(bands)
 cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) %>%
   st_transform(st_crs(r))
 plot(r, reset = FALSE)
@@ -277,7 +277,7 @@ train
 
 ```{r eval=EVAL}
 library(randomForest)
-train = as.data.frame(train)
+train = data.frame(train)
 train$x = NULL # remove geometry
 rf = randomForest(use ~ ., train) # ~ . : use all other attributes
 pr = predict(r, rf)
@@ -287,4 +287,84 @@ plot(m, add = TRUE)
 ```
 
 This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.
+
+### Parallel predict
+
+Prediction on large datasets can be time-consuming, but with enough computing power, this task can be parallelized easily.
+Some algorithms provide native multithreading like `predict()` function in `{ranger}` package (but this is not standard).
+In this situation, we have to parallelize the calculations ourselves.
+There are several approaches to do this, but for this example we will divide a large out of memory raster into smaller blocks and make predictions using multithreading.
+For this we need two additional packages -- `{foreach}` and `{doParallel}`.
+
+Let's start by loading our raster as a proxy (only metadata will be returned).
+
+```{r}
+bands = c("B04", "B03", "B02", "B08")
+s2 = paste0("/vsizip/", granule, 
+"/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
+r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+	setNames(bands)
+```
+
+Then use the `st_tile()` function to calculate smaller blocks by specifying their size (rows and columns).
+For example, it could be 1024 x 1024, but usually you should find the optimal size.
+
+```{r}
+tiles = st_tile(nrow(r), ncol(r), 1024, 1024)
+head(tiles)
+```
+
+Now we need to setup a parallel backend by defining the number of available cores in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function.
+
+```{r include=FALSE}
+install.packages(c("foreach", "doParallel"), repos = "http://cran.us.r-project.org")
+```
+
+```{r}
+library("foreach")
+library("doParallel")
+
+cores = 4 # number of cores
+cl = makeCluster(cores)
+registerDoParallel(cl)
+```
+
+Once we have the cluster prepared, we can write a loop that will be executed in parallel.
+Instead of the standard `for()` loop, we will use `foreach()` with the `%dopar%` operator.
+In `foreach()` we need to define an iterator and packages that will be exported to each worker.
+Then we use the `%dopar%` operator and write the core of the function.
+Basically, we want to load smaller raster blocks.
+To do this, specify the `RasterIO` argument in the `read_stars()` function.
+Next, we make the prediction using the previously developed model and save the result in the `tiles` directory.
+
+```{r results='hide'}
+if (!dir.exists("tiles")) dir.create("tiles")
+packages = c("stars", "randomForest")
+foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
+  tile = read_stars(r, proxy = FALSE, RasterIO = tiles[i, ], NA_value = 0)
+  pr = predict(tile, rf)
+  save_path = file.path("tiles", paste0("tile_", i, ".tif"))
+  write_stars(pr, save_path, NA_value = 0, options = "COMPRESS=NONE",
+              type = "Byte", chunk_size = dim(tile))
+  return(0) # don't return pr object as default
+}
+```
+
+As a result, we get many files that need to be merged.
+The best way to do this is by using a virtual file (`buildvrt`) and converting directly from GDAL (`translate`).
+Both of these tools are available in `sf::gdal_utils()`.
+
+```{r}
+# list files
+tiles = list.files("tiles", pattern = ".tif$", full.names = TRUE)
+tmp = tempfile(fileext = ".vrt")
+sf::gdal_utils(util = "buildvrt", source = tiles, destination = tmp)
+sf::gdal_utils(util = "translate", source = tmp, destination = "predict.tif")
+```
+
+The last step is to stop the computing cluster if you no longer need it.
+
+```{r}
+stopCluster(cl)
+```
 
