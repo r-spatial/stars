@@ -80,7 +80,8 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.6-1" id="version-06-1">version 0.6-1<a class="anchor" aria-label="anchor" href="#version-06-1"></a></h2>
-<ul><li><p><code>[.stars()</code>, as in <code>r[x]</code> allows <code>x</code> to be a logical stars object</p></li>
+<ul><li><p><code><a href="../reference/mdim.html">read_mdim()</a></code> reads “raster” with single pixel (as a point)</p></li>
+<li><p><code>[.stars()</code>, as in <code>r[x]</code> allows <code>x</code> to be a logical stars object</p></li>
 <li><p><code>[&lt;-.stars_proxy()</code> clones environment, so that after <code>r[r &gt; 100] = NA</code> we don’t get infinite recursion when realizing <code>r</code></p></li>
 <li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> avoids reading a raster twice to determine how to choose <code>proxy</code>; <code>proxy</code> can now be set as (and defaults to) the number of cells (bands * rows * columns) above which data will not be read in memory but returned as <code>stars_proxy</code> object; <a href="https://github.com/r-spatial/stars/issues/609" class="external-link">#609</a></p></li>
 <li><p>fix using <code>RasterIO</code> in <code><a href="../reference/read_stars.html">read_stars()</a></code> when <code>proxy=TRUE</code>; <a href="https://github.com/r-spatial/stars/issues/608" class="external-link">#608</a></p></li>
