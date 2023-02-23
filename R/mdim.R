@@ -121,6 +121,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE, bounds = TRUE) {
 
+	if (proxy)
+		stop("proxy not yet implemented in read_mdim()")
+
 	stopifnot(is.character(filename), is.character(variable), is.character(options));
 	# when releasing to CRAN, require sf 1.0-9 and drop second option
 	ret = if (packageVersion("sf") >= "1.0-9")
@@ -170,9 +173,13 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			l[[i]] = l[[i]][seq(from = offset[i]+1, length.out = count[i], by = step[i])]
 		}
 	}
+
+	# create dimensions table:
 	sf = any(sapply(l, function(x) inherits(x, "sfc")))
-	d = mapply(function(x, i) create_dimension(values = x, is_raster = !sf && i %in% 1:2), l, seq_along(l),
-			SIMPLIFY = FALSE)
+	# FIXME: i %in% 1:2 always the case?
+	d = mapply(function(x, i) create_dimension(values = x, is_raster = !sf && i %in% 1:2, 
+									   point = ifelse(length(x) == 1, TRUE, NA)),
+			   l, seq_along(l), SIMPLIFY = FALSE)
 	if (is.null(raster)) {
 		raster = if (sf)
 					get_raster(dimensions = rep(NA_character_,2))
@@ -180,9 +187,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 					get_raster(dimensions = names(d)[1:2])
 	} else
 		raster = get_raster(dimensions = raster)
-
-	if (proxy)
-		stop("proxy not yet implemented in read_mdim()")
+	dimensions = create_dimensions(d, raster = raster)
 
 	# handle array units:
 	for (i in seq_along(ret$array_list))
@@ -190,8 +195,13 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 				!inherits(try(units::set_units(1.0, u, mode = "standard"), silent = TRUE), "try-error"))
 			ret$array_list[[i]] = units::set_units(ret$array_list[[i]], u, mode = "standard")
 	lst = lapply(ret$array_list, function(x) structure(x, dim = rev(dim(x))))
-	st_set_crs(st_stars(lst, dimensions = structure(d, raster = raster, class = "dimensions")),
-		ret$srs)
+
+	# create return object:
+	st = st_stars(lst, dimensions)
+	if (!is.null(ret$crs))
+		st_set_crs(st, ret$srs)
+	else
+		st
 }
 
 

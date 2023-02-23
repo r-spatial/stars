@@ -216,7 +216,7 @@ st_get_dimension_values = function(.x, which, ..., where = NA, max = FALSE, cent
       stop("where, if not NA, must be 'start', 'center' or 'end': ", where)
     }
   }
-	expand_dimensions(.x, ..., max = max, center = center)[[which]]
+  expand_dimensions(.x, ..., max = max, center = center)[[which]]
 }
 
 
@@ -313,8 +313,18 @@ create_dimensions = function(lst, raster = NULL) {
 		names(lst)[sel] = make.names(seq_along(sel))
 	}
 	if (is.null(raster))
-		raster = get_raster(dimensions = c(NA_character_, NA_character_))
-	structure(lst, raster = raster, class = "dimensions")
+		structure(lst, raster = get_raster(dimensions = c(NA_character_, NA_character_)), class = "dimensions")
+	else { 
+		d = structure(lst, raster = raster, class = "dimensions")
+		rd = raster$dimensions
+		if (identical(d[[rd[1]]]$refsys, "udunits") && identical(d[[rd[2]]]$refsys, "udunits")) {
+			e = expand_dimensions(d)
+			deg = as_units("degree")
+			if (units::ud_are_convertible(e[[rd[1]]], deg) && units::ud_are_convertible(e[[rd[2]]], deg)) # FIXME: convert to degrees?
+				d[[rd[1]]]$refsys = d[[rd[2]]]$refsys = st_crs('OGC:CRS84')
+		}
+		d
+	}
 }
 
 get_crs = function(pr) {

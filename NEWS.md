@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* `read_mdim()` reads "raster" with single pixel (as a point)
+
 * `[.stars()`, as in `r[x]` allows `x` to be a logical stars object
 
 * `[<-.stars_proxy()` clones environment, so that after `r[r > 100] = NA` we don't get infinite recursion when realizing `r`

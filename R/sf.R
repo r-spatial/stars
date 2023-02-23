@@ -48,6 +48,8 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	dxy = attr(d, "raster")$dimensions
 	xy_pos = match(dxy, names(d))
 	stopifnot(all(xy_pos == 1:2))
+	if (missing(as_points) && isTRUE(d[[dxy[1]]]$point) && isTRUE(d[[dxy[2]]]$point))
+		as_points = TRUE
 
 	# find which records are NA for all attributes:
 	a = abind(x, along = length(dim(x)) + 1)
