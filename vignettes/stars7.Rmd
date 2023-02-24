@@ -314,7 +314,8 @@ tiles = st_tile(nrow(r), ncol(r), 1024, 1024)
 head(tiles)
 ```
 
-Now we need to setup a parallel backend by defining the number of available cores in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function. This can be accomplished, for instance, with
+Now we need to setup a parallel backend by defining the number of available cores (or by detecting them automatically using `detectCores()`) in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function.
+This can be accomplished, for instance, with
 
 ```{r eval=FALSE}
 library("foreach")
@@ -330,7 +331,7 @@ In `foreach()` we need to define an iterator and packages that will be exported 
 Then we use the `%dopar%` operator and write the core of the function.
 Basically, we want to load smaller raster blocks.
 To do this, specify the `RasterIO` argument in the `read_stars()` function.
-Next, we make the prediction using the previously developed model and save the result in the `tiles` directory.
+Next, we make the prediction using the previously developed model and save the result in the temporary directory.
 
 ```{r eval=FALSE}
 packages = c("stars", "randomForest")
@@ -345,11 +346,10 @@ tifs = foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
 ```
 
 As a result, we get many files that need to be merged.
-The best way to do this is by using a virtual file (`buildvrt`) and converting directly from GDAL (`translate`).
+The best way to do this is by using a virtual file (`buildvrt`) and converting directly from GDAL (`translate`) to a single geotiff.
 Both of these tools are available in `sf::gdal_utils()`.
 
 ```{r eval=FALSE}
-# list files
 vrt = tempfile(fileext = ".vrt")
 sf::gdal_utils(util = "buildvrt", unlist(tifs), vrt)
 dest = file.path(tempdir(), "predict.tif")
