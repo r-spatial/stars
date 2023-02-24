@@ -298,7 +298,7 @@ For this we need two additional packages -- `{foreach}` and `{doParallel}`.
 
 Let's start by loading our raster as a proxy (only metadata will be returned).
 
-```{r}
+```{r eval=EVAL}
 bands = c("B04", "B03", "B02", "B08")
 s2 = paste0("/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
@@ -309,18 +309,20 @@ r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
 Then use the `st_tile()` function to calculate smaller blocks by specifying their size (rows and columns).
 For example, it could be 1024 x 1024, but usually you should find the optimal size.
 
-```{r}
+```{r eval=EVAL}
 tiles = st_tile(nrow(r), ncol(r), 1024, 1024)
 head(tiles)
 ```
 
 Now we need to setup a parallel backend by defining the number of available cores (or by detecting them automatically using `detectCores()`) in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function.
+Due to hardware limitations, we use only two cores in this example, but in reality this number should be higher.
 This can be accomplished, for instance, with
 
-```{r eval=FALSE}
+```{r eval=EVAL}
 library("foreach")
 library("doParallel")
-cores = min(detectCores(), 4) # number of cores
+cores = 2 # specify number of cores
+# cores = detectCores()
 cl = makeCluster(cores)
 registerDoParallel(cl)
 ```
@@ -333,7 +335,7 @@ Basically, we want to load smaller raster blocks.
 To do this, specify the `RasterIO` argument in the `read_stars()` function.
 Next, we make the prediction using the previously developed model and save the result in the temporary directory.
 
-```{r eval=FALSE}
+```{r eval=EVAL}
 packages = c("stars", "randomForest")
 tifs = foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
   tile = read_stars(r, proxy = FALSE, RasterIO = tiles[i, ], NA_value = 0)
@@ -349,17 +351,17 @@ As a result, we get many files that need to be merged.
 The best way to do this is by using a virtual file (`buildvrt`) and converting directly from GDAL (`translate`) to a single geotiff.
 Both of these tools are available in `sf::gdal_utils()`.
 
-```{r eval=FALSE}
+```{r eval=EVAL}
 vrt = tempfile(fileext = ".vrt")
-sf::gdal_utils(util = "buildvrt", unlist(tifs), vrt)
+gdal_utils(util = "buildvrt", unlist(tifs), vrt)
 dest = file.path(tempdir(), "predict.tif")
-sf::gdal_utils(util = "translate", vrt, dest)
+gdal_utils(util = "translate", vrt, dest)
 read_stars(dest)
 ```
 
 The last step is to stop the computing cluster if you no longer need it.
 
-```{r eval=FALSE}
+```{r eval=EVAL}
 stopCluster(cl)
 ```
 
