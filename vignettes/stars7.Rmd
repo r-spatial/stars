@@ -314,17 +314,12 @@ tiles = st_tile(nrow(r), ncol(r), 1024, 1024)
 head(tiles)
 ```
 
-Now we need to setup a parallel backend by defining the number of available cores in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function.
+Now we need to setup a parallel backend by defining the number of available cores in `makeCluster()` and then registering the cluster using the `registerDoParallel()` function. This can be accomplished, for instance, with
 
-```{r include=FALSE}
-install.packages(c("foreach", "doParallel"), repos = "http://cran.us.r-project.org")
-```
-
-```{r}
+```{r eval=FALSE}
 library("foreach")
 library("doParallel")
-
-cores = 4 # number of cores
+cores = min(detectCores(), 4) # number of cores
 cl = makeCluster(cores)
 registerDoParallel(cl)
 ```
@@ -337,16 +332,15 @@ Basically, we want to load smaller raster blocks.
 To do this, specify the `RasterIO` argument in the `read_stars()` function.
 Next, we make the prediction using the previously developed model and save the result in the `tiles` directory.
 
-```{r results='hide'}
-if (!dir.exists("tiles")) dir.create("tiles")
+```{r eval=FALSE}
 packages = c("stars", "randomForest")
-foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
+tifs = foreach(i = seq_len(nrow(tiles)), .packages = packages) %dopar% {
   tile = read_stars(r, proxy = FALSE, RasterIO = tiles[i, ], NA_value = 0)
   pr = predict(tile, rf)
-  save_path = file.path("tiles", paste0("tile_", i, ".tif"))
+  save_path = file.path(tempdir(), paste0("tile_", i, ".tif"))
   write_stars(pr, save_path, NA_value = 0, options = "COMPRESS=NONE",
               type = "Byte", chunk_size = dim(tile))
-  return(0) # don't return pr object as default
+  save_path
 }
 ```
 
@@ -354,17 +348,18 @@ As a result, we get many files that need to be merged.
 The best way to do this is by using a virtual file (`buildvrt`) and converting directly from GDAL (`translate`).
 Both of these tools are available in `sf::gdal_utils()`.
 
-```{r}
+```{r eval=FALSE}
 # list files
-tiles = list.files("tiles", pattern = ".tif$", full.names = TRUE)
-tmp = tempfile(fileext = ".vrt")
-sf::gdal_utils(util = "buildvrt", source = tiles, destination = tmp)
-sf::gdal_utils(util = "translate", source = tmp, destination = "predict.tif")
+vrt = tempfile(fileext = ".vrt")
+sf::gdal_utils(util = "buildvrt", unlist(tifs), vrt)
+dest = file.path(tempdir(), "predict.tif")
+sf::gdal_utils(util = "translate", vrt, dest)
+read_stars(dest)
 ```
 
 The last step is to stop the computing cluster if you no longer need it.
 
-```{r}
+```{r eval=FALSE}
 stopCluster(cl)
 ```
 
