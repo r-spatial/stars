@@ -86,10 +86,10 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_stars</span><span class="op">(</span></span>
 <span>  <span class="va">.x</span>,</span>
+<span>  sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  driver <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  NA_value <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
 <span>  along <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
@@ -110,6 +110,10 @@
 <dd><p>character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector</p></dd>
 
 
+<dt>sub</dt>
+<dd><p>character, integer or logical; name, index or indicator of sub-dataset(s) to be read</p></dd>
+
+
 <dt>...</dt>
 <dd><p>passed on to <a href="st_as_stars.html">st_as_stars</a> if <code>curvilinear</code> was set</p></dd>
 
@@ -120,10 +124,6 @@
 
 <dt>driver</dt>
 <dd><p>character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use <code>NULL</code>.</p></dd>
-
-
-<dt>sub</dt>
-<dd><p>character, integer or logical; name, index or indicator of sub-dataset(s) to be read</p></dd>
 
 
 <dt>quiet</dt>
@@ -276,7 +276,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file345c53238f15.tif     1   30.75   60.5 60.5   90.25  120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file34e847fae6cb.tif     1   30.75   60.5 60.5   90.25  120</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1 10      0     1 [x]</span>
@@ -291,7 +291,7 @@ has to be one of: "nearest_neighbour" (the default),
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       Min. 1st Qu. Median Mean 3rd Qu. Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> file345c53238f15.tif    33   36.75   65.5 65.5   94.25   98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> file34e847fae6cb.tif    33   36.75   65.5 65.5   94.25   98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1  2      0     5 [x]</span>
