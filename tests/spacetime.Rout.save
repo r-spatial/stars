@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -329,9 +329,8 @@ The following objects are masked from 'package:base':
 
     as.Date, as.Date.numeric
 
-Warning message:
-In as.xts.stars(x) : all but first attribute will be ignored
+only the first attribute will used; maybe use merge() first?
 > 
 > proc.time()
    user  system elapsed 
-  1.486   0.051   1.530 
+  1.638   0.819   1.568 

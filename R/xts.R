@@ -3,7 +3,7 @@ as.xts.stars <- function(x,...) {
 	if (!requireNamespace("xts", quietly = TRUE))
 		stop("xts required: install that first") # nocov
 	if (length(x) > 1)
-		warning("all but first attribute will be ignored")
+		message("only the first attribute will used; maybe use merge() first?")
 
 	ed = expand_dimensions.stars(x)
 	time = which(sapply(ed, inherits, c("Date", "POSIXt")))
@@ -13,12 +13,15 @@ as.xts.stars <- function(x,...) {
 		message("more than one time dimension present in object; taking the first")
 		time = time[1]
 	}
-	x = st_upfront(x[1], time)
+	x = adrop(st_upfront(x[1], time), drop_xy = TRUE)
 	if (length(dim(x)) > 2) {
 		dims = setNames(c(dim(x)[1], prod(dim(x)[-1])), c(names(ed)[time], "other"))
 		x = st_redimension(x, dims)
+	} else { # set colnames
+		d = st_dimensions(x)
+		if (length(dim(x)) == 2 && length(d[[2]]$values) == dim(x)[2] && is.character(d[[2]]$values))
+			colnames(x[[1]]) = d[[2]]$values
 	}
-	
 	xts::xts(x[[1]], ed[[time]])
 }
 
