@@ -293,7 +293,7 @@
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>Downsampling: a value for <code>downsample</code> of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.</p>
+    <p>Downsampling: a value for <code>downsample</code> of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If <code>downsample</code> is <code>TRUE</code> or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.</p>
 <p>To remove unused classes in a categorical raster, use the <a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a> function.</p>
 <p>When bitmaps show visual artefacts (Moiré effects), make sure that device <a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a> is used rather than <code><a href="https://ragg.r-lib.org/reference/agg_png.html" class="external-link">ragg::agg_png</a></code> as the latter uses antialiasing for filled polygons which causes this; see also https://github.com/r-spatial/stars/issues/573 .</p>
 <p>use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208</p>
