@@ -30,7 +30,7 @@ make_label = function(x, i = 1) {
 #' @param hook NULL or function; hook function that will be called on every sub-plot; see examples.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
 #' @details
-#' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
+#' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If \code{downsample} is \code{TRUE} or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.
 #'
 #' To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
 #'
@@ -54,6 +54,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618,
 		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, mfrow = NULL) {
 
+	if (!missing(y))
+		stop("y argument should be missing")
 	flatten = function(x, i) { # collapse all non-x/y dims into one, and select "layer" i
 		d = st_dimensions(x)
 		dxy = attr(d, "raster")$dimensions
@@ -89,6 +91,27 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	if (is.factor(x[[1]]) && any(is.na(levels(x[[1]]))))
 		x = droplevels(x) # https://github.com/r-spatial/stars/issues/339
 
+	zlim = if (join_zlim && is.null(dots$rgb))
+			range(unclass(x[[1]]), na.rm = TRUE)
+		else
+			rep(NA_real_, 2)
+
+	# downsample if raster:
+	if (has_raster(x) && !identical(downsample, FALSE)) {
+		dxy = attr(st_dimensions(x), "raster")$dimensions
+		loop = setdiff(names(dim(x)), dxy) # dimension (name) over which we loop, if any
+		x = aperm(x, c(dxy, loop))
+		dims = dim(x)
+		if (isTRUE(downsample)) {
+			n = dims * 0 # keep names
+			n[dxy] = get_downsample(dims, rgb = is.numeric(dots$rgb))
+			x = st_downsample(x, n)
+		} else if (is.numeric(downsample)) {
+			x = st_downsample(x, downsample)
+		} 
+	}
+
+	# find breaks:
 	if (join_zlim && !is.character(x[[1]]) && is.null(dots$rgb)) {
 		breaks = if (is.factor(x[[1]]))
 					seq(.5, length.out = length(levels(x[[1]])) + 1)
@@ -106,27 +129,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	if (isTRUE(dots$logz) && !((has_raster(x) && (is_curvilinear(x) || has_rotate_or_shear(x))) || has_sfc(x)))
 		x = log10(x) # otherwise, defer log-transforming to sf::plot.sf
 
-	if (!missing(y))
-		stop("y argument should be missing")
 	if (has_raster(x)) {
-		dxy = attr(st_dimensions(x), "raster")$dimensions
-		loop = setdiff(names(dim(x)), dxy) # dimension (name) over which we loop, if any
-		x = aperm(x, c(dxy, loop))
-		zlim = if (join_zlim && is.null(dots$rgb))
-				range(unclass(x[[1]]), na.rm = TRUE)
-			else
-				rep(NA_real_, 2)
 		dims = dim(x)
-		x = if (isTRUE(downsample)) {
-				n = dims * 0 # keep names
-				n[dxy] = get_downsample(dims, rgb = is.numeric(dots$rgb))
-				st_downsample(x, n)
-			} else if (is.numeric(downsample)) {
-				st_downsample(x, downsample)
-			} else
-				x
-		dims = dim(x) # may have changed by st_downsample
-
 		if (length(dims) == 2 || dims[3] == 1 || (!is.null(dots$rgb) && is.numeric(dots$rgb))) { ## ONE IMAGE:
 			# set up key region
 			values = structure(x[[1]], dim = NULL) # array -> vector

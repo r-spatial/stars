@@ -139,7 +139,7 @@
 plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
 }
 \details{
-Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc.
+Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If \code{downsample} is \code{TRUE} or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.
 
 To remove unused classes in a categorical raster, use the \link[base]{droplevels} function.
 
