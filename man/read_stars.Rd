@@ -6,10 +6,10 @@
 \usage{
 read_stars(
   .x,
+  sub = TRUE,
   ...,
   options = character(0),
   driver = character(0),
-  sub = TRUE,
   quiet = FALSE,
   NA_value = NA_real_,
   along = NA_integer_,
@@ -26,13 +26,13 @@ read_stars(
 \arguments{
 \item{.x}{character vector with name(s) of file(s) or data source(s) to be read, or a function that returns such a vector}
 
+\item{sub}{character, integer or logical; name, index or indicator of sub-dataset(s) to be read}
+
 \item{...}{passed on to \link{st_as_stars} if \code{curvilinear} was set}
 
 \item{options}{character; opening options}
 
 \item{driver}{character; driver to use for opening file. To override fixing for subdatasets and autodetect them as well, use \code{NULL}.}
-
-\item{sub}{character, integer or logical; name, index or indicator of sub-dataset(s) to be read}
 
 \item{quiet}{logical; print progress output?}
 

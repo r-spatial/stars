@@ -115,8 +115,8 @@ unique_part = function(x, prefix) {
 #'   plot(st_as_sfc(red, as_points = FALSE), add = TRUE, border = 'green', lwd = 2)
 #' }
 #' file.remove(tmp)
-read_stars = function(.x, ..., options = character(0), driver = character(0),
-		sub = TRUE, quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
+read_stars = function(.x, sub = TRUE, ..., options = character(0), 
+		driver = character(0), quiet = FALSE, NA_value = NA_real_, along = NA_integer_,
 		RasterIO = list(), proxy = getOption("stars.n_proxy") %||% 1.e8,
 		curvilinear = character(0), normalize_path = TRUE, RAT = character(0),
 		tolerance = 1e-10, exclude = "", shorten = TRUE) {

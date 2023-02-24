@@ -319,9 +319,14 @@ create_dimensions = function(lst, raster = NULL) {
 		rd = raster$dimensions
 		if (identical(d[[rd[1]]]$refsys, "udunits") && identical(d[[rd[2]]]$refsys, "udunits")) {
 			e = expand_dimensions(d)
-			deg = as_units("degree")
-			if (units::ud_are_convertible(e[[rd[1]]], deg) && units::ud_are_convertible(e[[rd[2]]], deg)) # FIXME: convert to degrees?
-				d[[rd[1]]]$refsys = d[[rd[2]]]$refsys = st_crs('OGC:CRS84')
+			deg = units(as_units("degree"))
+			ux = units(e[[rd[1]]])
+			uy = units(e[[rd[2]]])
+			if (units::ud_are_convertible(ux, deg) && units::ud_are_convertible(uy, deg)) {
+				d[[rd[1]]] = drop_units.dimension(d[[rd[1]]])
+				d[[rd[2]]] = drop_units.dimension(d[[rd[2]]])
+				d[[rd[1]]]$refsys = d[[rd[2]]]$refsys = st_crs('OGC:CRS84') # specifies units
+			}
 		}
 		d
 	}
@@ -770,4 +775,21 @@ as.POSIXct.stars = function(x, ...) {
 			d[[i]] = create_dimension(values = p)
 	}
 	structure(x, dimensions = d)
+}
+
+drop_units.dimension = function(x) {
+	du = function(y) {
+		if (inherits(y, "units"))
+			units::drop_units(y)
+		else if (inherits(y, "intervals")) {
+			y$start = du(y$start)
+			y$end = du(y$end)
+			y
+		} else
+			y
+	}
+	x$offset = du(x$offset)
+	x$delta  = du(x$delta)
+	x$values = du(x$values)
+	x
 }
