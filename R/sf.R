@@ -167,7 +167,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				warning("working on the first sfc dimension only") # FIXME: this probably only works for 2D arrays, now
 			other_dim = setdiff(seq_along(dim(x)), ix[1])
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
-			other_values = st_dimensions(x)[[ other_dim[1] ]]$values
+			# other_values = st_dimensions(x)[[ other_dim[1] ]]$values
+			other_values = lapply(st_dimensions(x)[other_dim], function(x) x$values)
+			varnames = apply(do.call(expand.grid, other_values), 1, paste, collapse = ".")
 			un_dim = function(x) { # remove a dim attribute from data.frame columns
 				for (i in seq_along(x))
 					x[[i]] = structure(x[[i]], dim = NULL)
@@ -179,8 +181,8 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 	
 			if (length(dim(x)) == 1) # one-dimensional cube...
 				names(df) = names(x)
-			else if (!is.null(other_values) && length(other_values) == ncol(df))
-				names(df) = other_values
+			else if (length(varnames) == ncol(df))
+				names(df) = varnames
 			else if (length(unique(names(df))) < ncol(df) && length(names(dfs)) == ncol(df)) # I hate this
 				names(df) = names(dfs)
 			else { # another exception... time as second dimension

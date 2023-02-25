@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -72,28 +72,28 @@ Dimension:     XY
 Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
 Geodetic CRS:  NAD27
 First 10 features:
-            pop.BIR.1974 pop.SID.1974 pop.NWBIR.1974 pop.BIR.1979 pop.SID.1979
-Ashe                1091            1             10         1364            0
-Alleghany            487            0             10          542            3
-Surry               3188            5            208         3616            6
-Currituck            508            1            123          830            2
-Northampton         1421            9           1066         1606            3
-Hertford            1452            7            954         1838            5
-Camden               286            0            115          350            2
-Gates                420            0            254          594            2
-Warren               968            4            748         1190            2
-Stokes              1612            1            160         2038            5
-            pop.NWBIR.1979                         county
-Ashe                    19 MULTIPOLYGON (((-81.47276 3...
-Alleghany               12 MULTIPOLYGON (((-81.23989 3...
-Surry                  260 MULTIPOLYGON (((-80.45634 3...
-Currituck              145 MULTIPOLYGON (((-76.00897 3...
-Northampton           1197 MULTIPOLYGON (((-77.21767 3...
-Hertford              1237 MULTIPOLYGON (((-76.74506 3...
-Camden                 139 MULTIPOLYGON (((-76.00897 3...
-Gates                  371 MULTIPOLYGON (((-76.56251 3...
-Warren                 844 MULTIPOLYGON (((-78.30876 3...
-Stokes                 176 MULTIPOLYGON (((-80.02567 3...
+   BIR.1974 SID.1974 NWBIR.1974 BIR.1979 SID.1979 NWBIR.1979
+1      1091        1         10     1364        0         19
+2       487        0         10      542        3         12
+3      3188        5        208     3616        6        260
+4       508        1        123      830        2        145
+5      1421        9       1066     1606        3       1197
+6      1452        7        954     1838        5       1237
+7       286        0        115      350        2        139
+8       420        0        254      594        2        371
+9       968        4        748     1190        2        844
+10     1612        1        160     2038        5        176
+                           county
+1  MULTIPOLYGON (((-81.47276 3...
+2  MULTIPOLYGON (((-81.23989 3...
+3  MULTIPOLYGON (((-80.45634 3...
+4  MULTIPOLYGON (((-76.00897 3...
+5  MULTIPOLYGON (((-77.21767 3...
+6  MULTIPOLYGON (((-76.74506 3...
+7  MULTIPOLYGON (((-76.00897 3...
+8  MULTIPOLYGON (((-76.56251 3...
+9  MULTIPOLYGON (((-78.30876 3...
+10 MULTIPOLYGON (((-80.02567 3...
 > frac = function(x) x[2] / x[1]
 > frac2 = function(x) c(sidsr = x[2] / x[1], nwbr = x[3] / x[1])
 > frac2an = function(x) c(x[2] / x[1], x[3] / x[1])
@@ -120,7 +120,7 @@ frac2     1   2     NA    NA
 county    1 100  NAD27 FALSE
 year      1   2     NA    NA
                                                               values
-frac2                                         sidsr.SID , nwbr.NWBIR
+frac2                                                   sidsr, nwbr 
 county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
 year                                                      1974, 1979
 > st_apply(foo, c(1,3), frac2an)
@@ -134,7 +134,7 @@ frac2an    1   2     NA    NA
 county     1 100  NAD27 FALSE
 year       1   2     NA    NA
                                                                values
-frac2an                                                  SID  , NWBIR
+frac2an                                                          NULL
 county  MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
 year                                                       1974, 1979
 > library(abind)
@@ -151,7 +151,7 @@ frac2     1   2     NA    NA
                                                               values
 county MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...
 year                                                      1974, 1979
-frac2                                         sidsr.SID , nwbr.NWBIR
+frac2                                                   sidsr, nwbr 
 > y = aperm(st_apply(foo, c(1,3), frac2), c("county","year","frac2"))
 > all.equal(st_dimensions(x), st_dimensions(y))
 [1] TRUE
@@ -226,4 +226,4 @@ year                                                      1974, 1979
 > 
 > proc.time()
    user  system elapsed 
-  1.387   0.767   1.298 
+  1.377   0.760   1.250 

@@ -1,0 +1,51 @@
+
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # show that extract with exact=TRUE equals st_interpolate_aw(), only much faster
+> options(digits=15)
+> library(stars)
+Loading required package: abind
+Loading required package: sf
+Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
+> L = st_as_stars(L7_ETMs)[,,,1]
+> set.seed(123432)
+> st_bbox(L) |> 
++   st_as_sfc() |> 
++   st_centroid() |> 
++   st_buffer(50) |>
++   st_sample(10) |> 
++   st_combine() |> 
++   st_convex_hull() -> ch
+> if (interactive()) {
++  plot(L, reset = FALSE)
++  plot(ch, add = TRUE, border = 'red', col = NA)
++ }
+> if (FALSE) {
++ e = st_extract(L, ch)[[1]]
++ a = aggregate(L, ch, mean)[[1]]
++ identical(e, a) # same code path
++ ee = aggregate(L, ch, mean, exact = TRUE)[[1]]
++ all.equal(e, ee)
++ aw = suppressWarnings(st_interpolate_aw(L, ch, extensive = FALSE)$V1)
++ all.equal(as.vector(ee), aw)
++ ee0 = st_extract(L, ch, exact = TRUE)[[1]]
++ all.equal(ee0, ee) # ??
++ }
+> 
+> proc.time()
+   user  system elapsed 
+  1.042   0.708   0.909 
