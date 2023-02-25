@@ -144,15 +144,21 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 						cal %in% c("360_day", "365_day", "noleap"))
 				get_pcict(x, u, cal)
 			else {
+				days_since = grepl("days since", u)
 				if (inherits(try(tr <- units::set_units(x, u, mode = "standard"), silent = TRUE), "try-error"))
 						return(u)
 					else
 						u = tr
-				p = try(as.POSIXct(u), silent = TRUE)
-				if (inherits(p, "POSIXct"))
-					p
-				else
-					u
+				d = try(as.Date(u), silent = TRUE)
+				if (days_since && inherits(d, "Date")) 
+					d
+				else {
+					p = try(as.POSIXct(u), silent = TRUE)
+					if (inherits(p, "POSIXct"))
+						p
+					else
+						u
+				}
 			}
 		}
 	}
@@ -224,10 +230,11 @@ add_units_attr = function(l) {
 			else if (inherits(x, c("POSIXct", "PCICt"))) {
 				cal = if (!is.null(cal <- attr(x, "cal")))
 					c(calendar = paste0(cal, "_day")) # else NULL, intended
-				if (all(as.numeric(x) %% 86400 == 0))
-					add_attr(as.numeric(x)/86400, c(units = "days since 1970-01-01", cal))
-				else if (all(as.numeric(x) %% 3600 == 0))
-					add_attr(as.numeric(x)/3600, c(units = "hours since 1970-01-01 00:00:00", cal))
+				x = as.numeric(x)
+				if (all(x %% 86400 == 0))
+					add_attr(x/86400, c(units = "days since 1970-01-01", cal))
+				else if (all(x %% 3600 == 0))
+					add_attr(x / 3600, c(units = "hours since 1970-01-01 00:00:00", cal))
 				else
 					add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
 			} else if (inherits(x, "Date"))
