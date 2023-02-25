@@ -149,8 +149,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 						return(u)
 					else
 						u = tr
-				d = try(as.Date(u), silent = TRUE)
-				if (days_since && inherits(d, "Date")) 
+				if (days_since && inherits(d <- try(as.Date(u), silent = TRUE), "Date")) 
 					d
 				else {
 					p = try(as.POSIXct(u), silent = TRUE)
