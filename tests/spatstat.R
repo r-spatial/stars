@@ -1,7 +1,7 @@
 suppressPackageStartupMessages(library(sf))
 
 library(stars)
-if (require(spatstat.geom, quietly = TRUE)) {
+if (suppressPackageStartupMessages(require(spatstat.geom, quietly = TRUE))) {
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 s = adrop(read_stars(tif)[,,,1]) > 70
 plot(s)

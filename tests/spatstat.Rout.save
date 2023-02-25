@@ -1,5 +1,5 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 > 
 > library(stars)
 Loading required package: abind
-> if (require(spatstat.geom, quietly = TRUE)) {
+> if (suppressPackageStartupMessages(require(spatstat.geom, quietly = TRUE))) {
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
 + s = adrop(read_stars(tif)[,,,1]) > 70
 + plot(s)
@@ -27,11 +27,10 @@ Loading required package: abind
 + plot(m)
 + print(table(m$m))
 + }
-spatstat.geom 3.0-3
 
 FALSE  TRUE 
 39494 83354 
 > 
 > proc.time()
    user  system elapsed 
-  2.037   0.852   2.008 
+  2.123   0.739   1.967 
