@@ -93,6 +93,8 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 		args = args[-which(isdim)]
 	if (is.null(names(args)))
 		names(args) = paste0("A", seq_along(args))
+	for (i in seq_along(args))
+		names(dim(args[[i]])) = names(dimensions)
 	st_as_stars.list(args, dimensions = dimensions)
 }
 

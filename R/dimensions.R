@@ -149,6 +149,8 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		d[[which]]$point = point
 	}
 	if (! missing(xy)) {
+		if (is.null(xy) || (length(xy) == 1 && is.na(xy)))
+			xy = c(NA, NA)
 		stopifnot(length(xy) == 2)
 		r = attr(d, "raster")
 		r$dimensions = as.character(xy)

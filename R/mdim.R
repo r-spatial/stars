@@ -194,11 +194,17 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		if (nchar(u <- attr(ret$array_list[[i]], "units")) && 
 				!inherits(try(units::set_units(1.0, u, mode = "standard"), silent = TRUE), "try-error"))
 			ret$array_list[[i]] = units::set_units(ret$array_list[[i]], u, mode = "standard")
-	lst = lapply(ret$array_list, function(x) structure(x, dim = rev(dim(x))))
+	clean_units = function(x) { 
+		if (identical(attr(x, "units"), "")) 
+			structure(x, units = NULL)
+		else
+			x
+	}
+	lst = lapply(ret$array_list, function(x) structure(clean_units(x), dim = rev(dim(x))))
 
 	# create return object:
 	st = st_stars(lst, dimensions)
-	if (!is.null(ret$crs))
+	if (!is.null(ret$srs))
 		st_set_crs(st, ret$srs)
 	else
 		st
@@ -267,7 +273,7 @@ cdl_add_geometry = function(e, i, sfc) {
 		  	part_node_count = "part_node_count",
 		  	grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
 	} else { # POINT:
-		if (isTRUE(st_is_longlat(sfc))) {
+		if (ll <- isTRUE(st_is_longlat(sfc))) {
 			e$lon = add_attr(structure(cc[, 1], dim = setNames(nrow(cc), names(e)[i])), 
 						 	c(units = "degrees_north", standard_name = "longitude"))
 			e$lat = add_attr(structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i])), 
@@ -277,7 +283,7 @@ cdl_add_geometry = function(e, i, sfc) {
 			e$y = structure(cc[, 2], dim = setNames(nrow(cc), names(e)[i]))
 		}
 		e$geometry = add_attr(structure(numeric(0), dim = c("somethingNonEx%isting" = 0)),
-				c(geometry_type = "point", node_coordinates = "x y",
+				c(geometry_type = "point", node_coordinates = ifelse(ll, "lon lat", "x y"),
 				grid_mapping = if (!is.na(st_crs(sfc))) "crs" else NULL))
 	}
 	e
