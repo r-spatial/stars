@@ -320,13 +320,13 @@ create_dimensions = function(lst, raster = NULL) {
 		d = structure(lst, raster = raster, class = "dimensions")
 		rd = raster$dimensions
 		if (identical(d[[rd[1]]]$refsys, "udunits") && identical(d[[rd[2]]]$refsys, "udunits")) {
-			e = expand_dimensions(d)
 			deg = units(as_units("degree"))
-			ux = units(e[[rd[1]]])
-			uy = units(e[[rd[2]]])
-			if (units::ud_are_convertible(ux, deg) && units::ud_are_convertible(uy, deg)) {
-				d[[rd[1]]] = drop_units.dimension(d[[rd[1]]])
-				d[[rd[2]]] = drop_units.dimension(d[[rd[2]]])
+			ux = units(d[[rd[1]]])
+			uy = units(d[[rd[2]]])
+			if (inherits(ux, "symbolic_units") && inherits(uy, "symbolic_units") &&
+					units::ud_are_convertible(ux, deg) && units::ud_are_convertible(uy, deg)) {
+				d[[rd[1]]] = drop_units(d[[rd[1]]])
+				d[[rd[2]]] = drop_units(d[[rd[2]]])
 				d[[rd[1]]]$refsys = d[[rd[2]]]$refsys = st_crs('OGC:CRS84') # specifies units
 			}
 		}
@@ -794,4 +794,17 @@ drop_units.dimension = function(x) {
 	x$delta  = du(x$delta)
 	x$values = du(x$values)
 	x
+}
+
+units.dimension = function(x) {
+	if (inherits(x$offset, "units"))
+		units(x$offset)
+	else if (inherits(x$delta, "units"))
+		units(x$delta)
+	else if (inherits(x$values, "units"))
+		units(x$values)
+	else if (inherits(x$values$start, "units"))
+		units(x$values$start)
+	else
+		NULL
 }

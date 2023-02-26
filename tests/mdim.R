@@ -17,7 +17,7 @@ all.equal(s, s2)
 
 st_crs(sfc) = st_crs(s2)
 st_crs(s) = st_crs(s2)
-tm = Sys.Date() + 0:1
+tm = as.Date("2023-02-25") + 0:1
 (sd = st_set_dimensions(s, 2, tm))
 (sd = st_set_dimensions(sd, 1, sfc))
 f = tempfile(fileext = ".nc")

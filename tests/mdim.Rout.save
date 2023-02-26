@@ -71,7 +71,7 @@ X2                     NULL
 > 
 > st_crs(sfc) = st_crs(s2)
 > st_crs(s) = st_crs(s2)
-> tm = Sys.Date() + 0:1
+> tm = as.Date("2023-02-25") + 0:1
 > (sd = st_set_dimensions(s, 2, tm))
 stars object with 2 dimensions and 1 attribute
 attribute(s):

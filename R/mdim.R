@@ -136,7 +136,8 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)
 
 	create_units = function(x) {
-		u <- attr(x, "units")
+		u = attr(x, "units")
+		x = structure(x, units = NULL) # remove attribute
 		if (is.null(u) || u == "")
 			x
 		else {
@@ -145,18 +146,17 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 				get_pcict(x, u, cal)
 			else {
 				days_since = grepl("days since", u)
-				if (inherits(try(tr <- units::set_units(x, u, mode = "standard"), silent = TRUE), "try-error"))
-						return(u)
-					else
-						u = tr
-				if (days_since && inherits(d <- try(as.Date(u), silent = TRUE), "Date")) 
-					d
+				u = try_as_units(u)
+				if (!inherits(u, "units")) # FAIL:
+					x
 				else {
-					p = try(as.POSIXct(u), silent = TRUE)
-					if (inherits(p, "POSIXct"))
+					units(x) = u
+					if (days_since && inherits(d <- try(as.Date(x), silent = TRUE), "Date")) 
+						d
+					else if (inherits(p <- try(as.POSIXct(x), silent = TRUE), "POSIXct"))
 						p
 					else
-						u
+						x
 				}
 			}
 		}
@@ -196,9 +196,8 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 
 	# handle array units:
 	for (i in seq_along(ret$array_list))
-		if (nchar(u <- attr(ret$array_list[[i]], "units")) && 
-				!inherits(try(units::set_units(1.0, u, mode = "standard"), silent = TRUE), "try-error"))
-			ret$array_list[[i]] = units::set_units(ret$array_list[[i]], u, mode = "standard")
+		if (nchar(u <- attr(ret$array_list[[i]], "units")) && inherits(u <- try_as_units(u), "units"))
+			units(ret$array_list[[i]]) = u
 	clean_units = function(x) { 
 		if (identical(attr(x, "units"), "")) 
 			structure(x, units = NULL)
