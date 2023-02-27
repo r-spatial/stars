@@ -288,7 +288,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			refsys = "udunits"
 
 		if (inherits(values, "sfc")) {
-			point = inherits(values, "sfc_POINT")
+			point = inherits(values, c("sfc_POINT", "sfc_MULTIPOINT"))
 			if (!is.na(st_crs(values)) && is.na(refsys)) # inherit:
 				refsys = st_crs(values)
 		}
@@ -790,9 +790,12 @@ drop_units.dimension = function(x) {
 		} else
 			y
 	}
-	x$offset = du(x$offset)
-	x$delta  = du(x$delta)
-	x$values = du(x$values)
+	if (!is.null(x$offset))
+		x$offset = du(x$offset)
+	if (!is.null(x$delta))
+		x$delta  = du(x$delta)
+	if (!is.null(x$values))
+		x$values = du(x$values)
 	x
 }
 

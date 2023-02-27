@@ -894,9 +894,14 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 		if (prod(dim(x)) != prod(di))
 			stop("product of dim(new_dim) does not match that of x")
 		for (i in seq_len(min(length(di), length(dim(x)))))
-			if (di[i] == dim(x)[i])
+			if (di[i] == dim(x)[i]) {
 				new_dims[[i]] = d[[i]]
+				names(new_dims)[i] = names(d[i])
+			}
 		x = unclass(x)
+		raster = attr(d, "raster")
+		if (all(raster$dimensions %in% names(new_dims)))
+			attr(new_dims, "raster") = raster
 		for (i in seq_along(x))
 			dim(x[[i]]) = di
 		st_stars(x, dimensions = new_dims)
