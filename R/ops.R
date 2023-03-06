@@ -33,10 +33,12 @@ first_dimensions_match = function(e1, e2) {
 #' needs to make sure this is sensible; it may be needed to use \code{aperm}
 #' to permutate dimensions first. 
 Ops.stars <- function(e1, e2) {
-	if (!missing(e2) && inherits(e1, "stars") && inherits(e2, "stars") && !first_dimensions_match(e1, e2))
-		stop("(first) dimensions of e1 and e2 do not match")
-	if (!inherits(e2, "stars"))
-		e1 = drop_units(e1)
+	if (!missing(e2)) { 
+		if (inherits(e1, "stars") && inherits(e2, "stars") && !first_dimensions_match(e1, e2))
+			stop("(first) dimensions of e1 and e2 do not match")
+		if (!inherits(e2, "stars"))
+			e1 = drop_units(e1)
+	}
 	ret = if (missing(e2))
 			lapply(e1, .Generic)
 		else if (!inherits(e2, "stars"))
