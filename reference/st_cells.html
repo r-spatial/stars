@@ -105,8 +105,7 @@
 <span class="r-in"><span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">pts</span> </span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">st_cells</span><span class="op">(</span><span class="va">L7_ETMs</span>, <span class="va">pts</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      1      2      3      4      5      6      7      8      9     10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 102496 112324  74862  56976 112862 105242  75593  11784  91245  63885 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 102496 112324  74862  56976 112862 105242  75593  11784  91245  63885</span>
 <span class="r-in"><span><span class="co"># get the pixel values (first band only):</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">L7_ETMs</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">x</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  92  92  89  76  67  94  77  98 113  56</span>
