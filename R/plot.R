@@ -280,7 +280,7 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
-#' image(x, rgb = c(1,3,5)) # rgb composite
+#' image(x, rgb = c(1,3,5)) # false color composite
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
