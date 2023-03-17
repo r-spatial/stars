@@ -41,13 +41,27 @@ X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct FALSE
 X1 POINT (0 1), POINT (3 2)
 X2                     NULL
 > f = tempfile(fileext = ".nc")
-> write_mdim(s, f, as_float = FALSE)
-Warning messages:
-1: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
-  GDAL Error 6: SetIndexingVariable() not implemented
-2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
-  GDAL Error 6: SetIndexingVariable() not implemented
-> (s2 = read_mdim(f))
+> if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
++  write_mdim(s, f, as_float = FALSE)
++  s2 = read_mdim(f)
++  print(s2)
++  print(all.equal(s, s2, check.attributes = FALSE))
++  print(all.equal(s, s2))
++ 
++  st_crs(sfc) = st_crs(s2)
++  st_crs(s) = st_crs(s2)
++  tm = as.Date("2023-02-25") + 0:1
++  sd = st_set_dimensions(s, 2, tm)
++  print(sd)
++  sd = st_set_dimensions(sd, 1, sfc)
++  print(sd)
++  f = tempfile(fileext = ".nc")
++  write_mdim(sd, f)
++  sd2 = read_mdim(f)
++  print(sd2)
++  print(all.equal(sd, sd2, check.attributes = FALSE))
++  print(all.equal(sd, sd2))
++ }
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -59,20 +73,13 @@ X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct    NA
                      values
 X1 POINT (0 1), POINT (3 2)
 X2                     NULL
-> all.equal(s, s2, check.attributes = FALSE)
 [1] TRUE
-> all.equal(s, s2)
 [1] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"refsys\": Component \"input\": 1 string mismatch >"                                   
 [2] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"refsys\": Component \"wkt\": 1 string mismatch >"                                     
 [3] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"values\": Attributes: < Component \"crs\": Component \"input\": 1 string mismatch > >"
 [4] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"values\": Attributes: < Component \"crs\": Component \"wkt\": 1 string mismatch > >"  
 [5] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"offset\": 'tzone' attributes are inconsistent ('' and 'UTC') >"                       
 [6] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"point\": 'is.NA' value mismatch: 1 in current 0 in target >"                          
-> 
-> st_crs(sfc) = st_crs(s2)
-> st_crs(s) = st_crs(s2)
-> tm = as.Date("2023-02-25") + 0:1
-> (sd = st_set_dimensions(s, 2, tm))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -81,7 +88,6 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date FALSE                     NULL
-> (sd = st_set_dimensions(sd, 1, sfc))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -90,14 +96,6 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date FALSE                     NULL
-> f = tempfile(fileext = ".nc")
-> write_mdim(sd, f)
-Warning messages:
-1: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
-  GDAL Error 6: SetIndexingVariable() not implemented
-2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
-  GDAL Error 6: SetIndexingVariable() not implemented
-> (sd2 = read_mdim(f))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -106,11 +104,18 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date    NA                     NULL
-> all.equal(sd, sd2, check.attributes = FALSE)
 [1] TRUE
-> all.equal(sd, sd2)
 [1] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"point\": 'is.NA' value mismatch: 1 in current 0 in target >"
+Warning messages:
+1: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
+  GDAL Error 6: SetIndexingVariable() not implemented
+2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
+  GDAL Error 6: SetIndexingVariable() not implemented
+3: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
+  GDAL Error 6: SetIndexingVariable() not implemented
+4: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
+  GDAL Error 6: SetIndexingVariable() not implemented
 > 
 > proc.time()
    user  system elapsed 
-  1.032   0.778   0.915 
+  1.259   0.784   1.154 
