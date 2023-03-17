@@ -16,7 +16,7 @@ st_warp(
   no_data_value = NA_real_,
   debug = FALSE,
   method = "near",
-  threshold = ifelse(is.na(cellsize), Inf, cellsize/2)
+  threshold = ifelse(is.na(cellsize), Inf, cellsize * 0.71)
 )
 }
 \arguments{

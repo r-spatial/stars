@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* `st_warp()` gets (proper) default value for `threshold`; #618
+
 * `read_mdim()` reads "raster" with single pixel (as a point)
 
 * `[.stars()`, as in `r[x]` allows `x` to be a logical stars object
