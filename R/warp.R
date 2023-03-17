@@ -83,6 +83,9 @@ transform_grid_grid = function(x, target, threshold = Inf) {
 	from = st_crs(target)
 	pts = sf::sf_project(from = from, to = st_crs(x), pts = new_pts)
 
+	if (threshold == Inf)
+		threshold = sqrt(prod(sapply(target, function(x) abs(x$delta)))) * 0.71
+
 	# at xy (target) locations, get values from x, or put NA
 	# to array:
 	d = st_dimensions(x)
@@ -92,7 +95,7 @@ transform_grid_grid = function(x, target, threshold = Inf) {
         		stop("package FNN required, please install it first") #nocov
 			if (st_is_longlat(x))
 				warning("using Euclidean distance measures on geodetic coordinates")
-			fnn = FNN::get.knnx(st_coordinates(x)[,1:2], pts, 1)
+			fnn = FNN::get.knnx(st_coordinates(x)[, 1:2, drop = FALSE], pts, 1)
 			i = fnn$nn.index - 1
 			i[fnn$nn.dist > threshold] = NA
 			ny = dim(x)[1]
@@ -160,7 +163,8 @@ transform_grid_grid = function(x, target, threshold = Inf) {
 #' @export
 st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments = 100,
 		use_gdal = FALSE, options = character(0), no_data_value = NA_real_, debug = FALSE,
-		method = "near", threshold = ifelse(is.na(cellsize), Inf, cellsize / 2)) {
+		method = "near", threshold = ifelse(is.na(cellsize), Inf, cellsize * .71)) {
+		# .71: a bit over 0.5 * sqrt(2)
 
 	if (!inherits(src, "stars_proxy"))
 		src = st_normalize(src)
