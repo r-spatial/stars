@@ -130,8 +130,6 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 			proxy = TRUE
 		else if (length(curvilinear))
 			proxy = FALSE
-		else if (packageVersion("sf") <= "1.0-9")
-			proxy = is_big(.x, sub = sub, driver = driver, normalize_path = normalize_path, n_proxy = proxy, ...)
 	}
 
 	x = if (is.list(.x)) {
@@ -170,14 +168,14 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 	if (length(curvilinear) && proxy)
 		warning("proxy = TRUE may not work for curvilinear rasters")
 
-	if (length(x) > 1) { # loop over data sources and RETURNS:
+	if (length(x) > 1) { # loop over data sources, read, c() all, and RETURN:
 		ret = lapply(x, read_stars, options = options, driver = driver, sub = sub, quiet = quiet,
 			NA_value = NA_value, RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear,
 			along = if (length(along) > 1) along[-1] else NA_integer_, normalize_path = normalize_path)
 		return(do.call(c, append(ret, list(along = along, tolerance = tolerance))))
 	}
 
-	# else:
+	# else: do it --
 	data = sf::gdal_read(get_names(x),
 		options = options, driver = driver, read_data = ifelse(is.logical(proxy), !proxy, proxy),
 		NA_value = NA_value, RasterIO_parameters = as.list(RasterIO))
