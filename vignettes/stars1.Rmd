@@ -73,7 +73,7 @@ This means that for an index i (starting at $i=1$) along a certain dimension, th
 
 Dimension `band` is a simple sequence from 1 to 6. Since bands refer to colors, one could put their wavelength values in the `values` field.
 
-For this particular dataset (and most other raster datasets), we see that offset for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cell indexes increase from top to bottom, in the direction opposite to the $y$ axis.
+For this particular dataset (and most other raster datasets), we see that delta for dimension `y` is negative: this means that consecutive array values have decreasing $y$ values: cell indexes increase from top to bottom, in the direction opposite to the $y$ axis.
 
 `read_stars` reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.
 
