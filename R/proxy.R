@@ -620,6 +620,14 @@ predict.stars_proxy = function(object, model, ...) {
 	structure(y, class = class(x))
 }
 
+#' @export
+st_normalize.stars_proxy = function(x, domain = c(0, 0, 1, 1), ...) {
+	stopifnot(all(domain == c(0,0,1,1)))
+	d = st_dimensions(x)
+	stopifnot(d[[1]]$from == 1, d[[2]]$from == 1)
+	x
+}
+
 #nocov start
 get_data_url = function(url, expr = NULL) {
 	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
