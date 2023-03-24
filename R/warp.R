@@ -95,7 +95,7 @@ transform_grid_grid = function(x, target, threshold) {
 			fnn = FNN::get.knnx(cc_x <- st_coordinates(x)[, 1:2, drop = FALSE], pts, 1)
 			if (is.na(threshold)) {
 				p12 = st_as_sf(as.data.frame(cc_x[1:2,]), coords = 1:2)
-				threshold = st_distance(p12)[1,2]
+				threshold = signif(st_distance(p12)[1,2])
 				message(paste("threshold set to", threshold, ": set a larger value if you see missing values where they shouldn't be"))
 			}
 			i = fnn$nn.index - 1
