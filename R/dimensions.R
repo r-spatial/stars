@@ -687,7 +687,6 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	TRUE
 }
 
-#' @export
 all.equal.dimensions = function(target, current, ..., ignore_blocksizes = TRUE) {
 	if (ignore_blocksizes) {
 		attr(target, "raster")$blocksizes = NULL
