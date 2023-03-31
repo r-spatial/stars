@@ -1,2 +1,4 @@
+template:
+  bootstrap: 5
 figures:
   dev: png

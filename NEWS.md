@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* `read_stars()` fixes combining bands with different block sizes; #623
+
 * `st_warp()` gets (proper) default value for `threshold`; #618
 
 * `read_mdim()` reads "raster" with single pixel (as a point)
@@ -14,7 +16,7 @@
 
 * `plot.stars()` hook function can handle arguments `row`, `col`, `nrow`, `ncol`, `nr`, `value` and `bbox`; #600
 
-* fix handling of categorical rasters with colors but no category labels; #595, fallout of #565
+* fix handling of categorical rasters with colors but without category labels; #595, fallout of #565
 
 * fix subsetting of proxy objects over a time range; #596
 
