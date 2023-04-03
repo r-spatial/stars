@@ -283,9 +283,11 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 				# select attribute table:
 				which.at = which(lengths(at) > 0)[1]
 				which.column = if (length(RAT))
-						RAT
+						RAT[1]
 					else
 						which(sapply(at[[which.at]], class) == "character")[1]
+				if (length(which.column) == 0)
+					which.column = 1
 				labels = at = at[[ which.at ]][[ which.column ]]
 				levels = 0:(length(at) - 1)
 				if (length(exclude)) {
