@@ -1,5 +1,7 @@
 # version 0.6-1
 
+* remove `rgdal` dependency
+
 * `read_stars()` fixes combining bands with different block sizes; #623
 
 * `st_warp()` gets (proper) default value for `threshold`; #618

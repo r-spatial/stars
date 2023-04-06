@@ -67,7 +67,6 @@ Suggests:
     plm,
 	randomForest,
     raster,
-	rgdal,
     rmarkdown,
     sp,
     spacetime,

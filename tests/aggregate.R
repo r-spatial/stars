@@ -29,9 +29,11 @@ write_stars(st, tmp)
 sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 (a = aggregate(st, st_sf(a = 1, geom = sfc), mean))
 (a = aggregate(st, sfc, mean))
-(a = aggregate(st, sfc, mean, exact = TRUE))
-a[[1]]
-sum(a[[1]])*30 == sum(1:720)
+if (require(raster)) {
+ print(a <- aggregate(st, sfc, mean, exact = TRUE))
+ print(a[[1]])
+ print(sum(a[[1]])*30 == sum(1:720))
+}
 
 tm0 = as.Date("2019-02-19") + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))

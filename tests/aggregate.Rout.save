@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -102,7 +102,13 @@ t           1  6 2019-02-20 1 days   Date FALSE
                                                                 values
 geometry POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
 t                                                                 NULL
-> (a = aggregate(st, sfc, mean, exact = TRUE))
+> if (require(raster)) {
++  print(a <- aggregate(st, sfc, mean, exact = TRUE))
++  print(a[[1]])
++  print(sum(a[[1]])*30 == sum(1:720))
++ }
+Loading required package: raster
+Loading required package: sp
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -114,13 +120,11 @@ t           1  6 2019-02-20 1 days   Date FALSE
                                                                 values
 geometry POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
 t                                                                 NULL
-> a[[1]]
      [,1] [,2] [,3] [,4] [,5] [,6]
 [1,]   28  148  268  388  508  628
 [2,]   33  153  273  393  513  633
 [3,]   88  208  328  448  568  688
 [4,]   93  213  333  453  573  693
-> sum(a[[1]])*30 == sum(1:720)
 [1] TRUE
 > 
 > tm0 = as.Date("2019-02-19") + -1:8
@@ -196,4 +200,4 @@ t                                                                 NULL
 > 
 > proc.time()
    user  system elapsed 
-  6.263   0.848   6.223 
+  5.370   0.862   5.349 
