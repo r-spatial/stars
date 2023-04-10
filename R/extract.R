@@ -7,7 +7,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @name st_extract
 #' @param x object of class \code{stars} or \code{stars_proxy}
-#' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with points in rows, indicating where to extract x
+#' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
 #' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
 #' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.

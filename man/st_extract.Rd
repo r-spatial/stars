@@ -22,7 +22,7 @@ st_extract(x, ...)
 
 \item{...}{passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries}
 
-\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with points in rows, indicating where to extract x}
+\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 

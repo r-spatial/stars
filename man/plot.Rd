@@ -164,6 +164,8 @@ hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
 }
 plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
+lc = system.file("tif/lc.tif", package = "stars")
+plot(read_stars(ls), key.pos=4, key.width=lcm(5))
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 image(x, col = grey((3:9)/10))
