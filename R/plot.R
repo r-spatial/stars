@@ -50,7 +50,7 @@ make_label = function(x, i = 1) {
 #' }
 #' plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
 #' lc = system.file("tif/lc.tif", package = "stars")
-#' plot(read_stars(ls), key.pos=4, key.width=lcm(5))
+#' plot(read_stars(lc), key.pos=4, key.width=lcm(5))
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618,
