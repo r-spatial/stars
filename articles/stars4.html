@@ -478,12 +478,12 @@ arrays are kept.</p>
 <span><span class="va">nit.c</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                                                      Min.      1st Qu.</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] -3.301083e-05 1.868205e-05</span></span>
-<span><span class="co">##                                                   Median         Mean</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 2.622178e-05 2.898976e-05</span></span>
-<span><span class="co">##                                                  3rd Qu.         Max. NA's</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 3.629641e-05 0.0003924858  330</span></span>
+<span><span class="co">##                                                   Min.      1st Qu.</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] -3.301083e-05 1.868205e-05</span></span>
+<span><span class="co">##                                                Median         Mean      3rd Qu.</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 2.622178e-05 2.898976e-05 3.629641e-05</span></span>
+<span><span class="co">##                                                  Max. NA's</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858  330</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##      from  to         offset  refsys                                 values x/y</span></span>
 <span><span class="co">## x       1 450             NA  WGS 84 [450x278] -5.81066 [°],...,30.9468 [°] [x]</span></span>
@@ -512,12 +512,12 @@ plot this file:</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">nit.c_ds</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">:::</span><span class="fu"><a href="../reference/st_downsample.html">st_downsample</a></span><span class="op">(</span><span class="va">nit.c</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                                                      Min.     1st Qu.</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] -1.847503e-05 1.85778e-05</span></span>
-<span><span class="co">##                                                   Median       Mean</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 2.700901e-05 2.9113e-05</span></span>
-<span><span class="co">##                                                  3rd Qu.         Max. NA's</span></span>
-<span><span class="co">## nitrogendioxide_tropospheric_c... [mol/m^2] 3.642568e-05 0.0001363282   32</span></span>
+<span><span class="co">##                                                   Min.     1st Qu.       Median</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] -1.847503e-05 1.85778e-05 2.700901e-05</span></span>
+<span><span class="co">##                                                Mean      3rd Qu.         Max.</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 2.9113e-05 3.642568e-05 0.0001363282</span></span>
+<span><span class="co">##                                          NA's</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2]   32</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##      from to         offset  refsys                               values x/y</span></span>
 <span><span class="co">## x       1 50             NA  WGS 84 [50x31] -5.81066 [°],...,30.1405 [°] [x]</span></span>
