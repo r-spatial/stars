@@ -457,7 +457,7 @@ add_units = function(x) {
 print.stars = function(x, ..., n = 1e5, abbrev = 30) {
 	shorten = function(s) {
 		if (nchar(s) > abbrev)
-			paste0(substr(s, 1, abbrev), "...")
+			paste0(substr(s, 1, abbrev - 3), "...")
 		else
 			s
 	}
@@ -715,10 +715,10 @@ st_set_bbox.dimensions = function(x, value, ...) {
 	d = dim(x)
 	xsign = sign(x[[ xy[1] ]]$delta)
 	ysign = sign(x[[ xy[2] ]]$delta)
-	x[[ xy[1] ]]$offset = ifelse(xsign < 0, value["xmax"], value["xmin"])
-	x[[ xy[2] ]]$offset = ifelse(ysign < 0, value["ymax"], value["ymin"])
-	x[[ xy[1] ]]$delta = xsign * (value["xmax"] - value["xmin"]) / d[ xy[1] ]
-	x[[ xy[2] ]]$delta = ysign * (value["ymax"] - value["ymin"]) / d[ xy[2] ]
+	x[[ xy[1] ]]$offset = ifelse(xsign < 0, value[["xmax"]], value[["xmin"]])
+	x[[ xy[2] ]]$offset = ifelse(ysign < 0, value[["ymax"]], value[["ymin"]])
+	x[[ xy[1] ]]$delta = xsign * (value[["xmax"]] - value[["xmin"]]) / d[[ xy[1] ]]
+	x[[ xy[2] ]]$delta = ysign * (value[["ymax"]] - value[["ymin"]]) / d[[ xy[2] ]]
 	if (!is.na(st_crs(value)))
 		st_crs(x) = st_crs(value)
 	x
