@@ -24,6 +24,7 @@ make_label = function(x, i = 1) {
 #' @param key.pos integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.
 #' @param key.width amount of space reserved for width of the key (labels); relative or absolute (using lcm)
 #' @param key.length amount of space reserved for length of the key (labels); relative or absolute (using lcm)
+#' @param key.lab character; label for color key in case of multiple subplots, use \code{""} to suppress
 #' @param reset logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting
 #' @param box_col color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
@@ -53,7 +54,7 @@ make_label = function(x, i = 1) {
 #' plot(read_stars(lc), key.pos=4, key.width=lcm(5))
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
-		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618,
+		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, key.lab = main,
 		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, mfrow = NULL) {
 
 	if (!missing(y))
@@ -145,12 +146,14 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					layout(matrix(c(1,2), nrow = 2, ncol = 1), widths = 1, heights = c(key.width, 1)),  # 3 top
 					layout(matrix(c(2,1), nrow = 1, ncol = 2), widths = c(1, key.width), heights = 1)   # 4 right
 				)
+				if (missing(key.lab))
+					key.lab = ""
 				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes, ...)
 				else
 					.image_scale(values, col, breaks = breaks, key.pos = key.pos,
-						key.width = key.width, key.length = key.length, axes = axes, ...)
+						key.width = key.width, key.length = key.length, axes = axes, ..., lab = key.lab)
 			}
 
 			# map panel:
@@ -212,13 +215,15 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			for (i in seq_len(prod(lt$mfrow) - dims[3])) # empty panels:
 				plot.new()
 			if (draw.key) {
+				if (missing(key.lab) && inherits(x[[1]], "units"))
+					key.lab = units::make_unit_label(names(x)[1], x[[1]])
 				values = structure(x[[1]], dim = NULL)
 				if (is.factor(values))
 					.image_scale_factor(levels(values), col, key.pos = lt$key.pos,
 						key.width = key.width, key.length = key.length, axes = axes,...)
 				else
 					.image_scale(values, col, breaks = breaks, key.pos = lt$key.pos,
-						key.width = key.width, key.length = key.length, axes = axes,...)
+						key.width = key.width, key.length = key.length, axes = axes,..., lab = key.lab)
 			}
 		}
 	} else if (has_sfc(x)) {

@@ -22,6 +22,7 @@
   key.pos = get_key_pos(x, ...),
   key.width = lcm(1.8),
   key.length = 0.618,
+  key.lab = main,
   reset = TRUE,
   box_col = grey(0.8),
   center_time = FALSE,
@@ -86,6 +87,8 @@
 \item{key.width}{amount of space reserved for width of the key (labels); relative or absolute (using lcm)}
 
 \item{key.length}{amount of space reserved for length of the key (labels); relative or absolute (using lcm)}
+
+\item{key.lab}{character; label for color key in case of multiple subplots, use \code{""} to suppress}
 
 \item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting}
 

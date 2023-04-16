@@ -1,3 +1,7 @@
+# version 0.6-2
+
+* `plot.stars()` gains an argument `key.lab` to set the legend key label (requires sf >= 1.0-13)
+
 # version 0.6-1
 
 * remove `rgdal` dependency
