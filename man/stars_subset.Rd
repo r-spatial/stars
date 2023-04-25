@@ -74,6 +74,19 @@ plot(buf, add = TRUE, col = NA)
 # with i of class stars:
 x[x > 75] # generates lots of NA's; pattern for each band
 x[x[,,,1] > 75] # recycles a single band template for all bands
+x = read_stars(tif)
+# replace, using a logical stars selector: cuts all values above 90 to 90
+x[x > 90] = 90
+# replace a single attribute when there are more than one:
+s = split(x)
+names(s) = paste0("band", 1:6)
+# rescale only band 1:
+s[1] = s[1] * 0.75 
+# rescale only attribute named "band2":
+s["band2"] = s["band2"] * 0.85 
+# create a new attribute from a numeric vector:
+s["rnorm"] = rnorm(prod(dim(s))) 
+s
 lc = read_stars(system.file("tif/lc.tif", package = "stars"))
 x = c(orig = lc, 
       flip_x = st_flip(lc, "x"), 

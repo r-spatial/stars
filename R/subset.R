@@ -144,6 +144,20 @@
 #' @param value array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array
 #' @export
 #' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be either (i) a \code{stars} object with logical attribute(s) that has dimensions matching (possibly after recycling) those of \code{x}, in which case the \code{TRUE} cells will be replaced and \code{i} and/or \code{value} will be recycled to the dimensions of the arrays in \code{x}, or (ii) a length-one integer or character vector indicating which array to replace, in which case \code{value} may be stars object or a vector or array (that will be recycled).
+#' @examples
+#' x = read_stars(tif)
+#' # replace, using a logical stars selector: cuts all values above 90 to 90
+#' x[x > 90] = 90
+#' # replace a single attribute when there are more than one:
+#' s = split(x)
+#' names(s) = paste0("band", 1:6)
+#' # rescale only band 1:
+#' s[1] = s[1] * 0.75 
+#' # rescale only attribute named "band2":
+#' s["band2"] = s["band2"] * 0.85 
+#' # create a new attribute from a numeric vector:
+#' s["rnorm"] = rnorm(prod(dim(s))) 
+#' s
 "[<-.stars" = function(x, i, value) {
 	if (inherits(i, "stars")) {
 		fun = function(x, y, value) { x[y] = value; x }
@@ -153,6 +167,8 @@
 			stopifnot(length(value) == 1, first_dimensions_match(x, value))
 			value = value[[1]]
 		}
+		if (is.numeric(i))
+			stopifnot(i > 0, i <= length(x))
 		y = unclass(x)
 		y[[i]] = array(value, dim(x))
 		st_as_stars(y, dimensions = st_dimensions(x))
