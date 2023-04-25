@@ -143,12 +143,21 @@
 #' @param downsample downsampling rate used in case \code{i} is a \code{stars_proxy} object
 #' @param value array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array
 #' @export
-#' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be a \code{stars} object with logical attribute(s) that has dimensions matching (possibly after recycling) those of \code{x}; \code{i} and/or \code{value} will be recycled to the dimensions of the arrays in \code{x}.
+#' @details in an assignment (or replacement form, \code{[<-}), argument \code{i} needs to be either (i) a \code{stars} object with logical attribute(s) that has dimensions matching (possibly after recycling) those of \code{x}, in which case the \code{TRUE} cells will be replaced and \code{i} and/or \code{value} will be recycled to the dimensions of the arrays in \code{x}, or (ii) a length-one integer or character vector indicating which array to replace, in which case \code{value} may be stars object or a vector or array (that will be recycled).
 "[<-.stars" = function(x, i, value) {
-	if (!inherits(i, "stars"))
-		stop("selector i should be a stars object")
-	fun = function(x, y, value) { x[y] = value; x }
-	st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
+	if (inherits(i, "stars")) {
+		fun = function(x, y, value) { x[y] = value; x }
+		st_as_stars(mapply(fun, x, i, value = value, SIMPLIFY = FALSE), dimensions = st_dimensions(x))
+	} else if (inherits(i, c("numeric", "character")) && length(i) == 1) {
+		if (inherits(value, "stars")) {
+			stopifnot(length(value) == 1, first_dimensions_match(x, value))
+			value = value[[1]]
+		}
+		y = unclass(x)
+		y[[i]] = array(value, dim(x))
+		st_as_stars(y, dimensions = st_dimensions(x))
+	} else
+		stop("selector i should be a stars object or a lenght-one integer or character vector")
 }
 
 
