@@ -95,3 +95,6 @@ f = function(x, format = "\%B") {
 agg = aggregate(s, f, mean)
 plot(agg)
 }
+\seealso{
+\link[sf]{aggregate}, \link{st_aggregate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
+}
