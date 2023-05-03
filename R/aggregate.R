@@ -12,7 +12,7 @@
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @param exact logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells
-#' @seealso \link[sf]{aggregate}, \link{st_aggregate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
+#' @seealso \link[sf]{aggregate}, \link{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
 #' @export
 #' @aliases aggregate
 #' @examples

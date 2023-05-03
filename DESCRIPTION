@@ -46,6 +46,7 @@ Suggests:
     RNetCDF (>= 1.8-2),
 	clue,
     covr,
+	cubble,
 	cubelyr,
     digest,
     dplyr (>= 0.7-0),
@@ -116,3 +117,4 @@ Collate:
     'datasets.R'
     'tile.R'
     'mdim.R'
+    'cubble.R'
