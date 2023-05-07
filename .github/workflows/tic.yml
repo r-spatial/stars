@@ -52,7 +52,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           Ncpus: 4
-          extra-repositories: http://gis-bigdata.uni-muenster.de/pebesma/
+          extra-repositories: http://cran.uni-muenster.de/pebesma/
 
       - uses: r-lib/actions/setup-tinytex@v2
         if: matrix.config.latex == 'true'
@@ -85,7 +85,7 @@ jobs:
       - name: "[Stage] Manual installation"
         run: |
           options(timeout = 1000)
-          install.packages("starsdata", repos = "http://gis-bigdata.uni-muenster.de/pebesma", type = "source")
+          install.packages("starsdata", repos = "http://cran.uni-muenster.de/pebesma", type = "source")
         shell: Rscript {0}
 
       - name: "[Stage] Install"
