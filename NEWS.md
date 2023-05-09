@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* `image.stars()` plots images (e.g. of cross sections) when x and/or y are singular or absent; #628
+
 * `st_as_stars.cubble_df()` adds interoperability with cubble; `cubble::as_cubble()` methods convert the other way.
 
 * `[<-.stars()` accepts for `i` an indicator (numeric length character) to the array to be replaced; #626
