@@ -302,18 +302,34 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	#stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
-		x = adrop(x)
-
-	force(xlim)
-	force(ylim)
+		x = adrop(x, drop_xy = TRUE)
 
 	d = st_dimensions(x)
-
-	dimxy = attr(d, "raster")$dimensions
-	dimx =  dimxy[1]
-	dimy =  dimxy[2]
-	dimxn = match(dimx, names(d))
-	dimyn = match(dimy, names(d))
+	if (has_raster(x) || has_sfc(x)) {
+		if (missing(xlim) || missing(ylim)) {
+			force(xlim)
+			force(ylim)
+		}
+		dimxy = attr(d, "raster")$dimensions
+		dimx =  dimxy[1]
+		dimy =  dimxy[2]
+		dimxn = match(dimx, names(d))
+		dimyn = match(dimy, names(d))
+		is_rectilinear = is_rectilinear(x)
+	} else {
+		e = expand_dimensions(x)
+		if (missing(xlim))
+			xlim = range(e[[1]])
+		if (missing(ylim))
+			ylim = range(e[[2]])
+		dimx = names(dim(x))[1]
+		dimy = names(dim(x))[2]
+		dimxn = 1
+		dimyn = 2
+		is_rectilinear = (is.na(d[[1]]$delta) || is.na(d[[2]]$delta)) && (!regular_intervals(d[[1]]$values) || !regular_intervals(d[[2]]$values))
+		if (missing(axes))
+			axes = TRUE
+	}
 
 	if (has_sfc(x) && length(dim(x)) == 2) { # time series of features:
 		ed = lapply(expand_dimensions(x), function(x) if (inherits(x, "sfc")) seq_along(x) else x)
@@ -324,8 +340,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 
 	if (! is_curvilinear(x)) {
-		dims = expand_dimensions.stars(x, center = FALSE, max = FALSE)
-		d_max = expand_dimensions.stars(x, center = FALSE, max = TRUE)
+		dims = expand_dimensions(x, center = FALSE, max = FALSE)
+		d_max = expand_dimensions(x, center = FALSE, max = TRUE)
 		if (tail(dims[[dimx]], 1) != tail(d_max[[dimx]], 1))
 			dims[[ dimx ]] = c(dims[[dimx]], tail(d_max[[dimx]], 1))
 		if (tail(dims[[dimy]], 1) != tail(d_max[[dimy]], 1))
@@ -337,10 +353,11 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	} 
 
 	if (is.null(asp))
-		asp = if (isTRUE(st_is_longlat(x))) {
-				bb = st_bbox(x)
-				1 / cos((mean(bb[c(2,4)]) * pi)/180)
-			} else
+		asp = if (isTRUE(st_is_longlat(x)))
+				1 / cos((mean(st_bbox(x)[c(2,4)]) * pi)/180)
+			else if (!has_raster(x) && !has_sfc(x))
+				NA_real_
+			else
 				1.0
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
@@ -432,7 +449,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab,
-			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear(x), ...)
+			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear, ...)
 	}
 	if (text_values) {
 		dims = expand_dimensions.stars(x, center = TRUE)
