@@ -48,10 +48,10 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE
+# Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-read_stars(tif) %>%
-  slice(index = 1, along = "band") %>%
+read_stars(tif) |>
+  slice(index = 1, along = "band") |>
   plot()
 ```
 
@@ -115,8 +115,8 @@ methods(class = "stars_proxy")
 # [25] select          show            slice           slotsFromS3    
 # [29] split           st_apply        st_as_sf        st_as_stars    
 # [33] st_crop         st_dimensions<- st_downsample   st_mosaic      
-# [37] st_redimension  st_sample       st_set_bbox     transmute      
-# [41] write_stars    
+# [37] st_normalize    st_redimension  st_sample       st_set_bbox    
+# [41] transmute       write_stars    
 # see '?methods' for accessing help and source code
 ```
 
@@ -128,12 +128,14 @@ a hurricane is imported and the first 12 time steps are plotted:
 ``` r
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
+# Warning in read_stars(gdal_subdatasets(prec_file)[[1]]): proxy = TRUE may not
+# work for curvilinear rasters
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
-#                                            Min. 1st Qu. Median     Mean 3rd Qu.
-# Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63
-#                                              Max.
-# Total_precipitation_surface_1_... [kg/m^2] 163.75
+#                                         Min. 1st Qu. Median     Mean 3rd Qu.
+# Total_precipitation_surface... [kg/m^2]    0       0   0.75 4.143009    4.63
+#                                           Max.
+# Total_precipitation_surface... [kg/m^2] 163.75
 # dimension(s):
 #      from  to                  offset   delta  refsys
 # x       1  87                      NA      NA  WGS 84
@@ -145,12 +147,12 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # time                                   NULL    
 # curvilinear grid
 # or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") |>
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
-prec %>%
-  slice(index = 1:12, along = "time") %>%
+prec |>
+  slice(index = 1:12, along = "time") |>
   plot(downsample = c(3, 3, 1), hook = plot_hook)
 ```
 
@@ -175,11 +177,53 @@ and then the corresponding time value:
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 st_apply(a, "geom", index_max) %>%
   mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
-  select(when) %>%
+  select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
 ![](man/figures/README-plot5-1.png)<!-- -->
+
+With package `cubble`, we can make a glyph map to see the magnitude and
+timings of county maximum precipitation:
+
+``` r
+library(cubble)
+library(ggplot2)
+a |> setNames("precip") |>
+  st_set_dimensions(2, name = "tm") |>
+  units::drop_units() |>
+  as_cubble(key = id, index = tm) |>
+  suppressWarnings() -> a.cb
+a.cb |>
+  face_temporal() |>
+  unfold(long, lat) |>
+  mutate(tm = as.numeric(tm)) |>
+  ggplot(aes(x_major = long, x_minor = tm, y_major = lat, y_minor = precip)) +
+  geom_sf(data = nc, inherit.aes = FALSE) +
+  geom_glyph_box(width = 0.3, height = 0.1) +
+  geom_glyph(width = 0.3, height = 0.1)
+# Warning: There were 84 warnings in `dplyr::mutate()`.
+# The first warning was:
+# ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.
+# ℹ In group 12: `group = -80.531250269704.34.9864125408886`.
+# Caused by warning in `min()`:
+# ! no non-missing arguments to min; returning Inf
+# ℹ Run `dplyr::last_dplyr_warnings()` to see the 83 remaining warnings.
+# Warning: Removed 966 rows containing missing values (`geom_glyph_box()`).
+# Warning: Unknown or uninitialised column: `linewidth`.
+# Warning: Using the `size` aesthetic with geom_rect was deprecated in ggplot2 3.4.0.
+# ℹ Please use the `linewidth` aesthetic instead.
+# This warning is displayed once every 8 hours.
+# Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+# Warning: Removed 966 rows containing missing values (`geom_glyph()`).
+# Warning: Unknown or uninitialised column: `linewidth`.
+# Warning: Using the `size` aesthetic with geom_path was deprecated in ggplot2 3.4.0.
+# ℹ Please use the `linewidth` aesthetic instead.
+# This warning is displayed once every 8 hours.
+# Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
+![](man/figures/README-plot6-1.png)<!-- -->
 
 ## Other packages for data cubes
 
@@ -202,10 +246,11 @@ and handles temporal resampling or aggregation itself.
 `ncdfgeom` reads and writes vector data cubes from and to netcdf files
 in a standards-compliant way.
 
-### [`raster`](https://github.com/rspatial/raster/)
+### [`raster`](https://github.com/rspatial/raster/) and [`terra`](https://github.com/rspatial/terra/)
 
-Package `raster` is a powerful package for handling raster maps and
-stacks of raster maps both in memory and on disk, but does not address
+Packages `raster` and its successor, `terra` are powerful packages for
+handling raster maps and stacks of raster maps both in memory and on
+disk, but do not address
 
 -   non-raster time series,
 -   multi-attribute rasters time series
@@ -223,7 +268,8 @@ A list of translations in the opposite direction (from `stars` to
 
 -   blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
     [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
-    [third](https://www.r-spatial.org/r/2018/03/23/stars3.html)
+    [third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and
+    [newer blog posts](https://www.r-spatial.org/)
 -   vignettes:
     [first](https://r-spatial.github.io/stars/articles/stars1.html),
     [second](https://r-spatial.github.io/stars/articles/stars2.html),
