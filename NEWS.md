@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* more gracefully handle plotting of global curvilinear grids; #632
+
 * `st_as_stars.cubble_df()` adds interoperability with cubble; `cubble::as_cubble()` methods convert the other way.
 
 * `[<-.stars()` accepts for `i` an indicator (numeric length character) to the array to be replaced; #626

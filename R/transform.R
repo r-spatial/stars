@@ -35,7 +35,7 @@ transform_curvilinear = function(x, crs, ...) {
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
-	pts = sf::sf_project(from, to, cc)
+	pts = sf::sf_project(from, to, cc, ...)
 	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = st_crs(crs)
 	d[[ xy[1] ]]$values = matrix(pts[,1], dim(x)[xy])
 	d[[ xy[2] ]]$values = matrix(pts[,2], dim(x)[xy])
@@ -87,7 +87,7 @@ st_transform.stars =  function(x, crs, ...) {
 			warning("no spatial coordinates present: st_transform does nothing")
 			x
 		} else
-			transform_curvilinear(to_curvilinear(x), crs)
+			transform_curvilinear(to_curvilinear(x), crs, ...)
 	}
 }
 
