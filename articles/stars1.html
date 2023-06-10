@@ -357,12 +357,19 @@ be read by</p>
 <span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OVERVIEW_LEVEL=2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">x3</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OVERVIEW_LEVEL=3"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span></span>
+<span><span class="co">##    x    y band </span></span>
+<span><span class="co">##   88   88    6</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span></span>
+<span><span class="co">##    x    y band </span></span>
+<span><span class="co">##   44   44    6</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x3</span><span class="op">)</span></span>
+<span><span class="co">##    x    y band </span></span>
+<span><span class="co">##   22   22    6</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x1</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x2</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">x3</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="stars1_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
@@ -588,7 +595,7 @@ for a certain period.</p>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
 <span><span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 10.00007      12   27</span></span>
+<span><span class="co">## traffic     0       8     10 10.00018      12   26</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
