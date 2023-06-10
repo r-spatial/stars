@@ -799,7 +799,7 @@ asub.factor = function(x, idx, dims, drop = NULL, ...) {
 	l = levels(x)
 	x = unclass(x)
 	ret = NextMethod()
-	structure(ret, class = "factor", levels = l)
+	structure(ret, class = class(x), levels = l)
 }
 
 #' @name merge
