@@ -594,8 +594,8 @@ for a certain period.</p>
 <span><span class="op">(</span><span class="va">st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span>,  dimensions <span class="op">=</span> <span class="va">dims</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
-<span><span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 10.00095      12   27</span></span>
+<span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
+<span><span class="co">## traffic     0       8     10 9.99465      12   26</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
@@ -621,7 +621,14 @@ table joins. If we want to represent such an array as a
 <code>tbl_cube</code>, the simple feature geometry dimensions need to be
 replaced by indexes:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">st</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">st</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">## Source: local array [72,000,000 x 5]</span></span>
+<span><span class="co">## D: origin [int, 100]</span></span>
+<span><span class="co">## D: destination [int, 100]</span></span>
+<span><span class="co">## D: mode [chr, 3]</span></span>
+<span><span class="co">## D: day [[(days since 2015-01-01)], 100]</span></span>
+<span><span class="co">## D: hour [[h], 24]</span></span>
+<span><span class="co">## M: traffic [int[,100,3,100,24]]</span></span></code></pre></div>
 <p>The following demonstrates how <code>dplyr</code> can filter bike
 travel, and compute mean bike traffic by hour of day:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -632,8 +639,10 @@ travel, and compute mean bike traffic by hour of day:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>traffic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">traffic</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com" class="external-link">ggforce</a></span><span class="op">)</span> <span class="co"># for plotting a units variable</span></span>
+<span><span class="co">## Loading required package: ggforce</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>  </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">b</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hour</span>, y <span class="op">=</span> <span class="va">traffic</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="stars1_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
