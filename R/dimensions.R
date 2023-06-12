@@ -328,7 +328,9 @@ create_dimensions = function(lst, raster = NULL) {
 			deg = units(as_units("degree"))
 			ux = units(d[[rd[1]]])
 			uy = units(d[[rd[2]]])
+			u1 = units(units::as_units("1"))
 			if (inherits(ux, "symbolic_units") && inherits(uy, "symbolic_units") &&
+					(!identical(ux, u1) && !identical(uy, u1)) &&
 					units::ud_are_convertible(ux, deg) && units::ud_are_convertible(uy, deg)) {
 				d[[rd[1]]] = drop_units(d[[rd[1]]])
 				d[[rd[2]]] = drop_units(d[[rd[2]]])

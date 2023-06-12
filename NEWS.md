@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* `read_mdim()` reads curvilinear rasters (geolocation arrays), so far only at full extent/resolution
+
 * `st_as_stars.stars()` accepts curvilinear argument that points to arrays in `.x`
 
 * consistently use `OGC:CRS84` instead of `EPSG:4326`

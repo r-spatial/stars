@@ -114,12 +114,13 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @param debug logical; print debug info?
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
 #' named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names
-#' @details it is assumed that the first two dimensions are easting / northing
+#' @param curvilinear control reading curvilinear (geolocation) coordinate arrays; if \code{NA} try reading the x/y dimension names; if character, defines the arrays to read; if \code{FALSE} do not try; see also \link{read_stars}
+#' @details it is assumed that the first two dimensions are easting and northing
 #' @param ... ignored
 #' @export
 read_mdim = function(filename, variable = character(0), ..., options = character(0), raster = NULL,
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
-					 debug = FALSE, bounds = TRUE) {
+					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
 
 	if (proxy)
 		stop("proxy not yet implemented in read_mdim()")
@@ -203,10 +204,22 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 
 	# create return object:
 	st = st_stars(lst, dimensions)
-	if (!is.null(ret$srs))
-		st_set_crs(st, ret$srs)
-	else
+	if (is.null(ret$srs) || is.na(ret$srs)) {
+		if (missing(curvilinear) || is.character(curvilinear)) { # try curvilinear:
+			xy = raster$dimensions
+			if (is.character(curvilinear)) {
+				if (is.null(names(curvilinear)))
+					names(curvilinear) = xy[1:2]
+				st = st_as_stars(st, curvilinear = curvilinear)
+			}
+			else if (inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
+				inherits(y <- try(read_mdim(filename, ll[2], curvilinear = FALSE), silent = TRUE), "stars") &&
+					all.equal(dim(x), dim(st)[xy]) && all.equal(dim(y), dim(st)[xy]))
+				st = st_as_stars(st, curvilinear = setNames(list(x, y), xy))
+		}
 		st
+	} else
+		st_set_crs(st, ret$srs)
 }
 
 
