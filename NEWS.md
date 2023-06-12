@@ -1,5 +1,9 @@
 # version 0.6-2
 
+* `st_as_stars.stars()` accepts curvilinear argument that points to arrays in `.x`
+
+* consistently use `OGC:CRS84` instead of `EPSG:4326`
+
 * setting `values=NULL` in `st_set_dimensions()` removes dimension values
 
 * more gracefully handle plotting of global curvilinear grids; #632

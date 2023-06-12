@@ -124,7 +124,7 @@ st_mosaic.nc_proxy = function(.x, ...) stop("st_mosaic not supported for nc_prox
 #' @noRd
 add_curvilinear <- function(.x, 
 							curvilinear = NULL, 
-							crs = st_crs(4326)) {
+							crs = st_crs('OGC:CRS84')) {
 	# so we can just call add_curvilinear regardless
 	if (is.null(curvilinear))
 		.x
