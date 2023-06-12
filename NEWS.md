@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* setting `values=NULL` in `st_set_dimensions()` removes dimension values
+
 * more gracefully handle plotting of global curvilinear grids; #632
 
 * `image.stars()` plots images (e.g. of cross sections) when x and/or y are singular or absent; #628

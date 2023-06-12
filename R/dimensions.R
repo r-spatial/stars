@@ -95,7 +95,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 
 #' @name st_dimensions
 #' @param which integer or character; index or name of the dimension to be changed
-#' @param values values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object
+#' @param values values for this dimension (e.g. \code{sfc} list-column), or length-1 \code{dimensions} object; setting special value \code{NULL} removes dimension values, for instance to remove curvilinear raster coordinates
 #' @param names character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}
 #' @param xy length-2 character vector; (new) names for the \code{x} and \code{y} raster dimensions
 #' @export
@@ -116,7 +116,7 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 	d = st_dimensions(.x)
 	if (!missing(which) && is.character(which))
 		which = match(which, base::names(d))
-	if (! is.null(values)) {
+	if (! missing(values)) {
 		if (is.na(which))
 			stop("which should be a name or index of an existing dimensions")
 		if (inherits(values, "units") && names(d)[which] %in% attr(d, "raster")$xy 
@@ -127,20 +127,25 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 				names <- names(values)
 			values <- values[[1]]$values
 		}
-		if (!inherits(values, "intervals") && dim(.x)[which] != length(values)) {
+		if (!is.null(values) && !inherits(values, "intervals") && dim(.x)[which] != length(values)) {
 			if (dim(.x)[which] == length(values) - 1) # create intervals:
 				values = as_intervals(values)
 			else
 				stop(paste("length of values (", length(values), 
 					") does not match length of dimension", which, "(", dim(.x)[which], ")"))
 		}
-		d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
+		if (is.null(values))
+			d[[which]]["values"] = list(NULL) # avoid removing element values
+		else
+			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
 			# FIXME: there's much more that should be checked for curvilinear grids...
 			# https://github.com/r-spatial/stars/issues/460
-			if (which %in% r$dimensions && !is.matrix(values))
+			if (base::names(d)[which] %in% r$dimensions && !any(sapply(d, function(v) is.matrix(v$values)))) {
 				attr(d, "raster")$curvilinear = FALSE 
+				st_crs(d) = NA
+			}
 		}
 #		else if (inherits(values, "sfc"))
 #			base::names(d)[which] = "sfc"
