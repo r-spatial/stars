@@ -75,7 +75,8 @@
 <span>  step <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  proxy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  bounds <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  bounds <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  curvilinear <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">write_mdim</span><span class="op">(</span></span>
@@ -136,6 +137,10 @@
 named vector of the form <code>c(longitude="lon_bnds", latitude="lat_bnds")</code> with names dimension names</p></dd>
 
 
+<dt>curvilinear</dt>
+<dd><p>control reading curvilinear (geolocation) coordinate arrays; if <code>NA</code> try reading the x/y dimension names; if character, defines the arrays to read; if <code>FALSE</code> do not try; see also <a href="read_stars.html">read_stars</a></p></dd>
+
+
 <dt>x</dt>
 <dd><p>stars object</p></dd>
 
@@ -154,7 +159,7 @@ named vector of the form <code>c(longitude="lon_bnds", latitude="lat_bnds")</cod
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>it is assumed that the first two dimensions are easting / northing</p>
+    <p>it is assumed that the first two dimensions are easting and northing</p>
     </div>
 
     <div class="section level2">
