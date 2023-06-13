@@ -555,7 +555,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 
 	if (length(dots) == 1)
 		dots[[1]]
-	else if (identical(along, NA_integer_)) { 
+	else if (length(along) == 1 && is.na(along)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
 		if (identical_dimensions(dots, tolerance = tolerance))
