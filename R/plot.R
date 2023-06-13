@@ -50,8 +50,10 @@ make_label = function(x, i = 1) {
 #'    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
 #' }
 #' plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
-#' lc = system.file("tif/lc.tif", package = "stars")
-#' plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+#' isTRUE(dev.capabilities()$rasterImage == "yes") {
+#'   lc = system.file("tif/lc.tif", package = "stars")
+#'   plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+#' }
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, key.lab = main,
@@ -287,7 +289,9 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
-#' image(x, rgb = c(1,3,5)) # false color composite
+#' if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
+#'   image(x, rgb = c(1,3,5)) # false color composite
+#' }
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
