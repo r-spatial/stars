@@ -147,7 +147,7 @@ which adds coarse resolution versions by using the _average_
 resampling method to compute values based on blocks of pixels.
 These can be read by
 
-```{r eval=FALSE}
+```{r}
 x1 = read_stars(tif, options = c("OVERVIEW_LEVEL=1"))
 x2 = read_stars(tif, options = c("OVERVIEW_LEVEL=2"))
 x3 = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))
@@ -310,12 +310,12 @@ traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
 ```
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
-```{r eval=FALSE}
+```{r}
 st |> as.tbl_cube()
 ```
 
 The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
-```{r eval=FALSE}
+```{r}
 b <- st |> 
   as.tbl_cube() |> 
   filter(mode == "bike") |> 

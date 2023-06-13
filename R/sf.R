@@ -143,9 +143,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			ex = attr(x[[1]], "exclude")
 			if(any(ex)){
 				id = (seq_along(ex) - 1)[!ex] # index-values matching to levels
-				ret[[1]] = structure(match(ret[[1]], id), class = "factor", levels = lev)
+				ret[[1]] = structure(match(ret[[1]], id), class = "factor", levels = lev) # ordered?
 			} else {
-				ret[[1]] = structure(ret[[1]], class = "factor", levels = lev)
+				ret[[1]] = structure(ret[[1]], class = "factor", levels = lev) # ordered?
 			}
 		}
 		st_set_crs(ret, crs)

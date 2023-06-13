@@ -24,7 +24,7 @@ st_as_stars(.x, ...)
 
 \method{st_as_stars}{default}(.x = NULL, ..., raster = NULL)
 
-\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL, crs = st_crs(4326))
+\method{st_as_stars}{stars}(.x, ..., curvilinear = NULL, crs = st_crs("OGC:CRS84"))
 
 \method{st_as_stars}{bbox}(
   .x,
@@ -90,7 +90,7 @@ passed on to \code{\link{read_ncdf}}.}
 
 \item{raster}{character; the names of the dimensions that denote raster dimensions}
 
-\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to}
+\item{curvilinear}{only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices or stars arrays, or the names of the corresponding attributes in \code{.x}; the names of this vector should correspond to raster dimensions the matrices are associated with; see Details.}
 
 \item{crs}{object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details}
 
@@ -151,7 +151,7 @@ Must have same number of rows as timeseries instances.}
 convert objects into a stars object
 }
 \details{
-if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
+if \code{curvilinear} is a list with \code{stars} objects with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values. If \code{curvilinear} contains the names of two arrays in \code{.x}, then these are removed from the returned object.
 
 For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of \code{inside}. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
 

@@ -74,7 +74,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			if (is.character(m[[i]]))
 				m[[i]] = match(as.vector(m[[i]]), levels(x[[i]]))
 			m[[i]] = structure(m[[i]], levels = levels(x[[i]]), 
-				colors = attr(x[[i]], "colors"), class = "factor")
+				colors = attr(x[[i]], "colors"), class = class(x[[i]]))
 		} else if (inherits(x[[i]], "units"))
 			units(m[[i]]) = units(x[[i]])
 		else if (inherits(x, "stars_proxy") && !inherits(try_result, "try-error") && inherits(x0[[i]], "units"))
