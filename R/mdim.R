@@ -218,7 +218,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			if (!is_curvilinear(st) &&
 				inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
 				inherits(y <- try(read_mdim(filename, ll[2], curvilinear = FALSE), silent = TRUE), "stars") &&
-					all.equal(dim(x)[xy], dim(st)[xy]) && all.equal(dim(y)[xy], dim(st)[xy]))
+					identical(dim(x)[xy], dim(st)[xy]) && identical(dim(y)[xy], dim(st)[xy]))
 				st = st_as_stars(st, curvilinear = setNames(list(x, y), xy))
 		}
 		st
