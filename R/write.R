@@ -47,6 +47,7 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 		options = character(0), 
 		type = if (is.factor(obj[[1]]) && length(levels(obj[[1]])) < 256) "Byte" else "Float32", 
 		NA_value = NA_real_, update = FALSE, normalize_path = TRUE, scale_offset = c(1.0, 0.0)) {
+
 	if (missing(layer) && length(obj) > 1)
 		warning("all but first attribute are ignored")
 	if (length(layer) > 1)
