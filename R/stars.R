@@ -111,6 +111,8 @@ st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs('OGC:CRS8
 		if (all(sapply(curvilinear, is.character)))
 			curvilinear = unlist(curvilinear)
 		if (is.character(cl <- curvilinear)) {
+			if (!cl[1] %in% names(.x) || !cl[2] %in% names(.x))
+				stop("curvilinear arrays not present in object")
 			curvilinear = setNames(vector("list", 2), names(curvilinear))
 			curvilinear[[1]] = .x[ cl[1] ]
 			curvilinear[[2]] = .x[ cl[2] ]

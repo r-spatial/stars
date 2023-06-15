@@ -207,14 +207,18 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 	if (is.null(ret$srs) || is.na(ret$srs)) {
 		if (missing(curvilinear) || is.character(curvilinear)) { # try curvilinear:
 			xy = raster$dimensions
+			ll = curvilinear
 			if (is.character(curvilinear)) {
 				if (is.null(names(curvilinear)))
 					names(curvilinear) = xy[1:2]
-				st = st_as_stars(st, curvilinear = curvilinear)
+				ret = try(st_as_stars(st, curvilinear = curvilinear), silent = TRUE)
+				if (inherits(ret, "stars"))
+					st = ret
 			}
-			else if (inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
+			if (!is_curvilinear(st) &&
+				inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
 				inherits(y <- try(read_mdim(filename, ll[2], curvilinear = FALSE), silent = TRUE), "stars") &&
-					all.equal(dim(x), dim(st)[xy]) && all.equal(dim(y), dim(st)[xy]))
+					identical(dim(x)[xy], dim(st)[xy]) && identical(dim(y)[xy], dim(st)[xy]))
 				st = st_as_stars(st, curvilinear = setNames(list(x, y), xy))
 		}
 		st
