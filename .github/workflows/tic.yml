@@ -52,7 +52,7 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           Ncpus: 4
-          extra-repositories: http://cran.uni-muenster.de/pebesma/
+          extra-repositories: https://cran.uni-muenster.de/pebesma/
 
       - uses: r-lib/actions/setup-tinytex@v2
         if: matrix.config.latex == 'true'
