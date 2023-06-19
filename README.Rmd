@@ -59,8 +59,8 @@ or lower-dimensional cubes such as a raster image:
 suppressPackageStartupMessages(library(dplyr))
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-read_stars(tif) %>%
-  slice(index = 1, along = "band") %>%
+read_stars(tif) |>
+  slice(index = 1, along = "band") |>
   plot()
 ```
 
@@ -156,12 +156,12 @@ a hurricane is imported and the first 12 time steps are plotted:
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 # or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") |> 
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
-prec %>%
-  slice(index = 1:12, along = "time") %>%
+prec |>
+  slice(index = 1:12, along = "time") |>
   plot(downsample = c(3, 3, 1), hook = plot_hook)
 ```
 
@@ -179,9 +179,9 @@ index, and then the corresponding time value:
 
 ```{r plot5, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geom", index_max) %>%
-  mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
-  select(when) %>%
+b = st_apply(a, "geom", index_max)
+b |>  mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
+  select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 

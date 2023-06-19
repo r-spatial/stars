@@ -48,10 +48,10 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE
+# Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-read_stars(tif) %>%
-  slice(index = 1, along = "band") %>%
+read_stars(tif) |>
+  slice(index = 1, along = "band") |>
   plot()
 ```
 
@@ -115,8 +115,8 @@ methods(class = "stars_proxy")
 # [25] select          show            slice           slotsFromS3    
 # [29] split           st_apply        st_as_sf        st_as_stars    
 # [33] st_crop         st_dimensions<- st_downsample   st_mosaic      
-# [37] st_redimension  st_sample       st_set_bbox     transmute      
-# [41] write_stars    
+# [37] st_normalize    st_redimension  st_sample       st_set_bbox    
+# [41] transmute       write_stars    
 # see '?methods' for accessing help and source code
 ```
 
@@ -130,27 +130,27 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
-#                                            Min. 1st Qu. Median     Mean 3rd Qu.
-# Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63
-#                                              Max.
-# Total_precipitation_surface_1_... [kg/m^2] 163.75
+#                                         Min. 1st Qu. Median     Mean 3rd Qu.
+# Total_precipitation_surface... [kg/m^2]    0       0   0.75 4.143009    4.63
+#                                           Max.
+# Total_precipitation_surface... [kg/m^2] 163.75
 # dimension(s):
 #      from  to                  offset   delta  refsys
 # x       1  87                      NA      NA  WGS 84
 # y       1 118                      NA      NA  WGS 84
 # time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct
-#                                      values x/y
-# x    [87x118] -80.6113 [°],...,-74.8822 [°] [x]
-# y      [87x118] 32.4413 [°],...,37.6193 [°] [y]
-# time                                   NULL    
+#                                  values x/y
+# x    [87x118] -80.61 [°],...,-74.88 [°] [x]
+# y      [87x118] 32.44 [°],...,37.62 [°] [y]
+# time                               NULL    
 # curvilinear grid
 # or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") %>%
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") |> 
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
-prec %>%
-  slice(index = 1:12, along = "time") %>%
+prec |>
+  slice(index = 1:12, along = "time") |>
   plot(downsample = c(3, 3, 1), hook = plot_hook)
 ```
 
@@ -173,9 +173,9 @@ and then the corresponding time value:
 
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geom", index_max) %>%
-  mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
-  select(when) %>%
+b = st_apply(a, "geom", index_max)
+b |>  mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
+  select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
