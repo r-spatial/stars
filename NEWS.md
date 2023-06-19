@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* `[.stars()` supports `NA` values in dimension ranges for vector geometry (`sfc`) dimensions, resulting in empty geometries
+
 * `st_extract()` supports extracting points values from curvilinear grids (when not proxy); #632
 
 * `read_mdim()` reads curvilinear rasters (geolocation arrays), so far only at full extent/resolution

@@ -1115,9 +1115,14 @@ st_interpolate_aw.stars = function(x, to, extensive, ...) {
 #' st_raster_type(x, 1:3)
 #' @export
 st_raster_type = function(x, dimension = character(0)) {
+	stopifnot(inherits(x, "stars"))
+	if (!missing(dimension))
+		stopifnot(all(dimension >= 1), all(dimension <= length(dim(x))))
 	dimension_type = function(d) {
 		if (!any(is.na(c(d$offset, d$delta))))
 			"regular"
+		else if (!is.null(d$values) && is.numeric(d$values) && is.matrix(d$values))
+			"curvilinear"
 		else if (!is.null(d$values) && is.numeric(d$values))
 			"rectilinear"
 		else
