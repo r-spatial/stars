@@ -105,10 +105,10 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co"># Loading required package: abind</span></span>
 <span><span class="co"># Loading required package: sf</span></span>
-<span><span class="co"># Linking to GEOS 3.10.2, GDAL 3.4.3, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="co"># Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE</span></span>
 <span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, along <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span>, along <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot1-1.png"><!-- --></p>
 <p>Raster data do not need to be regular and aligned with North/East, and package <code>stars</code> supports besides <em>regular</em> also <em>rotated</em>, <em>sheared</em>, <em>rectilinear</em> and <em>curvilinear</em> rasters:</p>
@@ -141,8 +141,8 @@
 <span><span class="co"># [25] select          show            slice           slotsFromS3    </span></span>
 <span><span class="co"># [29] split           st_apply        st_as_sf        st_as_stars    </span></span>
 <span><span class="co"># [33] st_crop         st_dimensions&lt;- st_downsample   st_mosaic      </span></span>
-<span><span class="co"># [37] st_redimension  st_sample       st_set_bbox     transmute      </span></span>
-<span><span class="co"># [41] write_stars    </span></span>
+<span><span class="co"># [37] st_normalize    st_redimension  st_sample       st_set_bbox    </span></span>
+<span><span class="co"># [41] transmute       write_stars    </span></span>
 <span><span class="co"># see '?methods' for accessing help and source code</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -154,27 +154,27 @@
 <span><span class="op">(</span><span class="va">prec</span> <span class="op">=</span> <span class="fu"><a href="reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_subdatasets</a></span><span class="op">(</span><span class="va">prec_file</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co"># attribute(s):</span></span>
-<span><span class="co">#                                            Min. 1st Qu. Median     Mean 3rd Qu.</span></span>
-<span><span class="co"># Total_precipitation_surface_1_... [kg/m^2]    0       0   0.75 4.143009    4.63</span></span>
-<span><span class="co">#                                              Max.</span></span>
-<span><span class="co"># Total_precipitation_surface_1_... [kg/m^2] 163.75</span></span>
+<span><span class="co">#                                         Min. 1st Qu. Median     Mean 3rd Qu.</span></span>
+<span><span class="co"># Total_precipitation_surface... [kg/m^2]    0       0   0.75 4.143009    4.63</span></span>
+<span><span class="co">#                                           Max.</span></span>
+<span><span class="co"># Total_precipitation_surface... [kg/m^2] 163.75</span></span>
 <span><span class="co"># dimension(s):</span></span>
 <span><span class="co">#      from  to                  offset   delta  refsys</span></span>
 <span><span class="co"># x       1  87                      NA      NA  WGS 84</span></span>
 <span><span class="co"># y       1 118                      NA      NA  WGS 84</span></span>
 <span><span class="co"># time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct</span></span>
-<span><span class="co">#                                      values x/y</span></span>
-<span><span class="co"># x    [87x118] -80.6113 [°],...,-74.8822 [°] [x]</span></span>
-<span><span class="co"># y      [87x118] 32.4413 [°],...,37.6193 [°] [y]</span></span>
-<span><span class="co"># time                                   NULL    </span></span>
+<span><span class="co">#                                  values x/y</span></span>
+<span><span class="co"># x    [87x118] -80.61 [°],...,-74.88 [°] [x]</span></span>
+<span><span class="co"># y      [87x118] 32.44 [°],...,37.62 [°] [y]</span></span>
+<span><span class="co"># time                               NULL    </span></span>
 <span><span class="co"># curvilinear grid</span></span>
 <span><span class="co"># or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))</span></span>
-<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, <span class="st">"nc.gpkg"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">prec</span><span class="op">)</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">nc</span> <span class="co"># transform from NAD27 to WGS84</span></span>
 <span><span class="va">nc_outline</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_union</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">plot_hook</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc_outline</span>, border <span class="op">=</span> <span class="st">'red'</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">prec</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">prec</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, along <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span>downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span>, hook <span class="op">=</span> <span class="va">plot_hook</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot3-1.png"><!-- --></p>
 <p>and next, intersected with with the counties of North Carolina, where the maximum precipitation intensity was obtained per county, and plotted:</p>
@@ -185,9 +185,9 @@
 <p>We can integrate over (reduce) time, for instance to find out <em>when</em> the maximum precipitation occurred. The following code finds the time index, and then the corresponding time value:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">index_max</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"geom"</span>, <span class="va">index_max</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>when <span class="op">=</span> <span class="fu"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">[</span><span class="va">.</span><span class="op">$</span><span class="va">index_max</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">when</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">b</span> <span class="op">=</span> <span class="fu"><a href="reference/st_apply.html">st_apply</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"geom"</span>, <span class="va">index_max</span><span class="op">)</span></span>
+<span><span class="va">b</span> <span class="op">|&gt;</span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>when <span class="op">=</span> <span class="fu"><a href="reference/st_dimensions.html">st_get_dimension_values</a></span><span class="op">(</span><span class="va">a</span>, <span class="st">"time"</span><span class="op">)</span><span class="op">[</span><span class="va">b</span><span class="op">$</span><span class="va">index_max</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">when</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/plot.html">plot</a></span><span class="op">(</span>key.pos <span class="op">=</span> <span class="fl">1</span>, main <span class="op">=</span> <span class="st">"time of maximum precipitation"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot5-1.png"><!-- --></p>
 </div>
