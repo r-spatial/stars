@@ -297,7 +297,7 @@ plot this object,</p>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   1.365   0.239   1.201</span></span></code></pre>
+<span><span class="co">##   1.152   0.157   0.963</span></span></code></pre>
 <p>This takes only around 1 second, since only those pixels are read
 that can be seen on the plot. If we read the entire image in memory
 first, as we would do with</p>
@@ -404,12 +404,12 @@ attribute called <code>call_list</code>:</p>
 <span><span class="co">## [[1]]</span></span>
 <span><span class="co">## adrop(x = x, drop = drop)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x55f219725338&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x55c312d81b38&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
 <span><span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x55f2196c4728&gt;</span></span></code></pre></div>
+<span><span class="co">## &lt;environment: 0x55c312d20528&gt;</span></span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are
 done. As an example, for <code>st_apply</code>, reading can be done
 sequentially over the dimensions over which the function is applied:</p>
@@ -472,14 +472,14 @@ can compute NDVI by</p>
 <span><span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span></span>
 <span><span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x55f21776b030&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x55c310d6d680&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## This object has pending lazy operations: dimensions as printed may not reflect this.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></span>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.909   0.208   0.719</span></span></code></pre>
+<span><span class="co">##   0.769   0.195   0.613</span></span></code></pre>
 </div>
 </div>
 </div>
