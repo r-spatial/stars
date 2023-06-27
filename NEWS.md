@@ -1,5 +1,7 @@
 # version 0.6-2
 
+* `split.stars()` accepts `stars` objects with multiple attributes; #635
+
 * `[.stars()` supports `NA` values in dimension ranges for vector geometry (`sfc`) dimensions, resulting in empty geometries
 
 * `st_extract()` supports extracting points values from curvilinear grids (when not proxy); #632

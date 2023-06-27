@@ -821,18 +821,22 @@ asub.factor = function(x, idx, dims, drop = NULL, ...) {
 #' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
 #' @export
 split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
-	stopifnot(length(x) == 1)
-	d = st_dimensions(x)
-	if (is.character(f))
-		f = which(names(d) == f)
-	ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
-	spl = st_as_stars(ret, dimensions = d[-f])
-	if (is.null(names(spl)))
-		names(spl) = if (!is.null(d[[f]]$values))
-				d[[f]]$values
-			else
-				make.names(seq_along(spl))
-	spl
+	if (length(x) > 1) {
+		l = lapply(seq_along(x), function(i) split(x[i], f, drop = drop, ...))
+  		do.call(c, setNames(l, names(x)))
+	} else {
+		d = st_dimensions(x)
+		if (is.character(f))
+			f = which(names(d) == f)
+		ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
+		spl = st_as_stars(ret, dimensions = d[-f])
+		if (is.null(names(spl)))
+			names(spl) = if (!is.null(d[[f]]$values))
+					d[[f]]$values
+				else
+					make.names(seq_along(spl))
+		spl
+	}
 }
 
 #' merge or split stars object
