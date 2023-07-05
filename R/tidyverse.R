@@ -214,10 +214,10 @@ slice.stars_proxy <- function(.data, along, index, ...) {
 #' @name st_coordinates
 #' @param .x object to be converted to a tibble
 as_tibble.stars = function(.x, ..., add_max = FALSE, center = NA) {
-    if (!requireNamespace("dplyr", quietly = TRUE))
-        stop("package dplyr required, please install it first") # nocov
+    if (!requireNamespace("tibble", quietly = TRUE))
+        stop("package tibble required, please install it first") # nocov
 
-	dplyr::as_tibble(append(
+	tibble::as_tibble(append(
 			st_coordinates(.x, add_max = add_max, center = center),
 			lapply(.x, function(y) structure(y, dim = NULL))
 		)
@@ -279,6 +279,8 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 
 	if (!requireNamespace("ggplot2", quietly = TRUE))
 		stop("package ggplot2 required, please install it first") # nocov
+	if (!requireNamespace("tibble", quietly = TRUE))
+		stop("package tibble required, please install it first") # nocov
 
 	if (is.null(data)) stop("argument data should be a stars or stars_proxy object")
 
@@ -312,7 +314,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 				else 
            			modifyList( ggplot2::aes(x = !!rlang::sym(xy[1]), y = !!rlang::sym(xy[2]),
 						fill = !!rlang::sym(names(data)[1])), mapping) 
-			data = na.action(dplyr::as_tibble(data))
+			data = na.action(tibble::as_tibble(data))
 			ggplot2::geom_raster(mapping = mapping, data = data, ...)
 		} else {  # rectilinear: use geom_rect, passing on cell boundaries
 			xy_max = paste0(xy, "_max")
@@ -324,7 +326,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 					modifyList(ggplot2::aes(xmin = !!rlang::sym(xy[1]), ymin = !!rlang::sym(xy[2]),
 						xmax = !!rlang::sym(xy_max[1]), ymax = !!rlang::sym(xy_max[2]),
 						fill = !!rlang::sym(names(data)[1])), mapping) 
-			data = na.action(dplyr::as_tibble(data, add_max = TRUE))
+			data = na.action(tibble::as_tibble(data, add_max = TRUE))
 			ggplot2::geom_rect(mapping = mapping, data = data, ...)
 		}
 	} else if (has_sfc(d)) {
@@ -354,7 +356,6 @@ register_all_s3_methods = function() {
 	register_s3_method("cubelyr", "as.tbl_cube", "stars") # nocov start
 	register_s3_method("dplyr", "filter", "stars") 
 	register_s3_method("dplyr", "filter", "stars_proxy") 
-	register_s3_method("dplyr", "as_tibble", "stars")
 	register_s3_method("dplyr", "select", "stars")
 	register_s3_method("dplyr", "select", "stars_proxy")
 	register_s3_method("dplyr", "mutate", "stars")
@@ -373,6 +374,7 @@ register_all_s3_methods = function() {
 	register_s3_method("sf", "st_join", "stars")
 	register_s3_method("spatstat.geom", "as.owin", "stars")
 	register_s3_method("spatstat.geom", "as.im", "stars")
+	register_s3_method("tibble", "as_tibble", "stars")
 	register_s3_method("xts", "as.xts", "stars") # nocov end
 }
 

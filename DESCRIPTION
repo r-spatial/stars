@@ -76,6 +76,7 @@ Suggests:
     starsdata,
     terra (>= 1.4-22),
     testthat,
+    tibble,
     tidyr,
     tsibble,
     viridis,
