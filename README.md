@@ -255,7 +255,10 @@ A list of `stars` commands matching existing `raster` commands is found
 in this
 [wiki](https://github.com/r-spatial/stars/wiki/How-%60raster%60-functions-map-to-%60stars%60-functions).
 A list of translations in the opposite direction (from `stars` to
-`raster`) still needs to be made.
+`raster` or `terra`) still needs to be made.
+
+A comment on the differences between `stars` and `terra` is found
+[here](https://github.com/r-spatial/stars/issues/633).
 
 ## Other `stars` resources:
 
