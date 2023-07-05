@@ -92,7 +92,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 			if (inherits(sf[[i]], "units"))
 				units(ret[[i]]) = units(sf[[i]])
 			if (is.factor(attrs[[i]]))
-				ret[[i]] = structure(ret[[i]], class = "factor", levels = levels(attrs[[i]]))
+				ret[[i]] = structure(ret[[i]], class = class(attrs[[i]]), levels = levels(attrs[[i]]))
 		}
 	}
 	setNames(ret, names(attrs))

@@ -12,7 +12,7 @@
 \method{as.data.frame}{dimensions}(
   x,
   ...,
-  digits = 6,
+  digits = max(3, getOption("digits") - 3),
   usetz = TRUE,
   stars_crs = getOption("stars.crs") \%||\% 28,
   all = FALSE

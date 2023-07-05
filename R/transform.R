@@ -35,7 +35,7 @@ transform_curvilinear = function(x, crs, ...) {
 	d = st_dimensions(x)
 	xy = attr(d, "raster")$dimensions
 	cc = cbind(as.vector(d[[ xy[1] ]]$values), as.vector(d[[ xy[2] ]]$values))
-	pts = sf::sf_project(from, to, cc)
+	pts = sf::sf_project(from, to, cc, ...)
 	d[[ xy[1] ]]$refsys = d[[ xy[2] ]]$refsys = st_crs(crs)
 	d[[ xy[1] ]]$values = matrix(pts[,1], dim(x)[xy])
 	d[[ xy[2] ]]$values = matrix(pts[,2], dim(x)[xy])
@@ -58,7 +58,7 @@ transform_curvilinear = function(x, crs, ...) {
 #' @examples
 #' geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 #' (x = read_stars(geomatrix))
-#' new = st_crs(4326)
+#' new = st_crs('OGC:CRS84')
 #' y = st_transform(x, new)
 #' plot(st_transform(st_as_sfc(st_bbox(x)), new), col = NA, border = 'red')
 #' plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add = TRUE)
@@ -87,7 +87,7 @@ st_transform.stars =  function(x, crs, ...) {
 			warning("no spatial coordinates present: st_transform does nothing")
 			x
 		} else
-			transform_curvilinear(to_curvilinear(x), crs)
+			transform_curvilinear(to_curvilinear(x), crs, ...)
 	}
 }
 

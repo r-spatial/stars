@@ -98,24 +98,36 @@ st_as_stars.default = function(.x = NULL, ..., raster = NULL) {
 	st_as_stars.list(args, dimensions = dimensions)
 }
 
-#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices; the names of this list should correspond to raster dimensions referred to
+#' @param curvilinear only for creating curvilinear grids: named length 2 list holding longitude and latitude matrices or stars arrays, or the names of the corresponding attributes in \code{.x}; the names of this vector should correspond to raster dimensions the matrices are associated with; see Details.
 #' @param crs object of class \code{crs} with the coordinate reference system of the values in \code{curvilinear}; see details
-#' @details if \code{curvilinear} is a \code{stars} object with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values.
+#' @details if \code{curvilinear} is a list with \code{stars} objects with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values. If \code{curvilinear} contains the names of two arrays in \code{.x}, then these are removed from the returned object.
 #' @export
 #' @name st_as_stars
-st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs(4326)) {
+st_as_stars.stars = function(.x, ..., curvilinear = NULL, crs = st_crs('OGC:CRS84')) {
 	if (is.null(curvilinear))
 		.x
 	else {
-		stopifnot(is.list(curvilinear), names(curvilinear) %in% names(dim(.x)))
+		stopifnot(names(curvilinear) %in% names(dim(.x)))
+		if (all(sapply(curvilinear, is.character)))
+			curvilinear = unlist(curvilinear)
+		if (is.character(cl <- curvilinear)) {
+			if (!cl[1] %in% names(.x) || !cl[2] %in% names(.x))
+				stop("curvilinear arrays not present in object")
+			curvilinear = setNames(vector("list", 2), names(curvilinear))
+			curvilinear[[1]] = .x[ cl[1] ]
+			curvilinear[[2]] = .x[ cl[2] ]
+			.x[[ cl[1] ]] = NULL
+			.x[[ cl[2] ]] = NULL
+		}
+		stopifnot(is.list(curvilinear))
 		if (inherits(curvilinear[[1]], "stars"))
 			curvilinear[[1]] = curvilinear[[1]][[1]]
 		if (inherits(curvilinear[[2]], "stars"))
 			curvilinear[[2]] = curvilinear[[2]][[1]]
 		dimensions = st_dimensions(.x)
 		xy = names(curvilinear)
-		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]]), xy))
-		dimensions[[ xy[2] ]]$values = structure(curvilinear[[2]], dim = setNames(dim(curvilinear[[1]]), xy))
+		dimensions[[ xy[1] ]]$values = structure(curvilinear[[1]], dim = setNames(dim(curvilinear[[1]])[1:2], xy))
+		dimensions[[ xy[2] ]]$values = structure(curvilinear[[2]], dim = setNames(dim(curvilinear[[1]])[1:2], xy))
 		# erase regular grid coefficients $offset and $delta:
 		dimensions[[ xy[1] ]]$offset = dimensions[[ xy[1] ]]$delta = NA_real_
 		dimensions[[ xy[2] ]]$offset = dimensions[[ xy[2] ]]$delta = NA_real_
@@ -555,7 +567,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 
 	if (length(dots) == 1)
 		dots[[1]]
-	else if (identical(along, NA_integer_)) { 
+	else if (length(along) == 1 && is.na(along)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 		# dim does not change:
 		if (identical_dimensions(dots, tolerance = tolerance))
@@ -653,7 +665,7 @@ adrop.stars = function(x, drop = which(dim(x) == 1), ..., drop_xy = FALSE) {
 st_bbox.default = function(obj, ...) {
 	if (!missing(obj))
 		stop(paste("no st_bbox method available for object of class", class(obj)))
-	obj = st_sfc(st_point(c(-180,-90)), st_point(c(180, 90)), crs = 4326)
+	obj = st_sfc(st_point(c(-180,-90)), st_point(c(180, 90)), crs = st_crs('OGC:CRS84'))
 	st_bbox(obj)
 }
 
@@ -799,7 +811,7 @@ asub.factor = function(x, idx, dims, drop = NULL, ...) {
 	l = levels(x)
 	x = unclass(x)
 	ret = NextMethod()
-	structure(ret, class = "factor", levels = l)
+	structure(ret, class = class(x), levels = l)
 }
 
 #' @name merge
@@ -809,18 +821,22 @@ asub.factor = function(x, idx, dims, drop = NULL, ...) {
 #' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
 #' @export
 split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
-	stopifnot(length(x) == 1)
-	d = st_dimensions(x)
-	if (is.character(f))
-		f = which(names(d) == f)
-	ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
-	spl = st_as_stars(ret, dimensions = d[-f])
-	if (is.null(names(spl)))
-		names(spl) = if (!is.null(d[[f]]$values))
-				d[[f]]$values
-			else
-				make.names(seq_along(spl))
-	spl
+	if (length(x) > 1) {
+		l = lapply(seq_along(x), function(i) split(x[i], f, drop = drop, ...))
+  		do.call(c, setNames(l, names(x)))
+	} else {
+		d = st_dimensions(x)
+		if (is.character(f))
+			f = which(names(d) == f)
+		ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
+		spl = st_as_stars(ret, dimensions = d[-f])
+		if (is.null(names(spl)))
+			names(spl) = if (!is.null(d[[f]]$values))
+					d[[f]]$values
+				else
+					make.names(seq_along(spl))
+		spl
+	}
 }
 
 #' merge or split stars object
@@ -1103,9 +1119,14 @@ st_interpolate_aw.stars = function(x, to, extensive, ...) {
 #' st_raster_type(x, 1:3)
 #' @export
 st_raster_type = function(x, dimension = character(0)) {
+	stopifnot(inherits(x, "stars"))
+	if (!missing(dimension))
+		stopifnot(all(dimension >= 1), all(dimension <= length(dim(x))))
 	dimension_type = function(d) {
 		if (!any(is.na(c(d$offset, d$delta))))
 			"regular"
+		else if (!is.null(d$values) && is.numeric(d$values) && is.matrix(d$values))
+			"curvilinear"
 		else if (!is.null(d$values) && is.numeric(d$values))
 			"rectilinear"
 		else

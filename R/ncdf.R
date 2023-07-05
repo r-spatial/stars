@@ -333,10 +333,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       message(paste("No projection information found in nc file. \n",
                     "Coordinate variable units found to be degrees, \n",
                     "assuming WGS84 Lat/Lon."))
-      return(st_crs(4326))
+      st_crs('OGC:CRS84')
     } else {
       warning("No projection information found in nc file.")
-      return(st_crs(NULL))
+      st_crs(NULL)
     }
   } else {
   	tryCatch({
@@ -967,7 +967,7 @@ make_cal_time2 <- function(x, time_name = NULL, time_unit = NULL, cal = NULL) {
 #'
 st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 
-  crs <- sf::st_crs(4326)
+  crs <- sf::st_crs('OGC:CRS84')
 
   if(length(.x$alts) == 0) {
     ts_points <- data.frame(X = .x$lons, Y = .x$lats)

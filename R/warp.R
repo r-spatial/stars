@@ -96,7 +96,8 @@ transform_grid_grid = function(x, target, threshold) {
 			if (is.na(threshold)) {
 				p12 = st_as_sf(as.data.frame(cc_x[1:2,]), coords = 1:2)
 				threshold = signif(st_distance(p12)[1,2])
-				message(paste("threshold set to", threshold, ": set a larger value if you see missing values where they shouldn't be"))
+				message(paste("threshold set to", format(threshold), 
+					 ": set a larger value if you see missing values where they shouldn't be"))
 			}
 			i = fnn$nn.index - 1
 			i[fnn$nn.dist > threshold] = NA
@@ -145,7 +146,7 @@ transform_grid_grid = function(x, target, threshold) {
 #' @examples
 #' geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 #' (x = read_stars(geomatrix))
-#' new_crs = st_crs(4326)
+#' new_crs = st_crs('OGC:CRS84')
 #' y = st_warp(x, crs = new_crs)
 #' plot(st_transform(st_as_sfc(st_bbox(x)), new_crs), col = NA, border = 'red')
 #' plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add = TRUE)
@@ -154,7 +155,7 @@ transform_grid_grid = function(x, target, threshold) {
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new_crs), add = TRUE)
 #' # warp 0-360 raster to -180-180 raster:
 #' r = read_stars(system.file("nc/reduced.nc", package = "stars"))
-#' r %>% st_set_crs(4326) %>% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
+#' r %>% st_set_crs('OGC:CRS84') %>% st_warp(st_as_stars(st_bbox(), dx = 2)) -> s
 #' plot(r, axes = TRUE) # no CRS set, so no degree symbols in labels
 #' plot(s, axes = TRUE)
 #' # downsample raster (90 to 270 m)

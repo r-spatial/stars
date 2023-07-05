@@ -50,8 +50,10 @@ make_label = function(x, i = 1) {
 #'    text(pt[,"X"], pt[,"Y"], str, col = 'red', cex = 2)
 #' }
 #' plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
-#' lc = system.file("tif/lc.tif", package = "stars")
-#' plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+#' if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
+#'   lc = system.file("tif/lc.tif", package = "stars")
+#'   plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+#' }
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, key.lab = main,
@@ -287,7 +289,9 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
 #' image(x, col = grey((3:9)/10))
-#' image(x, rgb = c(1,3,5)) # false color composite
+#' if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
+#'   image(x, rgb = c(1,3,5)) # false color composite
+#' }
 image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		maxColorValue = ifelse(inherits(rgb, "data.frame"), 255, max(x[[attr]], na.rm = TRUE)),
 		xlab = if (!axes) "" else names(d)[1], ylab = if (!axes) "" else names(d)[2],
@@ -302,18 +306,34 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	#stopifnot(!has_rotate_or_shear(x)) # FIXME: use rasterImage() with rotate, if only rotate & no shear
 
 	if (any(dim(x) == 1))
-		x = adrop(x)
-
-	force(xlim)
-	force(ylim)
+		x = adrop(x, drop_xy = TRUE)
 
 	d = st_dimensions(x)
-
-	dimxy = attr(d, "raster")$dimensions
-	dimx =  dimxy[1]
-	dimy =  dimxy[2]
-	dimxn = match(dimx, names(d))
-	dimyn = match(dimy, names(d))
+	if (has_raster(x) || has_sfc(x)) {
+		if (missing(xlim) || missing(ylim)) {
+			force(xlim)
+			force(ylim)
+		}
+		dimxy = attr(d, "raster")$dimensions
+		dimx =  dimxy[1]
+		dimy =  dimxy[2]
+		dimxn = match(dimx, names(d))
+		dimyn = match(dimy, names(d))
+		is_rectilinear = is_rectilinear(x)
+	} else {
+		e = expand_dimensions(x)
+		if (missing(xlim))
+			xlim = range(e[[1]])
+		if (missing(ylim))
+			ylim = range(e[[2]])
+		dimx = names(dim(x))[1]
+		dimy = names(dim(x))[2]
+		dimxn = 1
+		dimyn = 2
+		is_rectilinear = (is.na(d[[1]]$delta) || is.na(d[[2]]$delta)) && (!regular_intervals(d[[1]]$values) || !regular_intervals(d[[2]]$values))
+		if (missing(axes))
+			axes = TRUE
+	}
 
 	if (has_sfc(x) && length(dim(x)) == 2) { # time series of features:
 		ed = lapply(expand_dimensions(x), function(x) if (inherits(x, "sfc")) seq_along(x) else x)
@@ -324,8 +344,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	}
 
 	if (! is_curvilinear(x)) {
-		dims = expand_dimensions.stars(x, center = FALSE, max = FALSE)
-		d_max = expand_dimensions.stars(x, center = FALSE, max = TRUE)
+		dims = expand_dimensions(x, center = FALSE, max = FALSE)
+		d_max = expand_dimensions(x, center = FALSE, max = TRUE)
 		if (tail(dims[[dimx]], 1) != tail(d_max[[dimx]], 1))
 			dims[[ dimx ]] = c(dims[[dimx]], tail(d_max[[dimx]], 1))
 		if (tail(dims[[dimy]], 1) != tail(d_max[[dimy]], 1))
@@ -337,10 +357,11 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 	} 
 
 	if (is.null(asp))
-		asp = if (isTRUE(st_is_longlat(x))) {
-				bb = st_bbox(x)
-				1 / cos((mean(bb[c(2,4)]) * pi)/180)
-			} else
+		asp = if (isTRUE(st_is_longlat(x)))
+				1 / cos((mean(st_bbox(x)[c(2,4)]) * pi)/180)
+			else if (!has_raster(x) && !has_sfc(x))
+				NA_real_
+			else
 				1.0
 
 	ar = unclass(x[[ attr ]]) # raw data matrix/array
@@ -432,7 +453,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 					ar[ , rev(seq_len(dim(ar)[2])), band] # FIXME: breaks if more than 3?
 		}
 		image.default(dims[[ dimx ]], dims[[ dimy ]], ar, asp = asp, xlab = xlab, ylab = ylab,
-			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear(x), ...)
+			xlim = xlim, ylim = ylim, axes = FALSE, useRaster = useRaster && !is_rectilinear, ...)
 	}
 	if (text_values) {
 		dims = expand_dimensions.stars(x, center = TRUE)

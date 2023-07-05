@@ -26,7 +26,7 @@ For simple feature dimensions, \link[sf]{st_transform} is called, leading to los
 \examples{
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 (x = read_stars(geomatrix))
-new = st_crs(4326)
+new = st_crs('OGC:CRS84')
 y = st_transform(x, new)
 plot(st_transform(st_as_sfc(st_bbox(x)), new), col = NA, border = 'red')
 plot(st_as_sfc(y, as_points=FALSE), col = NA, border = 'green', axes = TRUE, add = TRUE)

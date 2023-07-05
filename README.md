@@ -128,8 +128,6 @@ a hurricane is imported and the first 12 time steps are plotted:
 ``` r
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
-# Warning in read_stars(gdal_subdatasets(prec_file)[[1]]): proxy = TRUE may not
-# work for curvilinear rasters
 # stars object with 3 dimensions and 1 attribute
 # attribute(s):
 #                                         Min. 1st Qu. Median     Mean 3rd Qu.
@@ -141,13 +139,13 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 # x       1  87                      NA      NA  WGS 84
 # y       1 118                      NA      NA  WGS 84
 # time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct
-#                                      values x/y
-# x    [87x118] -80.6113 [°],...,-74.8822 [°] [x]
-# y      [87x118] 32.4413 [°],...,37.6193 [°] [y]
-# time                                   NULL    
+#                                  values x/y
+# x    [87x118] -80.61 [°],...,-74.88 [°] [x]
+# y      [87x118] 32.44 [°],...,37.62 [°] [y]
+# time                               NULL    
 # curvilinear grid
 # or: (prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"), ignore_bounds = TRUE))
-sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") |>
+sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg") |> 
   st_transform(st_crs(prec)) -> nc # transform from NAD27 to WGS84
 nc_outline = st_union(st_geometry(nc))
 plot_hook = function() plot(nc_outline, border = 'red', add = TRUE)
@@ -175,8 +173,8 @@ and then the corresponding time value:
 
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
-st_apply(a, "geom", index_max) %>%
-  mutate(when = st_get_dimension_values(a, "time")[.$index_max]) %>%
+b = st_apply(a, "geom", index_max)
+b |>  mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
   select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
@@ -188,6 +186,11 @@ timings of county maximum precipitation:
 
 ``` r
 library(cubble)
+# 
+# Attaching package: 'cubble'
+# The following object is masked from 'package:stats':
+# 
+#     filter
 library(ggplot2)
 a |> setNames("precip") |>
   st_set_dimensions(2, name = "tm") |>
@@ -205,22 +208,12 @@ a.cb |>
 # Warning: There were 84 warnings in `dplyr::mutate()`.
 # The first warning was:
 # ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.
-# ℹ In group 12: `group = -80.531250269704.34.9864125408886`.
+# ℹ In group 12: `group = 12`.
 # Caused by warning in `min()`:
 # ! no non-missing arguments to min; returning Inf
 # ℹ Run `dplyr::last_dplyr_warnings()` to see the 83 remaining warnings.
 # Warning: Removed 966 rows containing missing values (`geom_glyph_box()`).
-# Warning: Unknown or uninitialised column: `linewidth`.
-# Warning: Using the `size` aesthetic with geom_rect was deprecated in ggplot2 3.4.0.
-# ℹ Please use the `linewidth` aesthetic instead.
-# This warning is displayed once every 8 hours.
-# Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 # Warning: Removed 966 rows containing missing values (`geom_glyph()`).
-# Warning: Unknown or uninitialised column: `linewidth`.
-# Warning: Using the `size` aesthetic with geom_path was deprecated in ggplot2 3.4.0.
-# ℹ Please use the `linewidth` aesthetic instead.
-# This warning is displayed once every 8 hours.
-# Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 ```
 
 ![](man/figures/README-plot6-1.png)<!-- -->

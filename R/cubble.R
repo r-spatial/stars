@@ -2,6 +2,8 @@
 #' @export
 #' @param check_times logical; should we check that the time stamps of all time series are identical?
 st_as_stars.cubble_df = function(.x, ..., check_times = FALSE) {
+    if (!requireNamespace("tsibble", quietly = TRUE))
+        stop("package cubble required, please install it first") #nocov
     if (!requireNamespace("cubble", quietly = TRUE))
         stop("package cubble required, please install it first") #nocov
     if (!requireNamespace("dplyr", quietly = TRUE))
@@ -31,9 +33,10 @@ st_as_stars.cubble_df = function(.x, ..., check_times = FALSE) {
 		)
 		st_stars(list(values = m), d)
 	} else { # raster:
-		for (k in cubble::key_vars(.x))
-			.x[[k]] = NULL
+		kv = tsibble::key_vars(.x)
 		.x = dplyr::as_tibble(.x)
+		for (k in kv)
+			.x[[k]] = NULL
 		.x$ts = NULL # remove time series payload
 		.x = cbind(.x, m)
 		merge(st_as_stars(.x))
