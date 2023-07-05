@@ -46,7 +46,7 @@ Suggests:
     RNetCDF (>= 1.8-2),
 	clue,
     covr,
-	cubble,
+	cubble (>= 0.3.0),
 	cubelyr,
     digest,
     dplyr (>= 0.7-0),

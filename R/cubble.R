@@ -33,9 +33,10 @@ st_as_stars.cubble_df = function(.x, ..., check_times = FALSE) {
 		)
 		st_stars(list(values = m), d)
 	} else { # raster:
-		for (k in tsibble::key_vars(.x))
-			.x[[k]] = NULL
+		kv = tsibble::key_vars(.x)
 		.x = dplyr::as_tibble(.x)
+		for (k in kv)
+			.x[[k]] = NULL
 		.x$ts = NULL # remove time series payload
 		.x = cbind(.x, m)
 		merge(st_as_stars(.x))
