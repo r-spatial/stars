@@ -1,6 +1,6 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > options(rgdal_show_exportToProj4_warnings = "none")
-> if (require(sp, quietly = TRUE)) {
+> if (suppressPackageStartupMessages(require(sp, quietly = TRUE))) {
 + demo(meuse)
 + # remove +init=xxx
 + meuse@proj4string = CRS(
@@ -77,7 +77,10 @@ Type 'q()' to quit R.
 
 > proj4string(meuse.area) <- crs
 [1] TRUE
+Warning message:
+In CPL_crs_from_input(x) :
+  GDAL Message 1: +init=epsg:XXXX syntax is deprecated. It might return a CRS with a non-EPSG compliant axis order.
 > 
 > proc.time()
    user  system elapsed 
-  1.087   0.065   1.144 
+  1.445   0.758   1.339 

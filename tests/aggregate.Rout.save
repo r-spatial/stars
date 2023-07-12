@@ -1,5 +1,5 @@
 
-R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -20,7 +20,7 @@ Loading required package: abind
 Loading required package: sf
 Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
 > 
-> if (require(spacetime, quietly = TRUE)) {
+> if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
 + data(air) # this loads several datasets in .GlobalEnv
 + dim(air)
 + d = st_dimensions(station = st_set_crs(st_as_sfc(stations), 4326), time = dates)
@@ -108,7 +108,6 @@ t                                                                 NULL
 +  print(sum(a[[1]])*30 == sum(1:720))
 + }
 Loading required package: raster
-Loading required package: sp
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -200,4 +199,4 @@ t                                                                 NULL
 > 
 > proc.time()
    user  system elapsed 
-  5.370   0.862   5.349 
+  5.664   0.832   5.605 

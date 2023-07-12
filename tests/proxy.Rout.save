@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -59,7 +59,7 @@ call_list:
 [[1]]
 e1 + e2
 attr(,".Environment")
-<environment: 0x5647eb5db968>
+<environment: 0x564638dfb5b8>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > st_as_stars(sin(r), downsample = 2)
@@ -68,10 +68,10 @@ attribute(s):
                    Min.   1st Qu.    Median       Mean   3rd Qu.      Max.
 L7_ETMs.tif  -0.9999902 -0.676772 0.0353983 0.01655317 0.7210377 0.9999119
 dimension(s):
-     from  to  offset    delta                     refsys point x/y
-x       1 117  288776  85.0128 SIRGAS 2000 / UTM zone 25S FALSE [x]
-y       1 118 9120761 -85.0169 SIRGAS 2000 / UTM zone 25S FALSE [y]
-band    1   6      NA       NA                         NA    NA    
+     from  to  offset  delta                     refsys point x/y
+x       1 117  288776  85.01 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 118 9120761 -85.02 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA     NA                         NA    NA    
 > aperm(r, c(3,2,1))
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
@@ -86,7 +86,7 @@ call_list:
 [[1]]
 aperm(a = a, perm = perm)
 attr(,".Environment")
-<environment: 0x5647eac129b8>
+<environment: 0x564638aa6268>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > if (interactive()) {
@@ -146,7 +146,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5647e9cc5638>
+<environment: 0x56463781bc40>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -155,9 +155,9 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
 max    55      85     96 99.38568     113  255
 dimension(s):
-  from  to  offset   delta                     refsys point x/y
-x    1 175  288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE [x]
-y    1 176 9120761     -57 SIRGAS 2000 / UTM zone 25S FALSE [y]
+  from  to  offset delta                     refsys point x/y
+x    1 175  288776 56.84 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y    1 176 9120761   -57 SIRGAS 2000 / UTM zone 25S FALSE [y]
 > (y = adrop(st_apply(r, c("x", "y"), max)))
 stars_proxy object with 1 attribute in 1 file(s):
 $L7_ETMs.tif
@@ -173,12 +173,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5647eb7c2fe8>
+<environment: 0x5646390f0138>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x5647eb7aca00>
+<environment: 0x5646390e7450>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -187,9 +187,9 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
 max    55      85     96 99.38568     113  255
 dimension(s):
-  from  to  offset   delta                     refsys point x/y
-x    1 175  288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE [x]
-y    1 176 9120761     -57 SIRGAS 2000 / UTM zone 25S FALSE [y]
+  from  to  offset delta                     refsys point x/y
+x    1 175  288776 56.84 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y    1 176 9120761   -57 SIRGAS 2000 / UTM zone 25S FALSE [y]
 > plot(yy)
 > (y = adrop(st_apply(r, c("x", "band"), max)))
 stars_proxy object with 1 attribute in 1 file(s):
@@ -206,12 +206,12 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5647ebf556d0>
+<environment: 0x56463d0b86a8>
 
 [[2]]
 adrop(x = x, drop = drop)
 attr(,".Environment")
-<environment: 0x5647ebf4d270>
+<environment: 0x56463d0bee50>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > (yy = st_as_stars(y, downsample = 1))
@@ -220,9 +220,9 @@ attribute(s):
      Min. 1st Qu. Median     Mean 3rd Qu. Max.
 max    77     111    133 137.8505     157  255
 dimension(s):
-     from  to offset   delta                     refsys point
-x       1 175 288776 56.8371 SIRGAS 2000 / UTM zone 25S FALSE
-band    1   6     NA      NA                         NA    NA
+     from  to offset delta                     refsys point
+x       1 175 288776 56.84 SIRGAS 2000 / UTM zone 25S FALSE
+band    1   6     NA    NA                         NA    NA
 Warning message:
 In FUN(X[[i]], ...) :
   st_apply on x/y dimensions applied to downsampled image(s)
@@ -315,7 +315,7 @@ call_list:
 st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 attr(,".Environment")
-<environment: 0x5647edf532f8>
+<environment: 0x56463aed00a8>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > st_as_stars(x)
@@ -330,4 +330,4 @@ y    1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.950   0.734   1.789 
+  2.677   0.812   2.607 

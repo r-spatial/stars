@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
-> if (require(spacetime, quietly = TRUE)) {
+> if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
 + set.seed(1331)
 + Sys.setenv(TZ="UTC")
 + example(STFDF)
@@ -234,11 +234,11 @@ Slot "endTime":
 
 
 STFDF> stfdf[1,]
-                    values  ID      timeIndex
-2010-08-05 10:00:00 " 9.38" "ID 1"  "1"      
-2010-08-05 11:00:00 "11.50" "ID 4"  "2"      
-2010-08-05 12:00:00 "10.40" "ID 7"  "3"      
-2010-08-05 13:00:00 "10.30" "ID 10" "4"      
+                    values    ID timeIndex
+2010-08-05 10:00:00   9.38  ID 1         1
+2010-08-05 11:00:00  11.50  ID 4         2
+2010-08-05 12:00:00  10.40  ID 7         3
+2010-08-05 13:00:00  10.30 ID 10         4
 
 STFDF> stfdf[,2]
   coordinates values   ID
@@ -254,11 +254,11 @@ STFDF> as(stfdf[,,1], "xts")
 2010-08-05 13:00:00  10.30   21.4   29.4
 
 STFDF> as(stfdf[,,2], "xts")
-                    point1  point2  point3 
-2010-08-05 10:00:00 "ID 1"  "ID 2"  "ID 3" 
-2010-08-05 11:00:00 "ID 4"  "ID 5"  "ID 6" 
-2010-08-05 12:00:00 "ID 7"  "ID 8"  "ID 9" 
-2010-08-05 13:00:00 "ID 10" "ID 11" "ID 12"
+                    point1 point2 point3
+2010-08-05 10:00:00   ID 1   ID 2   ID 3
+2010-08-05 11:00:00   ID 4   ID 5   ID 6
+2010-08-05 12:00:00   ID 7   ID 8   ID 9
+2010-08-05 13:00:00  ID 10  ID 11  ID 12
 
 STFDF> # examples for [[, [[<-, $ and $<- 
 STFDF> stfdf[[1]]
@@ -333,4 +333,4 @@ only the first attribute will used; maybe use merge() first?
 > 
 > proc.time()
    user  system elapsed 
-  1.638   0.819   1.568 
+  1.731   0.769   1.637 

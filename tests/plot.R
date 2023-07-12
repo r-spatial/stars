@@ -1,6 +1,5 @@
-if (require(spacetime)) {
 suppressPackageStartupMessages(library(stars))
-if (require(spacetime, quietly = TRUE)) {
+if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
  data(air) # this loads several datasets in .GlobalEnv
  dim(air)
  d = st_dimensions(station = st_as_sfc(stations), time = dates)
@@ -20,4 +19,3 @@ if (csv != "") {
 nc = read_sf(system.file("shape/nc.shp", package = "sf"))
 output = st_as_stars(st_bbox(nc), nx = 1, ny = 1, values = 1)
 plot(output)
-}

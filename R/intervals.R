@@ -22,9 +22,9 @@ as_intervals = function(x, add_last = FALSE) {
 
 length.intervals = function(x) length(x$start)
 
-head.intervals = function(x, n) make_intervals(head(x$start, n), head(x$end, n))
+head.intervals = function(x, n, ...) make_intervals(head(x$start, n, ...), head(x$end, n, ...))
 
-tail.intervals = function(x, n) make_intervals(tail(x$start, n), tail(x$end, n))
+tail.intervals = function(x, n, ...) make_intervals(tail(x$start, n, ...), tail(x$end, n, ...))
 
 c.intervals = function(...) {
 	dots = list(...)

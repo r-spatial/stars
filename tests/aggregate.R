@@ -1,6 +1,6 @@
 library(stars)
 
-if (require(spacetime, quietly = TRUE)) {
+if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
 data(air) # this loads several datasets in .GlobalEnv
 dim(air)
 d = st_dimensions(station = st_set_crs(st_as_sfc(stations), 4326), time = dates)

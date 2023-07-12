@@ -10,18 +10,18 @@ names(x2) = names(y)
 all.equal(x2, y) # yes?
 
 # does gdal reproduce with stars template object?
-(x2 = st_warp(x, y, use_gdal = TRUE, no_data_value=-1))
+(x2 = setNames(st_warp(x, y, use_gdal = TRUE, no_data_value=-1), "file.tif"))
 
 # does gdal reproduce what stars does, default cell size?
 (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
-(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1))
+(y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
 
 # try with multiple bands:
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x1 = read_stars(tif))
 (x1p = read_stars(tif, proxy = TRUE))
 (x1a = st_warp(x1, crs = st_crs(4326)))
-(x1b = st_warp(x1, x1p, use_gdal = TRUE, no_data_value=-1))
+(x1b = setNames(st_warp(x1, x1p, use_gdal = TRUE, no_data_value=-1), "file.tif"))
 
 # does gdal reproduce what stars does? Smaller grid:
 (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
@@ -29,7 +29,7 @@ tif = system.file("tif/L7_ETMs.tif", package = "stars")
 if (interactive()) { plot(x2, breaks = "equal", axes=TRUE, reset = FALSE) }
 if (interactive()) { plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red') }
 ### doesn't work: FIXME: check with more recent GDAL:
-(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1))
+(y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
 if (interactive()) { plot(y, breaks = "equal") }
 names(x2) = names(y)
 # isTRUE(all.equal(x2, y, check.attributes=FALSE))

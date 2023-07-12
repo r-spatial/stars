@@ -1,6 +1,6 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -34,9 +34,9 @@ BIR79        319.000  1606.000  3108.000 4.852046e+03  5400.000 30757.000 30904
 SID79          0.000     3.000     6.000 9.584098e+00    13.000    57.000 30904
 NWBIR79        3.000   360.000  1058.000 1.604642e+03  1524.000 11631.000 30904
 dimension(s):
-  from  to   offset      delta refsys point x/y
-x    1 461 -84.3239  0.0192484  NAD27 FALSE [x]
-y    1 141  36.5896 -0.0192484  NAD27 FALSE [y]
+  from  to offset    delta refsys point x/y
+x    1 461 -84.32  0.01925  NAD27 FALSE [x]
+y    1 141  36.59 -0.01925  NAD27 FALSE [y]
 > plot(x, axes = TRUE)
 > # a bit more customized grid:
 > (x = st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
@@ -56,9 +56,9 @@ BIR79        319.000  1606.000  3108.000  4848.231062  5386.000 30757.000 2373
 SID79          0.000     3.000     6.000     9.574419    13.000    57.000 2373
 NWBIR79        3.000   360.000  1058.000  1602.740769  1524.000 11631.000 2373
 dimension(s):
-  from  to   offset      delta refsys point x/y
-x    1 100 -84.3239  0.0886687  NAD27 FALSE [x]
-y    1  50  36.5896 -0.0541531  NAD27 FALSE [y]
+  from  to offset    delta refsys point x/y
+x    1 100 -84.32  0.08867  NAD27 FALSE [x]
+y    1  50  36.59 -0.05415  NAD27 FALSE [y]
 > plot(x, axes = TRUE)
 > (ls = st_sf(a = 1:2, st_sfc(st_linestring(rbind(c(0.1, 0), c(1.1, 1))), st_linestring(rbind(c(0, 0.05), c(1, 0.05))))))
 Simple feature collection with 2 features and 1 field
@@ -105,4 +105,4 @@ y    1 10      1  -0.1 [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.671   0.801   1.587 
+  2.371   0.807   2.282 

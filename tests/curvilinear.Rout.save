@@ -1,5 +1,5 @@
 
-R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -77,13 +77,13 @@ nitrogendioxide_summed_tota...  3.650813e-05 7.451281e-05 8.296968e-05
                                         Mean      3rd Qu.         Max. NA's
 nitrogendioxide_summed_tota...  8.581399e-05 9.397442e-05 0.0004535302  330
 dimension(s):
-     from  to refsys                                 values x/y
-x       1 450 WGS 84 [450x278] -5.81066 [°],...,30.9468 [°] [x]
-y       1 278 WGS 84  [450x278] 28.3605 [°],...,51.4686 [°] [y]
-time    1   1     NA                                   NULL    
+     from  to refsys                             values x/y
+x       1 450 WGS 84 [450x278] -5.811 [°],...,30.95 [°] [x]
+y       1 278 WGS 84  [450x278] 28.36 [°],...,51.47 [°] [y]
+time    1   1     NA                               NULL    
 curvilinear grid
 There were 15 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  1.683   0.793   1.579 
+  2.541   0.735   2.426 

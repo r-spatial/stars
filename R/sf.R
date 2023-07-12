@@ -83,9 +83,9 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	st_stars(x, dimensions = d)
 }
 
-st_as_sf.dimensions = function(x) {
+st_as_sf.dimensions = function(x, ...) {
 	ix = which_sfc(x)[1]
-	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x))
+	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x), ...)
 }
 
 

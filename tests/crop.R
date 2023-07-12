@@ -26,3 +26,12 @@ image(x[buf,crop=FALSE])
 plot(buf, add = TRUE, col = NA)
 
 plot(x, rgb = 1:3)
+
+# #638:
+l = st_as_stars(L7_ETMs)
+st_bbox(l) |> st_as_sfc() -> bb
+(bb + 1e6) |> st_set_crs(st_crs(l)) -> b
+st_crop(l, b)
+st_intersects(b, st_as_sfc(st_bbox(l))) |> as.matrix()
+(bb - 1e6) |> st_set_crs(st_crs(l)) -> b
+st_crop(l, b)

@@ -1,5 +1,5 @@
 suppressPackageStartupMessages(library(stars))
-if (require(spacetime, quietly = TRUE)) {
+if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
 set.seed(1331)
 Sys.setenv(TZ="UTC")
 example(STFDF)
