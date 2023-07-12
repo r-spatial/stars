@@ -260,7 +260,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		as_points = TRUE
 		y = st_as_sfc(st_bbox(y))
 	}
-	if (!as.matrix(st_intersects(st_bbox(x), y)))
+	if (!as.matrix(st_intersects(st_bbox(x), st_bbox(y))))
 		warning("st_crop: bounding boxes of x and y do not overlap")
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
