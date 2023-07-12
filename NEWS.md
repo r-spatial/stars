@@ -1,3 +1,7 @@
+# version 0.6-3
+
+* `st_crop()` now works when the crop area does not overlap with the area of the object; #638
+
 # version 0.6-2
 
 * `split.stars()` accepts `stars` objects with multiple attributes; #635

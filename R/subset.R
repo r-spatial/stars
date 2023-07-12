@@ -176,6 +176,11 @@
 		stop("selector i should be a stars object or a lenght-one integer or character vector")
 }
 
+st_intersects.bbox = function(x, y, ...) {
+	if (!inherits(y, "sfc"))
+		y = st_as_sfc(y)
+	st_intersects(st_as_sfc(x), y, ...)
+}
 
 #' crop a stars object
 #' 
@@ -255,6 +260,8 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		as_points = TRUE
 		y = st_as_sfc(st_bbox(y))
 	}
+	if (!as.matrix(st_intersects(st_bbox(x), y)))
+		warning("st_crop: bounding boxes of x and y do not overlap")
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
@@ -267,19 +274,21 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
-		cr[,1] = cr[,1] - dm[[xd]]$from + 1
-		cr[,2] = cr[,2] - dm[[yd]]$from + 1
-		for (i in seq_along(d)) {
-			if (names(d[i]) == xd)
-				args[[i+1]] = seq(max(1, cr[1, 1], na.rm = TRUE), min(d[xd], cr[2, 1], na.rm = TRUE))
-			if (names(d[i]) == yd) {
-				if (dm[[ yd ]]$delta < 0)
-					cr[1:2, 2] = cr[2:1, 2]
-				args[[i+1]] = seq(max(1, cr[1, 2], na.rm = TRUE), min(d[yd], cr[2, 2], na.rm = TRUE))
+		if (!all(is.na(colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = TRUE)))) { 
+			cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
+			cr[,1] = cr[,1] - dm[[xd]]$from + 1
+			cr[,2] = cr[,2] - dm[[yd]]$from + 1
+			for (i in seq_along(d)) {
+				if (names(d[i]) == xd)
+					args[[i+1]] = seq(max(1, cr[1, 1], na.rm = TRUE), min(d[xd], cr[2, 1], na.rm = TRUE))
+				if (names(d[i]) == yd) {
+					if (dm[[ yd ]]$delta < 0)
+						cr[1:2, 2] = cr[2:1, 2]
+					args[[i+1]] = seq(max(1, cr[1, 2], na.rm = TRUE), min(d[yd], cr[2, 2], na.rm = TRUE))
+				}
 			}
+			x = eval(rlang::expr(x[!!!args]))
 		}
-		x = eval(rlang::expr(x[!!!args]))
 	} else if (crop)
 		warning("crop only crops regular grids")
 
