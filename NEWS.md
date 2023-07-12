@@ -1,6 +1,6 @@
 # version 0.6-3
 
-* `st_crop()` now works when the crop area does not overlap with the area of the object; #638
+* `st_crop()` works (and warns) for the case when the crop area does not overlap with the area of the object; #638
 
 # version 0.6-2
 
@@ -16,7 +16,7 @@
 
 * consistently use `OGC:CRS84` instead of `EPSG:4326`
 
-* setting `values=NULL` in `st_set_dimensions()` removes dimension values
+* setting `values = NULL` in `st_set_dimensions()` removes dimension values
 
 * more gracefully handle plotting of global curvilinear grids; #632
 
