@@ -595,7 +595,7 @@ for a certain period.</p>
 <span><span class="co">## stars object with 5 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
 <span><span class="co">##          Min. 1st Qu. Median    Mean 3rd Qu. Max.</span></span>
-<span><span class="co">## traffic     0       8     10 9.99875      12   28</span></span>
+<span><span class="co">## traffic     0       8     10 9.99625      12   25</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##             from  to                      offset                       delta</span></span>
 <span><span class="co">## origin         1 100                          NA                          NA</span></span>
@@ -629,8 +629,9 @@ replaced by indexes:</p>
 <span><span class="co">## D: day [[(days since 2015-01-01)], 100]</span></span>
 <span><span class="co">## D: hour [[h], 24]</span></span>
 <span><span class="co">## M: traffic [int[,100,3,100,24]]</span></span></code></pre></div>
-<p>The following demonstrates how <code>dplyr</code> can filter bike
-travel, and compute mean bike traffic by hour of day:</p>
+<p>The following demonstrates how we can use <code>dplyr</code> to
+filter travel mode <code>bike</code>, and compute mean bike traffic by
+hour of day:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="va">st</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/cubelyr/man/as.tbl_cube.html" class="external-link">as.tbl_cube</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
