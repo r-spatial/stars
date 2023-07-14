@@ -290,7 +290,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			x = eval(rlang::expr(x[!!!args]))
 		}
 	} else if (crop)
-		warning("crop only crops regular grids")
+		warning("crop only crops regular grids: maybe use st_warp() first?")
 
 	if (!inherits(y, "bbox")) { # post-process: burn in geometry mask
 		dxy = attr(dm, "raster")$dimensions
@@ -302,7 +302,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		d = dim(x) # cropped x
 		mask = rep(TRUE, prod(d[dxy]))
 		mask[inside] = FALSE
-		mask = array(mask, d) # replicates over secondary dims
+		mask = array(mask, d) # recycles over dims >= 3
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}
