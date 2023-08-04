@@ -70,10 +70,13 @@ dimension(s):
 x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
 y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 band    1   6      NA    NA                         NA    NA    
-> (x1p = read_stars(tif, proxy = TRUE))
+> tifcp = tempfile(fileext = ".tif")
+> file.copy(tif, tifcp)
+[1] TRUE
+> (x1p = read_stars(tifcp, proxy = TRUE))
 stars_proxy object with 1 attribute in 1 file(s):
-$L7_ETMs.tif
-[1] "[...]/L7_ETMs.tif"
+$file98af29be89cc.tif
+[1] "[...]/file98af29be89cc.tif"
 
 dimension(s):
      from  to  offset delta                     refsys point x/y
@@ -143,4 +146,4 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.985   1.481   1.675 
+  1.975   1.466   1.692 

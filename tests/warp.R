@@ -19,7 +19,9 @@ all.equal(x2, y) # yes?
 # try with multiple bands:
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 (x1 = read_stars(tif))
-(x1p = read_stars(tif, proxy = TRUE))
+tifcp = tempfile(fileext = ".tif")
+file.copy(tif, tifcp)
+(x1p = read_stars(tifcp, proxy = TRUE))
 (x1a = st_warp(x1, crs = st_crs(4326)))
 (x1b = setNames(st_warp(x1, x1p, use_gdal = TRUE, no_data_value=-1), "file.tif"))
 
