@@ -221,18 +221,27 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 			delta = unname(dy), refsys = st_crs(.x))
 	}
 	if (missing(nz)) { # 2D:
+		d = c(x = nx[[1L]], y = ny[[1L]])
 		if (proxy) {
 			f = tempfile(fileext = ".tif")
 			sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
 			read_stars(f, proxy = TRUE)
-		} else
-			st_as_stars(values = structure(values, dim = c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
-				dims = create_dimensions(list(x = x, y = y), get_raster()))
+		} else {
+			a = if (length(values) == prod(d))
+					structure(values, dim = d)
+				else
+					array(values, dim = d)
+			st_as_stars(values = a, dims = create_dimensions(list(x = x, y = y), get_raster()))
+		}
 	} else {
 		stopifnot(proxy == FALSE)
+		d = c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])
+		a = if (length(values) == prod(d))
+				structure(values, dim = d)
+			else
+				array(values, dim = d)
 		z = create_dimension(from = 1, to = nz[[1]])
-		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[ unnames
-			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
+		st_as_stars(values = a, dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
 	}
 }
 
