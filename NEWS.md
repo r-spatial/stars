@@ -1,5 +1,9 @@
 # version 0.6-3
 
+* `st_as_stars.bbox()` retains `factor` values; #640
+
+* fix CRAN error in test script
+
 * `st_crop()` works (and warns) for the case when the crop area does not overlap with the area of the object; #638
 
 # version 0.6-2
