@@ -67,7 +67,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">x</span>, <span class="va">n</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stars</span></span>
-<span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">x</span>, <span class="va">n</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">x</span>, <span class="va">n</span>, <span class="va">...</span>, offset <span class="op">=</span> <span class="fl">0</span>, <span class="va">FUN</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stars_proxy</span></span>
 <span><span class="fu">st_downsample</span><span class="op">(</span><span class="va">x</span>, <span class="va">n</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -80,11 +80,20 @@
 
 
 <dt>n</dt>
-<dd><p>numeric; the number of pixels/lines/bands etc that will be skipped; see Details.</p></dd>
+<dd><p>integer; for each dimension the number of pixels/lines/bands etc that will be skipped; see Details.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>ignored</p></dd>
+<dd><p>arguments passed on to <code>FUN</code> (e.g., <code>na.rm = TRUE</code> to ignore missing values if FUN is <code>mean</code>)</p></dd>
+
+
+<dt>offset</dt>
+<dd><p>integer; offset(s) for downsampling, in pixels, starting at the offset of 
+each dimension; should be smaller or equal to <code>n</code></p></dd>
+
+
+<dt>FUN</dt>
+<dd><p>function; if given, downsampling will apply FUN to each of the the subtiles</p></dd>
 
 </dl></div>
     <div class="section level2">
