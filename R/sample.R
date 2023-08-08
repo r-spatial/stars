@@ -31,6 +31,19 @@ st_downsample = function(x, n, ...) UseMethod("st_downsample")
 #' is n[i]+1 times larger, and may result in a (slightly) different extent.
 #' @name st_downsample
 #' @export
+#' @examples
+#' (m = matrix(1:121, 11, 11))
+#' (s = st_as_stars(m))
+#' st_downsample(s, 1)
+#' st_downsample(s, 1)[[1]]
+#' st_downsample(s, 1, offset = 1)
+#' st_downsample(s, 1, offset = 1)[[1]]
+#' st_downsample(s, 1, offset = c(0,1))
+#' st_downsample(s, 1, offset = c(0,1))[[1]]
+#' st_downsample(s, 1, FUN = mean)
+#' st_downsample(s, 1, FUN = mean)[[1]]
+#' st_downsample(s, 1, offset = 1, FUN = mean)
+#' st_downsample(s, 1, offset = c(0,1), FUN = mean)[[1]]
 st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 
 	d = dim(x)

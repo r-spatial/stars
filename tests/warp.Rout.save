@@ -73,12 +73,8 @@ band    1   6      NA    NA                         NA    NA
 > tifcp = tempfile(fileext = ".tif")
 > file.copy(tif, tifcp)
 [1] TRUE
-> (x1p = read_stars(tifcp, proxy = TRUE))
-stars_proxy object with 1 attribute in 1 file(s):
-$file98af29be89cc.tif
-[1] "[...]/file98af29be89cc.tif"
-
-dimension(s):
+> x1p = read_stars(tifcp, proxy = TRUE)
+> st_dimensions(x1p)
      from  to  offset delta                     refsys point x/y
 x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
 y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
@@ -146,4 +142,4 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.975   1.466   1.692 
+  2.011   1.502   1.797 

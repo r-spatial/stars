@@ -38,3 +38,17 @@ the first two (x and y) dimensions.
 Downsampled regular rasters keep their dimension offsets, have a cell size (delta) that
 is n[i]+1 times larger, and may result in a (slightly) different extent.
 }
+\examples{
+(m = matrix(1:121, 11, 11))
+(s = st_as_stars(m))
+st_downsample(s, 1)
+st_downsample(s, 1)[[1]]
+st_downsample(s, 1, offset = 1)
+st_downsample(s, 1, offset = 1)[[1]]
+st_downsample(s, 1, offset = c(0,1))
+st_downsample(s, 1, offset = c(0,1))[[1]]
+st_downsample(s, 1, FUN = mean)
+st_downsample(s, 1, FUN = mean)[[1]]
+st_downsample(s, 1, offset = 1, FUN = mean)
+st_downsample(s, 1, offset = c(0,1), FUN = mean)[[1]]
+}
