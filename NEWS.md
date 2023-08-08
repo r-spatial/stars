@@ -1,5 +1,9 @@
 # version 0.6-3
 
+* `st_downsample()` has argument `offset` to pixel-shift downsampled images
+
+* `st_downsample()` has argument `FUN` to compute sub-tile aggregates; #604
+
 * `st_as_stars.bbox()` retains `factor` values; #640
 
 * fix CRAN error in test script
