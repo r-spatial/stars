@@ -1,3 +1,12 @@
+get_index_ranges = function(d, n, offset) {
+	nd = (d - offset) %/% (n + 1)
+	g = do.call(expand.grid, lapply(nd, seq_len))
+	g = t(apply(g, 1, function(x) offset + 1 + (x - 1) * (n + 1)))
+	dimnames(g) = NULL
+	f = function(x) mapply(seq, x, length.out = n + 1, SIMPLIFY = FALSE)
+	apply(g, 1, f, simplify = FALSE)
+}
+
 # reduce resolution of x, keeping (most of) extent
 #' @export
 #' @name st_downsample
@@ -6,8 +15,11 @@ st_downsample = function(x, n, ...) UseMethod("st_downsample")
 #' downsample stars or stars_proxy object by skipping rows, columns and bands
 #' 
 #' @param x object of class stars or stars_proxy
-#' @param n numeric; the number of pixels/lines/bands etc that will be skipped; see Details.
-#' @param ... ignored
+#' @param n integer; for each dimension the number of pixels/lines/bands etc that will be skipped; see Details.
+#' @param offset integer; offset(s) for downsampling, in pixels, starting at the offset of 
+#' each dimension; should be smaller or equal to \code{n}
+#' @param FUN function; if given, downsampling will apply FUN to each of the the subtiles
+#' @param ... arguments passed on to \code{FUN} (e.g., \code{na.rm = TRUE} to ignore missing values if FUN is \code{mean})
 #' @details If all n == 0, no downsampling takes place; if it is 1, every second row/column/band
 #' is skipped, if it is 2, every second+third row/column/band are skipped, etc.
 #' 
@@ -19,36 +31,56 @@ st_downsample = function(x, n, ...) UseMethod("st_downsample")
 #' is n[i]+1 times larger, and may result in a (slightly) different extent.
 #' @name st_downsample
 #' @export
-st_downsample.stars = function(x, n, ...) {
-	n = as.integer(n)
-	stopifnot(all(n >= 0))
-	if (!all(n == 0)) {
-		d = dim(x)
-		n = rep(n, length.out = length(d))
-		dims = st_dimensions(x)
-		regular = is_regular_grid(x)
-		args = rep(list(rlang::missing_arg()), length(d)+1)
-		for (i in seq_along(d)) {
-			if (n[i] > 0) {
-				sq = seq(1, d[i], n[i] + 1)
-				args[[i+1]] = sq
-				# $values:
-				if (!is.null(dims[[i]]$values))
-					dims[[i]]$values = dims[[i]]$values[sq]
-			}
-		}
-		x = eval(rlang::expr(x[!!!args]))
-		if (regular) {
-			d_new = st_dimensions(x)
-			for (i in seq_along(d)) {
-				dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
-				dims[[i]]$from = d_new[[i]]$from
-				dims[[i]]$to = d_new[[i]]$to
-			}
-			x = structure(x, dimensions = dims)
+st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
+
+	d = dim(x)
+	n = rep_len(as.integer(n), length(d))
+	offset = rep_len(as.integer(offset), length(d))
+	stopifnot(all(n >= 0), all(offset <= n), all(offset < d))
+	new_dim = if (! missing(FUN))
+			(d - offset) %/% (n + 1)
+		else
+			ceiling((d - offset) / (n + 1)) # include last, incomplete tile
+
+	dims = st_dimensions(x)
+	ix = setNames(vector("list", length(dims)), names(dims))
+	for (i in seq_along(d)) # need to precompute:
+		ix[[i]] = seq(1 + offset[i], d[i], n[i] + 1)
+	xy = attr(dims, "raster")$dimensions
+	for (i in seq_along(d)) {
+		dims[[i]]$offset = if (offset[i] != 0)
+				dims[[i]]$offset + offset[i] * dims[[i]]$delta
+			else
+				dims[[i]]$offset = dims[[i]]$offset
+		dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
+		dims[[i]]$from = 1
+		dims[[i]]$to = new_dim[i]
+		if (!is.null(dims[[i]]$values)) {
+			if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
+				dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # that's a lot of square brackets!
+			else
+				dims[[i]]$values = dims[[i]]$values[ ix[[i]] ]
 		}
 	}
-	x
+
+	if (all(n == 0))
+		x
+	else if (!missing(FUN)) { # compute FUN() values over the subtiles:
+		stopifnot(is.function(FUN))
+		l = get_index_ranges(d, n, offset)
+		x = unclass(x) # so that `[[<-` doesn't go into the stars method, which recycles
+		for (i in seq_along(x))
+			x[[i]] = structure(sapply(l, function(y) FUN(as.vector(asub(x[[i]], y)), ...)),
+							   dim = new_dim)
+		x = structure(x, class = "stars", dimensions = dims)
+	} else { # downsample using `[`:
+		args = rep(list(rlang::missing_arg()), length(d)+1)
+		for (i in seq_along(d))
+			if (n[i] > 0)
+				args[[i+1]] = ix[[i]] # i==1 skipped: retain all attributes
+		x = eval(rlang::expr(x[!!!args]))
+		structure(x, dimensions = dims)
+	}
 }
 
 #' @export

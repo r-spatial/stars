@@ -8,16 +8,21 @@
 \usage{
 st_downsample(x, n, ...)
 
-\method{st_downsample}{stars}(x, n, ...)
+\method{st_downsample}{stars}(x, n, ..., offset = 0, FUN)
 
 \method{st_downsample}{stars_proxy}(x, n, ...)
 }
 \arguments{
 \item{x}{object of class stars or stars_proxy}
 
-\item{n}{numeric; the number of pixels/lines/bands etc that will be skipped; see Details.}
+\item{n}{integer; for each dimension the number of pixels/lines/bands etc that will be skipped; see Details.}
 
-\item{...}{ignored}
+\item{...}{arguments passed on to \code{FUN} (e.g., \code{na.rm = TRUE} to ignore missing values if FUN is \code{mean})}
+
+\item{offset}{integer; offset(s) for downsampling, in pixels, starting at the offset of 
+each dimension; should be smaller or equal to \code{n}}
+
+\item{FUN}{function; if given, downsampling will apply FUN to each of the the subtiles}
 }
 \description{
 downsample stars or stars_proxy object by skipping rows, columns and bands
