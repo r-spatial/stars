@@ -381,6 +381,5 @@ st_as_raster = function(x, class, ...) {
 			}
 		}
 	}
-	names(b) = names(x)
 	return(b)
 }

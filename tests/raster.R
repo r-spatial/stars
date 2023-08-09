@@ -67,5 +67,13 @@ r3_stars<- st_as_stars(r3)
 
 st_redimension(r3_stars) |> print()
 rast(r3_stars) |> levels() |> print()
+
+m = matrix(1:121, 11, 11)
+bb = st_bbox(c(xmin=0, xmax=11, ymin=0, ymax=11))
+s = st_as_stars(bb, values = m)
+r = rast(s)
+aggregate(r, 2) |> st_as_stars() -> r.s
+stopifnot(isTRUE(all.equal(r.s[,1:5,1:5], st_downsample(s, 1, FUN = mean))))
 }
 }
+
