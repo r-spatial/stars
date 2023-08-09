@@ -156,7 +156,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 			RasterIO = list(bands = src$bands[src$sid == i])
 			r = try(read_stars(file, RasterIO = RasterIO, ...), silent = TRUE)
 			if (! inherits(r, "try-error")) {
-				if (is.na(st_crs(r)))
+				if (is.na(st_crs(r)) && terra::crs(.x) != "")
 					r = st_set_crs(r, st_crs(terra::crs(.x)))
 				r = fix_dims(r, e)
 				if (length(unique(src$sid)) > 1 && length(dim(r)) > 2)
@@ -175,7 +175,6 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 		if (!all(is.na(terra::time(.x))))
 			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
 
-		setNames(ret, attr_name)
 	} else { # ignore_file TRUE:
 		if (terra::nlyr(.x) > 1 && as_attributes) {
 			ret = do.call(c, lapply(seq_len(terra::nlyr(.x)), function(i) st_as_stars(.x[[i]], ignore_file = TRUE)))
@@ -190,7 +189,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 				attr_name = paste(names(.x)[1], collapse = ".")
 		}
 		v = terra::values(.x, mat = FALSE)
-		dimv = dim(v) = dim(.x)[c(2,1,3)]
+		dimv = dim(v) = setNames(dim(.x)[c(2,1,3)], c("x", "y", "band"))
 		if (all(terra::is.factor(.x))) {
 			if (length(terra::levels(.x)) > 1)
 				warning("ignoring categories/levels for all but first layer")
@@ -204,19 +203,23 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 			v = structure(factor(as.vector(v), levels = l$levels, labels = l$labels),
 					dim = dimv, colors = l$colors, exclude = l$exclude)
 		}
+		crs = if (terra::crs(.x) == "")
+				NA_crs_
+			else
+				st_crs(terra::crs(.x))
 		dimensions = list(
 				x = create_dimension(from = 1, to = dim(v)[1], offset = e[1],
-							 	delta = (e[2]-e[1])/dim(v)[1], refsys = st_crs(terra::crs(.x))),
+							 	delta = (e[2]-e[1])/dim(v)[1], refsys = crs),
 				y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
-							 	delta = (e[3]-e[4])/dim(v)[2], refsys = st_crs(terra::crs(.x))))
+							 	delta = (e[3]-e[4])/dim(v)[2], refsys = crs))
 		dimensions$band = create_dimension(values = names(.x))
 		ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
 		if (dim(ret)[3] == 1)
 			ret = adrop(ret, 3)
 		else if (!all(is.na(terra::time(.x))))
 			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
-		setNames(ret, attr_name)
 	}
+	setNames(ret, attr_name)
 }
 
 #' Coerce stars object into a terra SpatRaster
@@ -334,7 +337,7 @@ st_as_raster = function(x, class, ...) {
 				warning("mix of factor and non-factor attributes: all factor levels are ignored")
 			as.vector(merge(x)[[1]])
 		}
-	if (class == "SpatRaster"){
+	if (class == "SpatRaster") {
 		third = setdiff(names(d), dxy)
 		b = terra::rast(nrows = dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
 						xmin = bb[1], xmax = bb[3], ymin = bb[2], ymax = bb[4],
@@ -347,7 +350,7 @@ st_as_raster = function(x, class, ...) {
 				for (i in seq_len(terra::nlyr(b)))
 					terra::coltab(b, layer = i) = coltab[[i]]
 		}
-		if (length(dim(x)) != 2){
+		if (length(dim(x)) != 2) {
 			z = seq(d[[third]])
 			if (!any(is.na(z))) {
 				if (is.character(z)) {
@@ -356,7 +359,8 @@ st_as_raster = function(x, class, ...) {
 					names(b) = paste0(third, z)
 				}
 			}
-		}
+		} else if (length(x) == terra::nlyr(b))
+			names(b) = names(x)
 	} else {
 		if (length(dim(x)) == 2) {
 			b = raster::raster(nrows=dim(x)[ dxy[2] ], ncols=dim(x)[ dxy[1] ],
@@ -377,5 +381,6 @@ st_as_raster = function(x, class, ...) {
 			}
 		}
 	}
+	names(b) = names(x)
 	return(b)
 }

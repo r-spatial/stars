@@ -12,7 +12,10 @@ get_index_ranges = function(d, n, offset) {
 #' @name st_downsample
 st_downsample = function(x, n, ...) UseMethod("st_downsample")
 
-#' downsample stars or stars_proxy object by skipping rows, columns and bands
+#' downsample stars or stars_proxy objects
+#'
+#' downsample a stars or stars_proxy object either by skipping rows, columns and bands,
+#' or by computing a single value (e.g. the mean) from the sub-tiles involved
 #' 
 #' @param x object of class stars or stars_proxy
 #' @param n integer; for each dimension the number of pixels/lines/bands etc that will be skipped; see Details.
@@ -29,6 +32,9 @@ st_downsample = function(x, n, ...) UseMethod("st_downsample")
 #'
 #' Downsampled regular rasters keep their dimension offsets, have a cell size (delta) that
 #' is n[i]+1 times larger, and may result in a (slightly) different extent.
+#'
+#' Note that terra's \link[terra]{aggregate} with \code{fact=2} corresponds to
+#' \code{st_downsample(x, n = 1, FUN = mean)}: \code{fact} is one larger than \code{n}.
 #' @name st_downsample
 #' @export
 #' @examples
@@ -67,7 +73,7 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 				dims[[i]]$offset = dims[[i]]$offset
 		dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
 		dims[[i]]$from = 1
-		dims[[i]]$to = new_dim[i]
+		dims[[i]]$to = unname(new_dim[i])
 		if (!is.null(dims[[i]]$values)) {
 			if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
 				dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # that's a lot of square brackets!
@@ -85,7 +91,7 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 		for (i in seq_along(x))
 			x[[i]] = structure(sapply(l, function(y) FUN(as.vector(asub(x[[i]], y)), ...)),
 							   dim = new_dim)
-		x = structure(x, class = "stars", dimensions = dims)
+		structure(x, class = "stars", dimensions = dims)
 	} else { # downsample using `[`:
 		args = rep(list(rlang::missing_arg()), length(d)+1)
 		for (i in seq_along(d))
