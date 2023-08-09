@@ -4,7 +4,7 @@
 \alias{st_downsample}
 \alias{st_downsample.stars}
 \alias{st_downsample.stars_proxy}
-\title{downsample stars or stars_proxy object by skipping rows, columns and bands}
+\title{downsample stars or stars_proxy objects}
 \usage{
 st_downsample(x, n, ...)
 
@@ -25,7 +25,8 @@ each dimension; should be smaller or equal to \code{n}}
 \item{FUN}{function; if given, downsampling will apply FUN to each of the the subtiles}
 }
 \description{
-downsample stars or stars_proxy object by skipping rows, columns and bands
+downsample a stars or stars_proxy object either by skipping rows, columns and bands,
+or by computing a single value (e.g. the mean) from the sub-tiles involved
 }
 \details{
 If all n == 0, no downsampling takes place; if it is 1, every second row/column/band
@@ -37,6 +38,9 @@ the first two (x and y) dimensions.
 
 Downsampled regular rasters keep their dimension offsets, have a cell size (delta) that
 is n[i]+1 times larger, and may result in a (slightly) different extent.
+
+Note that terra's \link[terra]{aggregate} with \code{fact=2} corresponds to
+\code{st_downsample(x, n = 1, FUN = mean)}: \code{fact} is one larger than \code{n}.
 }
 \examples{
 (m = matrix(1:121, 11, 11))
