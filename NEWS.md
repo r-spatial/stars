@@ -1,3 +1,5 @@
+# version 0.6-4
+
 # version 0.6-3
 
 * `st_downsample()` has argument `offset` to pixel-shift downsampled images

@@ -76,8 +76,8 @@ dimension(s):
 x    1  5 WGS 84 [5x5] -5.811 [°],...,-5.262 [°] [x]
 y    1  5 WGS 84   [5x5] 44.44 [°],...,44.87 [°] [y]
 curvilinear grid
-There were 15 warnings (use warnings() to see them)
+There were 12 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  2.213   0.785   2.118 
+  1.885   0.644   1.865 

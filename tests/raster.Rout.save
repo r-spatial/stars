@@ -93,6 +93,13 @@ band    1   6      NA    NA                         NA    NA
 + 
 + st_redimension(r3_stars) |> print()
 + rast(r3_stars) |> levels() |> print()
++ 
++ m = matrix(1:121, 11, 11)
++ bb = st_bbox(c(xmin=0, xmax=11, ymin=0, ymax=11))
++ s = st_as_stars(bb, values = m)
++ r = rast(s)
++ aggregate(r, 2) |> st_as_stars() -> r.s
++ stopifnot(isTRUE(all.equal(r.s[,1:5,1:5], st_downsample(s, 1, FUN = mean))))
 + }
 + }
 [1] TRUE
@@ -124,6 +131,7 @@ new_dim    1  2     NA    NA     NA lyr.1, lyr.2
 3   3         x3
 
 > 
+> 
 > proc.time()
    user  system elapsed 
-  5.400   0.848   5.357 
+  6.324   0.814   6.401 
