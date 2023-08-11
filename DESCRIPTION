@@ -26,7 +26,7 @@ Description: Reading, manipulating, writing and plotting
 License: Apache License
 URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Additional_repositories: http://cran.uni-muenster.de/pebesma/
+Additional_repositories: https://cran.uni-muenster.de/pebesma/
 LazyData: true
 Depends:
     R (>= 3.3.0),
