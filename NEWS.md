@@ -4,13 +4,13 @@
 
 * `read_mdim()` reads curvilinear rasters (geolocation arrays), so far only at full extent/resolution
 
-* `st_as_stars.stars()` accepts curvilinear argument that points to arrays in `.x`
+* `st_as_stars.stars()` accepts curvilinear argument with lon/lat array names present in `.x`
 
 * consistently use `OGC:CRS84` instead of `EPSG:4326`
 
 * setting `values=NULL` in `st_set_dimensions()` removes dimension values
 
-* more gracefully handle plotting of global curvilinear grids; #632
+* more gracefully handle plotting of global coverage curvilinear grids; #632
 
 * `image.stars()` plots images (e.g. of cross sections) when x and/or y are singular or absent; #628
 
