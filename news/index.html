@@ -74,10 +74,10 @@
 <li><p><code>[.stars()</code> supports <code>NA</code> values in dimension ranges for vector geometry (<code>sfc</code>) dimensions, resulting in empty geometries</p></li>
 <li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> supports extracting points values from curvilinear grids (when not proxy); <a href="https://github.com/r-spatial/stars/issues/632" class="external-link">#632</a></p></li>
 <li><p><code><a href="../reference/mdim.html">read_mdim()</a></code> reads curvilinear rasters (geolocation arrays), so far only at full extent/resolution</p></li>
-<li><p><code><a href="../reference/st_as_stars.html">st_as_stars.stars()</a></code> accepts curvilinear argument that points to arrays in <code>.x</code></p></li>
+<li><p><code><a href="../reference/st_as_stars.html">st_as_stars.stars()</a></code> accepts curvilinear argument with lon/lat array names present in <code>.x</code></p></li>
 <li><p>consistently use <code>OGC:CRS84</code> instead of <code>EPSG:4326</code></p></li>
 <li><p>setting <code>values = NULL</code> in <code><a href="../reference/st_dimensions.html">st_set_dimensions()</a></code> removes dimension values</p></li>
-<li><p>more gracefully handle plotting of global curvilinear grids; <a href="https://github.com/r-spatial/stars/issues/632" class="external-link">#632</a></p></li>
+<li><p>more gracefully handle plotting of global coverage curvilinear grids; <a href="https://github.com/r-spatial/stars/issues/632" class="external-link">#632</a></p></li>
 <li><p><code><a href="../reference/plot.html">image.stars()</a></code> plots images (e.g. of cross sections) when x and/or y are singular or absent; <a href="https://github.com/r-spatial/stars/issues/628" class="external-link">#628</a></p></li>
 <li><p><code><a href="../reference/st_as_stars.html">st_as_stars.cubble_df()</a></code> adds conversion from cubble; <code><a href="https://rdrr.io/pkg/cubble/man/as_cubble.html" class="external-link">cubble::as_cubble()</a></code> methods converts back</p></li>
 <li><p><code>[&lt;-.stars()</code> accepts for <code>i</code> an indicator (numeric length character) to the array to be replaced; <a href="https://github.com/r-spatial/stars/issues/626" class="external-link">#626</a></p></li>
