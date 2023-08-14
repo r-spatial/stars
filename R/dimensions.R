@@ -612,7 +612,7 @@ dim.dimensions = function(x) {
 #' @param stars_crs maximum width of string for CRS objects
 #' @param all logical; if \code{TRUE} print also fields entirely filled with \code{NA} or \code{NULL}
 #' @export
-as.data.frame.dimensions = function(x, ..., digits = 6, usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28, all = FALSE) {
+as.data.frame.dimensions = function(x, ..., digits = max(3, getOption("digits")-3), usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28, all = FALSE) {
 	mformat = function(x, ..., digits) {
 		if (inherits(x, c("PCICt", "POSIXct")))
 			format(x, ..., usetz = usetz)
@@ -738,13 +738,13 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 			x$values = x$values[i]
 		if (!is.na(x$from)) {
 			rang = x$from:x$to # valid range
-			if (max(i) > -1 && min(i) < 0)
+			if (!all(is.na(i)) && max(i, na.rm = TRUE) > -1 && min(i, na.rm = TRUE) < 0)
 				stop("cannot mix positive and negative indexes")
 			if (is.logical(i))
 				i = which(i)
 			else if (all(i < 0))
 				i = setdiff(rang, abs(i)) # subtract
-			if (all(diff(i) == 1)) {
+			if (!any(is.na(i)) && all(diff(i) == 1)) {
 				if (max(i) > length(rang))
 					stop("invalid range selected")
 				sel = rang[i]

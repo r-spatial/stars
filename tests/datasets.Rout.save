@@ -1,6 +1,6 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -27,7 +27,7 @@ $bar
 dimension(s):
      from to offset  delta  refsys                    values x/y
 x       1 81    -85  0.125      NA                      NULL [x]
-y       1 33 37.125 -0.125      NA                      NULL [y]
+y       1 33  37.12 -0.125      NA                      NULL [y]
 time    1 12     NA     NA POSIXct 1999-01-31,...,1999-12-31    
 > L7_ETMs
 stars_proxy object with 1 attribute in 1 file(s):
@@ -54,4 +54,4 @@ band    1     4     NA    NA                    NA B4,...,B8
 > 
 > proc.time()
    user  system elapsed 
-  1.134   0.778   1.019 
+  1.450   0.810   1.369 

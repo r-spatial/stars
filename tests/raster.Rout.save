@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > options(rgdal_show_exportToProj4_warnings = "none")
 > suppressPackageStartupMessages(library(stars))
 > 
-> if (require("raster", quietly = TRUE) && 
+> if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require("raster", quietly = TRUE) && 
 + 	suppressPackageStartupMessages(require("terra", quietly = TRUE))) {
 + 
 + tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -93,6 +93,13 @@ band    1   6      NA    NA                         NA    NA
 + 
 + st_redimension(r3_stars) |> print()
 + rast(r3_stars) |> levels() |> print()
++ 
++ m = matrix(1:121, 11, 11)
++ bb = st_bbox(c(xmin=0, xmax=11, ymin=0, ymax=11))
++ s = st_as_stars(bb, values = m)
++ r = rast(s)
++ aggregate(r, 2) |> st_as_stars() -> r.s
++ stopifnot(isTRUE(all.equal(r.s[,1:5,1:5], st_downsample(s, 1, FUN = mean))))
 + }
 + }
 [1] TRUE
@@ -124,6 +131,7 @@ new_dim    1  2     NA    NA     NA lyr.1, lyr.2
 3   3         x3
 
 > 
+> 
 > proc.time()
    user  system elapsed 
-  6.806   0.789   6.845 
+  6.324   0.814   6.401 

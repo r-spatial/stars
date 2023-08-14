@@ -4,6 +4,11 @@ split_strings = function(md, split = "=") {
 	structure(lst, names = sapply(splt, function(x) x[[1]]), class = "gdal_metadata")
 }
 
+.array = function(x, dim) {
+	structure(rep_len(x, prod(dim)), dim = dim)
+}
+
+
 #' convert objects into a stars object
 #' 
 #' convert objects into a stars object
@@ -157,7 +162,12 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
 #' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or allways cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
-#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. If \code{nx} and \code{ny} are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of \code{inside}. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
+#' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. 
+#' 
+#' If \code{nx} and \code{ny} are missing and \code{values} is a matrix, the number of columns and rows of the matrix are taken.
+#'
+#' Otherwise, if \code{nx} and \code{ny} are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of \code{inside}. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7). 
+#' 
 #' @export
 #' @name st_as_stars
 st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
@@ -170,6 +180,11 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 
 	adx = abs(diff(xlim))
 	ady = abs(diff(ylim))
+
+	if (is.matrix(values) && missing(nx) && missing(ny)) {
+		nx = ncol(values)
+		ny = nrow(values)
+	}
 
 	if (missing(dx) && missing(dy)) {
 		if (missing(nx))
@@ -198,6 +213,7 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 		else
 			ceiling(x)
 	}
+
 	if (missing(nx))
 		nx = consider_inside(diff(xlim) / dx, inside)
 
@@ -226,13 +242,13 @@ st_as_stars.bbox = function(.x, ..., nx, ny, dx = dy, dy = dx,
 			sf::gdal_create(f, c(nx, ny), values, st_crs(.x), xlim, ylim)
 			read_stars(f, proxy = TRUE)
 		} else
-			st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]])), # [[ unnames
-				dims = create_dimensions(list(x = x, y = y), get_raster()))
+			st_as_stars(values = .array(values, c(x = nx[[1L]], y = ny[[1L]])),
+						dims = create_dimensions(list(x = x, y = y), get_raster()))
 	} else {
 		stopifnot(proxy == FALSE)
 		z = create_dimension(from = 1, to = nz[[1]])
-		st_as_stars(values = array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), # [[ unnames
-			dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
+		st_as_stars(values = .array(values, c(x = nx[[1L]], y = ny[[1L]], z = nz[[1]])), 
+					dims = create_dimensions(list(x = x, y = y, z = z), get_raster()))
 	}
 }
 
@@ -821,18 +837,22 @@ asub.factor = function(x, idx, dims, drop = NULL, ...) {
 #' @details split.stars works on the first attribute, and will give an error when more than one attribute is present
 #' @export
 split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
-	stopifnot(length(x) == 1)
-	d = st_dimensions(x)
-	if (is.character(f))
-		f = which(names(d) == f)
-	ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
-	spl = st_as_stars(ret, dimensions = d[-f])
-	if (is.null(names(spl)))
-		names(spl) = if (!is.null(d[[f]]$values))
-				d[[f]]$values
-			else
-				make.names(seq_along(spl))
-	spl
+	if (length(x) > 1) {
+		l = lapply(seq_along(x), function(i) split(x[i], f, drop = drop, ...))
+  		do.call(c, setNames(l, names(x)))
+	} else {
+		d = st_dimensions(x)
+		if (is.character(f))
+			f = which(names(d) == f)
+		ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
+		spl = st_as_stars(ret, dimensions = d[-f])
+		if (is.null(names(spl)))
+			names(spl) = if (!is.null(d[[f]]$values))
+					d[[f]]$values
+				else
+					make.names(seq_along(spl))
+		spl
+	}
 }
 
 #' merge or split stars object
@@ -1115,9 +1135,14 @@ st_interpolate_aw.stars = function(x, to, extensive, ...) {
 #' st_raster_type(x, 1:3)
 #' @export
 st_raster_type = function(x, dimension = character(0)) {
+	stopifnot(inherits(x, "stars"))
+	if (!missing(dimension))
+		stopifnot(all(dimension >= 1), all(dimension <= length(dim(x))))
 	dimension_type = function(d) {
 		if (!any(is.na(c(d$offset, d$delta))))
 			"regular"
+		else if (!is.null(d$values) && is.numeric(d$values) && is.matrix(d$values))
+			"curvilinear"
 		else if (!is.null(d$values) && is.numeric(d$values))
 			"rectilinear"
 		else

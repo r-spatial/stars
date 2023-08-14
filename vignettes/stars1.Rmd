@@ -310,12 +310,12 @@ traffic = array(rpois(prod(n), 10), dim = n) # simulated traffic counts
 ```
 
 This array contains the simple feature geometries of origin and destination so that we can directly plot every slice without additional table joins. If we want to represent such an array as a `tbl_cube`, the simple feature geometry dimensions need to be replaced by indexes:
-```{r}
+```{r eval=ev}
 st |> as.tbl_cube()
 ```
 
-The following demonstrates how `dplyr` can filter bike travel, and compute mean bike traffic by hour of day:
-```{r}
+The following demonstrates how we can use `dplyr` to filter travel mode `bike`, and compute mean bike traffic by hour of day:
+```{r eval=ev}
 b <- st |> 
   as.tbl_cube() |> 
   filter(mode == "bike") |> 

@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,13 +21,14 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-[ FAIL 0 | WARN 0 | SKIP 4 | PASS 74 ]
+[ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
 
-══ Skipped tests ═══════════════════════════════════════════════════════════════
-• On CRAN (4)
+══ Skipped tests (4) ═══════════════════════════════════════════════════════════
+• On CRAN (4): 'test_ncdf.R:1:1', 'test_ncproxy.R:1:1', 'test_osm.R:4:3',
+  'test_rectilinear.R:89:3'
 
-[ FAIL 0 | WARN 0 | SKIP 4 | PASS 74 ]
+[ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
 > 
 > proc.time()
    user  system elapsed 
-  6.459   0.832   6.330 
+  7.247   0.892   7.305 

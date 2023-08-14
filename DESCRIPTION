@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.6-2
+Version: 0.6-4
 Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -26,7 +26,7 @@ Description: Reading, manipulating, writing and plotting
 License: Apache License
 URL: https://r-spatial.github.io/stars/, https://github.com/r-spatial/stars/
 BugReports: https://github.com/r-spatial/stars/issues/
-Additional_repositories: http://cran.uni-muenster.de/pebesma/
+Additional_repositories: https://cran.uni-muenster.de/pebesma/
 LazyData: true
 Depends:
     R (>= 3.3.0),
@@ -46,7 +46,7 @@ Suggests:
     RNetCDF (>= 1.8-2),
 	clue,
     covr,
-	cubble,
+	cubble (>= 0.3.0),
 	cubelyr,
     digest,
     dplyr (>= 0.7-0),
@@ -76,7 +76,9 @@ Suggests:
     starsdata,
     terra (>= 1.4-22),
     testthat,
+    tibble,
     tidyr,
+    tsibble,
     viridis,
     xts,
     zoo

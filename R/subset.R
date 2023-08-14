@@ -7,7 +7,7 @@
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
-#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. 
+#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -122,9 +122,9 @@
 		for (i in seq_along(d)) { # one-at-a-time:
 			name_i = names(d)[i]
 			argi = args[i]
-			if (! (is_curvilinear(d) && name_i %in% xy) &&  # as that was handled above
-					all(argi[[1]] != rlang::missing_arg()) && 
-					is.numeric(eval(argi[[1]])) && ! all(diff(eval(argi[[1]])) == 1))
+			if (!(is_curvilinear(d) && name_i %in% xy) &&  # as that case was handled above
+					!(is.name(argi[[1]]) && all(argi[[1]] == rlang::missing_arg())) &&  # empty arg
+					is.numeric(e <- eval(argi[[1]])) && !any(is.na(e)) && !all(diff(e) == 1)) # sequence with gaps
 				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
 						ed[[i]]
 					else
@@ -176,6 +176,11 @@
 		stop("selector i should be a stars object or a lenght-one integer or character vector")
 }
 
+st_intersects.bbox = function(x, y, ...) {
+	if (!inherits(y, "sfc"))
+		y = st_as_sfc(y)
+	st_intersects(st_as_sfc(x), y, ...)
+}
 
 #' crop a stars object
 #' 
@@ -255,6 +260,8 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		as_points = TRUE
 		y = st_as_sfc(st_bbox(y))
 	}
+	if (!as.matrix(st_intersects(st_bbox(x), st_bbox(y))))
+		warning("st_crop: bounding boxes of x and y do not overlap")
 	if (crop && (is_regular_grid(x) || has_rotate_or_shear(x))) {
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
@@ -267,21 +274,23 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
-		cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
-		cr[,1] = cr[,1] - dm[[xd]]$from + 1
-		cr[,2] = cr[,2] - dm[[yd]]$from + 1
-		for (i in seq_along(d)) {
-			if (names(d[i]) == xd)
-				args[[i+1]] = seq(max(1, cr[1, 1], na.rm = TRUE), min(d[xd], cr[2, 1], na.rm = TRUE))
-			if (names(d[i]) == yd) {
-				if (dm[[ yd ]]$delta < 0)
-					cr[1:2, 2] = cr[2:1, 2]
-				args[[i+1]] = seq(max(1, cr[1, 2], na.rm = TRUE), min(d[yd], cr[2, 2], na.rm = TRUE))
+		if (!all(is.na(colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = TRUE)))) { 
+			cr = colrow_from_xy(matrix(bb, 2, byrow = TRUE), dm, NA_outside = FALSE) # FALSE: https://github.com/r-spatial/stars/issues/455
+			cr[,1] = cr[,1] - dm[[xd]]$from + 1
+			cr[,2] = cr[,2] - dm[[yd]]$from + 1
+			for (i in seq_along(d)) {
+				if (names(d[i]) == xd)
+					args[[i+1]] = seq(max(1, cr[1, 1], na.rm = TRUE), min(d[xd], cr[2, 1], na.rm = TRUE))
+				if (names(d[i]) == yd) {
+					if (dm[[ yd ]]$delta < 0)
+						cr[1:2, 2] = cr[2:1, 2]
+					args[[i+1]] = seq(max(1, cr[1, 2], na.rm = TRUE), min(d[yd], cr[2, 2], na.rm = TRUE))
+				}
 			}
+			x = eval(rlang::expr(x[!!!args]))
 		}
-		x = eval(rlang::expr(x[!!!args]))
 	} else if (crop)
-		warning("crop only crops regular grids")
+		warning("crop only crops regular grids: maybe use st_warp() first?")
 
 	if (!inherits(y, "bbox")) { # post-process: burn in geometry mask
 		dxy = attr(dm, "raster")$dimensions
@@ -293,7 +302,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		d = dim(x) # cropped x
 		mask = rep(TRUE, prod(d[dxy]))
 		mask[inside] = FALSE
-		mask = array(mask, d) # replicates over secondary dims
+		mask = array(mask, d) # recycles over dims >= 3
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}

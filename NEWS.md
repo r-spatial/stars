@@ -1,4 +1,22 @@
+# version 0.6-4
+
+# version 0.6-3
+
+* `st_downsample()` has argument `offset` to pixel-shift downsampled images
+
+* `st_downsample()` has argument `FUN` to compute sub-tile aggregates; #604
+
+* `st_as_stars.bbox()` retains `factor` values; #640
+
+* fix CRAN error in test script
+
+* `st_crop()` works (and warns) for the case when the crop area does not overlap with the area of the object; #638
+
 # version 0.6-2
+
+* `split.stars()` accepts `stars` objects with multiple attributes; #635
+
+* `[.stars()` supports `NA` values in dimension ranges for vector geometry (`sfc`) dimensions, resulting in empty geometries
 
 * `st_extract()` supports extracting points values from curvilinear grids (when not proxy); #632
 
@@ -8,13 +26,13 @@
 
 * consistently use `OGC:CRS84` instead of `EPSG:4326`
 
-* setting `values=NULL` in `st_set_dimensions()` removes dimension values
+* setting `values = NULL` in `st_set_dimensions()` removes dimension values
 
 * more gracefully handle plotting of global coverage curvilinear grids; #632
 
 * `image.stars()` plots images (e.g. of cross sections) when x and/or y are singular or absent; #628
 
-* `st_as_stars.cubble_df()` adds interoperability with cubble; `cubble::as_cubble()` methods convert the other way.
+* `st_as_stars.cubble_df()` adds conversion from cubble; `cubble::as_cubble()` methods converts back
 
 * `[<-.stars()` accepts for `i` an indicator (numeric length character) to the array to be replaced; #626
 

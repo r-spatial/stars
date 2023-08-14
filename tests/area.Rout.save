@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -72,12 +72,12 @@ attribute(s):
                Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 area [m^2] 64503163 64957713 65834712 65849060 66734597 67218777
 dimension(s):
-  from to refsys                              values x/y
-x    1  5 WGS 84 [5x5] -5.81066 [°],...,-5.26234 [°] [x]
-y    1  5 WGS 84   [5x5] 44.4439 [°],...,44.8693 [°] [y]
+  from to refsys                          values x/y
+x    1  5 WGS 84 [5x5] -5.811 [°],...,-5.262 [°] [x]
+y    1  5 WGS 84   [5x5] 44.44 [°],...,44.87 [°] [y]
 curvilinear grid
-There were 15 warnings (use warnings() to see them)
+There were 12 warnings (use warnings() to see them)
 > 
 > proc.time()
    user  system elapsed 
-  1.802   0.704   1.769 
+  1.885   0.644   1.865 

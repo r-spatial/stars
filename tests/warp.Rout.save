@@ -1,6 +1,6 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,39 +21,125 @@ Type 'q()' to quit R.
 > # can stars reproduce what gdal does, by default?
 > x2 = st_warp(x, use_gdal = TRUE, no_data_value = -9999)
 > y = st_warp(x, x2)
-> plot(x2, breaks = "equal", axes=TRUE)
-> plot(y, breaks = "equal", axes=TRUE)
+> if (interactive()) { plot(x2, breaks = "equal", axes=TRUE) }
+> if (interactive()) { plot(y, breaks = "equal", axes=TRUE) }
 > names(x2) = names(y)
 > all.equal(x2, y) # yes?
 [1] TRUE
 > 
-> if (FALSE) { # FIXME: to be removed when sf >= 0.7-4 is on CRAN
-+ # does gdal reproduce with stars template object?
-+ (x2 = st_warp(x, y, use_gdal = TRUE))
-+ 
-+ # does gdal reproduce what stars does, default cell size?
-+ (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
-+ (y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
-+ 
-+ # try with multiple bands:
-+ tif = system.file("tif/L7_ETMs.tif", package = "stars")
-+ (x1 = read_stars(tif))
-+ (x1p = read_stars(tif, proxy = TRUE))
-+ (x1a = st_warp(x1, crs = st_crs(4326)))
-+ (x1b = st_warp(x1, x1p, use_gdal = TRUE))
-+ 
-+ # does gdal reproduce what stars does? Smaller grid:
-+ (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
-+ # x2 = x2[,2:43,2:43]
-+ plot(x2, breaks = "equal", axes=TRUE, reset = FALSE)
-+ plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red')
-+ ### doesn't work: FIXME: check with more recent GDAL:
-+ #(y = st_warp(x, x2, use_gdal = TRUE, debug = FALSE))
-+ #plot(y, breaks = "equal")
-+ #names(x2) = names(y)
-+ #all.equal(x2, y) 
-+ }
+> # does gdal reproduce with stars template object?
+> (x2 = setNames(st_warp(x, y, use_gdal = TRUE, no_data_value=-1), "file.tif"))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+file.tif    74     115    123 126.4289     132  255  224
+dimension(s):
+  from to  offset delta                refsys point x/y
+x    1 25 1840902  5.22 WGS 84 / UTM zone 11N FALSE [x]
+y    1 25 1144003 -5.22 WGS 84 / UTM zone 11N FALSE [y]
+> 
+> # does gdal reproduce what stars does, default cell size?
+> (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+               Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+geomatrix.tif    74     115    123 126.4289     132  255  224
+dimension(s):
+  from to  offset delta                refsys x/y
+x    1 25 1840902  5.22 WGS 84 / UTM zone 11N [x]
+y    1 25 1144003 -5.22 WGS 84 / UTM zone 11N [y]
+> (y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+file.tif    74     115    123 126.4289     132  255  224
+dimension(s):
+  from to  offset delta                refsys point x/y
+x    1 25 1840902  5.22 WGS 84 / UTM zone 11N FALSE [x]
+y    1 25 1144003 -5.22 WGS 84 / UTM zone 11N FALSE [y]
+> 
+> # try with multiple bands:
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> (x1 = read_stars(tif))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 68.91242      86  255
+dimension(s):
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+> tifcp = tempfile(fileext = ".tif")
+> file.copy(tif, tifcp)
+[1] TRUE
+> x1p = read_stars(tifcp, proxy = TRUE)
+> st_dimensions(x1p)
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+> (x1a = st_warp(x1, crs = st_crs(4326)))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+             Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+L7_ETMs.tif     1      54     69 68.93072      86  255 8778
+dimension(s):
+     from  to offset      delta refsys x/y
+x       1 350 -34.92  0.0002592 WGS 84 [x]
+y       1 352  -7.95 -0.0002592 WGS 84 [y]
+band    1   6     NA         NA     NA    
+> (x1b = setNames(st_warp(x1, x1p, use_gdal = TRUE, no_data_value=-1), "file.tif"))
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+          Min. 1st Qu. Median     Mean 3rd Qu. Max.
+file.tif     1      54     69 68.91242      86  255
+dimension(s):
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+> 
+> # does gdal reproduce what stars does? Smaller grid:
+> (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+               Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+geomatrix.tif    74     107    123 126.7262     132  255  727
+dimension(s):
+  from to  offset delta                refsys x/y
+x    1 44 1840902     3 WGS 84 / UTM zone 11N [x]
+y    1 44 1144003    -3 WGS 84 / UTM zone 11N [y]
+> # x2 = x2[,2:43,2:43]
+> if (interactive()) { plot(x2, breaks = "equal", axes=TRUE, reset = FALSE) }
+> if (interactive()) { plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red') }
+> ### doesn't work: FIXME: check with more recent GDAL:
+> (y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
+stars object with 2 dimensions and 1 attribute
+attribute(s):
+          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+file.tif    74     107    123 126.6584     132  255  727
+dimension(s):
+  from to  offset delta                refsys point x/y
+x    1 44 1840902     3 WGS 84 / UTM zone 11N FALSE [x]
+y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
+> if (interactive()) { plot(y, breaks = "equal") }
+> names(x2) = names(y)
+> # isTRUE(all.equal(x2, y, check.attributes=FALSE))
+> mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
+[1] 0.9975186
+> unique(as.vector(x2[[1]]-y[[1]]))
+[1] NA  0 25 49  8
+> 
+> g = st_as_stars()
+> attr(g, "dimensions")$x$offset = 0
+> g$values = as.vector(t(matrix(seq_len(prod(dim(g))), 180, 360)))
+> if (interactive()) { plot(g, axes=TRUE) }
+> a = st_warp(g, st_as_stars(), use_gdal=FALSE)
+> b = st_warp(g, st_as_stars(), use_gdal=TRUE, no_data_value = -1)
+> all.equal(a, b, check.attributes = FALSE)
+[1] TRUE
 > 
 > proc.time()
    user  system elapsed 
-  0.841   0.057   0.890 
+  2.011   1.502   1.797 
