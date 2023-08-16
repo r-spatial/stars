@@ -501,7 +501,8 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 					attr(x, "dimensions")[[ix]]$values <- 
 						attr(x, "dimensions")[[ix]]$values[r[1]:r[2]]
 				}
-			}
+			} else
+				stop("band selection requires an increasing, continuous index range")
 			ix = ix + 1
 			lst[[4]] = NULL # eat/remove
 		}
