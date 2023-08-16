@@ -9,7 +9,7 @@ output:
       smooth_scroll: false
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{6-raster-stars-mapping}
+  %\VignetteIndexEntry{6. How raster functions map to stars functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

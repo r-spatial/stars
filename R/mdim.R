@@ -134,7 +134,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 	create_units = function(x) {
 		u = attr(x, "units")
 		x = structure(x, units = NULL) # remove attribute
-		if (is.null(u) || u == "")
+		if (is.null(u) || u %in% c("", "none"))
 			x
 		else {
 			if (!is.null(a <- attr(x, "attributes")) && !is.na(cal <- a["calendar"]) && 

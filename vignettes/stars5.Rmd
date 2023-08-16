@@ -9,7 +9,7 @@ output:
       smooth_scroll: false
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{5. vector-raster and raster-vector conversion}
+  %\VignetteIndexEntry{5. vector-raster conversions, reprojection, warping}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
