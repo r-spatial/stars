@@ -36,7 +36,8 @@ reduce dimension to rgb (alpha) hex values
 }
 \details{
 the dimension's bands are mapped to red, green, blue, alpha; if a different
-ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
+ordering is wanted, use \link{[.stars} to reorder a dimension, see examples.
+Alternatively, you can use \link{plot.stars} with the \code{rgb} argument to create a three-band composition.
 }
 \examples{
 tif = system.file("tif/L7_ETMs.tif", package = "stars")

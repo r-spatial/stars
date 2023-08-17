@@ -536,7 +536,8 @@ contour.stars = function(x, ...) {
 #' @param probs probability values for quantiles used for stretching by "percent".
 #' @seealso \link{st_apply}, \link[grDevices]{rgb}
 #' @details the dimension's bands are mapped to red, green, blue, alpha; if a different
-#' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples
+#' ordering is wanted, use \link{[.stars} to reorder a dimension, see examples.
+#' Alternatively, you can use \link{plot.stars} with the \code{rgb} argument to create a three-band composition.
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x = read_stars(tif)
@@ -553,7 +554,7 @@ contour.stars = function(x, ...) {
 #' 		   probs = c(0.01, 0.99),
 #' 		   stretch = "histogram")
 #' plot(r)
-st_rgb <- function (x,
+st_rgb = function (x,
 					dimension = 3,
 					use_alpha = dim(x)[dimension] == 4,
 					maxColorValue = 255L,
@@ -573,7 +574,7 @@ st_rgb <- function (x,
 				   "should be 3 or 4"))
 	dims = setdiff(seq_along(dim(x)), dimension)
 	cutoff = function(x, probs, stretch.method = "percent") {
-		if(stretch.method == "percent"){
+		if (stretch.method == "percent"){
 			qs = if (all(probs == c(0, 1)))
 				range(x)
 			else quantile(x, probs, na.rm = TRUE)
@@ -590,29 +591,27 @@ st_rgb <- function (x,
 		}
 	}
 
-	if(is.null(stretch)) {
+	if (is.null(stretch)) {
 		stretch.method = "none"
 		stretch = FALSE
 	}
 
-	if(is.logical(stretch)) {
-		if(stretch){
+	if (is.logical(stretch)) {
+		if(stretch)
 			stretch.method = "percent"
-		} else {
+		else
 			maxColorValue = max(maxColorValue, max(x[[1]], na.rm = TRUE))
-		}
 	}
 
-	if(is.character(stretch)) {
-		if(!stretch %in% c("percent", "histogram")){
+	if (is.character(stretch)) {
+		if (!stretch %in% c("percent", "histogram"))
 			stretch.method = "percent"
-		} else {
+		else
 			stretch.method = stretch
-		}
 		stretch = TRUE
 	}
 
-	if(stretch)
+	if (stretch)
 		x = st_apply(x, dimension, cutoff, probs = probs, stretch.method = stretch.method)
 
 	if (anyNA(x[[1]])) {
