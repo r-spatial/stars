@@ -122,9 +122,6 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
 
-	if (proxy)
-		stop("proxy not yet implemented in read_mdim()")
-
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 	ret = recreate_geometry(ret)
@@ -190,17 +187,20 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		raster = get_raster(dimensions = raster)
 	dimensions = create_dimensions(d, raster = raster)
 
-	# handle array units:
-	for (i in seq_along(ret$array_list))
-		if (nchar(u <- attr(ret$array_list[[i]], "units")) && inherits(u <- try_as_units(u), "units"))
-			units(ret$array_list[[i]]) = u
-	clean_units = function(x) { 
-		if (identical(attr(x, "units"), "")) 
-			structure(x, units = NULL)
-		else
-			x
-	}
-	lst = lapply(ret$array_list, function(x) structure(clean_units(x), dim = rev(dim(x))))
+	if (!proxy) {
+		# handle array units:
+		for (i in seq_along(ret$array_list))
+			if (nchar(u <- attr(ret$array_list[[i]], "units")) && inherits(u <- try_as_units(u), "units"))
+				units(ret$array_list[[i]]) = u
+		clean_units = function(x) { 
+			if (identical(attr(x, "units"), "")) 
+				structure(x, units = NULL)
+			else
+				x
+		}
+		lst = lapply(ret$array_list, function(x) structure(clean_units(x), dim = rev(dim(x))))
+	} else
+		lst = list()
 
 	# create return object:
 	st = st_stars(lst, dimensions)
