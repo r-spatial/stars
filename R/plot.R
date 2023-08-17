@@ -56,8 +56,9 @@ make_label = function(x, i = 1) {
 #' }
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
-		key.pos = get_key_pos(x, ...), key.width = lcm(1.8), key.length = 0.618, key.lab = main,
-		reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, mfrow = NULL) {
+		key.pos = get_key_pos(x, ...), key.width = lcm(1.8 * par("ps")/12), key.length = 0.618, 
+		key.lab = main, reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, 
+		mfrow = NULL) {
 
 	if (!missing(y))
 		stop("y argument should be missing")
@@ -461,6 +462,8 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 			col = text_color)
 	}
 	if (axes) { # FIXME: see sf::plot.sf for refinements to be ported here?
+		if (!is.null(dots$cex.axis))
+			par(cex.axis = dots$cex.axis)
         if (isTRUE(st_is_longlat(x))) {
 			if (isTRUE(all.equal(st_bbox(x), st_bbox(), tolerance = .1, 
 								 check.attributes = FALSE))) {
