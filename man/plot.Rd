@@ -20,7 +20,7 @@
   breaks = "quantile",
   col = grey(1:(nbreaks - 1)/nbreaks),
   key.pos = get_key_pos(x, ...),
-  key.width = lcm(1.8),
+  key.width = lcm(1.8 * par("ps")/12),
   key.length = 0.618,
   key.lab = main,
   reset = TRUE,
