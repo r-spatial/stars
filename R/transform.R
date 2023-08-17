@@ -92,17 +92,16 @@ st_transform.stars =  function(x, crs, ...) {
 }
 
 #' @name st_transform
-#' @export
 st_transform_proj.stars =  function(x, crs, ...) {
 
 	stopifnot(!is.na(crs), !is.na(st_crs(x)))
 
 	if (has_sfc(x)) {
-    	if (!requireNamespace("lwgeom", quietly = TRUE))
-        	stop("package lwgeom required, please install it first") # nocov
 		try_proj = function(x, crs) {
 			ret = try(st_transform(x, crs), silent = TRUE)
 			if (inherits(ret, "try-error")) {
+				if (!requireNamespace("lwgeom", quietly = TRUE))
+					stop("package lwgeom required, please install it first") # nocov
 				if (inherits(crs, "crs"))
 					crs = crs$proj4string
 				ret = lwgeom::st_transform_proj(x, crs)

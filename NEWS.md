@@ -1,5 +1,7 @@
 # version 0.6-4
 
+* move `lwgeom` dependency to Suggests; using `st_transform_proj()` requires loading `lwgeom` first
+
 # version 0.6-3
 
 * `st_downsample()` has argument `offset` to pixel-shift downsampled images

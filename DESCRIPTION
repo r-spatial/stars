@@ -36,7 +36,6 @@ Imports:
     methods,
     parallel,
     classInt (>= 0.4-1),
-    lwgeom,
     rlang,
     units
 Suggests: 
@@ -60,6 +59,7 @@ Suggests:
     httr,
     jsonlite,
     knitr,
+    lwgeom,
     maps,
     mapdata,
     ncdfgeom,
