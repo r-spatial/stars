@@ -160,7 +160,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			}
 
 			# map panel:
-			mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0)
+			mar = c(axes * 2.1, axes * 2.1, 1.2 * !is.null(main), 0)
 			if (!is.null(key.pos) && key.pos[1] %in% 1:4)
 				mar[key.pos[1]] = mar[key.pos[1]] + .5
 			par(mar = mar)
