@@ -107,7 +107,7 @@
 <span>  as_points <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  key.pos <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  logz <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span><span class="op">)</span>,</span>
+<span>  key.width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">lcm</a></span><span class="op">(</span><span class="fl">1.8</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"ps"</span><span class="op">)</span><span class="op">/</span><span class="fl">12</span><span class="op">)</span>,</span>
 <span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
 <span>  add.geom <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  border <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -165,7 +165,7 @@
 
 
 <dt>key.pos</dt>
-<dd><p>integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to <code>NULL</code> to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter <code>asp</code>.</p></dd>
+<dd><p>numeric; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to <code>NULL</code> to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter <code>asp</code>. If it has lenght 2, the second value, ranging from 0 to 1, determines where the key is placed in the available space (default: 0.5, center).</p></dd>
 
 
 <dt>key.width</dt>
