@@ -21,7 +21,7 @@ make_label = function(x, i = 1) {
 #' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells, or color palette function
 #' @param ... further arguments: for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.
-#' @param key.pos integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.
+#' @param key.pos numeric; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}. If it has lenght 2, the second value, ranging from 0 to 1, determines where the key is placed in the available space (default: 0.5, center).
 #' @param key.width amount of space reserved for width of the key (labels); relative or absolute (using lcm)
 #' @param key.length amount of space reserved for length of the key (labels); relative or absolute (using lcm)
 #' @param key.lab character; label for color key in case of multiple subplots, use \code{""} to suppress
@@ -143,7 +143,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) && is.null(dots$rgb) &&
 					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
 					length(col) > 1 && !is_curvilinear(x)) { # plot key?
-				switch(key.pos,
+				switch(key.pos[1],
 					layout(matrix(c(2,1), nrow = 2, ncol = 1), widths = 1, heights = c(1, key.width)),  # 1 bottom
 					layout(matrix(c(1,2), nrow = 1, ncol = 2), widths = c(key.width, 1), heights = 1),  # 2 left
 					layout(matrix(c(1,2), nrow = 2, ncol = 1), widths = 1, heights = c(key.width, 1)),  # 3 top
@@ -161,8 +161,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 
 			# map panel:
 			mar = c(axes * 2.1, axes * 2.1, 1 * !is.null(main), 0)
-			if (!is.null(key.pos) && key.pos %in% 1:4)
-				mar[key.pos] = mar[key.pos] + .5
+			if (!is.null(key.pos) && key.pos[1] %in% 1:4)
+				mar[key.pos[1]] = mar[key.pos[1]] + .5
 			par(mar = mar)
 
 			# plot the map:
@@ -176,7 +176,9 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			if (! draw.key)
 				key.pos = NULL
 			lt = sf::.get_layout(st_bbox(x), dims[3], par("din"),
-						if (join_zlim && key.pos.missing) -1 else key.pos, key.width, mfrow = mfrow)
+						if (join_zlim && key.pos.missing) -1 else key.pos[1], key.width, mfrow = mfrow)
+			if (key.pos.missing)
+				key.pos = lt$key.pos
 			title_size = if (is.null(main))
 					0
 				else
@@ -222,10 +224,10 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					key.lab = units::make_unit_label(names(x)[1], x[[1]])
 				values = structure(x[[1]], dim = NULL)
 				if (is.factor(values))
-					.image_scale_factor(levels(values), col, key.pos = lt$key.pos,
+					.image_scale_factor(levels(values), col, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes,...)
 				else
-					.image_scale(values, col, breaks = breaks, key.pos = lt$key.pos,
+					.image_scale(values, col, breaks = breaks, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes,..., lab = key.lab)
 			}
 		}
@@ -299,7 +301,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE,
 		text_color = 'black', axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
-		key.width = lcm(1.8), key.length = 0.618, add.geom = NULL, border = NA,
+		key.width = lcm(1.8 * par("ps")/12), key.length = 0.618, add.geom = NULL, border = NA,
 		useRaster = isTRUE(dev.capabilities()$rasterImage == "yes"), extent = x) {
 
 	dots = list(...)
