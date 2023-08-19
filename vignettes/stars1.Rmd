@@ -339,10 +339,11 @@ two circular polygons:
 ```{r}
 s = system.file("tif/lc.tif", package = "stars")
 r = read_stars(s, proxy = FALSE) |> droplevels()
+levels(r[[1]]) = abbreviate(levels(r[[1]]), 10) # shorten text labels
 st_point(c(3190631, 3125)) |> st_sfc(crs = st_crs(r)) |> st_buffer(25000) -> pol1
 st_point(c(3233847, 21027)) |> st_sfc(crs = st_crs(r)) |> st_buffer(10000) -> pol2
 if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
-  plot(r, key.width = lcm(4), reset = FALSE, key.pos = 4)
+  plot(r, reset = FALSE, key.pos = 4)
   plot(c(pol1, pol2), col = NA, border = c('yellow', 'green'), lwd = 2, add = TRUE)
 }
 ```

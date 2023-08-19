@@ -6,6 +6,16 @@ make_label = function(x, i = 1) {
 		names(x)[i]
 }
 
+kw_dflt = function(x, key.pos) {
+	if (is.null(key.pos) || key.pos <= 0)
+		lcm(0)
+	else if (key.pos %in% c(2,4) && is.factor(x[[1]]))
+		lcm(max(strwidth(levels(x[[1]]), "inches")) * 2.54 * 1.1 + par("ps")/12) # cm
+	else
+		lcm(1.8 * par("ps")/12)
+}
+
+
 #' plot stars object, with subplots for each level of first non-spatial dimension
 #'
 #' plot stars object, with subplots for each level of first non-spatial dimension, and customization of legend key
@@ -51,12 +61,13 @@ make_label = function(x, i = 1) {
 #' }
 #' plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
 #' if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
-#'   lc = system.file("tif/lc.tif", package = "stars")
-#'   plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+#'   lc = read_stars(system.file("tif/lc.tif", package = "stars"))
+#'   levels(lc[[1]]) = abbreviate(levels(lc[[1]]), 6) # so it's not only legend
+#'   plot(lc, key.pos=4)
 #' }
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
-		key.pos = get_key_pos(x, ...), key.width = lcm(1.8 * par("ps")/12), key.length = 0.618, 
+		key.pos = get_key_pos(x, ...), key.width = kw_dflt(x, key.pos), key.length = 0.618, 
 		key.lab = main, reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, 
 		mfrow = NULL) {
 
@@ -301,7 +312,7 @@ image.stars = function(x, ..., band = 1, attr = 1, asp = NULL, rgb = NULL,
 		xlim = st_bbox(extent)$xlim, ylim = st_bbox(extent)$ylim, text_values = FALSE,
 		text_color = 'black', axes = FALSE,
 		interpolate = FALSE, as_points = FALSE, key.pos = NULL, logz = FALSE,
-		key.width = lcm(1.8 * par("ps")/12), key.length = 0.618, add.geom = NULL, border = NA,
+		key.width = kw_dflt(x, key.pos), key.length = 0.618, add.geom = NULL, border = NA,
 		useRaster = isTRUE(dev.capabilities()$rasterImage == "yes"), extent = x) {
 
 	dots = list(...)

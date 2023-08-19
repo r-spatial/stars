@@ -281,7 +281,7 @@ train = as.data.frame(train)
 train$x = NULL # remove geometry
 rf = randomForest(use ~ ., train) # ~ . : use all other attributes
 pr = predict(r, rf)
-plot(pr, key.width = lcm(5), reset = FALSE, key.pos = 4)
+plot(pr, reset = FALSE, key.pos = 1)
 # add country outline:
 plot(m, add = TRUE)
 ```
