@@ -256,6 +256,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page", "pin"))
 		par(opar[-desel])
 	}
+	invisible(NULL)
 }
 
 get_breaks = function(x, breaks, nbreaks, logz = NULL) {
