@@ -40,6 +40,7 @@ kw_dflt = function(x, key.pos) {
 #' @param center_time logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start
 #' @param hook NULL or function; hook function that will be called on every sub-plot; see examples.
 #' @param mfrow length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout
+#' @param fill logical; fill the plotting area at the key margin?
 #' @details
 #' Downsampling: a value for \code{downsample} of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If \code{downsample} is \code{TRUE} or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.
 #'
@@ -69,7 +70,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = kw_dflt(x, key.pos), key.length = 0.618, 
 		key.lab = main, reset = TRUE, box_col = grey(.8), center_time = FALSE, hook = NULL, 
-		mfrow = NULL) {
+		mfrow = NULL, fill = FALSE) {
 
 	if (!missing(y))
 		stop("y argument should be missing")
@@ -194,6 +195,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					0
 				else
 					1.2
+			if (key.pos > 0 && fill)
+				lt = fill_layout(lt, st_bbox(x), par("din"), title_size, key.width, key.pos)
 			layout(lt$m, widths = lt$widths, heights = lt$heights, respect = FALSE)
 			par(mar = c(axes * 2.1, axes * 2.1, title_size, 0))
 			labels = st_get_dimension_values(x, 3, center = center_time)
@@ -257,6 +260,37 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		par(opar[-desel])
 	}
 	invisible(NULL)
+}
+
+fill_layout = function(lt, bb, din, title_size, key.width, key.pos) {
+    asp = diff(bb[c(2,4)])/diff(bb[c(1,3)]) # > 1 means taller than wide
+    if (!is.finite(asp)) # 0/0
+        asp = 1
+    if (isTRUE(st_is_longlat(bb)))
+        asp = asp / cos(mean(bb[c(2,4)]) * pi /180)
+
+	title_cm = title_size * par("ps") / 72 * 2.54
+	key_cm = as.numeric(strsplit(key.width, " ")[[1]][1])
+	if (key.pos %in% c(1,3)) { # fill @ bottom; din = c(xin, yin)
+		h_one_map_cm = (din[1] * 2.54 / lt$mfrow[2]) * asp
+		h_maps = h_one_map_cm * lt$mfrow[1]
+		h_all = h_maps + lt$mfrow[1] * title_cm + key_cm
+		h_avail = din[2] * 2.54 - h_all
+		if (h_avail > .1) {
+			lt$m = rbind(lt$m, 0)
+			lt$heights = c(lt$heights, lcm(h_avail))
+		}
+	} else { # fill @ rhs:
+		w_one_map = (din[2] * 2.54 - lt$mfrow[1] * title_cm) / (lt$mfrow[1] * asp)
+		w_maps = w_one_map * lt$mfrow[2]
+		w_all = w_maps + key_cm
+		w_avail = din[1] * 2.54 - w_all
+		if (w_avail > .1) {
+			lt$m = cbind(lt$m, 0)
+			lt$widths = c(lt$widths, lcm(w_avail))
+		}
+	}
+	lt
 }
 
 get_breaks = function(x, breaks, nbreaks, logz = NULL) {

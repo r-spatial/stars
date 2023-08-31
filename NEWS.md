@@ -1,5 +1,7 @@
 # version 0.6-4
 
+* `plot.stars()` has a `fill` argument to shift unused plotting space between sub-maps to the bottom or rhs of the plotting area.
+
 * `plot.stars()` key.width is sensitive to pointsize graphics parameter 
 
 * `plot.stars()` and `image.stars()` are sensitive to `cex.axis`, for axes and key (requires sf >= 1.0-14); #642

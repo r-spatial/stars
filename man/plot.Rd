@@ -27,7 +27,8 @@
   box_col = grey(0.8),
   center_time = FALSE,
   hook = NULL,
-  mfrow = NULL
+  mfrow = NULL,
+  fill = FALSE
 )
 
 \method{image}{stars}(
@@ -99,6 +100,8 @@
 \item{hook}{NULL or function; hook function that will be called on every sub-plot; see examples.}
 
 \item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
+
+\item{fill}{logical; fill the plotting area at the key margin?}
 
 \item{band}{integer; which band (dimension) to plot}
 
