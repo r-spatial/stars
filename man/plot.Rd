@@ -101,7 +101,7 @@
 
 \item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
 
-\item{fill}{logical; fill the plotting area at the key margin?}
+\item{fill}{logical; fill the plotting area at the lower or right-hand margin?}
 
 \item{band}{integer; which band (dimension) to plot}
 
