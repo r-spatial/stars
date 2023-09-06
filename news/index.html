@@ -59,8 +59,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6-4" id="version-06-4">version 0.6-4<a class="anchor" aria-label="anchor" href="#version-06-4"></a></h2>
-<ul><li><p><code><a href="../reference/plot.html">plot.stars()</a></code> has a <code>fill</code> argument to shift unused plotting space between sub-maps to the bottom or rhs of the plotting area.</p></li>
-<li><p><code><a href="../reference/plot.html">plot.stars()</a></code> key.width is sensitive to pointsize graphics parameter</p></li>
+<ul><li><p><code><a href="../reference/plot.html">plot.stars()</a></code> has a <code>fill</code> argument that shifts unused plotting space between sub-maps to the bottom or right side of the plotting area</p></li>
+<li><p>in <code><a href="../reference/plot.html">plot.stars()</a></code>, the <code>key.width</code> default is sensitive to <code>par("ps")</code>, the pointsize graphics parameter</p></li>
 <li><p><code><a href="../reference/plot.html">plot.stars()</a></code> and <code><a href="../reference/plot.html">image.stars()</a></code> are sensitive to <code>cex.axis</code>, for axes and key (requires sf &gt;= 1.0-14); <a href="https://github.com/r-spatial/stars/issues/642" class="external-link">#642</a></p></li>
 <li><p>move <code>lwgeom</code> dependency to Suggests; using <code>st_transform_proj()</code> requires loading <code>lwgeom</code> first</p></li>
 </ul></div>
