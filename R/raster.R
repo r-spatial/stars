@@ -347,8 +347,10 @@ st_as_raster = function(x, class, ...) {
 		if (!is.null(levels)) {
 			levels(b) = levels
 			if (!all(sapply(coltab, is.null)))
-				for (i in seq_len(terra::nlyr(b)))
-					terra::coltab(b, layer = i) = coltab[[i]]
+				for (i in seq_len(terra::nlyr(b))) {
+					m = coltab[[i]]
+					terra::coltab(b, layer = i) = cbind(value = seq_len(nrow(m)) - 1, m)
+				}
 		}
 		if (length(dim(x)) != 2) {
 			z = seq(d[[third]])
