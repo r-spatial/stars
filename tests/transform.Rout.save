@@ -1,6 +1,6 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > suppressPackageStartupMessages(library(stars))
-> suppressPackageStartupMessages(library(lwgeom))
+> #suppressPackageStartupMessages(library(lwgeom))
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > (x = read_stars(geomatrix))
 stars object with 2 dimensions and 1 attribute
@@ -39,40 +39,21 @@ sheared raster with parameters: -5 -5
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)[,1:10,1:10,1:3]
 > x_ = st_transform(x, st_crs(4326))
-> x__ = st_transform_proj(x, st_crs(4326)$proj4string)
-> st_crs(x_) = st_crs(x__)
-> all.equal(x_,x__)
+> if (require(lwgeom, quietly = TRUE)) {
++   x__ = st_transform_proj(x, st_crs(4326)$proj4string)
++   st_crs(x_) = st_crs(x__)
++   print(all.equal(x_,x__))
++ 
++ # x__ = st_transform(x, x_) #now in st_warp 
++ # all.equal(x_, x__)
++ 
++   x = st_xy2sfc(x, as_points = FALSE)
++   (x_ = st_transform(x, st_crs(4326)))
++   (x__ = st_transform_proj(x, st_crs(4326)))
++   print(all.equal(x_,x__,check.attributes = FALSE))
++ }
+Linking to liblwgeom 3.0.0beta1 r16016, GEOS 3.11.1, PROJ 9.1.1
 [1] TRUE
-> 
-> # x__ = st_transform(x, x_) #now in st_warp 
-> # all.equal(x_, x__)
-> 
-> x = st_xy2sfc(x, as_points = FALSE)
-> (x_ = st_transform(x, st_crs(4326)))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median  Mean 3rd Qu. Max.
-L7_ETMs.tif    25      43     51 50.72      60   74
-dimension(s):
-         from  to refsys point
-geometry    1 100 WGS 84 FALSE
-band        1   3     NA    NA
-                                                                values
-geometry POLYGON ((-34.91617 -7.94...,...,POLYGON ((-34.91385 -7.95...
-band                                                              NULL
-> (x__ = st_transform_proj(x, st_crs(4326)))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-             Min. 1st Qu. Median  Mean 3rd Qu. Max.
-L7_ETMs.tif    25      43     51 50.72      60   74
-dimension(s):
-         from  to refsys point
-geometry    1 100 WGS 84 FALSE
-band        1   3     NA    NA
-                                                                values
-geometry POLYGON ((-34.91617 -7.94...,...,POLYGON ((-34.91385 -7.95...
-band                                                              NULL
-> all.equal(x_,x__,check.attributes = FALSE)
 [1] TRUE
 > 
 > # nothing to transform: now errs:
@@ -85,4 +66,4 @@ Error in st_transform_proj.stars(st_as_stars(list(matrix(1, 10, 10))),  :
 > 
 > proc.time()
    user  system elapsed 
-  1.200   0.783   1.089 
+  0.711   0.053   0.754 

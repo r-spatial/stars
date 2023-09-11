@@ -1,3 +1,5 @@
+# version 0.6-5
+
 # version 0.6-4
 
 * `plot.stars()` has a `fill` argument that shifts unused plotting space between sub-maps to the bottom or right side of the plotting area
@@ -6,7 +8,7 @@
 
 * `plot.stars()` and `image.stars()` are sensitive to `cex.axis`, for axes and key (requires sf >= 1.0-14); #642
 
-* move `lwgeom` dependency to Suggests; using `st_transform_proj()` requires loading `lwgeom` first
+* move `lwgeom` dependency to Suggests; using `st_transform_proj()` on vector data cubes requires loading `lwgeom` first
 
 # version 0.6-3
 

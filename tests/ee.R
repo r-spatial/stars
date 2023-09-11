@@ -1,6 +1,6 @@
 # show that extract with exact=TRUE equals st_interpolate_aw(), only much faster
 options(digits=15)
-library(stars)
+suppressPackageStartupMessages(library(stars))
 L = st_as_stars(L7_ETMs)[,,,1]
 set.seed(123432)
 st_bbox(L) |> 
