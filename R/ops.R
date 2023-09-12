@@ -55,7 +55,7 @@ Ops.stars <- function(e1, e2) {
 	if (any(sapply(ret, function(x) is.null(dim(x))))) # happens if e1[[1]] is a factor; #304
 		ret = lapply(ret, function(x) { dim(x) = dim(e1); x })
 	if (! inherits(e1, "stars"))
-		setNames(st_as_stars(ret, dimensions = st_dimensions(e2)), names(e2))
+		st_as_stars(setNames(ret, names(e2)), dimensions = st_dimensions(e2))
 	else
 		st_as_stars(ret, dimensions = st_dimensions(e1))
 }

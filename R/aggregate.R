@@ -92,7 +92,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
         	stop("package exactextractr required, please install it first") # nocov
 		x = st_upfront(x)
 		d = st_dimensions(x)[1:2]
-		r = st_as_stars(list(array(1, dim = dim(d))), dimensions = d)
+		r = st_as_stars(list(a = array(1, dim = dim(d))), dimensions = d)
 		e = exactextractr::coverage_fraction(as(r, "Raster"), by)
 		st = do.call(raster::stack, e)
 		m = raster::getValues(st)

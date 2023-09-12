@@ -57,13 +57,13 @@ Linking to liblwgeom 3.0.0beta1 r16016, GEOS 3.11.1, PROJ 9.1.1
 [1] TRUE
 > 
 > # nothing to transform: now errs:
-> try(st_transform(st_as_stars(list(matrix(1,10,10))), st_crs(4326)))
-Error in st_transform.stars(st_as_stars(list(matrix(1, 10, 10))), st_crs(4326)) : 
+> try(st_transform(st_as_stars(list(m = matrix(1,10,10))), st_crs(4326)))
+Error in st_transform.stars(st_as_stars(list(m = matrix(1, 10, 10))),  : 
   !is.na(st_crs(x)) is not TRUE
-> try(st_transform_proj(st_as_stars(list(matrix(1,10,10))), st_crs(4326)))
-Error in st_transform_proj.stars(st_as_stars(list(matrix(1, 10, 10))),  : 
+> try(st_transform_proj(st_as_stars(list(m = matrix(1,10,10))), st_crs(4326)))
+Error in st_transform_proj.stars(st_as_stars(list(m = matrix(1, 10, 10))),  : 
   !is.na(st_crs(x)) is not TRUE
 > 
 > proc.time()
    user  system elapsed 
-  0.711   0.053   0.754 
+  0.696   0.053   0.741 

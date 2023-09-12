@@ -41,10 +41,10 @@ st_as_stars.xts = function(.x, ..., dimensions, name = "attr") {
 		dim(.x) = dim(dimensions)
 		st_stars(setNames(list(.x), name), dimensions)
 	} else {
-		.x = st_as_stars(list(as.matrix(.x)))
+		.x = st_as_stars(setNames(list(as.matrix(.x)), name))
 		.x = st_set_dimensions(.x, 1, time)
 		if (!is.null(cn))
 			.x = st_set_dimensions(.x, 2, cn)
-		st_set_dimensions(setNames(.x, name), names = c("time", "others"))
+		st_set_dimensions(.x, names = c("time", "others"))
 	}
 }

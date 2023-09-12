@@ -28,5 +28,5 @@ if (require(lwgeom, quietly = TRUE)) {
 }
 
 # nothing to transform: now errs:
-try(st_transform(st_as_stars(list(matrix(1,10,10))), st_crs(4326)))
-try(st_transform_proj(st_as_stars(list(matrix(1,10,10))), st_crs(4326)))
+try(st_transform(st_as_stars(list(m = matrix(1,10,10))), st_crs(4326)))
+try(st_transform_proj(st_as_stars(list(m = matrix(1,10,10))), st_crs(4326)))

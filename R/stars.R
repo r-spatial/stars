@@ -851,13 +851,11 @@ split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
 		if (is.character(f))
 			f = which(names(d) == f)
 		ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
-		spl = st_as_stars(ret, dimensions = d[-f])
-		if (is.null(names(spl)))
-			names(spl) = if (!is.null(d[[f]]$values))
-					d[[f]]$values
-				else
-					make.names(seq_along(spl))
-		spl
+		nm = if (!is.null(d[[f]]$values))
+				d[[f]]$values
+			else
+				make.names(seq_along(ret))
+		st_as_stars(setNames(ret, nm), dimensions = d[-f])
 	}
 }
 
