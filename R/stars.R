@@ -24,6 +24,8 @@ st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 #' @export
 st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	if (length(.x)) {
+		if (is.null(names(.x)))
+			stop("list should have named elements")
 		for (i in seq_along(.x)[-1])
 			if (!all(dim(.x[[1]]) == dim(.x[[i]])))
 				stop("dim attributes not identical")
@@ -48,9 +50,13 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 					dimensions[[i]]$point = FALSE
 				}
 			}
-		}
+		} else
+			dimensions = create_dimensions(dim(.x[[1]]))
+		if (is.null(names(dim(.x[[1]]))))
+			for (i in seq_along(.x))
+				names(dim(.x[[i]])) = names(dimensions)
 	}
-	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
+	st_stars(.x, dimensions)
 }
 
 st_stars = function(x, dimensions, class = "stars") {

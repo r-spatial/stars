@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `st_as_stars.list()` requires a _named_ list, and will set names of array dimensions if not present
+
 # version 0.6-4
 
 * `plot.stars()` has a `fill` argument that shifts unused plotting space between sub-maps to the bottom or right side of the plotting area
