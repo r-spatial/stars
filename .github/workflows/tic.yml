@@ -1,5 +1,5 @@
 ## tic GitHub Actions template: linux-macos-windows-deploy
-## revision date: 2022-08-28
+## revision date: 2023-05-22
 on:
   workflow_dispatch:
   push:
@@ -29,10 +29,10 @@ jobs:
       matrix:
         config:
           # use a different tic template type if you do not want to build on all listed platforms
-          #- { os: windows-latest, r: "release" }
-          #- { os: macOS-latest, r: "release" }
+          - { os: windows-latest, r: "release" }
+          - { os: macOS-latest, r: "release", pkgdown: "true", latex: "true" }
           - { os: ubuntu-latest, r: "devel" }
-          - { os: ubuntu-latest, r: "release", pkgdown: "true", latex: "true" }
+          - { os: ubuntu-latest, r: "release" }
 
     env:
       # make sure to run `tic::use_ghactions_deploy()` to set up deployment
@@ -46,13 +46,12 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           Ncpus: 4
-          extra-repositories: https://cran.uni-muenster.de/pebesma/
 
       - uses: r-lib/actions/setup-tinytex@v2
         if: matrix.config.latex == 'true'
@@ -65,7 +64,7 @@ jobs:
       - name: "[Cache] Prepare daily timestamp for cache"
         if: runner.os != 'Windows'
         id: date
-        run: echo "::set-output name=date::$(date '+%d-%m')"
+        run: echo "date=$(date '+%d-%m')" >> $GITHUB_OUTPUT
 
       - name: "[Cache] Cache R packages"
         if: runner.os != 'Windows'
@@ -75,18 +74,8 @@ jobs:
           key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{steps.date.outputs.date}}
           restore-keys: ${{ runner.os }}-r-${{ matrix.config.r }}-${{steps.date.outputs.date}}
 
-      - name: "[Stage] Install spatial libraries on macOS"
-        if: runner.os == 'macOS'
-        run: brew install gdal proj
-
       - name: "[Stage] Install pak"
-        run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/devel/')"
-
-      - name: "[Stage] Manual installation"
-        run: |
-          options(timeout = 1000)
-          install.packages("starsdata", repos = "http://cran.uni-muenster.de/pebesma", type = "source")
-        shell: Rscript {0}
+        run: Rscript -e "install.packages('pak', repos = 'https://r-lib.github.io/p/pak/stable')"
 
       - name: "[Stage] Install"
         run: Rscript -e "if (grepl('Ubuntu', Sys.info()[['version']]) && !grepl('Under development', R.version[['status']])) {options(repos = c(CRAN = sprintf('https://packagemanager.rstudio.com/all/__linux__/%s/latest', system('lsb_release -cs', intern = TRUE))))}else{options(repos = c(CRAN = 'cloud.r-project.org'))}; pak::pkg_install('ropensci/tic')" -e "print(tic::dsl_load())" -e "tic::prepare_all_stages()" -e "tic::before_install()" -e "tic::install()"
@@ -99,7 +88,7 @@ jobs:
 
       - name: "[Stage] Upload R CMD check artifacts"
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
