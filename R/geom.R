@@ -92,9 +92,10 @@ st_join.stars = function(x, y, join = st_intersects, ..., what = "left1", as_poi
 		}
 		sel = li > 0
 		ix = unlist(ix)
-		# white-out existing cells not matched:
-		for (i in seq_along(x))
-			x[[i]][!sel] = NA
+		# white-out existing cells not matched; No,see https://github.com/r-spatial/stars/issues/643:
+		# for (i in seq_along(x))
+		#	x[[i]][!sel] = NA
+
 		# add matching fields from y:
 		for (i in setdiff(names(y), attr(y, "sf_column"))) {
 			na_mode = NA
