@@ -16,12 +16,12 @@ coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](ht
 Spatiotemporal data often comes in the form of dense arrays, with space
 and time being array dimensions. Examples include
 
--   socio-economic or demographic data,
--   environmental variables monitored at fixed stations,
--   raster maps
--   time series of satellite images with multiple spectral bands,
--   spatial simulations, and
--   climate or weather model output.
+  - socio-economic or demographic data,
+  - environmental variables monitored at fixed stations,
+  - raster maps
+  - time series of satellite images with multiple spectral bands,
+  - spatial simulations, and
+  - climate or weather model output.
 
 This R package provides classes and methods for reading, manipulating,
 plotting and writing such data cubes, to the extent that there are
@@ -48,7 +48,7 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.11.1, GDAL 3.6.2, PROJ 9.1.1; sf_use_s2() is TRUE
+# Linking to GEOS 3.11.1, GDAL 3.6.4, PROJ 9.1.1; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) |>
   slice(index = 1, along = "band") |>
@@ -225,10 +225,10 @@ a.cb |>
 Package `gdalcubes` can be used to create data cubes (or functions from
 them) from image collections, sets of multi-band images with varying
 
--   spatial resolution
--   spatial extent
--   coordinate reference systems (e.g., spread over multiple UTM zones)
--   observation times
+  - spatial resolution
+  - spatial extent
+  - coordinate reference systems (e.g., spread over multiple UTM zones)
+  - observation times
 
 and does this by resampling and/or aggregating over space and/or time.
 It reuses GDAL VRT’s and gdalwarp for spatial resampling and/or warping,
@@ -245,11 +245,11 @@ Packages `raster` and its successor, `terra` are powerful packages for
 handling raster maps and stacks of raster maps both in memory and on
 disk, but do not address
 
--   non-raster time series,
--   multi-attribute rasters time series
--   rasters with mixed type attributes (e.g., numeric, logical, factor,
+  - non-raster time series,
+  - multi-attribute rasters time series
+  - rasters with mixed type attributes (e.g., numeric, logical, factor,
     POSIXct)
--   rectilinear or curvilinear rasters
+  - rectilinear or curvilinear rasters
 
 A list of `stars` commands matching existing `raster` commands is found
 in this
@@ -262,17 +262,12 @@ A comment on the differences between `stars` and `terra` is found
 
 ## Other `stars` resources:
 
--   blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
+  - blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
     [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
     [third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and
     [newer blog posts](https://www.r-spatial.org/)
--   vignettes:
-    [first](https://r-spatial.github.io/stars/articles/stars1.html),
-    [second](https://r-spatial.github.io/stars/articles/stars2.html),
-    [third](https://r-spatial.github.io/stars/articles/stars3.html),
-    [fourth](https://r-spatial.github.io/stars/articles/stars4.html),
-    [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
--   the original [R Consortium
+  - [vignettes](https://r-spatial.github.io/stars/articles/)
+  - the original [R Consortium
     proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
 ### Acknowledgment
