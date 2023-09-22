@@ -255,11 +255,11 @@ computations are restricted to the pixels plotted:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">out</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, main <span class="op">=</span> <span class="st">"9-day time trend (slope)"</span><span class="op">)</span></span>
 <span><span class="co">## downsample set to 1</span></span></code></pre></div>
 <p><img src="stars7_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>An interisting pattern appears (despite the very short time series!):
+<p>An interesting pattern appears (despite the very short time series!):
 where SST reveals a main signal of colder when getting further from the
 equator, <em>changes</em> in SST show much more fine grained structures
 of areas going up, and others going down. A diverging color ramp would
-be a better choice here, to distinguis positive from negative
+be a better choice here, to distinguish positive from negative
 trends.</p>
 </div>
 </div>
@@ -270,7 +270,7 @@ trends.</p>
 <h3 id="principal-components">Principal components<a class="anchor" aria-label="anchor" href="#principal-components"></a>
 </h3>
 <p>In the first example, we build principal components on the entire
-data set, because it is rather small.</p>
+dataset, because it is rather small.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">=</span> <span class="fu"><a href="../reference/merge.html">split</a></span><span class="op">(</span><span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span><span class="op">)</span><span class="op">)</span></span>
@@ -281,9 +281,9 @@ data set, because it is rather small.</p>
 <p>We see, amongst others, that PC1 picks up the difference between sea
 (dark) and land, and PC2 and 3 structures in sea and coastal waters.</p>
 <p>In the second example, we build principal components from a sample of
-the entire data set, because the entire dataset is rather large. We
-apply it, using <code>predict</code>, to pixels shown in the plot
-(i.e. at reduced rather than full resolution)</p>
+the entire dataset, because the entire dataset is rather large. We apply
+it, using <code>predict</code>, to pixels shown in the plot (i.e. at
+reduced rather than full resolution)</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">granule</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip"</span>, </span>
 <span>   package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span></span>
@@ -453,6 +453,17 @@ kind. Note that predictions of this kind are pure pixel-based: for each
 prediction only the spectral bands for this pixel are considered, not
 for instance of any neighboring pixels.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="paralell-processing">Paralell processing<a class="anchor" aria-label="anchor" href="#paralell-processing"></a>
+</h2>
+<p>Some machine learning models support multithreading by default (e.g.,
+<code>ranger</code> and <code>xgboost</code>), but this is not the rule.
+R is single-threaded, but using appropriate packages we can easily
+parallelize the calculations, which will reduce the data processing
+time. An example tutorial showing step-by-step unsupervised
+classification using multithreading can be found on the <a href="https://r-spatial.org/r/2023/09/21/stars-parallel.html" class="external-link">R-Spatial
+blog</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
