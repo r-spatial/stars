@@ -251,7 +251,7 @@ A comment on the differences between `stars` and `terra` is found
 * blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
 [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
 [third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and [newer blog posts](https://www.r-spatial.org/)
-* vignettes: [first](https://r-spatial.github.io/stars/articles/stars1.html), [second](https://r-spatial.github.io/stars/articles/stars2.html), [third](https://r-spatial.github.io/stars/articles/stars3.html), [fourth](https://r-spatial.github.io/stars/articles/stars4.html), [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
+* [vignettes](https://r-spatial.github.io/stars/articles/)
 * the original [R Consortium proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
 
 ### Acknowledgment

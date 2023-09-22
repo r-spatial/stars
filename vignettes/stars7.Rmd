@@ -143,13 +143,13 @@ computations are restricted to the pixels plotted:
 plot(out, breaks = "equal", main = "9-day time trend (slope)")
 ```
 
-An interisting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, _changes_ in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguis positive from negative trends.
+An interesting pattern appears (despite the very short time series!): where SST reveals a main signal of colder when getting further from the equator, _changes_ in SST show much more fine grained structures of areas going up, and others going down. A diverging color ramp would be a better choice here, to distinguish positive from negative trends.
 
 ## Unsupervised learners
 
 ### Principal components
 
-In the first example, we build principal components on the entire data set,
+In the first example, we build principal components on the entire dataset,
 because it is rather small.
 ```{r}
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -162,7 +162,7 @@ plot(merge(out), breaks = "equal", join_zlim = FALSE)
 We see, amongst others, that PC1 picks up the difference between sea (dark) and land, and PC2 and 3 structures in sea and coastal waters.
 
 In the second example, we build principal components from a sample
-of the entire data set, because the entire dataset is rather large.
+of the entire dataset, because the entire dataset is rather large.
 We apply it, using `predict`, to pixels shown in the plot (i.e. at 
 reduced rather than full resolution) 
 
@@ -288,3 +288,8 @@ plot(m, add = TRUE)
 
 This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.
 
+## Paralell processing
+
+Some machine learning models support multithreading by default (e.g., `ranger` and `xgboost`), but this is not the rule.
+R is single-threaded, but using appropriate packages we can easily parallelize the calculations, which will reduce the data processing time.
+An example tutorial showing step-by-step unsupervised classification using multithreading can be found on the [R-Spatial blog](https://r-spatial.org/r/2023/09/21/stars-parallel.html).
