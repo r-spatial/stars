@@ -19,7 +19,11 @@ Authors@R:
              role = "ctb"), 
       person(given = "David", 
              family = "Blodgett", 
-             role = "ctb"))
+             role = "ctb"), 
+      person(given = "Krzysztof", 
+             family = "Dyba", 
+             role = "ctb",
+             comment=c(ORCID = "0000-0002-8614-3816")))
 Description: Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in 'R', using 'GDAL'
     bindings provided by 'sf', and 'NetCDF' bindings by 'ncmeta' and 'RNetCDF'.
