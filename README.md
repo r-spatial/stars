@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 
-[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/stars/actions)
+[![rcmdcheck](https://github.com/r-spatial/stars/actions/workflows/rcmdcheck.yml/badge.svg)](https://github.com/r-spatial/stars/actions/workflows/rcmdcheck.yml)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
 checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
