@@ -801,15 +801,15 @@ st_crs.dimensions = function(x, ...) {
 		else
 			stop(paste("crs of class", class(value), "not recognized"))
 
-	if (!is.na(st_crs(x)) && !is.na(value) && st_crs(x) != value)
-		warning("replacing CRS does not reproject data: use st_transform, or st_warp to warp to a new CRS")
-
 	# set CRS in dimensions:
 	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		x[[ xy[1] ]]$refsys = value
 		x[[ xy[2] ]]$refsys = value
 	}
+
+	if (!all(is.na(xy)) && !is.na(x[[ xy[1] ]]$refsys) && !is.na(value) && st_crs(x) != value)
+		warning("replacing CRS does not reproject data: use st_transform, or st_warp to warp to a new CRS")
 
 	# set crs of sfc's, if any:
 	for (j in which_sfc(x)) {
