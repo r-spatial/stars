@@ -93,7 +93,7 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
-	if (length(dots) == 1) # do nothing
+	if (length(dots) == 1 && length(along) == 1 && is.na(along)) # do nothing
 		dots[[1]]
 	else if (along_crs)
 		combine_along_crs_proxy(dots)

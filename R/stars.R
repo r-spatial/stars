@@ -587,7 +587,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	if (any(sapply(dots, inherits, "stars_proxy")))
 		stop("convert stars_proxy objects to stars first using st_as_stars()")
 
-	if (length(dots) == 1)
+	if (length(dots) == 1 && length(along) == 1 && missing(along))
 		dots[[1]]
 	else if (length(along) == 1 && is.na(along)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
