@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `c.stars()` with a single (valid) argument and `along` specified adds a dimension; #646
+
 * `st_join.stars()` keeps attributes from `x` complete; #643
 
 * `st_as_stars.list()` requires a _named_ list, and will set names of array dimensions if not present
