@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* fixed `st_as_stars.im()`; #648
+
 * `st_crs<-.stars()` is less critical on existing CRS being of class `crs` 
 
 * `c.stars()` with a single (valid) argument and `along` specified adds a dimension; #646

@@ -23,18 +23,14 @@ as.owin.stars = function(W, ..., fatal) {
 
 #' @export
 st_as_stars.im = function(.x, ...) {
-	d = dim(.x)
-	nd = create_dimensions(
-		list(x = create_dimension(1, d[1], .x$xrange[1], diff(.x$xrange)/d[1]), 
-			 y = create_dimension(1, d[2], .x$yrange[1], diff(.x$yrange)/d[2])),
-		get_raster(affine = c(0.0, 0.0), dimensions = c("x", "y"), curvilinear = FALSE))
-	st_stars(list(v = t(.x$v)), nd)
+	# see https://github.com/r-spatial/stars/issues/648
+	st_as_stars(as.data.frame(.x, ...))
 }
 
 as.im.stars = function(X, ...) {
 	check_spatstat("spatstat.geom", X)
-	if (!has_raster(X))
-		stop("as.im.stars only works for stars objects with raster data")
+	if (!has_raster(X) || !is_regular_grid(X))
+		stop("as.im.stars only works for stars objects with regular raster data")
 	if (length(dim(X)) > 2)
 		stop("as.im.stars only works for two-dimensional rasters")
 	X = as.data.frame(X)
