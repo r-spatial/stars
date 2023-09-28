@@ -101,7 +101,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 	breaks.missing = missing(breaks)
 	if (missing(nbreaks) && !missing(col))
 		nbreaks = length(col) + 1
-	opar = par()
+	opar = par(no.readonly = TRUE)
 	dots = list(...)
 	need_to_reset = TRUE
 
@@ -258,8 +258,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		stop("no raster, no features geometries: no default plot method set up yet!")
 	if (reset && need_to_reset) {
 		layout(matrix(1)) # reset
-		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page", "pin"))
-		par(opar[-desel])
+		par(opar)
 	}
 	invisible(NULL)
 }
