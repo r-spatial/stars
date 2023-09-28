@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `plot.stars()` only resets layout when needed (more than one sub-plot or key present)
+
 * fixed `st_as_stars.im()`; #648
 
 * `st_crs<-.stars()` is less critical on existing CRS being of class `crs` 

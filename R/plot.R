@@ -155,6 +155,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			if (! isTRUE(dots$add) && ! is.null(key.pos) && !all(is.na(values)) && is.null(dots$rgb) &&
 					(is.factor(values) || length(unique(na.omit(values))) > 1) &&
 					length(col) > 1 && !is_curvilinear(x)) { # plot key?
+				need_to_reset = TRUE
 				switch(key.pos[1],
 					layout(matrix(c(2,1), nrow = 2, ncol = 1), widths = 1, heights = c(1, key.width)),  # 1 bottom
 					layout(matrix(c(1,2), nrow = 1, ncol = 2), widths = c(key.width, 1), heights = 1),  # 2 left
@@ -169,7 +170,8 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 				else
 					.image_scale(values, col, breaks = breaks, key.pos = key.pos,
 						key.width = key.width, key.length = key.length, axes = axes, ..., lab = key.lab)
-			}
+			} else
+				need_to_reset = FALSE
 
 			# map panel:
 			mar = c(axes * 2.1, axes * 2.1, 1.2 * !is.null(main), 0)
@@ -198,6 +200,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			if (key.pos > 0 && fill)
 				lt = fill_layout(lt, st_bbox(x), par("din"), title_size, key.width, key.pos)
 			layout(lt$m, widths = lt$widths, heights = lt$heights, respect = FALSE)
+			need_to_reset = TRUE
 			par(mar = c(axes * 2.1, axes * 2.1, title_size, 0))
 			labels = st_get_dimension_values(x, 3, center = center_time)
 			for (i in seq_len(dims[3])) {
@@ -254,7 +257,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			key.width = key.width, reset = reset, axes = axes, main = main)
 	} else
 		stop("no raster, no features geometries: no default plot method set up yet!")
-	if (reset) {
+	if (reset && need_to_reset) {
 		layout(matrix(1)) # reset
 		desel = which(names(opar) %in% c("cin", "cra", "csi", "cxy", "din", "page", "pin"))
 		par(opar[-desel])

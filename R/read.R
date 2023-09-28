@@ -288,7 +288,8 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 						which(sapply(at[[which.at]], class) == "character")[1]
 				if (length(which.column) == 0)
 					which.column = 1
-			}
+			} else
+				which.column = NA
 			if (!(all(is.na(which.column)))) {
 				labels = at = at[[ which.at ]][[ which.column ]]
 				levels = 0:(length(at) - 1)
