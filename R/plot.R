@@ -189,7 +189,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			draw.key = !is.null(key.pos) && join_zlim
 			if (! draw.key)
 				key.pos = NULL
-			lt = if (packageVersion("sf") < "1.0.14")
+			lt = if (packageVersion("sf") <= "1.0.14")
 					sf::.get_layout(st_bbox(x), dims[3], par("din"),
 						if (join_zlim && key.pos.missing) -1 else key.pos[1], key.width, mfrow = mfrow)
 				else
