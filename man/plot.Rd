@@ -24,11 +24,11 @@
   key.length = 0.618,
   key.lab = main,
   reset = TRUE,
-  box_col = grey(0.8),
+  box_col = NA,
   center_time = FALSE,
   hook = NULL,
   mfrow = NULL,
-  fill = FALSE
+  compact = TRUE
 )
 
 \method{image}{stars}(
@@ -93,7 +93,7 @@
 
 \item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting}
 
-\item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
+\item{box_col}{color for box around sub-plots; use \code{NA} to suppress plotting of boxes around sub-plots.}
 
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
 
@@ -101,7 +101,7 @@
 
 \item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
 
-\item{fill}{logical; fill the plotting area at the lower or right-hand margin?}
+\item{compact}{logical; place facets compactly (TRUE), or spread over the plotting device area?}
 
 \item{band}{integer; which band (dimension) to plot}
 
