@@ -81,11 +81,11 @@
 <span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
 <span>  key.lab <span class="op">=</span> <span class="va">main</span>,</span>
 <span>  reset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  box_col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="fl">0.8</span><span class="op">)</span>,</span>
+<span>  box_col <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  center_time <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  hook <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mfrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fill <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  compact <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stars</span></span>
@@ -186,7 +186,7 @@
 
 
 <dt>box_col</dt>
-<dd><p>color for box around sub-plots; use <code>0</code> to suppress plotting of boxes around sub-plots.</p></dd>
+<dd><p>color for box around sub-plots; use <code>NA</code> to suppress plotting of boxes around sub-plots.</p></dd>
 
 
 <dt>center_time</dt>
@@ -201,8 +201,8 @@
 <dd><p>length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout</p></dd>
 
 
-<dt>fill</dt>
-<dd><p>logical; fill the plotting area at the lower or right-hand margin?</p></dd>
+<dt>compact</dt>
+<dd><p>logical; place facets compactly (TRUE), or spread over the plotting device area?</p></dd>
 
 
 <dt>band</dt>
