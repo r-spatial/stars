@@ -37,6 +37,9 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 #' @export
 st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
+	if (inherits(x, "stars_proxy"))
+		x = st_as_stars(x)
+
 	d = st_dimensions(x)
 	olddim = dim(x)
 
