@@ -420,28 +420,13 @@ get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
 		  class = "stars_raster")
 }
 
-get_geotransform = function(x) {
-	if (inherits(x, "stars"))
-		x = st_dimensions(x)
-	stopifnot(inherits(x, "dimensions"))
-	r = attr(x, "raster")
-	if (is.null(r))
-		rep(NA_real_, 6)
-	else {
-		xd = x[[ r$dimensions[1] ]]
-		yd = x[[ r$dimensions[2] ]]
-		c(as.numeric(xd$offset), as.numeric(xd$delta), r$affine[1], 
-		  as.numeric(yd$offset), r$affine[2], as.numeric(yd$delta))
-	}
-}
-
 
 #' @export
 print.stars_raster = function(x, ...) {
 	if (any(is.na(x$affine)))
 		cat(paste("affine parameters:", x$affine[1], x$affine[2], "\n"))
 	else if (any(x$affine != 0.0))
-		cat(paste("sheared raster with parameters:", x$affine[1], x$affine[2], "\n"))
+		cat(paste("sheared raster with parameters:", format(x$affine[1], ...), format(x$affine[2], ...), "\n"))
 	if (x$curvilinear)
 		cat("curvilinear grid\n")
 	invisible(x)

@@ -124,3 +124,4 @@ Collate:
     'tile.R'
     'mdim.R'
     'cubble.R'
+    'gt.R'
