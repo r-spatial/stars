@@ -13,6 +13,8 @@ st_geotransform(x, ...) <- value
 \item{x}{object of class stars or dimensions}
 
 \item{...}{ignored}
+
+\item{value}{length 6 numeric vector, or 2 x 2 (scaled) rotation matrix}
 }
 \description{
 get or set the geotransform, or rotation matrix

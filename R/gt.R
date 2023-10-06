@@ -26,7 +26,7 @@ st_geotransform.default = function(x, ...) {
 
 #' @export
 #' @name st_geotransform
-#' @name value length 6 numeric vector, or 2 x 2 (scaled) rotation matrix
+#' @param value length 6 numeric vector, or 2 x 2 (scaled) rotation matrix
 `st_geotransform<-` = function(x, value, ...) UseMethod("st_geotransform<-")
 
 #' @export
