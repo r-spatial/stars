@@ -76,10 +76,15 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 		dims[[i]]$to = unname(new_dim[i])
 		if (!is.null(dims[[i]]$values)) {
 			if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
-				dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # that's a lot of square brackets!
+				dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # speaks for itself 
 			else
 				dims[[i]]$values = dims[[i]]$values[ ix[[i]] ]
 		}
+	}
+	if (!all(attr(dims, "raster")$affine == 0.0)) {
+		if (!all(xy %in% names(d)[1:2]))
+			stop("downsampling an affine raster needs to have x/y in dims 1 and 2")
+		attr(dims, "raster")$affine = attr(dims, "raster")$affine * (n[1:2] + 1)
 	}
 
 	if (all(n == 0))

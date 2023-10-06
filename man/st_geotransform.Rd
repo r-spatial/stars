@@ -3,11 +3,14 @@
 \name{st_geotransform}
 \alias{st_geotransform}
 \alias{st_geotransform<-}
+\alias{st_geotransform<-.stars}
 \title{get or set the geotransform, or rotation matrix}
 \usage{
 st_geotransform(x, ...)
 
-st_geotransform(x, ...) <- value
+st_geotransform(x) <- value
+
+\method{st_geotransform}{stars}(x) <- value
 }
 \arguments{
 \item{x}{object of class stars or dimensions}
@@ -18,4 +21,15 @@ st_geotransform(x, ...) <- value
 }
 \description{
 get or set the geotransform, or rotation matrix
+}
+\examples{
+l = st_as_stars(L7_ETMs)
+rot = function(theta) { 
+   th = theta / 180 * pi
+   matrix(c(cos(th), sin(th), -sin(th), cos(th)), 2) 
+}
+st_geotransform(l) = rot(20) * 28.5 # clockwise, 20 degrees, scale by cell size
+if (interactive()) {
+  plot(l[,,,1])
+}
 }

@@ -27,17 +27,29 @@ st_geotransform.default = function(x, ...) {
 #' @export
 #' @name st_geotransform
 #' @param value length 6 numeric vector, or 2 x 2 (scaled) rotation matrix
-`st_geotransform<-` = function(x, value, ...) UseMethod("st_geotransform<-")
+`st_geotransform<-` = function(x, value) UseMethod("st_geotransform<-")
 
 #' @export
-`st_geotransform<-.stars` = function(x, value, ...) {
+#' @name st_geotransform
+#' @examples
+#' l = st_as_stars(L7_ETMs)
+#' rot = function(theta) { 
+#'    th = theta / 180 * pi
+#'    matrix(c(cos(th), sin(th), -sin(th), cos(th)), 2) 
+#' }
+#' st_geotransform(l) = rot(20) * 28.5 # clockwise, 20 degrees, scale by cell size
+#' if (interactive()) {
+#'   plot(l[,,,1])
+#' }
+`st_geotransform<-.stars` = function(x, value) {
 	d = st_dimensions(x)
 	r = attr(d, "raster")
 	if (is.matrix(value)) {
 		stopifnot(all(dim(value) == c(2, 2)))
-		d[[ r$dimensions[1] ]]$delta = value[1,1]
-		d[[ r$dimensions[2] ]]$delta = value[2,2]
-		r$affine = c(value[1,2], value[2,1])
+		r$affine = c(value[1,2] * sign(d[[ r$dimensions[1] ]]$delta), 
+					 value[2,1] * sign(d[[ r$dimensions[2] ]]$delta))
+		d[[ r$dimensions[1] ]]$delta = value[1,1] * sign(d[[ r$dimensions[1] ]]$delta)
+		d[[ r$dimensions[2] ]]$delta = value[2,2] * sign(d[[ r$dimensions[2] ]]$delta)
 	} else {
 		stopifnot(is.numeric(value), length(value) == 6)
 		d[[ r$dimensions[1] ]]$offset = value[1]
