@@ -5,7 +5,7 @@
 st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))) {
 
 	r = attr(st_dimensions(x), "raster")
-	gt = get_geotransform(x)
+	gt = st_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
 	if (xor(is.null(d[[1]]$values), is.null(d[[2]]$values))) {
 		# mixed regular/rectilinear dimensions: make rectilinear; https://github.com/r-spatial/stars/issues/458
@@ -129,7 +129,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 
 	crs = st_crs(x)
 	d = st_dimensions(x)
-	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
+	if (merge && !as_points && has_raster(x) && !any(is.na(st_geotransform(x)))) { # uses GDAL polygonize path:
 		x = st_normalize(x)
 		mask = if (na.rm) {
 				mask = x[1]
@@ -139,7 +139,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				NULL
 
 		ret = gdal_polygonize(x, mask, use_integer = use_integer,
-				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
+				geotransform = st_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels"))) {
@@ -227,7 +227,7 @@ st_contour = function(x, na.rm = TRUE, contour_lines = FALSE,
 			mask
 		} else
 			NULL
-	ret = gdal_polygonize(x, mask, use_integer = FALSE, geotransform = get_geotransform(x),
+	ret = gdal_polygonize(x, mask, use_integer = FALSE, geotransform = st_geotransform(x),
 			use_contours = TRUE, contour_lines = contour_lines, breaks = breaks)
 	# factor levels?
 	if (!is.null(lev <- attr(x[[1]], "levels")))

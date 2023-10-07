@@ -274,7 +274,7 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		obj = st_dimensions(obj)
 	xy = attr(obj, "raster")$dimensions
 	if (inherits(obj, "dimensions"))
-		gt = get_geotransform(obj)
+		gt = st_geotransform(obj)
 
 	if (isTRUE(st_is_longlat(st_crs(obj)))) {
 		bb = st_bbox(obj)
@@ -444,7 +444,7 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
 		setNames(as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-			get_geotransform(x))), xy) # gives cell centers
+			st_geotransform(x))), xy) # gives cell centers
 	} else {
 		if (add_max) {
 			cbind(
@@ -698,7 +698,7 @@ st_bbox.dimensions = function(obj, ...) {
 		x = obj[[ r$dimensions[1] ]]
 		y = obj[[ r$dimensions[2] ]]
 		bb = if (is.null(x$values) && is.null(y$values)) {
-				gt = get_geotransform(obj)
+				gt = st_geotransform(obj)
 				if (length(gt) == 6 && !any(is.na(gt))) {
 					bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
 					xy = xy_from_colrow(bb, gt)

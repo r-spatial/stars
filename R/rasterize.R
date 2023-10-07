@@ -82,7 +82,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 	attrs = as.data.frame(sf)[-geoms]
 	for (i in which(sapply(sf, inherits, "factor"))) # factors:
 		sf[[i]] = as.numeric(sf[[i]])
-	sf::gdal_rasterize(sf, template, get_geotransform(template), file, driver, options)
+	sf::gdal_rasterize(sf, template, st_geotransform(template), file, driver, options)
 	ret = read_stars(file, driver = driver, proxy = proxy)
 	if (!proxy) {
 		if (length(dim(ret)) > 2)

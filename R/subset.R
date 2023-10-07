@@ -295,7 +295,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 	if (!inherits(y, "bbox")) { # post-process: burn in geometry mask
 		dxy = attr(dm, "raster")$dimensions
 		xy_grd = if (is_curvilinear(x) || !as_points) # FIXME: for curvilinear as_points should work too!
-				st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = get_geotransform(x))
+				st_as_sfc(st_dimensions(x)[dxy], as_points = as_points, geotransform = st_geotransform(x))
 			else
 				st_as_sf(do.call(expand.grid, expand_dimensions.stars(x)[dxy]), coords = dxy, crs = st_crs(x))
 		inside = st_intersects(st_union(y), xy_grd)[[1]]

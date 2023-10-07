@@ -1,15 +1,11 @@
 get_geotransform = function(x) {
-	if (inherits(x, "stars"))
-		x = st_dimensions(x)
-	stopifnot(inherits(x, "dimensions"))
 	r = attr(x, "raster")
 	if (is.null(r))
 		rep(NA_real_, 6)
 	else {
 		xd = x[[ r$dimensions[1] ]]
 		yd = x[[ r$dimensions[2] ]]
-		c(as.numeric(xd$offset), as.numeric(xd$delta), r$affine[1], 
-		  as.numeric(yd$offset), r$affine[2], as.numeric(yd$delta))
+		as.numeric(c(xd$offset, xd$delta, r$affine[1], yd$offset, r$affine[2], yd$delta))
 	}
 }
 
@@ -21,8 +17,15 @@ st_geotransform = function(x, ...) UseMethod("st_geotransform")
 
 #' @export
 st_geotransform.default = function(x, ...) {
-	get_geotransform(x)
+	stop(paste("no st_geotransform method available for objects of class", class(x)[1]))
 }
+
+#' @export
+st_geotransform.stars = function(x, ...) st_geotransform(st_dimensions(x))
+
+#' @export
+st_geotransform.dimensions = function(x, ...) get_geotransform(x)
+
 
 #' @export
 #' @name st_geotransform
@@ -33,9 +36,10 @@ st_geotransform.default = function(x, ...) {
 #' @name st_geotransform
 #' @examples
 #' l = st_as_stars(L7_ETMs)
-#' rot = function(theta) { 
+#' rot = function(theta, dxdy = c(1., -1.)) { 
 #'    th = theta / 180 * pi
-#'    matrix(c(cos(th), sin(th), -sin(th), cos(th)), 2) 
+#'    matrix(c(cos(th), sin(th), -sin(th), cos(th)), 2, 2) %*%
+#'      matrix(c(dxdy[1], 0., 0., dxdy[2]), 2, 2)
 #' }
 #' st_geotransform(l) = rot(20) * 28.5 # clockwise, 20 degrees, scale by cell size
 #' if (interactive()) {
@@ -44,12 +48,13 @@ st_geotransform.default = function(x, ...) {
 `st_geotransform<-.stars` = function(x, value) {
 	d = st_dimensions(x)
 	r = attr(d, "raster")
-	if (is.matrix(value)) {
+	# https://gdal.org/tutorials/geotransforms_tut.html
+	if (is.matrix(value)) { # gdal has col-row (pixel-line) order, where linear algebra uses row-col
 		stopifnot(all(dim(value) == c(2, 2)))
-		r$affine = c(value[1,2] * sign(d[[ r$dimensions[1] ]]$delta), 
-					 value[2,1] * sign(d[[ r$dimensions[2] ]]$delta))
-		d[[ r$dimensions[1] ]]$delta = value[1,1] * sign(d[[ r$dimensions[1] ]]$delta)
-		d[[ r$dimensions[2] ]]$delta = value[2,2] * sign(d[[ r$dimensions[2] ]]$delta)
+		r$affine = c(value[2,1] * sign(d[[ r$dimensions[1] ]]$delta), 
+					 value[1,2] * sign(d[[ r$dimensions[2] ]]$delta))
+		d[[ r$dimensions[1] ]]$delta = value[2,2] * sign(d[[ r$dimensions[1] ]]$delta)
+		d[[ r$dimensions[2] ]]$delta = value[1,1] * sign(d[[ r$dimensions[2] ]]$delta)
 	} else {
 		stopifnot(is.numeric(value), length(value) == 6)
 		d[[ r$dimensions[1] ]]$offset = value[1]

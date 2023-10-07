@@ -5,7 +5,7 @@ to_curvilinear = function(x) {
 		ny = dim(x)[ xy[2] ]
 		cl = if (has_rotate_or_shear(x)) {
 			pts = xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-				get_geotransform(x))
+				st_geotransform(x))
 			list(matrix(pts[,1], nx, ny), matrix(pts[,2], nx, ny))
 		} else {
 			ed = expand_dimensions(x)

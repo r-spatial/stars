@@ -562,7 +562,7 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions
-	gt = get_geotransform(x)
+	gt = st_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
 	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5

@@ -34,7 +34,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				st_area(envelope_new)
 		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
-				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), get_geotransform(d))
+				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), st_geotransform(d))
 				cellarea = sum((xy[1,] - xy[2,])^2) / 2 # lenght is cell diagonal
 				xy_dims = attr(d, "raster")$dimensions
 				unclass(st_area(envelope)) / (prod(dim(x)[xy_dims]) * cellarea) # > 1
