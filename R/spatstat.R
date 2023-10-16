@@ -24,7 +24,7 @@ as.owin.stars = function(W, ..., fatal) {
 #' @export
 st_as_stars.im = function(.x, ...) {
 	# see https://github.com/r-spatial/stars/issues/648
-	st_as_stars(as.data.frame(.x, ...))
+	setNames(st_as_stars(as.data.frame(.x, ...)), "v")
 }
 
 as.im.stars = function(X, ...) {
