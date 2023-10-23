@@ -396,7 +396,7 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		lst$band$values = pr$descriptions
 	else if (!is.null(pr$band_meta)) {
 		bm = unlist(pr$band_meta)
-		if (any(a <- grepl("DESCRIPTION=", bm)))
+		if (any(a <- grepl("DESCRIPTION=", bm)) && length(which(a)) > 1)
 			lst$band$values = substring(bm[a], 13)
 	}
 	# set up raster:
