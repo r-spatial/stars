@@ -628,6 +628,11 @@ st_normalize.stars_proxy = function(x, domain = c(0, 0, 1, 1), ...) {
 	x
 }
 
+#' @export
+image.stars_proxy <- function(x, ..., downsample = get_downsample(dim(x))) {
+    image(st_as_stars(x, downsample = downsample), ...)
+}
+
 #nocov start
 get_data_url = function(url, expr = NULL) {
 	if (!requireNamespace("httr", quietly = TRUE)) # GET, POST, PUT
