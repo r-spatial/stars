@@ -94,7 +94,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for sf</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for Raster</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -120,14 +120,7 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
-<span>  <span class="va">.x</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  dims <span class="op">=</span> <span class="va">coords</span>,</span>
-<span>  xy <span class="op">=</span> <span class="va">dims</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>,</span>
-<span>  y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="va">coords</span>, <span class="va">xy</span>, y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>, coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for xts</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, <span class="va">dimensions</span>, name <span class="op">=</span> <span class="st">"attr"</span><span class="op">)</span></span>
@@ -215,8 +208,8 @@ passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 <dd><p>logical; should a <code>stars_proxy</code> object be created? (requires gdal_create binary when sf &lt; 1.0-6)</p></dd>
 
 
-<dt>name</dt>
-<dd><p>character; attribute name for array from an <code>xts</code> object</p></dd>
+<dt>dims</dt>
+<dd><p>the column names or indices that form the cube dimensions</p></dd>
 
 
 <dt>att</dt>
@@ -248,10 +241,6 @@ Must have same number of rows as timeseries instances.</p></dd>
 <dd><p>environment to resolve objects in</p></dd>
 
 
-<dt>dims</dt>
-<dd><p>the column names or indices that form the cube dimensions</p></dd>
-
-
 <dt>xy</dt>
 <dd><p>the x and y raster dimension names or indices; only takes effect after dims has been specified</p></dd>
 
@@ -262,6 +251,10 @@ Must have same number of rows as timeseries instances.</p></dd>
 
 <dt>coords</dt>
 <dd><p>same as dims, for symmetry with <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></p></dd>
+
+
+<dt>name</dt>
+<dd><p>character; attribute name for array from an <code>xts</code> object</p></dd>
 
 
 <dt>as_col</dt>
@@ -278,17 +271,63 @@ Must have same number of rows as timeseries instances.</p></dd>
 <p>For the <code>bbox</code> method: if <code>pretty</code> is <code>TRUE</code>, raster cells may extend the coordinate range of <code>.x</code> on all sides. If in addition to <code>nx</code> and <code>ny</code>, <code>dx</code> and <code>dy</code> are also missing, these are set to a single value computed as <code>sqrt(diff(xlim)*diff(ylim)/n)</code>.</p>
 <p>If <code>nx</code> and <code>ny</code> are missing and <code>values</code> is a matrix, the number of columns and rows of the matrix are taken.</p>
 <p>Otherwise, if <code>nx</code> and <code>ny</code> are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of <code>inside</code>. Positive <code>dy</code> will be made negative. Further named arguments (<code>...</code>) are passed on to <code>pretty</code>. If <code>dx</code> or <code>dy</code> are <code>units</code> objects, their value is converted to the units of <code>st_crs(.x)</code> (only when sf &gt;= 1.0-7).</p>
+<p>The <code>st_as_stars</code> method for <code>sf</code> objects without any additional
+arguments returns a one-dimensional data cube with a dimension for the simple features
+geometries, and all remaining attributes as data cube attributes. When used with
+further arguments, the method for <code>data.frame</code>s is called.</p>
 <p>For the <code>ncdfgeom</code> method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the <code>sf_geometry</code> parameter. See <span class="pkg">ncdfgeom</span> for more about this NetCDF-based format for geometry and timeseries.</p>
 <p>for the <code>xts</code> methods, if <code>dimensions</code> are provided, time has to be the first dimension.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `nc.gpkg' from data source </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 100 features and 14 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  NAD27</span>
+<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 14 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      AREA           PERIMETER         CNTY_         CNTY_ID    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.1205   Median :1.609   Median :1982   Median :1982  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     NAME               FIPS               FIPSNO         CRESS_ID      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Length:100         Length:100         Min.   :37001   Min.   :  1.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Class :character   Class :character   1st Qu.:37050   1st Qu.: 25.75  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mode  :character   Mode  :character   Median :37100   Median : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Mean   :37100   Mean   : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        3rd Qu.:37150   3rd Qu.: 75.25  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max.   :37199   Max.   :100.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      BIR74           SID74          NWBIR74           BIR79      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :  248   Min.   : 0.00   Min.   :   1.0   Min.   :  319  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1077   1st Qu.: 2.00   1st Qu.: 190.0   1st Qu.: 1336  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2180   Median : 4.00   Median : 697.5   Median : 2636  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3300   Mean   : 6.67   Mean   :1050.8   Mean   : 4224  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 3936   3rd Qu.: 8.25   3rd Qu.:1168.5   3rd Qu.: 4889  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :21588   Max.   :44.00   Max.   :8027.0   Max.   :30757  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SID79          NWBIR79       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   : 0.00   Min.   :    3.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 2.00   1st Qu.:  250.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 5.00   Median :  874.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 8.36   Mean   : 1352.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:10.25   3rd Qu.: 1406.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :57.00   Max.   :11631.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom    1 100  NAD27 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                             values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
-<span class="r-in"><span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span>, y_decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘plm’</span>
@@ -322,9 +361,129 @@ Must have same number of rows as timeseries instances.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :18.000  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       from to offset delta              values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> state    1 48     NA    NA ALABAMA,...,WYOMING [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     1 17   1970     1                NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       from to offset delta              values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> state    1 48     NA    NA ALABAMA,...,WYOMING</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     1 17   1970     1                NULL</span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="co"># https://stackoverflow.com/questions/77368957/</span></span></span>
+<span class="r-in"><span><span class="va">spatial_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span></span>
+<span class="r-in"><span>  geometry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">weekdays_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>weekdays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Monday"</span>, <span class="st">"Tuesday"</span>, <span class="st">"Wednesday"</span>, <span class="st">"Thursday"</span>, <span class="st">"Friday"</span>, <span class="st">"Saturday"</span>, <span class="st">"Sunday"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">hours_dim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>hours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8am"</span>, <span class="st">"11am"</span>, <span class="st">"4pm"</span>, <span class="st">"11pm"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sf_dta</span> <span class="op">&lt;-</span> <span class="va">spatial_dim</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join</a></span><span class="op">(</span><span class="va">weekdays_dim</span><span class="op">)</span><span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/cross_join.html" class="external-link">cross_join</a></span><span class="op">(</span><span class="va">hours_dim</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>population <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">1000</span>, sd <span class="op">=</span> <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">geometry</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">sf_dta</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"weekdays"</span>, <span class="st">"hours"</span>, <span class="st">"geometry"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 2 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Min.  1st Qu.   Median     Mean  3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ID            1.0000   1.0000    2.000    2.000    3.000    3.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> population  594.2642 909.3489 1016.819 1010.279 1112.744 1324.842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> weekdays    1  7    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hours       1  4    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1  3 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                 values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> weekdays                                          Friday,...,Wednesday</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hours                                                     11am,...,8am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POLYGON ((0 0, 1 0, 1 1, ...,...,POLYGON ((2 0, 3 0, 3 1, ...</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">nc</span>, echo<span class="op">=</span><span class="cn">FALSE</span>,ask<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 14 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      AREA           PERIMETER         CNTY_         CNTY_ID    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.1205   Median :1.609   Median :1982   Median :1982  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     NAME               FIPS               FIPSNO         CRESS_ID      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Length:100         Length:100         Min.   :37001   Min.   :  1.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Class :character   Class :character   1st Qu.:37050   1st Qu.: 25.75  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mode  :character   Mode  :character   Median :37100   Median : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Mean   :37100   Mean   : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        3rd Qu.:37150   3rd Qu.: 75.25  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max.   :37199   Max.   :100.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      BIR74           SID74          NWBIR74           BIR79      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :  248   Min.   : 0.00   Min.   :   1.0   Min.   :  319  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1077   1st Qu.: 2.00   1st Qu.: 190.0   1st Qu.: 1336  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2180   Median : 4.00   Median : 697.5   Median : 2636  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3300   Mean   : 6.67   Mean   :1050.8   Mean   : 4224  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 3936   3rd Qu.: 8.25   3rd Qu.:1168.5   3rd Qu.: 4889  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :21588   Max.   :44.00   Max.   :8027.0   Max.   :30757  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SID79          NWBIR79       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   : 0.00   Min.   :    3.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 2.00   1st Qu.:  250.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 5.00   Median :  874.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 8.36   Mean   : 1352.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:10.25   3rd Qu.: 1406.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :57.00   Max.   :11631.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom    1 100  NAD27 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                             values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span>
+<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, dims <span class="op">=</span> <span class="st">"NAME"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 13 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      AREA           PERIMETER         CNTY_         CNTY_ID    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.1205   Median :1.609   Median :1982   Median :1982  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     FIPS               FIPSNO         CRESS_ID           BIR74      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Length:100         Min.   :37001   Min.   :  1.00   Min.   :  248  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Class :character   1st Qu.:37050   1st Qu.: 25.75   1st Qu.: 1077  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mode  :character   Median :37100   Median : 50.50   Median : 2180  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Mean   :37100   Mean   : 50.50   Mean   : 3300  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     3rd Qu.:37150   3rd Qu.: 75.25   3rd Qu.: 3936  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Max.   :37199   Max.   :100.00   Max.   :21588  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SID74          NWBIR74           BIR79           SID79      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   : 0.00   Min.   :   1.0   Min.   :  319   Min.   : 0.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 2.00   1st Qu.: 190.0   1st Qu.: 1336   1st Qu.: 2.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 4.00   Median : 697.5   Median : 2636   Median : 5.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 6.67   Mean   :1050.8   Mean   : 4224   Mean   : 8.36  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 8.25   3rd Qu.:1168.5   3rd Qu.: 4889   3rd Qu.:10.25  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :44.00   Max.   :8027.0   Max.   :30757   Max.   :57.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     NWBIR79       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :    3.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:  250.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :  874.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 1352.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 1406.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :11631.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to              values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NAME    1 100 Alamance,...,Yancey</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>, z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Min.  1st Qu.    Median       Mean   3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> z  -2.194688 -1.01616 -0.258447 -0.3639007 0.3655264 1.613714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x    1  5    0.5     1 [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> y    1  5    5.5    -1 [y]</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
