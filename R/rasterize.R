@@ -140,70 +140,97 @@ guess_raster = function(x, ...) {
 #' @name st_as_stars
 #' @examples
 #' if (require(plm, quietly = TRUE)) {
-#'   data(Produc, package = "plm")
-#'   st_as_stars(Produc, y_decreasing = FALSE)
 #'  data(Produc, package = "plm")
-#'  st_as_stars(Produc, y_decreasing = FALSE)
+#'  st_as_stars(Produc)
 #' }
-st_as_stars.data.frame = function(.x, ..., dims = coords, xy = dims[1:2], y_decreasing = TRUE, coords = 1:2) {
+#' if (require(dplyr, quietly = TRUE)) {
+#'   # https://stackoverflow.com/questions/77368957/
+#' spatial_dim <- st_sf(
+#'   ID = 1:3,
+#'   geometry = list(
+#'     st_polygon(list(
+#'       cbind(c(0, 1, 1, 0, 0), c(0, 0, 1, 1, 0))
+#'     )),
+#'     st_polygon(list(
+#'       cbind(c(1, 2, 2, 1, 1), c(0, 0, 1, 1, 0))
+#'     )),
+#'     st_polygon(list(
+#'       cbind(c(2, 3, 3, 2, 2), c(0, 0, 1, 1, 0))
+#'     ))
+#'   )
+#' )
+#' weekdays_dim <- data.frame(weekdays = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+#' hours_dim <- data.frame(hours = c("8am", "11am", "4pm", "11pm"))
+#' sf_dta <- spatial_dim |>
+#'   cross_join(weekdays_dim)|>
+#'   cross_join(hours_dim) |>
+#'   mutate(population = rnorm(n(), mean = 1000, sd = 200)) |>
+#'   select(everything(), geometry)
+#' 
+#' st_as_stars(sf_dta, dims = c("weekdays", "hours", "geometry"))
+#' }
+#' demo(nc, echo=FALSE,ask=FALSE)
+#' st_as_stars(nc)
+#' st_as_stars(st_drop_geometry(nc), dims = "NAME")
+#' data.frame(expand.grid(x=1:5, y = 1:5), z = rnorm(25)) |> st_as_stars()
+st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRUE, coords = 1:2) {
 
 	if (missing(dims) && !missing(xy))
 		stop("parameter xy only takes effect when the cube dimensions are set with dims")
 	if (is.character(dims))
 		dims = match(dims, names(.x))
-	if (is.character(xy))
+	if (missing(xy)) {
+		if (length(dims) > 1 && all(sapply(.x[dims[1:2]], is.numeric)))
+			xy = dims[1:2]
+		else 
+			xy = c(-1, -1) # cancels y_decreasing
+	}
+	if (is.character(xy)) {
 		xy = match(xy, names(.x))
-	if (any(is.na(xy)))
-		stop("xy coordinates not found in data")
+		if (any(is.na(xy)))
+			stop("xy coordinates not found in data")
+	}
+	stopifnot(length(dims) >= 1, all(dims >= 1), !any(is.na(dims)))
 
 	index = NULL
 	dimensions = list()
-	if (length(dims) >= 2) {
-		this_dim = 1
-		for (i in dims) {
-			v = .x[[i]]
-			if (inherits(v, "sfc")) {
-    			if (!requireNamespace("digest", quietly = TRUE))
-        			stop("package digest required, please install it first") # nocov
-				dig = sapply(v, digest::digest)
-				uv = unique(dig) # no need to sort
-				ix = match(dig, uv) # but look up "hash collision"
-			} else {
-				suv = sort(unique(v), decreasing = y_decreasing && i == xy[2])
-				ix = match(v, suv)
-			}
-			index = cbind(index, ix)
-			dimensions[[this_dim]] = if (inherits(v, "sfc"))
-					create_dimension(values = v[match(uv, dig)])
-				else
-					create_dimension(values = suv, is_raster = i %in% xy)
-			this_dim = this_dim + 1
+	this_dim = 1
+	for (i in dims) {
+		v = .x[[i]]
+		if (inherits(v, "sfc")) {
+    		if (!requireNamespace("digest", quietly = TRUE))
+       			stop("package digest required, please install it first") # nocov
+			dig = sapply(v, digest::digest)
+			uv = unique(dig) # no need to sort
+			ix = match(dig, uv) # but look up "hash collision"
+		} else {
+			suv = sort(unique(v), decreasing = y_decreasing && i == xy[2])
+			ix = match(v, suv)
 		}
-		names(dimensions) = names(.x)[dims]
-	
-		raster_xy = if (length(xy) == 2) names(.x)[xy] else c(NA_character_, NA_character_)
-		d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
-		l = lapply(.x[-dims], function(x) {
-				m = if (is.factor(x))
-						structure(factor(rep(NA_character_, prod(dim(d))), levels = levels(x)),
-							dim = dim(d))
-					else 
-						array(NA, dim = dim(d))
-				m[index] = x # match order
-				m 
-			}
-		)
-	} else {
-		l = lapply(.x, as.array)
-		dimensions[[1]] = if (length(dims) == 0 || dims < 1)
-				create_dimension(values = row.names(.x))
-			else {
-				l[[dims]] = NULL
-				create_dimension(values = .x[[dims]])
-			}
-		names(dimensions) = "rows"
-		d = create_dimensions(dimensions)
+		index = cbind(index, ix)
+		dimensions[[this_dim]] = if (inherits(v, "sfc"))
+				create_dimension(values = v[match(uv, dig)])
+			else
+				create_dimension(values = suv, is_raster = i %in% xy)
+		this_dim = this_dim + 1
 	}
+	names(dimensions) = names(.x)[dims]
+	
+	raster_xy = if (length(xy) == 2 && all(xy > 0)) 
+			names(.x)[xy] 
+		else 
+			c(NA_character_, NA_character_)
+	d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
+	l = lapply(.x[-dims], function(x) {
+			m = if (is.factor(x))
+					structure(factor(rep(NA_character_, prod(dim(d))), levels = levels(x)),
+						dim = dim(d))
+				else 
+					array(NA, dim = dim(d))
+			m[index] = x # match order
+			m 
+		}
+	)
 	st_stars(l, d)
 }
 

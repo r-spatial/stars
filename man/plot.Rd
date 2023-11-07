@@ -79,7 +79,7 @@
 
 \item{nbreaks}{number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.}
 
-\item{breaks}{actual color breaks, or a method name used for \link[classInt]{classIntervals}.}
+\item{breaks}{numeric vector with actual color breaks, or a \code{style} name used in \link[classInt]{classIntervals}.}
 
 \item{col}{colors to use for grid cells, or color palette function}
 

@@ -28,7 +28,7 @@ kw_dflt = function(x, key.pos) {
 #' @param axes logical; should axes and box be added to the plot?
 #' @param downsample logical or numeric; if \code{TRUE} will try to plot not many more pixels than actually are visible, if \code{FALSE}, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.
 #' @param nbreaks number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.
-#' @param breaks actual color breaks, or a method name used for \link[classInt]{classIntervals}.
+#' @param breaks numeric vector with actual color breaks, or a \code{style} name used in \link[classInt]{classIntervals}.
 #' @param col colors to use for grid cells, or color palette function
 #' @param ... further arguments: for \code{plot}, passed on to \code{image.stars}; for \code{image}, passed on to \code{image.default} or \code{rasterImage}.
 #' @param key.pos numeric; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}. If it has lenght 2, the second value, ranging from 0 to 1, determines where the key is placed in the available space (default: 0.5, center).

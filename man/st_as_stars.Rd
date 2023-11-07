@@ -43,7 +43,7 @@ st_as_stars(.x, ...)
   proxy = FALSE
 )
 
-\method{st_as_stars}{sf}(.x, ..., name = attr(.x, "sf_column"))
+\method{st_as_stars}{sf}(.x, ..., dims = attr(.x, "sf_column"))
 
 \method{st_as_stars}{Raster}(.x, ..., att = 1, ignore_file = FALSE)
 
@@ -64,14 +64,7 @@ st_as_stars(.x, ...)
   envir = parent.frame()
 )
 
-\method{st_as_stars}{data.frame}(
-  .x,
-  ...,
-  dims = coords,
-  xy = dims[1:2],
-  y_decreasing = TRUE,
-  coords = 1:2
-)
+\method{st_as_stars}{data.frame}(.x, ..., dims = coords, xy, y_decreasing = TRUE, coords = 1:2)
 
 \method{st_as_stars}{xts}(.x, ..., dimensions, name = "attr")
 
@@ -118,7 +111,7 @@ passed on to \code{\link{read_ncdf}}.}
 
 \item{proxy}{logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)}
 
-\item{name}{character; attribute name for array from an \code{xts} object}
+\item{dims}{the column names or indices that form the cube dimensions}
 
 \item{att}{see \link[raster:factor]{factorValues}; column in the RasterLayer's attribute table}
 
@@ -135,13 +128,13 @@ Must have same number of rows as timeseries instances.}
 
 \item{envir}{environment to resolve objects in}
 
-\item{dims}{the column names or indices that form the cube dimensions}
-
 \item{xy}{the x and y raster dimension names or indices; only takes effect after dims has been specified}
 
 \item{y_decreasing}{logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)}
 
 \item{coords}{same as dims, for symmetry with \link[sf]{st_as_sf}}
+
+\item{name}{character; attribute name for array from an \code{xts} object}
 
 \item{as_col}{logical; return rgb numbers (FALSE) or (character) color values (TRUE)?}
 
@@ -159,15 +152,50 @@ If \code{nx} and \code{ny} are missing and \code{values} is a matrix, the number
 
 Otherwise, if \code{nx} and \code{ny} are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of \code{inside}. Positive \code{dy} will be made negative. Further named arguments (\code{...}) are passed on to \code{pretty}. If \code{dx} or \code{dy} are \code{units} objects, their value is converted to the units of \code{st_crs(.x)} (only when sf >= 1.0-7).
 
+The \code{st_as_stars} method for \code{sf} objects without any additional
+arguments returns a one-dimensional data cube with a dimension for the simple features
+geometries, and all remaining attributes as data cube attributes. When used with
+further arguments, the method for \code{data.frame}s is called.
+
 For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.
 
 for the \code{xts} methods, if \code{dimensions} are provided, time has to be the first dimension.
 }
 \examples{
+nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
+st_as_stars(nc)
 if (require(plm, quietly = TRUE)) {
-  data(Produc, package = "plm")
-  st_as_stars(Produc, y_decreasing = FALSE)
  data(Produc, package = "plm")
- st_as_stars(Produc, y_decreasing = FALSE)
+ st_as_stars(Produc)
 }
+if (require(dplyr, quietly = TRUE)) {
+  # https://stackoverflow.com/questions/77368957/
+spatial_dim <- st_sf(
+  ID = 1:3,
+  geometry = list(
+    st_polygon(list(
+      cbind(c(0, 1, 1, 0, 0), c(0, 0, 1, 1, 0))
+    )),
+    st_polygon(list(
+      cbind(c(1, 2, 2, 1, 1), c(0, 0, 1, 1, 0))
+    )),
+    st_polygon(list(
+      cbind(c(2, 3, 3, 2, 2), c(0, 0, 1, 1, 0))
+    ))
+  )
+)
+weekdays_dim <- data.frame(weekdays = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+hours_dim <- data.frame(hours = c("8am", "11am", "4pm", "11pm"))
+sf_dta <- spatial_dim |>
+  cross_join(weekdays_dim)|>
+  cross_join(hours_dim) |>
+  mutate(population = rnorm(n(), mean = 1000, sd = 200)) |>
+  select(everything(), geometry)
+
+st_as_stars(sf_dta, dims = c("weekdays", "hours", "geometry"))
+}
+demo(nc, echo=FALSE,ask=FALSE)
+st_as_stars(nc)
+st_as_stars(st_drop_geometry(nc), dims = "NAME")
+data.frame(expand.grid(x=1:5, y = 1:5), z = rnorm(25)) |> st_as_stars()
 }

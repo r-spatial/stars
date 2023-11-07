@@ -248,14 +248,15 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 }
 
 #' @name st_as_stars
-#' @param name character; name for the geometry dimensions
+#' @details The \code{st_as_stars} method for \code{sf} objects without any additional
+#' arguments returns a one-dimensional data cube with a dimension for the simple features
+#' geometries, and all remaining attributes as data cube attributes. When used with
+#' further arguments, the method for \code{data.frame}s is called.
+#' @examples
+#' nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
+#' st_as_stars(nc)
 #' @export
-st_as_stars.sf = function(.x, ..., name = attr(.x, "sf_column")) {
-	geom = st_geometry(.x)
-	if (length(list(...)))
-		stop("... arguments ignored")
-	dimensions = create_dimensions(setNames(list(create_dimension(1, length(geom), 
-		refsys = st_crs(geom), values = geom)), name))
-	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
-	st_as_stars(lst, dimensions = dimensions)
+st_as_stars.sf = function(.x, ..., dims = attr(.x, "sf_column")) {
+	.x = as.data.frame(.x)
+	NextMethod(dims = dims)
 }
