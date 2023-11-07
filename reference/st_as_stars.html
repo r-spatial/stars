@@ -242,7 +242,7 @@ Must have same number of rows as timeseries instances.</p></dd>
 
 
 <dt>xy</dt>
-<dd><p>the x and y raster dimension names or indices; only takes effect after dims has been specified</p></dd>
+<dd><p>the x and y raster dimension names or indices; only takes effect after <code>dims</code> has been specified, see details</p></dd>
 
 
 <dt>y_decreasing</dt>
@@ -276,6 +276,8 @@ arguments returns a one-dimensional data cube with a dimension for the simple fe
 geometries, and all remaining attributes as data cube attributes. When used with
 further arguments, the method for <code>data.frame</code>s is called.</p>
 <p>For the <code>ncdfgeom</code> method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the <code>sf_geometry</code> parameter. See <span class="pkg">ncdfgeom</span> for more about this NetCDF-based format for geometry and timeseries.</p>
+<p>If <code>xy</code> is not specified and the first two dimensions in <code>dims</code> are both numeric,
+then it is set to these two dimensions.</p>
 <p>for the <code>xts</code> methods, if <code>dimensions</code> are provided, time has to be the first dimension.</p>
     </div>
 
@@ -401,8 +403,8 @@ further arguments, the method for <code>data.frame</code>s is called.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> hours       1  4    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1  3 FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                 values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> weekdays                                          Friday,...,Wednesday</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hours                                                     11am,...,8am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> weekdays                                             Monday,...,Sunday</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hours                                                     8am,...,11pm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> geometry POLYGON ((0 0, 1 0, 1 1, ...,...,POLYGON ((2 0, 3 0, 3 1, ...</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/demo.html" class="external-link">demo</a></span><span class="op">(</span><span class="va">nc</span>, echo<span class="op">=</span><span class="cn">FALSE</span>,ask<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></span>
@@ -473,8 +475,8 @@ further arguments, the method for <code>data.frame</code>s is called.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 1406.8  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :11631.0  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to              values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NAME    1 100 Alamance,...,Yancey</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to             values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NAME    1 100 Ashe,...,Brunswick</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>, z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
