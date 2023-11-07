@@ -128,7 +128,7 @@ Must have same number of rows as timeseries instances.}
 
 \item{envir}{environment to resolve objects in}
 
-\item{xy}{the x and y raster dimension names or indices; only takes effect after dims has been specified}
+\item{xy}{the x and y raster dimension names or indices; only takes effect after \code{dims} has been specified, see details}
 
 \item{y_decreasing}{logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)}
 
@@ -158,6 +158,9 @@ geometries, and all remaining attributes as data cube attributes. When used with
 further arguments, the method for \code{data.frame}s is called.
 
 For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.
+
+If \code{xy} is not specified and the first two dimensions in \code{dims} are both numeric,
+then it is set to these two dimensions.
 
 for the \code{xts} methods, if \code{dimensions} are provided, time has to be the first dimension.
 }

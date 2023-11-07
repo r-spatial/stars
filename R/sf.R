@@ -258,5 +258,5 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 #' @export
 st_as_stars.sf = function(.x, ..., dims = attr(.x, "sf_column")) {
 	.x = as.data.frame(.x)
-	NextMethod(dims = dims)
+	NextMethod(dims = dims, ...)
 }

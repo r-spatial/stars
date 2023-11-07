@@ -135,9 +135,12 @@ guess_raster = function(x, ...) {
 #' @export
 #' @param dims the column names or indices that form the cube dimensions
 #' @param coords same as dims, for symmetry with \link[sf]{st_as_sf}
-#' @param xy the x and y raster dimension names or indices; only takes effect after dims has been specified
+#' @param xy the x and y raster dimension names or indices; only takes effect after \code{dims} has been specified, see details
 #' @param y_decreasing logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)
 #' @name st_as_stars
+#' @details
+#' If \code{xy} is not specified and the first two dimensions in \code{dims} are both numeric,
+#' then it is set to these two dimensions.
 #' @examples
 #' if (require(plm, quietly = TRUE)) {
 #'  data(Produc, package = "plm")
@@ -200,11 +203,16 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 		if (inherits(v, "sfc")) {
     		if (!requireNamespace("digest", quietly = TRUE))
        			stop("package digest required, please install it first") # nocov
-			dig = sapply(v, digest::digest)
+			dig = sapply(st_equals(v), digest::digest)
 			uv = unique(dig) # no need to sort
 			ix = match(dig, uv) # but look up "hash collision"
 		} else {
-			suv = sort(unique(v), decreasing = y_decreasing && i == xy[2])
+			suv = if (is.factor(v))
+					levels(v)
+				else if (is.character(v))
+					unique(v)
+				else # numeric:
+					sort(unique(v), decreasing = y_decreasing && i == xy[2])
 			ix = match(v, suv)
 		}
 		index = cbind(index, ix)
