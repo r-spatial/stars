@@ -1,6 +1,8 @@
 # version 0.6-5
 
-* `plot.stars()` only resets layout when needed (more than one sub-plot or key present)
+* `st_as_stars.data.frame()` and `st_as_stars.sf()` better handle non-raster data cubes
+
+* `plot.stars()` only resets layout when needed (more than one sub-plot, or key present)
 
 * fixed `st_as_stars.im()`; #648
 
