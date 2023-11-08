@@ -71,6 +71,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
 
+	fn_name = deparse1(substitute(FUN))
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function", "stars")
 	if (!is.function(by) && !inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
@@ -208,8 +209,22 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 			geom
 	if (drop_y)
 		d = d[-2] # y
+	
+	# suppose FUN resulted in more than one value?
+	if ((r <- prod(dim(x[[1]])) / prod(dim(d))) > 1) {
+		if (r %% 1 != 0)
+			stop("unexpected array size: does FUN return a consistent number of values?")
+		a = attributes(d)
+		d = append(d, list(create_dimension(values = seq_len(r))))
+		n = length(d)
+		names(d)[n] = fn_name
+		d = d[c(n, 1:(n-1))]
+		attr(d, "raster") = a$raster
+		attr(d, "class") = a$class
+		newdim = setNames(c(r, length(by), dims[-(1:ndims)]), names(d))
+	} else
+		newdim = setNames(c(length(by), dims[-(1:ndims)]), names(d))
 
-	newdim = setNames(c(sfc = length(by), dims[-(1:ndims)]), names(d))
 	st_stars(lapply(x, structure, dim = newdim), dimensions = d)
 }
 

@@ -187,7 +187,8 @@ spatial_dim <- st_sf(
     ))
   )
 )
-weekdays_dim <- data.frame(weekdays = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+weekdays_dim <- data.frame(weekdays = c("Monday", "Tuesday", "Wednesday", 
+    "Thursday", "Friday", "Saturday", "Sunday"))
 hours_dim <- data.frame(hours = c("8am", "11am", "4pm", "11pm"))
 sf_dta <- spatial_dim |>
   cross_join(weekdays_dim)|>

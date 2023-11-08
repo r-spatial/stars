@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `aggregate.stars()` deals with functions that return more than one number, putting these in a new dimension like `st_apply()` does
+
 * `st_as_stars.data.frame()` and `st_as_stars.sf()` better handle non-raster data cubes
 
 * `plot.stars()` only resets layout when needed (more than one sub-plot, or key present)
