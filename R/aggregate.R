@@ -71,7 +71,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE) {
 
-	fn_name = deparse1(substitute(FUN))
+	fn_name = substr(deparse1(substitute(FUN)), 1, 20)
 	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function", "stars")
 	if (!is.function(by) && !inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
@@ -215,7 +215,11 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		if (r %% 1 != 0)
 			stop("unexpected array size: does FUN return a consistent number of values?")
 		a = attributes(d)
-		d = append(d, list(create_dimension(values = seq_len(r))))
+		values = if (is.null(rn <- rownames(x[[1]])))
+				seq_len(r)
+			else
+				rn[1:r]
+		d = append(d, list(create_dimension(values = values)))
 		n = length(d)
 		names(d)[n] = fn_name
 		d = d[c(n, 1:(n-1))]
