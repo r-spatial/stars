@@ -252,3 +252,43 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 	}
 	ret
 }
+
+rotate = function(lon, lat, lon0, lat0, north = TRUE) {
+	# https://gis.stackexchange.com/questions/10808/manually-transforming-rotated-lat-lon-to-regular-lat-lon/14445 , by Miha
+	if (north) {
+		lat0 = -lat0
+		lon0 = pi + lon0
+	}
+	vartheta = -(pi/2 + lat0)
+	varphi = -lon0
+	cbind(
+		lon = atan2(sin(lon), tan(lat) * sin(vartheta) + 
+				cos(lon) * cos(vartheta)) - varphi,
+		lat = asin(cos(vartheta) * sin(lat) - cos(lon) * sin(vartheta) * cos(lat))
+	)
+}
+
+#' Transform rotated long/lat to regular long/lat
+#'
+#' Transform rotated long/lat to regular long/lat
+#' @param .x object of class \code{stars}
+#' @param lon0 longitude of the rotated pole
+#' @param lat0 latitude of the rotated pole
+#' @param north logical; if \code{TRUE} the pole refers to the North pole, otherwise the South pole
+#' @returns curvilinear stars object with coordinates in regular long/lat (North pole at lat=90)
+#' @export
+st_rotate = function(.x, lon0, lat0, north = TRUE) {
+	stopifnot(inherits(.x, "stars"), 
+			  is.na(st_crs(.x)) || st_is_longlat(.x), 
+			  !is_curvilinear(.x), 
+			  is.logical(north), 
+			  !is.na(north))
+	torad = function(x) x * pi / 180
+	todeg = function(x) x * 180 / pi
+	d = dim(.x)
+	n = prod(d[1:2])
+	cc = torad(st_coordinates(.x)[1:n, 1:2])
+	cc = todeg(rotate(cc[,1], cc[,2], torad(lon0), torad(lat0), north))
+	st_as_stars(.x, curvilinear = setNames(list(matrix(cc[,1], d[1], d[2]),
+					  matrix(cc[,2], d[1], d[2])), names(d)[1:2]))
+}
