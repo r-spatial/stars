@@ -277,6 +277,15 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #' @param north logical; if \code{TRUE} the pole refers to the North pole, otherwise the South pole
 #' @returns curvilinear stars object with coordinates in regular long/lat (North pole at lat=90)
 #' @export
+#' @examples
+#' if (require("starsdata") && require("maps")) {
+#'   nc = "netcdf/ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_201801-201812.nc"
+#'   f = system.file(nc, package = "starsdata")
+#'   m = read_mdim(f, "ts")
+#'   m1 = st_rotate(m, -162, 39.25)
+#'   h = function() maps::map(add = TRUE)
+#'   plot(m1[,,,1:2], downsample = 10, axes = TRUE, hook = h) # downsample for speed
+#' }
 st_rotate = function(.x, lon0, lat0, north = TRUE) {
 	stopifnot(inherits(.x, "stars"), 
 			  is.na(st_crs(.x)) || st_is_longlat(.x), 

@@ -21,3 +21,13 @@ curvilinear stars object with coordinates in regular long/lat (North pole at lat
 \description{
 Transform rotated long/lat to regular long/lat
 }
+\examples{
+if (require("starsdata") && require("maps")) {
+  nc = "netcdf/ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_201801-201812.nc"
+  f = system.file(nc, package = "starsdata")
+  m = read_mdim(f, "ts")
+  m1 = st_rotate(m, -162, 39.25)
+  h = function() maps::map(add = TRUE)
+  plot(m1[,,,1:2], downsample = 10, axes = TRUE, hook = h) # downsample for speed
+}
+}
