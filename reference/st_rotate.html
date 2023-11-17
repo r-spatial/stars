@@ -92,6 +92,20 @@
 <p>curvilinear stars object with coordinates in regular long/lat (North pole at lat=90)</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"starsdata"</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"maps"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">nc</span> <span class="op">=</span> <span class="st">"netcdf/ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_201801-201812.nc"</span></span></span>
+<span class="r-in"><span>  <span class="va">f</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="va">nc</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="mdim.html">read_mdim</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"ts"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m1</span> <span class="op">=</span> <span class="fu">st_rotate</span><span class="op">(</span><span class="va">m</span>, <span class="op">-</span><span class="fl">162</span>, <span class="fl">39.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">h</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m1</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, downsample <span class="op">=</span> <span class="fl">10</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, hook <span class="op">=</span> <span class="va">h</span><span class="op">)</span> <span class="co"># downsample for speed</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: maps</span>
+<span class="r-plt img"><img src="st_rotate-1.png" alt="" width="700" height="433"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
