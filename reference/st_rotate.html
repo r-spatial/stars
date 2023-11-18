@@ -98,11 +98,55 @@
 <span class="r-in"><span>  <span class="va">nc</span> <span class="op">=</span> <span class="st">"netcdf/ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_201801-201812.nc"</span></span></span>
 <span class="r-in"><span>  <span class="va">f</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="va">nc</span>, package <span class="op">=</span> <span class="st">"starsdata"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="mdim.html">read_mdim</a></span><span class="op">(</span><span class="va">f</span>, <span class="st">"ts"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">m1</span> <span class="op">=</span> <span class="fu">st_rotate</span><span class="op">(</span><span class="va">m</span>, <span class="op">-</span><span class="fl">162</span>, <span class="fl">39.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># NOTE this function is obsolete when reading m as</span></span></span>
+<span class="r-in"><span>  <span class="co"># m = read_mdim(f, "ts", curvilinear = c("longitude", "latitude"))</span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mjwoods/RNetCDF" class="external-link">RNetCDF</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>     <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/open.nc.html" class="external-link">open.nc</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="va">lon</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/att.get.nc.html" class="external-link">att.get.nc</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"rotated_latitude_longitude"</span>, <span class="st">"grid_north_pole_latitude"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="va">lat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/att.get.nc.html" class="external-link">att.get.nc</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"rotated_latitude_longitude"</span>, <span class="st">"grid_north_pole_longitude"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>     <span class="va">lon</span> <span class="op">=</span> <span class="op">-</span><span class="fl">162</span></span></span>
+<span class="r-in"><span>     <span class="va">lat</span> <span class="op">=</span> <span class="fl">39.25</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span> </span></span>
+<span class="r-in"><span>  <span class="va">m1</span> <span class="op">=</span> <span class="fu">st_rotate</span><span class="op">(</span><span class="va">m</span>, <span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">h</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m1</span><span class="op">[</span>,,,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, downsample <span class="op">=</span> <span class="fl">10</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, hook <span class="op">=</span> <span class="va">h</span><span class="op">)</span> <span class="co"># downsample for speed</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m1</span>, downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, hook <span class="op">=</span> <span class="va">h</span><span class="op">)</span> <span class="co"># downsample for speed</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: maps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s), summary of first 1e+05 cells:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Min.  1st Qu.   Median     Mean 3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ts [K] 277.3233 284.7061 286.1046 286.5914 288.003 296.9786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to offset delta refsys                    values x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rlon    1 848 -28.43 0.055     NA                      NULL [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rlat    1 824 -23.43 0.055     NA                      NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time    1  12     NA    NA   Date 2018-01-16,...,2018-12-16    </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: RNetCDF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     lon     lat </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   39.25 -162.00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s), summary of first 1e+05 cells:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Min.  1st Qu.   Median     Mean 3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ts [K] 277.3233 284.7061 286.1046 286.5914 288.003 296.9786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to refsys                      values x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rlon    1 848 WGS 84   [848x824] 39.28,...,399.2 [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rlat    1 824 WGS 84 [848x824] -89.98,...,-40.17 [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time    1  12   Date   2018-01-16,...,2018-12-16    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> curvilinear grid</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounding box has potentially an invalid value range for longlat data</span>
 <span class="r-plt img"><img src="st_rotate-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
