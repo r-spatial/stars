@@ -74,11 +74,11 @@
 
 
 <dt>lon0</dt>
-<dd><p>longitude of the rotated pole</p></dd>
+<dd><p>longitude of the rotated pole in degrees</p></dd>
 
 
 <dt>lat0</dt>
-<dd><p>latitude of the rotated pole</p></dd>
+<dd><p>latitude of the rotated pole in degrees</p></dd>
 
 
 <dt>north</dt>
@@ -105,6 +105,7 @@
 <span class="r-in"><span>     <span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/open.nc.html" class="external-link">open.nc</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-in"><span>     <span class="va">lon</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/att.get.nc.html" class="external-link">att.get.nc</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"rotated_latitude_longitude"</span>, <span class="st">"grid_north_pole_longitude"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>     <span class="va">lat</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/att.get.nc.html" class="external-link">att.get.nc</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"rotated_latitude_longitude"</span>, <span class="st">"grid_north_pole_latitude"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/pkg/RNetCDF/man/close.nc.html" class="external-link">close.nc</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span>     <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>lon <span class="op">=</span> <span class="va">lon</span>, lat <span class="op">=</span> <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>     <span class="va">lon</span> <span class="op">=</span> <span class="op">-</span><span class="fl">162</span></span></span>
@@ -113,7 +114,10 @@
 <span class="r-in"><span>  <span class="va">m1</span> <span class="op">=</span> <span class="fu">st_rotate</span><span class="op">(</span><span class="va">m</span>, <span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">h</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m1</span>, downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, hook <span class="op">=</span> <span class="va">h</span><span class="op">)</span> <span class="co"># downsample for speed</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m1</span>, downsample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">10</span>, <span class="fl">5</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, hook <span class="op">=</span> <span class="va">h</span>, mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span> </span></span>
+<span class="r-in"><span>    <span class="co"># curvilinear grid: downsample for speed</span></span></span>
+<span class="r-in"><span>  <span class="va">m2</span> <span class="op">=</span> <span class="fu"><a href="st_warp.html">st_warp</a></span><span class="op">(</span><span class="va">m1</span>, crs <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="st">"OGC:CRS84"</span><span class="op">)</span>, threshold <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">m2</span>, hook <span class="op">=</span> <span class="va">h</span><span class="op">)</span> <span class="co"># regular grid: fast</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: maps</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
@@ -138,7 +142,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> rlat    1 824 WGS 84  [848x824] 21.95,...,72.61 [y]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> time    1  12   Date  2018-01-16,...,2018-12-16    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> curvilinear grid</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>using Euclidean distance measures on geodetic coordinates</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> downsample set to 5</span>
 <span class="r-plt img"><img src="st_rotate-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="st_rotate-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
