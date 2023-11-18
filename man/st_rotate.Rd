@@ -9,9 +9,9 @@ st_rotate(.x, lon0, lat0, north = TRUE)
 \arguments{
 \item{.x}{object of class \code{stars}}
 
-\item{lon0}{longitude of the rotated pole}
+\item{lon0}{longitude of the rotated pole in degrees}
 
-\item{lat0}{latitude of the rotated pole}
+\item{lat0}{latitude of the rotated pole in degrees}
 
 \item{north}{logical; if \code{TRUE} the pole refers to the North pole, otherwise the South pole}
 }
@@ -33,6 +33,7 @@ if (require("starsdata") && require("maps")) {
      x = open.nc(f)
      lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
      lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
+     close.nc(x)
      print(c(lon = lon, lat = lat))
   } else {
      lon = -162
@@ -41,6 +42,7 @@ if (require("starsdata") && require("maps")) {
   m1 = st_rotate(m, lon, lat)
   print(m1)
   h = function() maps::map(add = TRUE)
-  plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h) # downsample for speed
+  plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h, mfrow = c(1,2)) 
+    # downsample for speed
 }
 }

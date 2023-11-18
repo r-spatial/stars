@@ -272,8 +272,8 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'
 #' Transform rotated long/lat regular grid to unrotated curvilinear grid
 #' @param .x object of class \code{stars}
-#' @param lon0 longitude of the rotated pole
-#' @param lat0 latitude of the rotated pole
+#' @param lon0 longitude of the rotated pole in degrees
+#' @param lat0 latitude of the rotated pole in degrees
 #' @param north logical; if \code{TRUE} the pole refers to the North pole, otherwise the South pole
 #' @returns curvilinear stars object with coordinates in regular long/lat (North pole at lat=90)
 #' @export
@@ -289,6 +289,7 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'      x = open.nc(f)
 #'      lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
 #'      lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
+#'      close.nc(x)
 #'      print(c(lon = lon, lat = lat))
 #'   } else {
 #'      lon = -162
@@ -297,14 +298,17 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'   m1 = st_rotate(m, lon, lat)
 #'   print(m1)
 #'   h = function() maps::map(add = TRUE)
-#'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h) # downsample for speed
+#'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h, mfrow = c(1,2)) 
+#'     # downsample for speed
 #' }
 st_rotate = function(.x, lon0, lat0, north = TRUE) {
 	stopifnot(inherits(.x, "stars"), 
 			  is.na(st_crs(.x)) || st_is_longlat(.x), 
 			  !is_curvilinear(.x), 
 			  is.logical(north), 
-			  !is.na(north))
+			  !is.na(north),
+			  lat0 <= 90,
+			  lat0 >= -90)
 	torad = function(x) x * pi / 180
 	todeg = function(x) x * 180 / pi
 	d = dim(.x)
