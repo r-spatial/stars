@@ -2,7 +2,7 @@
 % Please edit documentation in R/warp.R
 \name{st_rotate}
 \alias{st_rotate}
-\title{Transform rotated long/lat to regular long/lat}
+\title{Transform rotated pole long/lat regular grid to unrotated curvilinear grid}
 \usage{
 st_rotate(.x, lon0, lat0, north = TRUE)
 }
@@ -19,7 +19,7 @@ st_rotate(.x, lon0, lat0, north = TRUE)
 curvilinear stars object with coordinates in regular long/lat (North pole at lat=90)
 }
 \description{
-Transform rotated long/lat to regular long/lat
+Transform rotated long/lat regular grid to unrotated curvilinear grid
 }
 \examples{
 if (require("starsdata") && require("maps")) {
@@ -31,8 +31,8 @@ if (require("starsdata") && require("maps")) {
   # m = read_mdim(f, "ts", curvilinear = c("longitude", "latitude"))
   if (require(RNetCDF)) {
      x = open.nc(f)
-     lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
-     lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
+     lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
+     lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
      print(c(lon = lon, lat = lat))
   } else {
      lon = -162

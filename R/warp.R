@@ -268,9 +268,9 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 	)
 }
 
-#' Transform rotated long/lat to regular long/lat
+#' Transform rotated pole long/lat regular grid to unrotated curvilinear grid
 #'
-#' Transform rotated long/lat to regular long/lat
+#' Transform rotated long/lat regular grid to unrotated curvilinear grid
 #' @param .x object of class \code{stars}
 #' @param lon0 longitude of the rotated pole
 #' @param lat0 latitude of the rotated pole
@@ -287,8 +287,8 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'   # m = read_mdim(f, "ts", curvilinear = c("longitude", "latitude"))
 #'   if (require(RNetCDF)) {
 #'      x = open.nc(f)
-#'      lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
-#'      lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
+#'      lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
+#'      lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
 #'      print(c(lon = lon, lat = lat))
 #'   } else {
 #'      lon = -162
