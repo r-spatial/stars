@@ -254,7 +254,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 }
 
 rotate = function(lon, lat, lon0, lat0, north = TRUE) {
-	# https://gis.stackexchange.com/questions/10808/manually-transforming-rotated-lat-lon-to-regular-lat-lon/14445 , by Miha
+	# https://gis.stackexchange.com/questions/10808/manually-transforming-rotated-lat-lon-to-regular-lat-lon/14445 , by Miha!
 	if (north) {
 		lat0 = -lat0
 		lon0 = pi + lon0
@@ -282,9 +282,22 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'   nc = "netcdf/ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_201801-201812.nc"
 #'   f = system.file(nc, package = "starsdata")
 #'   m = read_mdim(f, "ts")
-#'   m1 = st_rotate(m, -162, 39.25)
+#'   print(m)
+#'   # NOTE this function is obsolete when reading m as
+#'   # m = read_mdim(f, "ts", curvilinear = c("longitude", "latitude"))
+#'   if (require(RNetCDF)) {
+#'      x = open.nc(f)
+#'      lon = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_latitude")
+#'      lat = att.get.nc(x, "rotated_latitude_longitude", "grid_north_pole_longitude")
+#'      print(c(lon = lon, lat = lat))
+#'   } else {
+#'      lon = -162
+#'      lat = 39.25
+#'   } 
+#'   m1 = st_rotate(m, lon, lat)
+#'   print(m1)
 #'   h = function() maps::map(add = TRUE)
-#'   plot(m1[,,,1:2], downsample = 10, axes = TRUE, hook = h) # downsample for speed
+#'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h) # downsample for speed
 #' }
 st_rotate = function(.x, lon0, lat0, north = TRUE) {
 	stopifnot(inherits(.x, "stars"), 
