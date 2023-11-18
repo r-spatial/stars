@@ -298,10 +298,10 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'   m1 = st_rotate(m, lon, lat)
 #'   print(m1)
 #'   h = function() maps::map(add = TRUE)
-#'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h, mfrow = c(1,2)) 
-#'     # curvilinear grid: downsample for speed
+#'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h, mfrow = c(1, 2)) 
+#'     # curvilinear grid: downsample for plotting speed
 #'   m2 = st_warp(m1, crs = st_crs("OGC:CRS84"), threshold = .1)
-#'   plot(m2, hook = h) # regular grid: fast
+#'   plot(m2, hook = h, mfrow = c(3, 4)) # regular grid: plots fast
 #' }
 st_rotate = function(.x, lon0, lat0, north = TRUE) {
 	stopifnot(inherits(.x, "stars"), 
