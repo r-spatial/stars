@@ -92,12 +92,12 @@ transform_grid_grid = function(x, target, threshold) {
         		stop("package FNN required, please install it first") #nocov
 			if (st_is_longlat(x))
 				warning("using Euclidean distance measures on geodetic coordinates")
-			fnn = FNN::get.knnx(cc_x <- st_coordinates(x)[, 1:2, drop = FALSE], pts, 1)
+			fnn = FNN::get.knnx(cc_x <- st_coordinates(d[xy_names]), pts, 1)
 			if (is.na(threshold)) {
 				p12 = st_as_sf(as.data.frame(cc_x[1:2,]), coords = 1:2)
 				threshold = signif(st_distance(p12)[1,2])
 				message(paste("threshold set to", format(threshold), 
-					 ": set a larger value if you see missing values where they shouldn't be"))
+					 ": set a larger value if you see missing values where there shouldn't be"))
 			}
 			i = fnn$nn.index - 1
 			i[fnn$nn.dist > threshold] = NA
@@ -299,7 +299,9 @@ rotate = function(lon, lat, lon0, lat0, north = TRUE) {
 #'   print(m1)
 #'   h = function() maps::map(add = TRUE)
 #'   plot(m1, downsample = c(10, 10, 5), axes = TRUE, hook = h, mfrow = c(1,2)) 
-#'     # downsample for speed
+#'     # curvilinear grid: downsample for speed
+#'   m2 = st_warp(m1, crs = st_crs("OGC:CRS84"), threshold = .1)
+#'   plot(m2, hook = h) # regular grid: fast
 #' }
 st_rotate = function(.x, lon0, lat0, north = TRUE) {
 	stopifnot(inherits(.x, "stars"), 
