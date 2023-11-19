@@ -3,9 +3,15 @@
 \name{st_rotate}
 \alias{st_rotate}
 \alias{st_rotate.stars}
+\alias{st_rotate.sfc}
+\alias{st_rotate.sf}
 \title{Transform rotated pole long/lat regular grid to unrotated curvilinear grid}
 \usage{
 \method{st_rotate}{stars}(.x, lon0, lat0, north = TRUE, ...)
+
+\method{st_rotate}{sfc}(.x, lon0, lat0, north = TRUE, ...)
+
+\method{st_rotate}{sf}(.x, lon0, lat0, north = TRUE, ...)
 }
 \arguments{
 \item{.x}{object of class \code{stars}}

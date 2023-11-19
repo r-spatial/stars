@@ -83,12 +83,14 @@ st_rotate.stars = function(.x, lon0, lat0, north = TRUE, ...) {
 	}
 }
 
+#' @name st_rotate
 #' @export
 st_rotate.sfc = function(.x, lon0, lat0, north = TRUE, ...) {
 	r = rapply(.x, rotate, how = "replace", lon0 = lon0, lat0 = lat0, north = north)
 	st_set_crs(r, NA_crs_)
 }
 
+#' @name st_rotate
 #' @export
 st_rotate.sf = function(.x, lon0, lat0, north = TRUE, ...) {
 	st_set_geometry(.x, st_rotate(st_geometry(.x), lon0, lat0, north))
