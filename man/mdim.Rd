@@ -87,3 +87,6 @@ if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
   print(read_mdim(nc))
 }
 }
+\seealso{
+\link[sf]{gdal_utils}, in particular util \code{mdiminfo} to query properties of a file or data source containing arrays
+}

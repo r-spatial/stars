@@ -87,7 +87,7 @@ st_rotate.stars = function(.x, lon0, lat0, north = TRUE, ...) {
 #' @export
 st_rotate.sfc = function(.x, lon0, lat0, north = TRUE, ...) {
 	r = rapply(.x, rotate, how = "replace", lon0 = lon0, lat0 = lat0, north = north)
-	st_set_crs(r, NA_crs_)
+	st_set_crs(st_sfc(r, recompute_bbox = TRUE), NA_crs_)
 }
 
 #' @name st_rotate
