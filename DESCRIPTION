@@ -35,7 +35,7 @@ LazyData: true
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 1.0-10)
+    sf (>= 1.0-15)
 Imports:
     methods,
     parallel,

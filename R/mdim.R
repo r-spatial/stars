@@ -128,7 +128,10 @@ read_mdim = function(filename, variable = character(0), ..., groups = character(
 		stop("proxy not yet implemented in read_mdim()")
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
-	ret = gdal_read_mdim(filename, variable, groups, options, rev(offset), rev(count), rev(step), proxy, debug)
+	ret = if (packageVersion("sf") <= "1.0.15")
+				gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
+			else
+				gdal_read_mdim(filename, variable, groups, options, rev(offset), rev(count), rev(step), proxy, debug)
 	ret = recreate_geometry(ret)
 	if (isTRUE(bounds) || is.character(bounds))
 		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)
