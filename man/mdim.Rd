@@ -10,6 +10,7 @@ read_mdim(
   filename,
   variable = character(0),
   ...,
+  groups = character(0),
   options = character(0),
   raster = NULL,
   offset = integer(0),
@@ -34,9 +35,11 @@ write_mdim(
 \arguments{
 \item{filename}{name of the source or destination file or data source}
 
-\item{variable}{name of the array to be read}
+\item{variable}{name of the array to be read; if `"?"`, a list of array names is returned, with group name as list element names.}
 
 \item{...}{ignored}
+
+\item{groups}{character vector with group sequence to be opened to find the named array (by default, the root group is opened)}
 
 \item{options}{character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset}
 
