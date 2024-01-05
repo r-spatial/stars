@@ -105,7 +105,6 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @name mdim
 #' @param filename name of the source or destination file or data source
 #' @param variable name of the array to be read; if `"?"`, a list of array names is returned, with group name as list element names.
-#' @param groups character vector with group sequence to be opened to find the named array (by default, the root group is opened)
 #' @param options character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset
 #' @param raster names of the raster variables (default: first two dimensions)
 #' @param offset integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
@@ -120,7 +119,7 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @param ... ignored
 #' @seealso \link[sf]{gdal_utils}, in particular util \code{mdiminfo} to query properties of a file or data source containing arrays
 #' @export
-read_mdim = function(filename, variable = character(0), ..., groups = character(0), options = character(0), 
+read_mdim = function(filename, variable = character(0), ..., options = character(0), 
 					 raster = NULL, offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
 
@@ -128,10 +127,7 @@ read_mdim = function(filename, variable = character(0), ..., groups = character(
 		stop("proxy not yet implemented in read_mdim()")
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
-	ret = if (packageVersion("sf") <= "1.0.15")
-				gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
-			else
-				gdal_read_mdim(filename, variable, groups, options, rev(offset), rev(count), rev(step), proxy, debug)
+	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 	ret = recreate_geometry(ret)
 	if (isTRUE(bounds) || is.character(bounds))
 		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)
