@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `read_mdim()` reads tables with composity type, returning a `data.frame` in that case; #659
+
 * `st_rotate()` transforms a rotated grid back to a curvilinear grid in unrotated coordinates.
 
 * `aggregate.stars()` deals with functions that return more than one number, putting these in a new dimension like `st_apply()` does
