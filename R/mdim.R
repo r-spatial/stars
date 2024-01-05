@@ -128,6 +128,10 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
+
+	if (length(ret$dimensions) == 1 && length(ret$array_list) == 1 && is.data.frame(ret$array_list[[1]]))
+		return(ret$array_list[[1]]) ## composite data: RETURNS
+
 	ret = recreate_geometry(ret)
 	if (isTRUE(bounds) || is.character(bounds))
 		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)
