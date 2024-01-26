@@ -829,6 +829,7 @@ st_geometry.stars = function(obj,...) {
 }
 
 # make sure asub works for factor too:
+#' @export
 asub.factor = function(x, idx, dims, drop = NULL, ...) {
 	l = levels(x)
 	x = unclass(x)

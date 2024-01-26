@@ -526,18 +526,29 @@ parse_gdal_meta = function(properties) {
 	properties
 }
 
+#' expand the dimension values into a list
+#'
+#' expand the dimension values into a list
+#' @param x object of class `stars` or `dimensions`
+#' @param ... ignored
+#' @export
 expand_dimensions = function(x, ...) UseMethod("expand_dimensions")
 
+#' @export
 expand_dimensions.stars = function(x, ...) {
 	expand_dimensions(st_dimensions(x), ...)
 }
 
+#' @export
+#' @param max logical; if `TRUE` return the max (end) values of the dimensions intervals
+#' @param center logical; if `TRUE` return the center values of intervals, otherwise return offset (start) of intervals; if `NA` (default) return centers for x/y dimensions, offsets for all others
+expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 # returns, in case of numeric dimensions:
 # 	center = TRUE: return center values for x and y coordinates, interval start values otherwise
 # 	center = FALSE: return start values
 #   center = NA: return centers for x/y raster, otherwise start values
 #   add_max = TRUE: add in addition to x and y start values an x_max and y_max end values
-expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
+
 
 	if (length(center) == 1)
 		center = setNames(rep(center, length(x)), names(x))
@@ -679,6 +690,7 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	TRUE
 }
 
+#' @export
 all.equal.dimensions = function(target, current, ..., ignore_blocksizes = TRUE) {
 	if (ignore_blocksizes) {
 		attr(target, "raster")$blocksizes = NULL
@@ -779,6 +791,7 @@ as.POSIXct.stars = function(x, ...) {
 	structure(x, dimensions = d)
 }
 
+#' @export
 drop_units.dimension = function(x) {
 	du = function(y) {
 		if (inherits(y, "units"))
@@ -799,6 +812,7 @@ drop_units.dimension = function(x) {
 	x
 }
 
+#' @export
 units.dimension = function(x) {
 	if (inherits(x$offset, "units"))
 		units(x$offset)

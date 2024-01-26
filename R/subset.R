@@ -176,7 +176,8 @@
 		stop("selector i should be a stars object or a lenght-one integer or character vector")
 }
 
-st_intersects.bbox = function(x, y, ...) {
+#' @export
+st_intersects.bbox = function(x, y, ...) { # FIXME: segmentize first if geographic coords? see sf::st_sample
 	if (!inherits(y, "sfc"))
 		y = st_as_sfc(y)
 	st_intersects(st_as_sfc(x), y, ...)

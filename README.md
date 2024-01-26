@@ -109,14 +109,14 @@ methods(class = "stars_proxy")
 #  [1] [               [[<-            [<-             adrop          
 #  [5] aggregate       aperm           as.data.frame   c              
 #  [9] coerce          dim             droplevels      filter         
-# [13] hist            initialize      is.na           Math           
-# [17] merge           mutate          Ops             plot           
-# [21] predict         print           pull            rename         
-# [25] select          show            slice           slotsFromS3    
-# [29] split           st_apply        st_as_sf        st_as_stars    
-# [33] st_crop         st_dimensions<- st_downsample   st_mosaic      
-# [37] st_normalize    st_redimension  st_sample       st_set_bbox    
-# [41] transmute       write_stars    
+# [13] hist            image           initialize      is.na          
+# [17] Math            merge           mutate          Ops            
+# [21] plot            predict         print           pull           
+# [25] rename          select          show            slice          
+# [29] slotsFromS3     split           st_apply        st_as_sf       
+# [33] st_as_stars     st_crop         st_dimensions<- st_downsample  
+# [37] st_mosaic       st_normalize    st_redimension  st_sample      
+# [41] st_set_bbox     transmute       write_stars    
 # see '?methods' for accessing help and source code
 ```
 
@@ -204,7 +204,8 @@ a.cb |>
   ggplot(aes(x_major = long, x_minor = tm, y_major = lat, y_minor = precip)) +
   geom_sf(data = nc, inherit.aes = FALSE) +
   geom_glyph_box(width = 0.3, height = 0.1) +
-  geom_glyph(width = 0.3, height = 0.1)
+  geom_glyph(width = 0.3, height = 0.1) |>
+  suppressWarnings()
 # Warning: There were 84 warnings in `dplyr::mutate()`.
 # The first warning was:
 # ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.

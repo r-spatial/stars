@@ -18,6 +18,7 @@ reset_sub = function(x) {
 	structure(x, dimensions = d)
 }
 
+#' @export
 st_write.stars = function(obj, dsn, layer, ...) {
 	.Deprecated("write_stars") # nocov
 }

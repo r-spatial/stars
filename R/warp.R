@@ -1,3 +1,5 @@
+## https://mastodon.social/@EvenRouault/111738407524055989
+
 has_global_longitude = function(x) {
 	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x)$xlim), c(-180.,180.)))
 }

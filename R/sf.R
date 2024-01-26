@@ -86,6 +86,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	st_stars(x, dimensions = d)
 }
 
+#' @export
 st_as_sf.dimensions = function(x, ...) {
 	ix = which_sfc(x)[1]
 	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x), ...)
@@ -235,7 +236,6 @@ st_contour = function(x, na.rm = TRUE, contour_lines = FALSE,
 	st_set_crs(ret, st_crs(x))
 #nocov end
 }
-
 
 #' @export
 st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
