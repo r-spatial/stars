@@ -135,14 +135,14 @@
 <span><span class="co">#  [1] [               [[&lt;-            [&lt;-             adrop          </span></span>
 <span><span class="co">#  [5] aggregate       aperm           as.data.frame   c              </span></span>
 <span><span class="co">#  [9] coerce          dim             droplevels      filter         </span></span>
-<span><span class="co"># [13] hist            initialize      is.na           Math           </span></span>
-<span><span class="co"># [17] merge           mutate          Ops             plot           </span></span>
-<span><span class="co"># [21] predict         print           pull            rename         </span></span>
-<span><span class="co"># [25] select          show            slice           slotsFromS3    </span></span>
-<span><span class="co"># [29] split           st_apply        st_as_sf        st_as_stars    </span></span>
-<span><span class="co"># [33] st_crop         st_dimensions&lt;- st_downsample   st_mosaic      </span></span>
-<span><span class="co"># [37] st_normalize    st_redimension  st_sample       st_set_bbox    </span></span>
-<span><span class="co"># [41] transmute       write_stars    </span></span>
+<span><span class="co"># [13] hist            image           initialize      is.na          </span></span>
+<span><span class="co"># [17] Math            merge           mutate          Ops            </span></span>
+<span><span class="co"># [21] plot            predict         print           pull           </span></span>
+<span><span class="co"># [25] rename          select          show            slice          </span></span>
+<span><span class="co"># [29] slotsFromS3     split           st_apply        st_as_sf       </span></span>
+<span><span class="co"># [33] st_as_stars     st_crop         st_dimensions&lt;- st_downsample  </span></span>
+<span><span class="co"># [37] st_mosaic       st_normalize    st_redimension  st_sample      </span></span>
+<span><span class="co"># [41] st_set_bbox     transmute       write_stars    </span></span>
 <span><span class="co"># see '?methods' for accessing help and source code</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -211,7 +211,8 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x_major <span class="op">=</span> <span class="va">long</span>, x_minor <span class="op">=</span> <span class="va">tm</span>, y_major <span class="op">=</span> <span class="va">lat</span>, y_minor <span class="op">=</span> <span class="va">precip</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">nc</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/cubble/man/glyph.html" class="external-link">geom_glyph_box</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.3</span>, height <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/cubble/man/glyph.html" class="external-link">geom_glyph</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.3</span>, height <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/cubble/man/glyph.html" class="external-link">geom_glyph</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.3</span>, height <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># Warning: There were 84 warnings in `dplyr::mutate()`.</span></span>
 <span><span class="co"># The first warning was:</span></span>
 <span><span class="co"># ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.</span></span>
