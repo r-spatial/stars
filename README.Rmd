@@ -201,8 +201,7 @@ a.cb |>
   ggplot(aes(x_major = long, x_minor = tm, y_major = lat, y_minor = precip)) +
   geom_sf(data = nc, inherit.aes = FALSE) +
   geom_glyph_box(width = 0.3, height = 0.1) +
-  geom_glyph(width = 0.3, height = 0.1) |>
-  suppressWarnings()
+  geom_glyph(width = 0.3, height = 0.1)
 ```
 
 ## Other packages for data cubes

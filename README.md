@@ -204,8 +204,7 @@ a.cb |>
   ggplot(aes(x_major = long, x_minor = tm, y_major = lat, y_minor = precip)) +
   geom_sf(data = nc, inherit.aes = FALSE) +
   geom_glyph_box(width = 0.3, height = 0.1) +
-  geom_glyph(width = 0.3, height = 0.1) |>
-  suppressWarnings()
+  geom_glyph(width = 0.3, height = 0.1)
 # Warning: There were 84 warnings in `dplyr::mutate()`.
 # The first warning was:
 # ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.
