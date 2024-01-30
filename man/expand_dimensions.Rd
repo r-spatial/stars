@@ -2,14 +2,21 @@
 % Please edit documentation in R/dimensions.R
 \name{expand_dimensions}
 \alias{expand_dimensions}
+\alias{expand_dimensions.dimensions}
 \title{expand the dimension values into a list}
 \usage{
 expand_dimensions(x, ...)
+
+\method{expand_dimensions}{dimensions}(x, ..., max = FALSE, center = NA)
 }
 \arguments{
 \item{x}{object of class `stars` or `dimensions`}
 
 \item{...}{ignored}
+
+\item{max}{logical; if `TRUE` return the max (end) values of the dimensions intervals}
+
+\item{center}{logical; if `TRUE` return the center values of intervals, otherwise return offset (start) of intervals; if `NA` (default) return centers for x/y dimensions, offsets for all others}
 }
 \description{
 expand the dimension values into a list

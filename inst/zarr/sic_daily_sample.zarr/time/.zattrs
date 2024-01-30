@@ -1,0 +1,9 @@
+{
+    "_ARRAY_DIMENSIONS": [
+        "time"
+    ],
+    "calendar": "gregorian",
+    "units": "hours since 1950-01-01",
+    "valid_max": "2021-01-09T00:00:00.000000000",
+    "valid_min": "2021-01-09T00:00:00.000000000"
+}

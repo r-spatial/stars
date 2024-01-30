@@ -540,6 +540,7 @@ expand_dimensions.stars = function(x, ...) {
 }
 
 #' @export
+#' @name expand_dimensions
 #' @param max logical; if `TRUE` return the max (end) values of the dimensions intervals
 #' @param center logical; if `TRUE` return the center values of intervals, otherwise return offset (start) of intervals; if `NA` (default) return centers for x/y dimensions, offsets for all others
 expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {

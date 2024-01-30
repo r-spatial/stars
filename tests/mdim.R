@@ -10,7 +10,7 @@ s = st_set_dimensions(s, 1, sfc) |> st_set_crs(4326)
 tm = as.POSIXct("2023-03-04 12:35") + c(0, 3600)
 (s = st_set_dimensions(s, 2, tm))
 f = tempfile(fileext = ".nc")
-if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
+# if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
  write_mdim(s, f, as_float = FALSE)
  s2 = read_mdim(f)
  print(s2)
@@ -30,4 +30,5 @@ if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
  print(sd2)
  print(all.equal(sd, sd2, check.attributes = FALSE))
  print(all.equal(sd, sd2))
-}
+ print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
+# }
