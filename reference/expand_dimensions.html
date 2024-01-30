@@ -64,7 +64,10 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">expand_dimensions</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">expand_dimensions</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for dimensions</span></span>
+<span><span class="fu">expand_dimensions</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, max <span class="op">=</span> <span class="cn">FALSE</span>, center <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,6 +78,14 @@
 
 <dt>...</dt>
 <dd><p>ignored</p></dd>
+
+
+<dt>max</dt>
+<dd><p>logical; if `TRUE` return the max (end) values of the dimensions intervals</p></dd>
+
+
+<dt>center</dt>
+<dd><p>logical; if `TRUE` return the center values of intervals, otherwise return offset (start) of intervals; if `NA` (default) return centers for x/y dimensions, offsets for all others</p></dd>
 
 </dl></div>
 
