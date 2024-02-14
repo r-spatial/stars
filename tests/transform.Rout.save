@@ -1,5 +1,5 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -52,7 +52,14 @@ sheared raster with parameters: -5 -5
 +   (x__ = st_transform_proj(x, st_crs(4326)))
 +   print(all.equal(x_,x__,check.attributes = FALSE))
 + }
-Linking to liblwgeom 3.0.0beta1 r16016, GEOS 3.11.1, PROJ 9.1.1
+Linking to liblwgeom 3.0.0beta1 r16016, GEOS 3.12.1, PROJ 9.3.1
+
+Attaching package: 'lwgeom'
+
+The following object is masked from 'package:sf':
+
+    st_perimeter
+
 [1] TRUE
 [1] TRUE
 > 
@@ -66,4 +73,4 @@ Error in st_transform_proj.stars(st_as_stars(list(m = matrix(1, 10, 10))),  :
 > 
 > proc.time()
    user  system elapsed 
-  0.696   0.053   0.741 
+  1.100   1.306   0.938 

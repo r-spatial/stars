@@ -115,22 +115,9 @@ X2    1  2 2023-02-25 1 days   Date    NA                     NULL
 [1] TRUE
 >  print(all.equal(sd, sd2))
 [1] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"point\": 'is.NA' value mismatch: 1 in current 0 in target >"
->  print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
-stars object with 3 dimensions and 1 attribute
-attribute(s), summary of first 1e+05 cells:
-           Min. 1st Qu. Median Mean 3rd Qu. Max.  NA's
-siconc [1]   NA      NA     NA  NaN      NA   NA 1e+05
-dimension(s):
-          from   to  refsys point
-longitude    1 4320  WGS 84    NA
-latitude     1  961  WGS 84    NA
-time         1    1 POSIXct  TRUE
-                                                      values x/y
-longitude       [-180.0417,-179.9583),...,[179.875,179.9583) [x]
-latitude  [-80.04167,-79.95833),...,[-0.04166667,0.04166667) [y]
-time                                          2021-01-09 UTC    
+>  # print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
 > # }
 > 
 > proc.time()
    user  system elapsed 
-  0.958   1.334   0.789 
+  0.941   1.328   0.838 

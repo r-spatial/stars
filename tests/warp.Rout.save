@@ -1,5 +1,5 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -105,7 +105,7 @@ band    1   6      NA    NA                         NA    NA
 stars object with 2 dimensions and 1 attribute
 attribute(s):
                Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
-geomatrix.tif    74     107    123 126.6857     132  255  727
+geomatrix.tif    74     107    123 126.7262     132  255  727
 dimension(s):
   from to  offset delta                refsys x/y
 x    1 44 1840902     3 WGS 84 / UTM zone 11N [x]
@@ -127,9 +127,9 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > names(x2) = names(y)
 > # isTRUE(all.equal(x2, y, check.attributes=FALSE))
 > mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
-[1] 0.9958644
+[1] 0.9975186
 > unique(as.vector(x2[[1]]-y[[1]]))
-[1]  NA   0 -33 -25  25  49  17
+[1] NA  0 25 49  8
 > 
 > g = st_as_stars()
 > attr(g, "dimensions")$x$offset = 0
@@ -142,4 +142,4 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.010   0.075   1.076 
+  1.732   2.471   1.376 

@@ -1,6 +1,6 @@
 
-R version 4.2.2 Patched (2022-11-10 r83330) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -309,9 +309,9 @@ attribute(s):
         Min. 1st Qu. Median Mean 3rd Qu. Max.
 values     0       0      0    0       0    0
 dimension(s):
-  from  to offset delta refsys x/y
-x    1 360   -180     1 WGS 84 [x]
-y    1 180     90    -1 WGS 84 [y]
+  from  to offset delta         refsys x/y
+x    1 360   -180     1 WGS 84 (CRS84) [x]
+y    1 180     90    -1 WGS 84 (CRS84) [y]
 > 
 > # multiple sub-datasets:
 > nc_red = system.file("nc/reduced.nc", package = "stars")
@@ -499,4 +499,4 @@ X1    1  1 FALSE 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.984   0.813   4.901 
+  4.614   1.291   4.652 
