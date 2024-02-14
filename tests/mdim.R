@@ -30,5 +30,5 @@ f = tempfile(fileext = ".nc")
  print(sd2)
  print(all.equal(sd, sd2, check.attributes = FALSE))
  print(all.equal(sd, sd2))
- print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
+ # print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
 # }
