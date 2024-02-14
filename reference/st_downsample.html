@@ -108,7 +108,7 @@ equivalent to calling <code>st_as_stars(x, downsample = 2)</code>, and only down
 the first two (x and y) dimensions.</p>
 <p>Downsampled regular rasters keep their dimension offsets, have a cell size (delta) that
 is n[i]+1 times larger, and may result in a (slightly) different extent.</p>
-<p>Note that terra's <a href="https://rdrr.io/pkg/terra/man/aggregate.html" class="external-link">aggregate</a> with <code>fact=2</code> corresponds to
+<p>Note that terra's <a href="https://rspatial.github.io/terra/reference/aggregate.html" class="external-link">aggregate</a> with <code>fact=2</code> corresponds to
 <code>st_downsample(x, n = 1, FUN = mean)</code>: <code>fact</code> is one larger than <code>n</code>.</p>
     </div>
 
