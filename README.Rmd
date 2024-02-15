@@ -206,7 +206,7 @@ a.cb |>
 
 ## Other packages for data cubes
 
-### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)
+### [`gdalcubes`](https://github.com/appelmar/gdalcubes)
 
 Package `gdalcubes` can be used to create data cubes (or functions
 from them) from image collections, sets of multi-band images with
@@ -221,7 +221,7 @@ and does this by resampling and/or aggregating over space and/or
 time. It reuses GDAL VRT's and gdalwarp for spatial resampling and/or
 warping, and handles temporal resampling or aggregation itself.
 
-### [`ncdfgeom`](https://github.com/USGS-R/ncdfgeom)
+### [`ncdfgeom`](https://github.com/DOI-USGS/ncdfgeom)
 
 `ncdfgeom` reads and writes vector data cubes from and to netcdf
 files in a standards-compliant way.
@@ -249,10 +249,10 @@ A comment on the differences between `stars` and `terra` is found
 ## Other `stars` resources:
 
 * blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
-[second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
-[third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and [newer blog posts](https://www.r-spatial.org/)
+[second](https://r-spatial.org/r/2018/03/22/stars2.html),
+[third](https://r-spatial.org/r/2018/03/23/stars3.html), and [newer blog posts](https://r-spatial.org/)
 * [vignettes](https://r-spatial.github.io/stars/articles/)
-* the original [R Consortium proposal](https://github.com/edzer/stars/blob/main/PROPOSAL.md).
+* the original [R Consortium proposal](https://github.com/r-spatial/stars/blob/main/PROPOSAL.md).
 
 ### Acknowledgment
 

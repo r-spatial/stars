@@ -22,7 +22,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
 				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 			else {
-				# https://github.com/mtennekes/tmap/issues/526 :
+				# https://github.com/r-tmap/tmap/issues/526 :
 				old_crs = st_crs(envelope)
 				st_crs(envelope) = NA_crs_
 				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)

@@ -264,13 +264,13 @@
 
 * `st_apply()` and other methods for `stars_proxy` objects handle ... ; #374
 
-* add `st_bbox()`, `st_crs()` methods for terra's `SpatVector` objects; https://github.com/mtennekes/tmap/issues/536
+* add `st_bbox()`, `st_crs()` methods for terra's `SpatVector` objects; https://github.com/r-tmap/tmap/issues/536
 
-* add `st_bbox()`, `st_crs()` and `st_as_stars()` methods for terra's `SpatRaster` objects; https://github.com/mtennekes/tmap/issues/536
+* add `st_bbox()`, `st_crs()` and `st_as_stars()` methods for terra's `SpatRaster` objects; https://github.com/r-tmap/tmap/issues/536
 
 * allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.
 
-* `plot()` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
+* `plot()` defaults to a categorical color scale when plotting a factor variable; https://github.com/r-tmap/tmap/issues/526
 
 * `st_extract()` extracts space-time points if `time_column` is specified, and handles time intervals; #352
 
@@ -328,7 +328,7 @@
 
 # version 0.4-3
 
-* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/mtennekes/tmap/issues/471
+* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/r-tmap/tmap/issues/471
 
 * add `s2` to Suggests:
 
@@ -358,7 +358,7 @@
 
 * x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
 
-* `st_warp()` preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
+* `st_warp()` preserves levels and colors; https://github.com/r-tmap/tmap/issues/429
 
 * `st_crop()` works with bounding boxes larger than the downsampled bounding box; #276
 
@@ -386,7 +386,7 @@
 
 * handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string only
 
-* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
+* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/r-tmap/tmap/issues/368
 
 * add `st_as_stars.OpenStreetMap()` method; #241 by @mtennekes
 

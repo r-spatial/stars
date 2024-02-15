@@ -11,7 +11,7 @@ An object of class \code{stars_proxy} (inherits from \code{stars}) of dimension 
 bcsd_obs
 }
 \description{
-These are the monthly observational data used for BCSD downscaling. See: http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#About for more information." ;
+These are the monthly observational data used for BCSD downscaling. See: <https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#About> for more information." ;
 "Atmospheric Temperature, Air Temperature Atmosphere, Precipitation, Rain, Maximum Daily Temperature, Minimum  Daily Temperature" ;
 }
 \keyword{datasets}
