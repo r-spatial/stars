@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 
-[![rcmdcheck](https://github.com/r-spatial/stars/actions/workflows/rcmdcheck.yml/badge.svg)](https://github.com/r-spatial/stars/actions/workflows/rcmdcheck.yml)
+[![R-CMD-check](https://github.com/r-spatial/stars/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/stars/actions/workflows/R-CMD-check.yaml)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars)
 [![cran
 checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
@@ -16,12 +16,12 @@ coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](ht
 Spatiotemporal data often comes in the form of dense arrays, with space
 and time being array dimensions. Examples include
 
-  - socio-economic or demographic data,
-  - environmental variables monitored at fixed stations,
-  - raster maps
-  - time series of satellite images with multiple spectral bands,
-  - spatial simulations, and
-  - climate or weather model output.
+- socio-economic or demographic data,
+- environmental variables monitored at fixed stations,
+- raster maps
+- time series of satellite images with multiple spectral bands,
+- spatial simulations, and
+- climate or weather model output.
 
 This R package provides classes and methods for reading, manipulating,
 plotting and writing such data cubes, to the extent that there are
@@ -33,13 +33,13 @@ The canonical data cube most of us have in mind is that where two
 dimensions represent spatial raster dimensions, and the third time (or
 band), as e.g. shown here:
 
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png" width="50%" />
+<img src="https://raw.githubusercontent.com/r-spatial/stars/main/images/cube1.png" width="50%" />
 
 By data cubes however we also consider higher-dimensional cubes
 (hypercubes) such as a five-dimensional cube where in addition to time,
 spectral band and sensor form dimensions:
 
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png" width="50%" />
+<img src="https://raw.githubusercontent.com/r-spatial/stars/main/images/cube2.png" width="50%" />
 
 or lower-dimensional cubes such as a raster image:
 
@@ -48,7 +48,7 @@ suppressPackageStartupMessages(library(dplyr))
 library(stars)
 # Loading required package: abind
 # Loading required package: sf
-# Linking to GEOS 3.11.1, GDAL 3.6.4, PROJ 9.1.1; sf_use_s2() is TRUE
+# Linking to GEOS 3.11.2, GDAL 3.7.2, PROJ 9.3.0; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) |>
   slice(index = 1, along = "band") |>
@@ -68,11 +68,11 @@ spatial dimensions, but a single dimension that points to distinct
 spatial feature geometries, such as polygons (e.g. denoting
 administrative regions):
 
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png" width="50%" />
+<img src="https://raw.githubusercontent.com/r-spatial/stars/main/images/cube3.png" width="50%" />
 
 or points (e.g. denoting sensor locations):
 
-<img src="https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png" width="50%" />
+<img src="https://raw.githubusercontent.com/r-spatial/stars/main/images/cube4.png" width="50%" />
 
 NetCDF’s CF-convention calls this a [discrete
 axis](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis).
@@ -135,10 +135,10 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 #                                           Max.
 # Total_precipitation_surface... [kg/m^2] 163.75
 # dimension(s):
-#      from  to                  offset   delta  refsys
-# x       1  87                      NA      NA  WGS 84
-# y       1 118                      NA      NA  WGS 84
-# time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct
+#      from  to                  offset   delta         refsys
+# x       1  87                      NA      NA WGS 84 (CRS84)
+# y       1 118                      NA      NA WGS 84 (CRS84)
+# time    1  23 2018-09-13 19:00:00 UTC 1 hours        POSIXct
 #                                  values x/y
 # x    [87x118] -80.61 [°],...,-74.88 [°] [x]
 # y      [87x118] 32.44 [°],...,37.62 [°] [y]
@@ -212,8 +212,10 @@ a.cb |>
 # Caused by warning in `min()`:
 # ! no non-missing arguments to min; returning Inf
 # ℹ Run `dplyr::last_dplyr_warnings()` to see the 83 remaining warnings.
-# Warning: Removed 966 rows containing missing values (`geom_glyph_box()`).
-# Warning: Removed 966 rows containing missing values (`geom_glyph()`).
+# Warning: Removed 966 rows containing missing values or values outside the scale range
+# (`geom_glyph_box()`).
+# Warning: Removed 966 rows containing missing values or values outside the scale range
+# (`geom_glyph()`).
 ```
 
 ![](man/figures/README-plot6-1.png)<!-- -->
@@ -225,10 +227,10 @@ a.cb |>
 Package `gdalcubes` can be used to create data cubes (or functions from
 them) from image collections, sets of multi-band images with varying
 
-  - spatial resolution
-  - spatial extent
-  - coordinate reference systems (e.g., spread over multiple UTM zones)
-  - observation times
+- spatial resolution
+- spatial extent
+- coordinate reference systems (e.g., spread over multiple UTM zones)
+- observation times
 
 and does this by resampling and/or aggregating over space and/or time.
 It reuses GDAL VRT’s and gdalwarp for spatial resampling and/or warping,
@@ -245,11 +247,11 @@ Packages `raster` and its successor, `terra` are powerful packages for
 handling raster maps and stacks of raster maps both in memory and on
 disk, but do not address
 
-  - non-raster time series,
-  - multi-attribute rasters time series
-  - rasters with mixed type attributes (e.g., numeric, logical, factor,
-    POSIXct)
-  - rectilinear or curvilinear rasters
+- non-raster time series,
+- multi-attribute rasters time series
+- rasters with mixed type attributes (e.g., numeric, logical, factor,
+  POSIXct)
+- rectilinear or curvilinear rasters
 
 A list of `stars` commands matching existing `raster` commands is found
 in this
@@ -262,13 +264,13 @@ A comment on the differences between `stars` and `terra` is found
 
 ## Other `stars` resources:
 
-  - blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
-    [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
-    [third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and
-    [newer blog posts](https://www.r-spatial.org/)
-  - [vignettes](https://r-spatial.github.io/stars/articles/)
-  - the original [R Consortium
-    proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
+- blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
+  [second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
+  [third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and
+  [newer blog posts](https://www.r-spatial.org/)
+- [vignettes](https://r-spatial.github.io/stars/articles/)
+- the original [R Consortium
+  proposal](https://github.com/edzer/stars/blob/main/PROPOSAL.md).
 
 ### Acknowledgment
 
