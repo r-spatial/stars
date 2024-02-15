@@ -232,7 +232,7 @@
 
 * handle `normalize_path` for choosing to `proxy`; #391
 
-* ignore units when there are different units accross bands of a subdataset
+* ignore units when there are different units across bands of a subdataset
 
 * speed up `st_rgb()` using faster `st_apply()` approach; #315, #390
 
@@ -474,7 +474,7 @@
 
 * support for `PCICt` 360- and 365-day calendars; #29
 
-* remove import of `ncdf4` in favour of `RNetCDF`, now in line with practice in `ncmeta` package. Thanks to David Blodgett for motivation and testing (see #87, #94). 
+* remove import of `ncdf4` in favor of `RNetCDF`, now in line with practice in `ncmeta` package. Thanks to David Blodgett for motivation and testing (see #87, #94). 
 
 * `st_as_sf` uses date/time column names when appropriate
 
@@ -486,7 +486,7 @@
 
 * depend on sf 0.7-2
 
-* add logz support for log-scale keys to `plot` and `image`
+* add `logz` support for log-scale keys to `plot` and `image`
 
 # version 0.2-0
 

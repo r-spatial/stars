@@ -77,7 +77,7 @@ For this particular dataset (and most other raster datasets), we see that delta 
 
 `read_stars` reads all bands from a raster dataset, or optionally a subset of raster datasets, into a single `stars` array structure. While doing so, raster values (often UINT8 or UINT16) are converted to double (numeric) values, and scaled back to their original values if needed if the file encodes the scaling parameters.
 
-The data structure `stars` is a generalisation of the `tbl_cube` found in `cubelyr`; we can convert to that by
+The data structure `stars` is a generalization of the `tbl_cube` found in `cubelyr`; we can convert to that by
 ```{r eval=ev}
 library(cubelyr)
 as.tbl_cube(x)

@@ -105,7 +105,7 @@ passed on to \code{\link{read_ncdf}}.}
 
 \item{pretty}{logical; should cell coordinates have \link{pretty} values?}
 
-\item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or allways cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?}
+\item{inside}{logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or always cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?}
 
 \item{nz}{integer; number of cells in z direction; if missing no z-dimension is created.}
 

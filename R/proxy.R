@@ -332,7 +332,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		ret # nocov end
 	} else {
 		cl = attr(.x, "call_list")
-		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
+		# FIXME: this means we ALWAYS process after (possibly partial) reading; 
 		# there are cases where this is not right. Hence:
 		# TODO: only warn when there is a reason to warn.
 		if (!all(downsample == 0))

@@ -35,7 +35,7 @@ curvilinear coordinates if they are not supplied.}
 
 \item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
 
-\item{make_time}{if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable}
+\item{make_time}{if \code{TRUE} (the default), an attempt is made to provide a date-time class from the "time" variable}
 
 \item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
 
@@ -69,7 +69,7 @@ that order.
 
 If \code{var} is not set the first set of variables on a shared grid is used.
 
-\code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
+\code{start} and \code{count} columns of ncsub must correspond to the variable dimension (nrows)
 and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
 is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 }

@@ -288,7 +288,7 @@ plot(m, add = TRUE)
 
 This comes with the rather trivial finding that land and sea can be well predicted when there are no clouds, and the less trivial finding that they can be reasonably distinguished through patchy clouds of this kind. Note that predictions of this kind are pure pixel-based: for each prediction only the spectral bands for this pixel are considered, not for instance of any neighboring pixels.
 
-## Paralell processing
+## Parallel processing
 
 Some machine learning models support multithreading by default (e.g., `ranger` and `xgboost`), but this is not the rule.
 R is single-threaded, but using appropriate packages we can easily parallelize the calculations, which will reduce the data processing time.

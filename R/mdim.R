@@ -109,7 +109,7 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @param raster names of the raster variables (default: first two dimensions)
 #' @param offset integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
 #' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)
-#' @param step integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
+#' @param step integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
 #' @param proxy logical; return proxy object? (not functional yet)
 #' @param debug logical; print debug info?
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
