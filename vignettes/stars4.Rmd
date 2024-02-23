@@ -102,7 +102,7 @@ image(s, text_values = TRUE, axes = TRUE)
 
 we see that $(0,0)$ is the origin of the grid (grid corner), and $1$ the coordinate value increase from one index (row, col) to the next. It means that consecutive matrix columns represent grid lines, going from south to north. Grids defined this way are **regular**: grid cell size is constant everywhere.
 
-Many actual grid datasets have y coordinates (grid rows) going from North to South (top to bottom); this is realised with a negative value for `delta`. We see that the grid origing $(0,0)$ did not change:
+Many actual grid datasets have y coordinates (grid rows) going from North to South (top to bottom); this is realised with a negative value for `delta`. We see that the grid origin $(0,0)$ did not change:
 ```{r fig.width=4.5, fig.height=4}
 attr(s, "dimensions")[[2]]$delta = -1
 image(s, text_values = TRUE, axes = TRUE)

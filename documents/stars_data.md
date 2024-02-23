@@ -30,7 +30,7 @@ with 57000 tiles coverng the Earth:
 
 All Sentinel data is freely [downloadable](https://scihub.copernicus.eu/).
 
-The [openEO](http://r-spatial.org/2016/11/29/openeo.html) blog further sketches the current situation. The [stars](https://github.com/r-spatial/stars) R consortium funded project creates client and middleware software for this problem. To test, evaluate and demonstrate the stars software (and demonstrate R provides a viable solution for these problems), a demonstrator backend is needed. This backend will serve moderately large data (up to 4 Tb) of different types (including spatiotemporal NetCDF model computations, and Landsat and Sentinel satellite imagery), and will be publicly available to evaluate and test the stars software for remote computing on large imagery.
+The [openEO](https://r-spatial.org/2016/11/29/openeo.html) blog further sketches the current situation. The [stars](https://github.com/r-spatial/stars) R consortium funded project creates client and middleware software for this problem. To test, evaluate and demonstrate the stars software (and demonstrate R provides a viable solution for these problems), a demonstrator backend is needed. This backend will serve moderately large data (up to 4 Tb) of different types (including spatiotemporal NetCDF model computations, and Landsat and Sentinel satellite imagery), and will be publicly available to evaluate and test the stars software for remote computing on large imagery.
 
 ### Existing work
 
@@ -38,7 +38,7 @@ R packages, as distributed over CRAN and/or github, are not suitable for distrib
 
 Two examples from data repositories for (amonst others) R users are the [global administrative data](http://gadm.org/) and the [global climate data](http://www.worldclim.org/), both set up by Robert Hijmans (author of [raster](https://cran.r-project.org/package=raster)) and co-workers. The latter has led to a publication which received over 11,000 citations, mainly from users of the dataset.
 
-The [rOpenSci](http://ropensci.org/) project has also developed several packages for downloading geoscientific data, for instance [rnoaa](https://cran.r-project.org/package=rnoaa), but these all allow download - a useful ability that no longer scales.
+The [rOpenSci](https://ropensci.org/) project has also developed several packages for downloading geoscientific data, for instance [rnoaa](https://cran.r-project.org/package=rnoaa), but these all allow download - a useful ability that no longer scales.
 
 As mentioned, [Google Earth Engine](https://earthengine.google.com/) provides remote processing on Tb-Pb sized dateset, but is not open source, and hence to some extent a black box. In addition, users have limited control over which data it serves, and which software it runs (e.g., it has a python interface but does not allow using numpy)
 
@@ -81,5 +81,5 @@ We will use most funding for cloud deployment, and to develop the R package. Tot
 
 ## Dissemination: 
 
-We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably dual GPL + MIT. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ or other scientific outlets are foreseen.
+We will regularly post blogs about the project on [r-spatial.org](https://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably dual GPL + MIT. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ or other scientific outlets are foreseen.
 

@@ -42,7 +42,7 @@ to finish computation within acceptable time? How can we quickly
 and easily develop an analysis by testing it on a small portion of
 the spatiotemporal datasets, before deploying it on the massive
 data set?  How can we use pipe-based workflows or dplyr-verbs on such
-data sets? How can we visualy explore high-dimensional raster data?
+data sets? How can we visually explore high-dimensional raster data?
 
 Today, people use R for large spatiotemporal data, but hit
 limits related to usability, user interface, and scalability. The
@@ -103,17 +103,17 @@ data is distributed.
 
 Relevant work outside R includes
 
-* [GDAL](http://www.gdal.org/), in particular gdal [virtual tiles](http://www.gdal.org/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
-* [SciDB](http://www.paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods
+* [GDAL](https://gdal.org/), in particular gdal [virtual tiles](https://gdal.org/programs/gdalbuildvrt.html) for building arbitrary large grid data sets from many individual files,
+* [SciDB](https://paradigm4.com/), an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods
 * [SciDB4geo](https://github.com/appelmar/scidb4geo), a SciDB Plugin
 for Managing Spatial and Temporal Reference Information of Arrays, and
-[SciDB4gdal](https://github.com/appelmar/scidb4geo), a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time
-* [PostGIS Raster](http://postgis.net/docs/RT_reference.html), a raster data extension of [PostGIS](http://www.postgis.net/)
-* [Rasdaman](http://www.rasdaman.com/), an array database dedicate to images, which is partially open source.
+[SciDB4gdal](https://github.com/appelmar/scidb4gdal), a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time
+* [PostGIS Raster](https://postgis.net/docs/RT_reference.html), a raster data extension of [PostGIS](https://www.postgis.net/)
+* [Rasdaman](https://www.rasdaman.com/), an array database dedicate to images, which is partially open source.
 
 Since there is a definite trend that
 [downloading Earth observation data is no longer
-feasible](http://r-spatial.org/2016/11/29/openeo.html), we will
+feasible](https://r-spatial.org/2016/11/29/openeo.html), we will
 have to work towards solutions where the data are accessed over
 a web service interface. Cloud services such as AWS are starting
 to give access to the large remote sensing imagery archives of e.g.
@@ -174,4 +174,4 @@ We will use most funding to develop the R package and web service API. Total cos
 
 ## Dissemination: 
 
-We will regularly post blogs about the project on [r-spatial.org](http://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.
+We will regularly post blogs about the project on [r-spatial.org](https://r-spatial.org/), use twitter, post to [r-sig-geo](https://stat.ethz.ch/mailman/listinfo/r-sig-geo), stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the [r-spatial](https://github.com/r-spatial/) organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in _the R Journal_ and other scientific outlets are foreseen.

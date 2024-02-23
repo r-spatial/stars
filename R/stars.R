@@ -166,7 +166,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param values value(s) to populate the raster values with
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
-#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or allways cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
+#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or always cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
 #' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. 
 #' 

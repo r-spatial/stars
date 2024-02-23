@@ -51,7 +51,7 @@ the stars method returns a stars object with the composite of the input; the \co
 build mosaic (composite) of several spatially disjoint stars objects
 }
 \details{
-the gdal function buildvrt builds a mosaic of input images; these imput images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
+the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
 
 uses \link[sf]{gdal_utils} to internally call \code{buildvrt}; no executables external to R are called.
 }

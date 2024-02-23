@@ -46,7 +46,7 @@ write_mdim(
 
 \item{count}{integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)}
 
-\item{step}{integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
+\item{step}{integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
 
 \item{proxy}{logical; return proxy object? (not functional yet)}
 
