@@ -41,15 +41,14 @@ X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct FALSE
 X1 POINT (0 1), POINT (3 2)
 X2                     NULL
 > f = tempfile(fileext = ".nc")
-> # if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
->  write_mdim(s, f, as_float = FALSE)
+> write_mdim(s, f, as_float = FALSE)
 Warning messages:
 1: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
   GDAL Error 6: SetIndexingVariable() not implemented
 2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
   GDAL Error 6: SetIndexingVariable() not implemented
->  s2 = read_mdim(f)
->  print(s2)
+> s2 = read_mdim(f)
+> print(s2)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -61,9 +60,9 @@ X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct    NA
                      values
 X1 POINT (0 1), POINT (3 2)
 X2                     NULL
->  print(all.equal(s, s2, check.attributes = FALSE))
+> print(all.equal(s, s2, check.attributes = FALSE))
 [1] TRUE
->  print(all.equal(s, s2))
+> print(all.equal(s, s2))
 [1] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"refsys\": Component \"input\": 1 string mismatch >"                                   
 [2] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"refsys\": Component \"wkt\": 1 string mismatch >"                                     
 [3] "Attributes: < Component \"dimensions\": Component \"X1\": Component \"values\": Attributes: < Component \"crs\": Component \"input\": 1 string mismatch > >"
@@ -71,11 +70,11 @@ X2                     NULL
 [5] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"offset\": 'tzone' attributes are inconsistent ('' and 'UTC') >"                       
 [6] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"point\": 'is.NA' value mismatch: 1 in current 0 in target >"                          
 > 
->  st_crs(sfc) = st_crs(s2)
->  st_crs(s) = st_crs(s2)
->  tm = as.Date("2023-02-25") + 0:1
->  sd = st_set_dimensions(s, 2, tm)
->  print(sd)
+> st_crs(sfc) = st_crs(s2)
+> st_crs(s) = st_crs(s2)
+> tm = as.Date("2023-02-25") + 0:1
+> sd = st_set_dimensions(s, 2, tm)
+> print(sd)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -84,8 +83,8 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date FALSE                     NULL
->  sd = st_set_dimensions(sd, 1, sfc)
->  print(sd)
+> sd = st_set_dimensions(sd, 1, sfc)
+> print(sd)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -94,15 +93,15 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date FALSE                     NULL
->  f = tempfile(fileext = ".nc")
->  write_mdim(sd, f)
+> f = tempfile(fileext = ".nc")
+> write_mdim(sd, f)
 Warning messages:
 1: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
   GDAL Error 6: SetIndexingVariable() not implemented
 2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
   GDAL Error 6: SetIndexingVariable() not implemented
->  sd2 = read_mdim(f)
->  print(sd2)
+> sd2 = read_mdim(f)
+> print(sd2)
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median Mean 3rd Qu. Max.
@@ -111,13 +110,14 @@ dimension(s):
    from to     offset  delta refsys point                   values
 X1    1  2         NA     NA WGS 84  TRUE POINT (0 1), POINT (3 2)
 X2    1  2 2023-02-25 1 days   Date    NA                     NULL
->  print(all.equal(sd, sd2, check.attributes = FALSE))
+> print(all.equal(sd, sd2, check.attributes = FALSE))
 [1] TRUE
->  print(all.equal(sd, sd2))
+> print(all.equal(sd, sd2))
 [1] "Attributes: < Component \"dimensions\": Component \"X2\": Component \"point\": 'is.NA' value mismatch: 1 in current 0 in target >"
->  # print(read_mdim(system.file("zarr/sic_daily_sample.zarr/", package = "stars")))
+> # if (.Platform$OS.type == "unix") {
+> #   print(read_mdim(paste0("/vsizip/", (system.file("zarr/sic_daily_sample.zarr.zip", package = "stars"))))
 > # }
 > 
 > proc.time()
    user  system elapsed 
-  0.941   1.328   0.838 
+  0.868   1.330   0.699 

@@ -1,5 +1,5 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -15,10 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(stars)
-Loading required package: abind
-Loading required package: sf
-Linking to GEOS 3.11.1, GDAL 3.6.4, PROJ 9.1.1; sf_use_s2() is TRUE
+> suppressPackageStartupMessages(library(stars))
 > m = matrix(1:121, 11, 11)
 > m
       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
@@ -119,4 +116,4 @@ X2    1  5      1     2 FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.176   0.639   1.002 
+  0.857   1.321   0.676 

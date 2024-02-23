@@ -1,5 +1,5 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -24,11 +24,11 @@ Type 'q()' to quit R.
 [ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
 
 ══ Skipped tests (4) ═══════════════════════════════════════════════════════════
-• On CRAN (4): 'test_ncdf.R:1:1', 'test_ncproxy.R:1:1', 'test_osm.R:4:3',
-  'test_rectilinear.R:89:3'
+• On CRAN (4): 'test-OpenStreetMap.R:2:3', 'test-ncdf.R:1:1',
+  'test-ncproxy.R:1:1', 'test-rectilinear.R:89:3'
 
 [ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
 > 
 > proc.time()
    user  system elapsed 
-  7.247   0.892   7.305 
+  5.544   1.440   5.561 

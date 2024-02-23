@@ -1,4 +1,4 @@
-library(stars)
+suppressPackageStartupMessages(library(stars))
 m = matrix(1:121, 11, 11)
 m
 s = st_as_stars(m)
