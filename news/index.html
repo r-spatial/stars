@@ -193,7 +193,7 @@
 <h2 class="pkg-version" data-toc-text="0.5-2" id="version-05-2">version 0.5-2<a class="anchor" aria-label="anchor" href="#version-05-2"></a></h2><p class="text-muted">CRAN release: 2021-03-17</p>
 <ul><li><p>read and write factor levels as GDAL category names; write color table; <a href="https://github.com/r-spatial/stars/issues/392" class="external-link">#392</a></p></li>
 <li><p>handle <code>normalize_path</code> for choosing to <code>proxy</code>; <a href="https://github.com/r-spatial/stars/issues/391" class="external-link">#391</a></p></li>
-<li><p>ignore units when there are different units accross bands of a subdataset</p></li>
+<li><p>ignore units when there are different units across bands of a subdataset</p></li>
 <li><p>speed up <code><a href="../reference/st_rgb.html">st_rgb()</a></code> using faster <code><a href="../reference/st_apply.html">st_apply()</a></code> approach; <a href="https://github.com/r-spatial/stars/issues/315" class="external-link">#315</a>, <a href="https://github.com/r-spatial/stars/issues/390" class="external-link">#390</a></p></li>
 <li><p>improve handling of crs in Spatial objects (avoid loss of wkt comments)</p></li>
 <li><p>correctly write band subsets for smaller proxy objects; <a href="https://github.com/r-spatial/stars/issues/291" class="external-link">#291</a></p></li>
@@ -213,10 +213,10 @@
 <h2 class="pkg-version" data-toc-text="0.5-0" id="version-05-0">version 0.5-0<a class="anchor" aria-label="anchor" href="#version-05-0"></a></h2><p class="text-muted">CRAN release: 2021-01-19</p>
 <ul><li><p>fix handling of rasters with color tables; <a href="https://github.com/r-spatial/stars/issues/375" class="external-link">#375</a></p></li>
 <li><p><code><a href="../reference/st_apply.html">st_apply()</a></code> and other methods for <code>stars_proxy</code> objects handle … ; <a href="https://github.com/r-spatial/stars/issues/374" class="external-link">#374</a></p></li>
-<li><p>add <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs()</a></code> methods for terra’s <code>SpatVector</code> objects; <a href="https://github.com/mtennekes/tmap/issues/536" class="external-link uri">https://github.com/mtennekes/tmap/issues/536</a></p></li>
-<li><p>add <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs()</a></code> and <code><a href="../reference/st_as_stars.html">st_as_stars()</a></code> methods for terra’s <code>SpatRaster</code> objects; <a href="https://github.com/mtennekes/tmap/issues/536" class="external-link uri">https://github.com/mtennekes/tmap/issues/536</a></p></li>
+<li><p>add <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs()</a></code> methods for terra’s <code>SpatVector</code> objects; <a href="https://github.com/r-tmap/tmap/issues/536" class="external-link uri">https://github.com/r-tmap/tmap/issues/536</a></p></li>
+<li><p>add <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs()</a></code> and <code><a href="../reference/st_as_stars.html">st_as_stars()</a></code> methods for terra’s <code>SpatRaster</code> objects; <a href="https://github.com/r-tmap/tmap/issues/536" class="external-link uri">https://github.com/r-tmap/tmap/issues/536</a></p></li>
 <li><p>allow for multi-resolution attributes in <code>stars_proxy</code> objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.</p></li>
-<li><p><code><a href="../reference/plot.html">plot()</a></code> defaults to a categorical color scale when plotting a factor variable; <a href="https://github.com/mtennekes/tmap/issues/526" class="external-link uri">https://github.com/mtennekes/tmap/issues/526</a></p></li>
+<li><p><code><a href="../reference/plot.html">plot()</a></code> defaults to a categorical color scale when plotting a factor variable; <a href="https://github.com/r-tmap/tmap/issues/526" class="external-link uri">https://github.com/r-tmap/tmap/issues/526</a></p></li>
 <li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> extracts space-time points if <code>time_column</code> is specified, and handles time intervals; <a href="https://github.com/r-spatial/stars/issues/352" class="external-link">#352</a></p></li>
 <li><p>add <code>[[&lt;-.stars</code> method, which is now called by <code>$&lt;-.stars</code>, so that array names can be set programmatically</p></li>
 <li><p>add <code><a href="https://dplyr.tidyverse.org/reference/transmute.html" class="external-link">transmute()</a></code> methods</p></li>
@@ -247,7 +247,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4-3" id="version-04-3">version 0.4-3<a class="anchor" aria-label="anchor" href="#version-04-3"></a></h2><p class="text-muted">CRAN release: 2020-07-08</p>
-<ul><li><p>fix bug in <code>st_as_stars.Raster</code>; set crs to the one assigned by raster; <a href="https://github.com/mtennekes/tmap/issues/471" class="external-link uri">https://github.com/mtennekes/tmap/issues/471</a></p></li>
+<ul><li><p>fix bug in <code>st_as_stars.Raster</code>; set crs to the one assigned by raster; <a href="https://github.com/r-tmap/tmap/issues/471" class="external-link uri">https://github.com/r-tmap/tmap/issues/471</a></p></li>
 <li><p>add <code>s2</code> to Suggests:</p></li>
 <li><p>new function <code><a href="../reference/st_rgb.html">st_rgb()</a></code> collapses (reduces) a dimension to rgb hex value; <a href="https://github.com/r-spatial/stars/issues/302" class="external-link">#302</a></p></li>
 </ul></div>
@@ -264,7 +264,7 @@
 <li><p>add <code><a href="../reference/st_extract.html">st_extract()</a></code> to extract e.g. time series from grids at point locations; <a href="https://github.com/r-spatial/stars/issues/279" class="external-link">#279</a>; <a href="https://github.com/r-spatial/stars/issues/290" class="external-link">#290</a></p></li>
 <li><p><code><a href="../reference/read_stars.html">read_stars()</a></code> chooses a value for <code>proxy</code> that depends on the data dimensions; <a href="https://github.com/r-spatial/stars/issues/281" class="external-link">#281</a></p></li>
 <li><p>x/y range subsetting of <code>stars_proxy</code> objects now only reads that range, similar to how crop already did this.</p></li>
-<li><p><code><a href="../reference/st_warp.html">st_warp()</a></code> preserves levels and colors; <a href="https://github.com/mtennekes/tmap/issues/429" class="external-link uri">https://github.com/mtennekes/tmap/issues/429</a></p></li>
+<li><p><code><a href="../reference/st_warp.html">st_warp()</a></code> preserves levels and colors; <a href="https://github.com/r-tmap/tmap/issues/429" class="external-link uri">https://github.com/r-tmap/tmap/issues/429</a></p></li>
 <li><p><code><a href="../reference/st_crop.html">st_crop()</a></code> works with bounding boxes larger than the downsampled bounding box; <a href="https://github.com/r-spatial/stars/issues/276" class="external-link">#276</a></p></li>
 <li><p><code><a href="../reference/st_crop.html">st_crop()</a></code> has a non-zero default for <code>epsilon</code> (bounding box shrinkage) to exclude cells touching the crop bounding box; <a href="https://github.com/r-spatial/stars/issues/275" class="external-link">#275</a></p></li>
 <li><p><code><a href="../reference/plot.html">image.stars()</a></code> (and hence <code>plot.stars</code>) gains an <code>extent</code> argument for setting the extent of a plot; <a href="https://github.com/r-spatial/sf/issues/1193" class="external-link uri">https://github.com/r-spatial/sf/issues/1193</a></p></li>
@@ -280,7 +280,7 @@
 <li><p>handle dimension <code>crs</code> specially, for proxy objects now.</p></li>
 <li><p>handle new-style <code>crs</code> objects from upcoming sf, moving away from proj4strings</p></li>
 <li><p>handle full <code>crs</code> objects as <code>refsys</code> element in a spatial dimensions, rather than proj4string only</p></li>
-<li><p><code>st_raster_type(x)</code> reveals the raster type of <code>x</code>; <a href="https://github.com/r-spatial/stars/issues/248" class="external-link">#248</a>, <a href="https://github.com/mtennekes/tmap/issues/368" class="external-link uri">https://github.com/mtennekes/tmap/issues/368</a></p></li>
+<li><p><code>st_raster_type(x)</code> reveals the raster type of <code>x</code>; <a href="https://github.com/r-spatial/stars/issues/248" class="external-link">#248</a>, <a href="https://github.com/r-tmap/tmap/issues/368" class="external-link uri">https://github.com/r-tmap/tmap/issues/368</a></p></li>
 <li><p>add <code><a href="../reference/st_as_stars.html">st_as_stars.OpenStreetMap()</a></code> method; <a href="https://github.com/r-spatial/stars/issues/241" class="external-link">#241</a> by <a href="https://github.com/mtennekes" class="external-link">@mtennekes</a></p></li>
 <li><p>add <code><a href="../reference/stars_subset.html">st_flip()</a></code> to flip arrays along one or more dimensions without changing dimension properties</p></li>
 <li><p>add <code>as.owin()</code> method to convert (2D raster) stars objects to spatstat <code>owin</code>; <a href="https://github.com/r-spatial/sf/issues/1233" class="external-link uri">https://github.com/r-spatial/sf/issues/1233</a></p></li>
@@ -330,13 +330,13 @@
 <li><p>deprecate <code>st_write.stars</code> for <code>write_stars</code>; <a href="https://github.com/r-spatial/stars/issues/96" class="external-link">#96</a></p></li>
 <li><p>use “native” R array-factor support</p></li>
 <li><p>support for <code>PCICt</code> 360- and 365-day calendars; <a href="https://github.com/r-spatial/stars/issues/29" class="external-link">#29</a></p></li>
-<li><p>remove import of <code>ncdf4</code> in favour of <code>RNetCDF</code>, now in line with practice in <code>ncmeta</code> package. Thanks to David Blodgett for motivation and testing (see <a href="https://github.com/r-spatial/stars/issues/87" class="external-link">#87</a>, <a href="https://github.com/r-spatial/stars/issues/94" class="external-link">#94</a>).</p></li>
+<li><p>remove import of <code>ncdf4</code> in favor of <code>RNetCDF</code>, now in line with practice in <code>ncmeta</code> package. Thanks to David Blodgett for motivation and testing (see <a href="https://github.com/r-spatial/stars/issues/87" class="external-link">#87</a>, <a href="https://github.com/r-spatial/stars/issues/94" class="external-link">#94</a>).</p></li>
 <li><p><code>st_as_sf</code> uses date/time column names when appropriate</p></li>
 <li><p>allow missing trailing comma’s when subsetting: <code>a[1,,]</code> and <code>a[1,]</code> now do the same.</p></li>
 <li><p>move <code>rlang</code> to Imports: ; rewrite <code>[</code> subset using rlang.</p></li>
 <li><p>add conversion to and from <code>Spatial*</code> classes, including the gridded ones, taking care of <code>factor</code> variables</p></li>
 <li><p>depend on sf 0.7-2</p></li>
-<li><p>add logz support for log-scale keys to <code>plot</code> and <code>image</code></p></li>
+<li><p>add <code>logz</code> support for log-scale keys to <code>plot</code> and <code>image</code></p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2-0" id="version-02-0">version 0.2-0<a class="anchor" aria-label="anchor" href="#version-02-0"></a></h2><p class="text-muted">CRAN release: 2018-10-25</p>

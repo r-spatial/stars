@@ -76,7 +76,7 @@
 </div>
 <div class="section level2">
 <h2 id="the-problem">The Problem<a class="anchor" aria-label="anchor" href="#the-problem"></a></h2>
-<p>How do we handle and analyze large amounts of spatially referenced time series data in R? How do we handle satellite imagery that don’t fit on a local disc with R, or for which we need a small cluster to finish computation within acceptable time? How can we quickly and easily develop an analysis by testing it on a small portion of the spatiotemporal datasets, before deploying it on the massive data set? How can we use pipe-based workflows or dplyr-verbs on such data sets? How can we visualy explore high-dimensional raster data?</p>
+<p>How do we handle and analyze large amounts of spatially referenced time series data in R? How do we handle satellite imagery that don’t fit on a local disc with R, or for which we need a small cluster to finish computation within acceptable time? How can we quickly and easily develop an analysis by testing it on a small portion of the spatiotemporal datasets, before deploying it on the massive data set? How can we use pipe-based workflows or dplyr-verbs on such data sets? How can we visually explore high-dimensional raster data?</p>
 <p>Today, people use R for large spatiotemporal data, but hit limits related to usability, user interface, and scalability. The <a href="https://stat.ethz.ch/pipermail/r-sig-geo/" class="external-link">r-sig-geo</a> mailing list documents many of these cases.</p>
 <p>Now that the <a href="https://github.com/edzer/sfr" class="external-link">simple features for R</a> project has largely modernized the handling and analysis vector data (points, lines, polygons) in R in a tidyverse-friendly fashion, it is time for raster data to catch up. This proposal aims at spatiotemporal raster data, as well as time series of feature data.</p>
 <div class="section level3">
@@ -87,17 +87,17 @@
 <p>With support from the R Consortium, the <a href="https://wiki.r-consortium.org/view/Distributed_Computing_Working_Group" class="external-link">Distributed Computing Working Group</a> has started to develop an API for distributed computing; an initial version is available in package <a href="https://github.com/vertica/ddR" class="external-link">ddR</a>. It aims at generic R data structures, and works towards relieving users from worrying that data is distributed.</p>
 <p>Relevant work outside R includes</p>
 <ul><li>
-<a href="http://www.gdal.org/" class="external-link">GDAL</a>, in particular gdal <a href="http://www.gdal.org/gdalbuildvrt.html" class="external-link">virtual tiles</a> for building arbitrary large grid data sets from many individual files,</li>
+<a href="https://gdal.org/" class="external-link">GDAL</a>, in particular gdal <a href="https://gdal.org/programs/gdalbuildvrt.html" class="external-link">virtual tiles</a> for building arbitrary large grid data sets from many individual files,</li>
 <li>
-<a href="http://www.paradigm4.com/" class="external-link">SciDB</a>, an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods</li>
+<a href="https://paradigm4.com/" class="external-link">SciDB</a>, an open source array database which has no spatial or temporal capabilities, but a strongly scalable architecture, and extremely flexible array manipulation methods</li>
 <li>
-<a href="https://github.com/appelmar/scidb4geo" class="external-link">SciDB4geo</a>, a SciDB Plugin for Managing Spatial and Temporal Reference Information of Arrays, and <a href="https://github.com/appelmar/scidb4geo" class="external-link">SciDB4gdal</a>, a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time</li>
+<a href="https://github.com/appelmar/scidb4geo" class="external-link">SciDB4geo</a>, a SciDB Plugin for Managing Spatial and Temporal Reference Information of Arrays, and <a href="https://github.com/appelmar/scidb4gdal" class="external-link">SciDB4gdal</a>, a GDAL driver for SciDB arrays, two activities to make SciDB databases aware of space and time</li>
 <li>
-<a href="http://postgis.net/docs/RT_reference.html" class="external-link">PostGIS Raster</a>, a raster data extension of <a href="http://www.postgis.net/" class="external-link">PostGIS</a>
+<a href="https://postgis.net/docs/RT_reference.html" class="external-link">PostGIS Raster</a>, a raster data extension of <a href="https://www.postgis.net/" class="external-link">PostGIS</a>
 </li>
 <li>
-<a href="http://www.rasdaman.com/" class="external-link">Rasdaman</a>, an array database dedicate to images, which is partially open source.</li>
-</ul><p>Since there is a definite trend that <a href="http://r-spatial.org/2016/11/29/openeo.html" class="external-link">downloading Earth observation data is no longer feasible</a>, we will have to work towards solutions where the data are accessed over a web service interface. Cloud services such as AWS are starting to give access to the large remote sensing imagery archives of e.g. <a href="https://aws.amazon.com/blogs/aws/start-using-landsat-on-aws/" class="external-link">Landsat</a>, <a href="https://aws.amazon.com/public-datasets/modis/" class="external-link">MODIS</a> and <a href="http://sentinel-pds.s3-website.eu-central-1.amazonaws.com/" class="external-link">Sentinel</a> satellites.</p>
+<a href="https://www.rasdaman.com/" class="external-link">Rasdaman</a>, an array database dedicate to images, which is partially open source.</li>
+</ul><p>Since there is a definite trend that <a href="https://r-spatial.org/2016/11/29/openeo.html" class="external-link">downloading Earth observation data is no longer feasible</a>, we will have to work towards solutions where the data are accessed over a web service interface. Cloud services such as AWS are starting to give access to the large remote sensing imagery archives of e.g. <a href="https://aws.amazon.com/blogs/aws/start-using-landsat-on-aws/" class="external-link">Landsat</a>, <a href="https://aws.amazon.com/public-datasets/modis/" class="external-link">MODIS</a> and <a href="http://sentinel-pds.s3-website.eu-central-1.amazonaws.com/" class="external-link">Sentinel</a> satellites.</p>
 </div>
 </div>
 <div class="section level2">
@@ -134,7 +134,7 @@
 </ul></div>
 <div class="section level2">
 <h2 id="dissemination">Dissemination:<a class="anchor" aria-label="anchor" href="#dissemination"></a></h2>
-<p>We will regularly post blogs about the project on <a href="http://r-spatial.org/" class="external-link">r-spatial.org</a>, use twitter, post to <a href="https://stat.ethz.ch/mailman/listinfo/r-sig-geo" class="external-link">r-sig-geo</a>, stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the <a href="https://github.com/r-spatial/" class="external-link">r-spatial</a> organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in <em>the R Journal</em> and other scientific outlets are foreseen.</p>
+<p>We will regularly post blogs about the project on <a href="https://r-spatial.org/" class="external-link">r-spatial.org</a>, use twitter, post to <a href="https://stat.ethz.ch/mailman/listinfo/r-sig-geo" class="external-link">r-sig-geo</a>, stackoverflow, and communicate through github issues or gitter discussion. The project will live on GitHub, in the <a href="https://github.com/r-spatial/" class="external-link">r-spatial</a> organisation. We will work under a permissive open source license, probably LGPL-2.1. Pull requests will be encouraged. R consortium blogs will be provided at start and end. Publications in <em>the R Journal</em> and other scientific outlets are foreseen.</p>
 </div>
 </div>
 

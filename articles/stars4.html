@@ -234,7 +234,7 @@ south to north. Grids defined this way are <strong>regular</strong>:
 grid cell size is constant everywhere.</p>
 <p>Many actual grid datasets have y coordinates (grid rows) going from
 North to South (top to bottom); this is realised with a negative value
-for <code>delta</code>. We see that the grid origing <span class="math inline">\((0,0)\)</span> did not change:</p>
+for <code>delta</code>. We see that the grid origin <span class="math inline">\((0,0)\)</span> did not change:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
