@@ -84,7 +84,7 @@
 
 
 <dt>template</dt>
-<dd><p>stars object with desired target geometry, or target geometry alignment if <code>align=TRUE</code></p></dd>
+<dd><p>optional; stars object with desired target geometry, or target geometry alignment if <code>align=TRUE</code>; see details</p></dd>
 
 
 <dt>file</dt>
@@ -100,8 +100,8 @@
 
 
 <dt>align</dt>
-<dd><p>logical; if <code>TRUE</code>, <code>template</code> contain the geometry alignment, 
-informing target resolution and offset only.</p></dd>
+<dd><p>logical; if <code>TRUE</code>, <code>template</code> is only used for the geometry _alignment_, 
+informing target resolution and offset</p></dd>
 
 
 <dt>proxy</dt>
@@ -112,6 +112,10 @@ informing target resolution and offset only.</p></dd>
 <dd><p>arguments passed on to <a href="st_as_stars.html">st_as_stars</a></p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>if `template` is a `stars` object, non-NA cells that are not covered by `sf` receive the value in `template`; see also argument `align`.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
