@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* `st_rasterize()` with `align=TRUE` returns `NA` values where there are no data; #668
+
 * `read_mdim()` reads tables with composity type, returning a `data.frame` in that case; #659
 
 * `st_rotate()` transforms a rotated grid back to a curvilinear grid in unrotated coordinates.

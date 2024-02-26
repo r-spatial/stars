@@ -19,7 +19,7 @@ st_rasterize(
 \arguments{
 \item{sf}{object of class \code{sf}}
 
-\item{template}{stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}}
+\item{template}{optional; stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}; see details}
 
 \item{file}{temporary file name}
 
@@ -27,8 +27,8 @@ st_rasterize(
 
 \item{options}{character; options vector for \code{GDALRasterize}}
 
-\item{align}{logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
-informing target resolution and offset only.}
+\item{align}{logical; if \code{TRUE}, \code{template} is only used for the geometry _alignment_, 
+informing target resolution and offset}
 
 \item{proxy}{logical; should a proxy object be returned?}
 
@@ -36,6 +36,9 @@ informing target resolution and offset only.}
 }
 \description{
 rasterize simple feature geometries
+}
+\details{
+if `template` is a `stars` object, non-NA cells that are not covered by `sf` receive the value in `template`; see also argument `align`.
 }
 \examples{
 demo(nc, echo = FALSE, ask = FALSE)

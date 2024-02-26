@@ -20,14 +20,15 @@ st_align = function(bb, d) {
 #' rasterize simple feature geometries
 #' @export
 #' @param sf object of class \code{sf}
-#' @param template stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}
+#' @param template optional; stars object with desired target geometry, or target geometry alignment if \code{align=TRUE}; see details
 #' @param file temporary file name
 #' @param driver driver for temporary file
 #' @param options character; options vector for \code{GDALRasterize}
-#' @param align logical; if \code{TRUE}, \code{template} contain the geometry alignment, 
-#' informing target resolution and offset only.
+#' @param align logical; if \code{TRUE}, \code{template} is only used for the geometry _alignment_, 
+#' informing target resolution and offset 
 #' @param proxy logical; should a proxy object be returned?
 #' @param ... arguments passed on to \link{st_as_stars}
+#' @details if `template` is a `stars` object, non-NA cells that are not covered by `sf` receive the value in `template`; see also argument `align`.
 #' @examples
 #' demo(nc, echo = FALSE, ask = FALSE)
 #' (x = st_rasterize(nc)) # default grid:
@@ -62,9 +63,9 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 		bb = st_align(st_bbox(sf), d <- st_dimensions(st_normalize(template)))
 		dx = d[[1]]$delta
 		dy = d[[2]]$delta
-		template = st_as_stars(bb, values = 0.0, dx = dx, dy = dy,
-			nx = round(diff(bb[c("xmin", "xmax")])/dx), 
-			ny = round(diff(bb[c("ymin", "ymax")])/dy),
+		template = st_as_stars(bb, values = NA, dx = dx, dy = dy,
+			nx = round(diff(bb[c("xmin", "xmax")])/abs(dx)), 
+			ny = round(diff(bb[c("ymin", "ymax")])/abs(dy)),
 			proxy = proxy)
 	} else
 		template = st_normalize(template)
