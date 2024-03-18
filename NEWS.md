@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* add `prcomp()` methods for `stars` and `stars_proxy` objects, working on attributes or last dimension
+
 * `st_rasterize()` with `align=TRUE` returns `NA` values where there are no data; #668
 
 * `read_mdim()` reads tables with composity type, returning a `data.frame` in that case; #659
