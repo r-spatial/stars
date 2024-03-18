@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>plot stars object, with subplots for each level of first non-spatial dimension</h1>
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/plot.R" class="external-link"><code>R/plot.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/ncproxy.R" class="external-link"><code>R/ncproxy.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/proxy.R" class="external-link"><code>R/proxy.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/ncproxy.R" class="external-link"><code>R/ncproxy.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/plot.R" class="external-link"><code>R/plot.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/proxy.R" class="external-link"><code>R/proxy.R</code></a></small>
       <div class="d-none name"><code>plot.Rd</code></div>
     </div>
 
@@ -64,7 +64,10 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for nc_proxy</span></span>
+<span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, max_times <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars</span></span>
 <span><span class="fu">plot</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">y</span>,</span>
@@ -116,9 +119,6 @@
 <span>  extent <span class="op">=</span> <span class="va">x</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for nc_proxy</span></span>
-<span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>, max_times <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for stars_proxy</span></span>
 <span><span class="fu">plot</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fu">get_downsample</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -137,6 +137,14 @@
 <dd><p>further arguments: for <code>plot</code>, passed on to <code>image.stars</code>; for <code>image</code>, passed on to <code>image.default</code> or <code>rasterImage</code>.</p></dd>
 
 
+<dt>downsample</dt>
+<dd><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.</p></dd>
+
+
+<dt>max_times</dt>
+<dd><p>integer; maximum number of time steps to attempt to plot.</p></dd>
+
+
 <dt>join_zlim</dt>
 <dd><p>logical; if <code>TRUE</code>, compute a single, joint zlim (color scale) for all subplots from <code>x</code></p></dd>
 
@@ -147,10 +155,6 @@
 
 <dt>axes</dt>
 <dd><p>logical; should axes and box be added to the plot?</p></dd>
-
-
-<dt>downsample</dt>
-<dd><p>logical or numeric; if <code>TRUE</code> will try to plot not many more pixels than actually are visible, if <code>FALSE</code>, no downsampling takes place, if numeric, the number of pixels/lines/bands etc that will be skipped; see Details.</p></dd>
 
 
 <dt>nbreaks</dt>
@@ -276,18 +280,14 @@
 <dt>extent</dt>
 <dd><p>object which has a <code>st_bbox</code> method; sets the plotting extent</p></dd>
 
-
-<dt>max_times</dt>
-<dd><p>integer; maximum number of time steps to attempt to plot.</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Downsampling: a value for <code>downsample</code> of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If <code>downsample</code> is <code>TRUE</code> or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.</p>
+    <p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and has to be set manually.</p>
+<p>Downsampling: a value for <code>downsample</code> of 0: no downsampling, 1: after every dimension value (pixel/line/band), one value is skipped (half of the original resolution), 2: after every dimension value, 2 values are skipped (one third of the original resolution), etc. If <code>downsample</code> is <code>TRUE</code> or a length 1 numeric vector, downsampling is only applied to the raster [x] and [y] dimensions.</p>
 <p>To remove unused classes in a categorical raster, use the <a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a> function.</p>
 <p>When bitmaps show visual artefacts (Moiré effects), make sure that device <a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a> is used rather than <code><a href="https://ragg.r-lib.org/reference/agg_png.html" class="external-link">ragg::agg_png</a></code> as the latter uses antialiasing for filled polygons which causes this; see also https://github.com/r-spatial/stars/issues/573 .</p>
 <p>use of an rgb color table is experimental; see https://github.com/r-spatial/mapview/issues/208</p>
-<p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and has to be set manually.</p>
 <p>when plotting a subsetted <code>stars_proxy</code> object, the default value for argument <code>downsample</code> will not be computed correctly, and has to be set manually.</p>
     </div>
 

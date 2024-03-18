@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>print stars or dimensions object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/stars.R" class="external-link"><code>R/stars.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/dimensions.R" class="external-link"><code>R/dimensions.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/dimensions.R" class="external-link"><code>R/dimensions.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/stars.R" class="external-link"><code>R/stars.R</code></a></small>
       <div class="d-none name"><code>print_stars.Rd</code></div>
     </div>
 
@@ -64,10 +64,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, n <span class="op">=</span> <span class="fl">1e+05</span>, abbrev <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for dimensions</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for dimensions</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">...</span>,</span>
@@ -78,7 +75,10 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for dimensions</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, n <span class="op">=</span> <span class="fl">1e+05</span>, abbrev <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -89,14 +89,6 @@
 
 <dt>...</dt>
 <dd><p>passed on to <code>as.data.frame.dimensions</code></p></dd>
-
-
-<dt>n</dt>
-<dd><p>when prod(dim(x)) &gt; 10 * n, the first n cells are used for attribute summary statistics</p></dd>
-
-
-<dt>abbrev</dt>
-<dd><p>number of characters to abbreviate attribute names to</p></dd>
 
 
 <dt>digits</dt>
@@ -113,6 +105,14 @@
 
 <dt>all</dt>
 <dd><p>logical; if <code>TRUE</code> print also fields entirely filled with <code>NA</code> or <code>NULL</code></p></dd>
+
+
+<dt>n</dt>
+<dd><p>when prod(dim(x)) &gt; 10 * n, the first n cells are used for attribute summary statistics</p></dd>
+
+
+<dt>abbrev</dt>
+<dd><p>number of characters to abbreviate attribute names to</p></dd>
 
 </dl></div>
 

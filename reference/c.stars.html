@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>combine multiple stars objects, or combine multiple attributes in a single stars object into a single array</h1>
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/stars.R" class="external-link"><code>R/stars.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/proxy.R" class="external-link"><code>R/proxy.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/proxy.R" class="external-link"><code>R/proxy.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/stars.R" class="external-link"><code>R/stars.R</code></a></small>
       <div class="d-none name"><code>c.stars.Rd</code></div>
     </div>
 
@@ -64,20 +64,20 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for stars_proxy</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
 <span>  along <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
+<span>  along_crs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  try_hard <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  nms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">.Machine</span><span class="op">$</span><span class="va">double.eps</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for stars_proxy</span></span>
+<span><span class="co"># S3 method for stars</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
 <span>  along <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
-<span>  along_crs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  try_hard <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  nms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  tolerance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">.Machine</span><span class="op">$</span><span class="va">double.eps</span><span class="op">)</span></span>
@@ -94,6 +94,10 @@
 <dd><p>integer; see <a href="read_stars.html">read_stars</a></p></dd>
 
 
+<dt>along_crs</dt>
+<dd><p>logical; if <code>TRUE</code>, combine arrays along a CRS dimension</p></dd>
+
+
 <dt>try_hard</dt>
 <dd><p>logical; if <code>TRUE</code> and some arrays have different dimensions, combine those that dimensions matching to the first array</p></dd>
 
@@ -105,10 +109,6 @@
 <dt>tolerance</dt>
 <dd><p>numeric; values used in <a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a> to compare dimension values
 combine those that dimensions matching to the first array</p></dd>
-
-
-<dt>along_crs</dt>
-<dd><p>logical; if <code>TRUE</code>, combine arrays along a CRS dimension</p></dd>
 
 </dl></div>
     <div class="section level2">

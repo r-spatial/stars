@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>convert objects into a stars object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/stars.R" class="external-link"><code>R/stars.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/sf.R" class="external-link"><code>R/sf.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/raster.R" class="external-link"><code>R/raster.R</code></a>, and 6 more</small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/HEAD/R/cubble.R" class="external-link"><code>R/cubble.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/ncdf.R" class="external-link"><code>R/ncdf.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/HEAD/R/OpenStreetMap.R" class="external-link"><code>R/OpenStreetMap.R</code></a>, and 6 more</small>
       <div class="d-none name"><code>st_as_stars.Rd</code></div>
     </div>
 
@@ -64,7 +64,42 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for cubble_df</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, check_times <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for ncdfgeom</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for OpenStreetMap</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for stars_proxy</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  downsample <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"url"</span><span class="op">)</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="va">coords</span>, <span class="va">xy</span>, y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>, coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for Raster</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for SpatRaster</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  ignore_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  as_attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/is.bool.html" class="external-link">is.factor</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for sf</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for list</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dimensions <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -93,43 +128,8 @@
 <span>  proxy <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># S3 method for sf</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"sf_column"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for Raster</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, att <span class="op">=</span> <span class="fl">1</span>, ignore_file <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for SpatRaster</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
-<span>  <span class="va">.x</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  ignore_file <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  as_attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/is.bool.html" class="external-link">is.factor</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for ncdfgeom</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for stars_proxy</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
-<span>  <span class="va">.x</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  downsample <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"url"</span><span class="op">)</span>,</span>
-<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for data.frame</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, dims <span class="op">=</span> <span class="va">coords</span>, <span class="va">xy</span>, y_decreasing <span class="op">=</span> <span class="cn">TRUE</span>, coords <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S3 method for xts</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, <span class="va">dimensions</span>, name <span class="op">=</span> <span class="st">"attr"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for OpenStreetMap</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for cubble_df</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, check_times <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, <span class="va">dimensions</span>, name <span class="op">=</span> <span class="st">"attr"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -142,6 +142,59 @@
 <dd><p>in case <code>.x</code> is of class <code>bbox</code>, arguments passed on to 
 <a href="https://rdrr.io/r/base/pretty.html" class="external-link">pretty</a>. In case <code>.x</code> is of class <code>nc_proxy</code>, arguments
 passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
+
+
+<dt>check_times</dt>
+<dd><p>logical; should we check that the time stamps of all time series are identical?</p></dd>
+
+
+<dt>sf_geometry</dt>
+<dd><p>sf data.frame with geometry and attributes to be added to stars object.
+Must have same number of rows as timeseries instances.</p></dd>
+
+
+<dt>as_col</dt>
+<dd><p>logical; return rgb numbers (FALSE) or (character) color values (TRUE)?</p></dd>
+
+
+<dt>downsample</dt>
+<dd><p>integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.</p></dd>
+
+
+<dt>url</dt>
+<dd><p>character; URL of the stars endpoint where the data reside</p></dd>
+
+
+<dt>envir</dt>
+<dd><p>environment to resolve objects in</p></dd>
+
+
+<dt>dims</dt>
+<dd><p>the column names or indices that form the cube dimensions</p></dd>
+
+
+<dt>xy</dt>
+<dd><p>the x and y raster dimension names or indices; only takes effect after <code>dims</code> has been specified, see details</p></dd>
+
+
+<dt>y_decreasing</dt>
+<dd><p>logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)</p></dd>
+
+
+<dt>coords</dt>
+<dd><p>same as dims, for symmetry with <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></p></dd>
+
+
+<dt>att</dt>
+<dd><p>see factorValues; column in the RasterLayer's attribute table</p></dd>
+
+
+<dt>ignore_file</dt>
+<dd><p>logical; if <code>TRUE</code>, ignore the SpatRaster object file name</p></dd>
+
+
+<dt>as_attributes</dt>
+<dd><p>logical; if <code>TRUE</code> and <code>.x</code> has more than one layer, load these as separate attributes rather than as a band or time dimension (only implemented for the case where <code>ignore_file</code> is <code>TRUE</code>)</p></dd>
 
 
 <dt>dimensions</dt>
@@ -208,126 +261,29 @@ passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 <dd><p>logical; should a <code>stars_proxy</code> object be created? (requires gdal_create binary when sf &lt; 1.0-6)</p></dd>
 
 
-<dt>dims</dt>
-<dd><p>the column names or indices that form the cube dimensions</p></dd>
-
-
-<dt>att</dt>
-<dd><p>see factorValues; column in the RasterLayer's attribute table</p></dd>
-
-
-<dt>ignore_file</dt>
-<dd><p>logical; if <code>TRUE</code>, ignore the SpatRaster object file name</p></dd>
-
-
-<dt>as_attributes</dt>
-<dd><p>logical; if <code>TRUE</code> and <code>.x</code> has more than one layer, load these as separate attributes rather than as a band or time dimension (only implemented for the case where <code>ignore_file</code> is <code>TRUE</code>)</p></dd>
-
-
-<dt>sf_geometry</dt>
-<dd><p>sf data.frame with geometry and attributes to be added to stars object.
-Must have same number of rows as timeseries instances.</p></dd>
-
-
-<dt>downsample</dt>
-<dd><p>integer: if larger than 0, downsample with this rate (number of pixels to skip in every row/column); if length 2, specifies downsampling rate in x and y.</p></dd>
-
-
-<dt>url</dt>
-<dd><p>character; URL of the stars endpoint where the data reside</p></dd>
-
-
-<dt>envir</dt>
-<dd><p>environment to resolve objects in</p></dd>
-
-
-<dt>xy</dt>
-<dd><p>the x and y raster dimension names or indices; only takes effect after <code>dims</code> has been specified, see details</p></dd>
-
-
-<dt>y_decreasing</dt>
-<dd><p>logical; if TRUE, (numeric) y values get a negative delta (decrease with increasing index)</p></dd>
-
-
-<dt>coords</dt>
-<dd><p>same as dims, for symmetry with <a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></p></dd>
-
-
 <dt>name</dt>
 <dd><p>character; attribute name for array from an <code>xts</code> object</p></dd>
-
-
-<dt>as_col</dt>
-<dd><p>logical; return rgb numbers (FALSE) or (character) color values (TRUE)?</p></dd>
-
-
-<dt>check_times</dt>
-<dd><p>logical; should we check that the time stamps of all time series are identical?</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>if <code>curvilinear</code> is a list with <code>stars</code> objects with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values. If <code>curvilinear</code> contains the names of two arrays in <code>.x</code>, then these are removed from the returned object.</p>
-<p>For the <code>bbox</code> method: if <code>pretty</code> is <code>TRUE</code>, raster cells may extend the coordinate range of <code>.x</code> on all sides. If in addition to <code>nx</code> and <code>ny</code>, <code>dx</code> and <code>dy</code> are also missing, these are set to a single value computed as <code>sqrt(diff(xlim)*diff(ylim)/n)</code>.</p>
-<p>If <code>nx</code> and <code>ny</code> are missing and <code>values</code> is a matrix, the number of columns and rows of the matrix are taken.</p>
-<p>Otherwise, if <code>nx</code> and <code>ny</code> are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of <code>inside</code>. Positive <code>dy</code> will be made negative. Further named arguments (<code>...</code>) are passed on to <code>pretty</code>. If <code>dx</code> or <code>dy</code> are <code>units</code> objects, their value is converted to the units of <code>st_crs(.x)</code> (only when sf &gt;= 1.0-7).</p>
+    <p>For the <code>ncdfgeom</code> method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the <code>sf_geometry</code> parameter. See <span class="pkg">ncdfgeom</span> for more about this NetCDF-based format for geometry and timeseries.</p>
+<p>If <code>xy</code> is not specified and the first two dimensions in <code>dims</code> are both numeric,
+then it is set to these two dimensions.</p>
 <p>The <code>st_as_stars</code> method for <code>sf</code> objects without any additional
 arguments returns a one-dimensional data cube with a dimension for the simple features
 geometries, and all remaining attributes as data cube attributes. When used with
 further arguments, the method for <code>data.frame</code>s is called.</p>
-<p>For the <code>ncdfgeom</code> method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the <code>sf_geometry</code> parameter. See <span class="pkg">ncdfgeom</span> for more about this NetCDF-based format for geometry and timeseries.</p>
-<p>If <code>xy</code> is not specified and the first two dimensions in <code>dims</code> are both numeric,
-then it is set to these two dimensions.</p>
+<p>if <code>curvilinear</code> is a list with <code>stars</code> objects with longitude and latitude values, its coordinate reference system is typically not that of the latitude and longitude values. If <code>curvilinear</code> contains the names of two arrays in <code>.x</code>, then these are removed from the returned object.</p>
+<p>For the <code>bbox</code> method: if <code>pretty</code> is <code>TRUE</code>, raster cells may extend the coordinate range of <code>.x</code> on all sides. If in addition to <code>nx</code> and <code>ny</code>, <code>dx</code> and <code>dy</code> are also missing, these are set to a single value computed as <code>sqrt(diff(xlim)*diff(ylim)/n)</code>.</p>
+<p>If <code>nx</code> and <code>ny</code> are missing and <code>values</code> is a matrix, the number of columns and rows of the matrix are taken.</p>
+<p>Otherwise, if <code>nx</code> and <code>ny</code> are missing, they are computed as the (ceiling, floor, or rounded to integer value) of the ratio of the (x or y) range divided by (dx or dy), depending on the value of <code>inside</code>. Positive <code>dy</code> will be made negative. Further named arguments (<code>...</code>) are passed on to <code>pretty</code>. If <code>dx</code> or <code>dy</code> are <code>units</code> objects, their value is converted to the units of <code>st_crs(.x)</code> (only when sf &gt;= 1.0-7).</p>
 <p>for the <code>xts</code> methods, if <code>dimensions</code> are provided, time has to be the first dimension.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `nc.gpkg' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 100 features and 14 fields</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  NAD27</span>
-<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 14 attributes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      AREA           PERIMETER         CNTY_         CNTY_ID    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.1205   Median :1.609   Median :1982   Median :1982  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     NAME               FIPS               FIPSNO         CRESS_ID      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Length:100         Length:100         Min.   :37001   Min.   :  1.00  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Class :character   Class :character   1st Qu.:37050   1st Qu.: 25.75  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mode  :character   Mode  :character   Median :37100   Median : 50.50  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Mean   :37100   Mean   : 50.50  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        3rd Qu.:37150   3rd Qu.: 75.25  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max.   :37199   Max.   :100.00  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      BIR74           SID74          NWBIR74           BIR79      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :  248   Min.   : 0.00   Min.   :   1.0   Min.   :  319  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1077   1st Qu.: 2.00   1st Qu.: 190.0   1st Qu.: 1336  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2180   Median : 4.00   Median : 697.5   Median : 2636  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3300   Mean   : 6.67   Mean   :1050.8   Mean   : 4224  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 3936   3rd Qu.: 8.25   3rd Qu.:1168.5   3rd Qu.: 4889  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :21588   Max.   :44.00   Max.   :8027.0   Max.   :30757  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      SID79          NWBIR79       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   : 0.00   Min.   :    3.0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 2.00   1st Qu.:  250.5  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 5.00   Median :  874.5  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 8.36   Mean   : 1352.8  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:10.25   3rd Qu.: 1406.8  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :57.00   Max.   :11631.0  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to refsys point</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geom    1 100  NAD27 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                             values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geom MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://cran.r-project.org/package=plm" class="external-link">plm</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Produc</span>, package <span class="op">=</span> <span class="st">"plm"</span><span class="op">)</span></span></span>
 <span class="r-in"><span> <span class="fu">st_as_stars</span><span class="op">(</span><span class="va">Produc</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
@@ -487,6 +443,50 @@ then it is set to these two dimensions.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   from to offset delta x/y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> x    1  5    0.5     1 [x]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> y    1  5    5.5    -1 [y]</span>
+<span class="r-in"><span><span class="va">nc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"gpkg/nc.gpkg"</span>, package<span class="op">=</span><span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `nc.gpkg' from data source </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 100 features and 14 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  NAD27</span>
+<span class="r-in"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 14 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      AREA           PERIMETER         CNTY_         CNTY_ID    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.0420   Min.   :0.999   Min.   :1825   Min.   :1825  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.0910   1st Qu.:1.324   1st Qu.:1902   1st Qu.:1902  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.1205   Median :1.609   Median :1982   Median :1982  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.1263   Mean   :1.673   Mean   :1986   Mean   :1986  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.1542   3rd Qu.:1.859   3rd Qu.:2067   3rd Qu.:2067  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.2410   Max.   :3.640   Max.   :2241   Max.   :2241  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     NAME               FIPS               FIPSNO         CRESS_ID      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Length:100         Length:100         Min.   :37001   Min.   :  1.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Class :character   Class :character   1st Qu.:37050   1st Qu.: 25.75  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mode  :character   Mode  :character   Median :37100   Median : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Mean   :37100   Mean   : 50.50  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        3rd Qu.:37150   3rd Qu.: 75.25  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                        Max.   :37199   Max.   :100.00  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      BIR74           SID74          NWBIR74           BIR79      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :  248   Min.   : 0.00   Min.   :   1.0   Min.   :  319  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 1077   1st Qu.: 2.00   1st Qu.: 190.0   1st Qu.: 1336  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 2180   Median : 4.00   Median : 697.5   Median : 2636  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 3300   Mean   : 6.67   Mean   :1050.8   Mean   : 4224  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.: 3936   3rd Qu.: 8.25   3rd Qu.:1168.5   3rd Qu.: 4889  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :21588   Max.   :44.00   Max.   :8027.0   Max.   :30757  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      SID79          NWBIR79       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   : 0.00   Min.   :    3.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.: 2.00   1st Qu.:  250.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median : 5.00   Median :  874.5  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   : 8.36   Mean   : 1352.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:10.25   3rd Qu.: 1406.8  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :57.00   Max.   :11631.0  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom    1 100  NAD27 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                             values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom MULTIPOLYGON (((-81.47276...,...,MULTIPOLYGON (((-78.65572...</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
