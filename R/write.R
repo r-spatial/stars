@@ -18,6 +18,7 @@ reset_sub = function(x) {
 	structure(x, dimensions = d)
 }
 
+#' @export
 st_write.stars = function(obj, dsn, layer, ...) {
 	.Deprecated("write_stars") # nocov
 }
@@ -60,7 +61,7 @@ write_stars.stars = function(obj, dsn, layer = 1, ..., driver = detect.driver(ds
 	if (normalize_path)
 		dsn = enc2utf8(maybe_normalizePath(dsn, TRUE))
 	sf::gdal_write(obj, ..., file = dsn, driver = driver, options = options, 
-		type = type, NA_value = NA_value, geotransform = get_geotransform(obj), 
+		type = type, NA_value = NA_value, geotransform = st_geotransform(obj), 
 		update = update, scale_offset = scale_offset)
 	invisible(obj)
 }
@@ -123,7 +124,7 @@ write_stars.stars_proxy = function(obj, dsn, layer = 1, ..., driver = detect.dri
 					d[[1]]$from = d[[2]]$from = 1
 					d[[1]]$to = d[[1]]$from + dim_obj[1] - 1
 					d[[2]]$to = d[[2]]$from + dim_obj[2] - 1
-					gt = get_geotransform(structure(obj, dimensions = d))
+					gt = st_geotransform(structure(obj, dimensions = d))
 					sf::gdal_write(structure(obj, dimensions = d), ..., file = dsn, driver = driver, options = options,
 						type = type, scale_offset = scale_offset, NA_value = NA_value, geotransform = gt) # branches on stars_proxy
 				}

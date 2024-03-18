@@ -1,6 +1,36 @@
+# version 0.6-5
+
+* `st_rasterize()` with `align=TRUE` returns `NA` values where there are no data; #668
+
+* `read_mdim()` reads tables with composity type, returning a `data.frame` in that case; #659
+
+* `st_rotate()` transforms a rotated grid back to a curvilinear grid in unrotated coordinates.
+
+* `aggregate.stars()` deals with functions that return more than one number, putting these in a new dimension like `st_apply()` does
+
+* `st_as_stars.data.frame()` and `st_as_stars.sf()` better handle non-raster data cubes
+
+* `plot.stars()` only resets layout when needed (more than one sub-plot, or key present)
+
+* fixed `st_as_stars.im()`; #648
+
+* `st_crs<-.stars()` is less critical on existing CRS being of class `crs` 
+
+* `c.stars()` with a single (valid) argument and `along` specified adds a dimension; #646
+
+* `st_join.stars()` keeps attributes from `x` complete; #643
+
+* `st_as_stars.list()` requires a _named_ list, and will set names of array dimensions if not present
+
 # version 0.6-4
 
-* move `lwgeom` dependency to Suggests; using `st_transform_proj()` requires loading `lwgeom` first
+* `plot.stars()` has a `fill` argument that shifts unused plotting space between sub-maps to the bottom or right side of the plotting area
+
+* in `plot.stars()`, the `key.width` default is sensitive to `par("ps")`, the pointsize graphics parameter 
+
+* `plot.stars()` and `image.stars()` are sensitive to `cex.axis`, for axes and key (requires sf >= 1.0-14); #642
+
+* move `lwgeom` dependency to Suggests; using `st_transform_proj()` on vector data cubes requires loading `lwgeom` first
 
 # version 0.6-3
 
@@ -204,7 +234,7 @@
 
 * handle `normalize_path` for choosing to `proxy`; #391
 
-* ignore units when there are different units accross bands of a subdataset
+* ignore units when there are different units across bands of a subdataset
 
 * speed up `st_rgb()` using faster `st_apply()` approach; #315, #390
 
@@ -236,13 +266,13 @@
 
 * `st_apply()` and other methods for `stars_proxy` objects handle ... ; #374
 
-* add `st_bbox()`, `st_crs()` methods for terra's `SpatVector` objects; https://github.com/mtennekes/tmap/issues/536
+* add `st_bbox()`, `st_crs()` methods for terra's `SpatVector` objects; https://github.com/r-tmap/tmap/issues/536
 
-* add `st_bbox()`, `st_crs()` and `st_as_stars()` methods for terra's `SpatRaster` objects; https://github.com/mtennekes/tmap/issues/536
+* add `st_bbox()`, `st_crs()` and `st_as_stars()` methods for terra's `SpatRaster` objects; https://github.com/r-tmap/tmap/issues/536
 
 * allow for multi-resolution attributes in `stars_proxy` objects (e.g., all gray scale sentinel-2 bands); see vignettes 2 and 7 for examples.
 
-* `plot()` defaults to a categorical color scale when plotting a factor variable; https://github.com/mtennekes/tmap/issues/526
+* `plot()` defaults to a categorical color scale when plotting a factor variable; https://github.com/r-tmap/tmap/issues/526
 
 * `st_extract()` extracts space-time points if `time_column` is specified, and handles time intervals; #352
 
@@ -300,7 +330,7 @@
 
 # version 0.4-3
 
-* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/mtennekes/tmap/issues/471
+* fix bug in `st_as_stars.Raster`; set crs to the one assigned by raster; https://github.com/r-tmap/tmap/issues/471
 
 * add `s2` to Suggests:
 
@@ -330,7 +360,7 @@
 
 * x/y range subsetting of `stars_proxy` objects now only reads that range, similar to how crop already did this.
 
-* `st_warp()` preserves levels and colors; https://github.com/mtennekes/tmap/issues/429
+* `st_warp()` preserves levels and colors; https://github.com/r-tmap/tmap/issues/429
 
 * `st_crop()` works with bounding boxes larger than the downsampled bounding box; #276
 
@@ -358,7 +388,7 @@
 
 * handle full `crs` objects as `refsys` element in a spatial dimensions, rather than proj4string only
 
-* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/mtennekes/tmap/issues/368
+* `st_raster_type(x)` reveals the raster type of `x`; #248, https://github.com/r-tmap/tmap/issues/368
 
 * add `st_as_stars.OpenStreetMap()` method; #241 by @mtennekes
 
@@ -446,7 +476,7 @@
 
 * support for `PCICt` 360- and 365-day calendars; #29
 
-* remove import of `ncdf4` in favour of `RNetCDF`, now in line with practice in `ncmeta` package. Thanks to David Blodgett for motivation and testing (see #87, #94). 
+* remove import of `ncdf4` in favor of `RNetCDF`, now in line with practice in `ncmeta` package. Thanks to David Blodgett for motivation and testing (see #87, #94). 
 
 * `st_as_sf` uses date/time column names when appropriate
 
@@ -458,7 +488,7 @@
 
 * depend on sf 0.7-2
 
-* add logz support for log-scale keys to `plot` and `image`
+* add `logz` support for log-scale keys to `plot` and `image`
 
 # version 0.2-0
 

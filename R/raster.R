@@ -213,13 +213,13 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 				y = create_dimension(from = 1, to = dim(v)[2], offset = e[4],
 							 	delta = (e[3]-e[4])/dim(v)[2], refsys = crs))
 		dimensions$band = create_dimension(values = names(.x))
-		ret = st_as_stars(list(v), dimensions = create_dimensions(dimensions, get_raster()))
+		ret = st_as_stars(setNames(list(v), attr_name), dimensions = create_dimensions(dimensions, get_raster()))
 		if (dim(ret)[3] == 1)
 			ret = adrop(ret, 3)
 		else if (!all(is.na(terra::time(.x))))
 			ret = st_set_dimensions(ret, 3, values = terra::time(.x), names = "time")
 	}
-	setNames(ret, attr_name)
+	ret
 }
 
 #' Coerce stars object into a terra SpatRaster
@@ -347,8 +347,10 @@ st_as_raster = function(x, class, ...) {
 		if (!is.null(levels)) {
 			levels(b) = levels
 			if (!all(sapply(coltab, is.null)))
-				for (i in seq_len(terra::nlyr(b)))
-					terra::coltab(b, layer = i) = coltab[[i]]
+				for (i in seq_len(terra::nlyr(b))) {
+					m = coltab[[i]]
+					terra::coltab(b, layer = i) = cbind(value = seq_len(nrow(m)) - 1, m)
+				}
 		}
 		if (length(dim(x)) != 2) {
 			z = seq(d[[third]])

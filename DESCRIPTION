@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.6-4
+Version: 0.6-5
 Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -19,7 +19,11 @@ Authors@R:
              role = "ctb"), 
       person(given = "David", 
              family = "Blodgett", 
-             role = "ctb"))
+             role = "ctb"), 
+      person(given = "Krzysztof", 
+             family = "Dyba", 
+             role = "ctb",
+             comment=c(ORCID = "0000-0002-8614-3816")))
 Description: Reading, manipulating, writing and plotting
     spatiotemporal arrays (raster and vector data cubes) in 'R', using 'GDAL'
     bindings provided by 'sf', and 'NetCDF' bindings by 'ncmeta' and 'RNetCDF'.
@@ -31,7 +35,7 @@ LazyData: true
 Depends:
     R (>= 3.3.0),
     abind,
-    sf (>= 1.0-10)
+    sf (>= 1.0-15)
 Imports:
     methods,
     parallel,
@@ -43,10 +47,10 @@ Suggests:
     OpenStreetMap,
     PCICt,
     RNetCDF (>= 1.8-2),
-	clue,
+    clue,
     covr,
-	cubble (>= 0.3.0),
-	cubelyr,
+    cubble (>= 0.3.0),
+    cubelyr,
     digest,
     dplyr (>= 0.7-0),
     exactextractr,
@@ -66,7 +70,7 @@ Suggests:
     ncmeta (>= 0.0.3),
     pbapply,
     plm,
-	randomForest,
+    randomForest,
     raster,
     rmarkdown,
     sp,
@@ -84,7 +88,7 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Collate: 
     'init.R'
     'stars.R'
@@ -105,6 +109,7 @@ Collate:
     'proxy.R'
     'factors.R'
     'rasterize.R'
+    'rotate.R'
     'subset.R'
     'warp.R'
     'aggregate.R'
@@ -120,3 +125,4 @@ Collate:
     'tile.R'
     'mdim.R'
     'cubble.R'
+    'gt.R'

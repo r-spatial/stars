@@ -34,7 +34,7 @@ write_mdim(
 \arguments{
 \item{filename}{name of the source or destination file or data source}
 
-\item{variable}{name of the array to be read}
+\item{variable}{name of the array to be read; if `"?"`, a list of array names is returned, with group name as list element names.}
 
 \item{...}{ignored}
 
@@ -46,7 +46,7 @@ write_mdim(
 
 \item{count}{integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)}
 
-\item{step}{integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
+\item{step}{integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
 
 \item{proxy}{logical; return proxy object? (not functional yet)}
 
@@ -86,4 +86,7 @@ if (compareVersion(sf_extSoftVersion()["GDAL"], "3.4.0") > -1) {
   # try ncdump on the generated file
   print(read_mdim(nc))
 }
+}
+\seealso{
+\link[sf]{gdal_utils}, in particular util \code{mdiminfo} to query properties of a file or data source containing arrays
 }

@@ -20,14 +20,15 @@
   breaks = "quantile",
   col = grey(1:(nbreaks - 1)/nbreaks),
   key.pos = get_key_pos(x, ...),
-  key.width = lcm(1.8),
+  key.width = kw_dflt(x, key.pos),
   key.length = 0.618,
   key.lab = main,
   reset = TRUE,
-  box_col = grey(0.8),
+  box_col = NA,
   center_time = FALSE,
   hook = NULL,
-  mfrow = NULL
+  mfrow = NULL,
+  compact = TRUE
 )
 
 \method{image}{stars}(
@@ -49,7 +50,7 @@
   as_points = FALSE,
   key.pos = NULL,
   logz = FALSE,
-  key.width = lcm(1.8),
+  key.width = kw_dflt(x, key.pos),
   key.length = 0.618,
   add.geom = NULL,
   border = NA,
@@ -78,11 +79,11 @@
 
 \item{nbreaks}{number of color breaks; should be one more than number of colors. If missing and \code{col} is specified, it is derived from that.}
 
-\item{breaks}{actual color breaks, or a method name used for \link[classInt]{classIntervals}.}
+\item{breaks}{numeric vector with actual color breaks, or a \code{style} name used in \link[classInt]{classIntervals}.}
 
 \item{col}{colors to use for grid cells, or color palette function}
 
-\item{key.pos}{integer; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}.}
+\item{key.pos}{numeric; side to plot a color key: 1 bottom, 2 left, 3 top, 4 right; set to \code{NULL} to omit key. Ignored if multiple columns are plotted in a single function call. Default depends on plot size, map aspect, and, if set, parameter \code{asp}. If it has length 2, the second value, ranging from 0 to 1, determines where the key is placed in the available space (default: 0.5, center).}
 
 \item{key.width}{amount of space reserved for width of the key (labels); relative or absolute (using lcm)}
 
@@ -92,13 +93,15 @@
 
 \item{reset}{logical; if \code{FALSE}, keep the plot in a mode that allows adding further map elements; if \code{TRUE} restore original mode after plotting}
 
-\item{box_col}{color for box around sub-plots; use \code{0} to suppress plotting of boxes around sub-plots.}
+\item{box_col}{color for box around sub-plots; use \code{NA} to suppress plotting of boxes around sub-plots.}
 
 \item{center_time}{logical; if \code{TRUE}, sub-plot titles will show the center of time intervals, otherwise their start}
 
 \item{hook}{NULL or function; hook function that will be called on every sub-plot; see examples.}
 
 \item{mfrow}{length-2 integer vector with nrows, ncolumns of a composite plot, to override the default layout}
+
+\item{compact}{logical; place facets compactly (TRUE), or spread over the plotting device area?}
 
 \item{band}{integer; which band (dimension) to plot}
 
@@ -168,8 +171,9 @@ hook2 = function(..., row, col, nr, nrow, ncol, value, bbox) {
 }
 plot(x, hook = hook2, col = grey(c(.2,.25,.3,.35)))
 if (isTRUE(dev.capabilities()$rasterImage == "yes")) {
-  lc = system.file("tif/lc.tif", package = "stars")
-  plot(read_stars(lc), key.pos=4, key.width=lcm(5))
+  lc = read_stars(system.file("tif/lc.tif", package = "stars"))
+  levels(lc[[1]]) = abbreviate(levels(lc[[1]]), 6) # so it's not only legend
+  plot(lc, key.pos=4)
 }
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)

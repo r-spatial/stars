@@ -14,7 +14,7 @@ is_online = curl::has_internet()
 # Spatiotemporal Arrays: Raster and Vector Datacubes
 
 <!-- badges: start -->
-[![tic](https://github.com/r-spatial/stars/workflows/tic/badge.svg?branch=main)](https://github.com/r-spatial/stars/actions)
+[![R-CMD-check](https://github.com/r-spatial/stars/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-spatial/stars/actions/workflows/R-CMD-check.yaml)
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 [![cran checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
@@ -43,7 +43,7 @@ dimensions represent spatial raster dimensions, and the third time
 (or band), as e.g. shown here:
 
 ```{r cube1,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube1.png")
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/main/images/cube1.png")
 ```
 
 By data cubes however we also consider higher-dimensional cubes
@@ -51,7 +51,7 @@ By data cubes however we also consider higher-dimensional cubes
 time, spectral band and sensor form dimensions:
 
 ```{r cube2,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube2.png")
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/main/images/cube2.png")
 ```
 
 or lower-dimensional cubes such as a raster image:
@@ -105,13 +105,13 @@ plot(st_geometry((r5)), main = "curvilinear")
 Vector data cubes arise when we do not have two regularly discretized spatial dimensions, but a single dimension that points to distinct spatial feature geometries, such as polygons (e.g. denoting administrative regions):
 
 ```{r cube3,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube3.png")
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/main/images/cube3.png")
 ```
 
 or points (e.g. denoting sensor locations):
 
 ```{r cube4,out.width='50%',echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/master/images/cube4.png")
+knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/main/images/cube4.png")
 ```
 
 NetCDF's CF-convention calls this a [discrete axis](https://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html#discrete-axis).
@@ -206,7 +206,7 @@ a.cb |>
 
 ## Other packages for data cubes
 
-### [`gdalcubes`](https://github.com/appelmar/gdalcubes_R/)
+### [`gdalcubes`](https://github.com/appelmar/gdalcubes)
 
 Package `gdalcubes` can be used to create data cubes (or functions
 from them) from image collections, sets of multi-band images with
@@ -221,7 +221,7 @@ and does this by resampling and/or aggregating over space and/or
 time. It reuses GDAL VRT's and gdalwarp for spatial resampling and/or
 warping, and handles temporal resampling or aggregation itself.
 
-### [`ncdfgeom`](https://github.com/USGS-R/ncdfgeom)
+### [`ncdfgeom`](https://github.com/DOI-USGS/ncdfgeom)
 
 `ncdfgeom` reads and writes vector data cubes from and to netcdf
 files in a standards-compliant way.
@@ -249,10 +249,10 @@ A comment on the differences between `stars` and `terra` is found
 ## Other `stars` resources:
 
 * blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
-[second](https://www.r-spatial.org/r/2018/03/22/stars2.html),
-[third](https://www.r-spatial.org/r/2018/03/23/stars3.html), and [newer blog posts](https://www.r-spatial.org/)
-* vignettes: [first](https://r-spatial.github.io/stars/articles/stars1.html), [second](https://r-spatial.github.io/stars/articles/stars2.html), [third](https://r-spatial.github.io/stars/articles/stars3.html), [fourth](https://r-spatial.github.io/stars/articles/stars4.html), [fifth](https://r-spatial.github.io/stars/articles/stars5.html)
-* the original [R Consortium proposal](https://github.com/edzer/stars/blob/master/PROPOSAL.md).
+[second](https://r-spatial.org/r/2018/03/22/stars2.html),
+[third](https://r-spatial.org/r/2018/03/23/stars3.html), and [newer blog posts](https://r-spatial.org/)
+* [vignettes](https://r-spatial.github.io/stars/articles/)
+* the original [R Consortium proposal](https://github.com/r-spatial/stars/blob/main/PROPOSAL.md).
 
 ### Acknowledgment
 

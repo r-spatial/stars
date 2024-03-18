@@ -20,12 +20,16 @@ as_intervals = function(x, add_last = FALSE) {
 	make_intervals(start = head(x, -1), end = tail(x, -1))
 }
 
+#' @export
 length.intervals = function(x) length(x$start)
 
+#' @export
 head.intervals = function(x, n, ...) make_intervals(head(x$start, n, ...), head(x$end, n, ...))
 
+#' @export
 tail.intervals = function(x, n, ...) make_intervals(tail(x$start, n, ...), tail(x$end, n, ...))
 
+#' @export
 c.intervals = function(...) {
 	dots = list(...)
 	start = do.call(c, lapply(dots, function(x) x$start))
@@ -33,6 +37,7 @@ c.intervals = function(...) {
 	make_intervals(start, end)
 }
 
+#' @export
 `[.intervals` = function(x, i, ...) {
 	make_intervals(x$start[i], x$end[i])
 }

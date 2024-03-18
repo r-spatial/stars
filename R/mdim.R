@@ -104,12 +104,12 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' Read or write data using GDAL's multidimensional array API
 #' @name mdim
 #' @param filename name of the source or destination file or data source
-#' @param variable name of the array to be read
+#' @param variable name of the array to be read; if `"?"`, a list of array names is returned, with group name as list element names.
 #' @param options character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset
 #' @param raster names of the raster variables (default: first two dimensions)
 #' @param offset integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
 #' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)
-#' @param step integer; step size for each dimension (pixels) of sub-aray to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
+#' @param step integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
 #' @param proxy logical; return proxy object? (not functional yet)
 #' @param debug logical; print debug info?
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
@@ -117,13 +117,18 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 #' @param curvilinear control reading curvilinear (geolocation) coordinate arrays; if \code{NA} try reading the x/y dimension names; if character, defines the arrays to read; if \code{FALSE} do not try; see also \link{read_stars}
 #' @details it is assumed that the first two dimensions are easting and northing
 #' @param ... ignored
+#' @seealso \link[sf]{gdal_utils}, in particular util \code{mdiminfo} to query properties of a file or data source containing arrays
 #' @export
-read_mdim = function(filename, variable = character(0), ..., options = character(0), raster = NULL,
-					 offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
+read_mdim = function(filename, variable = character(0), ..., options = character(0), 
+					 raster = NULL, offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
+
+	if (length(ret$dimensions) == 1 && length(ret$array_list) == 1 && is.data.frame(ret$array_list[[1]]))
+		return(ret$array_list[[1]]) ## composite data: RETURNS
+
 	ret = recreate_geometry(ret)
 	if (isTRUE(bounds) || is.character(bounds))
 		ret$dimensions = mdim_use_bounds(ret$dimensions, filename, bounds)

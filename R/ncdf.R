@@ -32,7 +32,7 @@
 #' curvilinear coordinates if they are not supplied.
 #' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
 #' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
-#' @param make_time if \code{TRUE} (the default), an atttempt is made to provide a date-time class from the "time" variable
+#' @param make_time if \code{TRUE} (the default), an attempt is made to provide a date-time class from the "time" variable
 #' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
 #' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
 #' metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
@@ -45,7 +45,7 @@
 #' @details
 #' If \code{var} is not set the first set of variables on a shared grid is used.
 #'
-#' \code{start} and \code{count} columns of ncsub must correspond to the variable dimemsion (nrows)
+#' \code{start} and \code{count} columns of ncsub must correspond to the variable dimension (nrows)
 #' and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
 #' is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 #' @export

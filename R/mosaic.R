@@ -7,7 +7,7 @@
 #' @param options character; options to the gdalbuildvrt command
 #' @param file_ext character; file extension, determining the format used to write to (".tif" implies GeoTIFF)
 #' @return the stars method returns a stars object with the composite of the input; the \code{character} method returns the file name of the file with the mosaic; see also the GDAL documentation of \code{gdalbuildvrt}
-#' @details the gdal function buildvrt builds a mosaic of input images; these imput images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
+#' @details the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
 #' 
 #' uses \link[sf]{gdal_utils} to internally call \code{buildvrt}; no executables external to R are called.
 #' @export

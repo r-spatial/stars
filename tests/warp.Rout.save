@@ -1,5 +1,5 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
+R version 4.3.2 (2023-10-31) -- "Eye Holes"
 Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -142,4 +142,4 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  2.011   1.502   1.797 
+  1.732   2.471   1.376 

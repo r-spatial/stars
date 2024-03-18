@@ -396,7 +396,7 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		lst$band$values = pr$descriptions
 	else if (!is.null(pr$band_meta)) {
 		bm = unlist(pr$band_meta)
-		if (any(a <- grepl("DESCRIPTION=", bm)))
+		if (any(a <- grepl("DESCRIPTION=", bm)) && length(which(a)) > 1)
 			lst$band$values = substring(bm[a], 13)
 	}
 	# set up raster:
@@ -420,28 +420,13 @@ get_raster = function(affine = rep(0, 2), dimensions = c("x", "y"),
 		  class = "stars_raster")
 }
 
-get_geotransform = function(x) {
-	if (inherits(x, "stars"))
-		x = st_dimensions(x)
-	stopifnot(inherits(x, "dimensions"))
-	r = attr(x, "raster")
-	if (is.null(r))
-		rep(NA_real_, 6)
-	else {
-		xd = x[[ r$dimensions[1] ]]
-		yd = x[[ r$dimensions[2] ]]
-		c(as.numeric(xd$offset), as.numeric(xd$delta), r$affine[1], 
-		  as.numeric(yd$offset), r$affine[2], as.numeric(yd$delta))
-	}
-}
-
 
 #' @export
 print.stars_raster = function(x, ...) {
 	if (any(is.na(x$affine)))
 		cat(paste("affine parameters:", x$affine[1], x$affine[2], "\n"))
 	else if (any(x$affine != 0.0))
-		cat(paste("sheared raster with parameters:", x$affine[1], x$affine[2], "\n"))
+		cat(paste("sheared raster with parameters:", format(x$affine[1], ...), format(x$affine[2], ...), "\n"))
 	if (x$curvilinear)
 		cat("curvilinear grid\n")
 	invisible(x)
@@ -541,18 +526,30 @@ parse_gdal_meta = function(properties) {
 	properties
 }
 
+#' expand the dimension values into a list
+#'
+#' expand the dimension values into a list
+#' @param x object of class `stars` or `dimensions`
+#' @param ... ignored
+#' @export
 expand_dimensions = function(x, ...) UseMethod("expand_dimensions")
 
+#' @export
 expand_dimensions.stars = function(x, ...) {
 	expand_dimensions(st_dimensions(x), ...)
 }
 
+#' @export
+#' @name expand_dimensions
+#' @param max logical; if `TRUE` return the max (end) values of the dimensions intervals
+#' @param center logical; if `TRUE` return the center values of intervals, otherwise return offset (start) of intervals; if `NA` (default) return centers for x/y dimensions, offsets for all others
+expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 # returns, in case of numeric dimensions:
 # 	center = TRUE: return center values for x and y coordinates, interval start values otherwise
 # 	center = FALSE: return start values
 #   center = NA: return centers for x/y raster, otherwise start values
 #   add_max = TRUE: add in addition to x and y start values an x_max and y_max end values
-expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
+
 
 	if (length(center) == 1)
 		center = setNames(rep(center, length(x)), names(x))
@@ -577,7 +574,7 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 
 	dimensions = x
 	xy = attr(x, "raster")$dimensions
-	gt = get_geotransform(x)
+	gt = st_geotransform(x)
 	lst = vector("list", length(dimensions))
 	names(lst) = names(dimensions)
 	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
@@ -694,6 +691,7 @@ identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	TRUE
 }
 
+#' @export
 all.equal.dimensions = function(target, current, ..., ignore_blocksizes = TRUE) {
 	if (ignore_blocksizes) {
 		attr(target, "raster")$blocksizes = NULL
@@ -794,6 +792,7 @@ as.POSIXct.stars = function(x, ...) {
 	structure(x, dimensions = d)
 }
 
+#' @export
 drop_units.dimension = function(x) {
 	du = function(y) {
 		if (inherits(y, "units"))
@@ -814,6 +813,7 @@ drop_units.dimension = function(x) {
 	x
 }
 
+#' @export
 units.dimension = function(x) {
 	if (inherits(x$offset, "units"))
 		units(x$offset)

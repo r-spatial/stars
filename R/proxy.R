@@ -93,7 +93,7 @@ c.stars_proxy = function(..., along = NA_integer_, along_crs = FALSE, try_hard =
 
 	# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
 	# dim does not change:
-	if (length(dots) == 1) # do nothing
+	if (length(dots) == 1 && length(along) == 1 && is.na(along)) # do nothing
 		dots[[1]]
 	else if (along_crs)
 		combine_along_crs_proxy(dots)
@@ -332,7 +332,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		ret # nocov end
 	} else {
 		cl = attr(.x, "call_list")
-		# FIXME: this means we ALLWAYS process after (possibly partial) reading; 
+		# FIXME: this means we ALWAYS process after (possibly partial) reading; 
 		# there are cases where this is not right. Hence:
 		# TODO: only warn when there is a reason to warn.
 		if (!all(downsample == 0))
@@ -626,6 +626,11 @@ st_normalize.stars_proxy = function(x, domain = c(0, 0, 1, 1), ...) {
 	d = st_dimensions(x)
 	stopifnot(d[[1]]$from == 1, d[[2]]$from == 1)
 	x
+}
+
+#' @export
+image.stars_proxy <- function(x, ..., downsample = get_downsample(dim(x))) {
+    image(st_as_stars(x, downsample = downsample), ...)
 }
 
 #nocov start

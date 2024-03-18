@@ -1,3 +1,5 @@
+## https://mastodon.social/@EvenRouault/111738407524055989
+
 has_global_longitude = function(x) {
 	st_is_longlat(x) && isTRUE(all.equal(as.numeric(st_bbox(x)$xlim), c(-180.,180.)))
 }
@@ -20,7 +22,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
 				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
 			else {
-				# https://github.com/mtennekes/tmap/issues/526 :
+				# https://github.com/r-tmap/tmap/issues/526 :
 				old_crs = st_crs(envelope)
 				st_crs(envelope) = NA_crs_
 				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
@@ -34,7 +36,7 @@ default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 				st_area(envelope_new)
 		ratio = if (has_rotate_or_shear(x)) {
 				d = st_dimensions(x)
-				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), get_geotransform(d))
+				xy = xy_from_colrow(rbind(c(0,0), c(1,1)), st_geotransform(d))
 				cellarea = sum((xy[1,] - xy[2,])^2) / 2 # lenght is cell diagonal
 				xy_dims = attr(d, "raster")$dimensions
 				unclass(st_area(envelope)) / (prod(dim(x)[xy_dims]) * cellarea) # > 1
@@ -92,12 +94,12 @@ transform_grid_grid = function(x, target, threshold) {
         		stop("package FNN required, please install it first") #nocov
 			if (st_is_longlat(x))
 				warning("using Euclidean distance measures on geodetic coordinates")
-			fnn = FNN::get.knnx(cc_x <- st_coordinates(x)[, 1:2, drop = FALSE], pts, 1)
+			fnn = FNN::get.knnx(cc_x <- st_coordinates(d[xy_names]), pts, 1)
 			if (is.na(threshold)) {
 				p12 = st_as_sf(as.data.frame(cc_x[1:2,]), coords = 1:2)
 				threshold = signif(st_distance(p12)[1,2])
 				message(paste("threshold set to", format(threshold), 
-					 ": set a larger value if you see missing values where they shouldn't be"))
+					 ": set a larger value if you see missing values where there shouldn't be"))
 			}
 			i = fnn$nn.index - 1
 			i[fnn$nn.dist > threshold] = NA

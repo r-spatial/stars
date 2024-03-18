@@ -24,6 +24,8 @@ st_as_stars = function(.x, ...) UseMethod("st_as_stars")
 #' @export
 st_as_stars.list = function(.x, ..., dimensions = NULL) {
 	if (length(.x)) {
+		if (is.null(names(.x)))
+			stop("list should have named elements")
 		for (i in seq_along(.x)[-1])
 			if (!all(dim(.x[[1]]) == dim(.x[[i]])))
 				stop("dim attributes not identical")
@@ -48,9 +50,13 @@ st_as_stars.list = function(.x, ..., dimensions = NULL) {
 					dimensions[[i]]$point = FALSE
 				}
 			}
-		}
+		} else
+			dimensions = create_dimensions(dim(.x[[1]]))
+		if (is.null(names(dim(.x[[1]]))))
+			for (i in seq_along(.x))
+				names(dim(.x[[i]])) = names(dimensions)
 	}
-	st_stars(.x, dimensions %||% create_dimensions(dim(.x[[1]])))
+	st_stars(.x, dimensions)
 }
 
 st_stars = function(x, dimensions, class = "stars") {
@@ -160,7 +166,7 @@ pretty_cut = function(lim, n, inside = FALSE, ...) {
 #' @param values value(s) to populate the raster values with
 #' @param n the (approximate) target number of grid cells
 #' @param pretty logical; should cell coordinates have \link{pretty} values?
-#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or allways cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
+#' @param inside logical; should all cells entirely fall inside the bbox, potentially not covering it completely (\code{TRUE}), or always cover the bbox (\code{FALSE}), or find a good approximation (\code{NA}, default)?
 #' @param proxy logical; should a \code{stars_proxy} object be created? (requires gdal_create binary when sf < 1.0-6)
 #' @details For the \code{bbox} method: if \code{pretty} is \code{TRUE}, raster cells may extend the coordinate range of \code{.x} on all sides. If in addition to \code{nx} and \code{ny}, \code{dx} and \code{dy} are also missing, these are set to a single value computed as \code{sqrt(diff(xlim)*diff(ylim)/n)}. 
 #' 
@@ -268,7 +274,7 @@ colrow_from_xy = function(x, obj, NA_outside = FALSE) {
 		obj = st_dimensions(obj)
 	xy = attr(obj, "raster")$dimensions
 	if (inherits(obj, "dimensions"))
-		gt = get_geotransform(obj)
+		gt = st_geotransform(obj)
 
 	if (isTRUE(st_is_longlat(st_crs(obj)))) {
 		bb = st_bbox(obj)
@@ -438,7 +444,7 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 		nx = d[ xy[1] ]
 		ny = d[ xy[2] ]
 		setNames(as.data.frame(xy_from_colrow(as.matrix(expand.grid(seq_len(nx), seq_len(ny))) - 0.5,
-			get_geotransform(x))), xy) # gives cell centers
+			st_geotransform(x))), xy) # gives cell centers
 	} else {
 		if (add_max) {
 			cbind(
@@ -576,12 +582,12 @@ setNamesIfnn = function(x, nms) { # set names if not NULL
 #' c(x, x, along = 3)
 c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(...)), tolerance = sqrt(.Machine$double.eps)) {
 	dots = list(...)
-	if (!all(sapply(dots, function(x) inherits(x, "stars"))))
+	if (!all(sapply(dots, inherits, "stars")))
 		stop("all arguments to c() should be stars objects")
-	if (any(sapply(dots, function(x) inherits(x, "stars_proxy"))))
+	if (any(sapply(dots, inherits, "stars_proxy")))
 		stop("convert stars_proxy objects to stars first using st_as_stars()")
 
-	if (length(dots) == 1)
+	if (length(dots) == 1 && length(along) == 1 && missing(along))
 		dots[[1]]
 	else if (length(along) == 1 && is.na(along)) { 
 		# Case 1: merge attributes of several objects by simply putting them together in a single stars object;
@@ -692,7 +698,7 @@ st_bbox.dimensions = function(obj, ...) {
 		x = obj[[ r$dimensions[1] ]]
 		y = obj[[ r$dimensions[2] ]]
 		bb = if (is.null(x$values) && is.null(y$values)) {
-				gt = get_geotransform(obj)
+				gt = st_geotransform(obj)
 				if (length(gt) == 6 && !any(is.na(gt))) {
 					bb = rbind(c(x$from - 1, y$from - 1), c(x$to, y$from - 1), c(x$to, y$to), c(x$from - 1, y$to))
 					xy = xy_from_colrow(bb, gt)
@@ -795,15 +801,15 @@ st_crs.dimensions = function(x, ...) {
 		else
 			stop(paste("crs of class", class(value), "not recognized"))
 
-	if (!is.na(st_crs(x)) && !is.na(value) && st_crs(x) != value)
-		warning("replacing CRS does not reproject data: use st_transform, or st_warp to warp to a new CRS")
-
 	# set CRS in dimensions:
 	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		x[[ xy[1] ]]$refsys = value
 		x[[ xy[2] ]]$refsys = value
 	}
+
+	if (!all(is.na(xy)) && !is.na(x[[ xy[1] ]]$refsys) && !is.na(value) && st_crs(x) != value)
+		warning("replacing CRS does not reproject data: use st_transform, or st_warp to warp to a new CRS")
 
 	# set crs of sfc's, if any:
 	for (j in which_sfc(x)) {
@@ -823,6 +829,7 @@ st_geometry.stars = function(obj,...) {
 }
 
 # make sure asub works for factor too:
+#' @export
 asub.factor = function(x, idx, dims, drop = NULL, ...) {
 	l = levels(x)
 	x = unclass(x)
@@ -845,13 +852,11 @@ split.stars = function(x, f = length(dim(x)), drop = TRUE, ...) {
 		if (is.character(f))
 			f = which(names(d) == f)
 		ret = lapply(seq_len(dim(x)[f]), function(y) asub(x[[1]], y, f, drop = TRUE))
-		spl = st_as_stars(ret, dimensions = d[-f])
-		if (is.null(names(spl)))
-			names(spl) = if (!is.null(d[[f]]$values))
-					d[[f]]$values
-				else
-					make.names(seq_along(spl))
-		spl
+		nm = if (!is.null(d[[f]]$values))
+				d[[f]]$values
+			else
+				make.names(seq_along(ret))
+		st_as_stars(setNames(ret, nm), dimensions = d[-f])
 	}
 }
 

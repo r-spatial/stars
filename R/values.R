@@ -95,6 +95,7 @@ set_dimension_values = function(..., start = NULL, end = NULL, centers = NULL) {
 	make_intervals(start = start, end = end)
 }
 
+#' @export
 range.dimension = function(..., na.rm = FALSE) {
 	dots = list(...)
 	stopifnot(length(dots) == 1)

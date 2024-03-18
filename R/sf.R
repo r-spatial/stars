@@ -5,7 +5,7 @@
 st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))) {
 
 	r = attr(st_dimensions(x), "raster")
-	gt = get_geotransform(x)
+	gt = st_geotransform(x)
 	d = st_dimensions(x)[r$dimensions]
 	if (xor(is.null(d[[1]]$values), is.null(d[[2]]$values))) {
 		# mixed regular/rectilinear dimensions: make rectilinear; https://github.com/r-spatial/stars/issues/458
@@ -36,6 +36,9 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 #' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
 #' @export
 st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
+
+	if (inherits(x, "stars_proxy"))
+		x = st_as_stars(x)
 
 	d = st_dimensions(x)
 	olddim = dim(x)
@@ -83,6 +86,7 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 	st_stars(x, dimensions = d)
 }
 
+#' @export
 st_as_sf.dimensions = function(x, ...) {
 	ix = which_sfc(x)[1]
 	st_sf(setNames(list(x[[ ix ]]$values), names(x)[ix]), crs = st_crs(x), ...)
@@ -126,7 +130,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 
 	crs = st_crs(x)
 	d = st_dimensions(x)
-	if (merge && !as_points && has_raster(x) && !any(is.na(get_geotransform(x)))) { # uses GDAL polygonize path:
+	if (merge && !as_points && has_raster(x) && !any(is.na(st_geotransform(x)))) { # uses GDAL polygonize path:
 		x = st_normalize(x)
 		mask = if (na.rm) {
 				mask = x[1]
@@ -136,7 +140,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				NULL
 
 		ret = gdal_polygonize(x, mask, use_integer = use_integer,
-				geotransform = get_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
+				geotransform = st_geotransform(x), use_contours = FALSE, connect8 = connect8, ...)
 
 		# factor levels?
 		if (!is.null(lev <- attr(x[[1]], "levels"))) {
@@ -224,7 +228,7 @@ st_contour = function(x, na.rm = TRUE, contour_lines = FALSE,
 			mask
 		} else
 			NULL
-	ret = gdal_polygonize(x, mask, use_integer = FALSE, geotransform = get_geotransform(x),
+	ret = gdal_polygonize(x, mask, use_integer = FALSE, geotransform = st_geotransform(x),
 			use_contours = TRUE, contour_lines = contour_lines, breaks = breaks)
 	# factor levels?
 	if (!is.null(lev <- attr(x[[1]], "levels")))
@@ -232,7 +236,6 @@ st_contour = function(x, na.rm = TRUE, contour_lines = FALSE,
 	st_set_crs(ret, st_crs(x))
 #nocov end
 }
-
 
 #' @export
 st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
@@ -245,14 +248,15 @@ st_as_stars.sfc = function(.x, ..., FUN = length, as_points = TRUE) {
 }
 
 #' @name st_as_stars
-#' @param name character; name for the geometry dimensions
+#' @details The \code{st_as_stars} method for \code{sf} objects without any additional
+#' arguments returns a one-dimensional data cube with a dimension for the simple features
+#' geometries, and all remaining attributes as data cube attributes. When used with
+#' further arguments, the method for \code{data.frame}s is called.
+#' @examples
+#' nc = st_read(system.file("gpkg/nc.gpkg", package="sf"))
+#' st_as_stars(nc)
 #' @export
-st_as_stars.sf = function(.x, ..., name = attr(.x, "sf_column")) {
-	geom = st_geometry(.x)
-	if (length(list(...)))
-		stop("... arguments ignored")
-	dimensions = create_dimensions(setNames(list(create_dimension(1, length(geom), 
-		refsys = st_crs(geom), values = geom)), name))
-	lst = lapply(st_set_geometry(.x, NULL), function(x) { dim(x) = length(geom); x })
-	st_as_stars(lst, dimensions = dimensions)
+st_as_stars.sf = function(.x, ..., dims = attr(.x, "sf_column")) {
+	.x = as.data.frame(.x)
+	NextMethod(dims = dims, ...)
 }

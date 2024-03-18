@@ -14,13 +14,13 @@
 
 #' Monthly Gridded Meteorological Observations
 #'
-#' These are the monthly observational data used for BCSD downscaling. See: http://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#About for more information." ;
+#' These are the monthly observational data used for BCSD downscaling. See: <https://gdo-dcp.ucllnl.org/downscaled_cmip_projections/dcpInterface.html#About> for more information." ;
 #' "Atmospheric Temperature, Air Temperature Atmosphere, Precipitation, Rain, Maximum Daily Temperature, Minimum  Daily Temperature" ;
 #'
 "bcsd_obs"
 
 #' Sentinel-2 sample tile
 #'
-#' Sentinel-2 sample tile, downloaded from https://scihub.copernicus.eu/
+#' Sentinel-2 sample tile, downloaded from <https://scihub.copernicus.eu/>
 #' reads the four 10-m bands: B2 (490 nm), B3 (560 nm), B4 (665 nm) and B8 (842 nm)
 "stars_sentinel2"
