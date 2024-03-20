@@ -1,5 +1,7 @@
 # version 0.6-5
 
+* fix `st_as_stars()` method for `Spatial` gridded objects; see https://github.com/r-spatial/gstat/issues/123
+
 * add `prcomp()` methods for `stars` and `stars_proxy` objects, working on attributes or last dimension
 
 * `st_rasterize()` with `align=TRUE` returns `NA` values where there are no data; #668
