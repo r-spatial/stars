@@ -89,11 +89,16 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 	}
 	# match times:
 	if (!is.null(time_column)) {
-		tm = match("time", names(st_dimensions(x))) # FIXME: select based on refsys in time classes
-		if (is.na(tm))
-			stop("cannot match times: x does not have a dimension called 'time'")
-		tm_cube = st_dimensions(x)$time$values %||% st_get_dimension_values(x, "time")
-		tm_ix = match_time(tm_pts, tm_cube, !st_dimensions(x)$time$point, interpolate_time)
+		refsys_time = c("POSIXct", "POSIXt", "Date", "PCICt")
+		tm = names(which(sapply(
+			st_dimensions(x),
+			function(i) any(i$refsys %in% refsys_time))))[1]
+		if (length(tm) == 0)
+			stop("cannot match times: x does not have a temporal dimension")
+		tm_cube = st_dimensions(x)[[tm]]$values %||% st_get_dimension_values(x, tm)
+		tm_ix = match_time(tm_pts, tm_cube,
+						   intervals = !st_dimensions(x)[[tm]]$point,
+						   interpolate_time)
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(at), tm_ix)])
 		else {
@@ -134,7 +139,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			if (!is.null(time_column)) { # add time columns of both cube and at:
 				if (inherits(tm_cube, "intervals"))
 					tm_cube = as.list(tm_cube)
-				df$time = tm_cube[tm_ix]
+				df[[tm]] = tm_cube[tm_ix]
 				df[[time_column]] = tm_pts
 			}
 			sf = st_as_sf(df)
