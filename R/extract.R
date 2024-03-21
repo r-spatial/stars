@@ -92,7 +92,8 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		refsys_time = c("POSIXct", "POSIXt", "Date", "PCICt")
 		tm = names(which(sapply(
 			st_dimensions(x),
-			function(i) any(i$refsys %in% refsys_time))))[1]
+			function(i) any(i$refsys %in% refsys_time))))
+		## Assuming there is only one temporal dimension.
 		if (length(tm) == 0)
 			stop("cannot match times: x does not have a temporal dimension")
 		tm_cube = st_dimensions(x)[[tm]]$values %||% st_get_dimension_values(x, tm)
