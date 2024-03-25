@@ -9,7 +9,7 @@
 \usage{
 \method{st_coordinates}{stars}(x, ..., add_max = FALSE, center = TRUE)
 
-\method{as.data.frame}{stars}(x, ..., add_max = FALSE, center = NA)
+\method{as.data.frame}{stars}(x, ..., add_max = FALSE, center = NA, add_coordinates = TRUE)
 
 as_tibble.stars(.x, ..., add_max = FALSE, center = NA)
 }
@@ -21,6 +21,9 @@ as_tibble.stars(.x, ..., add_max = FALSE, center = NA)
 \item{add_max}{logical; if \code{TRUE}, dimensions are given with a min (x) and max (x_max) value}
 
 \item{center}{logical; (only if \code{add_max} is FALSE): should grid cell center coordinates be returned (TRUE) or offset values (FALSE)? \code{center} can be a named logical vector or list to specify values for each dimension.}
+
+\item{add_coordinates}{logical; if `TRUE`, columns with dimension values preceed the array values, 
+otherwise they are omitted}
 
 \item{.x}{object to be converted to a tibble}
 }

@@ -14,7 +14,7 @@ prcomp.stars_proxy = function(x, ..., downsample = 0) {
 #' @details if `x` has only one attribute, principle components will be computed in the space of the last dimension of `x`
 #' to predict PC scores into a `stars` object, use \link{predict.stars}; see example below
 #' @name prcomp
-#' @value object of class `prcomp`, see \link[stats]{prcomp}
+#' @returns object of class `prcomp`, see \link[stats]{prcomp}
 #' @export
 #' @examples
 #' l7 = split(st_as_stars(L7_ETMs), 3) # use bands as features
@@ -26,5 +26,5 @@ prcomp.stars = function(x, ..., quiet = FALSE) {
 			message(paste0("computing PCs over dimension `", tail(names(dim(x)), 1), "'"))
 		x = split(x, length(dim(x)))
 	}
-	prcomp(as.data.frame(lapply(x, as.vector)), ...)
+	prcomp(as.data.frame(x), ...)
 }

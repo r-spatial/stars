@@ -19,6 +19,9 @@
 
 \item{quiet}{logical; if `TRUE`, suppress message that PCs will be computed on last dimension; see details}
 }
+\value{
+object of class `prcomp`, see \link[stats]{prcomp}
+}
 \description{
 Compute principle components of stars object
 }
