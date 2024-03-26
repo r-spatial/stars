@@ -264,9 +264,9 @@ xy_from_colrow = function(x, geotransform) {
 # 0-based indices:
 # Xp = geotransform[0] + P*geotransform[1] + L*geotransform[2];
 # Yp = geotransform[3] + P*geotransform[4] + L*geotransform[5];
-	stopifnot(ncol(x) == 2, length(geotransform) == 6, !any(is.na(geotransform)))
+	stopifnot(ncol(x) >= 2, length(geotransform) == 6, !any(is.na(geotransform)))
 	matrix(geotransform[c(1, 4)], nrow(x), 2, byrow = TRUE) + 
-		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
+		x[,1:2] %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
 colrow_from_xy = function(x, obj, NA_outside = FALSE, flip = FALSE) {
