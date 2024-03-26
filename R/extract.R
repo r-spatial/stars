@@ -9,7 +9,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @param x object of class \code{stars} or \code{stars_proxy}
 #' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
-#' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
+#' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{POSIXt}, \code{Date}, or \code{PCICt}), in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
 #' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.
 #' @param FUN function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel
 #' @param ... passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries
@@ -90,11 +90,11 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 	# match times:
 	if (!is.null(time_column)) {
 		refsys_time = c("POSIXct", "POSIXt", "Date", "PCICt")
+		## If there are more than two temporal dimensions, the first one is taken
 		tm = names(which(sapply(
 			st_dimensions(x),
-			function(i) any(i$refsys %in% refsys_time))))
-		## Assuming there is only one temporal dimension.
-		if (length(tm) == 0)
+			function(i) any(i$refsys %in% refsys_time))))[1]
+		if (is.na(tm))
 			stop("cannot match times: x does not have a temporal dimension")
 		tm_cube = st_dimensions(x)[[tm]]$values %||% st_get_dimension_values(x, tm)
 		tm_ix = match_time(tm_pts, tm_cube,
