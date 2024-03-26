@@ -90,6 +90,14 @@
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>object of class `prcomp`, see <a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></p>
+
+
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>if `x` has only one attribute, principle components will be computed in the space of the last dimension of `x`
 to predict PC scores into a `stars` object, use <a href="predict.stars.html">predict.stars</a>; see example below</p>
@@ -101,6 +109,7 @@ to predict PC scores into a `stars` object, use <a href="predict.stars.html">pre
 <span class="r-in"><span><span class="va">l7</span> <span class="op">|&gt;</span> <span class="fu">prcomp</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="prcomp-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">l7</span> <span class="op">|&gt;</span> <span class="fu">prcomp</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">l7</span>, model <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> downsample set to 1</span>
 <span class="r-plt img"><img src="prcomp-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

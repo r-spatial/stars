@@ -68,7 +68,7 @@
 <span><span class="fu">st_coordinates</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, add_max <span class="op">=</span> <span class="cn">FALSE</span>, center <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for stars</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, add_max <span class="op">=</span> <span class="cn">FALSE</span>, center <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, add_max <span class="op">=</span> <span class="cn">FALSE</span>, center <span class="op">=</span> <span class="cn">NA</span>, add_coordinates <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">as_tibble.stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, add_max <span class="op">=</span> <span class="cn">FALSE</span>, center <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -89,6 +89,11 @@
 
 <dt>center</dt>
 <dd><p>logical; (only if <code>add_max</code> is FALSE): should grid cell center coordinates be returned (TRUE) or offset values (FALSE)? <code>center</code> can be a named logical vector or list to specify values for each dimension.</p></dd>
+
+
+<dt>add_coordinates</dt>
+<dd><p>logical; if `TRUE`, columns with dimension values preceed the array values, 
+otherwise they are omitted</p></dd>
 
 
 <dt>.x</dt>

@@ -297,7 +297,7 @@ plot this object,</p>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.996   0.192   0.695</span></span></code></pre>
+<span><span class="co">##   0.964   0.199   0.692</span></span></code></pre>
 <p>This takes only around 1 second, since only those pixels are read
 that can be seen on the plot. If we read the entire image in memory
 first, as we would do with</p>
@@ -312,14 +312,14 @@ memory.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"stars_proxy"</span><span class="op">)</span></span>
 <span><span class="co">##  [1] [               [[&lt;-            [&lt;-             adrop          </span></span>
 <span><span class="co">##  [5] aggregate       aperm           as.data.frame   c              </span></span>
-<span><span class="co">##  [9] coerce          dim             droplevels      filter         </span></span>
-<span><span class="co">## [13] hist            image           initialize      is.na          </span></span>
-<span><span class="co">## [17] Math            merge           Ops             plot           </span></span>
-<span><span class="co">## [21] prcomp          predict         print           show           </span></span>
-<span><span class="co">## [25] slotsFromS3     split           st_apply        st_as_sf       </span></span>
-<span><span class="co">## [29] st_as_stars     st_crop         st_dimensions&lt;- st_downsample  </span></span>
-<span><span class="co">## [33] st_mosaic       st_normalize    st_redimension  st_sample      </span></span>
-<span><span class="co">## [37] st_set_bbox     write_stars    </span></span>
+<span><span class="co">##  [9] coerce          dim             droplevels      hist           </span></span>
+<span><span class="co">## [13] image           initialize      is.na           Math           </span></span>
+<span><span class="co">## [17] merge           Ops             plot            prcomp         </span></span>
+<span><span class="co">## [21] predict         print           show            slotsFromS3    </span></span>
+<span><span class="co">## [25] split           st_apply        st_as_sf        st_as_stars    </span></span>
+<span><span class="co">## [29] st_crop         st_dimensions&lt;- st_downsample   st_mosaic      </span></span>
+<span><span class="co">## [33] st_normalize    st_redimension  st_sample       st_set_bbox    </span></span>
+<span><span class="co">## [37] write_stars    </span></span>
 <span><span class="co">## see '?methods' for accessing help and source code</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -405,12 +405,12 @@ attribute called <code>call_list</code>:</p>
 <span><span class="co">## [[1]]</span></span>
 <span><span class="co">## adrop(x = x, drop = drop)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x56432cd23a80&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x557448171c20&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
 <span><span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x56432cc82a40&gt;</span></span></code></pre></div>
+<span><span class="co">## &lt;environment: 0x5574485011f8&gt;</span></span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are
 done. As an example, for <code>st_apply</code>, reading can be done
 sequentially over the dimensions over which the function is applied:</p>
@@ -473,14 +473,14 @@ can compute NDVI by</p>
 <span><span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span></span>
 <span><span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x56432e6a34e8&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x557447cb64d8&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## This object has pending lazy operations: dimensions as printed may not reflect this.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></span>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.691   0.168   0.367</span></span></code></pre>
+<span><span class="co">##   0.730   0.136   0.371</span></span></code></pre>
 </div>
 </div>
 </div>
