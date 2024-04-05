@@ -1,6 +1,6 @@
 
-R version 4.3.2 (2023-10-31) -- "Eye Holes"
-Copyright (C) 2023 The R Foundation for Statistical Computing
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -39,6 +39,7 @@ sheared raster with parameters: -5 -5
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)[,1:10,1:10,1:3]
 > x_ = st_transform(x, st_crs(4326))
+> ## IGNORE_RDIFF_BEGIN
 > if (require(lwgeom, quietly = TRUE)) {
 +   x__ = st_transform_proj(x, st_crs(4326)$proj4string)
 +   st_crs(x_) = st_crs(x__)
@@ -62,6 +63,7 @@ The following object is masked from 'package:sf':
 
 [1] TRUE
 [1] TRUE
+> ## IGNORE_RDIFF_END
 > 
 > # nothing to transform: now errs:
 > try(st_transform(st_as_stars(list(m = matrix(1,10,10))), st_crs(4326)))
@@ -73,4 +75,4 @@ Error in st_transform_proj.stars(st_as_stars(list(m = matrix(1, 10, 10))),  :
 > 
 > proc.time()
    user  system elapsed 
-  1.100   1.306   0.938 
+  1.020   1.298   0.824 

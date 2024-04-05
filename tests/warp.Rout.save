@@ -1,6 +1,6 @@
 
-R version 4.3.2 (2023-10-31) -- "Eye Holes"
-Copyright (C) 2023 The R Foundation for Statistical Computing
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -101,15 +101,7 @@ y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 band    1   6      NA    NA                         NA    NA    
 > 
 > # does gdal reproduce what stars does? Smaller grid:
-> (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-               Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
-geomatrix.tif    74     107    123 126.7262     132  255  727
-dimension(s):
-  from to  offset delta                refsys x/y
-x    1 44 1840902     3 WGS 84 / UTM zone 11N [x]
-y    1 44 1144003    -3 WGS 84 / UTM zone 11N [y]
+> x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3)
 > # x2 = x2[,2:43,2:43]
 > if (interactive()) { plot(x2, breaks = "equal", axes=TRUE, reset = FALSE) }
 > if (interactive()) { plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red') }
@@ -126,10 +118,8 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > if (interactive()) { plot(y, breaks = "equal") }
 > names(x2) = names(y)
 > # isTRUE(all.equal(x2, y, check.attributes=FALSE))
-> mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
-[1] 0.9975186
-> unique(as.vector(x2[[1]]-y[[1]]))
-[1] NA  0 25 49  8
+> m = mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
+> u = unique(as.vector(x2[[1]]-y[[1]]))
 > 
 > g = st_as_stars()
 > attr(g, "dimensions")$x$offset = 0
@@ -142,4 +132,4 @@ y    1 44 1144003    -3 WGS 84 / UTM zone 11N FALSE [y]
 > 
 > proc.time()
    user  system elapsed 
-  1.732   2.471   1.376 
+  1.465   2.300   1.108 
