@@ -105,7 +105,7 @@
 
 
 <dt>dst</dt>
-<dd><p>character; destination file name</p></dd>
+<dd><p>character; destination file name; this will be a VRT file with references to the source file(s), see details</p></dd>
 
 
 <dt>options</dt>
@@ -126,7 +126,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes</p>
+    <p>the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes; note that for the `stars` method, the `dst` file may contain references to temporary files that are going to be removed at termination of the R session.</p>
 <p>uses <a href="https://r-spatial.github.io/sf/reference/gdal_utils.html" class="external-link">gdal_utils</a> to internally call <code>buildvrt</code>; no executables external to R are called.</p>
     </div>
 
