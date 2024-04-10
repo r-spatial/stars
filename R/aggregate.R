@@ -172,10 +172,10 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	dims = dim(d)
 
 	agr_grps = function(x, grps, uq, FUN, ...) { 
-		do.call(rbind, lapply(uq, function(i) {
+		do.call(cbind, lapply(uq, function(i) {
 				sel <- which(grps == i)
 				if (!isTRUE(any(sel)))
-					rep(NA_real_, ncol(x))
+					NA_real_
 				else
 					apply(x[sel, , drop = FALSE], 2, FUN, ...)
 			}
