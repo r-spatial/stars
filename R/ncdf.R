@@ -518,7 +518,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                        dims$id[!dims$id %in% dim_matcher])
       dim_matcher <- unique(dim_matcher)
     }
-    dims <- dims[match(dims$id, dim_matcher), ]
+    dims <- dims[match(dim_matcher, dims$id, nomatch = 0L), ]
   }
   return(dims)
 }
