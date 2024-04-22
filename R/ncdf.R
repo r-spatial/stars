@@ -708,10 +708,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
 			coords[[lon_coord]] <- ((coords[[lon_coord]] + 180) %% 360) - 180
 		} else if(!is.null(lons) && .is_degrees(atts, lon_coord) &&
 				  max(lons) > 180) {
-			message(paste0("0-360 longitude crossing the international date", 
+			message(paste("0-360 longitude crossing the international date", 
 						   "line encountered.\nLongitude coordinates will be",
 						   "0-360 in output."))
-			
+
 		}
 	}
 	coords

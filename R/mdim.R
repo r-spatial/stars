@@ -98,6 +98,14 @@ mdim_use_bounds = function(dims, x, bnds, center = TRUE) {
 	dims
 }
 
+match_raster_dims = function(nms) {
+	m = tolower(nms) %in% c("lon", "long", "longitude", "lat", "latitude")
+	if (sum(m) == 2)
+		which(m)
+	else
+		1:2
+}
+
 
 #' Read or write data using GDAL's multidimensional array API
 #'
@@ -190,7 +198,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		raster = if (sf)
 					get_raster(dimensions = rep(NA_character_,2))
 				else
-					get_raster(dimensions = names(d)[1:2])
+					get_raster(dimensions = names(d)[match_raster_dims(names(d))])
 	} else
 		raster = get_raster(dimensions = raster)
 	dimensions = create_dimensions(d, raster = raster)
