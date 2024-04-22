@@ -299,7 +299,7 @@ test_that("axis attribute order -- see #680", {
 	nc <- RNetCDF::open.nc(file3, write = TRUE)
 	
 	RNetCDF::att.put.nc(nc, "lon", "standard_name", "NC_CHAR", "longitude")
-	RNetCDF::att.put.nc(nc, "lat", "standard_name", "NC_CHAR", "latidude")
+	RNetCDF::att.put.nc(nc, "lat", "standard_name", "NC_CHAR", "latitude")
 	RNetCDF::att.put.nc(nc, "time", "standard_name", "NC_CHAR", "time")
 	RNetCDF::att.put.nc(nc, "lon", "units", "NC_CHAR", "degrees")
 	RNetCDF::att.put.nc(nc, "lat", "units", "NC_CHAR", "degrees")
@@ -307,7 +307,7 @@ test_that("axis attribute order -- see #680", {
 	
 	RNetCDF::close.nc(nc)
 
-	s1 <- suppressWarnings(stars::read_ncdf(file3))
+	s1 <- suppressWarnings(stars::read_ncdf(file1))
 		
 	expect_equal(names(stars::st_dimensions(s1)), c("time", "lon", "lat"))
 	
@@ -317,5 +317,5 @@ test_that("axis attribute order -- see #680", {
 
 	s3 <- suppressWarnings(stars::read_ncdf(file3))
 	
-	expect_equal(names(stars::st_dimensions(s3)), c("time", "lon", "lat"))
+	expect_equal(names(stars::st_dimensions(s3)), c("lon", "lat", "time"))
 })
