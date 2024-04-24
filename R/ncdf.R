@@ -183,7 +183,7 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   
   # Create stars dimensions object
 
-  if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- dims$length
+  nc_dim <- dims$count
   
   dimensions <- create_dimensions(setNames(nc_dim, dims$name),
   								  raster)
