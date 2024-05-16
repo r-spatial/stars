@@ -326,7 +326,8 @@ st_cells_from_xy = function(x, xy) {
 
 #' return the cell index corresponding to the location of a set of points
 #' 
-#' return the cell index corresponding to the location of a set of points
+#' If the object has been cropped without normalization, then the indices return
+#' are relative to the original uncropped extent.  See \code{\link{st_crop}}
 #' @param x object of class \code{stars}
 #' @param sf object of class \code{sf} or \code{sfc}
 #' @examples

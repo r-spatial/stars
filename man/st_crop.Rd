@@ -21,7 +21,8 @@
   ...,
   crop = TRUE,
   epsilon = sqrt(.Machine$double.eps),
-  as_points = all(st_dimension(y) == 2, na.rm = TRUE)
+  as_points = all(st_dimension(y) == 2, na.rm = TRUE),
+  normalize = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@
 \item{collect}{logical; if \code{TRUE}, repeat cropping on \code{stars} object, i.e. after data has been read}
 
 \item{as_points}{logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details}
+
+\item{normalize}{logical; if \code{TRUE} then pass the cropped object to \code{\link{st_normalize}} before returning.}
 }
 \description{
 crop a stars object

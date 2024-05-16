@@ -12,7 +12,8 @@ st_cells(x, sf)
 \item{sf}{object of class \code{sf} or \code{sfc}}
 }
 \description{
-return the cell index corresponding to the location of a set of points
+If the object has been cropped without normalization, then the indices return
+are relative to the original uncropped extent.  See \code{\link{st_crop}}
 }
 \examples{
 set.seed(1345)
