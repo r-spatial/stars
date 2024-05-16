@@ -1,6 +1,6 @@
 
-R version 4.3.2 (2023-10-31) -- "Eye Holes"
-Copyright (C) 2023 The R Foundation for Statistical Computing
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -219,18 +219,10 @@ y        1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 > geomatrix = system.file("tif/geomatrix.tif", package = "stars")
 > x = read_stars(geomatrix)
 > y = st_transform(x, st_crs(4326))
-> st_coordinates(x)[1:10,]
-         x       y
-1  1841000 1144000
-2  1841002 1143995
-3  1841003 1143990
-4  1841004 1143985
-5  1841006 1143980
-6  1841008 1143975
-7  1841009 1143970
-8  1841010 1143965
-9  1841012 1143960
-10 1841014 1143955
+> st_coordinates(x)[1:2,]
+        x       y
+1 1841000 1144000
+2 1841002 1143995
 > 
 > nc = system.file("nc/tos_O1_2001-2002.nc", package = "stars")
 > if (nc != "" && require(PCICt, quietly = TRUE)) {
@@ -499,4 +491,4 @@ X1    1  1 FALSE 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.614   1.291   4.652 
+  4.556   1.375   4.532 

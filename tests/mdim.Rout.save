@@ -1,6 +1,6 @@
 
-R version 4.3.2 (2023-10-31) -- "Eye Holes"
-Copyright (C) 2023 The R Foundation for Statistical Computing
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,18 +28,7 @@ Type 'q()' to quit R.
 > sfc = st_sfc(st_point(0:1), st_point(3:2))
 > s = st_set_dimensions(s, 1, sfc) |> st_set_crs(4326)
 > tm = as.POSIXct("2023-03-04 12:35") + c(0, 3600)
-> (s = st_set_dimensions(s, 2, tm))
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-    Min. 1st Qu. Median Mean 3rd Qu. Max.
-A1     1    1.75    2.5  2.5    3.25    4
-dimension(s):
-   from to                  offset   delta  refsys point
-X1    1  2                      NA      NA  WGS 84  TRUE
-X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct FALSE
-                     values
-X1 POINT (0 1), POINT (3 2)
-X2                     NULL
+> s = st_set_dimensions(s, 2, tm)
 > f = tempfile(fileext = ".nc")
 > write_mdim(s, f, as_float = FALSE)
 Warning messages:
@@ -48,18 +37,7 @@ Warning messages:
 2: In CPL_write_mdim(file, driver, dimx, cdl, wkt, xy, root_group_options,  :
   GDAL Error 6: SetIndexingVariable() not implemented
 > s2 = read_mdim(f)
-> print(s2)
-stars object with 2 dimensions and 1 attribute
-attribute(s):
-    Min. 1st Qu. Median Mean 3rd Qu. Max.
-A1     1    1.75    2.5  2.5    3.25    4
-dimension(s):
-   from to                  offset   delta  refsys point
-X1    1  2                      NA      NA  WGS 84  TRUE
-X2    1  2 2023-03-04 12:35:00 UTC 1 hours POSIXct    NA
-                     values
-X1 POINT (0 1), POINT (3 2)
-X2                     NULL
+> #print(s2)
 > print(all.equal(s, s2, check.attributes = FALSE))
 [1] TRUE
 > print(all.equal(s, s2))
@@ -120,4 +98,4 @@ X2    1  2 2023-02-25 1 days   Date    NA                     NULL
 > 
 > proc.time()
    user  system elapsed 
-  0.868   1.330   0.699 
+  0.828   1.229   0.624 

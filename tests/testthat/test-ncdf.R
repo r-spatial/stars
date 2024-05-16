@@ -243,7 +243,79 @@ test_that("units are right with lcc km", {
 	skip_if_not_installed("ncmeta")
 	f <- system.file("nc/lcc_km.nc", package = "stars")
 	
-	nc <- read_ncdf(f)
+	nc <- expect_warning(read_ncdf(f), "prime meridian")
 	
 	expect_equal(units(sf::st_crs(nc)$ud_unit)$numerator, "km")
+})
+
+test_that("axis attribute order -- see #680", {
+	
+	# Example with two netCDFs
+	tas <- array(
+		data = rowSums(
+			expand.grid(seq_len(9), 10 * (seq_len(2) - 1), 100 * (seq_len(3) - 1))
+		),
+		dim = c(9, 2, 3)
+	)
+	
+	# File1 has no "axis" attributes
+	file1 <- tempfile("tas_example_", fileext = ".nc")
+	nc <- RNetCDF::create.nc(file1)
+	
+	id_lat <- RNetCDF::dim.def.nc(nc, "lat", 3)
+	iv_lat <- RNetCDF::var.def.nc(nc, "lat", "NC_FLOAT", id_lat)
+	RNetCDF::var.put.nc(nc, "lat", c(40, 45, 50))
+	
+	id_lon <- RNetCDF::dim.def.nc(nc, "lon", 2)
+	iv_lon <- RNetCDF::var.def.nc(nc, "lon", "NC_FLOAT", id_lon)
+	RNetCDF::var.put.nc(nc, "lon", c(-100, -95))
+	
+	id_bnds <- RNetCDF::dim.def.nc(nc, "bnds", 2)
+	
+	id_time <- RNetCDF::dim.def.nc(nc, "time", 9)
+	iv_time <- RNetCDF::var.def.nc(nc, "time", "NC_INT", id_time)
+	RNetCDF::var.put.nc(nc, "time", 1:9)
+	
+	iv_tas <- RNetCDF::var.def.nc(nc, "temperature", "NC_FLOAT", c(id_time, id_lon, id_lat))
+	RNetCDF::var.put.nc(nc, "temperature", tas)
+	
+	RNetCDF::close.nc(nc)
+	
+	# File2 has X, Y, T axis attributes
+	file2 <- tempfile("tas_example_", fileext = ".nc")
+	file.copy(from = file1, to = file2)
+	#> [1] TRUE
+	nc <- RNetCDF::open.nc(file2, write = TRUE)
+	
+	RNetCDF::att.put.nc(nc, "lon", "axis", "NC_CHAR", "X")
+	RNetCDF::att.put.nc(nc, "lat", "axis", "NC_CHAR", "Y")
+	RNetCDF::att.put.nc(nc, "time", "axis", "NC_CHAR", "T")
+	
+	RNetCDF::close.nc(nc)
+	
+	file3 <- tempfile("tas_example_", fileext = ".nc")
+	file.copy(from = file1, to = file3)
+	#> [1] TRUE
+	nc <- RNetCDF::open.nc(file3, write = TRUE)
+	
+	RNetCDF::att.put.nc(nc, "lon", "standard_name", "NC_CHAR", "longitude")
+	RNetCDF::att.put.nc(nc, "lat", "standard_name", "NC_CHAR", "latitude")
+	RNetCDF::att.put.nc(nc, "time", "standard_name", "NC_CHAR", "time")
+	RNetCDF::att.put.nc(nc, "lon", "units", "NC_CHAR", "degrees")
+	RNetCDF::att.put.nc(nc, "lat", "units", "NC_CHAR", "degrees")
+	RNetCDF::att.put.nc(nc, "time", "units", "NC_CHAR", "days since 1900-01-01")
+	
+	RNetCDF::close.nc(nc)
+
+	s1 <- suppressWarnings(stars::read_ncdf(file1))
+		
+	expect_equal(names(stars::st_dimensions(s1)), c("time", "lon", "lat"))
+	
+	s2 <- suppressWarnings(stars::read_ncdf(file2))
+
+	expect_equal(names(stars::st_dimensions(s2)), c("lon", "lat", "time"))
+
+	s3 <- suppressWarnings(stars::read_ncdf(file3))
+	
+	expect_equal(names(stars::st_dimensions(s3)), c("lon", "lat", "time"))
 })

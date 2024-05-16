@@ -45,6 +45,16 @@ unique_part = function(x, prefix) {
 		x
 }
 
+geoloc_is_2D = function(geolocation, driver) { # the thing has 2-D x and y arrays:
+	# read coordinate array dimensions only:
+	gxy = c(geolocation$X_DATASET, geolocation$Y_DATASET)
+	lon = adrop(read_stars(gxy[1], driver = driver, quiet = TRUE,
+		proxy = TRUE, curvilinear = character(0)))
+	lat = adrop(read_stars(gxy[2], driver = driver, quiet = TRUE,
+		proxy = TRUE, curvilinear = character(0)))
+	dim(lon)[2] > 1 || dim(lat)[2] > 1
+}
+
 
 #' read raster/array dataset from file or connection
 #'
@@ -140,7 +150,7 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 
 	if (missing(curvilinear)) { # see if we can get it from metadata item "GEOLOCATION":
 		geolocation <- try(gdal_metadata(.x, "GEOLOCATION"), silent = TRUE)
-		if (!inherits(geolocation, "try-error")) { # the thing has x and y arrays:
+		if (!inherits(geolocation, "try-error") && geoloc_is_2D(geolocation, driver)) { # the thing has 2-D x and y arrays:
 			# read coordinate arrays:
 			gxy = c(geolocation$X_DATASET, geolocation$Y_DATASET)
 			lon = adrop(read_stars(gxy[1], driver = driver, quiet = quiet, NA_value = NA_value,

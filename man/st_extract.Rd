@@ -26,7 +26,7 @@ st_extract(x, ...)
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
-\item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the dimension "time" in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
+\item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{POSIXt}, \code{Date}, or \code{PCICt}), in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
 
 \item{interpolate_time}{logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.}
 

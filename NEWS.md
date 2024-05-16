@@ -1,6 +1,10 @@
+# version 0.6-6
+
+* constrain reading full GEOLOCATION arrays to the case where they are 2-D; #678
+
 # version 0.6-5
 
-* fix `st_as_stars()` method for `Spatial` gridded objects; see https://github.com/r-spatial/gstat/issues/123
+* fix `st_as_stars.Spatial()` for `Spatial` gridded objects with non-square grid cells, see https://github.com/r-spatial/gstat/issues/123
 
 * add `prcomp()` methods for `stars` and `stars_proxy` objects, working on attributes or last dimension
 
