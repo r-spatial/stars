@@ -81,7 +81,8 @@
 <span>  <span class="va">...</span>,</span>
 <span>  crop <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  epsilon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">.Machine</span><span class="op">$</span><span class="va">double.eps</span><span class="op">)</span>,</span>
-<span>  as_points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_query.html" class="external-link">st_dimension</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  as_points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_query.html" class="external-link">st_dimension</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  normalize <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -113,6 +114,10 @@
 
 <dt>as_points</dt>
 <dd><p>logical; only relevant if <code>y</code> is of class <code>sf</code> or <code>sfc</code>: if <code>FALSE</code>, treat <code>x</code> as a set of points, else as a set of small polygons. Default: <code>TRUE</code> if <code>y</code> is two-dimensional, else <code>FALSE</code>; see Details</p></dd>
+
+
+<dt>normalize</dt>
+<dd><p>logical; if <code>TRUE</code> then pass the cropped object to <code><a href="https://r-spatial.github.io/sf/reference/st_normalize.html" class="external-link">st_normalize</a></code> before returning.</p></dd>
 
 </dl></div>
     <div class="section level2">

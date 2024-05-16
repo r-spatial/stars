@@ -102,8 +102,9 @@ file.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">## Loading required package: abind</span></span>
 <span><span class="co">## Loading required package: sf</span></span>
-<span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/reduced.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
+<span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"nc/reduced.nc"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## no 'var' specified, using sst, anom, err, ice</span></span>
 <span><span class="co">## other available variables:</span></span>
@@ -136,7 +137,7 @@ is where <code>proxy = TRUE</code> comes in. Below, we’ll lower the
 option that controls whether <code><a href="../reference/read_ncdf.html">read_ncdf()</a></code> defaults to proxy
 <em>and</em> use <code>proxy = TRUE</code> to show both ways of getting
 the same result.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">old_options</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"stars.n_proxy"</span> <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">f</span>, proxy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## no 'var' specified, using sst, anom, err, ice</span></span>
@@ -161,8 +162,9 @@ the same result.</p>
 <span><span class="co">## lon     1 180     -1     2  WGS 84           NULL [x]</span></span>
 <span><span class="co">## lat     1  90    -90     2  WGS 84           NULL [y]</span></span>
 <span><span class="co">## zlev    1   1     NA    NA      NA              0    </span></span>
-<span><span class="co">## time    1   1     NA    NA POSIXct 1981-12-31 UTC</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="va">old_options</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">## time    1   1     NA    NA POSIXct 1981-12-31 UTC</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="va">old_options</span><span class="op">)</span></span></code></pre></div>
 <p>The above shows that we have a NetCDF sourced stars proxy derived
 from the <code>reduced.nc</code> file. We see it has four variables and
 their units are displayed. The normal <code>stars</code>
@@ -172,7 +174,7 @@ the information needed to make requests for data according to the
 dimensions of the NetCDF data source. With this information, we have
 what we need to request a chunk of data that is what we want and not too
 large.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_ncdf.html">read_ncdf</a></span><span class="op">(</span><span class="va">f</span>, </span>
 <span>                 var <span class="op">=</span> <span class="st">"sst"</span>, </span>
 <span>                 ncsub <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">45</span>, <span class="fl">1</span> , <span class="fl">1</span><span class="op">)</span>, </span>
@@ -192,8 +194,9 @@ large.</p>
 <span><span class="co">## lon     1 90    177     2  WGS 84           NULL [x]</span></span>
 <span><span class="co">## lat     1 45     -2     2  WGS 84           NULL [y]</span></span>
 <span><span class="co">## zlev    1  1     NA    NA      NA              0    </span></span>
-<span><span class="co">## time    1  1     NA    NA POSIXct 1981-12-31 UTC</span></span>
-<span></span>
+<span><span class="co">## time    1  1     NA    NA POSIXct 1981-12-31 UTC</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars8_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The ability to view NetCDF metadata so we can make well formed
