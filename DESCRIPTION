@@ -37,6 +37,7 @@ Depends:
     abind,
     sf (>= 1.0-15)
 Imports:
+    CFtime (>= 1.3.0),
     methods,
     parallel,
     classInt (>= 0.4-1),

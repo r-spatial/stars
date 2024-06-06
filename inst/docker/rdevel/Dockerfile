@@ -83,7 +83,7 @@ RUN cd /tmp/R-devel \
 ## Set default CRAN repo
 RUN echo 'options(repos = c(CRAN = "https://cran.rstudio.com/"), download.file.method = "libcurl")' >> /usr/local/lib/R/etc/Rprofile.site
 
-RUN Rscript -e 'install.packages(c("sf", "lwgeom", "covr", "raster", "rgdal", "Rcpp", "magrittr", "abind", "units", "ggplot2", "ggthemes", "viridis", "testthat", "knitr", "covr", "rmarkdown", "PCICt", "ggforce", "gstat", "pbapply", "plm", "spacetime", "xts"), dependencies = TRUE, repos = "https://cloud.r-project.org")'
+RUN Rscript -e 'install.packages(c("CFtime", sf", "lwgeom", "covr", "raster", "rgdal", "Rcpp", "magrittr", "abind", "units", "ggplot2", "ggthemes", "viridis", "testthat", "knitr", "covr", "rmarkdown", "PCICt", "ggforce", "gstat", "pbapply", "plm", "spacetime", "xts"), dependencies = TRUE, repos = "https://cloud.r-project.org")'
 
 RUN Rscript -e 'install.packages("starsdata", repos = "http://pebesma.staff.ifgi.de/")'
 
