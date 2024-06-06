@@ -49,15 +49,16 @@ named elements
 * `to`: (numeric length 1): the end index of the array
 * `offset`: (numeric length 1): the start coordinate (or time) value of the first pixel (i.e., a pixel/cell boundary)
 * `delta`: (numeric length 1): the increment, or cell size
-* `refsys`: (character, or `crs`): object describing the reference system; e.g. the PROJ string, or string `POSIXct` or `PCICt` (for 360 and 365 days/year calendars), or object of class `crs` (containing both EPSG code and proj4string)
+* `refsys`: (character, or `crs`): object describing the reference system; e.g. the PROJ string, or string `POSIXct` or `CFtime` (for COARDS or CF Metadata Conventions calendars), or object of class `crs` (containing both EPSG code and proj4string)
 * `point`: (logical length 1): boolean indicating whether cells/pixels refer to areas/periods, or to points/instances (may be NA)
 * `values`: one of 
     * `NULL` (missing), 
-    * a vector with coordinate values (numeric, `POSIXct`, `PCICt`, or `sfc`), 
+    * a vector with coordinate values (numeric, `POSIXct`, or `sfc`), 
+    * an object of class `CFtime` (representing a "time" dimension per the COARDS or CF Metadata Conventions)
     * an object of class `intervals` (a list with two vectors, `start` and `end`, with interval start- and end-values), or
     * a matrix with longitudes or latitudes for all cells (in case of curvilinear grids)
 
-`from` and `to` will usually be 1 and the dimension size, but
+`from` and `to` will usually be 1 and the dimension size, respectively, but
 `from` may be larger than 1 in case a sub-grid got was selected
 (or cropped).
 

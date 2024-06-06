@@ -26,9 +26,9 @@ st_extract(x, ...)
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
-\item{time_column}{character or integer; name or index of a column with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{POSIXt}, \code{Date}, or \code{PCICt}), in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
+\item{time_column}{character or integer; name or index of a column in \code{at} (which must be of class \code{sf} or \code{sfc}) with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{Date}, or \code{CFtime}) in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .}
 
-\item{interpolate_time}{logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.}
+\item{interpolate_time}{logical; should time be interpolated? If \code{FALSE}, time instances are matched using the coinciding or the last preceding time in the data cube, unless the dimension uses \code{CFtime} with bounds set, in which case the corresponding time interval in which the time or date value falls is returned.}
 
 \item{FUN}{function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel}
 }
@@ -42,7 +42,7 @@ dimensions, if this is not the case, an object of \code{sf} with extracted value
 Extract cell values at point locations
 }
 \details{
-points outside the raster are returned as \code{NA} values. For
+Points outside the raster are returned as \code{NA} values. For
 large sets of points for which extraction is needed, passing a matrix as
 to \code{at} may be much faster than passing an \code{sf} or \code{sfc} object.
 }

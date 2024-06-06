@@ -3,7 +3,7 @@
 #' spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution
 #' 
 #' @param x object of class \code{stars} with information to be aggregated
-#' @param by object of class \code{sf} or \code{sfc} for spatial aggregation, for temporal aggregation a vector with time values (\code{Date}, \code{POSIXct}, or \code{PCICt}) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see \link{cut.POSIXt}), or a function that cuts time into intervals; if by is an object of class \code{stars}, it is converted to sfc by \code{st_as_sfc(by, as_points = FALSE)} thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.
+#' @param by object of class \code{sf} or \code{sfc} for spatial aggregation, for temporal aggregation a vector with time values (\code{Date}, \code{POSIXct}, or \code{ISO8601 character strings}) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see \link{cut.POSIXt}, \link[CFtime]{cut}), or a function that cuts time into intervals; if \code{by} is an object of class \code{stars}, it is converted to \code{sfc} by \code{st_as_sfc(by, as_points = FALSE)} thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.
 #' @param FUN aggregation function, such as \code{mean}
 #' @param ... arguments passed on to \code{FUN}, such as \code{na.rm=TRUE}
 #' @param drop logical; ignored
@@ -72,7 +72,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		left.open = FALSE, exact = FALSE) {
 
 	fn_name = substr(deparse1(substitute(FUN)), 1, 20)
-	classes = c("sf", "sfc", "POSIXct", "Date", "PCICt", "character", "function", "stars")
+	classes = c("sf", "sfc", "POSIXct", "Date", "character", "function", "stars")
 	if (!is.function(by) && !inherits(by, classes))
 		stop(paste("currently, only `by' arguments of class", 
 			paste(classes, collapse= ", "), "supported"))
@@ -120,6 +120,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	}
 
 	drop_y = FALSE
+	values = NULL # safeguard, must check if it has been set
 	grps = if (inherits(by, c("sf", "sfc"))) {
 			x = if (has_raster(x)) {
 					ndims = 2
@@ -153,11 +154,15 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 					i = as.factor(i)
 				by = levels(i)
 			} else if (inherits(by, "character")) {
-				i = cut(values, by, right = left.open)
-				by = if (inherits(values, "Date"))
-						as.Date(levels(i))
-					else
-						as.POSIXct(levels(i))
+				if (methods::is(values, "CFtime")) {
+					i  = CFtime::cut(values, by)
+					by = levels(i)
+					new_time = attr(i, "CFtime")
+				} else {
+					i  = cut(values, by, right = left.open)
+					by = if (inherits(values, "Date")) as.Date(levels(i))
+						 else as.POSIXct(levels(i))
+				}
 			} else {
 				if (!inherits(values, class(by)))
 					warning(paste0('argument "by" is of a different class (', class(by)[1], 
@@ -171,21 +176,17 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	d = st_dimensions(x)
 	dims = dim(d)
 
-	agr_grps = function(x, grps, uq, FUN, bind, ...) { 
-		do.call(bind, lapply(uq, function(i) {
+	agr_grps = function(x, grps, uq, FUN, ...) { 
+		do.call(rbind, lapply(uq, function(i) {
 				sel <- which(grps == i)
 				if (!isTRUE(any(sel)))
-					NA_real_
+					rep(NA_real_, ncol(x))
 				else
 					apply(x[sel, , drop = FALSE], 2, FUN, ...)
 			}
 		))
 	}
 
-	bind = if (length(FUN(1:10, ...)) > 1)
-			cbind
-		else
-			rbind
 	# rearrange:
 	x = structure(x, dimensions = NULL, class = NULL) # unclass
 	newdims = c(prod(dims[1:ndims]), prod(dims[-(1:ndims)]))
@@ -200,14 +201,19 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 					NULL
 			} else
 				NULL
-		x[[i]] = agr_grps(a, grps, seq_along(by), FUN, bind, ...)
+		x[[i]] = agr_grps(a, grps, seq_along(by), FUN, ...)
 		if (is.numeric(x[[i]]) && !is.null(u))
 			x[[i]] = units::set_units(x[[i]], u, mode = "standard")
 	}
 
 	# reconstruct dimensions table:
-	d[[1]] = create_dimension(values = by)
-	names(d)[1] = if (is.function(by) || inherits(by, c("POSIXct", "Date", "PCICt", "function")))
+	if (!is.null(values) && methods::is(values, "CFtime")) {
+		d[[1]] = create_dimension(refsys = "CFtime", values = new_time)
+	} else {
+		d[[1]] = create_dimension(values = by)
+	}
+	names(d)[1] = if (###is.function(by) || FIXME: 'by' can also apply to sf or sfc
+					  inherits(values, c("POSIXct", "Date", "CFtime")))
 			"time"
 		else
 			geom
@@ -239,7 +245,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	# aggregate is done over one or more dimensions
 	# say we have dimensions 1,...,k and we want to aggregate over i,...,j
 	# with 1 <= i <= j <= k; 
-	# let |n| = j-1+1 be the number of dimensions to aggregate over, n
+	# let |n| = j-i+1 be the number of dimensions to aggregate over, n
 	# let |m| = k - n be the number of remaining dimensions, m
 	# permute the cube such that the n dimensions are followed by the m
 	# rearrange the cube to a 2D matrix with |i| x ... x |j| rows, and remaining cols

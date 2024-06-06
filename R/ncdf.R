@@ -3,18 +3,23 @@
 #'
 #' Read data from a file (or source) using the NetCDF library directly.
 #'
-#' The following logic is applied to coordinates. If any coordinate axes have
-#' regularly spaced coordinate variables they are reduced to the
-#' offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
-#' are stored and used to define a rectilinear grid.
+#' The following logic is applied to spatial coordinates. If any coordinate axes
+#' have regularly spaced coordinate variables they are reduced to the
+#' offset/delta form with 'affine = c(0, 0)', otherwise the values of the
+#' coordinates are stored and used to define a rectilinear grid.
 #'
-#' If the data has two or more dimensions and the first two are regular
-#' they are nominated as the 'raster' for plotting.
+#' If the data has two or more dimensions and the first two are regular they are
+#' nominated as the 'raster' for plotting.
 #'
 #' If the \code{curvilinear} argument is used it specifies the 2D arrays
-#' containing coordinate values for the first two dimensions of the data read. It is currently
-#' assumed that the coordinates are 2D and that they relate to the first two dimensions in
-#' that order.
+#' containing coordinate values for the first two dimensions of the data read.
+#' It is currently assumed that the coordinates are 2D and that they relate to
+#' the first two dimensions in that order.
+#' 
+#' Any time dimension in the source is captured in a 'CFtime' object, unless the
+#' \code{make_time} argument is false. In that case, the numeric offsets 
+#' representing time are returned instead.
+#' 
 #' @examples
 #' f <- system.file("nc/reduced.nc", package = "stars")
 #' if (require(ncmeta, quietly = TRUE)) {
@@ -27,27 +32,37 @@
 #' @param ... ignored
 #' @param var variable name or names (they must be on matching grids)
 #' @param ncsub matrix of start, count columns (see Details)
-#' @param curvilinear length two character named vector with names of variables holding
-#' longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
-#' curvilinear coordinates if they are not supplied.
-#' @param eps numeric; dimension value increases are considered identical when they differ less than \code{eps}
-#' @param ignore_bounds logical; should bounds values for dimensions, if present, be ignored?
-#' @param make_time if \code{TRUE} (the default), an attempt is made to provide a date-time class from the "time" variable
-#' @param make_units if \code{TRUE} (the default), an attempt is made to set the units property of each variable
-#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
-#' metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
-#' when the number of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8 if that option was not set.
-#' @param downsample integer; number of cells to omit between samples along each dimension. 
-#' e.g. \code{c(1,1,2)} would return every other cell in x and y and every third cell
-#' in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
-#' is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
-#' option is ignored.
-#' @details
-#' If \code{var} is not set the first set of variables on a shared grid is used.
+#' @param curvilinear length two character named vector with names of variables
+#'   holding longitude and latitude values for all raster cells. `stars`
+#'   attempts to figure out appropriate curvilinear coordinates if they are not
+#'   supplied.
+#' @param eps numeric; dimension value increases are considered identical when
+#'   they differ less than \code{eps}.
+#' @param ignore_bounds logical; should bounds values for dimensions, if
+#'   present, be ignored?
+#' @param make_time if \code{TRUE} (the default), an attempt is made to provide
+#'   a CFtime class for any "time" dimension.
+#' @param make_units if \code{TRUE} (the default), an attempt is made to set the
+#'   units property of each variable.
+#' @param proxy logical; if \code{TRUE}, an object of class \code{stars_proxy}
+#'   is read which contains array metadata only; if \code{FALSE} the full array
+#'   data is read in memory. If not set, defaults to \code{TRUE} when the number
+#'   of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8
+#'   if that option was not set.
+#' @param downsample integer; number of cells to omit between samples along each
+#'   dimension. e.g. \code{c(1,1,2)} would return every other cell in x and y
+#'   and every third cell in the third dimension (z or t). If 0, no downsampling
+#'   is applied. Note that this transformation is applied AFTER NetCDF data are
+#'   read using \code{st_downsample()}. As such, if \code{proxy = TRUE}, this 
+#'   option is ignored.
+#' @details If \code{var} is not set the first set of variables on a shared grid
+#' is used.
 #'
-#' \code{start} and \code{count} columns of ncsub must correspond to the variable dimension (nrows)
-#' and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
-#' is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
+#' \code{start} and \code{count} columns of ncsub must correspond to the
+#' variable dimension (nrows) and be valid index using
+#' \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count
+#' value is \code{NA} then all steps are included. Axis order must match that of
+#' the variable/s being read.
 #' @export
 #' @examples
 #' if (require(ncmeta, quietly = TRUE)) {
@@ -85,24 +100,31 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     proxy_dimensions <- st_dimensions(.x)
     nc_prj <- sf::st_crs(.x)
     
+    # proxy already has CFtime in dimension[["time"]]$values
+    make_time <- FALSE
+    
     if(!is.null(ncsub)) {
     	warning("ncsub ignored when .x is class nc_proxy")
     	ncsub <- NULL
     }
-    
   } else {
     x <- .x
     proxy_dimensions <- NULL
   }
 	
+  # Open the file
+  nc <- RNetCDF::open.nc(x)
+  on.exit(RNetCDF::close.nc(nc), add = TRUE)
+	
   # Get all the nc metadata
-  meta <- .fix_meta(ncmeta::nc_meta(x))
+  meta <- .fix_meta(ncmeta::nc_meta(nc))
 
+  # NetCDF-DSG
   if(.is_netcdf_cf_dsg(meta)) {
     if (!requireNamespace("ncdfgeom", quietly = TRUE))
       stop("package ncdfgeom required, please install it first") # nocov
 
-    if(!is.null(proxy) && proxy) warning("proxy behavior not supported for timeseries netcdf")
+    if(!is.null(proxy) && proxy) warning("proxy behavior not supported for NetCDF-DSG file")
 
     geom <- .get_geom_name(meta)
 
@@ -114,10 +136,10 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   rep_var <- var[1L]
 
   # Get coordinate variable info
-  all_coord_var <- ncmeta::nc_coord_var(x)
+  all_coord_var <- ncmeta::nc_coord_var(nc)
 
-  if(ncol(all_coord_var) == 0) all_coord_var <- data.frame(variable = NA, X = NA, Y = NA,
-                                                           Z = NA, T = NA, bounds = NA)
+  if(ncol(all_coord_var) == 0)
+  	all_coord_var <- data.frame(variable = NA, X = NA, Y = NA, Z = NA, T = NA, bounds = NA)
 
   coord_var <- .clean_coord_var(all_coord_var, rep_var, meta, curvilinear)
 
@@ -132,9 +154,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   # Validate that ncsub matches dims
   dims <- .add_ncsub(dims, ncsub)
 
-  nc <- RNetCDF::open.nc(x)
-  on.exit(RNetCDF::close.nc(nc), add = TRUE)
-
   # Get coordinates from netcdf or create them
   coords <- .get_coords(nc, dims)
   coords <- .clean_coords(coords, coord_var, meta$attribute, eps)
@@ -146,48 +165,24 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   dimid_matcher <- .get_dimid_matcher(nc, coord_var, var)
   
   if(!is.null(proxy_dimensions)) {
-  	tdim <- if("T" %in% dims$axis) {
-  		
-  		tmeta <- .get_time_meta(coord_var, rep_var, meta)
-  		
-  		tvals <- coords[[which(dims$axis == "T")]]
-  		
-  		tdim <- create_dimension(from = 1, to = length(tvals))
-  		
-  		tdim$values <- tvals
-  		
-  		make_cal_time2(tdim,
-  					   time_unit = tmeta$tunit, 
-  					   cal = tmeta$calendar)
-  		
-  	} else NULL
-  	
-  	dims <- .update_dims(dims, proxy_dimensions, coords, tdim)
-  	
+  	dims   <- .update_dims(dims, proxy_dimensions, coords)
   	coords <- .get_coords(nc, dims)
   	coords <- .clean_coords(coords, coord_var, meta$attributes, eps)
   }
   
-  pull <- .should_pull(proxy, 
-  					   array_size = prod(dims[, "count", drop = TRUE]),
-  					   num_vars = length(var))
-  
+  pull <- .should_pull(proxy, prod(dims[, "count", drop = TRUE]), length(var))
   out_data <- if(pull) {
   	# Get all the data from the nc file
-  	.set_nc_units(.get_data(nc, var, dims, dimid_matcher, pull = pull),
-  				  meta$attribute, make_units)
+  	data <- .get_data(nc, var, dims, dimid_matcher)
+  	.set_nc_units(data, meta$attribute, make_units)
   } else {
   	# Just return the source file for each variable.
   	setNames(as.list(rep(x, length(var))), var)
   }
   
   # Create stars dimensions object
-
   if(is.null(nc_dim <- dim(out_data[[1]]))) nc_dim <- dims$length
-  
-  dimensions <- create_dimensions(setNames(nc_dim, dims$name),
-  								  raster)
-  	
+  dimensions <- create_dimensions(setNames(nc_dim, dims$name), raster)
   dimensions <- .get_nc_dimensions(dimensions,
                                    coord_var = all_coord_var,
                                    coords = coords,
@@ -198,16 +193,13 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                                    eps = eps,
                                    ignore_bounds = ignore_bounds,
                                    atts = meta$attribute)
-  dimensions <- .get_nc_time(dimensions, make_time,
-                            coord_var, rep_var, meta)
+  if (make_time)
+	dimensions <- .get_cf_time(dimensions, rep_var, meta)
 
   if (is.character(out_data[[1]])) {
-    
     # this is a proxy
     out_data <- st_stars_proxy(out_data, dimensions, NA_value = NA_real_, resolutions = NULL)
-
     class(out_data) <- c("nc_proxy", "stars_proxy", "stars")
-
   } else {
     # Make initial response data
     out_data <- st_stars(out_data, dimensions)
@@ -233,12 +225,9 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
     out_data <- add_curvilinear(out_data, curvilinear = curvi_coords, nc_prj)
   }
   
-  if(!all(downsample == 0)) {
-    out_data <- st_downsample(out_data, downsample)
-  }
-  
+  if(!all(downsample == 0)) out_data <- st_downsample(out_data, downsample)
+
   out_data
-  
 }
 
 .fix_meta <- function(meta) {
@@ -279,38 +268,35 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
                          n_proxy = options("stars.n_proxy")[[1]] %||% 1.e8) {
   if(is.null(proxy)) {
     if(array_size > n_proxy) {
+      message("Large NetCDF source found, returning proxy object.")
       pull <- FALSE
-      message("Large netcdf source found, returning proxy object.")
     } else {
-      pull <- TRUE
       message(paste("Will return stars object with", array_size, "cells."))
+      pull <- TRUE
     }
-  } else {
-    pull <- !proxy
-  }
-
+  } else pull <- !proxy
+	
   if(pull & array_size > n_proxy)
-    warning("Large netcdf source will be requested. Consider using stars proxy.")
-
+	warning("Large netcdf source will be requested. Consider using stars proxy.")
+	
   pull
 }
 
 .get_vars <- function(var, meta) {
-
   if (is.null(var)) {
     ix <- 1
     if (meta$grid$grid[ix] == "S") {
       ix <- which(!meta$grid$grid == "S")[1L] # nocov
 
-      if (length(ix) < 1)  stop("only scalar variables found, not yet supported") # nocov
+      if (length(ix) < 1)  stop("Only scalar variables found, not yet supported") # nocov
     }
-    grd = meta$grid$grid[which.max(nchar(meta$grid$grid))]
-    var = meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
+    grd <- meta$grid$grid[which.max(nchar(meta$grid$grid))]
+    var <- meta$grid$variables[[match(grd, meta$grid$grid)]]$variable
 
     message(sprintf("no 'var' specified, using %s", paste(var, collapse = ", ")))
     other_vars <- setdiff(meta$variable$name, var)
     if (length(other_vars) > 0)
-      message(sprintf("other available variables:\n %s", paste(other_vars, collapse = ", ")))
+      message(sprintf("Other available variables:\n %s", paste(other_vars, collapse = ", ")))
   }
   return(var)
 }
@@ -408,14 +394,14 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
       c_v$curvilinear <- TRUE
     } else{
       c_v <- c_v[1, ]
-      warning(paste("Found two coordinate variable pairs. Chosing:",
+      warning(paste("Found two coordinate variable pairs. Choosing:",
                     paste(as.character(c_v)[2:5], collapse = " "),
                     "for", as.character(c_v)[1])) #nocov
     }
   } else {
     c_v$curvilinear <- FALSE
   }
-  return(c_v)
+  c_v
 }
 
 .check_curvilinear <- function(coord_var, var, variables, curvilinear) {
@@ -562,44 +548,21 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   var)
 }
 
-.get_nc_var <- function(nc, .v, start, count) {
-  RNetCDF::var.get.nc(nc,
-                      variable = .v,
-                      start = start,
-                      count = count,
-                      collapse = FALSE, ## keep 1-dims
-                      unpack = TRUE,     ## offset and scale applied internally
-                      rawchar = TRUE)  ## needed for NC_CHAR, as per
-}
-
-.get_data <- function(nc, var, dims, dimid_matcher, pull = pull) {
-  out_data <- lapply(var, pull = pull, FUN = function(.v, pull) {
-
-    dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids,
-                dims[, "id", drop = TRUE])
+.get_data <- function(nc, var, dims, dimid_matcher) {
+  out_data <- lapply(var, function(.v) {
+    dm <- match(RNetCDF::var.inq.nc(nc, .v)$dimids, dims[, "id", drop = TRUE])
     if(is.null(dm)) dm <- c(1:nrow(dims))
 
-    request <- list(start = dims[, "start", drop = TRUE][dm],
-                    count = dims[, "count", drop = TRUE][dm])
-
-    request$size <- prod(request$count)
-
-    request$dimid_match <- dm
+    ret <- RNetCDF::var.get.nc(nc,
+    						   variable = .v,
+    						   start = dims[, "start", drop = TRUE][dm],
+    						   count = dims[, "count", drop = TRUE][dm],
+    						   collapse = FALSE, ## keep 1-dims
+    						   unpack = TRUE,     ## offset and scale applied internally
+    						   rawchar = TRUE)  ## needed for NC_CHAR, as per
     
-    request$axis <- dims$axis[dm]
-
-    if(pull) {
-
-      ret <- .get_nc_var(nc, .v, request$start, request$count)
-
-      if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) {
-        ret <- aperm(ret, dm)
-      }
-
-    }
-    
-    return(ret)
-
+	if(length(dm) > 1 && !all(diff(dm[1:2]) == 1)) ret <- aperm(ret, dm)
+    ret
   })
   
   ## "../rasterwise/extdata/R13352.nc"
@@ -729,10 +692,11 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   	
   	from_to <- dimensions[[i]]$from:dimensions[[i]]$to
   	
-  	try_bounds <- names(coords)[i] %in% var_names && 
-  		!ignore_bounds &&
-  		length(bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds) > 0 &&
-  		bounds %in% var_names
+  	if (!ignore_bounds) {
+	  	bounds <- coord_var[coord_var$variable == names(coords)[i], ]$bounds
+	  	try_bounds <- length(bounds) > 0 && bounds %in% var_names &&
+	  				  names(coords)[i] %in% var_names
+	} else try_bounds <- FALSE
   	
   	if (try_bounds) {
   		
@@ -792,56 +756,24 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   return(dimensions)
 }
 
-.get_time_meta <- function(coord_var, var, meta) {
-	
-	TIME_name = as.character(na.omit(unlist(
-		coord_var[coord_var$variable == var, ][c("T")])))
-	
-	if(!length(TIME_name)) {
-		
-		list(tname = NULL, calendar = NULL, tunit = NULL)	
-		
-	} else {
-		
-		atts = meta$attribute[meta$attribute$variable == TIME_name, ]
-		
-		## might not exist, so default to NULL
-		calendar = unlist(atts$value[atts$name == "calendar"])[1L]
-		tunit = unlist(atts$value[atts$name == "units"])[1L]
-		
-		list(tname = TIME_name, calendar = calendar, tunit = tunit)	
+#' Get the CFtime instances for the variable
+#' 
+#' @param dimensions All dimensions of the data source.
+#' @param var The variable to search for. This is a single var.
+#' @param meta The metadata of the data source.
+#' @noRd
+.get_cf_time <- function(dimensions, var, meta) {
+	var_dims  <- meta$axis$dimension[which(meta$axis$variable == var)]
+	time_dims <- meta$extended$dimension[which(!is.na(meta$extended$time))]
+	time_idx  <- which(meta$extended$dimension == time_dims[which(time_dims %in% var_dims)])
+	for (t in seq_along(time_idx)) {
+		idx <- time_idx[t]
+		time <- meta$extended$time[[idx]]
+		dimensions[[ meta$extended$name[[idx]] ]] <- 
+			create_dimension(from = 1, to = length(time), values = time, 
+							 refsys = "CFtime", point = TRUE)
 	}
-}
-
-.get_nc_time <- function(dimensions, make_time, coord_var, var, meta) {
-  # sort out time -> POSIXct:
-  if (make_time) {
-    if (all("T" %in% names(coord_var))) {
-      
-      tmeta <- .get_time_meta(coord_var, var, meta)
-
-      if (!is.na(tmeta$tname) && length(tmeta$tname) == 1L &&
-          meta$variable$ndims[match(tmeta$tname, meta$variable$name)] == 1) {
-        
-        if (tmeta$tname %in% names(dimensions)) {
-          tdim <- NULL
-          if (is.null(tmeta$tunit) || inherits(tmeta$tunit, "try-error")) {
-            warning("ignoring units of time dimension, not able to interpret")
-          } else {
-            tdim = make_cal_time2(dimensions,
-            					  time_name = tmeta$tname,
-            					  time_unit = tmeta$tunit, 
-            					  cal = tmeta$calendar)
-
-          }
-
-          if (!is.null(tdim)) dimensions[[tmeta$tname]] <- tdim
-
-        }
-      }
-    }
-  }
-  return(dimensions)
+	dimensions
 }
 
 .get_curvilinear_coords <- function(curvilinear, dimensions, nc, dims) {
@@ -870,68 +802,6 @@ read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(
   }
 
   return(curvi_coords)
-}
-
-make_cal_time2 <- function(x, time_name = NULL, time_unit = NULL, cal = NULL) {
-   if(inherits(x, "dimensions")) {
-    	tm = st_get_dimension_values(x, time_name)
-    	dimension <- x[[time_name]]
-    } else {
-    	tm <- x$values
-    	dimension <- x
-    }
-
-    if(! is.null(cal)  && cal %in% c("360_day", "365_day", "noleap")) {
-      if (!requireNamespace("PCICt", quietly = TRUE)) {
-        stop("package PCICt required, please install it first") # nocov
-      }
-      t01 = set_units(0:1, time_unit, mode = "standard")
-      delta = if (grepl("months", time_unit)) {
-        if (cal == "360_day")
-          set_units(30 * 24 * 3600, "s", mode = "standard")
-        else
-          set_units((365/12) * 24 * 3600, "s", mode = "standard")
-      } else
-        set_units(as_units(diff(as.POSIXct(t01))), "s", mode = "standard")
-
-
-      origin = as.character(as.POSIXct(t01[1]))
-      v.pcict = PCICt::as.PCICt(tm * as.numeric(delta), cal, origin)
-      if (!is.null(dimension$values)) {
-        v = dimension$values
-        if (inherits(v, "intervals")) {
-          start = PCICt::as.PCICt(v$start * as.numeric(delta), cal, origin)
-          end =   PCICt::as.PCICt(v$end   * as.numeric(delta), cal, origin)
-          dimension$values = make_intervals(start, end)
-        } else
-          dimension$values = v.pcict
-      } else {
-        dimension$offset = v.pcict[1]
-        dimension$delta = diff(v.pcict[1:2])
-      }
-
-      dimension$refsys = "PCICt"
-    } else { # Gregorian/Julian, POSIXct:
-      if (!is.null(dimension$values)) {
-        v = dimension$values
-        if (inherits(v, "intervals")) {
-          start = as.POSIXct(units::set_units(v$start, time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
-          end =   as.POSIXct(units::set_units(v$end,   time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
-          dimension$values = make_intervals(start, end)
-        } else
-          dimension$values = as.POSIXct(units::set_units(tm, time_unit, mode = "standard")) # or: RNetCDF::utcal.nc(u, tm, "c")
-      } else {
-        t0 = dimension$offset
-        t1 = dimension$offset + dimension$delta
-        t.posix = as.POSIXct(units::set_units(c(t0, t1), time_unit, mode = "standard")) # or: utcal.nc(u, c(t0,t1), "c")
-        dimension$offset = t.posix[1]
-        dimension$delta = diff(t.posix)
-      }
-      dimension$refsys = "POSIXct"
-    }
-    dimension
-
-
 }
 
 .is_netcdf_cf_dsg <- function(meta) {

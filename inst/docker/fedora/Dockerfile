@@ -42,7 +42,7 @@ RUN wget https://cran.r-project.org/src/contrib/stars_0.2-0.tar.gz
 #RUN _R_CHECK_FORCE_SUGGESTS_=false /usr/local/bin/R CMD check --as-cran stars*gz
 RUN yum install -y git
 RUN git clone https://github.com/r-spatial/stars.git
-RUN /usr/local/bin/Rscript -e 'install.packages(c("PCICt"), repos = "https://cloud.r-project.org")'
+RUN /usr/local/bin/Rscript -e 'install.packages(c("CFtime", PCICt"), repos = "https://cloud.r-project.org")'
 RUN /usr/local/bin/R CMD build stars
 #RUN _R_CHECK_FORCE_SUGGESTS_=false /usr/local/bin/R CMD check --as-cran stars*gz
 
