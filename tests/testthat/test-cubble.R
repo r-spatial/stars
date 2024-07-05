@@ -11,8 +11,8 @@ test_that("cubble", {
   l7sub = l7[,1:30,1:30]
   cu = as_cubble(l7sub)
   s2 = st_as_stars(cu)
-  # expect_equal(l7sub, s2)
-  expect_true(all.equal(l7sub, s2, check.attributes=FALSE))
+  expect_equal(l7sub, s2)
+  #expect_true(all.equal(l7sub, s2, check.attributes=FALSE))
 
   prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
   #(prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
@@ -25,9 +25,9 @@ test_that("cubble", {
     slice(index = 1:12, along = "time") %>%
     plot(downsample = c(3, 3, 1), hook = plot_hook)
   a = aggregate(prec, by = nc, FUN = max)
-  a.cb = as_cubble(a, key = id, index = time)
+  a.cb = suppressWarnings(as_cubble(a, key = id, index = time))
   a2 = st_as_stars(a.cb)
-  # expect_equal(a, a2)
-  expect_true(all.equal(drop_units(a),a2,check.attributes=FALSE))
+  expect_equal(a, a2)
+  #expect_true(all.equal(drop_units(a),a2,check.attributes=FALSE))
 })
 
