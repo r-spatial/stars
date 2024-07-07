@@ -59,7 +59,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6-6" id="version-06-6">version 0.6-6<a class="anchor" aria-label="anchor" href="#version-06-6"></a></h2>
-<ul><li><p><code>mutate.stars</code> (and others) handle attribute names with spaces in them; <a href="https://github.com/r-spatial/stars/issues/689" class="external-link">#689</a></p></li>
+<ul><li><p>skip <code>cubble</code> tests for cubble version 0.3.1; <a href="https://github.com/huizezhang-sherry/cubble/issues/30" class="external-link uri">https://github.com/huizezhang-sherry/cubble/issues/30</a></p></li>
+<li><p><code>st_transform.stars</code> transforms geometries in array elements</p></li>
+<li><p><code>mutate.stars</code> (and others) handle attribute names with spaces in them; <a href="https://github.com/r-spatial/stars/issues/689" class="external-link">#689</a></p></li>
 <li><p><code><a href="../reference/st_crop.html">st_crop()</a></code> gains an argument <code>normalize</code>; when set to <code>TRUE</code> <code><a href="https://r-spatial.github.io/sf/reference/st_normalize.html" class="external-link">st_normalize()</a></code> is called on the returned value; <a href="https://github.com/r-spatial/stars/issues/685" class="external-link">#685</a>, <a href="https://github.com/r-spatial/stars/issues/686" class="external-link">#686</a></p></li>
 <li><p>constrain reading full GEOLOCATION arrays to the case where they are 2-D; <a href="https://github.com/r-spatial/stars/issues/678" class="external-link">#678</a></p></li>
 </ul></div>
@@ -105,7 +107,7 @@
 <li><p>setting <code>values = NULL</code> in <code><a href="../reference/st_dimensions.html">st_set_dimensions()</a></code> removes dimension values</p></li>
 <li><p>more gracefully handle plotting of global coverage curvilinear grids; <a href="https://github.com/r-spatial/stars/issues/632" class="external-link">#632</a></p></li>
 <li><p><code><a href="../reference/plot.html">image.stars()</a></code> plots images (e.g. of cross sections) when x and/or y are singular or absent; <a href="https://github.com/r-spatial/stars/issues/628" class="external-link">#628</a></p></li>
-<li><p><code><a href="../reference/st_as_stars.html">st_as_stars.cubble_df()</a></code> adds conversion from cubble; <code><a href="https://rdrr.io/pkg/cubble/man/as_cubble.html" class="external-link">cubble::as_cubble()</a></code> methods converts back</p></li>
+<li><p><code><a href="../reference/st_as_stars.html">st_as_stars.cubble_df()</a></code> adds conversion from cubble; <code><a href="https://huizezhang-sherry.github.io/cubble/reference/as_cubble.html" class="external-link">cubble::as_cubble()</a></code> methods converts back</p></li>
 <li><p><code>[&lt;-.stars()</code> accepts for <code>i</code> an indicator (numeric length character) to the array to be replaced; <a href="https://github.com/r-spatial/stars/issues/626" class="external-link">#626</a></p></li>
 <li><p><code><a href="../reference/plot.html">plot.stars()</a></code> gains an argument <code>key.lab</code> to set the legend key label (requires sf &gt;= 1.0-13)</p></li>
 </ul></div>

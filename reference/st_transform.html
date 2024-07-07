@@ -87,6 +87,8 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For simple feature dimensions, <a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a> is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new <code>CRS</code>, use <a href="st_warp.html">st_warp</a> (which is in general lossy).</p>
+<p>If array values contain geometries and an array as a whole is of class `sfc` and 
+has a non-missing CRS, array geometries are also transformed.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
