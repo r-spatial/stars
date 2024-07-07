@@ -1,5 +1,9 @@
 # version 0.6-6
 
+* skip `cubble` tests for cubble version 0.3.1; https://github.com/huizezhang-sherry/cubble/issues/30
+
+* `st_transform.stars` transforms geometries in array elements
+
 * `mutate.stars` (and others) handle attribute names with spaces in them; #689
 
 * `st_crop()` gains an argument `normalize`; when set to `TRUE` `st_normalize()` is called on the returned value; #685, #686
