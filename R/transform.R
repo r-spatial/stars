@@ -67,11 +67,18 @@ transform_curvilinear = function(x, crs, ...) {
 #' plot(st_transform(st_as_sfc(x, as_points=FALSE), new), add = TRUE)
 #' @seealso \link{st_warp}
 #' @details For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp} (which is in general lossy).
+#' 
+#' If array values contain geometries and an array as a whole is of class `sfc` and 
+#' has a non-missing CRS, array geometries are also transformed. 
 #' @export
 st_transform.stars =  function(x, crs, ...) {
 
 	stopifnot(!is.na(crs), !is.na(st_crs(x)))
 
+	for (i in seq_along(x)) {
+		if (inherits(x[[i]], "sfc") && !is.na(st_crs(x[[i]]))) # array cells are geometries
+			x[[i]] = structure(st_transform(x[[i]], crs), dim = dim(x[[i]]))
+	}
 	if (has_sfc(x)) {
 		if (!inherits(crs, "crs") && !inherits(crs, "stars"))
 			crs = st_crs(crs) # needed for GDAL's transform of features

@@ -1,6 +1,6 @@
 # convert arrays to data.frame, in long form
 to_df = function(x) {
-	as.data.frame(lapply(x, function(y) structure(y, dim = NULL)), stringsAsFactors = FALSE)
+	dplyr::as_tibble(lapply(x, function(y) structure(y, dim = NULL)))
 }
 
 set_dim = function(x, d) {

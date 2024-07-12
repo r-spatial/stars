@@ -22,6 +22,9 @@ transform geometries in stars objects to a new coordinate reference system, with
 }
 \details{
 For simple feature dimensions, \link[sf]{st_transform} is called, leading to lossless transformation. For gridded spatial data, a curvilinear grid with transformed grid cell (centers) is returned, which is also lossless. To convert this to a regular grid in the new \code{CRS}, use \link{st_warp} (which is in general lossy).
+
+If array values contain geometries and an array as a whole is of class `sfc` and 
+has a non-missing CRS, array geometries are also transformed.
 }
 \examples{
 geomatrix = system.file("tif/geomatrix.tif", package = "stars")
