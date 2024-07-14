@@ -40,7 +40,7 @@
 
 \item{as_points}{logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details}
 
-\item{normalize}{logical; if \code{TRUE} then pass the cropped object to \code{\link{st_normalize}} before returning.}
+\item{normalize}{logical; if \code{TRUE} then pass the cropped object to \code{\link[sf]{st_normalize}} before returning.}
 }
 \description{
 crop a stars object
