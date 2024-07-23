@@ -40,7 +40,7 @@ RUN Rscript -e 'install.packages(c("dplyr"), repos = "https://cloud.r-project.or
 
 RUN R CMD build --no-build-vignettes --no-manual stars
 
-RUN Rscript -e 'install.packages(c("PCICt","RNetCDF","ggforce","gstat","lwgeom","maps","ncmeta","pbapply","plm","raster","sp","spacetime","zoo","xts"), repos = "https://cloud.r-project.org")'
+RUN Rscript -e 'install.packages(c("CFtime", PCICt","RNetCDF","ggforce","gstat","lwgeom","maps","ncmeta","pbapply","plm","raster","sp","spacetime","zoo","xts"), repos = "https://cloud.r-project.org")'
 
 
 #RUN R CMD check --no-build-vignettes --no-manual --as-cran --run-dontrun sf_*tar.gz

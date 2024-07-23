@@ -21,7 +21,7 @@
 \arguments{
 \item{x}{object of class \code{stars} with information to be aggregated}
 
-\item{by}{object of class \code{sf} or \code{sfc} for spatial aggregation, for temporal aggregation a vector with time values (\code{Date}, \code{POSIXct}, or \code{PCICt}) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see \link{cut.POSIXt}), or a function that cuts time into intervals; if by is an object of class \code{stars}, it is converted to sfc by \code{st_as_sfc(by, as_points = FALSE)} thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.}
+\item{by}{object of class \code{sf} or \code{sfc} for spatial aggregation, for temporal aggregation a vector with time values (\code{Date}, \code{POSIXct}, or \code{ISO8601 character strings}) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see \link{cut.POSIXt}, \link[CFtime]{cut}), or a function that cuts time into intervals; if \code{by} is an object of class \code{stars}, it is converted to \code{sfc} by \code{st_as_sfc(by, as_points = FALSE)} thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.}
 
 \item{FUN}{aggregation function, such as \code{mean}}
 

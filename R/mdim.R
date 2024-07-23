@@ -148,29 +148,14 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 	create_units = function(x) {
 		u = attr(x, "units")
 		x = structure(x, units = NULL) # remove attribute
-		if (is.null(u) || u %in% c("", "none"))
-			x
-		else {
-			if (!is.null(a <- attr(x, "attributes")) && !is.na(cal <- a["calendar"]) && 
-						cal %in% c("360_day", "365_day", "noleap"))
-				get_pcict(x, u, cal)
-			else {
-				days_since = grepl("days since", u)
-				u = try_as_units(u)
-				if (!inherits(u, "units")) # FAIL:
-					x
-				else {
-					units(x) = u
-					if (days_since && inherits(d <- try(as.Date(x), silent = TRUE), "Date")) 
-						d
-					else if (inherits(p <- try(as.POSIXct(x), silent = TRUE), "POSIXct"))
-						p
-					else
-						x
-				}
-			}
-		}
+		if (is.null(u) || u %in% c("", "none")) return(x)
+		
+		cal <- if (!is.null(a <- attr(x, "attributes"))) a["calendar"] else NULL
+		time <- try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFtime
+		if (methods::is(time, "CFtime")) time + as.numeric(x)  # if we have CFtime, add the offsets
+		else x                                                 # if not, fail graciously
 	}
+	
 	l = rev(lapply(ret$dimensions, function(x) {
 			   if (inherits(x, "sfc")) x else create_units(x$values[[1]])
 			}))
@@ -249,25 +234,27 @@ add_attr = function(x, at) { # append at to attribute "attrs"
 }
 
 add_units_attr = function(l) {
-		f = function(x) {
-			if (inherits(x, "units"))
-				add_attr(x, c(units = as.character(units(x))))
-			else if (inherits(x, c("POSIXct", "PCICt"))) {
-				cal = if (!is.null(cal <- attr(x, "cal")))
-					c(calendar = paste0(cal, "_day")) # else NULL, intended
-				x = as.numeric(x)
-				if (all(x %% 86400 == 0))
-					add_attr(x/86400, c(units = "days since 1970-01-01", cal))
-				else if (all(x %% 3600 == 0))
-					add_attr(x / 3600, c(units = "hours since 1970-01-01 00:00:00", cal))
-				else
-					add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
-			} else if (inherits(x, "Date"))
-				add_attr(as.numeric(x), c(units = "days since 1970-01-01"))
+	f = function(x) {
+		if (inherits(x, "units"))
+			add_attr(x, c(units = as.character(units(x))))
+		else if (inherits(x, "POSIXct")) {
+			cal = if (!is.null(cal <- attr(x, "cal")))
+				c(calendar = paste0(cal, "_day")) # else NULL, intended
+			x = as.numeric(x)
+			if (all(x %% 86400 == 0))
+				add_attr(x/86400, c(units = "days since 1970-01-01", cal))
+			else if (all(x %% 3600 == 0))
+				add_attr(x / 3600, c(units = "hours since 1970-01-01 00:00:00", cal))
 			else
-				x
-		}
-		lapply(l, f)
+				add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
+		} else if (methods::is(x, "CFtime"))
+			add_attr(CFtime::offsets(x), c(units = CFtime::definition(x), CFtime::calendar(x)))
+		else if (inherits(x, "Date"))
+			add_attr(as.numeric(x), c(units = "days since 1970-01-01"))
+		else
+			x
+	}
+	lapply(l, f)
 }
 
 cdl_add_geometry = function(e, i, sfc) {
