@@ -9,15 +9,15 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @param x object of class \code{stars} or \code{stars_proxy}
 #' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
-#' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{POSIXt}, \code{Date}, or \code{PCICt}), in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
-#' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.
+#' @param time_column character or integer; name or index of a column in \code{at} (which must be of class \code{sf} or \code{sfc}) with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{Date}, or \code{CFtime}) in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
+#' @param interpolate_time logical; should time be interpolated? If \code{FALSE}, time instances are matched using the coinciding or the last preceding time in the data cube, unless the dimension uses \code{CFtime} with bounds set, in which case the corresponding time interval in which the time or date value falls is returned.
 #' @param FUN function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel
 #' @param ... passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries
 #' @returns if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
 #' otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
 #' dimensions, if this is not the case, an object of \code{sf} with extracted values.
-#' @details points outside the raster are returned as \code{NA} values. For
+#' @details Points outside the raster are returned as \code{NA} values. For
 #' large sets of points for which extraction is needed, passing a matrix as
 #' to \code{at} may be much faster than passing an \code{sf} or \code{sfc} object.
 #' @export
@@ -35,6 +35,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 
 	stopifnot(inherits(at, c("sf", "sfc", "matrix")))
 	if (inherits(at, "matrix"))
+		# FIXME: matrix form of at supports only x,y rasters, no z,t or higher dimensions
 		pts = at
 	else {
 		stopifnot(st_crs(at) == st_crs(x))
@@ -48,8 +49,16 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		}
 		sf_column = attr(at, "sf_column") %||% "geometry"
 
-		tm_pts = if (!is.null(time_column))
-					at[[time_column]] # else NULL
+		if (!is.null(time_column)) {
+			tm_pts = at[[time_column]]
+			if (is.null(tm_pts))
+				stop("cannot match times: `time_column` not found in `at`")
+			## If there is more than one temporal dimension, the first one is taken
+			tm = which_time(x)[1]
+			if (is.na(tm))
+				stop("cannot match times: `x` does not have a temporal dimension")
+		}
+		
 		at = st_geometry(at)
 		pts = st_coordinates(at)
 	}
@@ -89,16 +98,9 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 	}
 	# match times:
 	if (!is.null(time_column)) {
-		refsys_time = c("POSIXct", "POSIXt", "Date", "PCICt")
-		## If there are more than two temporal dimensions, the first one is taken
-		tm = names(which(sapply(
-			st_dimensions(x),
-			function(i) any(i$refsys %in% refsys_time))))[1]
-		if (is.na(tm))
-			stop("cannot match times: x does not have a temporal dimension")
-		tm_cube = st_dimensions(x)[[tm]]$values %||% st_get_dimension_values(x, tm)
+		tm_cube = st_dimensions(x)[tm]$values %||% st_get_dimension_values(x, tm)
 		tm_ix = match_time(tm_pts, tm_cube,
-						   intervals = !st_dimensions(x)[[tm]]$point,
+						   intervals = !st_dimensions(x)[tm]$point,
 						   interpolate_time)
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(at), tm_ix)])
@@ -140,7 +142,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			if (!is.null(time_column)) { # add time columns of both cube and at:
 				if (inherits(tm_cube, "intervals"))
 					tm_cube = as.list(tm_cube)
-				df[[tm]] = tm_cube[tm_ix]
+				df[tm] = tm_cube[tm_ix]
 				df[[time_column]] = tm_pts
 			}
 			sf = st_as_sf(df)
@@ -155,6 +157,13 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 # if interpolate = FALSE, returns an integer in 1...length(b) or NA if outside
 # if interpolate = TRUE, returns a continuous index in 1...length(b) or NA if outside
 match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
+	if (methods::is(b, "CFtime")) {
+		if (interpolate && isFALSE(intervals) && is.null(CFtime::bounds(b))) 
+			return(CFtime::indexOf(a, b, method = "linear"))
+		else
+			return(CFtime::indexOf(a, b))
+	}
+
 	if (inherits(a, "POSIXct") && inherits(b, "Date"))
 		a = as.Date(a)
 	if (inherits(b, "POSIXct") && inherits(a, "Date"))
@@ -167,6 +176,7 @@ match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
 			m
 		} else
 			match(a, b)
+
 	if (interpolate && !isTRUE(intervals) && !inherits(b, "intervals")) {
 		b = as.numeric(b)
 		a = as.numeric(a)

@@ -1,28 +1,30 @@
-.update_dims <- function(dims, proxy_dimensions, coords, tdim) {
+.update_dims <- function(dims, proxy_dimensions, coords) {
+	between <- function(x, ymin, ymax, z = x) {
+		z[x >= ymin & x <= ymax, drop = FALSE]
+	}
+	
 	uc <- coords
 	for(coord in names(coords)) {
-		
-		pv <- st_get_dimension_values(proxy_dimensions, coord)
-		
-		between <- function(x, ymin, ymax, z = x) {
-			z[x >= ymin & x <= ymax, drop = FALSE]
-		}
-		
-		if(inherits(pv, "POSIXt")) {
-			# Need to deal with the case where tdim isn't values but is from to.
-			uc[[coord]] <- between(tdim$values, min(pv), max(pv), uc[[coord]])
+		ndx <- which(dims$name == coord)
+
+		# CFtime instance already has proxy dimensions
+		if (!is.na(proxy_dimensions[[coord]]$refsys) &&
+			proxy_dimensions[[coord]]$refsys == "CFtime") {
+			dims$start[ndx] <- proxy_dimensions[[coord]]$from
+			dims$count[ndx] <- proxy_dimensions[[coord]]$to -
+							   proxy_dimensions[[coord]]$from + 1
 		} else {
-			if(attr(proxy_dimensions, "raster")$curvilinear) {
+			pv <- st_get_dimension_values(proxy_dimensions, coord)
+	
+			if(attr(proxy_dimensions, "raster")$curvilinear)
 				uc[[coord]] <- seq(proxy_dimensions[[coord]]$from, 
 								   proxy_dimensions[[coord]]$to)
-			} else {
+			else
 				uc[[coord]] <- between(uc[[coord]], min(pv), max(pv))
-			}
+	
+			dims$start[ndx] <- which(coords[[coord]] == uc[[coord]][1])[1]
+			dims$count[ndx] <- dims$length[ndx] <- length(uc[[coord]])
 		}
-		
-		dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]][1])[1]
-		dims$count[dims$name == coord] <- dims$length[dims$name == coord] <- length(uc[[coord]])
-		
 	}
 	dims
 }
@@ -64,8 +66,7 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 		x <- x[1]
 	}
 			
-	tdim <- which(sapply(st_dimensions(x), function(x) any(grepl("^POSIX|^PCIC", x$refsys))))
-	
+	tdim <- which(sapply(st_dimensions(x), function(x) x$refsys == "CFtime"))
 	if(length(tdim)) {
 		if(length(st_get_dimension_values(x, tdim)) > max_times) {
 			stop("Time dimension of nc_proxy is longer than max_times in plot.nc_proxy.")

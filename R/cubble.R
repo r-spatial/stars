@@ -12,7 +12,7 @@ st_as_stars.cubble_df = function(.x, ..., check_times = FALSE) {
 	nr = sapply(.x$ts, nrow)
 	stopifnot(length(unique(nr)) == 1)
 	ts1 = .x$ts[[1]]
-	dt = which(sapply(ts1, inherits, c("Date", "POSIXct", "units")))
+	dt = which(sapply(ts1, inherits, c("Date", "POSIXct", "units", "factor")))
 	if (length(dt) > 1) {
 		message("using only first time column for time index")
 		dt = dt[1]
