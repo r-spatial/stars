@@ -308,8 +308,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}
-	if (normalize[1]) x = st_normalize(x)
-	x
+	if (normalize[1]) 
+		st_normalize(x)
+	else 
+		x
 }
 
 #' @export

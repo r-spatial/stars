@@ -54,16 +54,17 @@ plot.stars_proxy = function(x, y, ..., downsample = get_downsample(dim(x))) {
 	plot(st_as_stars(x, downsample = downsample, ...), ..., downsample = 0)
 }
 
-st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions, RasterIO = list(), file_dim = NULL) {
-	stopifnot(!missing(NA_value))
-	stopifnot(!missing(resolutions))
-	stopifnot(length(list(...)) == 0)
-	stopifnot(is.list(x))
-	stopifnot(inherits(dimensions, "dimensions"))
+st_stars_proxy = function(x, dimensions, ..., NA_value, resolutions, RasterIO = list(), file_dim = NULL, class = character(0)) {
+	stopifnot(!missing(NA_value),
+		!missing(resolutions),
+		length(list(...)) == 0,
+		is.list(x),
+		inherits(dimensions, "dimensions"))
+
 	if (length(RasterIO) == 0)
 		RasterIO = NULL
 	structure(x, dimensions = dimensions, NA_value = NA_value, resolutions = resolutions,
-		RasterIO = RasterIO, file_dim = file_dim, class = c("stars_proxy", "stars"))
+		RasterIO = RasterIO, file_dim = file_dim, class = c(class, "stars_proxy", "stars"))
 }
 
 add_resolution = function(lst) {
@@ -336,7 +337,7 @@ st_as_stars.stars_proxy = function(.x, ..., downsample = 0, url = attr(.x, "url"
 		# there are cases where this is not right. Hence:
 		# TODO: only warn when there is a reason to warn.
 		if (!all(downsample == 0))
-			lapply(attr(.x, "call_list"), check_xy_warn, dimensions = st_dimensions(.x))
+			lapply(cl, check_xy_warn, dimensions = st_dimensions(.x))
 		process_call_list(fetch(.x, ..., downsample = downsample), cl, envir = envir, downsample = downsample)
 	}
 }
