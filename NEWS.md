@@ -1,6 +1,6 @@
 # version 0.6-7
 
-* initial support for `read_mdim()` to work with `proxy = TRUE`; #559 
+* initial support for `read_mdim()` to work with `proxy = TRUE`; #659 
 
 # version 0.6-6
 
