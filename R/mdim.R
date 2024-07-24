@@ -435,6 +435,11 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 st_as_stars.mdim = function(.x, ..., downsample = 0, debug = FALSE,
 		envir = parent.frame()) {
 	d = st_dimensions(.x)
+	if (length(downsample) == 1) { # implies only spatial coordinates
+		ds = dim(.x) * 0
+		ds[1:2] = downsample
+		downsample = ds
+	}
 	step = rep_len(downsample, length(dim(.x))) + 1
 	offset = sapply(d, function(x) x$from) - 1
 	count = (sapply(d, function(x) x$to) - offset) %/% step
@@ -445,7 +450,7 @@ st_as_stars.mdim = function(.x, ..., downsample = 0, debug = FALSE,
 	for (i in seq_along(l))
 		l[[i]] = read_mdim(.x[[i]], names(.x)[i], offset = offset, count = count, step = step, proxy = FALSE, ...)
 	ret = do.call(c, l)
-	if (is.na(st_crs(ret)) && !is.na(st_crs(.x))) # as it was set after reading
+	if (!is.na(st_crs(.x)))
 		st_crs(ret) = st_crs(.x)
 	# post-process:
 	cl = attr(.x, "call_list")
