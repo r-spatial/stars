@@ -1,5 +1,7 @@
 # version 0.6-7
 
+* `c.stars()` verifies semantic equivalence of objects' CRS; #703
+
 * initial support for `read_mdim()` to work with `proxy = TRUE`; #659 
 
 # version 0.6-6

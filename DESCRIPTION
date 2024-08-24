@@ -88,7 +88,7 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Collate: 
     'aggregate.R'
     'cubble.R'
