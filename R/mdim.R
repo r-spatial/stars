@@ -373,12 +373,14 @@ st_as_cdl = function(x) {
 	for (i in seq_along(x))
 		x[[i]] = add_attr(x[[i]], co)
 
-	x = add_units_attr(x) # unclasses
+	x = add_units_attr(x) # unclasses x
 	for (i in seq_along(x))
-		if (is.null(names(dim(x[[i]])))) # FIXME: read_ncdf() doesn't name dim
+		if (is.null(names(dim(x[[i]])))) # FIXME: read_ncdf() doesn't name array dim
 			names(dim(x[[i]])) = names(d)
-	for (i in names(e))
+
+	for (i in names(e)) # copy over dimension values
 		x[[i]] = e[[i]]
+
 	which_dims = function(a, dimx) {
 		m = match(names(dim(a)), names(dimx), nomatch = numeric(0)) - 1
 		if (all(is.na(m)))
@@ -419,6 +421,8 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 					  root_group_options = character(0), options = character(0),
 					  as_float = TRUE) {
 
+	if (inherits(x, "stars_proxy"))
+		x = st_as_stars(x)
 	cdl = st_as_cdl(x)
 	wkt = if (is.na(st_crs(x)))
 			character(0)
