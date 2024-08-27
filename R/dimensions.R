@@ -113,6 +113,8 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
+	if (inherits(.x, "mdim"))
+		stop("for mdim objects, use st_set_dimensions() after st_as_stars()")
 	d = st_dimensions(.x)
 	if (!missing(which) && is.character(which))
 		which = match(which, base::names(d))

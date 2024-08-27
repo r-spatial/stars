@@ -444,7 +444,7 @@ st_as_stars.mdim = function(.x, ..., downsample = 0, debug = FALSE,
 		ds[1:2] = downsample
 		downsample = ds
 	}
-	step = rep_len(downsample, length(dim(.x))) + 1
+	step = rep_len(round(downsample), length(dim(.x))) + 1
 	offset = sapply(d, function(x) x$from) - 1
 	count = (sapply(d, function(x) x$to) - offset) %/% step
 	if (debug)
