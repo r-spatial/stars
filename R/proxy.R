@@ -567,10 +567,7 @@ st_crop.stars_proxy = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$d
 		rast = attr(dm, "raster")$dimensions
 		xd = rast[1]
 		yd = rast[2]
-		bb = if (!inherits(y, "bbox"))
-				st_bbox(y)
-			else
-				y
+		bb = st_bbox(y)
 		if (epsilon != 0)
 			bb = bb_shrink(bb, epsilon)
 		# FIXME: document how EXACTLY cropping works; https://github.com/hypertidy/tidync/issues/73
