@@ -1,6 +1,7 @@
 # convert arrays to data.frame, in long form
 to_df = function(x) {
-	dplyr::as_tibble(lapply(x, function(y) structure(y, dim = NULL)))
+	out = dplyr::as_tibble(lapply(x, function(y) structure(y, dim = NULL)))
+	if(any(sapply(out, inherits, "sfc")) st_as_sf(out) else out
 }
 
 set_dim = function(x, d) {
