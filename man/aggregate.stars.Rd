@@ -96,5 +96,5 @@ agg = aggregate(s, f, mean)
 plot(agg)
 }
 \seealso{
-\link[sf]{aggregate}, \link{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
+\link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
 }

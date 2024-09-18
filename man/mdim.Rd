@@ -42,13 +42,13 @@ write_mdim(
 
 \item{raster}{names of the raster variables (default: first two dimensions)}
 
-\item{offset}{integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)}
+\item{offset}{integer; zero-based offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)}
 
 \item{count}{integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)}
 
 \item{step}{integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
 
-\item{proxy}{logical; return proxy object? (not functional yet)}
+\item{proxy}{logical; return proxy object?}
 
 \item{debug}{logical; print debug info?}
 

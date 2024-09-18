@@ -63,6 +63,8 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		x = st_as_stars_proxy(x)
 
 	min_dist = NULL
+	if (inherits(x, "mdim"))
+		x = st_as_stars(x) # realize
 	m = if (inherits(x, "stars_proxy")) {
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(get_names(y), 

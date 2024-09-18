@@ -191,8 +191,13 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				names(df) = names(dfs)
 			else { # another exception... time as second dimension
 				e = expand_dimensions(x)
-				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt")))
-					names(df) = as.character(e[-ix][[1]])
+				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt"))) {
+					names(df) = if (length(nc) > 1) {
+							nm = expand.grid(e[-ix][[1]], names(x))
+							paste(nm[[2]], nm[[1]], sep = ".")
+						} else
+							as.character(e[-ix][[1]])
+				}
 			}
 	
 			df[[ names(st_dimensions(x))[ ix[1] ] ]] = sfc # keep dimension name

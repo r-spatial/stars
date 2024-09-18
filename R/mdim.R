@@ -116,10 +116,10 @@ match_raster_dims = function(nms) {
 #' @param variable name of the array to be read; if `"?"`, a list of array names is returned, with group name as list element names.
 #' @param options character; driver specific options regarding the opening (read_mdim) or creation (write_mdim) of the dataset
 #' @param raster names of the raster variables (default: first two dimensions)
-#' @param offset integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
+#' @param offset integer; zero-based offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)
 #' @param count integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)
 #' @param step integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)
-#' @param proxy logical; return proxy object? (not functional yet)
+#' @param proxy logical; return proxy object?
 #' @param debug logical; print debug info?
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
 #' named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names
@@ -131,9 +131,6 @@ match_raster_dims = function(nms) {
 read_mdim = function(filename, variable = character(0), ..., options = character(0), 
 					 raster = NULL, offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
 					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
-
-	if (proxy)
-		stop("proxy not yet implemented in read_mdim()")
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
@@ -215,32 +212,40 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		else
 			x
 	}
-	lst = lapply(ret$array_list, function(x) structure(clean_units(x), dim = rev(dim(x))))
 
 	# create return object:
-	st = st_stars(lst, dimensions)
-	if (is.null(ret$srs) || is.na(ret$srs)) {
-		if (missing(curvilinear) || is.character(curvilinear)) { # try curvilinear:
-			xy = raster$dimensions
-			ll = curvilinear
-			if (is.character(curvilinear)) {
-				if (is.null(names(curvilinear)))
-					names(curvilinear) = xy[1:2]
-				ret = try(st_as_stars(st, curvilinear = curvilinear), silent = TRUE)
-				if (inherits(ret, "stars"))
-					st = ret
+	if (proxy) {
+		lst = lapply(ret$array_list, function(x) filename)
+		st = st_stars_proxy(lst, dimensions, NA_value = NA_real_, resolutions = NULL, class = "mdim")
+		if (!is.null(ret$srs))
+			st_set_crs(st, ret$srs)
+		else
+			st
+	} else { 
+		lst = lapply(ret$array_list, function(x) structure(clean_units(x), dim = rev(dim(x))))
+		st = st_stars(lst, dimensions)
+		if (is.null(ret$srs) || is.na(ret$srs)) {
+			if (missing(curvilinear) || is.character(curvilinear)) { # try curvilinear:
+				xy = raster$dimensions
+				ll = curvilinear
+				if (is.character(curvilinear)) {
+					if (is.null(names(curvilinear)))
+						names(curvilinear) = xy[1:2]
+					ret = try(st_as_stars(st, curvilinear = curvilinear), silent = TRUE)
+					if (inherits(ret, "stars"))
+						st = ret
+				}
+				if (!is_curvilinear(st) &&
+					inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
+					inherits(y <- try(read_mdim(filename, ll[2], curvilinear = FALSE), silent = TRUE), "stars") &&
+						identical(dim(x)[xy], dim(st)[xy]) && identical(dim(y)[xy], dim(st)[xy]))
+					st = st_as_stars(st, curvilinear = setNames(list(x, y), xy))
 			}
-			if (!is_curvilinear(st) &&
-				inherits(x <- try(read_mdim(filename, ll[1], curvilinear = FALSE), silent = TRUE), "stars") &&
-				inherits(y <- try(read_mdim(filename, ll[2], curvilinear = FALSE), silent = TRUE), "stars") &&
-					identical(dim(x)[xy], dim(st)[xy]) && identical(dim(y)[xy], dim(st)[xy]))
-				st = st_as_stars(st, curvilinear = setNames(list(x, y), xy))
-		}
-		st
-	} else
-		st_set_crs(st, ret$srs)
+			st
+		} else
+			st_set_crs(st, ret$srs)
+	}
 }
-
 
 # WRITE helper functions:
 
@@ -368,12 +373,14 @@ st_as_cdl = function(x) {
 	for (i in seq_along(x))
 		x[[i]] = add_attr(x[[i]], co)
 
-	x = add_units_attr(x) # unclasses
+	x = add_units_attr(x) # unclasses x
 	for (i in seq_along(x))
-		if (is.null(names(dim(x[[i]])))) # FIXME: read_ncdf() doesn't name dim
+		if (is.null(names(dim(x[[i]])))) # FIXME: read_ncdf() doesn't name array dim
 			names(dim(x[[i]])) = names(d)
-	for (i in names(e))
+
+	for (i in names(e)) # copy over dimension values
 		x[[i]] = e[[i]]
+
 	which_dims = function(a, dimx) {
 		m = match(names(dim(a)), names(dimx), nomatch = numeric(0)) - 1
 		if (all(is.na(m)))
@@ -414,6 +421,8 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 					  root_group_options = character(0), options = character(0),
 					  as_float = TRUE) {
 
+	if (inherits(x, "stars_proxy"))
+		x = st_as_stars(x)
 	cdl = st_as_cdl(x)
 	wkt = if (is.na(st_crs(x)))
 			character(0)
@@ -424,4 +433,43 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 					root_group_options = root_group_options, options = options,
 					as_float = as_float)
 	invisible(x)
+}
+
+#' @export
+st_as_stars.mdim = function(.x, ..., downsample = 0, debug = FALSE,
+		envir = parent.frame()) {
+	d = st_dimensions(.x)
+	if (length(downsample) == 1) { # implies only spatial coordinates
+		ds = dim(.x) * 0
+		ds[1:2] = downsample
+		downsample = ds
+	}
+	step = rep_len(round(downsample), length(dim(.x))) + 1
+	offset = sapply(d, function(x) x$from) - 1
+	count = (sapply(d, function(x) x$to) - offset) %/% step
+	if (debug)
+		print(data.frame(offset = offset, step = step, count = count))
+	# read:
+	l = vector("list", length(.x))
+	for (i in seq_along(l))
+		l[[i]] = read_mdim(.x[[i]], names(.x)[i], offset = offset, count = count, step = step, proxy = FALSE, ...)
+	ret = do.call(c, l)
+	if (!is.na(st_crs(.x)))
+		st_crs(ret) = st_crs(.x)
+	# post-process:
+	cl = attr(.x, "call_list")
+	if (!all(downsample == 0))
+		lapply(cl, check_xy_warn, dimensions = st_dimensions(.x))
+	process_call_list(ret, cl, envir = envir, downsample = downsample)
+}
+
+#' @export
+`[.mdim` = function(x, i, j, ...) {
+	structure(NextMethod(), class = class(x))
+}
+
+#' @export
+#' @name st_crop
+st_crop.mdim = function(x, y, ...) {
+	structure(NextMethod(), class = class(x))
 }
