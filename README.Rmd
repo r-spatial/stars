@@ -259,6 +259,9 @@ This project has been realized with financial
 [support](https://www.r-consortium.org/blog/2017/04/03/q1-2017-isc-grants)
 from the
 
-<a href="https://www.r-consortium.org/all-projects/awarded-projects/2017-group-1">
-<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300">
+<a href="https://r-consortium.org/all-projects/2017-group-1.html#stars-scalable-spatiotemporal-tidy-arrays-for-r">
+<img src="https://r-consortium.org/images/RConsortium_Horizontal_Pantone.webp" width="300">
 </a>
+<!--
+<img src="http://pebesma.staff.ifgi.de/RConsortium_Horizontal_Pantone.png" width="300">
+-->
