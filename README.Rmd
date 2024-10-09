@@ -18,7 +18,7 @@ is_online = curl::has_internet()
 [![CRAN](https://www.r-pkg.org/badges/version/stars)](https://cran.r-project.org/package=stars) 
 [![cran checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
-[![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
+[![status](https://tinyverse.netlify.app/badge/stars)](https://CRAN.R-project.org/package=stars)
 [![Codecov test coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/stars?branch=main)
 <!-- badges: end -->
 
@@ -27,7 +27,7 @@ Spatiotemporal data often comes in the form of dense arrays, with space and time
 
 -   socio-economic or demographic data,
 -   environmental variables monitored at fixed stations,
--   raster maps
+-   raster maps,
 -   time series of satellite images with multiple spectral bands,
 -   spatial simulations, and
 -   climate or weather model output.
@@ -55,8 +55,8 @@ knitr::include_graphics("https://raw.githubusercontent.com/r-spatial/stars/main/
 ```
 
 or lower-dimensional cubes such as a raster image:
-```{r plot1}
-suppressPackageStartupMessages(library(dplyr))
+```{r plot1, message=FALSE}
+library(dplyr)
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) |>
@@ -90,7 +90,7 @@ y = c(1, 1.5, 3, 3.5)
 d = st_dimensions(x = x, y = y, .raster = c("x", "y"))
 r4 = st_as_stars(r = m, dimensions = d)
 
-grd = st_make_grid(cellsize = c(10,10), offset = c(-130,10), n= c(8,5), crs=st_crs(4326))
+grd = st_make_grid(cellsize = c(10,10), offset = c(-130,10), n = c(8,5), crs = st_crs(4326))
 r5 = st_transform(grd, "+proj=laea +lon_0=-70 +lat_0=35")
 
 par(mfrow = c(2,3))
@@ -180,20 +180,19 @@ index, and then the corresponding time value:
 ```{r plot5, fig.height=3}
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 b = st_apply(a, "geom", index_max)
-b |>  mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
+b |> mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
   select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
 
 With package `cubble`, we can make a glyph map to see the magnitude and timings of county maximum precipitation:
-```{r plot6, fig.height=3}
+```{r plot6, fig.height=3, message=FALSE, warning=FALSE}
 library(cubble)
 library(ggplot2)
 a |> setNames("precip") |>
   st_set_dimensions(2, name = "tm") |>
   units::drop_units() |>
-  as_cubble(key = id, index = tm) |>
-  suppressWarnings() -> a.cb
+  as_cubble(key = id, index = tm) -> a.cb
 a.cb |>
   face_temporal() |>
   unfold(long, lat) |>

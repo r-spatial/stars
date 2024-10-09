@@ -8,7 +8,7 @@
 [![cran
 checks](https://badges.cranchecks.info/worst/stars.svg)](https://cran.r-project.org/web/checks/check_results_stars.html)
 [![Downloads](https://cranlogs.r-pkg.org/badges/stars?color=brightgreen)](https://www.r-pkg.org/pkg/stars)
-[![status](https://tinyverse.netlify.com/badge/stars)](https://CRAN.R-project.org/package=stars)
+[![status](https://tinyverse.netlify.app/badge/stars)](https://CRAN.R-project.org/package=stars)
 [![Codecov test
 coverage](https://codecov.io/gh/r-spatial/stars/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-spatial/stars?branch=main)
 <!-- badges: end -->
@@ -18,7 +18,7 @@ and time being array dimensions. Examples include
 
 - socio-economic or demographic data,
 - environmental variables monitored at fixed stations,
-- raster maps
+- raster maps,
 - time series of satellite images with multiple spectral bands,
 - spatial simulations, and
 - climate or weather model output.
@@ -44,11 +44,8 @@ spectral band and sensor form dimensions:
 or lower-dimensional cubes such as a raster image:
 
 ``` r
-suppressPackageStartupMessages(library(dplyr))
+library(dplyr)
 library(stars)
-# Loading required package: abind
-# Loading required package: sf
-# Linking to GEOS 3.11.2, GDAL 3.7.2, PROJ 9.3.0; sf_use_s2() is TRUE
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 read_stars(tif) |>
   slice(index = 1, along = "band") |>
@@ -111,12 +108,12 @@ methods(class = "stars_proxy")
 #  [9] coerce          dim             droplevels      filter         
 # [13] hist            image           initialize      is.na          
 # [17] Math            merge           mutate          Ops            
-# [21] plot            predict         print           pull           
-# [25] rename          select          show            slice          
-# [29] slotsFromS3     split           st_apply        st_as_sf       
-# [33] st_as_stars     st_crop         st_dimensions<- st_downsample  
-# [37] st_mosaic       st_normalize    st_redimension  st_sample      
-# [41] st_set_bbox     transmute       write_stars    
+# [21] plot            prcomp          predict         print          
+# [25] pull            rename          select          show           
+# [29] slice           slotsFromS3     split           st_apply       
+# [33] st_as_sf        st_as_stars     st_crop         st_dimensions<-
+# [37] st_downsample   st_mosaic       st_normalize    st_redimension 
+# [41] st_sample       st_set_bbox     transmute       write_stars    
 # see '?methods' for accessing help and source code
 ```
 
@@ -135,10 +132,10 @@ prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 #                                           Max.
 # Total_precipitation_surface... [kg/m^2] 163.75
 # dimension(s):
-#      from  to                  offset   delta         refsys
-# x       1  87                      NA      NA WGS 84 (CRS84)
-# y       1 118                      NA      NA WGS 84 (CRS84)
-# time    1  23 2018-09-13 19:00:00 UTC 1 hours        POSIXct
+#      from  to                  offset   delta  refsys
+# x       1  87                      NA      NA  WGS 84
+# y       1 118                      NA      NA  WGS 84
+# time    1  23 2018-09-13 19:00:00 UTC 1 hours POSIXct
 #                                  values x/y
 # x    [87x118] -80.61 [°],...,-74.88 [°] [x]
 # y      [87x118] 32.44 [°],...,37.62 [°] [y]
@@ -174,7 +171,7 @@ and then the corresponding time value:
 ``` r
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 b = st_apply(a, "geom", index_max)
-b |>  mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
+b |> mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
   select(when) |>
   plot(key.pos = 1, main = "time of maximum precipitation")
 ```
@@ -186,17 +183,11 @@ timings of county maximum precipitation:
 
 ``` r
 library(cubble)
-# 
-# Attaching package: 'cubble'
-# The following object is masked from 'package:stats':
-# 
-#     filter
 library(ggplot2)
 a |> setNames("precip") |>
   st_set_dimensions(2, name = "tm") |>
   units::drop_units() |>
-  as_cubble(key = id, index = tm) |>
-  suppressWarnings() -> a.cb
+  as_cubble(key = id, index = tm) -> a.cb
 a.cb |>
   face_temporal() |>
   unfold(long, lat) |>
@@ -205,17 +196,6 @@ a.cb |>
   geom_sf(data = nc, inherit.aes = FALSE) +
   geom_glyph_box(width = 0.3, height = 0.1) +
   geom_glyph(width = 0.3, height = 0.1)
-# Warning: There were 84 warnings in `dplyr::mutate()`.
-# The first warning was:
-# ℹ In argument: `y = .data$y_major + rescale11(.data$y_minor) * .data$height/2`.
-# ℹ In group 12: `group = 12`.
-# Caused by warning in `min()`:
-# ! no non-missing arguments to min; returning Inf
-# ℹ Run `dplyr::last_dplyr_warnings()` to see the 83 remaining warnings.
-# Warning: Removed 966 rows containing missing values or values outside the scale range
-# (`geom_glyph_box()`).
-# Warning: Removed 966 rows containing missing values or values outside the scale range
-# (`geom_glyph()`).
 ```
 
 ![](man/figures/README-plot6-1.png)<!-- -->
@@ -266,8 +246,8 @@ A comment on the differences between `stars` and `terra` is found
 
 - blog posts: [first](https://r-spatial.org/r/2017/11/23/stars1.html),
   [second](https://r-spatial.org/r/2018/03/22/stars2.html),
-  [third](https://r-spatial.org/r/2018/03/23/stars3.html), and
-  [newer blog posts](https://r-spatial.org/)
+  [third](https://r-spatial.org/r/2018/03/23/stars3.html), and [newer
+  blog posts](https://r-spatial.org/)
 - [vignettes](https://r-spatial.github.io/stars/articles/)
 - the original [R Consortium
   proposal](https://github.com/r-spatial/stars/blob/main/PROPOSAL.md).
