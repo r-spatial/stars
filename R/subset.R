@@ -206,7 +206,7 @@ st_intersects.bbox = function(x, y, ...) { # FIXME: segmentize first if geograph
 #' @param as_points logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
-#' @param normalize logical; if \code{TRUE} then pass the cropped object to \code{\link{st_normalize}} before returning.
+#' @param normalize logical; if \code{TRUE} then pass the cropped object to \code{\link[sf]{st_normalize}} before returning.
 #' @details for raster \code{x}, \code{st_crop} selects cells that intersect with \code{y}. 
 #' For intersection, are raster cells interpreted as points or as small polygons? 
 #' If \code{y} is of class \code{stars}, \code{x} raster cells are interpreted as points; if \code{y} is of class \code{bbox}, \code{x} cells are interpreted as cells (small polygons). Otherwise, if \code{as_points} is not given, cells are interpreted as points if \code{y} has a two-dimensional geometry.
@@ -280,10 +280,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]
-		bb = if (!inherits(y, "bbox"))
-				st_bbox(y)
-			else
-				y
+		bb = st_bbox(y)
 		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
@@ -320,8 +317,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}
-	if (normalize[1]) x = st_normalize(x)
-	x
+	if (normalize[1]) 
+		st_normalize(x)
+	else 
+		x
 }
 
 #' @export

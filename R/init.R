@@ -18,3 +18,9 @@ setOldClass("stars_proxy")
 .onLoad = function(libname, pkgname) {
 	register_all_s3_methods() # dynamically registers non-imported pkgs (tidyverse) # nocov
 }
+
+.onAttach = function(libname, pkgname) {
+	if (nrow(sf::st_drivers("raster", "netCDF")) != 1)
+		packageStartupMessage("Note: sf is linked to a GDAL version without netCDF driver, some tests or examples may fail")
+}
+

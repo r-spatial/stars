@@ -808,11 +808,21 @@ st_crs.dimensions = function(x, ...) {
 		else
 			stop(paste("crs of class", class(value), "not recognized"))
 
+	drop_if_units = function(x) {
+		if (inherits(x, "units"))
+			units::drop_units(x)
+		else
+			x
+	}
 	# set CRS in dimensions:
 	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		x[[ xy[1] ]]$refsys = value
 		x[[ xy[2] ]]$refsys = value
+		x[[ xy[1] ]]$offset = drop_if_units(x[[ xy[1] ]]$offset)
+		x[[ xy[2] ]]$offset = drop_if_units(x[[ xy[2] ]]$offset)
+		x[[ xy[1] ]]$delta  = drop_if_units(x[[ xy[1] ]]$delta)
+		x[[ xy[2] ]]$delta  = drop_if_units(x[[ xy[2] ]]$delta)
 	}
 
 	if (!all(is.na(xy)) && !is.na(x[[ xy[1] ]]$refsys) && !is.na(value) && st_crs(x) != value)

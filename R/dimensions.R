@@ -113,6 +113,8 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
+	if (inherits(.x, "mdim"))
+		stop("for mdim objects, use st_set_dimensions() after st_as_stars()")
 	d = st_dimensions(.x)
 	if (!missing(which) && is.character(which))
 		which = match(which, base::names(d))
@@ -677,8 +679,13 @@ print.dimensions = function(x, ...) {
 identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	if (length(lst) > 1) {
 		d1 = attr(lst[[1]], "dimensions")
+		crs1 = st_crs(d1)
+		st_crs(d1) = NA_crs_
 		for (i in 2:length(lst)) {
 			di = attr(lst[[i]], "dimensions")
+			if (st_crs(di) != crs1) # check semantical equivalence; https://github.com/r-spatial/stars/issues/703
+				return(FALSE)
+			st_crs(di) = NA_crs_
 			if (ignore_resolution) {
 				for (j in seq_along(d1))
 					d1[[j]]$delta = d1[[j]]$to = NA_real_

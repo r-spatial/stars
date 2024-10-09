@@ -231,7 +231,7 @@ st_warp = function(src, dest, ..., crs = NA_crs_, cellsize = NA_real_, segments 
 		}
 		if (debug)
 			cat("Writing result to: ", dest, "\n")
-		else if (delete)
+		else if (delete && !inherits(src, "stars_proxy"))
 			on.exit(unlink(dest)) # a temp file
 		read_stars(dest)
 	} else {

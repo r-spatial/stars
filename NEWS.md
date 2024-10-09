@@ -1,4 +1,14 @@
+# version 0.6-7
+
+* `c.stars()` verifies semantic equivalence of objects' CRS; #703
+
+* initial support for `read_mdim()` to work with `proxy = TRUE`; #659 
+
 # version 0.6-6
+
+* skip `cubble` tests for cubble version 0.3.1; https://github.com/huizezhang-sherry/cubble/issues/30
+
+* `st_transform.stars` transforms geometries in array elements
 
 * `mutate.stars` (and others) handle attribute names with spaces in them; #689
 
