@@ -1,4 +1,6 @@
 # version 0.6-7
+ 
+* `Ops.stars()` (math ops) now also recycle arrays in the first argument; #718
 
 * `c.stars()` verifies semantic equivalence of objects' CRS; #703
 

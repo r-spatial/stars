@@ -34,11 +34,22 @@ first_dimensions_match = function(e1, e2) {
 #' to permutate dimensions first. 
 Ops.stars <- function(e1, e2) {
 	if (!missing(e2)) { 
-		if (inherits(e1, "stars") && inherits(e2, "stars") && !first_dimensions_match(e1, e2))
-			stop("(first) dimensions of e1 and e2 do not match")
-		if (!inherits(e2, "stars"))
+		if (inherits(e1, "stars") && inherits(e2, "stars")) {
+			if (!first_dimensions_match(e1, e2))
+				stop("(first) dimensions of e1 and e2 do not match")
+			dim_final = if (prod(dim(e1)) < prod(dim(e2)))
+							st_dimensions(e2)
+						else
+							st_dimensions(e1)
+		} else if (inherits(e1, "stars")) {
+			dim_final = st_dimensions(e1)
+		} else if (inherits(e2, "stars")) {
+			dim_final = st_dimensions(e2)
+		}
+		if (!inherits(e2, c("stars", "units")))
 			e1 = drop_units(e1)
-	}
+	} else
+		dim_final = st_dimensions(e1)
 	ret = if (missing(e2))
 			lapply(e1, .Generic)
 		else if (!inherits(e2, "stars"))
@@ -48,16 +59,16 @@ Ops.stars <- function(e1, e2) {
 			if (!is.null(dim(e1)) &&
 					!isTRUE(all.equal(dim(e1), dim(e2), check.attributes = FALSE))) {
 				stopifnot(length(e2) == 1)
-				lapply(e1, .Generic, e2 = structure(e2[[1]], dim = NULL))
+				lapply(lapply(e1, structure, dim=NULL), .Generic, e2 = structure(e2[[1]], dim = NULL))
 			} else
 				mapply(.Generic, e1, e2, SIMPLIFY = FALSE)
 		}
 	if (any(sapply(ret, function(x) is.null(dim(x))))) # happens if e1[[1]] is a factor; #304
-		ret = lapply(ret, function(x) { dim(x) = dim(e1); x })
+		ret = lapply(ret, function(x) { dim(x) = dim(dim_final); x })
 	if (! inherits(e1, "stars"))
-		st_as_stars(setNames(ret, names(e2)), dimensions = st_dimensions(e2))
+		st_as_stars(setNames(ret, names(e2)), dimensions = dim_final)
 	else
-		st_as_stars(ret, dimensions = st_dimensions(e1))
+		st_as_stars(ret, dimensions = dim_final)
 }
 
 #' Mathematical operations for stars objects
