@@ -60,7 +60,8 @@
 <span>  bilinear <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  time_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">at</span>, <span class="st">"time_column"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">at</span>, <span class="st">"time_col"</span><span class="op">)</span>,</span>
 <span>  interpolate_time <span class="op">=</span> <span class="va">bilinear</span>,</span>
-<span>  FUN <span class="op">=</span> <span class="va">mean</span></span>
+<span>  FUN <span class="op">=</span> <span class="va">mean</span>,</span>
+<span>  resampling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nearest"</span>, <span class="st">"bilinear"</span>, <span class="st">"cubic"</span>, <span class="st">"cubicspline"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -94,6 +95,11 @@
 
 <dt id="arg-fun">FUN<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
 <dd><p>function used to aggregate pixel values when geometries of <code>at</code> intersect with more than one pixel</p></dd>
+
+
+<dt id="arg-resampling">resampling<a class="anchor" aria-label="anchor" href="#arg-resampling"></a></dt>
+<dd><p>character; resampling method; for method cubic or cubicspline,
+`stars_proxy` objects should be used and GDAL should have version &gt;= 3.10.0</p></dd>
 
 </dl></div>
     <div class="section level2">
