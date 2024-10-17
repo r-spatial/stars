@@ -38,6 +38,7 @@ Depends:
     sf (>= 1.0-19)
 Remotes: r-spatial/sf
 Imports:
+    CFtime (>= 1.3.0),
     methods,
     parallel,
     classInt (>= 0.4-1),

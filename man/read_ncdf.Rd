@@ -27,51 +27,65 @@ read_ncdf(
 
 \item{ncsub}{matrix of start, count columns (see Details)}
 
-\item{curvilinear}{length two character named vector with names of variables holding
-longitude and latitude values for all raster cells. `stars` attempts to figure out appropriate
-curvilinear coordinates if they are not supplied.}
+\item{curvilinear}{length two character named vector with names of variables
+holding longitude and latitude values for all raster cells. `stars`
+attempts to figure out appropriate curvilinear coordinates if they are not
+supplied.}
 
-\item{eps}{numeric; dimension value increases are considered identical when they differ less than \code{eps}}
+\item{eps}{numeric; dimension value increases are considered identical when
+they differ less than \code{eps}.}
 
-\item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
+\item{ignore_bounds}{logical; should bounds values for dimensions, if
+present, be ignored?}
 
-\item{make_time}{if \code{TRUE} (the default), an attempt is made to provide a date-time class from the "time" variable}
+\item{make_time}{if \code{TRUE} (the default), an attempt is made to provide
+a CFtime class for any "time" dimension.}
 
-\item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
+\item{make_units}{if \code{TRUE} (the default), an attempt is made to set the
+units property of each variable.}
 
-\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy} is read which contains array
-metadata only; if \code{FALSE} the full array data is read in memory. If not set, defaults to \code{TRUE}
-when the number of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8 if that option was not set.}
+\item{proxy}{logical; if \code{TRUE}, an object of class \code{stars_proxy}
+is read which contains array metadata only; if \code{FALSE} the full array
+data is read in memory. If not set, defaults to \code{TRUE} when the number
+of cells to be read is larger than \code{options(stars.n_proxy)}, or to 1e8
+if that option was not set.}
 
-\item{downsample}{integer; number of cells to omit between samples along each dimension. 
-e.g. \code{c(1,1,2)} would return every other cell in x and y and every third cell
-in the third dimension (z or t). If 0, no downsampling is applied. Note that this transformation
-is applied AFTER NetCDF data are read using st_downsample. As such, if proxy=TRUE, this 
+\item{downsample}{integer; number of cells to omit between samples along each
+dimension. e.g. \code{c(1,1,2)} would return every other cell in x and y
+and every third cell in the third dimension (z or t). If 0, no downsampling
+is applied. Note that this transformation is applied AFTER NetCDF data are
+read using \code{st_downsample()}. As such, if \code{proxy = TRUE}, this 
 option is ignored.}
 }
 \description{
 Read data from a file (or source) using the NetCDF library directly.
 }
 \details{
-The following logic is applied to coordinates. If any coordinate axes have
-regularly spaced coordinate variables they are reduced to the
-offset/delta form with 'affine = c(0, 0)', otherwise the values of the coordinates
-are stored and used to define a rectilinear grid.
+The following logic is applied to spatial coordinates. If any coordinate axes
+have regularly spaced coordinate variables they are reduced to the
+offset/delta form with 'affine = c(0, 0)', otherwise the values of the
+coordinates are stored and used to define a rectilinear grid.
 
-If the data has two or more dimensions and the first two are regular
-they are nominated as the 'raster' for plotting.
+If the data has two or more dimensions and the first two are regular they are
+nominated as the 'raster' for plotting.
 
 If the \code{curvilinear} argument is used it specifies the 2D arrays
-containing coordinate values for the first two dimensions of the data read. It is currently
-assumed that the coordinates are 2D and that they relate to the first two dimensions in
-that order.
+containing coordinate values for the first two dimensions of the data read.
+It is currently assumed that the coordinates are 2D and that they relate to
+the first two dimensions in that order.
 
+Any time dimension in the source is captured in a 'CFtime' object, unless the
+\code{make_time} argument is false. In that case, the numeric offsets 
+representing time are returned instead.
 
-If \code{var} is not set the first set of variables on a shared grid is used.
+If \code{var} is not set the first set of variables on a shared grid
+is used.
 
-\code{start} and \code{count} columns of ncsub must correspond to the variable dimension (nrows)
-and be valid index using \code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count value
-is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
+\code{start} and \code{count} columns of ncsub must correspond to the
+variable dimension (nrows) and be valid index using
+\code{\link[RNetCDF]{var.get.nc}} convention (start is 1-based). If the count
+value is \code{NA} then all steps are included. Axis order must match that of
+the variable/s being read.
 }
 \examples{
 f <- system.file("nc/reduced.nc", package = "stars")
