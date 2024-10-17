@@ -14,7 +14,8 @@ st_extract(x, ...)
   bilinear = FALSE,
   time_column = attr(at, "time_column") \%||\% attr(at, "time_col"),
   interpolate_time = bilinear,
-  FUN = mean
+  FUN = mean,
+  resampling = c("nearest", "bilinear", "cubic", "cubicspline")
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ st_extract(x, ...)
 \item{interpolate_time}{logical; should time be interpolated? If \code{FALSE}, time instances are matched using the coinciding or the last preceding time in the data cube, unless the dimension uses \code{CFtime} with bounds set, in which case the corresponding time interval in which the time or date value falls is returned.}
 
 \item{FUN}{function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel}
+
+\item{resampling}{character; resampling method; for method cubic or cubicspline,
+`stars_proxy` objects should be used and GDAL should have version >= 3.10.0}
 }
 \value{
 if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 

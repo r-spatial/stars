@@ -1,5 +1,9 @@
 # version 0.6-7
 
+* `st_extract()` if used with GDAL 3.10.0 uses InterpolateAtPoints, allowing for cubic and cubicspline interpolators (requiring sf >= 1.0-19).
+ 
+* `Ops.stars()` (math ops) now also recycle arrays in the first argument; #718
+
 * `c.stars()` verifies semantic equivalence of objects' CRS; #703
 
 * initial support for `read_mdim()` to work with `proxy = TRUE`; #659 
