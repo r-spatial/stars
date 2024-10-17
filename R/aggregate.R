@@ -209,14 +209,14 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	# reconstruct dimensions table:
 	if (!is.null(values) && methods::is(values, "CFtime")) {
 		d[[1]] = create_dimension(refsys = "CFtime", values = new_time)
+		names(d)[1] <- "time"
 	} else {
 		d[[1]] = create_dimension(values = by)
-	}
-	names(d)[1] = if (###is.function(by) || FIXME: 'by' can also apply to sf or sfc
-					  inherits(values, c("POSIXct", "Date", "CFtime")))
+		names(d)[1] = if (is.function(by) || inherits(by, c("POSIXct", "Date", "function")))
 			"time"
 		else
 			geom
+	}
 	if (drop_y)
 		d = d[-2] # y
 	

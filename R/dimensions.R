@@ -138,9 +138,10 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else if (methods::is(values, "CFtime"))
-			d[[which]]["values"] = values
-		else
+		else if (methods::is(values, "CFtime")) {
+			d[[which]]$values <- values
+			d[[which]]$refsys <- "CFtime"
+		} else
 			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
@@ -494,6 +495,8 @@ parse_netcdf_meta = function(pr, name) {
 				u = get_val(paste0(v, "#units"), meta)
 				if (!is.na(u)) {
 					cal = get_val(paste0(v, "#calendar"), meta)
+					if (is.null(cal) || is.na(cal))
+						cal = "standard"
 					time = try(CFtime::CFtime(u, cal), silent = TRUE)
 					if (methods::is(time, "CFtime"))
 						pr$dim_extra[[v]] = time + pr$dim_extra[[v]]
