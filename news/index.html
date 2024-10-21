@@ -45,7 +45,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6-7" id="version-06-7">version 0.6-7<a class="anchor" aria-label="anchor" href="#version-06-7"></a></h2>
-<ul><li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> if used with GDAL 3.10.0 uses InterpolateAtPoints, allowing for cubic and cubicspline interpolators (requiring sf &gt;= 1.0-19).</p></li>
+<ul><li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> fix if points coincide with boundary grid cell centers and bilinear interpolation is used; <a href="https://github.com/r-spatial/stars/issues/720" class="external-link">#720</a></p></li>
+<li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> if used with GDAL 3.10.0 uses InterpolateAtPoints, allowing for cubic and cubicspline interpolators (requiring sf &gt;= 1.0-19).</p></li>
 <li><p><code><a href="../reference/ops_stars.html">Ops.stars()</a></code> (math ops) now also recycle arrays in the first argument; <a href="https://github.com/r-spatial/stars/issues/718" class="external-link">#718</a></p></li>
 <li><p><code><a href="../reference/c.stars.html">c.stars()</a></code> verifies semantic equivalence of objects’ CRS; <a href="https://github.com/r-spatial/stars/issues/703" class="external-link">#703</a></p></li>
 <li><p>initial support for <code><a href="../reference/mdim.html">read_mdim()</a></code> to work with <code>proxy = TRUE</code>; <a href="https://github.com/r-spatial/stars/issues/659" class="external-link">#659</a></p></li>
