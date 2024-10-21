@@ -1,5 +1,7 @@
 # version 0.6-7
 
+* `st_extract()` fix if points coincide with boundary grid cell centers and bilinear interpolation is used; #720
+
 * `st_extract()` if used with GDAL 3.10.0 uses InterpolateAtPoints, allowing for cubic and cubicspline interpolators (requiring sf >= 1.0-19).
  
 * `Ops.stars()` (math ops) now also recycle arrays in the first argument; #718
