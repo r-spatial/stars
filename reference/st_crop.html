@@ -108,7 +108,7 @@
 
 
 <dt id="arg-normalize">normalize<a class="anchor" aria-label="anchor" href="#arg-normalize"></a></dt>
-<dd><p>logical; if <code>TRUE</code> then pass the cropped object to <code><a href="https://r-spatial.github.io/sf/reference/st_normalize.html" class="external-link">st_normalize</a></code> before returning.</p></dd>
+<dd><p>logical; if <code>TRUE</code> then pass the cropped object to <code><a href="https://r-spatial.github.io/sf/reference/st_normalize.html" class="external-link">st_normalize</a></code> before returning. This typically changes the `offset` field and resets the `from` field to 1, and changes the bounding box of the returned object accordingly.</p></dd>
 
 </dl></div>
     <div class="section level2">
