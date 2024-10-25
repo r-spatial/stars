@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # - {os: macos-latest,   r: 'release'}
+          - {os: macos-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
@@ -42,6 +42,10 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
           extra-repositories: "https://cran.uni-muenster.de/pebesma"
+
+      - name: Install macOS system dependencies
+        if: runner.os == 'macos'
+        run: brew install gdal proj
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
