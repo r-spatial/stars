@@ -106,7 +106,7 @@ transform_grid_grid = function(x, target, threshold) {
 			ny = dim(x)[1]
 			cbind(i %% ny, i %/% ny) + 1
 		} else
-			colrow_from_xy(pts, x, NA_outside = TRUE)
+			colrow_from_xy(pts, x, NA_outside = TRUE, flip = TRUE)
 	dims = dim(x)
 	index = matrix(seq_len(prod(dims[dxy])), dims[ dxy[1] ], dims[ dxy[2] ])[xy]
 	x = unclass(x) # avoid using [[<-.stars:

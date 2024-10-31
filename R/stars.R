@@ -269,20 +269,20 @@ xy_from_colrow = function(x, geotransform) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-colrow_from_xy = function(x, obj, NA_outside = FALSE) {
+colrow_from_xy = function(x, obj, NA_outside = FALSE, flip = FALSE) {
 	if (inherits(obj, "stars"))
 		obj = st_dimensions(obj)
 	xy = attr(obj, "raster")$dimensions
 	if (inherits(obj, "dimensions"))
 		gt = st_geotransform(obj)
 
-	if (isTRUE(st_is_longlat(st_crs(obj)))) {
+	if (flip && isTRUE(st_is_longlat(st_crs(obj)))) {
 		bb = st_bbox(obj)
 # see https://github.com/r-spatial/stars/issues/519 where this is problematic;
 # not sure whether this introduces new problems.
 #		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
 #		x[,1] = x[,1] + sign * 360.
-		# one more try: https://github.com/r-spatial/stars/issues/563
+		## one more try: https://github.com/r-spatial/stars/issues/563
 		ix = x[,1] > bb["xmax"] & !is.na(x[,1])
 		x[ix,1] = x[ix,1] - 360.
 		ix = x[,1] < bb["xmin"] & !is.na(x[,1])
