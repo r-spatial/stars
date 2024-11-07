@@ -97,7 +97,10 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 				ret[[i]] = structure(ret[[i]], class = class(attrs[[i]]), levels = levels(attrs[[i]]))
 		}
 	}
-	ret
+	if (n_attr <= 1) # no names in bands
+		setNames(ret, names(attrs))
+	else
+		ret
 }
 
 guess_raster = function(x, ...) {
