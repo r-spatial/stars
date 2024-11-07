@@ -89,10 +89,8 @@ vector and raster representations.</p>
 <span><span class="op">(</span><span class="va">nc.st</span> <span class="op">=</span> <span class="fu"><a href="../reference/st_rasterize.html">st_rasterize</a></span><span class="op">(</span><span class="va">nc</span><span class="op">[</span><span class="st">"dens"</span><span class="op">]</span>, dx <span class="op">=</span> <span class="fl">5000</span>, dy <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                                Min.  1st Qu.   Median     Mean  3rd Qu.</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745</span></span>
-<span><span class="co">##                               Max. NA's</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 21.24828 4808</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4808</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##   from  to offset delta                 refsys point x/y</span></span>
 <span><span class="co">## x    1 162 123829  5000 NAD83 / North Carolina FALSE [x]</span></span>
@@ -260,10 +258,8 @@ transformation is stronger non-linear.</p>
 <span><span class="va">nc.curv</span></span>
 <span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                                Min.  1st Qu.   Median     Mean  3rd Qu.</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745</span></span>
-<span><span class="co">##                               Max. NA's</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 21.24828 4808</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.345918 3.825745 21.24828 4808</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##   from  to                       refsys point                         values</span></span>
 <span><span class="co">## x    1 162 +proj=laea +lat_0=34 +lon... FALSE [162x61] -2210936,...,-1371611</span></span>
@@ -294,10 +290,8 @@ grid:</p>
 <span><span class="va">nc.new</span> </span>
 <span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                                Min.  1st Qu.   Median     Mean  3rd Qu.</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 0.2545072 1.225631 1.932222 3.344805 3.825745</span></span>
-<span><span class="co">##                               Max.  NA's</span></span>
-<span><span class="co">## file2d2a2c164db8 [1/km^2] 21.24828 36155</span></span>
+<span><span class="co">##                    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.  NA's</span></span>
+<span><span class="co">## dens [1/km^2] 0.2545072 1.225631 1.932222 3.344805 3.825745 21.24828 36155</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##   from  to   offset delta                       refsys x/y</span></span>
 <span><span class="co">## x    1 380 -2188110  2098 +proj=laea +lat_0=34 +lon... [x]</span></span>
