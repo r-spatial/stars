@@ -1,3 +1,5 @@
+# version 0.6-8
+
 # version 0.6-7
 
 * `st_extract()` fix if points coincide with boundary grid cell centers and bilinear interpolation is used; #720
