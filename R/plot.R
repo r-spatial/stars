@@ -87,7 +87,7 @@ kw_dflt = function(x, key.pos) {
 plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes = FALSE,
 		downsample = TRUE, nbreaks = 11, breaks = "quantile", col = grey(1:(nbreaks-1)/nbreaks),
 		key.pos = get_key_pos(x, ...), key.width = kw_dflt(x, key.pos), key.length = 0.618, 
-		key.lab = main, reset = TRUE, box_col = NA, center_time = FALSE, hook = NULL, 
+		key.lab = ifelse(length(main) == 1, main, ""), reset = TRUE, box_col = NA, center_time = FALSE, hook = NULL, 
 		mfrow = NULL, compact = TRUE) {
 
 	if (!missing(y))
