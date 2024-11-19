@@ -334,7 +334,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 		if (is.null(mapping)) {
 			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1])) } else {
 		        mapping = modifyList( ggplot2::aes(fill = !!rlang::sym(names(data)[1])), mapping) }
-		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), color = NA, mapping = mapping, ...)
+		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), mapping = mapping, ...)
 	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
 						     
