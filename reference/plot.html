@@ -68,7 +68,7 @@
 <span>  key.pos <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">get_key_pos</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>,</span>
 <span>  key.width <span class="op">=</span> <span class="fu">kw_dflt</span><span class="op">(</span><span class="va">x</span>, <span class="va">key.pos</span><span class="op">)</span>,</span>
 <span>  key.length <span class="op">=</span> <span class="fl">0.618</span>,</span>
-<span>  key.lab <span class="op">=</span> <span class="va">main</span>,</span>
+<span>  key.lab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">main</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span>, <span class="va">main</span>, <span class="st">""</span><span class="op">)</span>,</span>
 <span>  reset <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  box_col <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  center_time <span class="op">=</span> <span class="cn">FALSE</span>,</span>
