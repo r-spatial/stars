@@ -24,7 +24,7 @@
   key.pos = get_key_pos(x, ...),
   key.width = kw_dflt(x, key.pos),
   key.length = 0.618,
-  key.lab = main,
+  key.lab = ifelse(length(main) == 1, main, ""),
   reset = TRUE,
   box_col = NA,
   center_time = FALSE,
