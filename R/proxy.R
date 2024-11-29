@@ -547,12 +547,14 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 
 # shrink bbox with e * width in each direction
 bb_shrink = function(bb, e) {
+	stopifnot(inherits(bb, "bbox"))
 	dx = diff(bb[c("xmin", "xmax")])
 	dy = diff(bb[c("ymin", "ymax")])
 	st_bbox(setNames(c(bb["xmin"] + e * dx, 
 		bb["ymin"] + e * dy, 
 		bb["xmax"] - e * dx, 
-		bb["ymax"] - e * dy), c("xmin", "ymin", "xmax", "ymax")))
+		bb["ymax"] - e * dy), c("xmin", "ymin", "xmax", "ymax")),
+		crs = st_crs(bb))
 }
 
 #' @name st_crop
