@@ -31,14 +31,22 @@ st_as_stars.cubble_df = function(.x, ..., check_times = FALSE) {
 			   geometry = create_dimension(values = sfc),
 			   time = create_dimension(values = times))
 		)
-		st_stars(list(values = m), d)
+		names(d) <- c(attr(.x, "sf_column"), attr(.x, "index"))
+		vals <- list(values = array(m, dim = dim(d)))
+		units(vals$values) <- .x$ts[[1]][[2]] |> units()
+		names(vals) <- names(.x$ts[[1]])[-1]
+		st_stars(vals, d)
 	} else { # raster:
 		kv = tsibble::key_vars(.x)
+		d <- attr(.x, "dimensions")
 		.x = dplyr::as_tibble(.x)
+		vals <- list(values = array(m, dim(d)))
+		names(vals) <- names(.x$ts[[1]])[-1]
 		for (k in kv)
 			.x[[k]] = NULL
 		.x$ts = NULL # remove time series payload
 		.x = cbind(.x, m)
-		merge(st_as_stars(.x))
+	
+		st_stars(vals, d)
 	}
 }
