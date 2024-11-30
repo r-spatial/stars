@@ -4,18 +4,20 @@ raw <- read_stars(system.file("nc/bcsd_obs_1999.nc", package = "stars"))
 foo <- function(x, idx) stats::lowess(idx, x)$y
 
 timeline <- st_get_dimension_values(raw, "time")
+offsets <- CFtime::offsets(timeline)
+
 smooth = st_apply(raw,
 	MARGIN = c("x", "y"),
 	FUN = foo,
-	idx = st_get_dimension_values(raw, "time")
+	idx = offsets
 )
 
 st_set_dimensions(smooth,
 	which = "foo",
-	values = st_get_dimension_values(raw, "time"),
+	values = timeline,
 	names = "time"
 )
 
 raw %>%
-  st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) %>%
-  st_set_dimensions("foo", st_dimensions(raw)["time"])
+  st_apply(MARGIN = c("x", "y"), FUN = foo, idx = offsets) %>%
+  st_set_dimensions("foo", timeline, names = "time")

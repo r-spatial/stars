@@ -45,7 +45,8 @@ st_intersects.stars = function(x, y, sparse = TRUE, ..., as_points = NA, transpo
 		else
 			ret
 	} else { # curvilinear or !as_points:
-		ret = st_intersects(st_as_sf(x, as_points = as_points, na.rm = FALSE), y, 
+		sf <- st_as_sf(x, as_points = as_points, na.rm = FALSE)
+		ret = st_intersects(sf, y, 
 			sparse = sparse, ...)
 		if (! sparse)
 			ret = as.matrix(ret)
