@@ -313,9 +313,17 @@ test_that("axis attribute order -- see #680", {
 	
 	s2 <- suppressWarnings(stars::read_ncdf(file2))
 
-	expect_equal(names(stars::st_dimensions(s2)), c("lon", "lat", "time"))
+	d <- stars::st_dimensions(s2)
+	
+	expect_equal(names(d), c("lon", "lat", "time"))
 
+	expect_equal(d$time$to, 9)
+	
 	s3 <- suppressWarnings(stars::read_ncdf(file3))
 	
-	expect_equal(names(stars::st_dimensions(s3)), c("lon", "lat", "time"))
+	d <- stars::st_dimensions(s2)
+	
+	expect_equal(names(d), c("lon", "lat", "time"))
+	
+	expect_equal(d$time$to, 9)
 })
