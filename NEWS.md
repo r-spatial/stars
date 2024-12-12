@@ -1,5 +1,7 @@
 # version 0.6-8
 
+* fix `st_as_stars.im()`; #727 and #648, thanks to Barry Rowlingson
+
 # version 0.6-7
 
 * `st_extract()` fix if points coincide with boundary grid cell centers and bilinear interpolation is used; #720
