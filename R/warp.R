@@ -14,19 +14,14 @@ cut_latitude_to_3857 = function(bb) { # Pseudomercator does not have global cove
 # return a dimensions object
 default_target_grid = function(x, crs, cellsize = NA_real_, segments = NA) {
 	bb_x = st_bbox(x)
+	old_crs = st_crs(x)
 	if (st_is_longlat(x) && crs == st_crs(3857)) # common case:
 		bb_x = cut_latitude_to_3857(bb_x)
-	envelope = st_as_sfc(bb_x)
+	envelope = st_as_sfc(st_set_crs(bb_x, NA_crs_))
 	# global adjustment: needed to have st_segmentize span global extent
 	# https://github.com/r-spatial/mapview/issues/256
-	envelope = if (!is.na(segments) && !has_global_longitude(x)) # FIXME: should this branch be retained?
-				st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments)
-			else {
 				# https://github.com/r-tmap/tmap/issues/526 :
-				old_crs = st_crs(envelope)
-				st_crs(envelope) = NA_crs_
-				st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
-			}
+	envelope = st_set_crs(st_segmentize(envelope, st_length(st_cast(envelope, "LINESTRING"))/segments), old_crs)
 	envelope_new = st_transform(envelope, crs)
 	bb = st_bbox(envelope_new) # in new crs
 	if (any(is.na(cellsize))) {
