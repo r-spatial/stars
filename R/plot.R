@@ -157,7 +157,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 		if (!inherits(breaks, c("POSIXt", "Date")))
 			breaks = as.numeric(breaks)
 		# https://github.com/r-spatial/stars/issues/728:
-		if (packageVersion("sf") < "1.0.20")
+		if (packageVersion("sf") < "1.0.20" && length(breaks) > 2)
 			breaks = unique(breaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
 		if (breaks.missing && length(unique(breaks)) <= 2) # unlucky default!
