@@ -156,10 +156,11 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 					get_breaks(x, breaks, nbreaks, dots$logz)
 		if (!inherits(breaks, c("POSIXt", "Date")))
 			breaks = as.numeric(breaks)
-		if (length(breaks) > 2)
+		# https://github.com/r-spatial/stars/issues/728:
+		if (packageVersion("sf") < "1.0.20")
 			breaks = unique(breaks)
 		nbreaks = length(breaks) # might be shorter than originally intended!
-		if (breaks.missing && nbreaks <= 2) # unlucky default!
+		if (breaks.missing && length(unique(breaks)) <= 2) # unlucky default!
 			warning('breaks="quantile" leads to a single class; maybe try breaks="equal" instead?')
 	}
 
