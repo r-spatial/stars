@@ -116,7 +116,7 @@ C++).</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">## Loading required package: abind</span></span>
 <span><span class="co">## Loading required package: sf</span></span>
-<span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
+<span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</span></span>
 <span><span class="va">tif</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span></span>
 <span><span class="va">rasterio</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>nXOff <span class="op">=</span> <span class="fl">6</span>, nYOff <span class="op">=</span> <span class="fl">6</span>, nXSize <span class="op">=</span> <span class="fl">100</span>, nYSize <span class="op">=</span> <span class="fl">100</span>, bands <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">tif</span>, RasterIO <span class="op">=</span> <span class="va">rasterio</span><span class="op">)</span><span class="op">)</span></span>
@@ -282,7 +282,7 @@ plot this object,</p>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.993   0.163   0.688</span></span></code></pre>
+<span><span class="co">##   1.020   0.166   0.655</span></span></code></pre>
 <p>This takes only around 1 second, since only those pixels are read
 that can be seen on the plot. If we read the entire image in memory
 first, as we would do with</p>
@@ -390,12 +390,12 @@ attribute called <code>call_list</code>:</p>
 <span><span class="co">## [[1]]</span></span>
 <span><span class="co">## adrop(x = x, drop = drop)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x561333cc7d88&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x55b6450bf8f8&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
 <span><span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x561333c64aa8&gt;</span></span></code></pre></div>
+<span><span class="co">## &lt;environment: 0x55b645016b98&gt;</span></span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are
 done. As an example, for <code>st_apply</code>, reading can be done
 sequentially over the dimensions over which the function is applied:</p>
@@ -458,14 +458,14 @@ can compute NDVI by</p>
 <span><span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span></span>
 <span><span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x561333912f38&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x55b644cc2140&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## This object has pending lazy operations: dimensions as printed may not reflect this.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></span>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.695   0.158   0.370</span></span></code></pre>
+<span><span class="co">##   0.726   0.165   0.369</span></span></code></pre>
 </div>
 </div>
 </div>

@@ -434,6 +434,9 @@ package <code>starsdata</code>; this package can be installed with</p>
 <code>GEOLOCATION</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/gdal.html" class="external-link">gdal_metadata</a></span><span class="op">(</span><span class="va">subs</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span>, <span class="st">"GEOLOCATION"</span><span class="op">)</span></span>
+<span><span class="co">## $GEOREFERENCING_CONVENTION</span></span>
+<span><span class="co">## [1] "PIXEL_CENTER"</span></span>
+<span><span class="co">## </span></span>
 <span><span class="co">## $LINE_OFFSET</span></span>
 <span><span class="co">## [1] "0"</span></span>
 <span><span class="co">## </span></span>
@@ -519,10 +522,14 @@ arrays are kept.</p>
 <span><span class="co">##                                                  Max. NA's</span></span>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858  330</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to         offset  refsys                             values x/y</span></span>
-<span><span class="co">## x       1 450             NA  WGS 84 [450x278] -5.811 [°],...,30.95 [°] [x]</span></span>
-<span><span class="co">## y       1 278             NA  WGS 84  [450x278] 28.36 [°],...,51.47 [°] [y]</span></span>
-<span><span class="co">## time    1   1 2018-07-17 UTC POSIXct                               NULL    </span></span>
+<span><span class="co">##      from  to         offset         refsys                             values</span></span>
+<span><span class="co">## x       1 450             NA WGS 84 (CRS84) [450x278] -5.811 [°],...,30.95 [°]</span></span>
+<span><span class="co">## y       1 278             NA WGS 84 (CRS84)  [450x278] 28.36 [°],...,51.47 [°]</span></span>
+<span><span class="co">## time    1   1 2018-07-17 UTC        POSIXct                               NULL</span></span>
+<span><span class="co">##      x/y</span></span>
+<span><span class="co">## x    [x]</span></span>
+<span><span class="co">## y    [y]</span></span>
+<span><span class="co">## time    </span></span>
 <span><span class="co">## curvilinear grid</span></span></code></pre></div>
 <p>The curvilinear array has the actual arrays (raster layers, matrices)
 with longitude and latitude values read in its dimension table. We can
@@ -553,10 +560,10 @@ plot this file:</p>
 <span><span class="co">##                                          NA's</span></span>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2]   32</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from to         offset  refsys                           values x/y</span></span>
-<span><span class="co">## x       1 50             NA  WGS 84 [50x31] -5.811 [°],...,30.14 [°] [x]</span></span>
-<span><span class="co">## y       1 31             NA  WGS 84  [50x31] 28.78 [°],...,51.47 [°] [y]</span></span>
-<span><span class="co">## time    1  1 2018-07-17 UTC POSIXct                             NULL    </span></span>
+<span><span class="co">##      from to         offset         refsys                           values x/y</span></span>
+<span><span class="co">## x       1 50             NA WGS 84 (CRS84) [50x31] -5.811 [°],...,30.14 [°] [x]</span></span>
+<span><span class="co">## y       1 31             NA WGS 84 (CRS84)  [50x31] 28.78 [°],...,51.47 [°] [y]</span></span>
+<span><span class="co">## time    1  1 2018-07-17 UTC        POSIXct                             NULL    </span></span>
 <span><span class="co">## curvilinear grid</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c_ds</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>         pch <span class="op">=</span> <span class="fl">16</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>

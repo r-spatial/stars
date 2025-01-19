@@ -90,7 +90,7 @@ provided.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="co">## Loading required package: abind</span></span>
 <span><span class="co">## Loading required package: sf</span></span>
-<span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre></div>
+<span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</span></span></code></pre></div>
 <p>Spatiotemporal arrays are stored in objects of class
 <code>stars</code>; methods for class <code>stars</code> currently
 available are</p>
@@ -411,10 +411,10 @@ as in</p>
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##           from to offset delta  refsys                    values x/y</span></span>
-<span><span class="co">## longitude    1 81    -85 0.125  WGS 84                      NULL [x]</span></span>
-<span><span class="co">## latitude     1 33     33 0.125  WGS 84                      NULL [y]</span></span>
-<span><span class="co">## time         1 12     NA    NA POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
+<span><span class="co">##           from to offset delta         refsys                    values x/y</span></span>
+<span><span class="co">## longitude    1 81    -85 0.125 WGS 84 (CRS84)                      NULL [x]</span></span>
+<span><span class="co">## latitude     1 33     33 0.125 WGS 84 (CRS84)                      NULL [y]</span></span>
+<span><span class="co">## time         1 12     NA    NA        POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
 <p>The difference between <code>read_ncdf</code> and
 <code>read_stars</code> for NetCDF files is that the former uses package
 RNetCDF to directly read the NetCDF file, where the latter uses the GDAL
