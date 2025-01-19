@@ -29,6 +29,8 @@ test_that("cubble", {
   a.cb = as_cubble(a, key = id, index = time)
   a2 = st_as_stars(a.cb)
   # expect_equal(a, a2)
-  expect_true(all.equal(drop_units(a),a2,check.attributes=FALSE))
+  if (packageVersion("units") < '0.8.6')
+    a = drop_units(a)
+  expect_true(all.equal(a, a2, check.attributes = FALSE))
 })
 
