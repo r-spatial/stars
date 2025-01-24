@@ -120,16 +120,28 @@
 		# dimensions:
 		#mc0 = mc[1:3] # "[", x, first dim
 		for (i in seq_along(d)) { # one-at-a-time:
-			name_i = names(d)[i]
-			argi = args[i]
-			if (!(is_curvilinear(d) && name_i %in% xy) &&  # as that case was handled above
-					!(is.name(argi[[1]]) && all(argi[[1]] == rlang::missing_arg())) &&  # empty arg
-					is.numeric(e <- eval(argi[[1]])) && !any(is.na(e)) && !all(diff(e) == 1)) # sequence with gaps
-				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
-						ed[[i]]
-					else
-						as_intervals(ed[[i]], add_last = TRUE)
-			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
+			if (!is.na(d[[i]]$refsys) && d[[i]]$refsys == "CFtime") {
+				time = d[[i]]$values
+				bnds = CFtime::bounds(time)
+				time = CFtime::CFtime(CFtime::definition(time), 
+									  CFtime::calendar(time), 
+									  CFtime::offsets(time)[ args[[i]] ])
+				if (!is.null(bnds))
+					CFtime::bounds(time) <- bnds[, args[[i]] ]
+				d[[i]]$values = time
+				d[[i]]$to = length(args[[i]])
+			} else {
+				name_i = names(d)[i]
+				argi = args[i]
+				if (!(is_curvilinear(d) && name_i %in% xy) &&  # as that case was handled above
+						!(is.name(argi[[1]]) && all(argi[[1]] == rlang::missing_arg())) &&  # empty arg
+						is.numeric(e <- eval(argi[[1]])) && !any(is.na(e)) && !all(diff(e) == 1)) # sequence with gaps
+					d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+							ed[[i]]
+						else
+							as_intervals(ed[[i]], add_last = TRUE)
+				d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
+			}
 		}
 	}
 	x = st_as_stars(x, dimensions = d)

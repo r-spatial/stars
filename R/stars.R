@@ -393,19 +393,18 @@ which_time = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
-		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
-		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "PCICt") ||
-									grepl("PCICt", i$refsys)))))
+		inherits(i$values, c("POSIXct", "Date", "CFtime")) ||
+			(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date")))))
 }
 
 #' @export
 time.stars = function(x, ..., which = 1) {
+	stopifnot(length(which) == 1)
 	w = which_time(x)
 	if (length(w) > 1 && missing(which))
 		warning(paste("using the first of", length(w), "time dimensions"))
 	if (length(w) == 0)
 		stop("object does not have a time dimensions")
-	stopifnot(length(which) == 1)
 	expand_dimensions(x)[[ w[which] ]]
 }
 
@@ -455,6 +454,8 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 			)
 		} else {
 			ed = expand_dimensions(x, center = center) # cell centers for x/y if raster
+			ed = lapply(ed, function(z) {
+				if (methods::is(z, "CFtime")) CFtime::as_timestamp(z) else z})
 			if (length(ed) > 1)
 				do.call(expand.grid, ed)
 			else
