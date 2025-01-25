@@ -792,9 +792,11 @@ as.POSIXct.stars = function(x, ...) {
 	d = st_dimensions(x)
 	e = expand_dimensions(d)
 	for (i in seq_along(d)) {
-		p = try(as.POSIXct(e[[i]]), silent = TRUE)
-		if (!inherits(p, "try-error"))
-			d[[i]] = create_dimension(values = p)
+		if (inherits(e[[i]], c("Date", "POSIXt", "udunits", "PCICt"))) {
+			p = try(as.POSIXct(e[[i]]), silent = TRUE)
+			if (!inherits(p, "try-error"))
+				d[[i]] = create_dimension(values = p)
+		}
 	}
 	structure(x, dimensions = d)
 }

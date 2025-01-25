@@ -1,5 +1,7 @@
 # version 0.6-8
 
+* `c.stars()` is more strict when combining time sequences; #703
+
 * fix plotting when breaks contain duplicates; #728
 
 * fix `st_as_stars.im()`; #727 and #648, thanks to Barry Rowlingson

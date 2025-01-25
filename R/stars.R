@@ -904,13 +904,20 @@ merge.stars = function(x, y, ..., name = "attributes") {
 }
 
 sort_out_along = function(ret) { 
-	d1 = st_dimensions(ret[[1]])
-	d2 = st_dimensions(ret[[2]])
-	if ("time" %in% names(d1) && (isTRUE(d1$time$offset != d2$time$offset) || 
-			!any(d1$time$values %in% d2$time$values)))
-		"time"
-	else
-		NA_integer_
+	# https://github.com/r-spatial/stars/issues/703 :
+	# 1. check that time is a dimension name in all objects 
+	l = lapply(ret, st_dimensions)
+	if (!all(sapply(l, function(x) "time" %in% names(x))))
+		return(NA_integer_)
+	# 2. check that time values do not overlap
+	lv = lapply(l, st_get_dimension_values, "time")
+	for (i in seq_along(lv)) {
+		if (!inherits(lv[[i]], c("POSIXt", "Date", "PCICt")))
+			return(NA_integer_)
+		if (i < length(lv) && max(lv[[i]]) >= min(lv[[i+1]])) # no sequence
+			return(NA_integer_)
+	}
+	return("time")
 }
 
 
