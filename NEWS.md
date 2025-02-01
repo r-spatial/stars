@@ -1,3 +1,7 @@
+# version 0.6-9
+
+* 
+
 # version 0.6-8
 
 * address difftime issue new in R-devel rev 87670
