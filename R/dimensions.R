@@ -251,7 +251,8 @@ regular_intervals = function(x, epsilon = 1e-10) {
 				else
 					return(FALSE)
 			}
-		isTRUE(as.numeric(abs(diff(range(ud)) / mean(ud))) < epsilon)
+		ud = as.numeric(ud)
+		isTRUE((abs(diff(range(ud)) / mean(ud))) < epsilon)
 	}
 }
 

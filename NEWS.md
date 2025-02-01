@@ -1,5 +1,7 @@
 # version 0.6-8
 
+* address difftime issue new in R-devel rev 87670
+
 * `c.stars()` is more strict when combining time sequences; #703
 
 * fix plotting when breaks contain duplicates; #728
