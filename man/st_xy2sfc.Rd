@@ -2,22 +2,38 @@
 % Please edit documentation in R/sf.R
 \name{st_xy2sfc}
 \alias{st_xy2sfc}
-\title{replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)}
+\alias{st_sfc2xy}
+\title{replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize) and vice versa}
 \usage{
 st_xy2sfc(x, as_points, ..., na.rm = TRUE)
+
+st_sfc2xy(x, ...)
 }
 \arguments{
-\item{x}{object of class \code{stars}}
+\item{x}{object of class \code{stars}, or of class \code{sf}}
 
 \item{as_points}{logical; if \code{TRUE}, generate points at cell centers, else generate polygons}
 
-\item{...}{arguments passed on to \code{st_as_sfc}}
+\item{...}{passed on to \link{st_as_stars.data.frame}}
 
 \item{na.rm}{logical; omit (remove) cells which are entirely missing valued (across other dimensions)?}
 }
 \value{
-object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
+`st_xy2sfc` returns an object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
+
+`st_sfc2xy` returns an object of class \code{stars} with a POINT list replaced by X and Y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
 }
 \description{
-replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
+replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize) and vice versa
+}
+\details{
+`st_xy2sfc` replaces x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
+
+`st_sfc2xy` replaces POINT simple feature geometry list with an x y raster
+}
+\examples{
+(reduced_nc = read_ncdf(system.file("nc/reduced.nc", package = "stars")))
+(x = stars::st_xy2sfc(reduced_nc, as_points = TRUE, na.rm = FALSE))
+# roundtrip:
+st_sfc2xy(x, dims=c("X", "Y","zlev","time"))
 }

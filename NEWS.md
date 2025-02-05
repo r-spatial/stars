@@ -1,10 +1,10 @@
 # version 0.6-9
 
-* 
+* `st_sfc2xy()` passes on `...` to `st_as_stars()`; #733 
 
 # version 0.6-8
 
-* address difftime issue new in R-devel rev 87670
+* address `/.difftime` issue new in R-devel rev 87670
 
 * `c.stars()` is more strict when combining time sequences; #703
 

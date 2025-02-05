@@ -247,22 +247,3 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 	)
 	st_stars(l, d)
 }
-
-#' replace POINT simple feature geometry list with an x y raster
-#' @param x object of class \code{stars}, or of class \code{sf}
-#' @param ... passed on to \link{as.data.frame.stars}
-#' @return object of class \code{stars} with a POINT list replaced by x and y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
-#' @export
-st_sfc2xy = function(x, ...) {
-	if (inherits(x, "sf"))
-		x = st_as_stars(x)
-	i = which_sfc(x)
-	d = st_dimensions(x)
-	if (!inherits(d[[i]]$values, "sfc_POINT"))
-		stop("point geometries expected")
-	cc = st_coordinates(d[[i]]$values)
-	df = as.data.frame(x)
-	df$geometry = NULL
-	s = st_as_stars(cbind(cc, df))
-	st_set_crs(s, st_crs(d))
-}
