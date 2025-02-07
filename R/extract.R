@@ -80,7 +80,8 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		} else if (!all(st_dimension(at) == 0)) {
 			# Allow time matching for lines and polygons using aggregate
 			x = st_normalize(st_upfront(x_agg))
-			lapply(seq_along(x), function(i) x[[i]]) 		} else {
+			lapply(seq_along(x), function(i) x[[i]]) 		
+		} else {
 			x = st_normalize(st_upfront(x))
 			if (is_curvilinear(x)) { # https://github.com/r-spatial/stars/issues/632
 				d = st_distance(at, st_as_sfc(x, as_points = TRUE))
