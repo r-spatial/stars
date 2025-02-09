@@ -7,7 +7,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 
 #' @name st_extract
 #' @param x object of class \code{stars} or \code{stars_proxy}
-#' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}
+#' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}, or a \code{stars} object with geometry and temporal dimensions (vector data cube)
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
 #' @param time_column character or integer; name or index of a column with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{POSIXt}, \code{Date}, or \code{PCICt}), in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
 #' @param interpolate_time logical; should time be interpolated? if FALSE, time instances are matched using the coinciding or the last preceding time in the data cube.
@@ -16,6 +16,9 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' `stars_proxy` objects should be used and GDAL should have version >= 3.10.0
 #' @param ... passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries
 #' @returns if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
+#' if \code{at} is of class \code{stars} and a temporal dimension was passed to \code{time_column},
+#' a \code{stars} object with the original object dimensions
+#' and the extracted values as attributes.
 #' otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 #' object of class \code{stars} with POINT geometries replacing x and y raster
 #' dimensions, if this is not the case, an object of \code{sf} with extracted values.
@@ -36,12 +39,15 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		interpolate_time = bilinear, FUN = mean,
 		resampling = c("nearest", "bilinear", "cubic", "cubicspline")) {
 
-	stopifnot(inherits(at, c("sf", "sfc", "matrix")))
+	stopifnot(inherits(at, c("sf", "sfc", "stars", "matrix")))
 	resampling = match.arg(resampling)
 	if (bilinear) {
 		stopifnot(resampling %in% c("nearest", "bilinear"))
 		resampling = "bilinear"
 	}
+	at_orig = at
+	if (inherits(at_orig, "stars")) 
+		at = st_as_sf(at, long = TRUE)
 	if (inherits(at, "matrix"))
 		pts = at
 	else {
@@ -166,7 +172,11 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			sf = st_as_sf(df)
 			if (!is.null(min_dist))
 				sf$min_dist = min_dist
-			sf
+			if (!inherits(at_orig, "stars")) 
+				sf
+			else {
+				st_as_stars(sf, dims = attr(attr(at_orig, "dimensions"), "names"))
+			}
 		}
 	}
 }

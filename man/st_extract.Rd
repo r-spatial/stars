@@ -23,7 +23,7 @@ st_extract(x, ...)
 
 \item{...}{passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries}
 
-\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}}
+\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}, or a \code{stars} object with geometry and temporal dimensions (vector data cube)}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
@@ -38,6 +38,9 @@ st_extract(x, ...)
 }
 \value{
 if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
+if \code{at} is of class \code{stars} and a temporal dimension was passed to \code{time_column},
+a \code{stars} object with the original object dimensions
+and the extracted values as attributes.
 otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
 dimensions, if this is not the case, an object of \code{sf} with extracted values.
