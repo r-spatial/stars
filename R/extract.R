@@ -46,7 +46,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		resampling = "bilinear"
 	}
 	at_orig = at
-	if (inherits(at_orig, "stars")) 
+	if (inherits(at_orig, "stars") & !is.null(time_column)) 
 		at = st_as_sf(at, long = TRUE)
 	if (inherits(at, "matrix"))
 		pts = at
