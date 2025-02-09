@@ -77,10 +77,10 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(get_names(y), 
 				gdal_extract, pts, resampling)))
-		} else if (!all(st_dimension(at) == 0)) {
+		} else if (exists("x_agg")) {
 			# Allow time matching for lines and polygons using aggregate
 			x = st_normalize(st_upfront(x_agg))
-			lapply(seq_along(x), function(i) x[[i]]) 		
+			lapply(seq_along(x), function(i) x[[i]]) 
 		} else {
 			x = st_normalize(st_upfront(x))
 			if (is_curvilinear(x)) { # https://github.com/r-spatial/stars/issues/632
@@ -94,9 +94,6 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			lapply(x, function(y) 
 				array(y, dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)])))[ix, , drop = FALSE])
 		}
-	
-	# reset list names
-	names(m) = names(x)
 	
 	# reset factors & units attributes:
 	for (i in seq_along(m)) {
