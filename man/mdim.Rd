@@ -18,7 +18,8 @@ read_mdim(
   proxy = FALSE,
   debug = FALSE,
   bounds = TRUE,
-  curvilinear = NA
+  curvilinear = NA,
+  normalize_path = TRUE
 )
 
 write_mdim(
@@ -56,6 +57,8 @@ write_mdim(
 named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names}
 
 \item{curvilinear}{control reading curvilinear (geolocation) coordinate arrays; if \code{NA} try reading the x/y dimension names; if character, defines the arrays to read; if \code{FALSE} do not try; see also \link{read_stars}}
+
+\item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{filename}}
 
 \item{x}{stars object}
 
