@@ -39,7 +39,7 @@ st_extract(x, ...)
 \value{
 if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
 if \code{at} is of class \code{stars} and a temporal dimension was passed to \code{time_column},
-a \code{stars} object with the original object dimensions
+a \code{stars} object with the original \code{at} dimensions
 and the extracted values as attributes.
 otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
@@ -61,4 +61,24 @@ st_extract(r, pnt)
 st_extract(r, pnt) \%>\% st_as_sf()
 st_extract(r[,,,1], pnt)
 st_extract(r, st_coordinates(pnt)) # "at" is a matrix: return a matrix
+# Extraction on non-POINT geometries
+poly = st_buffer(pnt, 1000)
+st_extract(r, poly)
+
+# Extraction with time matching
+rdate = c(r, r*2, along = "date")
+dates = c(Sys.Date()-1, Sys.Date())
+rdate = st_set_dimensions(rdate, "date", values = c(dates))
+
+pntsf = st_sf(date = dates, geometry = pnt)
+st_extract(split(rdate, "band"), pntsf, time_column = "date") # POINT geometries
+
+polysf = st_buffer(pntsf, 1000)
+st_extract(split(rdate, "band"), polysf, time_column = "date") # POLYGON geometries
+
+vdc = st_sf(rdm = rnorm(10), geometry = pnt, date = rep(dates, each = 5)) |> 
+	st_as_stars(dims = c("geometry", "date"))
+
+(vdc_new = st_extract(split(rdate, "band"), vdc, time_column = "date")) # stars vector data cube
+merge(vdc_new, name = "band")
 }
