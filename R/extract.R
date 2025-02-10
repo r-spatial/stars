@@ -52,7 +52,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		pts = at
 	else {
 		stopifnot(st_crs(at) == st_crs(x))
-		if (!all(st_dimension(at) == 0)) { # should check & branch here in case of MULTIPOINT?
+		if (!all(st_dimension(at, FALSE) == 0)) { # should check & branch here in case of MULTIPOINT?
 			stopifnot(!bilinear) # bilinear interpolation not supported for time matching with lines/polygons
 			# from aggregate.stars_proxy:
 			by = st_geometry(at)
