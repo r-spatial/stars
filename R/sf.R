@@ -30,7 +30,7 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 #' replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize) and vice versa
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
-#' @param ... arguments passed on to \code{st_as_sfc}
+#' @param ... for `st_xy2sfc`: arguments passed on to \code{st_as_sfc}, for `st_sfc2xy` arguments passed on to \link{st_as_stars.data.frame}
 #' @param na.rm logical; omit (remove) cells which are entirely missing valued (across other dimensions)?
 #' @details `st_xy2sfc` replaces x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
 #' @return `st_xy2sfc` returns an object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
@@ -88,7 +88,6 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
 #' @details `st_sfc2xy` replaces POINT simple feature geometry list with an x y raster
 #' @param x object of class \code{stars}, or of class \code{sf}
-#' @param ... passed on to \link{st_as_stars.data.frame}
 #' @return `st_sfc2xy` returns an object of class \code{stars} with a POINT list replaced by X and Y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
 #' @export
 #' @name st_xy2sfc

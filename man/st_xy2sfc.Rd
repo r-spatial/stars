@@ -14,7 +14,7 @@ st_sfc2xy(x, ...)
 
 \item{as_points}{logical; if \code{TRUE}, generate points at cell centers, else generate polygons}
 
-\item{...}{passed on to \link{st_as_stars.data.frame}}
+\item{...}{for `st_xy2sfc`: arguments passed on to \code{st_as_sfc}, for `st_sfc2xy` arguments passed on to \link{st_as_stars.data.frame}}
 
 \item{na.rm}{logical; omit (remove) cells which are entirely missing valued (across other dimensions)?}
 }
