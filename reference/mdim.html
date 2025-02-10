@@ -62,7 +62,8 @@
 <span>  proxy <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  bounds <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  curvilinear <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  curvilinear <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  normalize_path <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">write_mdim</span><span class="op">(</span></span>
@@ -127,6 +128,10 @@ named vector of the form <code>c(longitude="lon_bnds", latitude="lat_bnds")</cod
 
 <dt id="arg-curvilinear">curvilinear<a class="anchor" aria-label="anchor" href="#arg-curvilinear"></a></dt>
 <dd><p>control reading curvilinear (geolocation) coordinate arrays; if <code>NA</code> try reading the x/y dimension names; if character, defines the arrays to read; if <code>FALSE</code> do not try; see also <a href="read_stars.html">read_stars</a></p></dd>
+
+
+<dt id="arg-normalize-path">normalize_path<a class="anchor" aria-label="anchor" href="#arg-normalize-path"></a></dt>
+<dd><p>logical; if <code>FALSE</code>, suppress a call to <a href="https://rdrr.io/r/base/normalizePath.html" class="external-link">normalizePath</a> on <code>filename</code></p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
