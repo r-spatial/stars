@@ -138,6 +138,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		filename = enc2utf8char(maybe_normalizePath(filename, np = normalize_path))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 
+	if (identical(variable, "?"))
+		return(ret) # RETURNS
+
 	if (length(ret$dimensions) == 1 && length(ret$array_list) == 1 && is.data.frame(ret$array_list[[1]]))
 		return(ret$array_list[[1]]) ## composite data: RETURNS
 
