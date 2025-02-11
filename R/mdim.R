@@ -124,15 +124,18 @@ match_raster_dims = function(nms) {
 #' @param bounds logical or character: if \code{TRUE} tries to infer from "bounds" attribute; if character, 
 #' named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names
 #' @param curvilinear control reading curvilinear (geolocation) coordinate arrays; if \code{NA} try reading the x/y dimension names; if character, defines the arrays to read; if \code{FALSE} do not try; see also \link{read_stars}
+#' @param normalize_path logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{filename}
 #' @details it is assumed that the first two dimensions are easting and northing
 #' @param ... ignored
 #' @seealso \link[sf]{gdal_utils}, in particular util \code{mdiminfo} to query properties of a file or data source containing arrays
 #' @export
 read_mdim = function(filename, variable = character(0), ..., options = character(0), 
 					 raster = NULL, offset = integer(0), count = integer(0), step = integer(0), proxy = FALSE, 
-					 debug = FALSE, bounds = TRUE, curvilinear = NA) {
+					 debug = FALSE, bounds = TRUE, curvilinear = NA, normalize_path = TRUE) {
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
+	if (normalize_path)
+		filename = enc2utf8char(maybe_normalizePath(filename, np = normalize_path))
 	ret = gdal_read_mdim(filename, variable, options, rev(offset), rev(count), rev(step), proxy, debug)
 
 	if (length(ret$dimensions) == 1 && length(ret$array_list) == 1 && is.data.frame(ret$array_list[[1]]))
