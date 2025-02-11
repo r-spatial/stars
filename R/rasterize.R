@@ -235,14 +235,10 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 		else 
 			c(NA_character_, NA_character_)
 	d = create_dimensions(dimensions, raster = get_raster(dimensions = raster_xy))
-	
 	l = lapply(.x[-dims], function(x) {
 			m = if (is.factor(x))
 					structure(factor(rep(NA_character_, prod(dim(d))), levels = levels(x)),
 							  dim = dim(d))
-				else if (inherits(x , "sfc"))
-					do.call("structure", list(.Data = array(NA, dim = dim(d)),
-							... = append(attributes(x), list(dim = dim(d)))))
 				else 
 					array(NA, dim = dim(d))
 			m[index] = x # match order
