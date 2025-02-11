@@ -474,10 +474,13 @@ st_coordinates.dimensions = function(x, ...) {
 #' otherwise they are omitted
 as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA, add_coordinates = TRUE) {
 	if (add_coordinates)
-		data.frame(st_coordinates(x, add_max = add_max, center = center, ...), 
-			lapply(x, function(y) structure(y, dim = NULL)))
+		setNames(
+			data.frame(st_coordinates(x, add_max = add_max, center = center, ...), 
+			lapply(x, function(y) structure(y, dim = NULL))),
+			c(names(st_dimensions(x)), names(x))
+		)
 	else
-		as.data.frame(lapply(x, function(y) structure(y, dim = NULL)))
+		setNames(as.data.frame(lapply(x, function(y) structure(y, dim = NULL))), names(x))
 }
 
 add_units = function(x) {
