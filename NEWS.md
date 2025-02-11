@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* use, by default, `normalizePath()` on `filename` in `read_mdim()`;  #735
+
 * `st_extract()` accepts empty points as target; #734
 
 * `st_sfc2xy()` passes on `...` to `st_as_stars()`; #733 
