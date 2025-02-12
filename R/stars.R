@@ -473,12 +473,13 @@ st_coordinates.dimensions = function(x, ...) {
 #' @param add_coordinates logical; if `TRUE`, columns with dimension values preceed the array values, 
 #' otherwise they are omitted
 as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA, add_coordinates = TRUE) {
-	if (add_coordinates)
+	if (add_coordinates) {
+		coords = st_coordinates(x, add_max = add_max, center = center, ...)
 		setNames(
-			data.frame(st_coordinates(x, add_max = add_max, center = center, ...), 
-			lapply(x, function(y) structure(y, dim = NULL))),
-			c(names(st_dimensions(x)), names(x))
+			data.frame(coords, lapply(x, function(y) structure(y, dim = NULL))),
+			c(names(coords), names(x))
 		)
+	}
 	else
 		setNames(as.data.frame(lapply(x, function(y) structure(y, dim = NULL))), names(x))
 }
