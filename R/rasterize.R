@@ -199,33 +199,31 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 		if (any(is.na(xy)))
 			stop("xy coordinates not found in data")
 	}
-	stopifnot(length(dims) >= 1, all(dims >= 1), !any(is.na(dims)))
+	stopifnot(length(dims) >= 1, all(dims >= 1), !any(is.na(dims)), is.numeric(xy))
 	
 	index = NULL
 	dimensions = list()
 	this_dim = 1
 	for (i in dims) {
 		v = .x[[i]]
-		if (inherits(v, "sfc")) {
-    		if (!requireNamespace("digest", quietly = TRUE))
-       			stop("package digest required, please install it first") # nocov
-			dig = sapply(st_equals(v), digest::digest)
-			uv = unique(dig) # no need to sort
-			ix = match(dig, uv) # but look up "hash collision"
-		} else {
-			suv = if (is.factor(v))
-					levels(v)
-				else if (is.character(v))
-					unique(v)
-				else # numeric:
-					sort(unique(v), decreasing = y_decreasing && i == xy[2])
-			ix = match(v, suv)
-		}
+		ix = if (inherits(v, "sfc")) {
+    			if (!requireNamespace("digest", quietly = TRUE))
+       				stop("package digest required, please install it first") # nocov
+				dig = sapply(st_equals(v), digest::digest)
+				uv = unique(dig) # no need to sort
+				dimensions[[this_dim]] = create_dimension(values = v[match(uv, dig)])
+				match(dig, uv) # but look up "hash collision"
+			} else {
+				suv = if (is.factor(v))
+						levels(v)
+					else if (is.character(v))
+						unique(v)
+					else # numeric:
+						sort(unique(v), decreasing = y_decreasing && i == xy[2])
+				dimensions[[this_dim]] = create_dimension(values = suv, is_raster = i %in% xy)
+				match(v, suv)
+			}
 		index = cbind(index, ix)
-		dimensions[[this_dim]] = if (inherits(v, "sfc"))
-				create_dimension(values = v[match(uv, dig)])
-			else
-				create_dimension(values = suv, is_raster = i %in% xy)
 		this_dim = this_dim + 1
 	}
 	names(dimensions) = names(.x)[dims]
@@ -242,11 +240,8 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 				else 
 					array(NA, dim = dim(d))
 			m[index] = x # match order
-			if(inherits(x, "sfc")) 
-				array(
-					st_sfc(m, crs = st_crs(x), precision = st_precision(x)),
-					dim = dim(d)
-				)
+			if (inherits(x, "sfc")) 
+				array(st_sfc(m, crs = st_crs(x), precision = st_precision(x)), dim = dim(d))
 			else 
 				m 
 		}
