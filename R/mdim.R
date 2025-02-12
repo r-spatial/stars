@@ -425,8 +425,10 @@ st_as_cdl = function(x) {
 #' }
 write_mdim = function(x, filename, driver = detect.driver(filename), ..., 
 					  root_group_options = character(0), options = character(0),
-					  as_float = TRUE) {
+					  as_float = TRUE, normalize_path = TRUE) {
 
+	if (normalize_path)
+		filename = enc2utf8(maybe_normalizePath(dsn, filename))
 	if (inherits(x, "stars_proxy"))
 		x = st_as_stars(x)
 	cdl = st_as_cdl(x)
