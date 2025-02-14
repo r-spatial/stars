@@ -48,7 +48,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' rdate = st_set_dimensions(rdate, "date", values = c(dates))
 #' 
 #' pntsf = st_sf(date = dates, geometry = pnt)
-#' st_extract(split(rdate, "band"), pntsf, time_column = "date") # POINT geometries
+#' st_extract(split(rdate, "band"), pntsf) # POINT geometries
 #' 
 #' polysf = st_buffer(pntsf, 1000)
 #' st_extract(split(rdate, "band"), polysf, time_column = "date") # POLYGON geometries
@@ -57,11 +57,11 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' 			geometry = rep(pnt, 2), date = rep(dates, each = 10)) |> 
 #' 	st_as_stars(dims = c("geometry", "date"))
 #' 
-#' (vdc_new = st_extract(split(rdate, "band"), vdc, time_column = "date")) # stars vector data cube
+#' (vdc_new = st_extract(split(rdate, "band"), vdc)) # stars vector data cube
 #' merge(vdc_new, name = "band")
 #' 
 #' ### Extraction applied to the geometries inside the vector data cube (cell values)
-#' (vdc_new2 = st_extract(split(rdate, "band"), vdc, time_column = "date", 
+#' (vdc_new2 = st_extract(split(rdate, "band"), vdc,
 #' 					   sfc_attribute = "polygons")) # stars vector data cube
 #' merge(vdc_new2, name = "band")
 st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column = 
@@ -77,12 +77,18 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		resampling = "bilinear"
 	}
 	at_orig = at
-	if (inherits(at_orig, "stars") & !is.null(time_column)) {
+	if (inherits(at_orig, "stars")) {
+		if (is.null(time_column) && length(which_time(at)) > 0)
+			time_column = names(which_time(at))[1] # later on matched by name in sf object
 		at = st_as_sf(at, long = TRUE) 
 		if (!is.null(sfc_attribute)) {
+			stopifnot(is.character(sfc_attribute), length(sfc_attribute) == 1)
 			sfc_dim = st_geometry(at)
 			sfc_dim_name = attr(at, "sf_column")
-			if(is.null(at[[sfc_attribute]])) at else st_geometry(at) = sfc_attribute
+			if (!is.null(at[[sfc_attribute]])) 
+				st_geometry(at) = sfc_attribute
+			else
+				stop(paste(sfc_attribute, "should be an array in x"))
 		}
 	}
 	if (inherits(at, "matrix"))

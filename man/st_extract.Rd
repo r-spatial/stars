@@ -77,7 +77,7 @@ dates = c(Sys.Date()-1, Sys.Date())
 rdate = st_set_dimensions(rdate, "date", values = c(dates))
 
 pntsf = st_sf(date = dates, geometry = pnt)
-st_extract(split(rdate, "band"), pntsf, time_column = "date") # POINT geometries
+st_extract(split(rdate, "band"), pntsf) # POINT geometries
 
 polysf = st_buffer(pntsf, 1000)
 st_extract(split(rdate, "band"), polysf, time_column = "date") # POLYGON geometries
@@ -86,11 +86,11 @@ vdc = st_sf(rdm = rnorm(20), polygons = st_buffer(st_sample(st_bbox(pnt), 20), 5
 			geometry = rep(pnt, 2), date = rep(dates, each = 10)) |> 
 	st_as_stars(dims = c("geometry", "date"))
 
-(vdc_new = st_extract(split(rdate, "band"), vdc, time_column = "date")) # stars vector data cube
+(vdc_new = st_extract(split(rdate, "band"), vdc)) # stars vector data cube
 merge(vdc_new, name = "band")
 
 ### Extraction applied to the geometries inside the vector data cube (cell values)
-(vdc_new2 = st_extract(split(rdate, "band"), vdc, time_column = "date", 
+(vdc_new2 = st_extract(split(rdate, "band"), vdc,
 					   sfc_attribute = "polygons")) # stars vector data cube
 merge(vdc_new2, name = "band")
 }
