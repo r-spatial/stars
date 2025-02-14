@@ -15,7 +15,8 @@ st_extract(x, ...)
   time_column = attr(at, "time_column") \%||\% attr(at, "time_col"),
   interpolate_time = bilinear,
   FUN = mean,
-  resampling = c("nearest", "bilinear", "cubic", "cubicspline")
+  resampling = c("nearest", "bilinear", "cubic", "cubicspline"),
+  sfc_attribute = NULL
 )
 }
 \arguments{
@@ -23,7 +24,7 @@ st_extract(x, ...)
 
 \item{...}{passed on to \link{aggregate.stars} when geometries are not exclusively POINT geometries}
 
-\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}}
+\item{at}{object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}, or a \code{stars} object with geometry and temporal dimensions (vector data cube)}
 
 \item{bilinear}{logical; use bilinear interpolation rather than nearest neighbour?}
 
@@ -35,9 +36,17 @@ st_extract(x, ...)
 
 \item{resampling}{character; resampling method; for method cubic or cubicspline,
 `stars_proxy` objects should be used and GDAL should have version >= 3.10.0}
+
+\item{sfc_attribute}{character; if \code{at} is of class \code{stars} should the aggregation be performed
+for the attribute geometry rather than the dimension geometry? If \code{NULL} (default),
+the aggregation is performed at the dimension geometries, else the name of the attribute geometry to perform the aggregation on.
+If the given attribute geometry does not exist, the aggregation defaults to the dimension geometry.}
 }
 \value{
 if \code{at} is of class \code{matrix}, a matrix with extracted values is returned; 
+if \code{at} is of class \code{stars} and a temporal dimension was passed to \code{time_column},
+a \code{stars} object with the original \code{at} dimensions
+and the extracted values as attributes.
 otherwise: if \code{x} has more dimensions than only x and y (raster), an 
 object of class \code{stars} with POINT geometries replacing x and y raster
 dimensions, if this is not the case, an object of \code{sf} with extracted values.
@@ -58,4 +67,30 @@ st_extract(r, pnt)
 st_extract(r, pnt) \%>\% st_as_sf()
 st_extract(r[,,,1], pnt)
 st_extract(r, st_coordinates(pnt)) # "at" is a matrix: return a matrix
+# Extraction on non-POINT geometries
+poly = st_buffer(pnt, 1000)
+st_extract(r, poly)
+
+# Extraction with time matching
+rdate = c(r, r*2, along = "date")
+dates = c(Sys.Date()-1, Sys.Date())
+rdate = st_set_dimensions(rdate, "date", values = c(dates))
+
+pntsf = st_sf(date = dates, geometry = pnt)
+st_extract(split(rdate, "band"), pntsf, time_column = "date") # POINT geometries
+
+polysf = st_buffer(pntsf, 1000)
+st_extract(split(rdate, "band"), polysf, time_column = "date") # POLYGON geometries
+
+vdc = st_sf(rdm = rnorm(20), polygons = st_buffer(st_sample(st_bbox(pnt), 20), 500),
+			geometry = rep(pnt, 2), date = rep(dates, each = 10)) |> 
+	st_as_stars(dims = c("geometry", "date"))
+
+(vdc_new = st_extract(split(rdate, "band"), vdc, time_column = "date")) # stars vector data cube
+merge(vdc_new, name = "band")
+
+### Extraction applied to the geometries inside the vector data cube (cell values)
+(vdc_new2 = st_extract(split(rdate, "band"), vdc, time_column = "date", 
+					   sfc_attribute = "polygons")) # stars vector data cube
+merge(vdc_new2, name = "band")
 }
