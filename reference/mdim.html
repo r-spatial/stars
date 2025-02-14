@@ -73,7 +73,8 @@
 <span>  <span class="va">...</span>,</span>
 <span>  root_group_options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  as_float <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  as_float <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  normalize_path <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -175,16 +176,7 @@ named vector of the form <code>c(longitude="lon_bnds", latitude="lat_bnds")</cod
 <span class="r-in"><span>  <span class="co"># try ncdump on the generated file</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">read_mdim</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 6: SetIndexingVariable() not implemented</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Error 6: SetIndexingVariable() not implemented</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      Min.   1st Qu.    Median      Mean  3rd Qu.      Max.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Precipitation  0.03524588 0.3224987 0.3772574 0.4289465 0.511113 0.9204841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          from to     offset  delta refsys point                   values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stations    1  2         NA     NA     NA  TRUE POINT (0 1), POINT (3 5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time        1  5 2022-05-02 1 days   Date    NA                     NULL</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in !np:</span> invalid argument type</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
