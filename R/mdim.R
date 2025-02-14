@@ -428,7 +428,7 @@ write_mdim = function(x, filename, driver = detect.driver(filename), ...,
 					  as_float = TRUE, normalize_path = TRUE) {
 
 	if (normalize_path)
-		filename = enc2utf8(maybe_normalizePath(dsn, filename))
+		filename = enc2utf8(maybe_normalizePath(filename, filename))
 	if (inherits(x, "stars_proxy"))
 		x = st_as_stars(x)
 	cdl = st_as_cdl(x)

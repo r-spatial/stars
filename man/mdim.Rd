@@ -29,7 +29,8 @@ write_mdim(
   ...,
   root_group_options = character(0),
   options = character(0),
-  as_float = TRUE
+  as_float = TRUE,
+  normalize_path = TRUE
 )
 }
 \arguments{
