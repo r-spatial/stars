@@ -61,7 +61,8 @@
 <span>  time_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">at</span>, <span class="st">"time_column"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">at</span>, <span class="st">"time_col"</span><span class="op">)</span>,</span>
 <span>  interpolate_time <span class="op">=</span> <span class="va">bilinear</span>,</span>
 <span>  FUN <span class="op">=</span> <span class="va">mean</span>,</span>
-<span>  resampling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nearest"</span>, <span class="st">"bilinear"</span>, <span class="st">"cubic"</span>, <span class="st">"cubicspline"</span><span class="op">)</span></span>
+<span>  resampling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nearest"</span>, <span class="st">"bilinear"</span>, <span class="st">"cubic"</span>, <span class="st">"cubicspline"</span><span class="op">)</span>,</span>
+<span>  sfc_attribute <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -78,7 +79,7 @@
 
 
 <dt id="arg-at">at<a class="anchor" aria-label="anchor" href="#arg-at"></a></dt>
-<dd><p>object of class <code>sf</code> or <code>sfc</code> with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of <code>x</code></p></dd>
+<dd><p>object of class <code>sf</code> or <code>sfc</code> with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of <code>x</code>, or a <code>stars</code> object with geometry and temporal dimensions (vector data cube)</p></dd>
 
 
 <dt id="arg-bilinear">bilinear<a class="anchor" aria-label="anchor" href="#arg-bilinear"></a></dt>
@@ -101,10 +102,20 @@
 <dd><p>character; resampling method; for method cubic or cubicspline,
 `stars_proxy` objects should be used and GDAL should have version &gt;= 3.10.0</p></dd>
 
+
+<dt id="arg-sfc-attribute">sfc_attribute<a class="anchor" aria-label="anchor" href="#arg-sfc-attribute"></a></dt>
+<dd><p>character; if <code>at</code> is of class <code>stars</code> should the aggregation be performed
+for the attribute geometry rather than the dimension geometry? If <code>NULL</code> (default),
+the aggregation is performed at the dimension geometries, else the name of the attribute geometry to perform the aggregation on.
+If the given attribute geometry does not exist, the aggregation defaults to the dimension geometry.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>if <code>at</code> is of class <code>matrix</code>, a matrix with extracted values is returned;
+if <code>at</code> is of class <code>stars</code> and a temporal dimension was passed to <code>time_column</code>,
+a <code>stars</code> object with the original <code>at</code> dimensions
+and the extracted values as attributes.
 otherwise: if <code>x</code> has more dimensions than only x and y (raster), an
 object of class <code>stars</code> with POINT geometries replacing x and y raster
 dimensions, if this is not the case, an object of <code>sf</code> with extracted values.</p>
@@ -190,6 +201,144 @@ to <code>at</code> may be much faster than passing an <code>sf</code> or <code>s
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8,]  110  101  114   74  150  128</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9,]   80   68   74   54  110   88</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10,]   80   65   65   44   84   71</span>
+<span class="r-in"><span><span class="co"># Extraction on non-POINT geometries</span></span></span>
+<span class="r-in"><span><span class="va">poly</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="va">pnt</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">st_extract</span><span class="op">(</span><span class="va">r</span>, <span class="va">poly</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  Min.  1st Qu.   Median     Mean  3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L7_ETMs.tif  12.22199 61.95172 70.34698 69.55859 81.08313 112.3657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to                     refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10 SIRGAS 2000 / UTM zone 25S FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band        1  6                         NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                 values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POLYGON ((299340.2 911494...,...,POLYGON ((290531.4 911147...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band                                                              NULL</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extraction with time matching</span></span></span>
+<span class="r-in"><span><span class="va">rdate</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">r</span><span class="op">*</span><span class="fl">2</span>, along <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dates</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rdate</span> <span class="op">=</span> <span class="fu"><a href="st_dimensions.html">st_set_dimensions</a></span><span class="op">(</span><span class="va">rdate</span>, <span class="st">"date"</span>, values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">dates</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">pntsf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">dates</span>, geometry <span class="op">=</span> <span class="va">pnt</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">st_extract</span><span class="op">(</span><span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="va">rdate</span>, <span class="st">"band"</span><span class="op">)</span>, <span class="va">pntsf</span>, time_column <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span> <span class="co"># POINT geometries</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 7 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 288950.3 ymin: 9111189 xmax: 298340.2 ymax: 9119338</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     X1  X2  X3  X4  X5  X6       date                 geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   97  88  67  14  13  12 2025-02-13 POINT (298340.2 9114943)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  164 132 148  98 214 164 2025-02-14 POINT (293918.4 9114415)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   66  54  46  73  79  42 2025-02-13 POINT (293485.2 9118749)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  160 136 138 154 234 172 2025-02-14 POINT (294440.9 9114839)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   87  85 104  87 120  79 2025-02-13   POINT (295209 9118813)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  180 166 130  26  26  24 2025-02-14 POINT (295048.9 9111189)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   63  46  38  65  83  50 2025-02-13 POINT (289649.4 9116888)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  220 202 228 148 300 256 2025-02-14 POINT (295730.3 9119338)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   80  68  74  54 110  88 2025-02-13 POINT (288950.3 9111816)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 160 130 130  88 168 142 2025-02-14 POINT (289531.4 9111471)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">polysf</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="va">pntsf</span>, <span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">st_extract</span><span class="op">(</span><span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="va">rdate</span>, <span class="st">"band"</span><span class="op">)</span>, <span class="va">polysf</span>, time_column <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span> <span class="co"># POLYGON geometries</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 7 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 287950.3 ymin: 9110189 xmax: 299340.2 ymax: 9120338</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: SIRGAS 2000 / UTM zone 25S</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           X1        X2        X3        X4        X5        X6       date</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   95.61855  87.97014  66.87460  13.91219  13.35652  12.22199 2025-02-13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  168.67356 145.05173 153.31092 133.18779 221.45680 171.79255 2025-02-14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   70.16835  59.61072  56.02305  77.30407  93.00078  58.88915 2025-02-13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  161.71081 138.51940 142.88153 141.05122 211.41852 157.77237 2025-02-14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   76.32885  66.93708  67.44537  77.82367 102.07587  68.78250 2025-02-13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  174.55556 155.56283 129.95569  68.87434  74.75926  53.56283 2025-02-14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   69.69241  57.50929  54.95356  66.84740  89.00159  59.73938 2025-02-13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  163.53261 144.08644 152.66253 148.69203 224.73137 167.08644 2025-02-14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   77.67062  62.33319  62.58754  53.40356  86.72064  66.59983 2025-02-13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 154.69930 124.51919 123.22393 107.94016 164.82381 124.12995 2025-02-14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POLYGON ((299340.2 9114943,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POLYGON ((294918.4 9114415,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POLYGON ((294485.2 9118749,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POLYGON ((295440.9 9114839,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POLYGON ((296209 9118813, 2...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POLYGON ((296048.9 9111189,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POLYGON ((290649.4 9116888,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POLYGON ((296730.3 9119338,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POLYGON ((289950.3 9111816,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POLYGON ((290531.4 9111471,...</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">vdc</span> <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span>rdm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span>, polygons <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_buffer</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">pnt</span><span class="op">)</span>, <span class="fl">20</span><span class="op">)</span>, <span class="fl">500</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      geometry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">pnt</span>, <span class="fl">2</span><span class="op">)</span>, date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">dates</span>, each <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="st_as_stars.html">st_as_stars</a></span><span class="op">(</span>dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geometry"</span>, <span class="st">"date"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">vdc_new</span> <span class="op">=</span> <span class="fu">st_extract</span><span class="op">(</span><span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="va">rdate</span>, <span class="st">"band"</span><span class="op">)</span>, <span class="va">vdc</span>, time_column <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span><span class="op">)</span> <span class="co"># stars vector data cube</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 6 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Min. 1st Qu. Median   Mean 3rd Qu. Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X1    63   81.50  118.0 125.25   161.0  220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X2    46   68.00   96.5 108.60   136.0  202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X3    38   68.50   98.0 107.40   135.0  228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X4    13   47.75   75.5  82.50   113.5  174</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X5    13   82.00  118.5 131.40   179.5  300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X6    12   48.00   85.0  97.50   146.0  256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to     offset  delta                     refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date        1  2 2025-02-13 1 days                       Date    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (298340.2 9114943),...,POINT (289531.4 9111471)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date                                                      NULL</span>
+<span class="r-in"><span><span class="fu"><a href="merge.html">merge</a></span><span class="op">(</span><span class="va">vdc_new</span>, name <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    Min. 1st Qu. Median    Mean 3rd Qu. Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X1.X2.X3.X4.X5.X6    12      68   94.5 108.775   148.5  300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to     offset  delta                     refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date        1  2 2025-02-13 1 days                       Date    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band        1  6         NA     NA                         NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (298340.2 9114943),...,POINT (289531.4 9111471)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date                                                      NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band                                                 X1,...,X6</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">### Extraction applied to the geometries inside the vector data cube (cell values)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">vdc_new2</span> <span class="op">=</span> <span class="fu">st_extract</span><span class="op">(</span><span class="fu"><a href="merge.html">split</a></span><span class="op">(</span><span class="va">rdate</span>, <span class="st">"band"</span><span class="op">)</span>, <span class="va">vdc</span>, time_column <span class="op">=</span> <span class="st">"date"</span>, </span></span>
+<span class="r-in"><span>             sfc_attribute <span class="op">=</span> <span class="st">"polygons"</span><span class="op">)</span><span class="op">)</span> <span class="co"># stars vector data cube</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 2 dimensions and 6 attributes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Min.  1st Qu.    Median      Mean  3rd Qu.     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X1  64.05389 81.78454 114.71922 121.18932 160.0073 193.3864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X2  52.09223 71.41825  96.37767 103.37781 134.0551 177.9421</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X3  44.29948 68.55390  95.45427 100.92211 136.0219 157.0072</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X4  13.16426 63.60088  76.40195  89.18981 130.5063 160.7764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X5  13.76653 94.78568 118.90647 133.22952 193.5465 217.5130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X6  12.76550 75.00908  95.18119  98.57301 133.8600 168.5140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to     offset  delta                     refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date        1  2 2025-02-13 1 days                       Date    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (298340.2 9114943),...,POINT (289531.4 9111471)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date                                                      NULL</span>
+<span class="r-in"><span><span class="fu"><a href="merge.html">merge</a></span><span class="op">(</span><span class="va">vdc_new2</span>, name <span class="op">=</span> <span class="st">"band"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       Min.  1st Qu.   Median     Mean  3rd Qu.    Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X1.X2.X3.X4.X5.X6  12.7655 73.93376 102.7202 107.7469 143.4256 217.513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from to     offset  delta                     refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date        1  2 2025-02-13 1 days                       Date    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band        1  6         NA     NA                         NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (298340.2 9114943),...,POINT (289531.4 9111471)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date                                                      NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> band                                                 X1,...,X6</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
