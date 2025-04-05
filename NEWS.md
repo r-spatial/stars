@@ -1,12 +1,14 @@
 # version 0.6-9
 
+* `st_redimension()` (and by that, `merge.stars()`) use `abind()` for numeric variables rather than `c()`, reducing memory overhead.
+
 * fix problem with reading HDF4 files; #741 by Alexys Rodriguez
 
 * use, by default, `normalizePath()` on `filename` in `read_mdim()`;  #735
 
 * `st_extract()` accepts empty points as target; #734
 
-* `st_sfc2xy()` passes on `...` to `st_as_stars()`; #733 
+* `st_sfc2xy()` passes `...` on to `st_as_stars()`; #733 
 
 # version 0.6-8
 
