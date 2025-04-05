@@ -129,7 +129,8 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		} else if (exists("x_agg")) {
 			# Allow time matching for lines and polygons using aggregate
 			x = st_normalize(st_upfront(x_agg))
-			lapply(seq_along(x), function(i) x[[i]]) 
+			# lapply(seq_along(x), function(i) x[[i]]) 
+			x
 		} else {
 			x = st_normalize(st_upfront(x))
 			if (is_curvilinear(x)) { # https://github.com/r-spatial/stars/issues/632

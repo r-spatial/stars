@@ -513,7 +513,7 @@ try_as_units = function(u) {
 		un = try(suppressWarnings(as_units(gsub("^", "", u, fixed = TRUE))), silent = TRUE)
 	if (inherits(un, "try-error")) # try without **
 		un = try(suppressWarnings(as_units(gsub("**", "", u, fixed = TRUE))), silent = TRUE)
-	if (inherits(un, "try-error")) {
+	if (inherits(un, "try-error") && u != "none") {
 		warning(paste("ignoring unrecognized unit:", u), call. = FALSE)
 		NULL
 	} else

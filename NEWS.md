@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* fix problem with reading HDF4 files; #741 by Alexys Rodriguez
+
 * use, by default, `normalizePath()` on `filename` in `read_mdim()`;  #735
 
 * `st_extract()` accepts empty points as target; #734
