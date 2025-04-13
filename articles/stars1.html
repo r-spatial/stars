@@ -453,11 +453,11 @@ character names:</p>
 <span><span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span></span>
 <span><span class="co">## ice [percent]  0.01    0.73   0.83  0.7657695    0.87 1.00 27377</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from   to         offset  delta  refsys x/y</span></span>
-<span><span class="co">## x       1 1440              0   0.25      NA [x]</span></span>
-<span><span class="co">## y       1  720             90  -0.25      NA [y]</span></span>
-<span><span class="co">## zlev    1    1          0 [m]     NA      NA    </span></span>
-<span><span class="co">## time    1    9 1981-09-01 UTC 1 days POSIXct</span></span></code></pre></div>
+<span><span class="co">##      from   to offset delta x/y</span></span>
+<span><span class="co">## x       1 1440      0  0.25 [x]</span></span>
+<span><span class="co">## y       1  720     90 -0.25 [y]</span></span>
+<span><span class="co">## zlev    1    1  0 [m]    NA    </span></span>
+<span><span class="co">## time    1    9     NA    NA</span></span></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop
 the singular <code>zlev</code> (depth) dimension using
 <code>adrop</code>:</p>
