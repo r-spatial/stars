@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* fix `c.stars()` for the case where some of the objects have a single slice on the `along=` dimension; #743
+
 * `st_redimension()` (and by that, `merge.stars()`) use `abind()` for numeric variables rather than `c()`, reducing memory overhead.
 
 * fix problem with reading HDF4 files; #741 by Alexys Rodriguez

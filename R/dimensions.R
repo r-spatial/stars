@@ -710,7 +710,7 @@ all.equal.dimensions = function(target, current, ..., ignore_blocksizes = TRUE) 
 
 combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 	dims = st_dimensions(dots[[1]])
-	if (along > length(dims)) {
+	if (along > length(dims)) { # along new dimension:
 		if (length(dots) > 1 && check_dims_identical) {
 			for (i in 2:length(dots))
 				if (! isTRUE(all.equal(dims, st_dimensions(dots[[i]]))))
@@ -718,16 +718,13 @@ combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
-		offset = lapply(dots, function(x) attr(x, "dimensions")[[along]]$offset)
-		if (any(is.na(offset))) { # concatenate values if non-NULL:
-			dims[[along]]$from = 1
-			dims[[along]]$to = sum(sapply(dots, function(x) { d = st_dimensions(x)[[along]]; d$to - d$from + 1} ))
-			if (!is.null(dims[[along]]$values))
-				dims[[along]]$values = do.call(c, lapply(dots, function(x) attr(x, "dimensions")[[along]]$values))
-		} else {
-			values = do.call(c, lapply(dots, function(y) st_get_dimension_values(y, along)))
-			dims[[along]] = create_dimension(values = values)
-		}
+		no_values = all(sapply(dots, function(x) is.null(st_dimensions(x)[[along]]$values)))
+		dims[[along]] = if (no_values)
+				create_dimension(from = 1, to = sum(sapply(dots, function(x) dim(x)[along])))
+			else {
+				values = do.call(c, lapply(dots, function(y) st_get_dimension_values(y, along)))
+				create_dimension(values = values, point = dims[[along]]$point)
+			}
 	}
 	dims
 }
