@@ -203,6 +203,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
 			# other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			other_values = lapply(st_dimensions(x)[other_dim], function(x) x$values)
+			for (i in seq_along(other_values))
+				if (inherits(other_values[[i]], "intervals"))
+					other_values[[i]] = format(other_values[[i]])
 			varnames = apply(do.call(expand.grid, other_values), 1, paste, collapse = ".")
 			un_dim = function(x) { # remove a dim attribute from data.frame columns
 				for (i in seq_along(x))
