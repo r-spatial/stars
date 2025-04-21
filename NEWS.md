@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* handle "intervals" dimension in aggregate.stars() and `st_as_sf.stars()`; #745
+
 * fix `c.stars()` for the case where some of the objects have a single slice on the `along=` dimension; #743
 
 * `st_redimension()` (and by that, `merge.stars()`) use `abind()` for numeric variables rather than `c()`, reducing memory overhead.
