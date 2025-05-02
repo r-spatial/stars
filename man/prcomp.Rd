@@ -31,6 +31,6 @@ to predict PC scores into a `stars` object, use \link{predict.stars}; see exampl
 }
 \examples{
 l7 = split(st_as_stars(L7_ETMs), 3) # use bands as features
-l7 |> prcomp() |> plot()
-l7 |> prcomp() |> predict(l7, model = _) |> merge() |> plot()
+plot(prcomp(l7))
+plot(merge(predict(l7, model = prcomp(l7))))
 }
