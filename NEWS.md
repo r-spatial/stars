@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* `[.stars()` can select on names of a vector geometry (`sfc`) dimension; #747
+
 * handle "intervals" dimension in aggregate.stars() and `st_as_sf.stars()`; #745
 
 * fix `c.stars()` for the case where some of the objects have a single slice on the `along=` dimension; #743

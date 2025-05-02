@@ -79,7 +79,10 @@
 			mc[[i]] = eval(mc[[i]], parent.frame())
 		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]]) || is.character(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = if (is.character(mc[[i]])) {
-						m = match(mc[[i]], d[[i]]$values)
+						m = if (inherits(d[[i]]$values, "sfc"))
+								match(mc[[i]], names(d[[i]]$values))
+							else
+								match(mc[[i]], d[[i]]$values)
 						if (length(m) == 0 || any(is.na(m)))
 							stop("selecting using invalid value label(s)?")
 						m
