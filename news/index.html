@@ -45,7 +45,7 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6-9" id="version-06-9">version 0.6-9<a class="anchor" aria-label="anchor" href="#version-06-9"></a></h2>
-<ul><li><p><code>[.stars()</code> can select on names of a vector geometry (<code>sfc</code>) dimension; <a href="https://github.com/r-spatial/stars/issues/747" class="external-link">#747</a></p></li>
+<ul><li><p><code>[.stars()</code> with a <code>character</code> selector selects on names of a dimension if it has names; <a href="https://github.com/r-spatial/stars/issues/747" class="external-link">#747</a></p></li>
 <li><p>handle “intervals” dimension in aggregate.stars() and <code><a href="../reference/st_as_sf.html">st_as_sf.stars()</a></code>; <a href="https://github.com/r-spatial/stars/issues/745" class="external-link">#745</a></p></li>
 <li><p>fix <code><a href="../reference/c.stars.html">c.stars()</a></code> for the case where some of the objects have a single slice on the <code>along=</code> dimension; <a href="https://github.com/r-spatial/stars/issues/743" class="external-link">#743</a></p></li>
 <li><p><code><a href="../reference/redimension.html">st_redimension()</a></code> (and by that, <code><a href="../reference/merge.html">merge.stars()</a></code>) use <code><a href="https://rdrr.io/pkg/abind/man/abind.html" class="external-link">abind()</a></code> for numeric variables rather than <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>, reducing memory overhead.</p></li>
