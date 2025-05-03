@@ -1,6 +1,6 @@
 # version 0.6-9
 
-* `[.stars()` can select on names of a vector geometry (`sfc`) dimension; #747
+* `[.stars()` with a `character` selector selects on names of a dimension if it has names; #747
 
 * handle "intervals" dimension in aggregate.stars() and `st_as_sf.stars()`; #745
 

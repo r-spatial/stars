@@ -7,7 +7,7 @@
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
-#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported.
+#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported. Character selectors are matched against the names of a dimension if it has names, otherwise to the dimension values.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -79,7 +79,7 @@
 			mc[[i]] = eval(mc[[i]], parent.frame())
 		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]]) || is.character(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = if (is.character(mc[[i]])) {
-						m = if (inherits(d[[i]]$values, "sfc"))
+						m = if (!is.null(names(d[[i]]$values)))
 								match(mc[[i]], names(d[[i]]$values))
 							else
 								match(mc[[i]], d[[i]]$values)
