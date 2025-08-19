@@ -1,5 +1,7 @@
 # version 0.6-9
 
+* `slice.stars_proxy()` works (again) for single-file proxy objects; #751, #527
+
 * `[.stars()` with a `character` selector selects on names of a dimension if it has names; #747
 
 * handle "intervals" dimension in aggregate.stars() and `st_as_sf.stars()`; #745

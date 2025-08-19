@@ -161,7 +161,8 @@ slice.stars_proxy <- function(.data, along, index, ...) {
   # adrop.stars_proxy
 
   # If there are already operations queued, just add to the queue
-  if (!is.null(attr(.data, "call_list")))
+  if (!is.null(attr(.data, "call_list")) || 
+	  	(length(.data) == 1 && is.character(.data[[1]]))) # #527
     return(collect(.data, match.call(), "slice", ".data",
                    env = parent.frame(), ...))
 
