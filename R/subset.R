@@ -280,10 +280,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]
-		bb = if (!inherits(y, "bbox"))
-				st_bbox(y)
-			else
-				y
+		bb = st_bbox(y)
 		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
@@ -320,8 +317,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}
-	if (normalize[1]) x = st_normalize(x)
-	x
+	if (normalize[1]) 
+		st_normalize(x)
+	else 
+		x
 }
 
 #' @export

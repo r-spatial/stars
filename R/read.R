@@ -83,7 +83,7 @@ geoloc_is_2D = function(geolocation, driver) { # the thing has 2-D x and y array
 #' \code{RasterIO} is a list with zero or more of the following named arguments:
 #' \code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 #' \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, \code{resample}.
-#' See \url{https://gdal.org/doxygen/classGDALDataset.html} for their meaning;
+#' See \url{https://gdal.org/en/latest/doxygen/classGDALDataset.html} for their meaning;
 #' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1).
 #' Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and

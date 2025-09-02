@@ -357,6 +357,8 @@ st_as_raster = function(x, class, ...) {
 			if (!any(is.na(z))) {
 				if (is.character(z)) {
 					names(b) = z
+				} else if (inherits(z, c("POSIXt", "Date"))) {
+					terra::time(b) = z
 				} else {
 					names(b) = paste0(third, z)
 				}

@@ -77,15 +77,16 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 		} else
 			sf[isn]
 	n_attr = length(which(isn))
-	if (length(dim(template)) == 2 && n_attr > 1)
-		template = merge(do.call(c, lapply(seq_len(n_attr), function(x) template)))
 	geoms = which(sapply(sf, inherits, "sfc"))
 	attrs = as.data.frame(sf)[-geoms]
+	if (length(dim(template)) == 2 && n_attr > 1)
+		template = st_set_dimensions(merge(do.call(c, lapply(seq_len(n_attr), function(x) template))),
+									 3, names(attrs))
 	for (i in which(sapply(sf, inherits, "factor"))) # factors:
 		sf[[i]] = as.numeric(sf[[i]])
 	sf::gdal_rasterize(sf, template, st_geotransform(template), file, driver, options)
 	ret = read_stars(file, driver = driver, proxy = proxy)
-	if (!proxy) {
+	if (! proxy) {
 		if (length(dim(ret)) > 2)
 			ret = split(ret)
 		for (i in seq_along(ret)) {
@@ -96,7 +97,7 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 				ret[[i]] = structure(ret[[i]], class = class(attrs[[i]]), levels = levels(attrs[[i]]))
 		}
 	}
-	setNames(ret, names(attrs))
+	ret
 }
 
 guess_raster = function(x, ...) {

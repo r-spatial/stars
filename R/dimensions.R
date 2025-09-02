@@ -113,6 +113,8 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
+	if (inherits(.x, "mdim"))
+		stop("for mdim objects, use st_set_dimensions() after st_as_stars()")
 	d = st_dimensions(.x)
 	if (!missing(which) && is.character(which))
 		which = match(which, base::names(d))
@@ -136,9 +138,10 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else if (methods::is(values, "CFtime"))
-			d[[which]]["values"] = values
-		else
+		else if (methods::is(values, "CFtime")) {
+			d[[which]]$values <- values
+			d[[which]]$refsys <- "CFtime"
+		} else
 			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
@@ -492,6 +495,8 @@ parse_netcdf_meta = function(pr, name) {
 				u = get_val(paste0(v, "#units"), meta)
 				if (!is.na(u)) {
 					cal = get_val(paste0(v, "#calendar"), meta)
+					if (is.null(cal) || is.na(cal))
+						cal = "standard"
 					time = try(CFtime::CFtime(u, cal), silent = TRUE)
 					if (methods::is(time, "CFtime"))
 						pr$dim_extra[[v]] = time + pr$dim_extra[[v]]
@@ -677,8 +682,13 @@ print.dimensions = function(x, ...) {
 identical_dimensions = function(lst, ignore_resolution = FALSE, tolerance = 0) {
 	if (length(lst) > 1) {
 		d1 = attr(lst[[1]], "dimensions")
+		crs1 = st_crs(d1)
+		st_crs(d1) = NA_crs_
 		for (i in 2:length(lst)) {
 			di = attr(lst[[i]], "dimensions")
+			if (st_crs(di) != crs1) # check semantical equivalence; https://github.com/r-spatial/stars/issues/703
+				return(FALSE)
+			st_crs(di) = NA_crs_
 			if (ignore_resolution) {
 				for (j in seq_along(d1))
 					d1[[j]]$delta = d1[[j]]$to = NA_real_
