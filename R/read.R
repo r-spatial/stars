@@ -214,9 +214,9 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
 
-		driver = if (is.null(driver) || data$driver[1] == "HDF5") # to override auto-detection:
+		driver = if (is.null(driver) || data$driver[1] %in% c("HDF5", "HDF4"))
 				character(0)
-			else
+			else # override auto-detection:
 				data$driver[1]
 
 		ret = lapply(sub_datasets, .read_stars, options = options,

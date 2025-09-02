@@ -161,7 +161,8 @@ slice.stars_proxy <- function(.data, along, index, ...) {
   # adrop.stars_proxy
 
   # If there are already operations queued, just add to the queue
-  if (!is.null(attr(.data, "call_list")))
+  if (!is.null(attr(.data, "call_list")) || 
+	  	(length(.data) == 1 && is.character(.data[[1]]))) # #527
     return(collect(.data, match.call(), "slice", ".data",
                    env = parent.frame(), ...))
 
@@ -334,7 +335,7 @@ geom_stars = function(mapping = NULL, data = NULL, ..., downsample = 0, sf = FAL
 		if (is.null(mapping)) {
 			mapping = ggplot2::aes(fill = !!rlang::sym(names(data)[1])) } else {
 		        mapping = modifyList( ggplot2::aes(fill = !!rlang::sym(names(data)[1])), mapping) }
-		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), color = NA, mapping = mapping, ...)
+		ggplot2::geom_sf(data = st_as_sf(data, long = TRUE), mapping = mapping, ...)
 	} else
 		stop("geom_stars only works for objects with raster or vector geometries")
 						     

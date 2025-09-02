@@ -43,9 +43,13 @@ jobs:
           use-public-rspm: true
           extra-repositories: "https://cran.uni-muenster.de/pebesma"
 
+      - name: Install macOS system dependencies
+        if: runner.os == 'macos'
+        run: brew install gdal proj
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, starsdata=?ignore, PCICt=?ignore
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

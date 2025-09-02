@@ -81,7 +81,7 @@ tribble(
   "cut", "cut", "",
   "subs", "", "",
   "reclassify", "mutate with case_when", "or forcats::fct_recode ?",
-  "reclassify", "cut", "see https://stackoverflow.com/questions/70619002/reclassify-2d-stars-array/",
+  "reclassify", "cut", "",
   "init", "[ ] <-", "",
   "stackApply", "{[ ] , slice, filter} %>% st_apply", "",
   "stackSelect", "", "",

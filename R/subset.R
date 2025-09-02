@@ -7,7 +7,7 @@
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
-#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported.
+#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported. Character selectors are matched against the names of a dimension if it has names, otherwise to the dimension values.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -79,7 +79,10 @@
 			mc[[i]] = eval(mc[[i]], parent.frame())
 		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]]) || is.character(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = if (is.character(mc[[i]])) {
-						m = match(mc[[i]], d[[i]]$values)
+						m = if (!is.null(names(d[[i]]$values)))
+								match(mc[[i]], names(d[[i]]$values))
+							else
+								match(mc[[i]], d[[i]]$values)
 						if (length(m) == 0 || any(is.na(m)))
 							stop("selecting using invalid value label(s)?")
 						m
@@ -206,7 +209,7 @@ st_intersects.bbox = function(x, y, ...) { # FIXME: segmentize first if geograph
 #' @param as_points logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
-#' @param normalize logical; if \code{TRUE} then pass the cropped object to \code{\link[sf]{st_normalize}} before returning.
+#' @param normalize logical; if \code{TRUE} then pass the cropped object to \code{\link[sf]{st_normalize}} before returning. This typically changes the `offset` field and resets the `from` field to 1, and changes the bounding box of the returned object accordingly.
 #' @details for raster \code{x}, \code{st_crop} selects cells that intersect with \code{y}. 
 #' For intersection, are raster cells interpreted as points or as small polygons? 
 #' If \code{y} is of class \code{stars}, \code{x} raster cells are interpreted as points; if \code{y} is of class \code{bbox}, \code{x} cells are interpreted as cells (small polygons). Otherwise, if \code{as_points} is not given, cells are interpreted as points if \code{y} has a two-dimensional geometry.

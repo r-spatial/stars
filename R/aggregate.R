@@ -106,7 +106,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		new_dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)]))
 		out_dim = c(ncol(m), dim(x)[-(1:2)])
 		if (isTRUE(list(...)$na.rm))
-			x = lapply(x, function(y) { y[is.na(y)] = 0.0; y })
+			x = st_as_stars(lapply(x, function(y) { y[is.na(y)] = 0.0; y }), dimensions = st_dimensions(x))
 		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
 		# %*% dropped units, so to propagate units, if present we need to copy (mean/sum):
 		d = create_dimensions(append(setNames(list(create_dimension(values = by)), geom),

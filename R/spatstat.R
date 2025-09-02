@@ -24,7 +24,13 @@ as.owin.stars = function(W, ..., fatal) {
 #' @export
 st_as_stars.im = function(.x, ...) {
 	# see https://github.com/r-spatial/stars/issues/648
-	setNames(st_as_stars(as.data.frame(.x, ...)), "v")
+	#setNames(st_as_stars(as.data.frame(.x, ...)), "v")
+	d = dim(.x)
+	nd = create_dimensions(
+		list(x = create_dimension(1, d[2], .x$xrange[1], diff(.x$xrange)/d[2]),
+			 y = create_dimension(1, d[1], .x$yrange[1], diff(.x$yrange)/d[1])),
+		get_raster(affine = c(0.0, 0.0), dimensions = c("x", "y"), curvilinear = FALSE))
+	st_stars(list(v = t(.x$v)), nd)
 }
 
 as.im.stars = function(X, ...) {

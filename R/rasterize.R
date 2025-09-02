@@ -97,7 +97,10 @@ st_rasterize = function(sf, template = guess_raster(sf, ...) %||%
 				ret[[i]] = structure(ret[[i]], class = class(attrs[[i]]), levels = levels(attrs[[i]]))
 		}
 	}
-	ret
+	if (n_attr <= 1) # no names in bands
+		setNames(ret, names(attrs))
+	else
+		ret
 }
 
 guess_raster = function(x, ...) {
@@ -196,33 +199,31 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 		if (any(is.na(xy)))
 			stop("xy coordinates not found in data")
 	}
-	stopifnot(length(dims) >= 1, all(dims >= 1), !any(is.na(dims)))
-
+	stopifnot(length(dims) >= 1, all(dims >= 1), !any(is.na(dims)), is.numeric(xy))
+	
 	index = NULL
 	dimensions = list()
 	this_dim = 1
 	for (i in dims) {
 		v = .x[[i]]
-		if (inherits(v, "sfc")) {
-    		if (!requireNamespace("digest", quietly = TRUE))
-       			stop("package digest required, please install it first") # nocov
-			dig = sapply(st_equals(v), digest::digest)
-			uv = unique(dig) # no need to sort
-			ix = match(dig, uv) # but look up "hash collision"
-		} else {
-			suv = if (is.factor(v))
-					levels(v)
-				else if (is.character(v))
-					unique(v)
-				else # numeric:
-					sort(unique(v), decreasing = y_decreasing && i == xy[2])
-			ix = match(v, suv)
-		}
+		ix = if (inherits(v, "sfc")) {
+    			if (!requireNamespace("digest", quietly = TRUE))
+       				stop("package digest required, please install it first") # nocov
+				dig = sapply(st_equals(v), digest::digest)
+				uv = unique(dig) # no need to sort
+				dimensions[[this_dim]] = create_dimension(values = v[match(uv, dig)])
+				match(dig, uv) # but look up "hash collision"
+			} else {
+				suv = if (is.factor(v))
+						levels(v)
+					else if (is.character(v))
+						unique(v)
+					else # numeric:
+						sort(unique(v), decreasing = y_decreasing && i == xy[2])
+				dimensions[[this_dim]] = create_dimension(values = suv, is_raster = i %in% xy)
+				match(v, suv)
+			}
 		index = cbind(index, ix)
-		dimensions[[this_dim]] = if (inherits(v, "sfc"))
-				create_dimension(values = v[match(uv, dig)])
-			else
-				create_dimension(values = suv, is_raster = i %in% xy)
 		this_dim = this_dim + 1
 	}
 	names(dimensions) = names(.x)[dims]
@@ -235,31 +236,15 @@ st_as_stars.data.frame = function(.x, ..., dims = coords, xy, y_decreasing = TRU
 	l = lapply(.x[-dims], function(x) {
 			m = if (is.factor(x))
 					structure(factor(rep(NA_character_, prod(dim(d))), levels = levels(x)),
-						dim = dim(d))
+							  dim = dim(d))
 				else 
 					array(NA, dim = dim(d))
 			m[index] = x # match order
-			m 
+			if (inherits(x, "sfc")) 
+				array(st_sfc(m, crs = st_crs(x), precision = st_precision(x)), dim = dim(d))
+			else 
+				m 
 		}
 	)
 	st_stars(l, d)
-}
-
-#' replace POINT simple feature geometry list with an x y raster
-#' @param x object of class \code{stars}, or of class \code{sf}
-#' @param ... passed on to \link{as.data.frame.stars}
-#' @return object of class \code{stars} with a POINT list replaced by x and y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
-#' @export
-st_sfc2xy = function(x, ...) {
-	if (inherits(x, "sf"))
-		x = st_as_stars(x)
-	i = which_sfc(x)
-	d = st_dimensions(x)
-	if (!inherits(d[[i]]$values, "sfc_POINT"))
-		stop("point geometries expected")
-	cc = st_coordinates(d[[i]]$values)
-	df = as.data.frame(x)
-	df$geometry = NULL
-	s = st_as_stars(cbind(cc, df))
-	st_set_crs(s, st_crs(d))
 }

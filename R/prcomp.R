@@ -18,8 +18,8 @@ prcomp.stars_proxy = function(x, ..., downsample = 0) {
 #' @export
 #' @examples
 #' l7 = split(st_as_stars(L7_ETMs), 3) # use bands as features
-#' l7 |> prcomp() |> plot()
-#' l7 |> prcomp() |> predict(l7, model = _) |> merge() |> plot()
+#' plot(prcomp(l7))
+#' plot(merge(predict(l7, model = prcomp(l7))))
 prcomp.stars = function(x, ..., quiet = FALSE) {
 	if (length(x) == 1) {
 		if (!quiet)
