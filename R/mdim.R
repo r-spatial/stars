@@ -155,8 +155,10 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		
 		cal <- if (!is.null(a <- attr(x, "attributes"))) a["calendar"] else NULL
 		time <- try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFtime
-		if (inherits(time, "CFtime")) time + as.numeric(x)  # if we have CFtime, add the offsets
-		else x                                                 # if not, fail graciously
+		if (inherits(time, "CFTime")) 
+			time + as.numeric(x)  # if we have CFtime, add the offsets
+		else 
+			x                                                 # if not, fail graciously
 	}
 	
 	l = rev(lapply(ret$dimensions, function(x) {
@@ -258,7 +260,7 @@ add_units_attr = function(l) {
 				add_attr(x / 3600, c(units = "hours since 1970-01-01 00:00:00", cal))
 			else
 				add_attr(x, c(units = "seconds since 1970-01-01 00:00:00", cal))
-		} else if (inherits(x, "CFtime"))
+		} else if (inherits(x, "CFTime"))
 			add_attr(CFtime::offsets(x), c(units = CFtime::definition(x), CFtime::calendar(x)))
 		else if (inherits(x, "Date"))
 			add_attr(as.numeric(x), c(units = "days since 1970-01-01"))

@@ -9,7 +9,7 @@ st_extract = function(x, ...) UseMethod("st_extract")
 #' @param x object of class \code{stars} or \code{stars_proxy}
 #' @param at object of class \code{sf} or \code{sfc} with geometries, or two-column matrix with coordinate points in rows, indicating where to extract values of \code{x}, or a \code{stars} object with geometry and temporal dimensions (vector data cube)
 #' @param bilinear logical; use bilinear interpolation rather than nearest neighbour?
-#' @param time_column character or integer; name or index of a column in \code{at} (which must be of class \code{sf} or \code{sfc}) with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{Date}, or \code{CFtime}) in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
+#' @param time_column character or integer; name or index of a column in \code{at} (which must be of class \code{sf} or \code{sfc}) with time or date values that will be matched to values of the first temporal dimension (matching classes \code{POSIXct}, \code{Date}, or \code{CFTime}) in \code{x}, after which this dimension is reduced. This is useful to extract data cube values along a trajectory; see https://github.com/r-spatial/stars/issues/352 .
 #' @param interpolate_time logical; should time be interpolated? If \code{FALSE}, time instances are matched using the coinciding or the last preceding time in the data cube, unless the dimension uses \code{CFtime} with bounds set, in which case the corresponding time interval in which the time or date value falls is returned.
 #' @param FUN function used to aggregate pixel values when geometries of \code{at} intersect with more than one pixel
 #' @param resampling character; resampling method; for method cubic or cubicspline,
@@ -235,7 +235,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 # if interpolate = FALSE, returns an integer in 1...length(b) or NA if outside
 # if interpolate = TRUE, returns a continuous index in 1...length(b) or NA if outside
 match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
-	if (inherits(b, "CFtime")) {
+	if (inherits(b, "CFTime")) {
 		if (interpolate && isFALSE(intervals) && is.null(CFtime::bounds(b))) 
 			return(CFtime::indexOf(a, b, method = "linear"))
 		else

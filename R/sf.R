@@ -203,7 +203,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
 			# other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			other_values = lapply(st_dimensions(x)[other_dim], function(x) {
-				if (inherits(x$values, "CFtime"))
+				if (inherits(x$values, "CFTime"))
 					CFtime::offsets(x$values) 
 				else
 					x$values
@@ -230,7 +230,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			else { # another exception... time as second dimension
 				e = expand_dimensions(x)
 
-				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "CFtime"))) {
+				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "CFTime"))) {
 					names(df) = if (length(nc) > 1) {
 							nm = expand.grid(e[-ix][[1]], names(x))
 							paste(nm[[2]], nm[[1]], sep = ".")

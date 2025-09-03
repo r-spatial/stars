@@ -219,7 +219,7 @@ plot.stars = function(x, y, ..., join_zlim = TRUE, main = make_label(x, 1), axes
 			layout(lt$m, widths = lt$widths, heights = lt$heights, respect = compact)
 			par(mar = c(axes * 2.1, axes * 2.1, title_size, 0))
 			labels = st_get_dimension_values(x, 3, center = center_time)
-			if (inherits(labels, "CFtime"))
+			if (inherits(labels, "CFTime"))
 				labels = CFtime::as_timestamp(labels)
 			for (i in seq_len(dims[3])) {
 				im = flatten(x, i)
