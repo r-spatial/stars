@@ -455,7 +455,7 @@ st_coordinates.stars = function(x, ..., add_max = FALSE, center = TRUE) {
 		} else {
 			ed = expand_dimensions(x, center = center) # cell centers for x/y if raster
 			ed = lapply(ed, function(z) {
-				if (methods::is(z, "CFtime")) CFtime::as_timestamp(z) else z})
+				if (inherits(z, "CFtime")) CFtime::as_timestamp(z) else z})
 			if (length(ed) > 1)
 				do.call(expand.grid, ed)
 			else

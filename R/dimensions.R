@@ -138,7 +138,7 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else if (methods::is(values, "CFtime")) {
+		else if (inherits(values, "CFtime")) {
 			d[[which]]$values <- values
 			d[[which]]$refsys <- "CFtime"
 		} else
@@ -245,7 +245,7 @@ st_get_dimension_values = function(.x, which, ..., where = NA, max = FALSE, cent
 regular_intervals = function(x, epsilon = 1e-10) {
 	if (length(x) <= 1)
 		FALSE
-	else if (methods::is(x, "CFtime"))
+	else if (inherits(x, "CFtime"))
 		CFtime::is_complete(x)
 	else {
 		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date"))))
@@ -295,7 +295,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			refsys = "POSIXct"
 		else if (inherits(example, "Date"))
 			refsys = "Date"
-		else if (methods::is(values, "CFtime"))
+		else if (inherits(values, "CFtime"))
 			refsys = "CFtime"
 		else if (inherits(example, "units"))
 			refsys = "udunits"
@@ -385,7 +385,7 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		for (d in names(pr$dim_extra)) {
 			de = pr$dim_extra[[d]]
 			len = length(de)
-			if (methods::is(de, "CFtime")) 
+			if (inherits(de, "CFtime")) 
 				lst[[d]] = create_dimension(from = 1, to = len, values = de, refsys = "CFtime", point = TRUE)
 			else {
 				refsys = if (inherits(de, "POSIXct")) "POSIXct" else NA_character_
@@ -499,7 +499,7 @@ parse_netcdf_meta = function(pr, name) {
 					if (is.null(cal) || is.na(cal))
 						cal = "standard"
 					time = try(CFtime::CFtime(u, cal), silent = TRUE)
-					if (methods::is(time, "CFtime"))
+					if (inherits(time, "CFtime"))
 						pr$dim_extra[[v]] = time + pr$dim_extra[[v]]
 				}
 			}
@@ -591,7 +591,7 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 			get_dimension_values(x[[ nm ]], where[[ nm ]], gt, "x")
 		else if (isTRUE(xy[2] == nm))  # y
 			get_dimension_values(x[[ nm ]], where[[ nm ]], gt, "y")
-		else if ("crs" == nm || methods::is(x[[ nm ]]$values, "CFtime"))
+		else if ("crs" == nm || inherits(x[[ nm ]]$values, "CFtime"))
 			x[[ nm ]]$values
 		else get_dimension_values(x[[ nm ]], where[[ nm ]], NA, NA)
 	})
@@ -623,7 +623,7 @@ as.data.frame.dimensions = function(x, ..., digits = max(3, getOption("digits")-
 			format(x, digits = digits, ...) 
 	}
 	abbrev_dim = function(y) {
-		if (methods::is(y$values, "CFtime")) {
+		if (inherits(y$values, "CFtime")) {
 			rng = range(y$values, ...)
 			y$values = paste0(rng[1], ",...,", rng[2])
 		} else if (length(y$values) > 3 || (inherits(y$values, "sfc") && length(y$values) > 2)) {

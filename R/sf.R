@@ -203,7 +203,7 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
 			# other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			other_values = lapply(st_dimensions(x)[other_dim], function(x) {
-				if (methods::is(x$values, "CFtime"))
+				if (inherits(x$values, "CFtime"))
 					CFtime::offsets(x$values) 
 				else
 					x$values

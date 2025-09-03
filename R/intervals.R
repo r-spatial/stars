@@ -49,7 +49,7 @@ format.intervals = function(x, digits = getOption("digits"), ...) {
 		stopifnot(units(x$start) == units(x$end))
 		paste0("[", format(as.numeric(x$start), ...), ",", format(as.numeric(x$end), ...), ") ",
 			"[", as.character(units(x$start)), "]")
-	} else if (methods::is(x, "CFtime")) {
+	} else if (inherits(x, "CFtime")) {
 		rng = range(x)
 		paste0("[", rng[1], ",", rng[2], ")")
 	} else {

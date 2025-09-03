@@ -154,7 +154,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 					i = as.factor(i)
 				by = levels(i)
 			} else if (inherits(by, "character")) {
-				if (methods::is(values, "CFtime")) {
+				if (inherits(values, "CFtime")) {
 					i  = CFtime::cut(values, by)
 					by = levels(i)
 					new_time = attr(i, "CFtime")
@@ -207,7 +207,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	}
 
 	# reconstruct dimensions table:
-	if (!is.null(values) && methods::is(values, "CFtime")) {
+	if (!is.null(values) && inherits(values, "CFtime")) {
 		d[[1]] = create_dimension(refsys = "CFtime", values = new_time)
 		names(d)[1] <- "time"
 	} else {

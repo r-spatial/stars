@@ -235,7 +235,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 # if interpolate = FALSE, returns an integer in 1...length(b) or NA if outside
 # if interpolate = TRUE, returns a continuous index in 1...length(b) or NA if outside
 match_time = function(a, b, intervals = FALSE, interpolate = FALSE) {
-	if (methods::is(b, "CFtime")) {
+	if (inherits(b, "CFtime")) {
 		if (interpolate && isFALSE(intervals) && is.null(CFtime::bounds(b))) 
 			return(CFtime::indexOf(a, b, method = "linear"))
 		else
