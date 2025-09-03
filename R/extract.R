@@ -116,7 +116,8 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			if (is.null(tm_pts))
 				stop("cannot match times: `time_column` not found in `at`")
 			## If there is more than one temporal dimension, the first one is taken
-			tm = which_time(x)[1]
+			refsys_time = c("POSIXct", "POSIXt", "Date", "CFTime")
+			tm = names(which(sapply(st_dimensions(x), function(i) any(i$refsys %in% refsys_time))))[1]
 			if (is.na(tm))
 				stop("cannot match times: `x` does not have a temporal dimension")
 		}
@@ -170,7 +171,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 	if (!is.null(time_column)) {
 		tm_cube = st_dimensions(x)[tm]$values %||% st_get_dimension_values(x, tm)
 		tm_ix = match_time(tm_pts, tm_cube,
-						   intervals = !st_dimensions(x)[tm]$point,
+						   intervals = !st_dimensions(x)[[tm]]$point,
 						   interpolate_time)
 		if (!interpolate_time)
 			m = lapply(m, function(p) p[cbind(seq_along(at), tm_ix)])
