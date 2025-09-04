@@ -67,7 +67,7 @@ st_get_dimension_values(.x, which, ..., where = NA, max = FALSE, center = NA)
 
 \item{which}{integer or character; index or name of the dimension to be changed}
 
-\item{values}{values for this dimension (e.g. \code{sfc} list-column), length-1 \code{dimensions} object, or a \code{CFtime} instance; setting special value \code{NULL} removes dimension values, for instance to remove curvilinear raster coordinates}
+\item{values}{values for this dimension (e.g. \code{sfc} list-column), length-1 \code{dimensions} object, or a \code{CFTime} instance; setting special value \code{NULL} removes dimension values, for instance to remove curvilinear raster coordinates}
 
 \item{names}{character; vector with new names for all dimensions, or with the single new name for the dimension indicated by \code{which}}
 

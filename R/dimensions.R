@@ -138,10 +138,18 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else # if (inherits(values, "CFTime")) { ## EJP FIXME:
-			# d[[which]]$values <- values
-			# d[[which]]$refsys <- "CFtime"
-		# } else
+		else if (inherits(values, "CFTime")) {
+			if (values$POSIX_compatible()) {
+				values = CFtime::as_timestamp(values, asPOSIX = TRUE)
+				d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
+			} else {
+				if (length(values) == 1)
+					d[[which]]$offset <- values
+				else
+					d[[which]]$values <- values
+				d[[which]]$refsys <- "CFtime"
+			}
+		} else
 			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
@@ -385,9 +393,13 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 		for (d in names(pr$dim_extra)) {
 			de = pr$dim_extra[[d]]
 			len = length(de)
-			if (inherits(de, "CFTime")) 
-				lst[[d]] = create_dimension(from = 1, to = len, values = de, refsys = "CFtime", point = TRUE)
-			else {
+			if (inherits(de, "CFTime")) {
+				if (de$POSIX_compatible())
+					de = CFtime::as_timestamp(de, asPOSIX=TRUE)
+				else
+					lst[[d]] = create_dimension(from = 1, to = len, values = de, refsys = "CFtime", point = TRUE)
+			}
+			if (!inherits(de, "CFTime")) {
 				refsys = if (inherits(de, "POSIXct")) "POSIXct" else NA_character_
 				diff.de = diff(de)
 				lst[[d]] = if (length(unique(diff.de)) <= 1) {
@@ -614,7 +626,6 @@ dim.dimensions = function(x) {
 #' @param stars_crs maximum width of string for CRS objects
 #' @param all logical; if \code{TRUE} print also fields entirely filled with \code{NA} or \code{NULL}
 #' @export
-#' @importMethodsFrom CFtime range
 as.data.frame.dimensions = function(x, ..., digits = max(3, getOption("digits")-3), usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28, all = FALSE) {
 	mformat = function(x, ..., digits) {
 		if (inherits(x, "POSIXct"))

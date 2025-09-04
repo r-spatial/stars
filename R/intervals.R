@@ -43,7 +43,6 @@ c.intervals = function(...) {
 }
 
 #' @export
-#' @importMethodsFrom CFtime range
 format.intervals = function(x, digits = getOption("digits"), ...) {
 	if (inherits(x$start, "units") && inherits(x$end, "units")) {
 		stopifnot(units(x$start) == units(x$end))

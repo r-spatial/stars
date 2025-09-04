@@ -155,7 +155,7 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				by = levels(i)
 			} else if (inherits(by, "character")) {
 				if (inherits(values, "CFTime")) {
-					i  = CFtime::cut(values, by)
+					i  = cut(values, by)
 					by = levels(i)
 					new_time = attr(i, "CFTime")
 				} else {
