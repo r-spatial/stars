@@ -138,10 +138,10 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else if (inherits(values, "CFTime")) {
-			d[[which]]$values <- values
-			d[[which]]$refsys <- "CFtime"
-		} else
+		else # if (inherits(values, "CFTime")) { ## EJP FIXME:
+			# d[[which]]$values <- values
+			# d[[which]]$refsys <- "CFtime"
+		# } else
 			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
