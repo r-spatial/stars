@@ -243,7 +243,7 @@ regular_intervals = function(x, epsilon = 1e-10) {
 	if (length(x) <= 1)
 		FALSE
 	else {
-		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date", "PCICt"))))
+		ud = if (is.atomic(x) && (is.numeric(x) || inherits(x, c("POSIXt", "Date"))))
 				unique(diff(x))
 			else {
 				if (inherits(x, "intervals") && identical(tail(x$end, -1), head(x$start, -1)))
@@ -290,8 +290,8 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			refsys = "POSIXct"
 		else if (inherits(example, "Date"))
 			refsys = "Date"
-		else if (inherits(example, "PCICt"))
-			refsys = paste0("PCICt_", attr(example, "cal"))
+		else if (inherits(example, "CFTime"))
+			refsys = "CFtime"
 		else if (inherits(example, "units"))
 			refsys = "udunits"
 
@@ -322,6 +322,7 @@ create_dimensions = function(lst, raster = NULL) {
 		sel = which(names(lst) == "")
 		names(lst)[sel] = make.names(seq_along(sel))
 	}
+
 	if (is.null(raster))
 		structure(lst, raster = get_raster(dimensions = c(NA_character_, NA_character_)), class = "dimensions")
 	else { 
@@ -378,19 +379,21 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 	}
 	if (! is.null(pr$dim_extra)) { # netcdf...
 		for (d in names(pr$dim_extra)) {
-			refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) 
+			de = pr$dim_extra[[d]]
+			if (inherits(de, "CFTime")) 
+				lst[[d]] = create_dimension(from = 1, to = length(de), values = de, refsys = "CFtime", point = TRUE)
+			else {
+				refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) 
 					"POSIXct" 
-				else if (inherits(pr$dim_extra[[d]], "PCICt"))
-					"PCICt"
 				else 
 					NA_character_
-			de = pr$dim_extra[[d]]
-			diff.de = diff(de)
-			lst[[d]] = if (length(unique(diff.de)) <= 1) {
-					delta = if (length(diff.de)) diff.de[1] else NA_real_
-					create_dimension(from = 1, to = length(de), offset = de[1], delta = delta, refsys = refsys)
-				} else
-					create_dimension(from = 1, to = length(de), values = de, refsys = refsys)
+				diff.de = diff(de)
+				lst[[d]] = if (length(unique(diff.de)) <= 1) {
+						delta = if (length(diff.de)) diff.de[1] else NA_real_
+						create_dimension(from = 1, to = length(de), offset = de[1], delta = delta, refsys = refsys)
+					} else
+						create_dimension(from = 1, to = length(de), values = de, refsys = refsys)
+			}
 		}
 		lst[["band"]] = NULL
 	}
@@ -443,23 +446,6 @@ get_val = function(pattern, meta) {
 		NA_character_
 }
 
-get_pcict = function(values, unts, calendar) {
-	stopifnot(calendar %in% c("360_day", "365_day", "noleap"))
-	if (!requireNamespace("PCICt", quietly = TRUE))
-		stop("package PCICt required, please install it first") # nocov
-	origin = 0:1
-	units(origin) = try_as_units(unts)
-	delta = if (grepl("months", unts)) { # for these calendars, length of months are different from udunits representation
-			if (calendar == "360_day")
-				set_units(30 * 24 * 3600, "s", mode = "standard")
-			else
-				set_units((365./12) * 24 * 3600, "s", mode = "standard")
-		} else
-			set_units(as_units(diff(as.POSIXct(origin))), "s", mode = "standard")
-	origin_txt = as.character(as.POSIXct(origin[1]))
-	PCICt::as.PCICt(values * as.numeric(delta), calendar, origin_txt)
-}
-
 parse_netcdf_meta = function(pr, name) {
 	meta = pr$meta
 	spl = strsplit(name, ":")[[1]] # "C:\..." results in length 2:
@@ -488,16 +474,18 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta) # nocov # FIXME: find example?
 					pr$dim_extra[[v]] = as.numeric(rhs)           # nocov
 				}
-				cal = get_val(paste0(v, "#calendar"), meta)
 				u =   get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
-					if (v %in% c("t", "time") && !is.na(cal) && cal %in% c("360_day", "365_day", "noleap"))
-						pr$dim_extra[[v]] = get_pcict(pr$dim_extra[[v]], u, cal)
-					else {
-						units(pr$dim_extra[[v]]) = try_as_units(u)
-						if (v %in% c("t", "time") && !inherits(try(as.POSIXct(pr$dim_extra[[v]]), silent = TRUE),
-								"try-error"))
-							pr$dim_extra[[v]] = as.POSIXct(pr$dim_extra[[v]])
+					cal = get_val(paste0(v, "#calendar"), meta)
+					if (is.null(cal) || is.na(cal))
+						cal = "standard"
+					time = try(CFtime::CFtime(u, cal), silent = TRUE)
+					if (inherits(time, "CFTime")) {
+						time = time + pr$dim_extra[[v]] # add the time offsets
+						if (cal %in% CF_calendar_regular)
+							pr$dim_extra[[v]] = time$as_timestamp(asPOSIX = TRUE)
+						else 
+							pr$dim_extra[[v]] = time
 					}
 				}
 			}
@@ -579,19 +567,27 @@ expand_dimensions.dimensions = function(x, ..., max = FALSE, center = NA) {
 	xy = attr(x, "raster")$dimensions
 	gt = st_geotransform(x)
 	lst = vector("list", length(dimensions))
-	names(lst) = names(dimensions)
+	names = names(dimensions)
+	names(lst) = names
 	if (! is.null(xy) && all(!is.na(xy))) { # we have raster: where defaulting to 0.5
 		where[xy] = ifelse(!max[xy] & (is.na(center[xy]) | center[xy]), 0.5, where[xy])
-		if (xy[1] %in% names(lst)) # x
+		if (xy[1] %in% names) # x
 			lst[[ xy[1] ]] = get_dimension_values(dimensions[[ xy[1] ]], where[[ xy[1] ]], gt, "x")
-		if (xy[2] %in% names(lst))  # y
+		if (xy[2] %in% names)  # y
 			lst[[ xy[2] ]] = get_dimension_values(dimensions[[ xy[2] ]], where[[ xy[2] ]], gt, "y")
 	}
 
-	if ("crs" %in% names(lst))
+	if ("crs" %in% names)
 		lst[[ "crs" ]] = dimensions[[ "crs" ]]$values
+	
+	is_time = sapply(dimensions, function(d) inherits(d$values, "CFTime"))
+	if (all(is.logical(is_time)) && length(time_dim <- which(is_time))) {
+		lst[[ time_dim ]] = dimensions[[ time_dim ]]$values$offsets
+		time_name = names[time_dim]
+	} else
+		time_name = ""
 
-	for (nm in setdiff(names(lst), c(xy, "crs"))) # non-xy, non-crs dimensions
+	for (nm in setdiff(names, c(xy, "crs", time_name))) # non-xy, non-crs, non-time dimensions
 		lst[[ nm ]] = get_dimension_values(dimensions[[ nm ]], where[[nm]], NA, NA)
 
 	lst
@@ -608,19 +604,22 @@ dim.dimensions = function(x) {
 
 #' @name print_stars
 #' @param digits number of digits to print numbers
-#' @param usetz logical; used to format \code{PCICt} or \code{POSIXct} values
+#' @param usetz logical; used to format \code{POSIXct} values
 #' @param stars_crs maximum width of string for CRS objects
 #' @param all logical; if \code{TRUE} print also fields entirely filled with \code{NA} or \code{NULL}
 #' @export
 as.data.frame.dimensions = function(x, ..., digits = max(3, getOption("digits")-3), usetz = TRUE, stars_crs = getOption("stars.crs") %||% 28, all = FALSE) {
 	mformat = function(x, ..., digits) {
-		if (inherits(x, c("PCICt", "POSIXct")))
+		if (inherits(x, "POSIXct"))
 			format(x, ..., usetz = usetz)
 		else
 			format(x, digits = digits, ...) 
 	}
 	abbrev_dim = function(y) {
-		if (length(y$values) > 3 || (inherits(y$values, "sfc") && length(y$values) > 2)) {
+		if (inherits(y$values, "CFTime")) {
+			rng = range(y$values, ...)
+			y$values = paste0(rng[1], ",...,", rng[2])
+		} else if (length(y$values) > 3 || (inherits(y$values, "sfc") && length(y$values) > 2)) {
 			y$values = if (is.array(y$values))
 					paste0("[", paste(dim(y$values), collapse = "x"), "] ", 
 						mformat(min(y$values), digits = digits), ",...,", 
@@ -737,6 +736,14 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 #' @export
 `[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
+		if (!is.na(x$refsys) && x$refsys == "CFtime") {
+			ind = x$values$indexOf(i)
+			newcf = attr(ind, "CFTime")
+			x$to = length(newcf)
+			x$values = newcf
+			return(x)
+		}
+		
 		if (!is.null(x$values) && !is.matrix(x$values))
 			x$values = x$values[i]
 		if (!is.na(x$from)) {
@@ -790,7 +797,8 @@ as.POSIXct.stars = function(x, ...) {
 	d = st_dimensions(x)
 	e = expand_dimensions(d)
 	for (i in seq_along(d)) {
-		if (inherits(e[[i]], c("Date", "POSIXt", "udunits", "PCICt"))) {
+		# No need to check for refsys == "CFtime" as these will not convert to POSIXct
+		if (inherits(e[[i]], c("Date", "POSIXt", "udunits"))) {
 			p = try(as.POSIXct(e[[i]]), silent = TRUE)
 			if (!inherits(p, "try-error"))
 				d[[i]] = create_dimension(values = p)

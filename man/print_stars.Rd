@@ -27,7 +27,7 @@
 
 \item{digits}{number of digits to print numbers}
 
-\item{usetz}{logical; used to format \code{PCICt} or \code{POSIXct} values}
+\item{usetz}{logical; used to format \code{POSIXct} values}
 
 \item{stars_crs}{maximum width of string for CRS objects}
 

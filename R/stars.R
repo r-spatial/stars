@@ -393,9 +393,8 @@ which_time = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
-		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
-		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "PCICt") ||
-									grepl("PCICt", i$refsys)))))
+		inherits(i$values, c("POSIXct", "Date", "CFTime")) ||
+		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "CFtime")))))
 }
 
 #' @export
@@ -912,7 +911,7 @@ sort_out_along = function(ret) {
 	# 2. check that time values do not overlap
 	lv = lapply(l, st_get_dimension_values, "time")
 	for (i in seq_along(lv)) {
-		if (!inherits(lv[[i]], c("POSIXt", "Date", "PCICt")))
+		if (!inherits(lv[[i]], c("POSIXt", "Date", "CFTime")))
 			return(NA_integer_)
 		if (i < length(lv) && max(lv[[i]]) >= min(lv[[i+1]])) # no sequence
 			return(NA_integer_)

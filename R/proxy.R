@@ -498,7 +498,10 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 			if (!is.null(r <- get_range(lst[[4]]))) {
 				attr(x, "dimensions")[[ix]]$from = r[1]
 				attr(x, "dimensions")[[ix]]$to = r[2]
-				if(!is.null(attr(x, "dimensions")[[ix]]$values)) {
+				if (inherits(attr(x, "dimensions")[[ix]]$values, "CFTime")) {
+					idx = CFtime::indexOf(lst[[4]], attr(x, "dimensions")[[ix]]$values)
+					attr(x, "dimensions")[[ix]]$values = attr(idx, "CFTime")
+				} else if(!is.null(attr(x, "dimensions")[[ix]]$values)) {
 					attr(x, "dimensions")[[ix]]$values <- 
 						attr(x, "dimensions")[[ix]]$values[r[1]:r[2]]
 				}
