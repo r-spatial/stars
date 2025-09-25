@@ -161,9 +161,12 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			time = try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFTime
 			if (inherits(time, "CFTime")) {
 				time = time + as.numeric(x)                       # if we have CFTime, add the offsets
-				if (time$calendar$name %in% CF_calendar_regular)
-					time$as_timestamp(asPOSIX = TRUE)
-				else 
+				if (time$calendar$name %in% CF_calendar_regular) {
+					if (time$unit == "days")
+						as.Date(time$as_timestamp())
+					else
+						time$as_timestamp(asPOSIX = TRUE)
+				} else 
 					time
 			} else {
 				u = try_as_units(u)

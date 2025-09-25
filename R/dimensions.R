@@ -384,9 +384,15 @@ create_dimensions_from_gdal_meta = function(dims, pr) {
 				lst[[d]] = create_dimension(from = 1, to = length(de), values = de, refsys = "CFtime", point = TRUE)
 			else {
 				refsys = if (inherits(pr$dim_extra[[d]], "POSIXct")) 
-					"POSIXct" 
-				else 
-					NA_character_
+						"POSIXct"
+					else if (inherits(pr$dim_extra[[d]], "Date")) 
+						"Date"
+					else if (inherits(pr$dim_extra[[d]], "CFTime")) 
+						"CFTime"
+					else if (inherits(pr$dim_extra[[d]], "units")) 
+						"udunits"
+					else
+						NA_character_
 				diff.de = diff(de)
 				lst[[d]] = if (length(unique(diff.de)) <= 1) {
 						delta = if (length(diff.de)) diff.de[1] else NA_real_
@@ -474,7 +480,7 @@ parse_netcdf_meta = function(pr, name) {
 					rhs = get_val(paste0("NETCDF_DIM_", v), meta) # nocov # FIXME: find example?
 					pr$dim_extra[[v]] = as.numeric(rhs)           # nocov
 				}
-				u =   get_val(paste0(v, "#units"), meta)
+				u = get_val(paste0(v, "#units"), meta)
 				if (! is.na(u)) {
 					cal = get_val(paste0(v, "#calendar"), meta)
 					if (is.null(cal) || is.na(cal))
@@ -482,11 +488,15 @@ parse_netcdf_meta = function(pr, name) {
 					time = try(CFtime::CFtime(u, cal), silent = TRUE)
 					if (inherits(time, "CFTime")) {
 						time = time + pr$dim_extra[[v]] # add the time offsets
-						if (cal %in% CF_calendar_regular)
-							pr$dim_extra[[v]] = time$as_timestamp(asPOSIX = TRUE)
-						else 
+						if (cal %in% CF_calendar_regular) {
+							if (time$unit == "days")
+								pr$dim_extra[[v]] = as.Date(time$as_timestamp())
+							else
+								pr$dim_extra[[v]] = time$as_timestamp(asPOSIX = TRUE)
+						} else
 							pr$dim_extra[[v]] = time
-					}
+					} else
+						units(pr$dim_extra[[v]]) = try_as_units(u)
 				}
 			}
 			pr$dim_extra = rev(pr$dim_extra)
