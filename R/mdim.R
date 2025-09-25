@@ -159,16 +159,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 		else {
 			cal = if (!is.null(a <- attr(x, "attributes"))) a["calendar"] else NULL
 			time = try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFTime
-			if (inherits(time, "CFTime")) {
-				time = time + as.numeric(x)                       # if we have CFTime, add the offsets
-				if (time$calendar$name %in% CF_calendar_regular) {
-					if (time$unit == "days")
-						as.Date(time$as_timestamp())
-					else
-						time$as_timestamp(asPOSIX = TRUE)
-				} else 
-					time
-			} else {
+			if (inherits(time, "CFTime"))
+				time + as.numeric(x)                       # if we have CFTime, add the offsets
+			else {
 				u = try_as_units(u)
 				if (inherits(u, "units"))
 					units(x) = u
@@ -198,8 +191,7 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 	sf = any(sapply(l, function(x) inherits(x, "sfc")))
 	# FIXME: i %in% 1:2 always the case?
 	raster_dims = match_raster_dims(names(l))
-	d = mapply(function(x, i) create_dimension(values = x, is_raster = !sf && i %in% raster_dims,
-									   point = ifelse(length(x) == 1, TRUE, NA)),
+	d = mapply(function(x, i) create_dimension(values = x, is_raster = !sf && i %in% raster_dims, point = NA),
 			   l, seq_along(l), SIMPLIFY = FALSE)
 	if (is.null(raster)) {
 		raster = if (sf)
