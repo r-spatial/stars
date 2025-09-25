@@ -1,3 +1,9 @@
+# version 0.7-0
+
+* removed dependency on PCICt, added dependency on CFtime; #754 by @pvanlaake
+
+* handling of dimensions with a single value is now more consistent; #754
+
 # version 0.6-9
 
 * `slice.stars_proxy()` works (again) for single-file proxy objects; #751, #527
