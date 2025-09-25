@@ -107,11 +107,11 @@ file.</p>
 <span><span class="co">## err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span></span>
 <span><span class="co">## ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to offset delta         refsys         values x/y</span></span>
-<span><span class="co">## lon     1 180     -1     2 WGS 84 (CRS84)           NULL [x]</span></span>
-<span><span class="co">## lat     1  90    -90     2 WGS 84 (CRS84)           NULL [y]</span></span>
-<span><span class="co">## zlev    1   1     NA    NA             NA              0    </span></span>
-<span><span class="co">## time    1   1     NA    NA        POSIXct 1981-12-31 UTC</span></span></code></pre></div>
+<span><span class="co">##      from  to         offset delta         refsys point values x/y</span></span>
+<span><span class="co">## lon     1 180             -1     2 WGS 84 (CRS84)    NA   NULL [x]</span></span>
+<span><span class="co">## lat     1  90            -90     2 WGS 84 (CRS84)    NA   NULL [y]</span></span>
+<span><span class="co">## zlev    1   1             NA    NA             NA    NA      0    </span></span>
+<span><span class="co">## time    1   1 1981-12-31 GMT    NA        POSIXct  TRUE   NULL</span></span></code></pre></div>
 <p>Let’s assume <code>reduced.nc</code> was 10 years of hourly data,
 rather than 1 time step. It would be over 10GB rather than about 130KB
 and we would not be able to just read it all into memory. In this case,
@@ -142,11 +142,11 @@ the same result.</p>
 <span><span class="co">## ice</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from  to offset delta         refsys         values x/y</span></span>
-<span><span class="co">## lon     1 180     -1     2 WGS 84 (CRS84)           NULL [x]</span></span>
-<span><span class="co">## lat     1  90    -90     2 WGS 84 (CRS84)           NULL [y]</span></span>
-<span><span class="co">## zlev    1   1     NA    NA             NA              0    </span></span>
-<span><span class="co">## time    1   1     NA    NA        POSIXct 1981-12-31 UTC</span></span>
+<span><span class="co">##      from  to         offset delta         refsys point values x/y</span></span>
+<span><span class="co">## lon     1 180             -1     2 WGS 84 (CRS84)    NA   NULL [x]</span></span>
+<span><span class="co">## lat     1  90            -90     2 WGS 84 (CRS84)    NA   NULL [y]</span></span>
+<span><span class="co">## zlev    1   1             NA    NA             NA    NA      0    </span></span>
+<span><span class="co">## time    1   1 1981-12-31 GMT    NA        POSIXct  TRUE   NULL</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="va">old_options</span><span class="op">)</span></span></code></pre></div>
 <p>The above shows that we have a NetCDF sourced stars proxy derived
 from the <code>reduced.nc</code> file. We see it has four variables and
@@ -173,11 +173,11 @@ large.</p>
 <span><span class="co">##          Min. 1st Qu. Median     Mean 3rd Qu.  Max. NA's</span></span>
 <span><span class="co">## sst [°C] -1.8   -1.04     14 12.92722   25.13 29.81  757</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from to offset delta         refsys         values x/y</span></span>
-<span><span class="co">## lon     1 90    177     2 WGS 84 (CRS84)           NULL [x]</span></span>
-<span><span class="co">## lat     1 45     -2     2 WGS 84 (CRS84)           NULL [y]</span></span>
-<span><span class="co">## zlev    1  1     NA    NA             NA              0    </span></span>
-<span><span class="co">## time    1  1     NA    NA        POSIXct 1981-12-31 UTC</span></span>
+<span><span class="co">##      from to         offset delta         refsys point values x/y</span></span>
+<span><span class="co">## lon     1 90            177     2 WGS 84 (CRS84)    NA   NULL [x]</span></span>
+<span><span class="co">## lat     1 45             -2     2 WGS 84 (CRS84)    NA   NULL [y]</span></span>
+<span><span class="co">## zlev    1  1             NA    NA             NA    NA      0    </span></span>
+<span><span class="co">## time    1  1 1981-12-31 GMT    NA        POSIXct  TRUE   NULL</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars8_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>

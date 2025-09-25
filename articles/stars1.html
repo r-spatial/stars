@@ -383,10 +383,10 @@ NetCDF file, e.g. by</p>
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from to offset  delta  refsys                    values x/y</span></span>
-<span><span class="co">## x       1 81    -85  0.125      NA                      NULL [x]</span></span>
-<span><span class="co">## y       1 33  37.12 -0.125      NA                      NULL [y]</span></span>
-<span><span class="co">## time    1 12     NA     NA POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
+<span><span class="co">##      from to offset  delta refsys                    values x/y</span></span>
+<span><span class="co">## x       1 81    -85  0.125     NA                      NULL [x]</span></span>
+<span><span class="co">## y       1 33  37.12 -0.125     NA                      NULL [y]</span></span>
+<span><span class="co">## time    1 12     NA     NA   Date 1999-01-31,...,1999-12-31</span></span></code></pre></div>
 <p>For this dataset we can see that</p>
 <ul>
 <li>variables have units associated (and a wrong unit, <code>C</code> is
@@ -411,10 +411,14 @@ as in</p>
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##           from to offset delta         refsys                    values x/y</span></span>
-<span><span class="co">## longitude    1 81    -85 0.125 WGS 84 (CRS84)                      NULL [x]</span></span>
-<span><span class="co">## latitude     1 33     33 0.125 WGS 84 (CRS84)                      NULL [y]</span></span>
-<span><span class="co">## time         1 12     NA    NA        POSIXct 1999-01-31,...,1999-12-31</span></span></code></pre></div>
+<span><span class="co">##           from to offset delta         refsys point                    values</span></span>
+<span><span class="co">## longitude    1 81    -85 0.125 WGS 84 (CRS84)    NA                      NULL</span></span>
+<span><span class="co">## latitude     1 33     33 0.125 WGS 84 (CRS84)    NA                      NULL</span></span>
+<span><span class="co">## time         1 12     NA    NA        POSIXct  TRUE 1999-01-31,...,1999-12-31</span></span>
+<span><span class="co">##           x/y</span></span>
+<span><span class="co">## longitude [x]</span></span>
+<span><span class="co">## latitude  [y]</span></span>
+<span><span class="co">## time</span></span></code></pre></div>
 <p>The difference between <code>read_ncdf</code> and
 <code>read_stars</code> for NetCDF files is that the former uses package
 RNetCDF to directly read the NetCDF file, where the latter uses the GDAL
@@ -453,11 +457,11 @@ character names:</p>
 <span><span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span></span>
 <span><span class="co">## ice [percent]  0.01    0.73   0.83  0.7657695    0.87 1.00 27377</span></span>
 <span><span class="co">## dimension(s):</span></span>
-<span><span class="co">##      from   to offset delta x/y</span></span>
-<span><span class="co">## x       1 1440      0  0.25 [x]</span></span>
-<span><span class="co">## y       1  720     90 -0.25 [y]</span></span>
-<span><span class="co">## zlev    1    1  0 [m]    NA    </span></span>
-<span><span class="co">## time    1    9     NA    NA</span></span></code></pre></div>
+<span><span class="co">##      from   to offset delta  refsys x/y</span></span>
+<span><span class="co">## x       1 1440      0  0.25      NA [x]</span></span>
+<span><span class="co">## y       1  720     90 -0.25      NA [y]</span></span>
+<span><span class="co">## zlev    1    1  0 [m]    NA udunits    </span></span>
+<span><span class="co">## time    1    9     NA    NA      NA</span></span></code></pre></div>
 <p>Next, we select sea surface temperature (<code>sst</code>), and drop
 the singular <code>zlev</code> (depth) dimension using
 <code>adrop</code>:</p>

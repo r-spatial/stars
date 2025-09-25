@@ -106,11 +106,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to offset delta         refsys         values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon     1 180     -1     2 WGS 84 (CRS84)           NULL [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lat     1  90    -90     2 WGS 84 (CRS84)           NULL [y]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1   1     NA    NA             NA              0    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time    1   1     NA    NA        POSIXct 1981-12-31 UTC    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to         offset delta         refsys point values x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon     1 180             -1     2 WGS 84 (CRS84)    NA   NULL [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat     1  90            -90     2 WGS 84 (CRS84)    NA   NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1   1             NA    NA             NA    NA      0    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time    1   1 1981-12-31 GMT    NA        POSIXct  TRUE   NULL    </span>
 <span class="r-in"><span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">::</span><span class="fu">st_xy2sfc</span><span class="op">(</span><span class="va">reduced_nc</span>, as_points <span class="op">=</span> <span class="cn">TRUE</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 3 dimensions and 4 attributes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
@@ -120,10 +120,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ice [percent]  0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          from    to         refsys point                           values</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 16200 WGS 84 (CRS84)  TRUE POINT (0 -89),...,POINT (358 89)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> zlev        1     1             NA    NA                                0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time        1     1        POSIXct    NA                   1981-12-31 UTC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          from    to         offset         refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry    1 16200             NA WGS 84 (CRS84)  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> zlev        1     1             NA             NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time        1     1 1981-12-31 GMT        POSIXct  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geometry POINT (0 -89),...,POINT (358 89)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> zlev                                    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time                                 NULL</span>
 <span class="r-in"><span><span class="co"># roundtrip:</span></span></span>
 <span class="r-in"><span><span class="fu">st_sfc2xy</span><span class="op">(</span><span class="va">x</span>, dims<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span>,<span class="st">"zlev"</span>,<span class="st">"time"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 4 dimensions and 4 attributes</span>
@@ -134,11 +138,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> err    0.11    0.16  0.270  0.2626872  0.3200  0.84  4448</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ice    0.01    0.47  0.920  0.7178118  0.9600  1.00 13266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to offset delta         refsys         values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X       1 180     -1     2 WGS 84 (CRS84)           NULL [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Y       1  90     90    -2 WGS 84 (CRS84)           NULL [y]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1   1     NA    NA             NA         [0,NA)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time    1   1     NA    NA        POSIXct 1981-12-31 UTC    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from  to         offset delta         refsys x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> X       1 180             -1     2 WGS 84 (CRS84) [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Y       1  90             90    -2 WGS 84 (CRS84) [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1   1              0    NA             NA    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time    1   1 1981-12-31 GMT    NA        POSIXct    </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -100,7 +100,8 @@ curvilinear coordinates if they are not supplied.</p></dd>
 
 
 <dt id="arg-make-time">make_time<a class="anchor" aria-label="anchor" href="#arg-make-time"></a></dt>
-<dd><p>if <code>TRUE</code> (the default), an attempt is made to provide a date-time class from the "time" variable</p></dd>
+<dd><p>if <code>TRUE</code> (the default), an attempt is made to provide
+a CFTime class for any "time" dimension.</p></dd>
 
 
 <dt id="arg-make-units">make_units<a class="anchor" aria-label="anchor" href="#arg-make-units"></a></dt>
@@ -133,6 +134,9 @@ they are nominated as the 'raster' for plotting.</p>
 containing coordinate values for the first two dimensions of the data read. It is currently
 assumed that the coordinates are 2D and that they relate to the first two dimensions in
 that order.</p>
+<p>Any time dimension in the source is captured in a 'CFTime' object, unless the
+<code>make_time</code> argument is false. In that case, the numeric offsets
+representing time are returned instead.</p>
 
 <p>If <code>var</code> is not set the first set of variables on a shared grid is used.</p>
 <p><code>start</code> and <code>count</code> columns of ncsub must correspond to the variable dimension (nrows)
@@ -178,11 +182,11 @@ is <code>NA</code> then all steps are included. Axis order must match that of th
 <span class="r-out co"><span class="r-pr">#&gt;</span> err [°C]       0.30  0.3000  0.300  0.30299999   0.300 0.32   90</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ice [percent]  0.01  0.1100  0.170  0.20937500   0.255 0.52  104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      from to offset delta         refsys         values x/y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon     1 10     -1     2 WGS 84 (CRS84)           NULL [x]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lat     1 12    -90     2 WGS 84 (CRS84)           NULL [y]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1  1     NA    NA             NA              0    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> time    1  1     NA    NA        POSIXct 1981-12-31 UTC    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from to         offset delta         refsys point values x/y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon     1 10             -1     2 WGS 84 (CRS84)    NA   NULL [x]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat     1 12            -90     2 WGS 84 (CRS84)    NA   NULL [y]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> zlev    1  1             NA    NA             NA    NA      0    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> time    1  1 1981-12-31 GMT    NA        POSIXct  TRUE   NULL    </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/hypertidy/ncmeta" class="external-link">ncmeta</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span> <span class="co">#' precipitation data in a curvilinear NetCDF</span></span></span>
