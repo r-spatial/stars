@@ -4,8 +4,6 @@
 
 * handling of dimensions with a single value is now more consistent; #754
 
-# version 0.6-9
-
 * `slice.stars_proxy()` works (again) for single-file proxy objects; #751, #527
 
 * `[.stars()` with a `character` selector selects on names of a dimension if it has names; #747

@@ -108,8 +108,7 @@ match_raster_dims = function(nms) {
 }
 
 "[.CFTime" = function(x, i = TRUE, ...) {
-	x$offsets = x$offsets[i]
-	x
+	x$indexOf(i)
 }
 
 #' Read or write data using GDAL's multidimensional array API
