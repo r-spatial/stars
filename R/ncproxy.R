@@ -1,28 +1,26 @@
-.update_dims <- function(dims, proxy_dimensions, coords, tdim) {
+.update_dims <- function(dims, proxy_dimensions, coords) {
+	between <- function(x, ymin, ymax, z = x) {
+		z[x >= ymin & x <= ymax, drop = FALSE]
+	}
+	
 	uc <- coords
 	for(coord in names(coords)) {
+		ndx <- which(dims$name == coord)
 		
-		pv <- st_get_dimension_values(proxy_dimensions, coord)
-		
-		between <- function(x, ymin, ymax, z = x) {
-			z[x >= ymin & x <= ymax, drop = FALSE]
-		}
-		
-		if(inherits(pv, "POSIXt")) {
-			# Need to deal with the case where tdim isn't values but is from to.
-			uc[[coord]] <- between(tdim$values, min(pv), max(pv), uc[[coord]])
+		if (!is.na(proxy_dimensions[[coord]]$refsys) &&
+			all(proxy_dimensions[[coord]]$refsys %in% c("POSIXct", "CFtime"))) {
+			dims$start[ndx] <- proxy_dimensions[[coord]]$from
+			dims$count[ndx] <- proxy_dimensions[[coord]]$to - proxy_dimensions[[coord]]$from + 1
 		} else {
 			if(attr(proxy_dimensions, "raster")$curvilinear) {
-				uc[[coord]] <- seq(proxy_dimensions[[coord]]$from, 
-								   proxy_dimensions[[coord]]$to)
+				uc[[coord]] <- seq(proxy_dimensions[[coord]]$from, proxy_dimensions[[coord]]$to)
 			} else {
+				pv <- st_get_dimension_values(proxy_dimensions, coord)
 				uc[[coord]] <- between(uc[[coord]], min(pv), max(pv))
 			}
+			dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]][1])[1]
+			dims$count[dims$name == coord] <- dims$length[dims$name == coord] <- length(uc[[coord]])
 		}
-		
-		dims$start[dims$name == coord] <- which(coords[[coord]] == uc[[coord]][1])[1]
-		dims$count[dims$name == coord] <- dims$length[dims$name == coord] <- length(uc[[coord]])
-		
 	}
 	dims
 }
@@ -64,7 +62,7 @@ plot.nc_proxy = function(x, y, ..., downsample = get_downsample(dim(x)), max_tim
 		x <- x[1]
 	}
 			
-	tdim <- which(sapply(st_dimensions(x), function(x) any(grepl("^POSIX|^PCIC", x$refsys))))
+	tdim <- which(sapply(st_dimensions(x), function(x) any(grepl("^POSIX|^CFtime", x$refsys))))
 	
 	if(length(tdim)) {
 		if(length(st_get_dimension_values(x, tdim)) > max_times) {

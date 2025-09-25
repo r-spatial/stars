@@ -44,8 +44,8 @@ Imports:
     units
 Suggests: 
     Cairo,
+    CFtime,
     OpenStreetMap,
-    PCICt,
     RNetCDF (>= 1.8-2),
     clue,
     covr,

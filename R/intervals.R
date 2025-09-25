@@ -45,9 +45,10 @@ c.intervals = function(...) {
 #' @export
 format.intervals = function(x, ...) {
 	mformat = function(x, ..., digits = getOption("digits")) {
-		if (inherits(x, "PCICt")) 
-			format(x, ...)
-		else
+		if (inherits(x, "CFTime")) {
+			rng = x$range()
+			paste0("[", rng[1], ",", rng[2], ")")
+		} else
 			format(x, digits = digits, ...) 
 	}
 	if (inherits(x$start, "units") && inherits(x$end, "units")) {

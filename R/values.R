@@ -56,10 +56,7 @@ get_dimension_values = function(x, where = 0.0, geotransform, what = NA_characte
 				stop("argument what needs to be x or y")
 			)
 		else if (!any(c(is.na(x$offset), is.na(x$delta)))) {
-			if (inherits(x$offset, "PCICt") && inherits(x$delta, "difftime")) # FIXME: why does this generate a warning, where POSIXct & difftime doesn't?
-				suppressWarnings(seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1))
-			else
-				seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1)
+			seq(from = x$offset + (x$from - 1 + where) * x$delta, by = x$delta, length.out = x$to - x$from + 1)
 		} else if (!is.na(x$offset) && x$from == 1 && x$to == 1)
 			x$offset
 		else
