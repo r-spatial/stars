@@ -267,8 +267,11 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		if (inherits(values, "CFTime") && values$calendar$name %in% CF_calendar_regular) {
 			if (values$unit == "days")
 				values = as.Date(values$as_timestamp())
-			else
+			else {
 				values = values$as_timestamp(asPOSIX = TRUE)
+				if (attr(values, "tzone") == "GMT") # should not be needed if CFtime > 1.7.1
+					attr(values, "tzone") = "UTC"
+			}
 		}
 		if (!(is.character(values) || is.factor(values)) && is.atomic(values)) { 
 			if (! all(is.finite(values)))
