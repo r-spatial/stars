@@ -35,7 +35,8 @@ curvilinear coordinates if they are not supplied.}
 
 \item{ignore_bounds}{logical; should bounds values for dimensions, if present, be ignored?}
 
-\item{make_time}{if \code{TRUE} (the default), an attempt is made to provide a date-time class from the "time" variable}
+\item{make_time}{if \code{TRUE} (the default), an attempt is made to provide
+a CFTime class for any "time" dimension.}
 
 \item{make_units}{if \code{TRUE} (the default), an attempt is made to set the units property of each variable}
 
@@ -65,6 +66,10 @@ If the \code{curvilinear} argument is used it specifies the 2D arrays
 containing coordinate values for the first two dimensions of the data read. It is currently
 assumed that the coordinates are 2D and that they relate to the first two dimensions in
 that order.
+
+Any time dimension in the source is captured in a 'CFTime' object, unless the
+\code{make_time} argument is false. In that case, the numeric offsets 
+representing time are returned instead.
 
 
 If \code{var} is not set the first set of variables on a shared grid is used.

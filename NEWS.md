@@ -1,4 +1,70 @@
+# version 0.7-0
+
+* try harder to convert times to `Date` when they are dates.
+
+* if set, `options("stars.regular")` controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4
+
+* removed dependency on PCICt, added dependency on CFtime; #754 by @pvanlaake
+
+* handling of dimensions with a single value is now more consistent; #754
+
+* `slice.stars_proxy()` works (again) for single-file proxy objects; #751, #527
+
+* `[.stars()` with a `character` selector selects on names of a dimension if it has names; #747
+
+* handle "intervals" dimension in aggregate.stars() and `st_as_sf.stars()`; #745
+
+* fix `c.stars()` for the case where some of the objects have a single slice on the `along=` dimension; #743
+
+* `st_redimension()` (and by that, `merge.stars()`) use `abind()` for numeric variables rather than `c()`, reducing memory overhead.
+
+* fix problem with reading HDF4 files; #741 by Alexys Rodriguez
+
+* use, by default, `normalizePath()` on `filename` in `read_mdim()`;  #735
+
+* `st_extract()` accepts empty points as target; #734
+
+* `st_sfc2xy()` passes `...` on to `st_as_stars()`; #733 
+
+# version 0.6-8
+
+* address `/.difftime` issue new in R-devel rev 87670
+
+* `c.stars()` is more strict when combining time sequences; #703
+
+* fix plotting when breaks contain duplicates; #728
+
+* fix `st_as_stars.im()`; #727 and #648, thanks to Barry Rowlingson
+
+# version 0.6-7
+
+* `st_extract()` fix if points coincide with boundary grid cell centers and bilinear interpolation is used; #720
+
+* `st_extract()` if used with GDAL 3.10.0 uses InterpolateAtPoints, allowing for cubic and cubicspline interpolators (requiring sf >= 1.0-19).
+ 
+* `Ops.stars()` (math ops) now also recycle arrays in the first argument; #718
+
+* `c.stars()` verifies semantic equivalence of objects' CRS; #703
+
+* initial support for `read_mdim()` to work with `proxy = TRUE`; #659 
+
+# version 0.6-6
+
+* skip `cubble` tests for cubble version 0.3.1; https://github.com/huizezhang-sherry/cubble/issues/30
+
+* `st_transform.stars` transforms geometries in array elements
+
+* `mutate.stars` (and others) handle attribute names with spaces in them; #689
+
+* `st_crop()` gains an argument `normalize`; when set to `TRUE` `st_normalize()` is called on the returned value; #685, #686
+
+* constrain reading full GEOLOCATION arrays to the case where they are 2-D; #678
+
 # version 0.6-5
+
+* fix `st_as_stars.Spatial()` for `Spatial` gridded objects with non-square grid cells, see https://github.com/r-spatial/gstat/issues/123
+
+* add `prcomp()` methods for `stars` and `stars_proxy` objects, working on attributes or last dimension
 
 * `st_rasterize()` with `align=TRUE` returns `NA` values where there are no data; #668
 

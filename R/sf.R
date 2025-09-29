@@ -27,13 +27,13 @@ st_as_sfc.stars = function(x, ..., as_points, which = seq_len(prod(dim(x)[1:2]))
 		sfc
 }
 
-
-#' replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
+#' replace x y raster dimensions with simple feature geometry list (points, or polygons = rasterize) and vice versa
 #' @param x object of class \code{stars}
 #' @param as_points logical; if \code{TRUE}, generate points at cell centers, else generate polygons
-#' @param ... arguments passed on to \code{st_as_sfc}
+#' @param ... for `st_xy2sfc`: arguments passed on to \code{st_as_sfc}, for `st_sfc2xy` arguments passed on to \link{st_as_stars.data.frame}
 #' @param na.rm logical; omit (remove) cells which are entirely missing valued (across other dimensions)?
-#' @return object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
+#' @details `st_xy2sfc` replaces x y raster dimensions with simple feature geometry list (points, or polygons = rasterize)
+#' @return `st_xy2sfc` returns an object of class \code{stars} with x and y raster dimensions replaced by a single sfc geometry list column containing either points, or polygons. Adjacent cells with identical values are not merged; see \code{st_rasterize} for this.
 #' @export
 st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 
@@ -84,6 +84,36 @@ st_xy2sfc = function(x, as_points, ..., na.rm = TRUE) {
 				levels = attr(x[[i]], "levels"))
 	}
 	st_stars(x, dimensions = d)
+}
+
+#' @details `st_sfc2xy` replaces POINT simple feature geometry list with an x y raster
+#' @param x object of class \code{stars}, or of class \code{sf}
+#' @return `st_sfc2xy` returns an object of class \code{stars} with a POINT list replaced by X and Y raster dimensions. This only works when the points are distributed over a regular or rectilinear grid.
+#' @export
+#' @name st_xy2sfc
+#' @examples
+#' (reduced_nc = read_ncdf(system.file("nc/reduced.nc", package = "stars")))
+#' (x = stars::st_xy2sfc(reduced_nc, as_points = TRUE, na.rm = FALSE))
+#' # roundtrip:
+#' st_sfc2xy(x, dims=c("X", "Y","zlev","time"))
+st_sfc2xy = function(x, ...) {
+	if (inherits(x, "sf"))
+		x = st_as_stars(x)
+	i = which_sfc(x)
+	if (length(i) == 0)
+		stop("x does not contain a geometry dimension")
+	if (length(i) > 1) {
+		stop("using first geometry dimension only")
+		i = i[1]
+	}
+	d = st_dimensions(x)
+	if (!inherits(d[[i]]$values, "sfc_POINT"))
+		stop("point geometries expected")
+	cc = st_coordinates(d[[i]]$values)
+	df = as.data.frame(x)
+	df$geometry = NULL
+	s = st_as_stars(cbind(cc, df), ...)
+	st_set_crs(s, st_crs(d))
 }
 
 #' @export
@@ -173,6 +203,9 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 			sfc = st_dimensions(x)[[ ix[1] ]]$values
 			# other_values = st_dimensions(x)[[ other_dim[1] ]]$values
 			other_values = lapply(st_dimensions(x)[other_dim], function(x) x$values)
+			for (i in seq_along(other_values))
+				if (inherits(other_values[[i]], "intervals"))
+					other_values[[i]] = format(other_values[[i]])
 			varnames = apply(do.call(expand.grid, other_values), 1, paste, collapse = ".")
 			un_dim = function(x) { # remove a dim attribute from data.frame columns
 				for (i in seq_along(x))
@@ -191,8 +224,13 @@ st_as_sf.stars = function(x, ..., as_points = FALSE, merge = FALSE, na.rm = TRUE
 				names(df) = names(dfs)
 			else { # another exception... time as second dimension
 				e = expand_dimensions(x)
-				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt", "PCICt")))
-					names(df) = as.character(e[-ix][[1]])
+				if (length(e[-ix]) == 1 && inherits(e[-ix][[1]], c("Date", "POSIXt"))) {
+					names(df) = if (length(nc) > 1) {
+							nm = expand.grid(e[-ix][[1]], names(x))
+							paste(nm[[2]], nm[[1]], sep = ".")
+						} else
+							as.character(e[-ix][[1]])
+				}
 			}
 	
 			df[[ names(st_dimensions(x))[ ix[1] ] ]] = sfc # keep dimension name

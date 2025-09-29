@@ -3,11 +3,11 @@
 #' build mosaic (composite) of several spatially disjoint stars objects
 #' @param .x object of class stars, or character vector with input dataset names
 #' @param ... further input stars objects
-#' @param dst character; destination file name
+#' @param dst character; destination file name; this will be a VRT file with references to the source file(s), see details
 #' @param options character; options to the gdalbuildvrt command
 #' @param file_ext character; file extension, determining the format used to write to (".tif" implies GeoTIFF)
 #' @return the stars method returns a stars object with the composite of the input; the \code{character} method returns the file name of the file with the mosaic; see also the GDAL documentation of \code{gdalbuildvrt}
-#' @details the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
+#' @details the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes; note that for the `stars` method, the `dst` file may contain references to temporary files that are going to be removed at termination of the R session.
 #' 
 #' uses \link[sf]{gdal_utils} to internally call \code{buildvrt}; no executables external to R are called.
 #' @export
@@ -29,14 +29,14 @@ st_mosaic.stars = function(.x, ..., dst = tempfile(fileext = file_ext),
 		write_stars(obj, fname)
 		fname
 	}
+	missing_dst = missing(dst)
 	objs = if (missing(.x)) list(...) else append(list(.x), list(...))
 	src = sapply(objs, lst_write)
 	st_mosaic(src, dst = dst, file_ext = file_ext, options = options)
 	ret = setNames(read_stars(dst), names(objs[[1]])[1])
-	if (!inherits(ret, "stars_proxy")) {
+	if (!inherits(ret, "stars_proxy") && missing_dst) {
 		unlink(src)
-		if (missing(dst))
-			unlink(dst)
+		unlink(dst)
 	}
 	ret
 }

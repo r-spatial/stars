@@ -18,7 +18,8 @@ read_mdim(
   proxy = FALSE,
   debug = FALSE,
   bounds = TRUE,
-  curvilinear = NA
+  curvilinear = NA,
+  normalize_path = TRUE
 )
 
 write_mdim(
@@ -28,7 +29,8 @@ write_mdim(
   ...,
   root_group_options = character(0),
   options = character(0),
-  as_float = TRUE
+  as_float = TRUE,
+  normalize_path = TRUE
 )
 }
 \arguments{
@@ -42,13 +44,13 @@ write_mdim(
 
 \item{raster}{names of the raster variables (default: first two dimensions)}
 
-\item{offset}{integer; offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)}
+\item{offset}{integer; zero-based offset for each dimension (pixels) of sub-array to read, defaults to 0 for each dimension(requires sf >= 1.0-9)}
 
 \item{count}{integer; size for each dimension (pixels) of sub-array to read (default: read all); a value of NA will read the corresponding dimension entirely; counts are relative to the step size (requires sf >= 1.0-9)}
 
 \item{step}{integer; step size for each dimension (pixels) of sub-array to read; defaults to 1 for each dimension (requires sf >= 1.0-9)}
 
-\item{proxy}{logical; return proxy object? (not functional yet)}
+\item{proxy}{logical; return proxy object?}
 
 \item{debug}{logical; print debug info?}
 
@@ -56,6 +58,8 @@ write_mdim(
 named vector of the form \code{c(longitude="lon_bnds", latitude="lat_bnds")} with names dimension names}
 
 \item{curvilinear}{control reading curvilinear (geolocation) coordinate arrays; if \code{NA} try reading the x/y dimension names; if character, defines the arrays to read; if \code{FALSE} do not try; see also \link{read_stars}}
+
+\item{normalize_path}{logical; if \code{FALSE}, suppress a call to \link{normalizePath} on \code{filename}}
 
 \item{x}{stars object}
 

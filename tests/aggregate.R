@@ -1,4 +1,6 @@
+## IGNORE_RDIFF_BEGIN
 library(stars)
+## IGNORE_RDIFF_END
 
 if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
 data(air) # this loads several datasets in .GlobalEnv

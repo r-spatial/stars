@@ -45,6 +45,16 @@ unique_part = function(x, prefix) {
 		x
 }
 
+geoloc_is_2D = function(geolocation, driver) { # the thing has 2-D x and y arrays:
+	# read coordinate array dimensions only:
+	gxy = c(geolocation$X_DATASET, geolocation$Y_DATASET)
+	lon = adrop(read_stars(gxy[1], driver = driver, quiet = TRUE,
+		proxy = TRUE, curvilinear = character(0)))
+	lat = adrop(read_stars(gxy[2], driver = driver, quiet = TRUE,
+		proxy = TRUE, curvilinear = character(0)))
+	dim(lon)[2] > 1 || dim(lat)[2] > 1
+}
+
 
 #' read raster/array dataset from file or connection
 #'
@@ -73,7 +83,7 @@ unique_part = function(x, prefix) {
 #' \code{RasterIO} is a list with zero or more of the following named arguments:
 #' \code{nXOff}, \code{nYOff} (both 1-based: the first row/col has offset value 1),
 #' \code{nXSize}, \code{nYSize}, \code{nBufXSize}, \code{nBufYSize}, \code{bands}, \code{resample}.
-#' See \url{https://gdal.org/doxygen/classGDALDataset.html} for their meaning;
+#' See \url{https://gdal.org/en/latest/doxygen/classGDALDataset.html} for their meaning;
 #' \code{bands} is an integer vector containing the band numbers to be read (1-based: first band is 1).
 #' Note that if \code{nBufXSize} or \code{nBufYSize} are specified for downsampling an image,
 #' resulting in an adjusted geotransform. \code{resample} reflects the resampling method and
@@ -140,7 +150,7 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 
 	if (missing(curvilinear)) { # see if we can get it from metadata item "GEOLOCATION":
 		geolocation <- try(gdal_metadata(.x, "GEOLOCATION"), silent = TRUE)
-		if (!inherits(geolocation, "try-error")) { # the thing has x and y arrays:
+		if (!inherits(geolocation, "try-error") && geoloc_is_2D(geolocation, driver)) { # the thing has 2-D x and y arrays:
 			# read coordinate arrays:
 			gxy = c(geolocation$X_DATASET, geolocation$Y_DATASET)
 			lon = adrop(read_stars(gxy[1], driver = driver, quiet = quiet, NA_value = NA_value,
@@ -204,9 +214,9 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 				RasterIO = as.list(RasterIO), proxy = proxy, curvilinear = curvilinear)
 		}
 
-		driver = if (is.null(driver) || data$driver[1] == "HDF5") # to override auto-detection:
+		driver = if (is.null(driver) || data$driver[1] %in% c("HDF5", "HDF4"))
 				character(0)
-			else
+			else # override auto-detection:
 				data$driver[1]
 
 		ret = lapply(sub_datasets, .read_stars, options = options,

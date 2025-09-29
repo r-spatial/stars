@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.6-5
+Version: 0.6-9
 Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -33,9 +33,9 @@ BugReports: https://github.com/r-spatial/stars/issues/
 Additional_repositories: https://cran.uni-muenster.de/pebesma/
 LazyData: true
 Depends:
-    R (>= 3.3.0),
+    R (>= 4.1.0),
     abind,
-    sf (>= 1.0-15)
+    sf (>= 1.0-19)
 Imports:
     methods,
     parallel,
@@ -44,8 +44,8 @@ Imports:
     units
 Suggests: 
     Cairo,
+    CFtime,
     OpenStreetMap,
-    PCICt,
     RNetCDF (>= 1.8-2),
     clue,
     covr,
@@ -88,41 +88,42 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 Collate: 
-    'init.R'
-    'stars.R'
-    'read.R'
-    'sf.R'
+    'aggregate.R'
+    'cubble.R'
+    'datasets.R'
     'dimensions.R'
-    'values.R'
-    'plot.R'
-    'tidyverse.R'
-    'transform.R'
-    'ops.R'
-    'write.R'
-    'raster.R'
-    'sp.R'
-    'spacetime.R'
+    'extract.R'
+    'factors.R'
+    'geom.R'
+    'gt.R'
+    'init.R'
+    'intervals.R'
+    'mdim.R'
+    'mosaic.R'
     'ncdf.R'
     'ncproxy.R'
-    'proxy.R'
-    'factors.R'
-    'rasterize.R'
-    'rotate.R'
-    'subset.R'
-    'warp.R'
-    'aggregate.R'
-    'xts.R'
-    'intervals.R'
-    'geom.R'
-    'mosaic.R'
-    'spatstat.R'
     'OpenStreetMap.R'
+    'ops.R'
+    'plot.R'
+    'prcomp.R'
+    'proxy.R'
+    'rasterize.R'
+    'raster.R'
+    'read.R'
+    'rotate.R'
     'sample.R'
-    'extract.R'
-    'datasets.R'
+    'sf.R'
+    'spacetime.R'
+    'spatstat.R'
+    'sp.R'
+    'stars.R'
+    'subset.R'
+    'tidyverse.R'
     'tile.R'
-    'mdim.R'
-    'cubble.R'
-    'gt.R'
+    'transform.R'
+    'values.R'
+    'warp.R'
+    'write.R'
+    'xts.R'

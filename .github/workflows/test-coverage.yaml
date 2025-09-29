@@ -23,7 +23,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, starsdata=?ignore
+          extra-packages: any::covr, starsdata=?ignore, PCICt=?ignore
           needs: coverage
 
       - name: Test coverage

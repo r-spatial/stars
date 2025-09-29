@@ -67,18 +67,30 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 		ix[[i]] = seq(1 + offset[i], d[i], n[i] + 1)
 	xy = attr(dims, "raster")$dimensions
 	for (i in seq_along(d)) {
-		dims[[i]]$offset = if (offset[i] != 0)
-				dims[[i]]$offset + offset[i] * dims[[i]]$delta
-			else
-				dims[[i]]$offset = dims[[i]]$offset
-		dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
-		dims[[i]]$from = 1
-		dims[[i]]$to = unname(new_dim[i])
-		if (!is.null(dims[[i]]$values)) {
-			if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
-				dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # speaks for itself 
-			else
-				dims[[i]]$values = dims[[i]]$values[ ix[[i]] ]
+		if (!is.na(dims[[i]]$refsys) && dims[[i]]$refsys == "CFtime") {
+			dims[[i]]$to = unname(new_dim[i])
+			time = dims[[i]]$values
+			bnds = CFtime::bounds(time)
+			time = CFtime::CFtime(CFtime::definition(time), 
+								  CFtime::calendar(time), 
+								  CFtime::offsets(time)[ ix[[i]] ])
+			if (!is.null(bnds))
+				CFtime::bounds(time) <- bnds[, ix[[i]] ]
+			dims[[i]]$values = time
+		} else {
+			dims[[i]]$offset = if (offset[i] != 0)
+					dims[[i]]$offset + offset[i] * dims[[i]]$delta
+				else
+					dims[[i]]$offset = dims[[i]]$offset
+			dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
+			dims[[i]]$from = 1
+			dims[[i]]$to = unname(new_dim[i])
+			if (!is.null(dims[[i]]$values)) {
+				if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
+					dims[[i]]$values = dims[[i]]$values[ ix[[ xy[1] ]], ix[[ xy[2] ]] ] # speaks for itself 
+				else
+					dims[[i]]$values = dims[[i]]$values[ ix[[i]] ]
+			}
 		}
 	}
 	if (!all(attr(dims, "raster")$affine == 0.0)) {

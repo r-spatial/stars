@@ -269,20 +269,20 @@ xy_from_colrow = function(x, geotransform) {
 		x %*% matrix(geotransform[c(2, 3, 5, 6)], nrow = 2, ncol = 2)
 }
 
-colrow_from_xy = function(x, obj, NA_outside = FALSE) {
+colrow_from_xy = function(x, obj, NA_outside = FALSE, flip = FALSE) {
 	if (inherits(obj, "stars"))
 		obj = st_dimensions(obj)
 	xy = attr(obj, "raster")$dimensions
 	if (inherits(obj, "dimensions"))
 		gt = st_geotransform(obj)
 
-	if (isTRUE(st_is_longlat(st_crs(obj)))) {
+	if (flip && isTRUE(st_is_longlat(st_crs(obj)))) {
 		bb = st_bbox(obj)
 # see https://github.com/r-spatial/stars/issues/519 where this is problematic;
 # not sure whether this introduces new problems.
 #		sign = ifelse(x[,1] < bb["xmin"], 1., ifelse(x[,1] > bb["xmax"], -1., 0.))
 #		x[,1] = x[,1] + sign * 360.
-		# one more try: https://github.com/r-spatial/stars/issues/563
+		## one more try: https://github.com/r-spatial/stars/issues/563
 		ix = x[,1] > bb["xmax"] & !is.na(x[,1])
 		x[ix,1] = x[ix,1] - 360.
 		ix = x[,1] < bb["xmin"] & !is.na(x[,1])
@@ -326,7 +326,8 @@ st_cells_from_xy = function(x, xy) {
 
 #' return the cell index corresponding to the location of a set of points
 #' 
-#' return the cell index corresponding to the location of a set of points
+#' If the object has been cropped without normalization, then the indices return
+#' are relative to the original uncropped extent.  See \code{\link{st_crop}}
 #' @param x object of class \code{stars}
 #' @param sf object of class \code{sf} or \code{sfc}
 #' @examples
@@ -392,9 +393,8 @@ which_time = function(x) {
 	if (inherits(x, "stars"))
 		x = st_dimensions(x)
 	which(sapply(x, function(i) 
-		inherits(i$values, c("POSIXct", "Date", "PCICt")) ||
-		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "PCICt") ||
-									grepl("PCICt", i$refsys)))))
+		inherits(i$values, c("POSIXct", "Date", "CFTime")) ||
+		(is.character(i$refsys) && (i$refsys %in% c("POSIXct", "Date", "CFtime")))))
 }
 
 #' @export
@@ -469,9 +469,14 @@ st_coordinates.dimensions = function(x, ...) {
 
 #' @name st_coordinates
 #' @export
-as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA) {
-	data.frame(st_coordinates(x, add_max = add_max, center = center, ...), 
-		lapply(x, function(y) structure(y, dim = NULL)))
+#' @param add_coordinates logical; if `TRUE`, columns with dimension values preceed the array values, 
+#' otherwise they are omitted
+as.data.frame.stars = function(x, ..., add_max = FALSE, center = NA, add_coordinates = TRUE) {
+	df = setNames(as.data.frame(lapply(x, function(y) structure(y, dim = NULL))), names(x))
+	if (add_coordinates)
+		cbind(st_coordinates(x, add_max = add_max, center = center, ...), df)
+	else
+		df
 }
 
 add_units = function(x) {
@@ -801,11 +806,21 @@ st_crs.dimensions = function(x, ...) {
 		else
 			stop(paste("crs of class", class(value), "not recognized"))
 
+	drop_if_units = function(x) {
+		if (inherits(x, "units"))
+			units::drop_units(x)
+		else
+			x
+	}
 	# set CRS in dimensions:
 	xy = attr(x, "raster")$dimensions
 	if (!all(is.na(xy))) { # has x/y spatial dimensions:
 		x[[ xy[1] ]]$refsys = value
 		x[[ xy[2] ]]$refsys = value
+		x[[ xy[1] ]]$offset = drop_if_units(x[[ xy[1] ]]$offset)
+		x[[ xy[2] ]]$offset = drop_if_units(x[[ xy[2] ]]$offset)
+		x[[ xy[1] ]]$delta  = drop_if_units(x[[ xy[1] ]]$delta)
+		x[[ xy[2] ]]$delta  = drop_if_units(x[[ xy[2] ]]$delta)
 	}
 
 	if (!all(is.na(xy)) && !is.na(x[[ xy[1] ]]$refsys) && !is.na(value) && st_crs(x) != value)
@@ -888,13 +903,20 @@ merge.stars = function(x, y, ..., name = "attributes") {
 }
 
 sort_out_along = function(ret) { 
-	d1 = st_dimensions(ret[[1]])
-	d2 = st_dimensions(ret[[2]])
-	if ("time" %in% names(d1) && (isTRUE(d1$time$offset != d2$time$offset) || 
-			!any(d1$time$values %in% d2$time$values)))
-		"time"
-	else
-		NA_integer_
+	# https://github.com/r-spatial/stars/issues/703 :
+	# 1. check that time is a dimension name in all objects 
+	l = lapply(ret, st_dimensions)
+	if (!all(sapply(l, function(x) "time" %in% names(x))))
+		return(NA_integer_)
+	# 2. check that time values do not overlap
+	lv = lapply(l, st_get_dimension_values, "time")
+	for (i in seq_along(lv)) {
+		if (!inherits(lv[[i]], c("POSIXt", "Date", "CFTime")))
+			return(NA_integer_)
+		if (i < length(lv) && max(lv[[i]]) >= min(lv[[i+1]])) # no sequence
+			return(NA_integer_)
+	}
+	return("time")
 }
 
 
@@ -950,8 +972,12 @@ st_redimension.stars = function(x, new_dims = st_dimensions(x),
 			dims = create_dimensions(c(d, new_dim = list(new_dim)), attr(d, "raster"))
 			if (length(names(along)) == 1)
 				names(dims)[names(dims) == "new_dim"] = names(along)
-			ret = structure(do.call(c, x), dim = dim(dims))
-			st_stars(setNames(list(ret), paste(names(x), collapse = ".")), dimensions = dims)
+			ns = names(x)
+			x = if (inherits(x[[1]], c("factor", "Date", "POSIXt")))
+					structure(do.call(c, x), dim = dim(dims)) # don't do this on large data sets!!
+				else
+					do.call(abind, append(unclass(x), list(along = length(dims))))
+			st_stars(setNames(list(x), paste(ns, collapse = ".")), dimensions = dims)
 		}
 	}
 }

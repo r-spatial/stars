@@ -7,7 +7,7 @@
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
 #' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
-#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported.
+#' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported. Character selectors are matched against the names of a dimension if it has names, otherwise to the dimension values.
 #' @export
 #' @examples
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -79,7 +79,10 @@
 			mc[[i]] = eval(mc[[i]], parent.frame())
 		if (is.numeric(mc[[i]]) || is.call(mc[[i]]) || is.name(mc[[i]]) || is.character(mc[[i]])) { # FIXME: or something else?
 			args[[i]] = if (is.character(mc[[i]])) {
-						m = match(mc[[i]], d[[i]]$values)
+						m = if (!is.null(names(d[[i]]$values)))
+								match(mc[[i]], names(d[[i]]$values))
+							else
+								match(mc[[i]], d[[i]]$values)
 						if (length(m) == 0 || any(is.na(m)))
 							stop("selecting using invalid value label(s)?")
 						m
@@ -120,16 +123,28 @@
 		# dimensions:
 		#mc0 = mc[1:3] # "[", x, first dim
 		for (i in seq_along(d)) { # one-at-a-time:
-			name_i = names(d)[i]
-			argi = args[i]
-			if (!(is_curvilinear(d) && name_i %in% xy) &&  # as that case was handled above
-					!(is.name(argi[[1]]) && all(argi[[1]] == rlang::missing_arg())) &&  # empty arg
-					is.numeric(e <- eval(argi[[1]])) && !any(is.na(e)) && !all(diff(e) == 1)) # sequence with gaps
-				d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
-						ed[[i]]
-					else
-						as_intervals(ed[[i]], add_last = TRUE)
-			d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
+			if (!is.na(d[[i]]$refsys) && d[[i]]$refsys == "CFtime") {
+				time = d[[i]]$values
+				bnds = CFtime::bounds(time)
+				time = CFtime::CFtime(CFtime::definition(time), 
+									  CFtime::calendar(time), 
+									  CFtime::offsets(time)[ args[[i]] ])
+				if (!is.null(bnds))
+					CFtime::bounds(time) <- bnds[, args[[i]] ]
+				d[[i]]$values = time
+				d[[i]]$to = length(args[[i]])
+			} else {
+				name_i = names(d)[i]
+				argi = args[i]
+				if (!(is_curvilinear(d) && name_i %in% xy) &&  # as that case was handled above
+						!(is.name(argi[[1]]) && all(argi[[1]] == rlang::missing_arg())) &&  # empty arg
+						is.numeric(e <- eval(argi[[1]])) && !any(is.na(e)) && !all(diff(e) == 1)) # sequence with gaps
+					d[[i]]$values = if (isTRUE(d[[i]]$point) || !is.numeric(unclass(ed[[i]][1])))
+							ed[[i]]
+						else
+							as_intervals(ed[[i]], add_last = TRUE)
+				d[[i]] = eval(rlang::expr(d[[i]] [!!!argi]))
+			}
 		}
 	}
 	x = st_as_stars(x, dimensions = d)
@@ -194,6 +209,7 @@ st_intersects.bbox = function(x, y, ...) { # FIXME: segmentize first if geograph
 #' @param as_points logical; only relevant if \code{y} is of class \code{sf} or \code{sfc}: if \code{FALSE}, treat \code{x} as a set of points, else as a set of small polygons. Default: \code{TRUE} if \code{y} is two-dimensional, else \code{FALSE}; see Details
 #' @param ... ignored
 #' @param crop logical; if \code{TRUE}, the spatial extent of the returned object is cropped to still cover \code{obj}, if \code{FALSE}, the extent remains the same but cells outside \code{y} are given \code{NA} values.
+#' @param normalize logical; if \code{TRUE} then pass the cropped object to \code{\link[sf]{st_normalize}} before returning. This typically changes the `offset` field and resets the `from` field to 1, and changes the bounding box of the returned object accordingly.
 #' @details for raster \code{x}, \code{st_crop} selects cells that intersect with \code{y}. 
 #' For intersection, are raster cells interpreted as points or as small polygons? 
 #' If \code{y} is of class \code{stars}, \code{x} raster cells are interpreted as points; if \code{y} is of class \code{bbox}, \code{x} cells are interpreted as cells (small polygons). Otherwise, if \code{as_points} is not given, cells are interpreted as points if \code{y} has a two-dimensional geometry.
@@ -250,7 +266,7 @@ st_intersects.bbox = function(x, y, ...) { # FIXME: segmentize first if geograph
 #' image(l7[bb,,,1], add = TRUE, col = sf.colors())
 #' plot(st_as_sfc(bb), add = TRUE, border = 'green', lwd = 2)
 st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.eps), 
-		as_points = all(st_dimension(y) == 2, na.rm = TRUE)) {
+		as_points = all(st_dimension(y) == 2, na.rm = TRUE), normalize = FALSE) {
 	x = st_upfront(x) # put spatial dimensions up front; https://github.com/r-spatial/stars/issues/457
 	d = dim(x)
 	dm = st_dimensions(x)
@@ -267,10 +283,7 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		rastxy = attr(dm, "raster")$dimensions
 		xd = rastxy[1]
 		yd = rastxy[2]
-		bb = if (!inherits(y, "bbox"))
-				st_bbox(y)
-			else
-				y
+		bb = st_bbox(y)
 		if (any(is.na(as.numeric(bb)))) # as.numeric() can go after sf 0.7-5
 			stop("NA values in bounding box of y")
 		if (epsilon != 0)
@@ -307,7 +320,10 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		for (i in seq_along(x))
 			x[[i]][mask] = NA
 	}
-	x
+	if (normalize[1]) 
+		st_normalize(x)
+	else 
+		x
 }
 
 #' @export

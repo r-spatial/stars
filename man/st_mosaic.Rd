@@ -38,7 +38,7 @@ st_mosaic(.x, ...)
 
 \item{...}{further input stars objects}
 
-\item{dst}{character; destination file name}
+\item{dst}{character; destination file name; this will be a VRT file with references to the source file(s), see details}
 
 \item{options}{character; options to the gdalbuildvrt command}
 
@@ -51,7 +51,7 @@ the stars method returns a stars object with the composite of the input; the \co
 build mosaic (composite) of several spatially disjoint stars objects
 }
 \details{
-the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes
+the gdal function buildvrt builds a mosaic of input images; these input images can be multi-band, but not higher-dimensional data cubes or stars objects with multiple attributes; note that for the `stars` method, the `dst` file may contain references to temporary files that are going to be removed at termination of the R session.
 
 uses \link[sf]{gdal_utils} to internally call \code{buildvrt}; no executables external to R are called.
 }

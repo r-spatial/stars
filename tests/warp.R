@@ -27,7 +27,7 @@ st_dimensions(x1p)
 (x1b = setNames(st_warp(x1, x1p, use_gdal = TRUE, no_data_value=-1), "file.tif"))
 
 # does gdal reproduce what stars does? Smaller grid:
-(x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3))
+x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE, cellsize = 3)
 # x2 = x2[,2:43,2:43]
 if (interactive()) { plot(x2, breaks = "equal", axes=TRUE, reset = FALSE) }
 if (interactive()) { plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border = 'red') }
@@ -36,8 +36,8 @@ if (interactive()) { plot(st_as_sfc(st_bbox(x2)), add = TRUE, col = NA, border =
 if (interactive()) { plot(y, breaks = "equal") }
 names(x2) = names(y)
 # isTRUE(all.equal(x2, y, check.attributes=FALSE))
-mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
-unique(as.vector(x2[[1]]-y[[1]]))
+m = mean(as.vector(x2[[1]]==y[[1]]), na.rm = TRUE)
+u = unique(as.vector(x2[[1]]-y[[1]]))
 
 g = st_as_stars()
 attr(g, "dimensions")$x$offset = 0
