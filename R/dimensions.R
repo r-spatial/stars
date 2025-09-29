@@ -239,7 +239,7 @@ st_get_dimension_values = function(.x, which, ..., where = NA, max = FALSE, cent
 		create_dimensions(ret) # drop raster
 }
 
-regular_intervals = function(x, epsilon = 1e-10) {
+regular_intervals = function(x, epsilon = options("stars.regular")[[1]] %||% 1.0e-4) {
 	if (length(x) <= 1)
 		FALSE
 	else {
@@ -265,31 +265,29 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		from = 1
 		to = length(values)
 		if (inherits(values, "CFTime") && values$calendar$name %in% CF_calendar_regular) {
-			if (values$unit == "days")
-				values = as.Date(values$as_timestamp())
-			else {
-				values = values$as_timestamp(asPOSIX = TRUE)
-				if (attr(values, "tzone") == "GMT") # should not be needed if CFtime > 1.7.1
-					attr(values, "tzone") = "UTC"
-			}
+			values = values$as_timestamp(asPOSIX = TRUE)
+			if (attr(values, "tzone") == "GMT") # should not be needed if CFtime > 1.7.1
+				attr(values, "tzone") = "UTC"
+			dd = diff(values)
+			if (attr(dd, "units") == "days" && all((as.numeric(dd) %% 1) == 0))
+				values = as.Date(values)
 		}
 		if (!(is.character(values) || is.factor(values)) && is.atomic(values)) { 
 			if (! all(is.finite(values)))
-				warning("dimension value(s) non-finite")
-			else {
-				if (length(values) == 1 || regular_intervals(values)) {
-					offset = values[1]
-					if (length(values) > 1) {
-						delta = diff(values[1:2])
-					# shift half grid cell size if x or y raster dim cell midpoints:
-						if (is_raster)
-							offset = offset - 0.5 * delta
-					}
-					values = NULL
-					example = offset
-				} else
-					example = values
-			}
+				stop("dimension value(s) non-finite")
+			if (length(values) == 1 || regular_intervals(values)) {
+				offset = values[1]
+				if (length(values) > 1) {
+					#delta = diff(values[1:2])
+					delta = mean(diff(values))
+				# shift half grid cell size if x or y raster dim cell midpoints:
+					if (is_raster)
+						offset = offset - 0.5 * delta
+				}
+				values = NULL
+				example = offset
+			} else
+				example = values
 		} else if (inherits(values, "intervals"))
 			example = values$start
 

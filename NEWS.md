@@ -1,5 +1,9 @@
 # version 0.7-0
 
+* try harder to convert times to `Date` when they are dates.
+
+* if set, `options("stars.regular")` controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4
+
 * removed dependency on PCICt, added dependency on CFtime; #754 by @pvanlaake
 
 * handling of dimensions with a single value is now more consistent; #754
