@@ -45,7 +45,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7-0" id="version-07-0">version 0.7-0<a class="anchor" aria-label="anchor" href="#version-07-0"></a></h2>
-<ul><li><p>removed dependency on PCICt, added dependency on CFtime; <a href="https://github.com/r-spatial/stars/issues/754" class="external-link">#754</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
+<ul><li><p>try harder to convert times to <code>Date</code> when they are dates.</p></li>
+<li><p>if set, <code>options("stars.regular")</code> controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4</p></li>
+<li><p>removed dependency on PCICt, added dependency on CFtime; <a href="https://github.com/r-spatial/stars/issues/754" class="external-link">#754</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
 <li><p>handling of dimensions with a single value is now more consistent; <a href="https://github.com/r-spatial/stars/issues/754" class="external-link">#754</a></p></li>
 <li><p><code><a href="../reference/dplyr.html">slice.stars_proxy()</a></code> works (again) for single-file proxy objects; <a href="https://github.com/r-spatial/stars/issues/751" class="external-link">#751</a>, <a href="https://github.com/r-spatial/stars/issues/527" class="external-link">#527</a></p></li>
 <li><p><code>[.stars()</code> with a <code>character</code> selector selects on names of a dimension if it has names; <a href="https://github.com/r-spatial/stars/issues/747" class="external-link">#747</a></p></li>
