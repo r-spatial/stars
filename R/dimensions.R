@@ -288,8 +288,10 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 				example = offset
 			} else
 				example = values
-		} else if (inherits(values, "intervals"))
+		} else if (inherits(values, "intervals")) {
 			example = values$start
+		} else if (inherits(values, "CFTime"))
+			example = values
 
 		# refsys:
 		if (inherits(example, "POSIXct"))
@@ -297,7 +299,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		else if (inherits(example, "Date"))
 			refsys = "Date"
 		else if (inherits(example, "CFTime"))
-			refsys = "CFtime"
+			refsys = paste("CFtime", example$cal$name, sep = "_")
 		else if (inherits(example, "units"))
 			refsys = "udunits"
 
