@@ -77,6 +77,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		resampling = "bilinear"
 	}
 	at_orig = at
+	use_x_agg = FALSE
 	if (inherits(at_orig, "stars")) {
 		if (is.null(time_column) && length(which_time(at)) > 0)
 			time_column = names(which_time(at))[1] # later on matched by name in sf object
@@ -106,6 +107,7 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			} else {
 				# to pass to time matching		
 				x_agg = do.call(c, c(l, along = list(which_sfc(l[[1]]))))
+				use_x_agg = TRUE
 			}
 		}
 		sf_column = attr(at, "sf_column") %||% "geometry"
@@ -126,11 +128,9 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 			try_result = try(x0 <- st_as_stars(x, downsample = dim(x)/2), silent = TRUE)
 			lapply(x, function(y) do.call(abind, lapply(get_names(y), 
 				gdal_extract, pts, resampling)))
-		} else if (exists("x_agg")) {
+		} else if (use_x_agg) {
 			# Allow time matching for lines and polygons using aggregate
-			x = st_normalize(st_upfront(x_agg))
-			# lapply(seq_along(x), function(i) x[[i]]) 
-			x
+			st_normalize(st_upfront(x_agg))
 		} else {
 			x = st_normalize(st_upfront(x))
 			if (is_curvilinear(x)) { # https://github.com/r-spatial/stars/issues/632
@@ -170,19 +170,46 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		tm_ix = match_time(tm_pts, tm_cube,
 						   intervals = !st_dimensions(x)[[tm]]$point,
 						   interpolate_time)
-		if (!interpolate_time)
-			m = lapply(m, function(p) p[cbind(seq_along(at), tm_ix)])
-		else {
-			interpolate = function(x, ix) { 
-				i = floor(ix)
-				di = ix - i
-				if (is.na(ix) || di == 0)
-					x[i]
-				else 
-					(1 - di) * x[i] + di * x[i+1]
+		# need to handle the case that there is more than time, besides space, in x; 
+		# https://github.com/r-spatial/stars/issues/748
+		if (has_raster(x) && length(dim(x)) > 3 && dim(m[[1]])[2] > length(tm_cube)) {
+			# check time is last dimension:
+			if (names(dim(x))[length(dim(x))] != tm)
+				stop(paste(tm, 'needs to be the last dimensions'))
+			if (interpolate_time)
+				stop("to use interpolate_time=TRUE, first drop additional dimensions")
+			do = dim(x)[-(c(1:2, length(dim(x))))]
+			if (length(do) > 1)
+				warning("this may not work for higher than 4-dimensional cubes")
+			r = rep(1:dim(m[[1]])[1], each = prod(do))
+			c = rep(1:prod(do), dim(m[[1]])[1]) + rep((tm_ix - 1) * prod(do), each = prod(do))
+			# print(rbind(r,c))
+			# print(m[[1]][cbind(r,c)])
+			m = lapply(m, function(a) structure(a[cbind(r,c)], dim = NULL))
+			df = setNames(as.data.frame(m), names(x))
+			df[[sf_column]] = rep(st_geometry(at), each = do)
+			# if (inherits(tm_cube, "intervals"))
+			#	tm_cube = as.list(tm_cube)
+			# df[[tm]] = tm_cube[tm_ix]
+			df[[time_column]] = rep(tm_pts, each = do)
+			# depth, or whatever is in do: assuming now there is only one dimension in do
+			df[[ names(do)[1] ]] = st_get_dimension_values(x, names(do)[1])
+			return(st_as_sf(df))
+		} else {
+			if (!interpolate_time)
+				m = lapply(m, function(p) p[cbind(seq_along(at), tm_ix)])
+			else {
+				interpolate = function(x, ix) { 
+					i = floor(ix)
+					di = ix - i
+					if (is.na(ix) || di == 0)
+						x[i]
+					else 
+						(1 - di) * x[i] + di * x[i+1]
+				}
+				# each time series is reduced to a _single_ time step, interpolated:
+				m = lapply(m, function(n) mapply(interpolate, asplit(n, 1), tm_ix))
 			}
-			# each time series is reduced to a _single_ time step, interpolated:
-			m = lapply(m, function(n) mapply(interpolate, asplit(n, 1), tm_ix))
 		}
 	}
 	if (NCOL(m[[1]]) > 1) { # multi-band:
