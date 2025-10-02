@@ -260,10 +260,10 @@ tos_O1_2001-2002.nc [K] 271.1709 275.0928 285.4899 286.6974 299.0914 305.5038
                           NA's
 tos_O1_2001-2002.nc [K] 228240
 dimension(s):
-     from  to offset delta                    values x/y
-x       1 180      0     2                      NULL [x]
-y       1 170     90    -1                      NULL [y]
-time    1  24     NA    NA 2001-01-16,...,2002-12-16    
+     from  to offset delta         refsys                    values x/y
+x       1 180      0     2             NA                      NULL [x]
+y       1 170     90    -1             NA                      NULL [y]
+time    1  24     NA    NA CFtime_360_day 2001-01-16,...,2002-12-16    
 xmin ymin xmax ymax 
    0  -80  360   90 
      xmin      ymin      xmax      ymax 
@@ -288,10 +288,10 @@ tos_O1_2001-2002.nc  271.1709 275.0928 285.4899 286.6974 299.0914 305.5038
                        NA's
 tos_O1_2001-2002.nc  228240
 dimension(s):
-     from  to offset delta                    values x/y
-x       1 180      0     2                      NULL [x]
-y       1 170     90    -1                      NULL [y]
-time    1  24     NA    NA 2001-01-16,...,2002-12-16    
+     from  to offset delta         refsys                    values x/y
+x       1 180      0     2             NA                      NULL [x]
+y       1 170     90    -1             NA                      NULL [y]
+time    1  24     NA    NA CFtime_360_day 2001-01-16,...,2002-12-16    
 [1] "x"    "y"    "time"
 [1] "a" "b" "c"
 > 
@@ -491,4 +491,4 @@ X1    1  1 FALSE 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.035   1.595   4.124 
+  3.937   1.564   4.000 
