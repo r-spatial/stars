@@ -704,8 +704,10 @@ combine_dimensions = function(dots, along, check_dims_identical = TRUE) {
 	if (along > length(dims)) { # along new dimension:
 		if (length(dots) > 1 && check_dims_identical) {
 			for (i in 2:length(dots))
-				if (! isTRUE(all.equal(dims, st_dimensions(dots[[i]]))))
+				if (! isTRUE(report <- all.equal(dims, st_dimensions(dots[[i]])))) {
+					print(report)
 					stop(paste("dimensions of element", 1, "and", i, "are not identical"))
+				}
 		}
 		dims[[along]] = create_dimension(from = 1, to = length(dots), values = names(dots))
 	} else {
