@@ -40,7 +40,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>convert objects into a stars object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/main/R/cubble.R" class="external-link"><code>R/cubble.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/main/R/ncdf.R" class="external-link"><code>R/ncdf.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/main/R/OpenStreetMap.R" class="external-link"><code>R/OpenStreetMap.R</code></a>, and 6 more</small>
+      <small class="dont-index">Source: <a href="https://github.com/r-spatial/stars/blob/main/R/cf.R" class="external-link"><code>R/cf.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/main/R/cubble.R" class="external-link"><code>R/cubble.R</code></a>, <a href="https://github.com/r-spatial/stars/blob/main/R/OpenStreetMap.R" class="external-link"><code>R/OpenStreetMap.R</code></a>, and 6 more</small>
       <div class="d-none name"><code>st_as_stars.Rd</code></div>
     </div>
 
@@ -50,10 +50,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'cubble_df'</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, check_times <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'ncdfgeom'</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'ncdfgeom'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'CFDataset'</span></span>
@@ -61,6 +58,9 @@
 <span></span>
 <span><span class="co"># S3 method for class 'CFVariable'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'cubble_df'</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, check_times <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'OpenStreetMap'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -138,10 +138,6 @@
 passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 
 
-<dt id="arg-check-times">check_times<a class="anchor" aria-label="anchor" href="#arg-check-times"></a></dt>
-<dd><p>logical; should we check that the time stamps of all time series are identical?</p></dd>
-
-
 <dt id="arg-sf-geometry">sf_geometry<a class="anchor" aria-label="anchor" href="#arg-sf-geometry"></a></dt>
 <dd><p>sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.</p></dd>
@@ -158,6 +154,10 @@ If omitted, the first data variable will be used.</p></dd>
 the same axes as argument `var` uses should be converted into attributes.
 Default is `TRUE` when only one data variable is specified, `FALSE`
 otherwise.</p></dd>
+
+
+<dt id="arg-check-times">check_times<a class="anchor" aria-label="anchor" href="#arg-check-times"></a></dt>
+<dd><p>logical; should we check that the time stamps of all time series are identical?</p></dd>
 
 
 <dt id="arg-as-col">as_col<a class="anchor" aria-label="anchor" href="#arg-as-col"></a></dt>

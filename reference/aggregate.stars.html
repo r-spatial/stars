@@ -74,7 +74,7 @@
 
 
 <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
-<dd><p>object of class <code>sf</code> or <code>sfc</code> for spatial aggregation, for temporal aggregation a vector with time values (<code>Date</code>, <code>POSIXct</code>, or <code>CFtime</code>) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see <a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.POSIXt</a>), or a function that cuts time into intervals; if by is an object of class <code>stars</code>, it is converted to sfc by <code>st_as_sfc(by, as_points = FALSE)</code> thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.</p></dd>
+<dd><p>object of class <code>sf</code> or <code>sfc</code> for spatial aggregation, for temporal aggregation a vector with time values (<code>Date</code>, <code>POSIXct</code>, or <code>CFTime</code>) that is interpreted as a sequence of left-closed, right-open time intervals or a string like "months", "5 days" or the like (see <a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.POSIXt</a>), or a function that cuts time into intervals; if by is an object of class <code>stars</code>, it is converted to sfc by <code>st_as_sfc(by, as_points = FALSE)</code> thus ignoring its time component. Note: each pixel is assigned to only a single group (in the order the groups occur) so non-overlapping spatial features and temporal windows are recommended.</p></dd>
 
 
 <dt id="arg-fun">FUN<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
