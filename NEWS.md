@@ -1,6 +1,8 @@
 # version 0.7-0
 
-* try harder to convert times to `Date` when they are dates.
+* add `st_as_stars()` methods for `CFVariable` and `CFDataset`, provided by package `ncdfCF`; #756, #757 by @pvanlaake
+
+* try harder to convert `CFTime` times to `Date` when they are dates.
 
 * if set, `options("stars.regular")` controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4
 
