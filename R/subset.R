@@ -123,7 +123,7 @@
 		# dimensions:
 		#mc0 = mc[1:3] # "[", x, first dim
 		for (i in seq_along(d)) { # one-at-a-time:
-			if (!is.na(d[[i]]$refsys) && is.character(d[[i]]$refsys) && substr(d[[i]]$refsys, 1, 6) == "CFtime") {
+			if (is_CFTime(d[[i]]$refsys)) {
 				time = d[[i]]$values
 				bnds = CFtime::bounds(time)
 				time = CFtime::CFtime(CFtime::definition(time), 

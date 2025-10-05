@@ -67,7 +67,7 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 		ix[[i]] = seq(1 + offset[i], d[i], n[i] + 1)
 	xy = attr(dims, "raster")$dimensions
 	for (i in seq_along(d)) {
-		if (!is.na(dims[[i]]$refsys) && is.character(dims[[i]]$refsys) && substr(dims[[i]]$refsys, 1, 6) == "CFtime") {
+		if (is_CFTime(dims[[i]]$refsys)) {
 			dims[[i]]$to = unname(new_dim[i])
 			time = dims[[i]]$values
 			bnds = CFtime::bounds(time)

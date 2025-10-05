@@ -305,7 +305,7 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 		else if (inherits(example, "Date"))
 			refsys = "Date"
 		else if (inherits(example, "CFTime"))
-			refsys = paste("CFtime", example$cal$name, sep = "_")
+			refsys = paste("CFTime", example$cal$name, sep = "_")
 		else if (inherits(example, "units"))
 			refsys = "udunits"
 
@@ -736,7 +736,7 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 #' @export
 `[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
-		if (!is.na(x$refsys) && is.character(x$refsys) && substr(x$refsys, 1, 6) == "CFtime") {
+		if (is_CFTime(x$refsys)) {
 			ind = x$values$indexOf(i)
 			newcf = attr(ind, "CFTime")
 			x$to = length(newcf)

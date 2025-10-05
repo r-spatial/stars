@@ -92,6 +92,7 @@ Encoding: UTF-8
 RoxygenNote: 7.3.3
 Collate: 
     'aggregate.R'
+	'cf.R'
     'cubble.R'
     'datasets.R'
     'dimensions.R'
