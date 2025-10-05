@@ -4,7 +4,8 @@ CF_calendar_regular = c("standard", "gregorian", "proleptic_gregorian", "utc", "
 CF_calendar_model = c("360_day", "365_day", "noleap", "366_day", "all_leap")
 
 is_CFTime = function(x) {
-	!is.na(x) && is.character(x) && substr(x, 1, 6) == "CFTime")
+	# catch things like "CFTime_360_day" as a CFTime refsys
+	length(x) == 1 && !is.na(x) && is.character(x) && substr(x, 1, 6) == "CFTime"
 }
 
 "[.CFTime" = function(x, i = TRUE, ...) {
@@ -16,7 +17,6 @@ is_CFTime = function(x) {
 #' @details For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.
 #' @name st_as_stars
 #' @export
-#'
 st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 
   crs <- sf::st_crs('OGC:CRS84')
