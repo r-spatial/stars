@@ -263,7 +263,7 @@ dimension(s):
      from  to offset delta         refsys                    values x/y
 x       1 180      0     2             NA                      NULL [x]
 y       1 170     90    -1             NA                      NULL [y]
-time    1  24     NA    NA CFtime_360_day 2001-01-16,...,2002-12-16    
+time    1  24     NA    NA CFTime_360_day 2001-01-16,...,2002-12-16    
 xmin ymin xmax ymax 
    0  -80  360   90 
      xmin      ymin      xmax      ymax 
@@ -291,7 +291,7 @@ dimension(s):
      from  to offset delta         refsys                    values x/y
 x       1 180      0     2             NA                      NULL [x]
 y       1 170     90    -1             NA                      NULL [y]
-time    1  24     NA    NA CFtime_360_day 2001-01-16,...,2002-12-16    
+time    1  24     NA    NA CFTime_360_day 2001-01-16,...,2002-12-16    
 [1] "x"    "y"    "time"
 [1] "a" "b" "c"
 > 
@@ -491,4 +491,4 @@ X1    1  1 FALSE 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  3.937   1.564   4.000 
+  4.001   1.555   4.055 
