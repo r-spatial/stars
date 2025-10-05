@@ -921,7 +921,7 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 		stop("Data variable does not have X and/or Y axes")
 	
 	crs = if (is.null(var$crs))
-		"WGS84" # If no grid_mapping, then data is lat-long, assuming WGS84 datum here,
+		"OGC:CRS84" # If no grid_mapping, then data is lat-long, assuming WGS84 datum here,
 	else {      # otherwise, tease the AUTHORITY out of the WKT2 string of the grid_mapping
 				# This will often fail to identify an AUTHORITY because CF grid_mappings
 				# are incomplete and a WKT2 thus has many "unknown"s.
@@ -936,19 +936,20 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 	
 	raster = get_raster(dimensions = c(axes[[ axis_order[1] ]]$name, axes[[ axis_order[2] ]]$name))
 	dimensions = lapply(axes, function(ax) {
-		switch(ax$orientation,
+			switch(ax$orientation,
 			   X = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE), 
 			   Y = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE),
-			   T = {
-			   	time = ax$time
-			   	if (time$calendar$name %in% CF_calendar_regular)
-			   		create_dimension(to = length(time$offsets), refsys = "POSIXct",
-			   						 values = time$as_timestamp(asPOSIX = TRUE))
-			   	else
-			   		create_dimension(to = length(time), refsys = "CFtime", values = time)
-			   },
-			   create_dimension(values = ax$coordinates))
-	})
+			   T = create_dimension(to = length(time), refsys = "CFtime", values = ax$time),
+		   		{
+					v = ax$coordinates
+		   			u = ax$attribute("units")
+					if (!is.na(u))
+						units(v) = try_as_units(u)
+		   			create_dimension(values = v)
+		   		}
+			)
+		}
+	)
 	create_dimensions(dimensions, raster)
 }
 

@@ -66,6 +66,7 @@ Suggests:
     lwgeom,
     maps,
     mapdata,
+    ncdfCF,
     ncdfgeom,
     ncmeta (>= 0.0.3),
     pbapply,
@@ -85,8 +86,7 @@ Suggests:
     tsibble,
     viridis,
     xts,
-    zoo,
-    ncdfCF
+    zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.3.3
