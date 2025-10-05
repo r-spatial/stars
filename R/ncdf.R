@@ -913,4 +913,122 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
            dimensions =  create_dimensions(dim))
 }
 
+# Take a CFVariable `var` and convert its axes into a dimensions structure
+.dimensions_from_CF <- function(var) {
+	axes = var$axes
+	axis_order = match(sapply(axes, function(ax) ax$orientation), c("X", "Y", "Z", "T"))
+	if (any(is.na(axis_order[1:2])))
+		stop("Data variable does not have X and/or Y axes")
+	
+	crs = if (is.null(var$crs))
+		"OGC:CRS84" # If no grid_mapping, then data is lat-long, assuming WGS84 datum here,
+	else {      # otherwise, tease the AUTHORITY out of the WKT2 string of the grid_mapping
+				# This will often fail to identify an AUTHORITY because CF grid_mappings
+				# are incomplete and a WKT2 thus has many "unknown"s.
+		wkt = var$crs_wkt2
+		auth = regexec('([a-zA-Z0-9]*)",["]?([a-zA-Z0-9]*)["]?\\]\\]$', wkt)
+		auth = regmatches(wkt, auth)[[1]]
+		if (!length(auth))
+			NA_character_
+		else
+			paste(auth[-1], collapse = ":")
+	}
+	
+	raster = get_raster(dimensions = c(axes[[ axis_order[1] ]]$name, axes[[ axis_order[2] ]]$name))
+	dimensions = lapply(axes, function(ax) {
+			switch(ax$orientation,
+			   X = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE), 
+			   Y = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE),
+			   T = create_dimension(to = length(time), refsys = "CFtime", values = ax$time),
+		   		{
+					v = ax$coordinates
+		   			u = ax$attribute("units")
+					if (!is.na(u))
+						units(v) = try_as_units(u)
+		   			create_dimension(values = v)
+		   		}
+			)
+		}
+	)
+	create_dimensions(dimensions, raster)
+}
 
+#' @param .var Character vector with names of netCDF data variables to convert
+#'   into stars attributes. All data variables have to use the same set of axes.
+#'   If omitted, the first data variable will be used.
+#' @param all_compatible Logical flag that indicates if all data variables with
+#'   the same axes as argument `var` uses should be converted into attributes.
+#'   Default is `TRUE` when only one data variable is specified, `FALSE`
+#'   otherwise.
+#' @name st_as_stars
+#' @export
+st_as_stars.CFDataset <- function(.x, ..., .var = .x$var_names[1], all_compatible = length(var) == 1) {
+	if (!requireNamespace("ncdfCF", quietly = TRUE))
+		stop("Please install package 'ncdfCF' before using this functionality")
+	
+	all_var_names = .x$var_names
+	if (!is.character(.var) || !length(.var) || !all(.var %in% all_var_names))
+		stop("Argument `.var` must be a character vector of one of more data variable names in the data set.")
+	all_compatible = is.logical(all_compatible) && all_compatible[1]
+	
+	# Grab all CFVariables from the passed data variable names - check that all are compatible on dimensions
+	axis_names = sapply(.x[[ .var[1] ]]$axes, function(ax) ax$fullname)
+	num_axes = length(axis_names)
+	if (length(.var) > 1) {
+		vars = lapply(.var, function(v_name) {
+			v = .x[[v_name]]
+			v_ax_names = sapply(v$axes, function(ax) ax$fullname)
+			if (length(v_ax_names) == num_axes && all(v_ax_names == axis_names)) 
+				v
+			else
+				NULL
+		})
+		if (any(is.null(vars)))
+			stop("Data variables in argument `.var` have different axes.")
+		names(vars) <- sapply(vars, function(v) v$name)
+	} else if (all_compatible) {
+		vars = lapply(all_var_names, function(nm) {
+			v = .x[[nm]]
+			if (all(sapply(v$axes, function(ax) ax$fullname) == axis_names))
+				v
+			else
+				NULL
+		})
+		names(vars) <- sapply(vars, function(v) v$name)
+		vars = vars[lengths(vars) > 0]
+		if (!all(.var %in% names(vars)))
+			stop("Data variables in argument `var` have different axes.")
+	} else
+		vars = setNames(list(.x[[ .var[1] ]]), .var[1])
+	
+	# Turn the list of CFVariables into stars attributes
+	attributes = lapply(vars, function(v) {
+		att = v$raw()
+		dimnames(att) <- NULL
+		un = v$attribute("units")
+		if (!is.na(un))
+			units(att) = try_as_units(un)
+		att
+	})
+	names(attributes) = names(vars)
+	
+	dimensions = .dimensions_from_CF(vars[[1]])	
+	st_stars(attributes, dimensions = dimensions)
+}
+
+#' @name st_as_stars
+#' @export
+st_as_stars.CFVariable <- function(.x, ...) {
+	if (!requireNamespace("ncdfCF", quietly = TRUE))
+		stop("Please install package 'ncdfCF' before using this functionality")
+	
+	dimensions = .dimensions_from_CF(.x)
+	att <- .x$raw()
+	dimnames(att) <- NULL
+	attributes = setNames(list(att), .x$name)
+	un = .x$attribute("units")
+	if (!is.na(un))
+		units(attributes[[1]]) = try_as_units(un)
+	
+	st_stars(attributes, dimensions = dimensions)
+}

@@ -5,6 +5,8 @@
 \alias{st_as_stars}
 \alias{st_as_stars.cubble_df}
 \alias{st_as_stars.ncdfgeom}
+\alias{st_as_stars.CFDataset}
+\alias{st_as_stars.CFVariable}
 \alias{st_as_stars.OpenStreetMap}
 \alias{st_as_stars.stars_proxy}
 \alias{st_as_stars.data.frame}
@@ -21,6 +23,10 @@
 \method{st_as_stars}{cubble_df}(.x, ..., check_times = FALSE)
 
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
+
+\method{st_as_stars}{CFDataset}(.x, ..., .var = .x$var_names[1], all_compatible = length(var) == 1)
+
+\method{st_as_stars}{CFVariable}(.x, ...)
 
 \method{st_as_stars}{OpenStreetMap}(.x, ..., as_col = FALSE)
 
@@ -83,6 +89,15 @@ passed on to \code{\link{read_ncdf}}.}
 
 \item{sf_geometry}{sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.}
+
+\item{.var}{Character vector with names of netCDF data variables to convert
+into stars attributes. All data variables have to use the same set of axes.
+If omitted, the first data variable will be used.}
+
+\item{all_compatible}{Logical flag that indicates if all data variables with
+the same axes as argument `var` uses should be converted into attributes.
+Default is `TRUE` when only one data variable is specified, `FALSE`
+otherwise.}
 
 \item{as_col}{logical; return rgb numbers (FALSE) or (character) color values (TRUE)?}
 
