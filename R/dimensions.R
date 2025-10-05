@@ -736,7 +736,7 @@ seq.dimension = function(from, ..., center = FALSE) { # does what expand_dimensi
 #' @export
 `[.dimension` = function(x, i, ...) {
 	if (!missing(i)) {
-		if (!is.na(x$refsys) && x$refsys == "CFtime") {
+		if (!is.na(x$refsys) && is.character(x$refsys) && substr(x$refsys, 1, 6) == "CFtime") {
 			ind = x$values$indexOf(i)
 			newcf = attr(ind, "CFTime")
 			x$to = length(newcf)

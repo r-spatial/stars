@@ -76,7 +76,7 @@ Suggests:
     sp,
     spacetime,
     spatstat (>= 2.0-1),
-    spatstat.geom, 
+    spatstat.geom,
     starsdata,
     terra (>= 1.4-22),
     testthat,
@@ -85,7 +85,8 @@ Suggests:
     tsibble,
     viridis,
     xts,
-    zoo
+    zoo,
+    ncdfCF
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.3.3

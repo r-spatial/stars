@@ -105,7 +105,7 @@ test_that("subset", {
 	nc2 <- nc[ , , , 5]
 	expect_equal(st_dimensions(nc2)$time$from, 5)
 	expect_equal(st_dimensions(nc2)$time$values, 
-				 structure(928108800, class = c("POSIXct", "POSIXt"), tzone = "GMT"))
+				 structure(928108800, class = c("POSIXct", "POSIXt"), tzone = "UTC"))
 	
 	nc3 <- st_as_stars(nc2)
 	
