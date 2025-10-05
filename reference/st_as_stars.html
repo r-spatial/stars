@@ -56,6 +56,12 @@
 <span><span class="co"># S3 method for class 'ncdfgeom'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S3 method for class 'CFDataset'</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, .var <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">var_names</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, all_compatible <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'CFVariable'</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'OpenStreetMap'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, as_col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -139,6 +145,19 @@ passed on to <code><a href="read_ncdf.html">read_ncdf</a></code>.</p></dd>
 <dt id="arg-sf-geometry">sf_geometry<a class="anchor" aria-label="anchor" href="#arg-sf-geometry"></a></dt>
 <dd><p>sf data.frame with geometry and attributes to be added to stars object.
 Must have same number of rows as timeseries instances.</p></dd>
+
+
+<dt id="arg--var">.var<a class="anchor" aria-label="anchor" href="#arg--var"></a></dt>
+<dd><p>Character vector with names of netCDF data variables to convert
+into stars attributes. All data variables have to use the same set of axes.
+If omitted, the first data variable will be used.</p></dd>
+
+
+<dt id="arg-all-compatible">all_compatible<a class="anchor" aria-label="anchor" href="#arg-all-compatible"></a></dt>
+<dd><p>Logical flag that indicates if all data variables with
+the same axes as argument `var` uses should be converted into attributes.
+Default is `TRUE` when only one data variable is specified, `FALSE`
+otherwise.</p></dd>
 
 
 <dt id="arg-as-col">as_col<a class="anchor" aria-label="anchor" href="#arg-as-col"></a></dt>
