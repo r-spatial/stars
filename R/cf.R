@@ -66,6 +66,8 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 	axis_order = match(sapply(axes, function(ax) ax$orientation), c("X", "Y", "Z", "T"))
 	if (any(is.na(axis_order[1:2])))
 		stop("Data variable does not have X and/or Y axes")
+	if (axes[[ axis_order[1] ]]$length == 1 || axes[[ axis_order[2] ]]$length == 1)
+		stop("Raster dimensions are degenerate")
 	
 	crs = if (is.null(var$crs))
 		"OGC:CRS84" # If no grid_mapping, then data is lat-long, assuming WGS84 datum here,
@@ -83,7 +85,10 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 	
 	raster = get_raster(dimensions = c(axes[[ axis_order[1] ]]$name, axes[[ axis_order[2] ]]$name))
 	dimensions = lapply(axes, function(ax) {
-			switch(ax$orientation,
+		if (ax$length == 1) 
+			return (NULL)
+			
+		switch(ax$orientation,
 			   X = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE), 
 			   Y = create_dimension(values = ax$coordinates, refsys = crs, is_raster = TRUE),
 			   T = create_dimension(to = length(time), refsys = "CFtime", values = ax$time),
@@ -97,6 +102,7 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 			)
 		}
 	)
+	dimensions = dimensions[lengths(dimensions) > 0]
 	create_dimensions(dimensions, raster)
 }
 
