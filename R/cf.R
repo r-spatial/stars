@@ -115,7 +115,7 @@ st_as_stars.ncdfgeom <- function(.x, ..., sf_geometry = NA) {
 #'   otherwise.
 #' @name st_as_stars
 #' @export
-st_as_stars.CFDataset <- function(.x, ..., .var = .x$var_names[1], all_compatible = length(var) == 1) {
+st_as_stars.CFDataset <- function(.x, ..., .var = .x$var_names[1], all_compatible = length(.var) == 1) {
 	if (!requireNamespace("ncdfCF", quietly = TRUE))
 		stop("Please install package 'ncdfCF' before using this functionality")
 	
