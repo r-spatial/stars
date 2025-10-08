@@ -22,7 +22,12 @@
 \usage{
 \method{st_as_stars}{ncdfgeom}(.x, ..., sf_geometry = NA)
 
-\method{st_as_stars}{CFDataset}(.x, ..., .var = .x$var_names[1], all_compatible = length(var) == 1)
+\method{st_as_stars}{CFDataset}(
+  .x,
+  ...,
+  .var = .x$var_names[1],
+  all_compatible = length(.var) == 1
+)
 
 \method{st_as_stars}{CFVariable}(.x, ...)
 
