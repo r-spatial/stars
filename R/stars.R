@@ -625,7 +625,7 @@ c.stars = function(..., along = NA_integer_, try_hard = FALSE, nms = names(list(
 	} else {
 		if (is.list(along)) { # custom ordering of ... over dimension(s) with values specified
 			if (prod(lengths(along)) != length(dots))
-				stop("number of objects does not match the product of lenghts of the along argument", call. = FALSE)
+				stop("number of objects does not match the product of lengths of the along argument", call. = FALSE)
 			# abind all:
 			d = st_dimensions(dots[[1]])
 			ret = mapply(abind, ..., along = length(d) + 1, SIMPLIFY = FALSE)
