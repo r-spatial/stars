@@ -54,7 +54,12 @@
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, sf_geometry <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'CFDataset'</span></span>
-<span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, .var <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">var_names</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, all_compatible <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu">st_as_stars</span><span class="op">(</span></span>
+<span>  <span class="va">.x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  .var <span class="op">=</span> <span class="va">.x</span><span class="op">$</span><span class="va">var_names</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>  all_compatible <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">.var</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'CFVariable'</span></span>
 <span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
