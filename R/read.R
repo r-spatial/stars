@@ -1,5 +1,5 @@
 maybe_normalizePath = function(.x, np = FALSE) {
-	prefixes = c("NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:", "/vsi", "http://", "https://")
+	prefixes = c("ZARR:", "NETCDF:", "HDF5:", "HDF4:", "HDF4_EOS:", "SENTINEL2_L1", "SENTINEL2_L2", "GPKG:", "/vsi", "http://", "https://")
 	has_prefix = function(pf, x) substr(x, 1, nchar(pf)) == pf
 	if (is.function(.x) || !np || any(sapply(prefixes, has_prefix, x = .x)))
 		.x
@@ -197,6 +197,8 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 	if (length(data$bands) == 0) { # read sub-datasets: different attributes
 		sub_names = split_strings(data$sub) # get named list
 		sub_datasets = sub_names[seq(1, length(sub_names), by = 2)]
+		if (length(sub_datasets) == 1 && is.na(sub_datasets[1]))
+			stop("cannot derive subdataset names from data source: please provide manually")
 		# sub_datasets = gdal_subdatasets(x, options)[sub] # -> would open x twice
 
 		# FIXME: only tested for NetCDF:
