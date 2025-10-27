@@ -797,11 +797,36 @@ as.POSIXct.stars = function(x, ...) {
 	d = st_dimensions(x)
 	e = expand_dimensions(d)
 	for (i in seq_along(d)) {
-		# No need to check for refsys == "CFtime" as these will not convert to POSIXct
 		if (inherits(e[[i]], c("Date", "POSIXt", "udunits"))) {
 			p = try(as.POSIXct(e[[i]]), silent = TRUE)
 			if (!inherits(p, "try-error"))
 				d[[i]] = create_dimension(values = p)
+		}
+		if (inherits(d[[i]]$values, "CFTime")) {
+			warning("converting between incompatible calendars: results are approximate")
+			tm = d[[i]]$values
+			p = as.POSIXct(tm$format())
+			d[[i]] = create_dimension(values = p)
+		}
+	}
+	structure(x, dimensions = d)
+}
+
+#' @export
+as.Date.stars = function(x, ...) {
+	d = st_dimensions(x)
+	e = expand_dimensions(d)
+	for (i in seq_along(d)) {
+		if (inherits(e[[i]], c("POSIXt", "udunits"))) {
+			p = try(as.Date(e[[i]]), silent = TRUE)
+			if (!inherits(p, "try-error"))
+				d[[i]] = create_dimension(values = p)
+		}
+		if (inherits(d[[i]]$values, "CFTime")) {
+			warning("converting between incompatible calendars: results are approximate")
+			tm = d[[i]]$values
+			p = as.Date(tm$format())
+			d[[i]] = create_dimension(values = p)
 		}
 	}
 	structure(x, dimensions = d)
