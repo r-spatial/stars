@@ -45,7 +45,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7-0" id="version-07-0">version 0.7-0<a class="anchor" aria-label="anchor" href="#version-07-0"></a></h2>
-<ul><li><p>add <code><a href="../reference/st_as_stars.html">st_as_stars()</a></code> methods for <code>CFVariable</code> and <code>CFDataset</code>, provided by package <code>ncdfCF</code>; <a href="https://github.com/r-spatial/stars/issues/756" class="external-link">#756</a>, <a href="https://github.com/r-spatial/stars/issues/757" class="external-link">#757</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
+<ul><li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> no longer stops when InterpolateAtPoint returns error value(s); <a href="https://github.com/r-spatial/stars/issues/760" class="external-link">#760</a></p></li>
+<li><p>add <code><a href="../reference/st_as_stars.html">st_as_stars()</a></code> methods for <code>CFVariable</code> and <code>CFDataset</code>, provided by package <code>ncdfCF</code>; <a href="https://github.com/r-spatial/stars/issues/756" class="external-link">#756</a>, <a href="https://github.com/r-spatial/stars/issues/757" class="external-link">#757</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
 <li><p>try harder to convert <code>CFTime</code> times to <code>Date</code> when they are dates.</p></li>
 <li><p>if set, <code>options("stars.regular")</code> controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4</p></li>
 <li><p>removed dependency on PCICt, added dependency on CFtime; <a href="https://github.com/r-spatial/stars/issues/754" class="external-link">#754</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
