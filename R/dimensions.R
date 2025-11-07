@@ -269,8 +269,6 @@ create_dimension = function(from = 1, to, offset = NA_real_, delta = NA_real_,
 			if (length(values) == 1)
 				as_date = values$unit == "days"
 			values = values$as_timestamp(asPOSIX = TRUE)
-			if (attr(values, "tzone") == "GMT") # should not be needed if CFtime > 1.7.1
-				attr(values, "tzone") = "UTC"
 			if (length(values) > 1) {
 				dd = diff(values)
 				as_date = attr(dd, "units") == "days" && all((as.numeric(dd) %% 1) == 0)

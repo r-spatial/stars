@@ -44,7 +44,7 @@ Imports:
     units
 Suggests: 
     Cairo,
-    CFtime,
+    CFtime (>= 1.7.1),
     OpenStreetMap,
     RNetCDF (>= 1.8-2),
     clue,
