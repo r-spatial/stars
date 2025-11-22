@@ -1,5 +1,7 @@
 # version 0.7-0
 
+* deal with `values` column in RAT table; #761
+
 * `st_extract()` no longer stops when GDAL's `InterpolateAtPoint` returns error value(s); #760
 
 * add `st_as_stars()` methods for `CFVariable` and `CFDataset`, provided by package `ncdfCF`; #756, #757 by @pvanlaake

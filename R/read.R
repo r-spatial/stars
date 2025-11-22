@@ -303,10 +303,14 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 			} else
 				which.column = NA
 			if (!(all(is.na(which.column)))) {
-				labels = at = at[[ which.at ]][[ which.column ]]
-				levels = 0:(length(at) - 1)
+				at = at[[ which.at ]]
+				labels = at[[ which.column ]]
+				levels = if (!is.na(v <-  match("value", tolower(names(at)))))
+						at[[ v ]]
+					else 
+						0:(length(labels) - 1)
 				if (length(exclude)) {
-					ex = at %in% exclude
+					ex = labels %in% exclude
 					labels = labels[!ex]
 					levels = levels[!ex]
 					if (!is.null(co))
