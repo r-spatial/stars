@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -211,7 +211,7 @@ x and y coordinate values respectively.</li>
 <code>stars</code> objects,</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-3-1.png" width="432"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" width="432"></p>
 <p>we see that
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math>
 is the origin of the grid (grid corner), and
@@ -228,7 +228,7 @@ did not change:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-4-1.png" width="432"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" width="432"></p>
 <p>An example is the GeoTIFF carried in the package, which, as probably
 all data sources read through GDAL, has a negative <code>delta</code>
 for the <code>y</code>-coordinate:</p>
@@ -313,7 +313,7 @@ to a non-zero value:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-7-1.png" class="r-plt" width="700"></p>
 <p>The rotation angle, in degrees, is</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">atan2</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">180</span> <span class="op">/</span> <span class="va">pi</span></span>
@@ -326,7 +326,7 @@ are unequal:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span>, <span class="st">"raster"</span><span class="op">)</span><span class="op">$</span><span class="va">affine</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/st_as_sf.html">st_as_sf</a></span><span class="op">(</span><span class="va">s</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, nbreaks <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-9-1.png" class="r-plt" width="700"></p>
 <p>Now, the y-axis and x-axis have different rotation in degrees of
 respectively</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -359,7 +359,7 @@ more</em> value than the dimension size:</p>
 <span><span class="co">## xmin ymin xmax ymax </span></span>
 <span><span class="co">##  0.0  0.3  5.0  2.2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">r</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/gray.html" class="external-link">grey</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span><span class="op">/</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-11-1.png" class="r-plt" width="700"></p>
 <p>Would we leave out the last value, than <code>stars</code> may come
 up with a <em>different</em> cell boundary for the last cell, as this is
 now derived from the width of the one-but-last cell:</p>
@@ -540,14 +540,14 @@ plot this file:</p>
 <span><span class="co">## Warning in NextMethod(): NaNs produced</span></span>
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-21-1.png" class="r-plt" width="700"></p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">nit.c</span>, breaks <span class="op">=</span> <span class="st">"equal"</span>, reset <span class="op">=</span> <span class="cn">FALSE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span>, as_points <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>         border <span class="op">=</span> <span class="cn">NA</span>, logz <span class="op">=</span> <span class="cn">TRUE</span>, key.length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">## Warning in NextMethod(): NaNs produced</span></span>
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" width="700"></p>
 <p>We can downsample the data by</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">nit.c_ds</span> <span class="op">=</span> <span class="fu">stars</span><span class="fu">:::</span><span class="fu"><a href="../reference/st_downsample.html">st_downsample</a></span><span class="op">(</span><span class="va">nit.c</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
@@ -570,7 +570,7 @@ plot this file:</p>
 <span><span class="co">## Warning in NextMethod(): NaNs produced</span></span>
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" width="700"></p>
 <p>which doesn’t look nice, but plotting the cells as polygons looks
 better:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -579,7 +579,7 @@ better:</p>
 <span><span class="co">## Warning in NextMethod(): NaNs produced</span></span>
 <span><span class="co">## Warning in plot.sf(x, pal = col, ...): NaNs produced</span></span>
 <span><span class="fu">maps</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/maps/man/map.html" class="external-link">map</a></span><span class="op">(</span><span class="st">'world'</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, col <span class="op">=</span> <span class="st">'red'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-24-1.png" class="r-plt" width="700"></p>
 <p>Another approach would be to warp the curvilinear grid to a regular
 grid, e.g. by</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -588,7 +588,7 @@ grid, e.g. by</p>
 <span><span class="co">## threshold): using Euclidean distance measures on geodetic coordinates</span></span>
 <span><span class="co">## threshold set to 0.108545 : set a larger value if you see missing values where there shouldn't be</span></span>
 <span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span></span></code></pre></div>
-<p><img src="stars4_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="stars4_files/figure-html/unnamed-chunk-25-1.png" class="r-plt" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -601,7 +601,7 @@ grid, e.g. by</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

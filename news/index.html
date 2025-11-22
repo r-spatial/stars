@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6-9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7-0" id="version-07-0">version 0.7-0<a class="anchor" aria-label="anchor" href="#version-07-0"></a></h2>
-<ul><li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> no longer stops when InterpolateAtPoint returns error value(s); <a href="https://github.com/r-spatial/stars/issues/760" class="external-link">#760</a></p></li>
+<ul><li><p>deal with <code>values</code> column in RAT table; <a href="https://github.com/r-spatial/stars/issues/761" class="external-link">#761</a></p></li>
+<li><p><code><a href="../reference/st_extract.html">st_extract()</a></code> no longer stops when GDAL’s <code>InterpolateAtPoint</code> returns error value(s); <a href="https://github.com/r-spatial/stars/issues/760" class="external-link">#760</a></p></li>
 <li><p>add <code><a href="../reference/st_as_stars.html">st_as_stars()</a></code> methods for <code>CFVariable</code> and <code>CFDataset</code>, provided by package <code>ncdfCF</code>; <a href="https://github.com/r-spatial/stars/issues/756" class="external-link">#756</a>, <a href="https://github.com/r-spatial/stars/issues/757" class="external-link">#757</a> by <a href="https://github.com/pvanlaake" class="external-link">@pvanlaake</a></p></li>
 <li><p>try harder to convert <code>CFTime</code> times to <code>Date</code> when they are dates.</p></li>
 <li><p>if set, <code>options("stars.regular")</code> controls the threshold below which dimension coordinates are considered regular, with default 1.0e-4</p></li>
@@ -415,7 +416,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
