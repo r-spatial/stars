@@ -1,6 +1,6 @@
 # version 0.7-0
 
-* deal with `values` column in RAT table; #761
+* use `values` column from RAT table, and merge duplicate labels; #761
 
 * `st_extract()` no longer stops when GDAL's `InterpolateAtPoint` returns error value(s); #760
 

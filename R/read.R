@@ -308,7 +308,7 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 				levels = if (!is.na(v <-  match("value", tolower(names(at)))))
 						at[[ v ]]
 					else 
-						0:(length(labels) - 1)
+						0:(length(labels) - 1) # why not 1:length(labels)? renumbered in match()
 				if (length(exclude)) {
 					ex = labels %in% exclude
 					labels = labels[!ex]
@@ -327,7 +327,14 @@ read_stars = function(.x, sub = TRUE, ..., options = character(0),
 			# f = factor(as.vector(data), levels = levels, labels = labels) # is too costly;
 			# see https://github.com/r-spatial/stars/issues/565:
 			# construct factor array manually:
-			data = structure(match(as.integer(as.vector(data)), levels),
+			data = if (any(du <- duplicated(labels))) {
+				ul = labels[!du] # unique, non-duplicated
+				m = match(labels, ul) # renumber table
+				dm = match(as.vector(data), levels)
+				structure(m[dm], levels = ul, dim = dim(data), 
+							 colors = co, exclude = ex, class = "factor")
+			} else
+				structure(match(as.integer(as.vector(data)), levels),
 							 levels = labels, dim = dim(data), 
 							 colors = co, exclude = ex, class = "factor")
 		}
