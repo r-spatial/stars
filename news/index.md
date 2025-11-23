@@ -2,7 +2,7 @@
 
 ## version 0.7-0
 
-- deal with `values` column in RAT table;
+- use `values` column from RAT table, and merge duplicate labels;
   [\#761](https://github.com/r-spatial/stars/issues/761)
 
 - [`st_extract()`](../reference/st_extract.md) no longer stops when
