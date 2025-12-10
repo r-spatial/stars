@@ -203,7 +203,7 @@ st_extract(split(rdate, "band"), pntsf) # POINT geometries
 #> dimension(s):
 #>          from to     offset  delta                     refsys point
 #> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE
-#> date        1  2 2025-11-22 1 days                       Date    NA
+#> date        1  2 2025-12-09 1 days                       Date    NA
 #>                                                         values
 #> geometry POINT (292954.5 9111273),...,POINT (289511.7 9117396)
 #> date                                                      NULL
@@ -216,16 +216,16 @@ st_extract(split(rdate, "band"), polysf, time_column = "date") # POLYGON geometr
 #> Bounding box:  xmin: 288232.3 ymin: 9110273 xmax: 298312.4 ymax: 9121157
 #> Projected CRS: SIRGAS 2000 / UTM zone 25S
 #>           X1        X2        X3        X4        X5        X6       date
-#> 1   86.74235  73.34041  78.95659  59.57558 107.90662  86.68551 2025-11-22
-#> 2  128.05442 104.12335  87.59834 154.64110 156.04872  86.64680 2025-11-23
-#> 3   80.84317  69.51889  73.68789  68.72257 102.97050  79.01656 2025-11-22
-#> 4  143.92547 121.26812 117.35352 141.02174 184.27640 120.74896 2025-11-23
-#> 5   84.99715  73.55567  70.69834  51.76877  78.77188  60.54195 2025-11-22
-#> 6  126.98972 100.18972  83.01095 146.08226 144.47297  79.95821 2025-11-23
-#> 7   80.71654  68.98010  71.40930  69.38656 105.59302  79.18656 2025-11-22
-#> 8  192.11344 175.69852 129.11318  27.31106  27.26237  25.22714 2025-11-23
-#> 9   64.81101  51.57237  44.47277  71.82245  77.79326  46.09780 2025-11-22
-#> 10 134.47686 110.56999 102.17447 140.02693 169.27237 106.59299 2025-11-23
+#> 1   86.74235  73.34041  78.95659  59.57558 107.90662  86.68551 2025-12-09
+#> 2  128.05442 104.12335  87.59834 154.64110 156.04872  86.64680 2025-12-10
+#> 3   80.84317  69.51889  73.68789  68.72257 102.97050  79.01656 2025-12-09
+#> 4  143.92547 121.26812 117.35352 141.02174 184.27640 120.74896 2025-12-10
+#> 5   84.99715  73.55567  70.69834  51.76877  78.77188  60.54195 2025-12-09
+#> 6  126.98972 100.18972  83.01095 146.08226 144.47297  79.95821 2025-12-10
+#> 7   80.71654  68.98010  71.40930  69.38656 105.59302  79.18656 2025-12-09
+#> 8  192.11344 175.69852 129.11318  27.31106  27.26237  25.22714 2025-12-10
+#> 9   64.81101  51.57237  44.47277  71.82245  77.79326  46.09780 2025-12-09
+#> 10 134.47686 110.56999 102.17447 140.02693 169.27237 106.59299 2025-12-10
 #>                          geometry
 #> 1  POLYGON ((293954.5 9111273,...
 #> 2  POLYGON ((293431.3 9118384,...
@@ -255,7 +255,7 @@ vdc = st_sf(rdm = rnorm(20), polygons = st_buffer(st_sample(st_bbox(pnt), 20), 5
 #> dimension(s):
 #>          from to     offset  delta                     refsys point
 #> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE
-#> date        1  2 2025-11-22 1 days                       Date    NA
+#> date        1  2 2025-12-09 1 days                       Date    NA
 #>                                                         values
 #> geometry POINT (292954.5 9111273),...,POINT (289511.7 9117396)
 #> date                                                      NULL
@@ -267,7 +267,7 @@ merge(vdc_new, name = "band")
 #> dimension(s):
 #>          from to     offset  delta                     refsys point
 #> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE
-#> date        1  2 2025-11-22 1 days                       Date    NA
+#> date        1  2 2025-12-09 1 days                       Date    NA
 #> band        1  6         NA     NA                         NA    NA
 #>                                                         values
 #> geometry POINT (292954.5 9111273),...,POINT (289511.7 9117396)
@@ -289,7 +289,7 @@ merge(vdc_new, name = "band")
 #> dimension(s):
 #>          from to     offset  delta                     refsys point
 #> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE
-#> date        1  2 2025-11-22 1 days                       Date    NA
+#> date        1  2 2025-12-09 1 days                       Date    NA
 #>                                                         values
 #> geometry POINT (292954.5 9111273),...,POINT (289511.7 9117396)
 #> date                                                      NULL
@@ -301,7 +301,7 @@ merge(vdc_new2, name = "band")
 #> dimension(s):
 #>          from to     offset  delta                     refsys point
 #> geometry    1 10         NA     NA SIRGAS 2000 / UTM zone 25S  TRUE
-#> date        1  2 2025-11-22 1 days                       Date    NA
+#> date        1  2 2025-12-09 1 days                       Date    NA
 #> band        1  6         NA     NA                         NA    NA
 #>                                                         values
 #> geometry POINT (292954.5 9111273),...,POINT (289511.7 9117396)
