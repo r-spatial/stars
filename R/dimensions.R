@@ -113,6 +113,7 @@ st_dimensions.default = function(.x, ..., .raster, affine = c(0, 0),
 #' # set bandwidth intervals:
 #' (x3 = st_set_dimensions(x, "band", values = make_intervals(bw), names = "bandwidth"))
 st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NULL, xy, ...) {
+	dots = list(...)
 	if (inherits(.x, "mdim"))
 		stop("for mdim objects, use st_set_dimensions() after st_as_stars()")
 	d = st_dimensions(.x)
@@ -138,8 +139,10 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		}
 		if (is.null(values))
 			d[[which]]["values"] = list(NULL) # avoid removing element values
-		else
+		else {
 			d[[which]] = create_dimension(values = values, point = point %||% d[[which]]$point, ...)
+			dots = list()
+		}
 		r = attr(d, "raster")
 		if (isTRUE(r$curvilinear)) {
 			# FIXME: there's much more that should be checked for curvilinear grids...
@@ -182,7 +185,7 @@ st_set_dimensions = function(.x, which, values = NULL, point = NULL, names = NUL
 		attr(d, "raster") = r
 		base::names(d) = new_names
 	}
-	if (length(list(...)))
+	if (length(dots))
 		d[[which]] = create_dimension(from = 1, to = dim(.x)[which], ...)
 
 	if (inherits(.x, "stars_proxy"))
