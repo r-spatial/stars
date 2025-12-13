@@ -1,5 +1,7 @@
 # version 0.7-0
 
+* `read_mdim()` passes if `CFtime` is not installed, with a message that times will not be read.
+
 * use `values` column from RAT table, and merge duplicate labels; #761
 
 * `st_extract()` no longer stops when GDAL's `InterpolateAtPoint` returns error value(s); #760

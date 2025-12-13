@@ -8,10 +8,6 @@ is_CFTime = function(x) {
 	length(x) == 1 && !is.na(x) && is.character(x) && substr(x, 1, 6) == "CFTime"
 }
 
-"[.CFTime" = function(x, i = TRUE, ...) {
-	x$indexOf(i)
-}
-
 #' @param sf_geometry sf data.frame with geometry and attributes to be added to stars object.
 #' Must have same number of rows as timeseries instances.
 #' @details For the \code{ncdfgeom} method: objects are point-timeseries with optional line or polygon geometry for each timeseries specified with the \code{sf_geometry} parameter. See \pkg{ncdfgeom} for more about this NetCDF-based format for geometry and timeseries.

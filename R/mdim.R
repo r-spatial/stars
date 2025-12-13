@@ -133,8 +133,9 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 					 debug = FALSE, bounds = TRUE, curvilinear = NA, normalize_path = TRUE) {
 
 	stopifnot(is.character(filename), is.character(variable), is.character(options))
-	if (!requireNamespace("CFtime", quietly = TRUE)) 
-		stop("package CFtime required, please install it first") # nocov
+	cftime_installed = requireNamespace("CFtime", quietly = TRUE) 
+	if (! cftime_installed)
+		message("for reading time stamps, package CFtime is required: please install it first") # nocov
 
 	if (normalize_path)
 		filename = enc2utf8char(maybe_normalizePath(filename, np = normalize_path))
@@ -157,7 +158,10 @@ read_mdim = function(filename, variable = character(0), ..., options = character
 			x
 		else {
 			cal = if (!is.null(a <- attr(x, "attributes"))) a["calendar"] else NULL
-			time = try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFTime
+			time = if (cftime_installed)
+					time = try(CFtime::CFtime(u, cal), silent = TRUE)     # cheaply try if we can make CFTime
+				else
+					FALSE
 			if (inherits(time, "CFTime"))
 				time + as.numeric(x)                       # if we have CFTime, add the offsets
 			else {
