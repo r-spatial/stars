@@ -2,6 +2,9 @@
 
 ## version 0.7-0
 
+- [`read_mdim()`](../reference/mdim.md) passes if `CFtime` is not
+  installed, with a message that times will not be read.
+
 - use `values` column from RAT table, and merge duplicate labels;
   [\#761](https://github.com/r-spatial/stars/issues/761)
 
