@@ -27,3 +27,4 @@ vignettes.awk
 ^codecov\.yml$
 vignettes/sst.tif
 _pkgdown.yml
+revdep
