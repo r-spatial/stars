@@ -189,7 +189,7 @@ system.time(plot(p))
 ![](stars2_files/figure-html/unnamed-chunk-8-1.png)
 
     ##    user  system elapsed 
-    ##   1.017   0.149   0.645
+    ##   1.014   0.178   0.660
 
 This takes only around 1 second, since only those pixels are read that
 can be seen on the plot. If we read the entire image in memory first, as
@@ -304,12 +304,12 @@ attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 ## [[1]]
 ## adrop(x = x, drop = drop)
 ## attr(,".Environment")
-## <environment: 0x556c727d5988>
+## <environment: 0x556c37633ac0>
 ## 
 ## [[2]]
 ## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]
 ## attr(,".Environment")
-## <environment: 0x556c715a5050>
+## <environment: 0x556c36dacb58>
 ```
 
 Doing this allows for optimizing the order in which operations are done.
@@ -377,7 +377,7 @@ rm(x)
 ## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
 ##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 ## attr(,".Environment")
-## <environment: 0x556c72c80c48>
+## <environment: 0x556c38f600e0>
 ## 
 ## This object has pending lazy operations: dimensions as printed may not reflect this.
 system.time(plot(s2.ndvi)) # read - compute ndvi - plot 
@@ -387,7 +387,7 @@ system.time(plot(s2.ndvi)) # read - compute ndvi - plot
 ![](stars2_files/figure-html/unnamed-chunk-16-1.png)
 
     ##    user  system elapsed 
-    ##   0.718   0.152   0.355
+    ##   0.730   0.152   0.361
 
 ## Multi-resolution proxy objects
 

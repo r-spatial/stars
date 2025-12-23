@@ -223,7 +223,7 @@ write_stars(st, tmp)
 #> stars object with 2 dimensions and 1 attribute
 #> attribute(s):
 #>                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#> file20e44a517a39.tif     1   30.75   60.5 60.5   90.25  120
+#> file23362b51eadd.tif     1   30.75   60.5 60.5   90.25  120
 #> dimension(s):
 #>   from to offset delta x/y
 #> x    1 10      0     1 [x]
@@ -238,7 +238,7 @@ read_stars(tmp, RasterIO = list(nXOff = 1, nYOff = 1, nXSize = 10, nYSize = 12,
 #> stars object with 2 dimensions and 1 attribute
 #> attribute(s):
 #>                       Min. 1st Qu. Median Mean 3rd Qu. Max.
-#> file20e44a517a39.tif    33   36.75   65.5 65.5   94.25   98
+#> file23362b51eadd.tif    33   36.75   65.5 65.5   94.25   98
 #> dimension(s):
 #>   from to offset delta x/y
 #> x    1  2      0     5 [x]

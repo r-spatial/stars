@@ -1,6 +1,14 @@
 # Changelog
 
+## version 0.7-1
+
+- [`write_stars()`](../reference/write_stars.md) supports drivers that
+  only provide CreateCopy(); requires sf \>= 1.0-24;
+  [\#762](https://github.com/r-spatial/stars/issues/762)
+
 ## version 0.7-0
+
+CRAN release: 2025-12-14
 
 - [`read_mdim()`](../reference/mdim.md) passes if `CFtime` is not
   installed, with a message that times will not be read.
