@@ -35,7 +35,7 @@ Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 + }
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      Min. 1st Qu. Median     Mean 3rd Qu.    Max.   NA's
+      Min. 1st Qu. Median     Mean 3rd Qu.    Max.    NAs
 PM10     0   9.921 14.792 17.69728  21.992 274.333 157659
 dimension(s):
         from   to     offset  delta refsys point
@@ -46,7 +46,7 @@ station POINT (9.585911 53.67057),...,POINT (9.446661 49.24068)
 time                                                       NULL
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-      Min. 1st Qu.   Median    Mean  3rd Qu.    Max. NA's
+      Min. 1st Qu.   Median    Mean  3rd Qu.    Max.  NAs
 PM10     1      11 15.57425 18.1715 22.17197 183.271 8429
 dimension(s):
          from   to     offset  delta refsys point
@@ -132,7 +132,7 @@ t                                                                 NULL
 > (a = aggregate(st, tm0, mean, na.rm = TRUE))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.  NAs
 A1     1  180.75  360.5 360.5  540.25  720  480
 dimension(s):
      from to     offset  delta refsys point x/y
@@ -177,7 +177,7 @@ POINT (-10 -10)
 > (a = aggregate(st, sfc, mean))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    Min. 1st Qu. Median  Mean 3rd Qu. Max. NA's
+    Min. 1st Qu. Median  Mean 3rd Qu. Max.  NAs
 A1    28  194.25  360.5 360.5  526.75  693    6
 dimension(s):
          from to     offset  delta refsys point

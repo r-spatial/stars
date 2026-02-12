@@ -63,7 +63,7 @@ was `contains'
 > st_crop(l, b)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-         Min. 1st Qu. Median Mean 3rd Qu. Max.   NA's
+         Min. 1st Qu. Median Mean 3rd Qu. Max.    NAs
 L7_ETMs    NA      NA     NA  NaN      NA   NA 737088
 dimension(s):
      from  to  offset delta                     refsys point x/y
@@ -79,7 +79,7 @@ In st_crop.stars(l, b) : st_crop: bounding boxes of x and y do not overlap
 > st_crop(l, b)
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-         Min. 1st Qu. Median Mean 3rd Qu. Max.   NA's
+         Min. 1st Qu. Median Mean 3rd Qu. Max.    NAs
 L7_ETMs    NA      NA     NA  NaN      NA   NA 737088
 dimension(s):
      from  to  offset delta                     refsys point x/y

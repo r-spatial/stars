@@ -23,7 +23,7 @@ Type 'q()' to quit R.
 > (r = st_as_stars(t(volcano)))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+    Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 A1    94     108    124 130.1879     150  195  732
 dimension(s):
    from to offset delta point x/y
@@ -42,7 +42,7 @@ X2    1 99      0     1 FALSE [y]
 > # Extract - 'st_extract'
 > y = st_extract(r, pnt)
 > 
-> # check there are NA's:
+> # check there are  NAs:
 > any(is.na(x))
 [1] TRUE
 > # Compare

@@ -20,7 +20,7 @@ Type 'q()' to quit R.
 > (x = st_rasterize(nc)) # default grid:
 stars object with 2 dimensions and 12 attributes
 attribute(s):
-                Min.   1st Qu.    Median         Mean   3rd Qu.      Max.  NA's
+                Min.   1st Qu.    Median         Mean   3rd Qu.      Max.   NAs
 AREA           0.042     0.108     0.142 1.451932e-01     0.181     0.241 30904
 PERIMETER      0.999     1.461     1.716 1.786110e+00     2.004     3.640 30904
 CNTY_       1825.000  1907.000  1989.000 1.998403e+03  2085.000  2241.000 30904
@@ -42,7 +42,7 @@ y    1 141  36.59 -0.01925  NAD27 FALSE [y]
 > (x = st_rasterize(nc, st_as_stars(st_bbox(nc), nx = 100, ny = 50, values = NA_real_)))
 stars object with 2 dimensions and 12 attributes
 attribute(s):
-                Min.   1st Qu.    Median         Mean   3rd Qu.      Max. NA's
+                Min.   1st Qu.    Median         Mean   3rd Qu.      Max.  NAs
 AREA           0.042     0.108     0.142     0.145536     0.181     0.241 2373
 PERIMETER      0.999     1.470     1.716     1.789032     2.004     3.640 2373
 CNTY_       1825.000  1908.000  1989.000  1999.761325  2088.000  2241.000 2373
@@ -75,7 +75,7 @@ CRS:           NA
 > (grd = st_as_stars(st_bbox(ls), nx = 10, ny = 10, xlim = c(0, 1.0), ylim = c(0, 1), values = NA_real_))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-        Min. 1st Qu. Median Mean 3rd Qu. Max. NA's
+        Min. 1st Qu. Median Mean 3rd Qu. Max.  NAs
 values    NA      NA     NA  NaN      NA   NA  100
 dimension(s):
   from to offset delta x/y

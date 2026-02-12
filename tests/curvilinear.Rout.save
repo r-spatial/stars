@@ -74,7 +74,7 @@ stars object with 3 dimensions and 1 attribute
 attribute(s):
                                         Min.      1st Qu.       Median
 nitrogendioxide_summed_tota...  3.650813e-05 7.451281e-05 8.296968e-05
-                                        Mean      3rd Qu.         Max. NA's
+                                        Mean      3rd Qu.         Max.  NAs
 nitrogendioxide_summed_tota...  8.581399e-05 9.397442e-05 0.0004535302  330
 dimension(s):
      from  to         offset  refsys                             values x/y

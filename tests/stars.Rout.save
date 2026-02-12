@@ -257,7 +257,7 @@ stars object with 3 dimensions and 1 attribute
 attribute(s):
                             Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 tos_O1_2001-2002.nc [K] 271.1709 275.0928 285.4899 286.6974 299.0914 305.5038
-                          NA's
+                           NAs
 tos_O1_2001-2002.nc [K] 228240
 dimension(s):
      from  to offset delta         refsys                    values x/y
@@ -285,7 +285,7 @@ stars object with 3 dimensions and 1 attribute
 attribute(s):
                          Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 tos_O1_2001-2002.nc  271.1709 275.0928 285.4899 286.6974 299.0914 305.5038
-                       NA's
+                        NAs
 tos_O1_2001-2002.nc  228240
 dimension(s):
      from  to offset delta         refsys                    values x/y
@@ -312,7 +312,7 @@ sst, anom, err, ice,
 > red
 stars object with 4 dimensions and 4 attributes
 attribute(s):
-                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
+                Min. 1st Qu. Median       Mean 3rd Qu.  Max.   NAs
 sst [°C]       -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
 anom [°C]     -10.16   -0.58 -0.080 -0.1855812  0.2100  2.99  4448
 err [°C]        0.11    0.16  0.270  0.2626872  0.3200  0.84  4448

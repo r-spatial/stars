@@ -31,7 +31,7 @@ Type 'q()' to quit R.
 > (x2 = setNames(st_warp(x, y, use_gdal = TRUE, no_data_value=-1), "file.tif"))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+          Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 file.tif    74     115    123 126.4289     132  255  224
 dimension(s):
   from to  offset delta                refsys point x/y
@@ -42,7 +42,7 @@ y    1 25 1144003 -5.22 WGS 84 / UTM zone 11N FALSE [y]
 > (x2 = st_warp(x, crs = st_crs(x), use_gdal = FALSE))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-               Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+               Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 geomatrix.tif    74     115    123 126.4289     132  255  224
 dimension(s):
   from to  offset delta                refsys x/y
@@ -51,7 +51,7 @@ y    1 25 1144003 -5.22 WGS 84 / UTM zone 11N [y]
 > (y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+          Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 file.tif    74     115    123 126.4289     132  255  224
 dimension(s):
   from to  offset delta                refsys point x/y
@@ -82,7 +82,7 @@ band    1   6      NA    NA                         NA    NA
 > (x1a = st_warp(x1, crs = st_crs(4326)))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-             Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 L7_ETMs.tif     1      54     69 68.93072      86  255 8778
 dimension(s):
      from  to offset      delta refsys x/y
@@ -109,7 +109,7 @@ band    1   6      NA    NA                         NA    NA
 > (y = setNames(st_warp(x, x2, use_gdal = TRUE, debug = FALSE, no_data_value=-1), "file.tif"))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-          Min. 1st Qu. Median     Mean 3rd Qu. Max. NA's
+          Min. 1st Qu. Median     Mean 3rd Qu. Max.  NAs
 file.tif    74     107    123 126.6584     132  255  727
 dimension(s):
   from to  offset delta                refsys point x/y
