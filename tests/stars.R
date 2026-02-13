@@ -56,7 +56,7 @@ if (nc != "") {
   print(identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree))))
 
   df = as.data.frame(x)
-  if (require(units, quietly = TRUE))
+  if (suppressPackageStartupMessages(require(units, quietly = TRUE)))
     print(units::drop_units(x))
 
   print(dimnames(x))
