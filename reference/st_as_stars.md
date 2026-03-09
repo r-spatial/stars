@@ -364,7 +364,7 @@ st_as_stars(sf_dta, dims = c("weekdays", "hours", "geometry"))
 #> attribute(s):
 #>                 Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
 #> ID            1.0000   1.0000    2.000    2.000    3.000    3.000
-#> population  594.2642 903.1372 1013.056 1003.978 1106.926 1324.842
+#> population  594.2642 909.3489 1016.819 1010.279 1112.744 1324.842
 #> dimension(s):
 #>          from to point
 #> weekdays    1  7    NA
@@ -448,8 +448,8 @@ st_as_stars(st_drop_geometry(nc), dims = "NAME")
 data.frame(expand.grid(x=1:5, y = 1:5), z = rnorm(25)) |> st_as_stars()
 #> stars object with 2 dimensions and 1 attribute
 #> attribute(s):
-#>         Min.   1st Qu.     Median       Mean   3rd Qu.     Max.
-#> z  -2.194688 -1.452389 -0.5143981 -0.4837413 0.2901747 1.627052
+#>         Min.  1st Qu.    Median       Mean   3rd Qu.     Max.
+#> z  -2.194688 -1.01616 -0.258447 -0.3639007 0.3655264 1.613714
 #> dimension(s):
 #>   from to offset delta x/y
 #> x    1  5    0.5     1 [x]

@@ -2,6 +2,8 @@
 
 ## version 0.7-1
 
+CRAN release: 2026-02-13
+
 - [`write_stars()`](../reference/write_stars.md) supports drivers that
   only provide CreateCopy(); requires sf \>= 1.0-24;
   [\#762](https://github.com/r-spatial/stars/issues/762)
