@@ -4,6 +4,9 @@
 
 CRAN release: 2026-02-13
 
+- [`st_contour()`](../reference/st_contour.md) normalizes grids before
+  export; [\#766](https://github.com/r-spatial/stars/issues/766)
+
 - [`write_stars()`](../reference/write_stars.md) supports drivers that
   only provide CreateCopy(); requires sf \>= 1.0-24;
   [\#762](https://github.com/r-spatial/stars/issues/762)
