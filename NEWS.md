@@ -1,5 +1,7 @@
 # version 0.7-1
 
+* `st_contour()` normalizes grids before export; #766
+
 * `write_stars()` supports drivers that only provide CreateCopy(); requires sf >= 1.0-24; #762
 
 # version 0.7-0

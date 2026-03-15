@@ -260,6 +260,7 @@ st_as_sf.stars_proxy = function(x, ..., downsample = 0) {
 st_contour = function(x, na.rm = TRUE, contour_lines = FALSE, 
 		breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks) {
 #nocov start
+	x = st_normalize(x)
 	mask = if (na.rm) { 
 			mask = x[1]
 			mask[[1]] = !is.na(mask[[1]])

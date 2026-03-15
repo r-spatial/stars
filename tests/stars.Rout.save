@@ -1,7 +1,7 @@
 
-R version 4.5.1 (2025-06-13) -- "Great Square Root"
-Copyright (C) 2025 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu
+R Under development (unstable) (2026-02-11 r89406 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -246,7 +246,7 @@ y        1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 +   print(identical(st_as_stars(st_bbox(x1), dx = 1), st_as_stars(st_bbox(x1), dx = units::set_units(1, degree))))
 + 
 +   df = as.data.frame(x)
-+   if (require(units, quietly = TRUE))
++   if (suppressPackageStartupMessages(require(units, quietly = TRUE)))
 +     print(units::drop_units(x))
 + 
 +   print(dimnames(x))
@@ -280,7 +280,6 @@ xmin ymin xmax ymax
 xmin ymin xmax ymax 
    0  -90  360   90 
 [1] TRUE
-udunits database from /usr/share/xml/udunits/udunits2.xml
 stars object with 3 dimensions and 1 attribute
 attribute(s):
                          Min.  1st Qu.   Median     Mean  3rd Qu.     Max.
@@ -491,4 +490,4 @@ X1    1  1 FALSE 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 > 
 > proc.time()
    user  system elapsed 
-  4.001   1.555   4.055 
+   8.60    1.07    9.67 
