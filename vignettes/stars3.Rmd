@@ -34,8 +34,8 @@ methods(class = "stars")
 
 We will work with a three-band section of a landsat image:
 ```{r}
-system.file("tif/L7_ETMs.tif", package = "stars") %>%
-	read_stars -> x
+system.file("tif/L7_ETMs.tif", package = "stars") |>
+	read_stars() -> x
 x
 ```
 
@@ -43,7 +43,7 @@ x
 `slice` slices a sub-array out of the cube; this is done by specifying
 the dimension on which to act, and the slice number. 
 ```{r}
-x %>% slice(band, 6) -> x6
+x |> slice(band, 6) -> x6
 x6
 ```
 It returns a lower-dimensional array if a single element is selected
@@ -53,7 +53,7 @@ along the slice dimension.
 Similar to `slice`, `filter` selects on dimensions but evaluates their values
 rather than their index: in
 ```{r}
-x %>% filter(x > 289000, x < 291000, band > 3) -> x7
+x |> filter(x > 289000, x < 291000, band > 3) -> x7
 x7
 ```
 the subarray is created based on the x _coordinate_ values.
@@ -68,14 +68,14 @@ regular `[` selection or using `st_crop` may be an alternative.
 
 `pull` pulls out an array from a stars object:
 ```{r}
-x %>% pull(1) -> x8
+x |> pull(1) -> x8
 class(x8)
 dim(x8)
 ```
 
 ## `mutate`
 ```{r}
-x %>% mutate(band2 = 2 * L7_ETMs.tif) -> x2 
+x |> mutate(band2 = 2 * L7_ETMs.tif) -> x2 
 x2
 ```
 
@@ -83,7 +83,7 @@ x2
 
 `select` selects an attribute, or a set of attributes:
 ```{r}
-x2 %>% select(band2) -> x9
+x2 |> select(band2) -> x9
 x9
 ```
 

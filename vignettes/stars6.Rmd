@@ -43,7 +43,7 @@ tribble(
   "addLayer", "c() or c(along = ...)","",
   "dropLayer", "{[ ] , slice, filter}","",
   "unstack", "combine lapply and {[ ] , slice, filter}",""
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -65,7 +65,7 @@ tribble(
   "flip", "[] with reversed index", "#",
   "rotate", "", "*",
   "t", "", "NA"
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -74,7 +74,7 @@ tribble(
 tribble(
   ~raster, ~stars, ~`Note/comment`,
   "calc", "st_apply", "",
-  "overlay", "c(along = , ...) %>% st_apply(...)", "",
+  "overlay", "c(along = , ...) |> st_apply(...)", "",
   "cover", "[ ] <-", "",
   "mask", "[ ], st_crop", "when using an sf polygon as mask",
   "mask", "[ ]<- NA", "when using a stars object to mask",
@@ -83,9 +83,9 @@ tribble(
   "reclassify", "mutate with case_when", "or forcats::fct_recode ?",
   "reclassify", "cut", "",
   "init", "[ ] <-", "",
-  "stackApply", "{[ ] , slice, filter} %>% st_apply", "",
+  "stackApply", "{[ ] , slice, filter} |> st_apply(...)", "",
   "stackSelect", "", "",
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -107,7 +107,7 @@ tribble(
   "area", "st_area", "",
   "terrain", "", "#",
   "Moran", "", ""
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -118,7 +118,7 @@ tribble(
   ~raster, ~stars, ~`Note/comment`,
   "predict", "predict", "",
   "interpolate", "gstat::idw, gstat::krige", "`st_warp` has raster-raster interpolations of `gdalwarp`"
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -132,7 +132,7 @@ tribble(
   "rasterToContour", "st_contour", "requires GDAL >= 2.4.0",
   "rasterFromXYZ", "", "",
   "rasterFromCells", "", "",
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -141,12 +141,12 @@ tribble(
 tribble(
   ~raster, ~stars, ~`Note/comment`,
   "cellStats", "st_apply", "",
-  "summary", "print, summary(as.vector(. %>% pull))", "",
+  "summary", "print, summary(as.vector(. |> pull()))", "",
   "freq", "table", "*",
   "crosstab", "", "",
-  "unique", "unique(as.vector(. %>% pull))", "",
+  "unique", "unique(as.vector(. |> pull()))", "",
   "zonal", "", "*"
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -156,8 +156,8 @@ tribble(
 tribble(
   ~raster, ~stars, ~`Note/comment`,
   "getValues", "{pull, [[ ]]}", "",
-  "getValuesBlock", "{[ ] , slice, filter} %>% pull", "",
-  "getValuesFocal", "{[ ] , slice, filter} %>% pull", "",
+  "getValuesBlock", "{[ ] , slice, filter} |> pull()", "",
+  "getValuesFocal", "{[ ] , slice, filter} |> pull()", "",
   "as.matrix", "[[ ]]", "currently behaves somewhat unexpectedly *", 
   "as.array", "[[ ]]", "currently behaves somewhat unexpectedly *", 
   "extract (by cell)", "{[ ] , slice, filter}", "",
@@ -168,7 +168,7 @@ tribble(
   "minValue", "purrr::map(x, min)", "",
   "maxValue", "purrr::map(x, max)", "",
   "setMinMax", "", "," 
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -190,7 +190,7 @@ tribble(
   "density", "", "",
   "pairs", "", "",
   "boxplot", "", ""
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -220,7 +220,7 @@ tribble(
   "nbands", "dim(x)[3]", "may also be time; bands may also be in another dimension, or have another name", 
   "compareRaster", "all.equal(st_dimensions(x), st_dimensions(y))", "*", 
   "NAvalue", "", "-"
-) %>% 
+) |> 
   knitr::kable()
 ```
 
@@ -242,12 +242,12 @@ tribble(
   "cellsFromExtent", "", "",
   "coordinates", "st_coordinates", "",
   "validCell", "", "",
-  "validCol", "col %>% between(st_dimensions(.)$x$from, st_dimensions(.)$x$to)", "raster columns are not always named 'x'", 
-  "validRow", "row %>% between(st_dimensions(.)$y$from, st_dimensions(.)$y$to)", "raster columns are not always named 'y'", 
+  "validCol", "col |> between(st_dimensions(.)$x$from, st_dimensions(.)$x$to)", "raster columns are not always named 'x'", 
+  "validRow", "row |> between(st_dimensions(.)$y$from, st_dimensions(.)$y$to)", "raster columns are not always named 'y'", 
   "setValues", "[ ] <-", "",
   "writeRaster", "write_stars", "currently uses GDAL, somewhat limited", 
   "KML", "", ""
-) %>% 
+) |> 
   knitr::kable()
 ```
 

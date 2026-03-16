@@ -268,15 +268,15 @@ write_stars(s3, fn3)
 We see that **multi-resolution** is mentioned in the printed summary. When converting this to a `stars` object, the secondary rasters are resampled to the cellsize + extent of the first:
 
 ```{r eval=TRUE}
-st_as_stars(r1) %>%
-  merge() %>%
+st_as_stars(r1) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
 If we do this for a sub-range, defined for the object resolutions, we get:
 ```{r eval=TRUE}
-st_as_stars(r1[,2:4,2:4]) %>%
-  merge() %>%
+st_as_stars(r1[,2:4,2:4]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
@@ -311,11 +311,11 @@ write_stars(s5, fn5)
 write_stars(s6, fn6) 
 (r2 = read_stars(c(fn4, fn5, fn6), proxy = TRUE))
 
-st_as_stars(r2) %>%
-  merge() %>%
+st_as_stars(r2) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
-st_as_stars(r2[,2:4,2:4]) %>%
-  merge() %>%
+st_as_stars(r2[,2:4,2:4]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
@@ -324,10 +324,10 @@ Finally, an example where the first raster has the higher resolution:
 ```{r eval=TRUE}
 (r3 = read_stars(c(fn6, fn5, fn4), proxy = TRUE))
 
-st_as_stars(r3) %>%
-  merge() %>%
+st_as_stars(r3) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
-st_as_stars(r3[,2:6,3:6]) %>%
-  merge() %>%
+st_as_stars(r3[,2:6,3:6]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```

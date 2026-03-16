@@ -44,8 +44,8 @@ time    1 12     NA     NA   Date 1999-01-31,...,1999-12-31
 x       1 81    -85  0.125     NA                      NULL [x]
 y       1 33  37.12 -0.125     NA                      NULL [y]
 > 
-> raw %>%
-+   st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) %>%
+> raw |>
++   st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) |>
 +   st_set_dimensions("foo", st_dimensions(raw)["time"])
 stars object with 3 dimensions and 2 attributes
 attribute(s):

@@ -38,7 +38,7 @@ ggplot geom for stars objects
 If visual artefacts occur (Moiré-Effekt), then see the details section of \link{plot.stars}
 }
 \examples{
-system.file("tif/L7_ETMs.tif", package = "stars") \%>\% read_stars() -> x
+system.file("tif/L7_ETMs.tif", package = "stars") |> read_stars() -> x
 if (require(ggplot2, quietly = TRUE)) {
   ggplot() + geom_stars(data = x) +
     coord_equal() +

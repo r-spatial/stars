@@ -1,6 +1,12 @@
-# version 0.7-1
+# version 0.7-2
+
+* replace `%>%` pipe with base pipe `|>`
+
+* add documentation of `st_normalize()`; #766
 
 * `st_contour()` normalizes grids before export; #766
+
+# version 0.7-1
 
 * `write_stars()` supports drivers that only provide CreateCopy(); requires sf >= 1.0-24; #762
 

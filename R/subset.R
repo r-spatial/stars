@@ -326,6 +326,14 @@ st_crop.stars = function(x, y, ..., crop = TRUE, epsilon = sqrt(.Machine$double.
 		x
 }
 
+#' Move raster offset such that grid start at row/col (1,1)
+#' 
+#' Move raster offset such that grid start at row/col (1,1)
+#' @name st_normalize
+#' @details the `stars` method "moves" the `offset` of the raster dimensions, such that the `from`
+#' field becomes `(1,1)` for the raster dimensions; as a side effect, it moves the raster
+#' dimensions `x` and `y` to first and second position.  If the `from` field is already `(1,1)` or the
+#' object does not have raster dimensions it does nothing. 
 #' @export
 st_normalize.stars = function(x, domain = c(0, 0, 1, 1), ...) {
 	stopifnot(all(domain == c(0,0,1,1)))

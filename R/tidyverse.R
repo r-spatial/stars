@@ -137,8 +137,8 @@ as.tbl_cube.stars = function(x, ...) {
 #' tif = system.file("tif/L7_ETMs.tif", package = "stars")
 #' x1 = read_stars(tif)
 #' if (require(dplyr, quietly = TRUE)) {
-#'  x1 %>% slice("band", 2:3)
-#'  x1 %>% slice("x", 50:100)
+#'  x1 |> slice("band", 2:3)
+#'  x1 |> slice("x", 50:100)
 #' }
 slice.stars <- function(.data, along, index, ..., drop = length(index) == 1) {
   #stopifnot(length(index) == 1)
@@ -264,7 +264,7 @@ replace_na.stars_proxy = function(data, ...) {
 #' If visual artefacts occur (Moiré-Effekt), then see the details section of \link{plot.stars}
 #' @export
 #' @examples
-#' system.file("tif/L7_ETMs.tif", package = "stars") %>% read_stars() -> x
+#' system.file("tif/L7_ETMs.tif", package = "stars") |> read_stars() -> x
 #' if (require(ggplot2, quietly = TRUE)) {
 #'   ggplot() + geom_stars(data = x) +
 #'     coord_equal() +

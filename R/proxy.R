@@ -623,6 +623,11 @@ predict.stars_proxy = function(object, model, ...) {
 	structure(y, class = class(x))
 }
 
+#' @name st_normalize
+#' @param domain ignored
+#' @param x object of class `stars` or `stars_proxy`
+#' @param ... ignored
+#' @details the `stars_proxy` method does nothing, but raises an error when a raster does not start at cell (1,1)
 #' @export
 st_normalize.stars_proxy = function(x, domain = c(0, 0, 1, 1), ...) {
 	stopifnot(all(domain == c(0,0,1,1)))

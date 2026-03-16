@@ -59,7 +59,7 @@
 #' times = Sys.Date() + seq(1, 2000, length.out = d[3])
 #' m = as.numeric(format(times, "%m"))
 #' signal = rep(sin(m / 12 * pi), each = prod(d[1:2])) # yearly period
-#' s = (st_as_stars(a) + signal) %>%
+#' s = (st_as_stars(a) + signal) |>
 #'       st_set_dimensions(3, values = times)
 #' f = function(x, format = "%B") {
 #' 	  months = format(as.Date(paste0("01-", 1:12, "-1970")), format)

@@ -16,6 +16,6 @@ st_set_dimensions(smooth,
 	names = "time"
 )
 
-raw %>%
-  st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) %>%
+raw |>
+  st_apply(MARGIN = c("x", "y"), FUN = foo, idx = timeline) |>
   st_set_dimensions("foo", st_dimensions(raw)["time"])
