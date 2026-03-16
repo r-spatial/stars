@@ -40,7 +40,7 @@ library(stars)
 ## Loading required package: abind
 ## Loading required package: sf
 ## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
-l7 = system.file("tif/L7_ETMs.tif", package = "stars") %>%
+l7 = system.file("tif/L7_ETMs.tif", package = "stars") |>
   read_stars()
 l7
 ## stars object with 3 dimensions and 1 attribute
@@ -52,7 +52,7 @@ l7
 ## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
 ## y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
 ## band    1   6      NA    NA                         NA    NA
-as.data.frame(l7) %>% head()
+as.data.frame(l7) |> head()
 ##          x       y band L7_ETMs.tif
 ## 1 288790.5 9120747    1          69
 ## 2 288819.0 9120747    1          69
@@ -73,8 +73,8 @@ use the dedicated `split` method for `stars` objects, which resolves a
 dimension and splits it over attributes, one for each dimension value:
 
 ``` r
-l7 %>% split("band") %>%
-  as.data.frame() %>% 
+l7 |> split("band") |>
+  as.data.frame() |> 
   head()
 ##          x       y X1 X2 X3 X4 X5 X6
 ## 1 288790.5 9120747 69 56 46 79 86 46
@@ -223,7 +223,7 @@ granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_201
    package = "starsdata")
 s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632")
-p = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+p = read_stars(s2, proxy = TRUE, NA_value = 0) |>
     split()
 r = st_sample(p, 1000)
 pc = prcomp(na.omit(as.data.frame(r))[,-(1:2)]) # based on all data
@@ -234,14 +234,14 @@ Before plotting this, we’ll add country borders that delineate sea,
 obtained from the `mapdata` package:
 
 ``` r
-bb = st_bbox(p) %>% 
-  st_as_sfc() %>%
-  st_transform(4326) %>%
+bb = st_bbox(p) |> 
+  st_as_sfc() |>
+  st_transform(4326) |>
   st_bbox()
 library(maps)
 library(mapdata)
-m = map("worldHires", xlim = bb[c(1,3)], ylim = bb[c(2,4)], plot=F,fill=TRUE) %>%
-  st_as_sfc() %>%
+m = map("worldHires", xlim = bb[c(1,3)], ylim = bb[c(2,4)], plot=F,fill=TRUE) |>
+  st_as_sfc() |>
   st_transform(st_crs(r))
 ```
 
@@ -280,7 +280,7 @@ For a small dataset:
 
 ``` r
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
-i = read_stars(tif, proxy = TRUE) %>%
+i = read_stars(tif, proxy = TRUE) |>
     split()
 nclus = 5
 
@@ -298,7 +298,7 @@ rural (3), and densely populated (1, 2).
 For the large(r) dataset:
 
 ``` r
-i = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+i = read_stars(s2, proxy = TRUE, NA_value = 0) |>
     split()
 sam = st_sample(i, 1000)
 k = kmeans(na.omit(as.data.frame(sam)[, -c(1:2)]), nclus)
@@ -334,9 +334,9 @@ bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", 
 # bands = c("B04", "B03", "B02", "B08")
 s2 = paste0("/vsizip/", granule, 
 "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/GRANULE/L1C_T32ULE_A013919_20180220T105539/IMG_DATA/T32ULE_20180220T105051_", bands, ".jp2")
-r = read_stars(s2, proxy = TRUE, NA_value = 0) %>%
+r = read_stars(s2, proxy = TRUE, NA_value = 0) |>
     setNames(bands) 
-cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) %>%
+cl = read_sf(system.file("gpkg/s2.gpkg", package = "stars")) |>
   st_transform(st_crs(r))
 plot(r, reset = FALSE)
 ## downsample set to 8
@@ -350,8 +350,8 @@ Next, we need points, sampled inside these polygons, for which we need
 to extract the satellite spectral data
 
 ``` r
-pts = st_sample(cl, 1000, "regular") %>%
-    st_as_sf() %>%
+pts = st_sample(cl, 1000, "regular") |>
+    st_as_sf() |>
     st_intersection(cl)
 ## Warning: attribute variables are assumed to be spatially constant throughout
 ## all geometries

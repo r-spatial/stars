@@ -158,7 +158,7 @@ x = read_stars(system.file("tif/L7_ETMs.tif", package = "stars"))
 #> y              1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
 #> band_number    1   6      NA    NA                         NA  TRUE 1,...,7    
 # set band values as bandwidth
-rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)) %>%
+rbind(c(0.45,0.515), c(0.525,0.605), c(0.63,0.69), c(0.775,0.90), c(1.55,1.75), c(2.08,2.35)) |>
   units::set_units("um") -> bw # or: units::set_units(µm) -> bw
 # set bandwidth midpoint:
 (x2 = st_set_dimensions(x, "band", values = 0.5 * (bw[,1]+bw[,2]), 

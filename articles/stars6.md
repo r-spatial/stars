@@ -52,20 +52,20 @@ NA = Not available by design
 
 ## Cell based computation
 
-| raster      | stars                                 | Note/comment                      |
-|:------------|:--------------------------------------|:----------------------------------|
-| calc        | st_apply                              |                                   |
-| overlay     | c(along = , …) %\>% st_apply(…)       |                                   |
-| cover       | \[ \] \<-                             |                                   |
-| mask        | \[ \], st_crop                        | when using an sf polygon as mask  |
-| mask        | \[ \]\<- NA                           | when using a stars object to mask |
-| cut         | cut                                   |                                   |
-| subs        |                                       |                                   |
-| reclassify  | mutate with case_when                 | or forcats::fct_recode ?          |
-| reclassify  | cut                                   |                                   |
-| init        | \[ \] \<-                             |                                   |
-| stackApply  | {\[ \] , slice, filter} %\>% st_apply |                                   |
-| stackSelect |                                       |                                   |
+| raster      | stars                                    | Note/comment                      |
+|:------------|:-----------------------------------------|:----------------------------------|
+| calc        | st_apply                                 |                                   |
+| overlay     | c(along = , …) \|\> st_apply(…)          |                                   |
+| cover       | \[ \] \<-                                |                                   |
+| mask        | \[ \], st_crop                           | when using an sf polygon as mask  |
+| mask        | \[ \]\<- NA                              | when using a stars object to mask |
+| cut         | cut                                      |                                   |
+| subs        |                                          |                                   |
+| reclassify  | mutate with case_when                    | or forcats::fct_recode ?          |
+| reclassify  | cut                                      |                                   |
+| init        | \[ \] \<-                                |                                   |
+| stackApply  | {\[ \] , slice, filter} \|\> st_apply(…) |                                   |
+| stackSelect |                                          |                                   |
 
 ## Spatial contextual computation
 
@@ -104,22 +104,22 @@ NA = Not available by design
 
 ## Summarizing
 
-| raster    | stars                                  | Note/comment |
-|:----------|:---------------------------------------|:-------------|
-| cellStats | st_apply                               |              |
-| summary   | print, summary(as.vector(. %\>% pull)) |              |
-| freq      | table                                  | \*           |
-| crosstab  |                                        |              |
-| unique    | unique(as.vector(. %\>% pull))         |              |
-| zonal     |                                        | \*           |
+| raster    | stars                                    | Note/comment |
+|:----------|:-----------------------------------------|:-------------|
+| cellStats | st_apply                                 |              |
+| summary   | print, summary(as.vector(. \|\> pull())) |              |
+| freq      | table                                    | \*           |
+| crosstab  |                                          |              |
+| unique    | unique(as.vector(. \|\> pull()))         |              |
+| zonal     |                                          | \*           |
 
 ## Accessing values of objects
 
 | raster               | stars                                                                     | Note/comment                               |
 |:---------------------|:--------------------------------------------------------------------------|:-------------------------------------------|
 | getValues            | {pull, \[\[ \]\]}                                                         |                                            |
-| getValuesBlock       | {\[ \] , slice, filter} %\>% pull                                         |                                            |
-| getValuesFocal       | {\[ \] , slice, filter} %\>% pull                                         |                                            |
+| getValuesBlock       | {\[ \] , slice, filter} \|\> pull()                                       |                                            |
+| getValuesFocal       | {\[ \] , slice, filter} \|\> pull()                                       |                                            |
 | as.matrix            | \[\[ \]\]                                                                 | currently behaves somewhat unexpectedly \* |
 | as.array             | \[\[ \]\]                                                                 | currently behaves somewhat unexpectedly \* |
 | extract (by cell)    | {\[ \] , slice, filter}                                                   |                                            |
@@ -192,8 +192,8 @@ NA = Not available by design
 | cellsFromExtent |                                                                  |                                                                        |
 | coordinates     | st_coordinates                                                   |                                                                        |
 | validCell       |                                                                  |                                                                        |
-| validCol        | col %\>% between(st_dimensions(.)$x$from, st_dimensions(.)$x$to) | raster columns are not always named ‘x’                                |
-| validRow        | row %\>% between(st_dimensions(.)$y$from, st_dimensions(.)$y$to) | raster columns are not always named ‘y’                                |
+| validCol        | col \|\> between(st_dimensions(.)$x$from, st_dimensions(.)$x$to) | raster columns are not always named ‘x’                                |
+| validRow        | row \|\> between(st_dimensions(.)$y$from, st_dimensions(.)$y$to) | raster columns are not always named ‘y’                                |
 | setValues       | \[ \] \<-                                                        |                                                                        |
 | writeRaster     | write_stars                                                      | currently uses GDAL, somewhat limited                                  |
 | KML             |                                                                  |                                                                        |

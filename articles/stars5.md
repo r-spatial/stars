@@ -8,8 +8,8 @@ raster representations.
 ``` r
 library(stars)
 ## Loading required package: abind
-system.file("gpkg/nc.gpkg", package = "sf") %>%
-  read_sf() %>%
+system.file("gpkg/nc.gpkg", package = "sf") |>
+  read_sf() |>
   st_transform(32119) -> nc
 nc$dens = nc$BIR79 / units::set_units(st_area(nc), km^2)
 (nc.st = st_rasterize(nc["dens"], dx = 5000, dy = 5000))
@@ -199,7 +199,7 @@ transformation is stronger non-linear.
 An example of the reprojection of the grid created above is
 
 ``` r
-nc.st %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
+nc.st |> st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
 nc.curv
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):
@@ -229,14 +229,14 @@ on a (usually regular) grid in another CRS. We can do the transformation
 of the previous section by first creating a target grid:
 
 ``` r
-nc %>% st_transform("+proj=laea +lat_0=34 +lon_0=-60") %>% st_bbox() %>%
+nc |> st_transform("+proj=laea +lat_0=34 +lon_0=-60") |> st_bbox() |>
     st_as_stars() -> newgrid
 ```
 
 and then warping the old raster to the new
 
 ``` r
-nc.st %>% st_warp(newgrid) -> nc.new
+nc.st |> st_warp(newgrid) -> nc.new
 nc.new 
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):

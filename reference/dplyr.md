@@ -88,8 +88,8 @@ replace_na.stars_proxy(data, ...)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x1 = read_stars(tif)
 if (require(dplyr, quietly = TRUE)) {
- x1 %>% slice("band", 2:3)
- x1 %>% slice("x", 50:100)
+ x1 |> slice("band", 2:3)
+ x1 |> slice("x", 50:100)
 }
 #> 
 #> Attaching package: ‘dplyr’

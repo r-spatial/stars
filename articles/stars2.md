@@ -189,7 +189,7 @@ system.time(plot(p))
 ![](stars2_files/figure-html/unnamed-chunk-8-1.png)
 
     ##    user  system elapsed 
-    ##   1.072   0.181   0.675
+    ##   1.061   0.174   0.663
 
 This takes only around 1 second, since only those pixels are read that
 can be seen on the plot. If we read the entire image in memory first, as
@@ -304,12 +304,12 @@ attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 ## [[1]]
 ## adrop(x = x, drop = drop)
 ## attr(,".Environment")
-## <environment: 0x55631257fcc0>
+## <environment: 0x562f11a33580>
 ## 
 ## [[2]]
 ## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]
 ## attr(,".Environment")
-## <environment: 0x5563124359b8>
+## <environment: 0x562f117d0c70>
 ```
 
 Doing this allows for optimizing the order in which operations are done.
@@ -377,7 +377,7 @@ rm(x)
 ## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, 
 ##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)
 ## attr(,".Environment")
-## <environment: 0x556314660398>
+## <environment: 0x562f157d2138>
 ## 
 ## This object has pending lazy operations: dimensions as printed may not reflect this.
 system.time(plot(s2.ndvi)) # read - compute ndvi - plot 
@@ -387,7 +387,7 @@ system.time(plot(s2.ndvi)) # read - compute ndvi - plot
 ![](stars2_files/figure-html/unnamed-chunk-16-1.png)
 
     ##    user  system elapsed 
-    ##   0.796   0.152   0.383
+    ##   0.777   0.170   0.383
 
 ## Multi-resolution proxy objects
 
@@ -468,8 +468,8 @@ When converting this to a `stars` object, the secondary rasters are
 resampled to the cellsize + extent of the first:
 
 ``` r
-st_as_stars(r1) %>%
-  merge() %>%
+st_as_stars(r1) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
@@ -479,8 +479,8 @@ If we do this for a sub-range, defined for the object resolutions, we
 get:
 
 ``` r
-st_as_stars(r1[,2:4,2:4]) %>%
-  merge() %>%
+st_as_stars(r1[,2:4,2:4]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
@@ -545,16 +545,16 @@ write_stars(s6, fn6)
 ## x    1  4      0     1 [x]
 ## y    1  4      4    -1 [y]
 
-st_as_stars(r2) %>%
-  merge() %>%
+st_as_stars(r2) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
 ![](stars2_files/figure-html/unnamed-chunk-22-1.png)
 
 ``` r
-st_as_stars(r2[,2:4,2:4]) %>%
-  merge() %>%
+st_as_stars(r2[,2:4,2:4]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
@@ -579,16 +579,16 @@ Finally, an example where the first raster has the higher resolution:
 ## x    1 12      0  0.3333 [x]
 ## y    1 12      4 -0.3333 [y]
 
-st_as_stars(r3) %>%
-  merge() %>%
+st_as_stars(r3) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 
 ![](stars2_files/figure-html/unnamed-chunk-23-1.png)
 
 ``` r
-st_as_stars(r3[,2:6,3:6]) %>%
-  merge() %>%
+st_as_stars(r3[,2:6,3:6]) |>
+  merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
 ```
 

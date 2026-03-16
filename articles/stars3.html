@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,8 +116,8 @@ by</p>
 <span><span class="co">## see '?methods' for accessing help and source code</span></span></code></pre></div>
 <p>We will work with a three-band section of a landsat image:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="va">read_stars</span> <span class="op">-&gt;</span> <span class="va">x</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"tif/L7_ETMs.tif"</span>, package <span class="op">=</span> <span class="st">"stars"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x</span></span>
 <span><span class="va">x</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
@@ -135,7 +135,7 @@ by</p>
 <p><code>slice</code> slices a sub-array out of the cube; this is done
 by specifying the dimension on which to act, and the slice number.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">band</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x6</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice</a></span><span class="op">(</span><span class="va">band</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x6</span></span>
 <span><span class="va">x6</span></span>
 <span><span class="co">## stars object with 2 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
@@ -155,7 +155,7 @@ along the slice dimension.</p>
 <p>Similar to <code>slice</code>, <code>filter</code> selects on
 dimensions but evaluates their values rather than their index: in</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">289000</span>, <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">291000</span>, <span class="va">band</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x7</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">289000</span>, <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">291000</span>, <span class="va">band</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x7</span></span>
 <span><span class="va">x7</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>
@@ -182,7 +182,7 @@ objects, using regular <code>[</code> selection or using
 </h2>
 <p><code>pull</code> pulls out an array from a stars object:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x8</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x8</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span></span>
 <span><span class="co">## [1] "array"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">x8</span><span class="op">)</span></span>
@@ -194,7 +194,7 @@ objects, using regular <code>[</code> selection or using
 <code>mutate</code><a class="anchor" aria-label="anchor" href="#mutate"></a>
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>band2 <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">L7_ETMs.tif</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x2</span> </span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>band2 <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">L7_ETMs.tif</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x2</span> </span>
 <span><span class="va">x2</span></span>
 <span><span class="co">## stars object with 3 dimensions and 2 attributes</span></span>
 <span><span class="co">## attribute(s):</span></span>
@@ -213,7 +213,7 @@ objects, using regular <code>[</code> selection or using
 </h2>
 <p><code>select</code> selects an attribute, or a set of attributes:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">band2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x9</span></span>
+<code class="sourceCode R"><span><span class="va">x2</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">band2</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="va">x9</span></span>
 <span><span class="va">x9</span></span>
 <span><span class="co">## stars object with 3 dimensions and 1 attribute</span></span>
 <span><span class="co">## attribute(s):</span></span>

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -282,7 +282,7 @@ plot this object,</p>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   1.072   0.181   0.675</span></span></code></pre>
+<span><span class="co">##   1.061   0.174   0.663</span></span></code></pre>
 <p>This takes only around 1 second, since only those pixels are read
 that can be seen on the plot. If we read the entire image in memory
 first, as we would do with</p>
@@ -390,12 +390,12 @@ attribute called <code>call_list</code>:</p>
 <span><span class="co">## [[1]]</span></span>
 <span><span class="co">## adrop(x = x, drop = drop)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x55631257fcc0&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x562f11a33580&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
 <span><span class="co">## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x5563124359b8&gt;</span></span></code></pre></div>
+<span><span class="co">## &lt;environment: 0x562f117d0c70&gt;</span></span></code></pre></div>
 <p>Doing this allows for optimizing the order in which operations are
 done. As an example, for <code>st_apply</code>, reading can be done
 sequentially over the dimensions over which the function is applied:</p>
@@ -458,14 +458,14 @@ can compute NDVI by</p>
 <span><span class="co">## st_apply(X = X, MARGIN = MARGIN, FUN = FUN, CLUSTER = CLUSTER, </span></span>
 <span><span class="co">##     PROGRESS = PROGRESS, FUTURE = FUTURE, rename = rename, .fname = .fname)</span></span>
 <span><span class="co">## attr(,".Environment")</span></span>
-<span><span class="co">## &lt;environment: 0x556314660398&gt;</span></span>
+<span><span class="co">## &lt;environment: 0x562f157d2138&gt;</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## This object has pending lazy operations: dimensions as printed may not reflect this.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span><span class="va">s2.ndvi</span><span class="op">)</span><span class="op">)</span> <span class="co"># read - compute ndvi - plot </span></span>
 <span><span class="co">## downsample set to 18</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700"></p>
 <pre><code><span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   0.796   0.152   0.383</span></span></code></pre>
+<span><span class="co">##   0.777   0.170   0.383</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -536,15 +536,15 @@ printed summary. When converting this to a <code>stars</code> object,
 the secondary rasters are resampled to the cellsize + extent of the
 first:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-19-1.png" class="r-plt" alt="" width="700"></p>
 <p>If we do this for a sub-range, defined for the object resolutions, we
 get:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r1</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-20-1.png" class="r-plt" alt="" width="700"></p>
 <p>We now create four maps, all over the same region ([0,4] x [0,4]),
@@ -596,13 +596,13 @@ with different resolutions (cell size 1, 1/2 and 1/3):</p>
 <span><span class="co">## x    1  4      0     1 [x]</span></span>
 <span><span class="co">## y    1  4      4    -1 [y]</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r2</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-22-2.png" class="r-plt" alt="" width="700"></p>
 <p>Finally, an example where the first raster has the higher
@@ -624,13 +624,13 @@ resolution:</p>
 <span><span class="co">## x    1 12      0  0.3333 [x]</span></span>
 <span><span class="co">## y    1 12      4 -0.3333 [y]</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-23-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/st_as_stars.html">st_as_stars</a></span><span class="op">(</span><span class="va">r3</span><span class="op">[</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span>,<span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/merge.html">merge</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/plot.html">plot</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="st">"equal"</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, text_color <span class="op">=</span> <span class="st">'orange'</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars2_files/figure-html/unnamed-chunk-23-2.png" class="r-plt" alt="" width="700"></p>
 </div>

@@ -75,7 +75,7 @@ of [plot.stars](plot.md)
 ## Examples
 
 ``` r
-system.file("tif/L7_ETMs.tif", package = "stars") %>% read_stars() -> x
+system.file("tif/L7_ETMs.tif", package = "stars") |> read_stars() -> x
 if (require(ggplot2, quietly = TRUE)) {
   ggplot() + geom_stars(data = x) +
     coord_equal() +
