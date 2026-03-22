@@ -52,6 +52,10 @@ st_downsample = function(x, n, ...) UseMethod("st_downsample")
 #' st_downsample(s, 1, offset = c(0,1), FUN = mean)[[1]]
 st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 
+	if (all(n == 0))
+		return(x)
+
+	x = st_normalize(x)
 	d = dim(x)
 	n = rep_len(as.integer(n), length(d))
 	offset = rep_len(as.integer(offset), length(d))
@@ -78,12 +82,9 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 				CFtime::bounds(time) <- bnds[, ix[[i]] ]
 			dims[[i]]$values = time
 		} else {
-			dims[[i]]$offset = if (offset[i] != 0)
-					dims[[i]]$offset + offset[i] * dims[[i]]$delta
-				else
-					dims[[i]]$offset = dims[[i]]$offset
+			if (offset[i] != 0)
+				dims[[i]]$offset = dims[[i]]$offset + offset[i] * dims[[i]]$delta
 			dims[[i]]$delta = dims[[i]]$delta * (n[i] + 1)
-			dims[[i]]$from = 1
 			dims[[i]]$to = unname(new_dim[i])
 			if (!is.null(dims[[i]]$values)) {
 				if (is.matrix(dims[[i]]$values) && names(ix)[i] %in% xy)
@@ -99,24 +100,21 @@ st_downsample.stars = function(x, n, ..., offset = 0, FUN) {
 		attr(dims, "raster")$affine = attr(dims, "raster")$affine * (n[1:2] + 1)
 	}
 
-	if (all(n == 0))
-		x
-	else if (!missing(FUN)) { # compute FUN() values over the subtiles:
+	if (!missing(FUN)) { # compute FUN() values over the subtiles:
 		stopifnot(is.function(FUN))
 		l = get_index_ranges(d, n, offset)
 		x = unclass(x) # so that `[[<-` doesn't go into the stars method, which recycles
 		for (i in seq_along(x))
 			x[[i]] = structure(sapply(l, function(y) FUN(as.vector(asub(x[[i]], y)), ...)),
 							   dim = new_dim)
-		structure(x, class = "stars", dimensions = dims)
 	} else { # downsample using `[`:
 		args = rep(list(rlang::missing_arg()), length(d)+1)
 		for (i in seq_along(d))
 			if (n[i] > 0)
 				args[[i+1]] = ix[[i]] # i==1 skipped: retain all attributes
 		x = eval(rlang::expr(x[!!!args]))
-		structure(x, dimensions = dims)
 	}
+	st_stars(x, dims)
 }
 
 #' @export
