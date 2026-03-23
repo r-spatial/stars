@@ -6,7 +6,7 @@ subset stars objects
 
 ``` r
 # S3 method for class 'stars_proxy'
-x[i, downsample = 0] <- value
+x[i, ..., downsample = 0] <- value
 
 # S3 method for class 'stars'
 x[i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x)]
@@ -29,6 +29,11 @@ st_flip(x, which = 1)
   attributes to select, or object of class `sf`, `sfc`, `bbox`, or
   `stars` used as spatial selector; see details
 
+- ...:
+
+  further (logical or integer vector) selectors, matched by order, to
+  select on individual dimensions
+
 - downsample:
 
   downsampling rate used in case `i` is a `stars_proxy` object
@@ -37,11 +42,6 @@ st_flip(x, which = 1)
 
   array of dimensions equal to those in `x`, or a vector or value that
   will be recycled to such an array
-
-- ...:
-
-  further (logical or integer vector) selectors, matched by order, to
-  select on individual dimensions
 
 - drop:
 

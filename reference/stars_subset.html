@@ -51,7 +51,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'stars_proxy'</span></span>
-<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, downsample <span class="op">=</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">...</span>, downsample <span class="op">=</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'stars'</span></span>
 <span><span class="va">x</span><span class="op">[</span>i <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>, crop <span class="op">=</span> <span class="op">!</span><span class="fu">is_curvilinear</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span></span>
@@ -74,16 +74,16 @@
 <dd><p>first selector: integer, logical or character vector indicating attributes to select, or object of class <code>sf</code>, <code>sfc</code>, <code>bbox</code>, or <code>stars</code> used as spatial selector; see details</p></dd>
 
 
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>further (logical or integer vector) selectors, matched by order, to select on individual dimensions</p></dd>
+
+
 <dt id="arg-downsample">downsample<a class="anchor" aria-label="anchor" href="#arg-downsample"></a></dt>
 <dd><p>downsampling rate used in case <code>i</code> is a <code>stars_proxy</code> object</p></dd>
 
 
 <dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
 <dd><p>array of dimensions equal to those in <code>x</code>, or a vector or value that will be recycled to such an array</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further (logical or integer vector) selectors, matched by order, to select on individual dimensions</p></dd>
 
 
 <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
