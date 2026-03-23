@@ -432,12 +432,11 @@ is.na.stars_proxy = function(x) {
 #' @export
 "[<-.stars_proxy" = function(x, i, ..., downsample = 0, value) {
 	# https://stackoverflow.com/questions/9965577/copy-move-one-environment-to-another
-	# copy the environment, to avoid side effect later on:
+	# deep copy the environment, to avoid side effect later on:
 	# FIXME: to investigate - should this be done to env in every call to collect()?
-	env = new.env(parent = parent.env(environment()))
-	l = as.list(environment(), all.names = TRUE)
-	for (n in names(l)) # copy over:
-		env[[n]] = l[[n]]
+	e = environment()
+	# parent not the calling frame but the package namespace:
+	env = list2env(as.list(e, all.names = TRUE), parent = parent.env(e))
 	collect(x, match.call(), "[<-", c("x", "i", "value"), env)
 }
 
