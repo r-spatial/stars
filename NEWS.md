@@ -1,5 +1,7 @@
 # version 0.7-2
 
+* remove usage of `parent.env<-()` in `[<-.stars_proxy()` (considered unsafe)
+
 * replace `%>%` pipe with base pipe `|>`
 
 * add documentation of `st_normalize()`; #766

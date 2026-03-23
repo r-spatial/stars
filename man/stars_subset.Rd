@@ -8,7 +8,7 @@
 \alias{st_flip}
 \title{subset stars objects}
 \usage{
-\method{[}{stars_proxy}(x, i, downsample = 0) <- value
+\method{[}{stars_proxy}(x, i, ..., downsample = 0) <- value
 
 \method{[}{stars}(x, i = TRUE, ..., drop = FALSE, crop = !is_curvilinear(x))
 
@@ -21,11 +21,11 @@ st_flip(x, which = 1)
 
 \item{i}{first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf}, \code{sfc}, \code{bbox}, or \code{stars} used as spatial selector; see details}
 
+\item{...}{further (logical or integer vector) selectors, matched by order, to select on individual dimensions}
+
 \item{downsample}{downsampling rate used in case \code{i} is a \code{stars_proxy} object}
 
 \item{value}{array of dimensions equal to those in \code{x}, or a vector or value that will be recycled to such an array}
-
-\item{...}{further (logical or integer vector) selectors, matched by order, to select on individual dimensions}
 
 \item{drop}{logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped}
 

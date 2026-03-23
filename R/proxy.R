@@ -371,7 +371,9 @@ process_call_list = function(x, cl, envir = new.env(), downsample = 0) {
 		# so we need to do that for other args too: https://github.com/r-spatial/stars/issues/390 :
 		if ("e2" %in% names(env) && inherits(env$e2, "stars_proxy")) # binary ops: also fetch the second arg
 			env$e2 = st_as_stars(env$e2, downsample = downsample)
-		x = eval(cl[[i]], env, parent.frame())
+		if ("i" %in% names(env) && inherits(env$i, "stars_proxy")) # binary ops: also fetch the second arg
+			env$i = st_as_stars(env$i, downsample = downsample)
+		x = eval(cl[[i]], env)
 		env$downsample = old_downsample
 	}
 	x
@@ -428,15 +430,16 @@ is.na.stars_proxy = function(x) {
 
 #' @name stars_subset
 #' @export
-"[<-.stars_proxy" = function(x, i, downsample = 0, value) {
+"[<-.stars_proxy" = function(x, i, ..., downsample = 0, value) {
 	# https://stackoverflow.com/questions/9965577/copy-move-one-environment-to-another
 	# copy the environment, to avoid side effect later on:
 	# FIXME: to investigate - should this be done to env in every call to collect()?
-	env = as.environment(as.list(environment(), all.names = TRUE)) # copies
-	parent.env(env) = parent.env(environment())
-	collect(x, match.call(), "[<-", c("x", "i", "value", "downsample"), env)
+	env = new.env(parent = parent.env(environment()))
+	l = as.list(environment(), all.names = TRUE)
+	for (n in names(l)) # copy over:
+		env[[n]] = l[[n]]
+	collect(x, match.call(), "[<-", c("x", "i", "value"), env)
 }
-
 
 #' @export
 split.stars_proxy = function(x, ...) {
@@ -464,7 +467,6 @@ merge.stars_proxy = function(x, y, ..., name = "attributes") {
 			resolutions = attr(x, "resolutions"))
 	}
 }
-
 
 #' @export
 "[.stars_proxy" = function(x, i = TRUE, ..., drop = FALSE, crop = TRUE) {

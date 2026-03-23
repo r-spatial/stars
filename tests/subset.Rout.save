@@ -1,7 +1,7 @@
 
-R version 4.1.1 (2021-08-10) -- "Kick Things"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.5.3 (2026-03-11) -- "Reassured Reassurer"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -85,6 +85,22 @@ x       1 10  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [x]
 y       1 10 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE    NULL [y]
 band    1  4      NA    NA                         NA  TRUE a,...,b    
 > 
+> # [<- on stars_proxy:
+> tif = system.file("tif/L7_ETMs.tif", package = "stars")
+> x = read_stars(tif, proxy = TRUE)
+> sel = x > 100
+> x[sel] = 100
+> st_as_stars(x)
+stars object with 3 dimensions and 1 attribute
+attribute(s):
+             Min. 1st Qu. Median     Mean 3rd Qu. Max.
+L7_ETMs.tif     1      54     69 67.08532      86  100
+dimension(s):
+     from  to  offset delta                     refsys point x/y
+x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
+y       1 352 9120761 -28.5 SIRGAS 2000 / UTM zone 25S FALSE [y]
+band    1   6      NA    NA                         NA    NA    
+> 
 > proc.time()
    user  system elapsed 
-  1.043   0.049   1.084 
+  0.941   1.269   0.900 
