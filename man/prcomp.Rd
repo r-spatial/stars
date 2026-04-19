@@ -4,7 +4,7 @@
 \alias{prcomp}
 \alias{prcomp.stars_proxy}
 \alias{prcomp.stars}
-\title{Principle components of stars object}
+\title{Principal components of stars object}
 \usage{
 \method{prcomp}{stars_proxy}(x, ..., downsample = 0)
 
@@ -23,10 +23,10 @@
 object of class `prcomp`, see \link[stats]{prcomp}
 }
 \description{
-Compute principle components of stars object
+Compute principal components of stars object
 }
 \details{
-if `x` has only one attribute, principle components will be computed in the space of the last dimension of `x`
+if `x` has only one attribute, principal components will be computed in the space of the last dimension of `x`
 to predict PC scores into a `stars` object, use \link{predict.stars}; see example below
 }
 \examples{

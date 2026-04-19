@@ -5,13 +5,13 @@ prcomp.stars_proxy = function(x, ..., downsample = 0) {
 	prcomp(st_as_stars(x, downsample = downsample), ...)
 }
 
-#' Principle components of stars object
+#' Principal components of stars object
 #'
-#' Compute principle components of stars object
+#' Compute principal components of stars object
 #' @param x object of class `stars` or `stars_proxy`
 #' @param quiet logical; if `TRUE`, suppress message that PCs will be computed on last dimension; see details
 #' @param ... see \link[stats]{prcomp}
-#' @details if `x` has only one attribute, principle components will be computed in the space of the last dimension of `x`
+#' @details if `x` has only one attribute, principal components will be computed in the space of the last dimension of `x`
 #' to predict PC scores into a `stars` object, use \link{predict.stars}; see example below
 #' @name prcomp
 #' @returns object of class `prcomp`, see \link[stats]{prcomp}
