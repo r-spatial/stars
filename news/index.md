@@ -4,6 +4,8 @@
 
 CRAN release: 2026-04-03
 
+- do not print the `.Environment` attribute of call list elements
+
 - remove usage of `parent.env<-()` in `[<-.stars_proxy()` (considered
   unsafe)
 
