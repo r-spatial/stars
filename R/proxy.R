@@ -31,7 +31,8 @@ print.stars_proxy = function(x, ..., n = 1e5, nfiles = 10, simplify = TRUE) {
 	print(st_dimensions(x), ...)
 	if (!is.null(attr(x, "call_list"))) {
 		cat("call_list:\n")
-		print(unlist(attr(x, "call_list")))
+		l = attr(x, "call_list")
+		print(lapply(l, `attr<-`, ".Environment", NULL))
 		cat("This object has pending lazy operations: dimensions as printed may not reflect this.\n")
 	}
 }

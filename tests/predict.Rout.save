@@ -1,7 +1,7 @@
 
-R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.5.3 (2026-03-11) -- "Reassured Reassurer"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -55,8 +55,6 @@ band    1   6      NA    NA                         NA    NA
 call_list:
 [[1]]
 predict(object = object, model = model)
-attr(,".Environment")
-<environment: 0x556f362cb628>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > all.equal(x, st_as_stars(yp))
@@ -80,8 +78,6 @@ band
 call_list:
 [[1]]
 split(x = x, 3)
-attr(,".Environment")
-<environment: 0x556f395ecad0>
 
 This object has pending lazy operations: dimensions as printed may not reflect this.
 > as.data.frame(st_as_stars(split(yy, 3)))[1:3,]
@@ -92,4 +88,4 @@ This object has pending lazy operations: dimensions as printed may not reflect t
 > 
 > proc.time()
    user  system elapsed 
-  3.318   2.248   2.888 
+  2.575   3.820   2.238 

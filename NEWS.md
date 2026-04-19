@@ -1,5 +1,7 @@
 # version 0.7-2
 
+* do not print the `.Environment` attribute of call list elements
+
 * remove usage of `parent.env<-()` in `[<-.stars_proxy()` (considered unsafe)
 
 * replace `%>%` pipe with base pipe `|>`

@@ -25,9 +25,5 @@ all.equal(st_dimensions(x), st_dimensions(y))
 
 split(foo, 2)
 split(foo, 3)
-
-st_crs(foo)
-plot(foo)
-
 # subset vector cube:
 foo[nc[1]]
