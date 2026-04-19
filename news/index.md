@@ -2,6 +2,8 @@
 
 ## version 0.7-2
 
+CRAN release: 2026-04-03
+
 - remove usage of `parent.env<-()` in `[<-.stars_proxy()` (considered
   unsafe)
 

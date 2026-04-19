@@ -1,6 +1,6 @@
-# Principle components of stars object
+# Principal components of stars object
 
-Compute principle components of stars object
+Compute principal components of stars object
 
 ## Usage
 
@@ -38,7 +38,7 @@ object of class \`prcomp\`, see
 
 ## Details
 
-if \`x\` has only one attribute, principle components will be computed
+if \`x\` has only one attribute, principal components will be computed
 in the space of the last dimension of \`x\` to predict PC scores into a
 \`stars\` object, use [predict.stars](predict.stars.md); see example
 below

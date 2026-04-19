@@ -53,7 +53,7 @@
   [`plot(`*`<stars_proxy>`*`)`](plot.md) : plot stars object, with
   subplots for each level of first non-spatial dimension
 - [`prcomp(`*`<stars_proxy>`*`)`](prcomp.md)
-  [`prcomp(`*`<stars>`*`)`](prcomp.md) : Principle components of stars
+  [`prcomp(`*`<stars>`*`)`](prcomp.md) : Principal components of stars
   object
 - [`predict(`*`<stars_proxy>`*`)`](predict.stars.md)
   [`predict(`*`<stars>`*`)`](predict.stars.md) : Predict values, given a
