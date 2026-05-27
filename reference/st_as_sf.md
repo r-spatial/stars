@@ -100,7 +100,7 @@ x
 #>  Mode :logical  
 #>  FALSE:525      
 #>  TRUE :7665     
-#>  NA's :1810     
+#>  NAs  :1810     
 #> dimension(s):
 #>      from  to  offset delta                     refsys point x/y
 #> x       1 100  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]

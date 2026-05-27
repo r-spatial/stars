@@ -11,6 +11,7 @@ a dataset smaller than the default threshold, will just read in all the
 data. Below we read in and display the `reduced.nc` NetCDF file.
 
 ``` r
+
 library(stars)
 ## Loading required package: abind
 ## Loading required package: sf
@@ -28,7 +29,7 @@ f <- system.file("nc/reduced.nc", package = "stars")
 ##  assuming WGS84 Lat/Lon.
 ## stars object with 4 dimensions and 4 attributes
 ## attribute(s):
-##                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
+##                Min. 1st Qu. Median       Mean 3rd Qu.  Max.   NAs
 ## sst [°C]      -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
 ## anom [°C]     -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449
 ## err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448
@@ -51,6 +52,7 @@ whether [`read_ncdf()`](../reference/read_ncdf.md) defaults to proxy
 *and* use `proxy = TRUE` to show both ways of getting the same result.
 
 ``` r
+
 old_options <- options("stars.n_proxy" = 100)
 (nc <- read_ncdf(f, proxy = TRUE))
 ## no 'var' specified, using sst, anom, err, ice
@@ -89,6 +91,7 @@ what we need to request a chunk of data that is what we want and not too
 large.
 
 ``` r
+
 (nc <- read_ncdf(f, 
                  var = "sst", 
                  ncsub = cbind(start = c(90, 45, 1 , 1), 
@@ -101,8 +104,8 @@ large.
 ##  assuming WGS84 Lat/Lon.
 ## stars object with 4 dimensions and 1 attribute
 ## attribute(s):
-##          Min. 1st Qu. Median     Mean 3rd Qu.  Max. NA's
-## sst [°C] -1.8   -1.04     14 12.92722   25.13 29.81  757
+##          Min. 1st Qu. Median     Mean 3rd Qu.  Max. NAs
+## sst [°C] -1.8   -1.04     14 12.92722   25.13 29.81 757
 ## dimension(s):
 ##      from to         offset delta         refsys point values x/y
 ## lon     1 90            177     2 WGS 84 (CRS84)    NA   NULL [x]

@@ -15,6 +15,7 @@ feature geometries (packages `sf`). Tidyverse methods are provided.
 The `stars` package is loaded by
 
 ``` r
+
 library(stars)
 ## Loading required package: abind
 ## Loading required package: sf
@@ -25,6 +26,7 @@ Spatiotemporal arrays are stored in objects of class `stars`; methods
 for class `stars` currently available are
 
 ``` r
+
 methods(class = "stars")
 ##  [1] [                 [[<-              [<-               %in%             
 ##  [5] $<-               adrop             aggregate         aperm            
@@ -53,6 +55,7 @@ We can read a satellite image through GDAL, e.g. from a GeoTIFF file in
 the package:
 
 ``` r
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)
 plot(x, axes = TRUE)
@@ -65,6 +68,7 @@ values along axes), and that the object returned (`x`) has three
 dimensions called `x`, `y` and `band`, and has one attribute:
 
 ``` r
+
 x
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
@@ -80,19 +84,19 @@ x
 Each dimension has a name; the meaning of the fields of a single
 dimension are:
 
-| *field* | *meaning*                                                                  |
-|---------|----------------------------------------------------------------------------|
-| from    | the origin index (1)                                                       |
-| to      | the final index (dim(x)\[i\])                                              |
-| offset  | the start value for this dimension (pixel boundary), if regular            |
-| delta   | the step (pixel, cell) size for this dimension, if regular                 |
-| refsys  | the reference system, or proj4string                                       |
-| point   | logical; whether cells refer to points, or intervals                       |
-| values  | the sequence of values for this dimension (e.g., geometries), if irregular |
+| *field* | *meaning* |
+|----|----|
+| from | the origin index (1) |
+| to | the final index (dim(x)\[i\]) |
+| offset | the start value for this dimension (pixel boundary), if regular |
+| delta | the step (pixel, cell) size for this dimension, if regular |
+| refsys | the reference system, or proj4string |
+| point | logical; whether cells refer to points, or intervals |
+| values | the sequence of values for this dimension (e.g., geometries), if irregular |
 
-This means that for an index i (starting at $i = 1$) along a certain
+This means that for an index i (starting at $`i=1`$) along a certain
 dimension, the corresponding dimension value (coordinate, time) is
-$\text{offset} + (i - 1) \times \text{delta}$. This value then refers to
+$`\mbox{offset} + (i-1) \times \mbox{delta}`$. This value then refers to
 the start (edge) of the cell or interval; in order to get the interval
 middle or cell centre, one needs to add half an offset.
 
@@ -101,8 +105,8 @@ colors, one could put their wavelength values in the `values` field.
 
 For this particular dataset (and most other raster datasets), we see
 that delta for dimension `y` is negative: this means that consecutive
-array values have decreasing $y$ values: cell indexes increase from top
-to bottom, in the direction opposite to the $y$ axis.
+array values have decreasing $`y`$ values: cell indexes increase from
+top to bottom, in the direction opposite to the $`y`$ axis.
 
 `read_stars` reads all bands from a raster dataset, or optionally a
 subset of raster datasets, into a single `stars` array structure. While
@@ -114,6 +118,7 @@ The data structure `stars` is a generalization of the `tbl_cube` found
 in `cubelyr`; we can convert to that by
 
 ``` r
+
 library(cubelyr)
 as.tbl_cube(x)
 ## Source: local array [737,088 x 3]
@@ -129,6 +134,7 @@ system, vector geometries)
 ### Switching attributes to dimensions and back
 
 ``` r
+
 (x.spl = split(x, "band"))
 ## stars object with 2 dimensions and 6 attributes
 ## attribute(s):
@@ -164,6 +170,7 @@ attribute got a default name. We can set attribute names with
 `setNames`, and dimension names and values with `st_set_dimensions`:
 
 ``` r
+
 merge(x.spl) |>
   setNames(names(x)) |> 
   st_set_dimensions(3, values = paste0("band", 1:6)) |>
@@ -193,6 +200,7 @@ describing dimensions, list extraction (and assignment) works as
 expected:
 
 ``` r
+
 class(x[[1]])
 ## [1] "array"
 dim(x[[1]])
@@ -223,6 +231,7 @@ The `stars` subset operator `[` works a bit different: its
 Thus,
 
 ``` r
+
 x["two", 1:10, , 2:4]
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
@@ -242,6 +251,7 @@ Alternatively, when `[` is given a single argument of class `sf`, `sfc`
 or `bbox`, `[` will work as a crop operator:
 
 ``` r
+
 circle = st_sfc(st_buffer(st_point(c(293749.5, 9115745)), 400), crs = st_crs(x))
 plot(x[circle][, , , 1], reset = FALSE)
 plot(circle, col = NA, border = 'red', add = TRUE, lwd = 2)
@@ -261,6 +271,7 @@ which adds coarse resolution versions by using the *average* resampling
 method to compute values based on blocks of pixels. These can be read by
 
 ``` r
+
 x1 = read_stars(tif, options = c("OVERVIEW_LEVEL=1"))
 x2 = read_stars(tif, options = c("OVERVIEW_LEVEL=2"))
 x3 = read_stars(tif, options = c("OVERVIEW_LEVEL=3"))
@@ -287,6 +298,7 @@ Another example is when we read raster time series model outputs in a
 NetCDF file, e.g. by
 
 ``` r
+
 system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
     read_stars() -> w
 ## pr, tas,
@@ -295,10 +307,11 @@ system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
 We see that
 
 ``` r
+
 w
 ## stars object with 3 dimensions and 2 attributes
 ## attribute(s):
-##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's
+##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max.  NAs
 ## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116
 ## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116
 ## dimension(s):
@@ -317,6 +330,7 @@ For this dataset we can see that
 Alternatively, this dataset can be read using `read_ncdf`, as in
 
 ``` r
+
 system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
     read_ncdf()
 ## no 'var' specified, using pr, tas
@@ -328,7 +342,7 @@ system.file("nc/bcsd_obs_1999.nc", package = "stars") |>
 ##  assuming WGS84 Lat/Lon.
 ## stars object with 3 dimensions and 2 attributes
 ## attribute(s):
-##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's
+##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max.  NAs
 ## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116
 ## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116
 ## dimension(s):
@@ -358,6 +372,7 @@ eclipse.ncdc.noaa.gov/pub/OI-daily-v2/NetCDF/1981/AVHRR/).
 We read the data by giving `read_stars` a vector with character names:
 
 ``` r
+
 x = c(
 "avhrr-only-v2.19810901.nc",
 "avhrr-only-v2.19810902.nc",
@@ -375,7 +390,7 @@ file_list = system.file(paste0("netcdf/", x), package = "starsdata")
 (y = read_stars(file_list, quiet = TRUE))
 ## stars object with 4 dimensions and 4 attributes
 ## attribute(s), summary of first 1e+05 cells:
-##                Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's
+##                Min. 1st Qu. Median       Mean 3rd Qu. Max.   NAs
 ## sst [°*C]     -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360
 ## anom [°*C]    -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360
 ## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360
@@ -392,6 +407,7 @@ Next, we select sea surface temperature (`sst`), and drop the singular
 `zlev` (depth) dimension using `adrop`:
 
 ``` r
+
 library(dplyr)
 ## 
 ## Attaching package: 'dplyr'
@@ -409,6 +425,7 @@ We can now graph the sea surface temperature (SST) using `ggplot`, which
 needs data in a long table form, and without units:
 
 ``` r
+
 # convert POSIXct time to character, to please ggplot's facet_wrap()
 z1 = st_set_dimensions(z, 3, values = as.character(st_get_dimension_values(z, 3)))
 library(ggplot2)
@@ -435,6 +452,7 @@ GDAL interface is currently not supported. `write_stars` currently
 writes only a single attribute:
 
 ``` r
+
 write_stars(adrop(y[1]), "sst.tif")
 ```
 
@@ -446,6 +464,7 @@ be merged (folded) into a dimension.
 Using a curvilinear grid, taken from the example of `read_ncdf`:
 
 ``` r
+
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 prec = read_ncdf(prec_file, curvilinear = c("lon", "lat"))
 ## no 'var' specified, using Total_precipitation_surface_1_Hour_Accumulation
@@ -475,6 +494,7 @@ plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
 We can now crop the grid to those cells falling in
 
 ``` r
+
 nc = st_transform(nc, st_crs(prec_slice)) # datum transformation
 plot(prec_slice[nc], border = NA, breaks = qu_0_omit(prec_slice[[1]]), reset = FALSE)
 plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA, border = 'red')
@@ -503,6 +523,7 @@ dimension is an advantage when we want to compute patterns over the day,
 for a certain period.
 
 ``` r
+
 nc = st_read(system.file("gpkg/nc.gpkg", package="sf")) 
 ## Reading layer `nc.gpkg' from data source 
 ##   `/home/runner/work/_temp/Library/sf/gpkg/nc.gpkg' using driver `GPKG'
@@ -555,6 +576,7 @@ table joins. If we want to represent such an array as a `tbl_cube`, the
 simple feature geometry dimensions need to be replaced by indexes:
 
 ``` r
+
 st |> as.tbl_cube()
 ## Source: local array [72,000,000 x 5]
 ## D: origin [int, 100]
@@ -569,6 +591,7 @@ The following demonstrates how we can use `dplyr` to filter travel mode
 `bike`, and compute mean bike traffic by hour of day:
 
 ``` r
+
 b <- st |> 
   as.tbl_cube() |> 
   filter(mode == "bike") |> 
@@ -593,6 +616,7 @@ Aggregates, such as mean, maximum or modal values can be obtained by
 find the modal (most frequent) class within two circular polygons:
 
 ``` r
+
 s = system.file("tif/lc.tif", package = "stars")
 r = read_stars(s, proxy = FALSE) |> droplevels()
 levels(r[[1]]) = abbreviate(levels(r[[1]]), 10) # shorten text labels
@@ -610,6 +634,7 @@ To find the modal value, we need a function that gives back the label
 corresponding to the class which is most frequent, using `table`:
 
 ``` r
+
 f = function(x) { tb = table(x); names(tb)[which.max(tb)] }
 ```
 
@@ -617,6 +642,7 @@ We can then call `aggregate` on the raster map, and the set of the two
 circular polygons `pol1` and `pol2`, and pass the function `f`:
 
 ``` r
+
 aggregate(r, c(pol1, pol2), f) |> st_as_sf()
 ## Simple feature collection with 2 features and 1 field
 ## Geometry type: POLYGON

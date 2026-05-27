@@ -16,6 +16,7 @@ package. They are in a [drat
 repo](https://github.com/eddelbuettel/drat), installation is done by
 
 ``` r
+
 install.packages("starsdata", repos = "https://cran.uni-muenster.de/pebesma/")
 # possibly after: options(timeout = 100)
 # or from an alternative repository:
@@ -39,6 +40,7 @@ the 1-based offset index in R to 0-based offset in C++).
 An example of using `RasterIO` is
 
 ``` r
+
 library(stars)
 ## Loading required package: abind
 ## Loading required package: sf
@@ -63,6 +65,7 @@ dim(x)
 Compare this to
 
 ``` r
+
 st_dimensions(read_stars(tif))
 ##      from  to  offset delta                     refsys point x/y
 ## x       1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]
@@ -85,6 +88,7 @@ Reading datasets at a lower (but also higher!) resolution can be done by
 setting `nBufXSize` and `nBufYSize`
 
 ``` r
+
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 100, nYSize = 100,
                 nBufXSize = 20, nBufYSize = 20, bands = c(1, 3, 4))
 (x = read_stars(tif, RasterIO = rasterio))
@@ -112,6 +116,7 @@ We can also read at higher resolution; here we read a 3 x 3 area and
 blow it up to 100 x 100:
 
 ``` r
+
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 3, nYSize = 3,
    nBufXSize = 100, nBufYSize = 100, bands = 1)
 x = read_stars(tif, RasterIO = rasterio)
@@ -127,6 +132,7 @@ The reason we “see” only three grid cells is that the default sampling
 method is “nearest neighbour”. We can modify this by
 
 ``` r
+
 rasterio = list(nXOff = 6, nYOff = 6, nXSize = 3, nYSize = 3,
    nBufXSize = 100, nBufYSize = 100, bands = 1, resample = "cubic_spline")
 x = read_stars(tif, RasterIO = rasterio)
@@ -140,16 +146,16 @@ plot(x)
 
 The following methods are allowed for parameter `resample`:
 
-| `resample`          | method used                                                                 |
-|---------------------|-----------------------------------------------------------------------------|
-| `nearest_neighbour` | Nearest neighbour (default)                                                 |
-| `bilinear`          | Bilinear (2x2 kernel)                                                       |
-| `cubic`             | Cubic Convolution Approximation (4x4 kernel)                                |
-| `cubic_spline`      | Cubic B-Spline Approximation (4x4 kernel)                                   |
-| `lanczos`           | Lanczos windowed sinc interpolation (6x6 kernel)                            |
-| `average`           | Average                                                                     |
-| `mode`              | Mode (selects the value which appears most often of all the sampled points) |
-| `Gauss`             | Gauss blurring                                                              |
+| `resample` | method used |
+|----|----|
+| `nearest_neighbour` | Nearest neighbour (default) |
+| `bilinear` | Bilinear (2x2 kernel) |
+| `cubic` | Cubic Convolution Approximation (4x4 kernel) |
+| `cubic_spline` | Cubic B-Spline Approximation (4x4 kernel) |
+| `lanczos` | Lanczos windowed sinc interpolation (6x6 kernel) |
+| `average` | Average |
+| `mode` | Mode (selects the value which appears most often of all the sampled points) |
+| `Gauss` | Gauss blurring |
 
 All these methods are implemented in GDAL; for what these methods
 exactly do, we refer to the GDAL documentation or source code.
@@ -164,6 +170,7 @@ screen, rather than at the native resolution, so that if we have e.g. a
 10000 x 10000 Sentinel 2 (level 1C) image, we can open it by
 
 ``` r
+
 granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", package = "starsdata")
 s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, "/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.SAFE/MTD_MSIL1C.xml:10m:EPSG_32632")
 (p = read_stars(s2, proxy = TRUE))
@@ -182,6 +189,7 @@ and this happens *instantly*, because no data is read. When we plot this
 object,
 
 ``` r
+
 system.time(plot(p))
 ## downsample set to 18
 ```
@@ -189,13 +197,14 @@ system.time(plot(p))
 ![](stars2_files/figure-html/unnamed-chunk-8-1.png)
 
     ##    user  system elapsed 
-    ##   1.001   0.173   0.649
+    ##   1.058   0.191   0.702
 
 This takes only around 1 second, since only those pixels are read that
 can be seen on the plot. If we read the entire image in memory first, as
 we would do with
 
 ``` r
+
 p = read_stars(s2, proxy = FALSE)
 ```
 
@@ -204,6 +213,7 @@ then only the reading would take over a minute, and require 5 Gb memory.
 ### Methods for stars proxy objects
 
 ``` r
+
 methods(class = "stars_proxy")
 ##  [1] [               [[<-            [<-             adrop          
 ##  [5] aggregate       aperm           as.data.frame   c              
@@ -224,6 +234,7 @@ We can select attributes as with regular `stars` objects, by using the
 first argument to `[`:
 
 ``` r
+
 x = c("avhrr-only-v2.19810901.nc",
 "avhrr-only-v2.19810902.nc",
 "avhrr-only-v2.19810903.nc",
@@ -265,6 +276,7 @@ a spatial object. This can be done by passing a `bbox` object, or an
 An example:
 
 ``` r
+
 bb = st_bbox(c(xmin = 10.125, ymin = 0.125, xmax = 70.125, ymax = 70.125))
 ysub = y[bb]
 st_dimensions(ysub)
@@ -290,6 +302,7 @@ shown above first need data, and can only then be carried out. Such
 functions are added to the object, in an attribute called `call_list`:
 
 ``` r
+
 yy = adrop(y)
 yyy = yy[,1:10,1:10,]
 class(yyy) # still no data
@@ -304,12 +317,12 @@ attr(yyy, "call_list") # the name of object in the call (y) is replaced with x:
 ## [[1]]
 ## adrop(x = x, drop = drop)
 ## attr(,".Environment")
-## <environment: 0x56087e6df3f0>
+## <environment: 0x563d6da95ba0>
 ## 
 ## [[2]]
 ## x[i = i, 1:10, 1:10, , drop = drop, crop = crop]
 ## attr(,".Environment")
-## <environment: 0x56087db23928>
+## <environment: 0x563d7044be70>
 ```
 
 Doing this allows for optimizing the order in which operations are done.
@@ -324,6 +337,7 @@ dimensions over which the function is applied:
   on the pixels actually plotted. This means that e.g. in
 
 ``` r
+
 plot(st_apply(x, c("x", "y"), range))
 ```
 
@@ -337,6 +351,7 @@ Fetching the data now involves reading the whole array and then
 evaluating the `call_list` on it, sequentially:
 
 ``` r
+
 (x = st_as_stars(yyy)) # read, adrop, subset
 ## stars object with 3 dimensions and 4 attributes
 ## attribute(s):
@@ -358,6 +373,7 @@ For the Sentinel 2 data, band 4 represents NIR and band 1 red, so we can
 compute NDVI by
 
 ``` r
+
 # S2 10m: band 4: near infrared, band 1: red.
 #ndvi = function(x) (x[4] - x[1])/(x[4] + x[1])
 ndvi = function(x1, x2, x3, x4) (x4 - x1)/(x4 + x1)
@@ -385,7 +401,7 @@ system.time(plot(s2.ndvi)) # read - compute ndvi - plot
 ![](stars2_files/figure-html/unnamed-chunk-16-1.png)
 
     ##    user  system elapsed 
-    ##   0.726   0.142   0.356
+    ##   0.720   0.194   0.377
 
 ## Multi-resolution proxy objects
 
@@ -401,6 +417,7 @@ assumptions here are:
 We’ll create four maps with cells size 1, 2 and 3:
 
 ``` r
+
 s1 = st_as_stars(matrix(1:16, 4))
 s2 = st_as_stars(matrix(1:16, 4))
 s3 = st_as_stars(matrix(1:16, 4))
@@ -422,12 +439,14 @@ plot(s1, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ![](stars2_files/figure-html/unnamed-chunk-17-1.png)
 
 ``` r
+
 plot(s2, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ```
 
 ![](stars2_files/figure-html/unnamed-chunk-17-2.png)
 
 ``` r
+
 plot(s3, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ```
 
@@ -438,6 +457,7 @@ different cell sizes, and hence extents. If we bind them in a single
 proxy object, with
 
 ``` r
+
 fn1 = paste0(tempdir(), .Platform$file.sep, "img1.tif")
 fn2 = paste0(tempdir(), .Platform$file.sep, "img2.tif")
 fn3 = paste0(tempdir(), .Platform$file.sep, "img3.tif")
@@ -466,6 +486,7 @@ When converting this to a `stars` object, the secondary rasters are
 resampled to the cellsize + extent of the first:
 
 ``` r
+
 st_as_stars(r1) |>
   merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
@@ -477,6 +498,7 @@ If we do this for a sub-range, defined for the object resolutions, we
 get:
 
 ``` r
+
 st_as_stars(r1[,2:4,2:4]) |>
   merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
@@ -488,6 +510,7 @@ We now create four maps, all over the same region (\[0,4\] x \[0,4\]),
 with different resolutions (cell size 1, 1/2 and 1/3):
 
 ``` r
+
 s4 = st_as_stars(matrix(1: 16, 4))
 s5 = st_as_stars(matrix(1: 64, 8))
 s6 = st_as_stars(matrix(1:144,12))
@@ -509,18 +532,21 @@ plot(s4, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ![](stars2_files/figure-html/unnamed-chunk-21-1.png)
 
 ``` r
+
 plot(s5, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ```
 
 ![](stars2_files/figure-html/unnamed-chunk-21-2.png)
 
 ``` r
+
 plot(s6, axes = TRUE, text_values = TRUE, text_color = 'orange')
 ```
 
 ![](stars2_files/figure-html/unnamed-chunk-21-3.png)
 
 ``` r
+
 fn4 = paste0(tempdir(), .Platform$file.sep, "img4.tif")
 fn5 = paste0(tempdir(), .Platform$file.sep, "img5.tif")
 fn6 = paste0(tempdir(), .Platform$file.sep, "img6.tif")
@@ -551,6 +577,7 @@ st_as_stars(r2) |>
 ![](stars2_files/figure-html/unnamed-chunk-22-1.png)
 
 ``` r
+
 st_as_stars(r2[,2:4,2:4]) |>
   merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)
@@ -561,6 +588,7 @@ st_as_stars(r2[,2:4,2:4]) |>
 Finally, an example where the first raster has the higher resolution:
 
 ``` r
+
 (r3 = read_stars(c(fn6, fn5, fn4), proxy = TRUE))
 ## multi-resolution stars_proxy object with 3 attributes in 3 file(s):
 ## $`6`
@@ -585,6 +613,7 @@ st_as_stars(r3) |>
 ![](stars2_files/figure-html/unnamed-chunk-23-1.png)
 
 ``` r
+
 st_as_stars(r3[,2:6,3:6]) |>
   merge() |>
   plot(breaks = "equal", text_values = TRUE, text_color = 'orange', axes = TRUE)

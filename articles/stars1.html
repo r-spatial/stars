@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>1. introduction • stars</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="1. introduction">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -187,7 +187,7 @@ irregular</td>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i=1</annotation></semantics></math>)
 along a certain dimension, the corresponding dimension value
 (coordinate, time) is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">offset</mtext><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mtext mathvariant="normal">delta</mtext></mrow><annotation encoding="application/x-tex">\mbox{offset} + (i-1) \times \mbox{delta}</annotation></semantics></math>.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">offset</mtext><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>×</mo><mtext mathvariant="normal">delta</mtext></mrow><annotation encoding="application/x-tex">\mbox{offset} + (i-1) \times \mbox{delta}</annotation></semantics></math>.
 This value then refers to the start (edge) of the cell or interval; in
 order to get the interval middle or cell centre, one needs to add half
 an offset.</p>
@@ -379,7 +379,7 @@ NetCDF file, e.g. by</p>
 <code class="sourceCode R"><span><span class="va">w</span></span>
 <span><span class="co">## stars object with 3 dimensions and 2 attributes</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span></span>
+<span><span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max.  NAs</span></span>
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
@@ -407,7 +407,7 @@ as in</p>
 <span><span class="co">##  assuming WGS84 Lat/Lon.</span></span>
 <span><span class="co">## stars object with 3 dimensions and 2 attributes</span></span>
 <span><span class="co">## attribute(s):</span></span>
-<span><span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max. NA's</span></span>
+<span><span class="co">##                 Min.   1st Qu.   Median      Mean   3rd Qu.      Max.  NAs</span></span>
 <span><span class="co">## pr [mm/m]  0.5900000 56.139999 81.88000 101.26433 121.07250 848.54999 7116</span></span>
 <span><span class="co">## tas [C]   -0.4209678  8.898887 15.65763  15.48932  21.77979  29.38581 7116</span></span>
 <span><span class="co">## dimension(s):</span></span>
@@ -451,7 +451,7 @@ character names:</p>
 <span><span class="op">(</span><span class="va">y</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_stars.html">read_stars</a></span><span class="op">(</span><span class="va">file_list</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">## stars object with 4 dimensions and 4 attributes</span></span>
 <span><span class="co">## attribute(s), summary of first 1e+05 cells:</span></span>
-<span><span class="co">##                Min. 1st Qu. Median       Mean 3rd Qu. Max.  NA's</span></span>
+<span><span class="co">##                Min. 1st Qu. Median       Mean 3rd Qu. Max.   NAs</span></span>
 <span><span class="co">## sst [°*C]     -1.80   -1.19  -1.05 -0.3201670   -0.20 9.36 13360</span></span>
 <span><span class="co">## anom [°*C]    -4.69   -0.06   0.52  0.2299385    0.71 3.70 13360</span></span>
 <span><span class="co">## err [°*C]      0.11    0.30   0.30  0.2949421    0.30 0.48 13360</span></span>

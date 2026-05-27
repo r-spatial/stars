@@ -74,9 +74,10 @@ cube](https://r-spatial.org/r/2022/09/12/vdc.html).
 
 ### Regular grids
 
-With a very simple file created from a $4 \times 5$ matrix
+With a very simple file created from a $`4 \times 5`$ matrix
 
 ``` r
+
 suppressPackageStartupMessages(library(stars))
 m = matrix(1:20, nrow = 5, ncol = 4)
 dim(m) = c(x = 5, y = 4) # named dim
@@ -99,6 +100,7 @@ we see that
   corresponds to the array dimension:
 
 ``` r
+
 dim(s[[1]])
 ## x y 
 ## 5 4
@@ -110,22 +112,24 @@ dim(s[[1]])
 When we plot this object, using the `image` method for `stars` objects,
 
 ``` r
+
 image(s, text_values = TRUE, axes = TRUE)
 ```
 
 ![](stars4_files/figure-html/unnamed-chunk-3-1.png)
 
-we see that $(0,0)$ is the origin of the grid (grid corner), and $1$ the
-coordinate value increase from one index (row, col) to the next. It
+we see that $`(0,0)`$ is the origin of the grid (grid corner), and $`1`$
+the coordinate value increase from one index (row, col) to the next. It
 means that consecutive matrix columns represent grid lines, going from
 south to north. Grids defined this way are **regular**: grid cell size
 is constant everywhere.
 
 Many actual grid datasets have y coordinates (grid rows) going from
 North to South (top to bottom); this is realised with a negative value
-for `delta`. We see that the grid origin $(0,0)$ did not change:
+for `delta`. We see that the grid origin $`(0,0)`$ did not change:
 
 ``` r
+
 attr(s, "dimensions")[[2]]$delta = -1
 image(s, text_values = TRUE, axes = TRUE)
 ```
@@ -137,6 +141,7 @@ data sources read through GDAL, has a negative `delta` for the
 `y`-coordinate:
 
 ``` r
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 st_dimensions(read_stars(tif))["y"]
 ##   from  to  offset delta                     refsys point
@@ -148,6 +153,7 @@ st_dimensions(read_stars(tif))["y"]
 Dimension tables of `stars` objects carry a `raster` attribute:
 
 ``` r
+
 str(attr(st_dimensions(s), "raster"))
 ## List of 4
 ##  $ affine     : num [1:2] 0 0
@@ -170,23 +176,29 @@ dimensions forms a raster, both `affine` and `curvilinear` describe how
 x and y *as a pair* are derived from grid indexes (see below) when this
 cannot be done on a per-dimension basis.
 
-With two affine parameters $a_{1}$ and $a_{2}$, $x$ and $y$ coordinates
-are derived from (1-based) grid indexes $i$ and $j$, grid offset values
-$o_{x}$ and $o_{y}$, and grid cell sizes $d_{x}$ and $d_{y}$ by
+With two affine parameters $`a_1`$ and $`a_2`$, $`x`$ and $`y`$
+coordinates are derived from (1-based) grid indexes $`i`$ and $`j`$,
+grid offset values $`o_x`$ and $`o_y`$, and grid cell sizes $`d_x`$ and
+$`d_y`$ by
 
-$$x = o_{x} + (i - 1)d_{x} + (j - 1)a_{1}$$
+``` math
+x = o_x + (i-1) d_x + (j-1) a_1
+```
 
-$$y = o_{y} + (i - 1)a_{2} + (j - 1)d_{y}$$ Clearly, when
-$a_{1} = a_{2} = 0$, $x$ and $y$ are entirely derived from their
-respective index, offset and cellsize.
+``` math
+y = o_y + (i-1) a_2 + (j-1) d_y
+```
+Clearly, when $`a_1=a_2=0`$, $`x`$ and $`y`$ are entirely derived from
+their respective index, offset and cellsize.
 
 Note that for integer indexes, the coordinates are that of the starting
 edge of a grid cell; to get the grid cell center of the top left grid
-cell (in case of a negative $d_{y}$), use $i = 1.5$ and $j = 1.5$.
+cell (in case of a negative $`d_y`$), use $`i=1.5`$ and $`j=1.5`$.
 
-We can rotate grids by setting $a_{1}$ and $a_{2}$ to a non-zero value:
+We can rotate grids by setting $`a_1`$ and $`a_2`$ to a non-zero value:
 
 ``` r
+
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.1)
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 ```
@@ -196,14 +208,16 @@ plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 The rotation angle, in degrees, is
 
 ``` r
+
 atan2(0.1, 1) * 180 / pi
 ## [1] 5.710593
 ```
 
-Sheared grids are obtained when the two rotation coefficients, $a_{1}$
-and $a_{2}$, are unequal:
+Sheared grids are obtained when the two rotation coefficients, $`a_1`$
+and $`a_2`$, are unequal:
 
 ``` r
+
 attr(attr(s, "dimensions"), "raster")$affine = c(0.1, 0.2)
 plot(st_as_sf(s, as_points = FALSE), axes = TRUE, nbreaks = 20)
 ```
@@ -214,6 +228,7 @@ Now, the y-axis and x-axis have different rotation in degrees of
 respectively
 
 ``` r
+
 atan2(c(0.1, 0.2), 1) * 180 / pi
 ## [1]  5.710593 11.309932
 ```
@@ -229,6 +244,7 @@ meaning for every dimension we specify *one more* value than the
 dimension size:
 
 ``` r
+
 x = c(0, 0.5, 1, 2, 4, 5)  # 6 numbers: boundaries!
 y = c(0.3, 0.5, 1, 2, 2.2) # 5 numbers: boundaries!
 (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
@@ -253,6 +269,7 @@ Would we leave out the last value, than `stars` may come up with a
 the width of the one-but-last cell:
 
 ``` r
+
 x = c(0, 0.5, 1, 2, 4)  # 5 numbers: offsets only!
 y = c(0.3, 0.5, 1, 2)   # 4 numbers: offsets only!
 (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
@@ -274,6 +291,7 @@ the boundaries are reduced to an `offset` and `delta` value,
 irrespective whether an upper boundary is given:
 
 ``` r
+
 x = c(0, 1, 2, 3, 4)  # 5 numbers: offsets only!
 y = c(0.5, 1, 1.5, 2)   # 4 numbers: offsets only!
 (r = st_as_stars(list(m = m), dimensions = st_dimensions(x = x, y = y)))
@@ -294,6 +312,7 @@ Alternatively, one can also set the *cell midpoints* by specifying
 arguments `cell_midpoints` to the `st_dimensions` call:
 
 ``` r
+
 x = st_as_stars(matrix(1:9, 3, 3), 
                 st_dimensions(x = c(1, 2, 3), y = c(2, 3, 10), cell_midpoints = TRUE))
 ```
@@ -315,12 +334,14 @@ As an example, we will use a Sentinel 5P dataset available from package
 `starsdata`; this package can be installed with
 
 ``` r
+
 install.packages("starsdata", repos = "https://cran.uni-muenster.de/pebesma/")
 ```
 
 The dataset is found here:
 
 ``` r
+
 (s5p = system.file("sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc", package = "starsdata"))
 ## [1] "/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc"
 ```
@@ -329,6 +350,7 @@ We can construct the curvilinear `stars` raster by calling `read_stars`
 on the right sub-array:
 
 ``` r
+
 subs = gdal_subdatasets(s5p)
 subs[[6]]
 ## [1] "NETCDF:\"/home/runner/work/_temp/Library/starsdata/sentinel5p/S5P_NRTI_L2__NO2____20180717T120113_20180717T120613_03932_01_010002_20180717T125231.nc\":/PRODUCT/nitrogendioxide_tropospheric_column"
@@ -337,6 +359,7 @@ subs[[6]]
 For this array, we can see the GDAL metadata under item `GEOLOCATION`:
 
 ``` r
+
 gdal_metadata(subs[[6]], "GEOLOCATION")
 ## $GEOREFERENCING_CONVENTION
 ## [1] "PIXEL_CENTER"
@@ -376,6 +399,7 @@ which reveals where, in this dataset, the longitude and latitude arrays
 are kept.
 
 ``` r
+
 nit.c = read_stars(subs[[6]]) 
 ## Warning in CPL_read_gdal(as.character(x), as.character(options),
 ## as.character(driver), : GDAL Message 1: The dataset has several variables that
@@ -426,8 +450,8 @@ nit.c
 ## nitrogendioxide_tropospheri... [mol/m^2] -3.301083e-05 1.868205e-05
 ##                                                Median         Mean      3rd Qu.
 ## nitrogendioxide_tropospheri... [mol/m^2] 2.622178e-05 2.898976e-05 3.629641e-05
-##                                                  Max. NA's
-## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858  330
+##                                                  Max. NAs
+## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858 330
 ## dimension(s):
 ##      from  to         offset         refsys                             values
 ## x       1 450             NA WGS 84 (CRS84) [450x278] -5.811 [°],...,30.95 [°]
@@ -445,6 +469,7 @@ with longitude and latitude values read in its dimension table. We can
 plot this file:
 
 ``` r
+
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = TRUE, 
          pch = 16,  logz = TRUE, key.length = 1)
 ## Warning in NextMethod(): NaNs produced
@@ -455,6 +480,7 @@ maps::map('world', add = TRUE, col = 'red')
 ![](stars4_files/figure-html/unnamed-chunk-21-1.png)
 
 ``` r
+
 plot(nit.c, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
          border = NA, logz = TRUE, key.length = 1)
 ## Warning in NextMethod(): NaNs produced
@@ -467,6 +493,7 @@ maps::map('world', add = TRUE, col = 'red')
 We can downsample the data by
 
 ``` r
+
 (nit.c_ds = stars:::st_downsample(nit.c, 8))
 ## stars object with 3 dimensions and 1 attribute
 ## attribute(s):
@@ -474,8 +501,8 @@ We can downsample the data by
 ## nitrogendioxide_tropospheri... [mol/m^2] -1.847503e-05 1.85778e-05 2.700901e-05
 ##                                                Mean      3rd Qu.         Max.
 ## nitrogendioxide_tropospheri... [mol/m^2] 2.9113e-05 3.642568e-05 0.0001363282
-##                                          NA's
-## nitrogendioxide_tropospheri... [mol/m^2]   32
+##                                          NAs
+## nitrogendioxide_tropospheri... [mol/m^2]  32
 ## dimension(s):
 ##      from to         offset         refsys                           values x/y
 ## x       1 50             NA WGS 84 (CRS84) [50x31] -5.811 [°],...,30.14 [°] [x]
@@ -495,6 +522,7 @@ which doesn’t look nice, but plotting the cells as polygons looks
 better:
 
 ``` r
+
 plot(nit.c_ds, breaks = "equal", reset = FALSE, axes = TRUE, as_points = FALSE, 
          border = NA, logz = TRUE, key.length = 1)
 ## Warning in NextMethod(): NaNs produced
@@ -508,6 +536,7 @@ Another approach would be to warp the curvilinear grid to a regular
 grid, e.g. by
 
 ``` r
+
 w = st_warp(nit.c, crs = 4326, cellsize = 0.25)
 ## Warning in transform_grid_grid(st_as_stars(src), st_dimensions(dest),
 ## threshold): using Euclidean distance measures on geodetic coordinates

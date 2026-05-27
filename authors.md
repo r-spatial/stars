@@ -24,7 +24,7 @@ Source:
 
 Pebesma E, Bivand R (2023). *Spatial Data Science: With applications in
 R*. Chapman and Hall/CRC, London.
-[doi:10.1201/9780429459016](https://doi.org/10.1201/9780429459016),
+[doi:10.1201/9780429459016](https://doi.org/10.1201/9780429459016).
 <https://r-spatial.org/book/>.
 
     @Book{,

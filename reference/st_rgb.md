@@ -66,10 +66,12 @@ x = read_stars(tif)
 st_rgb(x[,,,3:1])
 #> stars object with 2 dimensions and 1 attribute
 #> attribute(s):
-#>  L7_ETMs.tif       
-#>  Length:122848     
-#>  Class :character  
-#>  Mode  :character  
+#>     L7_ETMs.tif    
+#>  Length   :122848  
+#>  N.unique : 22249  
+#>  N.blank  :     0  
+#>  Min.nchar:     7  
+#>  Max.nchar:     7  
 #> dimension(s):
 #>   from  to  offset delta                     refsys point x/y
 #> x    1 349  288776  28.5 SIRGAS 2000 / UTM zone 25S FALSE [x]

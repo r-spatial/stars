@@ -141,11 +141,11 @@ if (require(ncmeta, quietly = TRUE)) {
 #>  assuming WGS84 Lat/Lon.
 #> stars object with 4 dimensions and 4 attributes
 #> attribute(s):
-#>                Min. 1st Qu. Median        Mean 3rd Qu. Max. NA's
-#> sst [°C]      -1.39 -0.7200 -0.515 -0.53399999  -0.275 0.03   90
-#> anom [°C]     -1.07 -0.3625  0.195  0.05866667   0.555 0.92   90
-#> err [°C]       0.30  0.3000  0.300  0.30299999   0.300 0.32   90
-#> ice [percent]  0.01  0.1100  0.170  0.20937500   0.255 0.52  104
+#>                Min. 1st Qu. Median        Mean 3rd Qu. Max. NAs
+#> sst [°C]      -1.39 -0.7200 -0.515 -0.53399999  -0.275 0.03  90
+#> anom [°C]     -1.07 -0.3625  0.195  0.05866667   0.555 0.92  90
+#> err [°C]       0.30  0.3000  0.300  0.30299999   0.300 0.32  90
+#> ice [percent]  0.01  0.1100  0.170  0.20937500   0.255 0.52 104
 #> dimension(s):
 #>      from to         offset delta         refsys point values x/y
 #> lon     1 10             -1     2 WGS 84 (CRS84)    NA   NULL [x]

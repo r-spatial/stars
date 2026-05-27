@@ -6,6 +6,7 @@ raster representations.
 ## Rasterizing an `sf` vector object
 
 ``` r
+
 library(stars)
 ## Loading required package: abind
 system.file("gpkg/nc.gpkg", package = "sf") |>
@@ -15,7 +16,7 @@ nc$dens = nc$BIR79 / units::set_units(st_area(nc), km^2)
 (nc.st = st_rasterize(nc["dens"], dx = 5000, dy = 5000))
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):
-##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max. NA's
+##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max.  NAs
 ## dens [1/km^2] 0.2545128 1.225654 1.9322 3.345956 3.825793 21.24795 4808
 ## dimension(s):
 ##   from  to offset delta                 refsys point x/y
@@ -43,6 +44,7 @@ We will work again with the landsat-7 6-band image, but will select the
 first band and round the values:
 
 ``` r
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 x = read_stars(tif)[, 1:50, 1:50, 1:2]
 x[[1]] = round(x[[1]]/5)
@@ -56,6 +58,7 @@ the contour sets (only available when the GDAL version is at least
 2.4.0):
 
 ``` r
+
 l =  st_contour(x, contour_lines = TRUE, breaks = 11:15)
 plot(l[1], key.pos = 1, pal = sf.colors, lwd = 2, key.length = 0.8)
 ```
@@ -69,6 +72,7 @@ them either as a wide table with all bands per point, and no replicated
 `POINT` geometries:
 
 ``` r
+
 st_as_sf(x, as_points = TRUE, merge = FALSE)
 ## Simple feature collection with 2500 features and 2 fields
 ## Geometry type: POINT
@@ -92,6 +96,7 @@ st_as_sf(x, as_points = TRUE, merge = FALSE)
 or as a long table with a single attribute and all points replicated:
 
 ``` r
+
 st_as_sf(x, as_points = TRUE, merge = FALSE, long = TRUE)
 ## Simple feature collection with 5000 features and 2 fields
 ## Geometry type: POINT
@@ -121,6 +126,7 @@ Alternatively, we can export to polygons and either get a single polygon
 per pixel, as in
 
 ``` r
+
 st_as_sf(x[1], as_points = FALSE, merge = FALSE)
 ## Simple feature collection with 2500 features and 2 fields
 ## Geometry type: POLYGON
@@ -144,6 +150,7 @@ st_as_sf(x[1], as_points = FALSE, merge = FALSE)
 or merge polygons that have identical pixel values;
 
 ``` r
+
 p = st_as_sf(x, as_points = FALSE, merge = TRUE)
 ```
 
@@ -151,6 +158,7 @@ When plotted with boundaries, we see the resolved boundaries of areas
 with the same pixel value:
 
 ``` r
+
 plot(p)
 ```
 
@@ -167,6 +175,7 @@ We can convert a raster dimension to a vector dimension while keeping
 other dimensions as they are in a `stars` object by
 
 ``` r
+
 x.sf = st_xy2sfc(x, as_points = TRUE)
 x.sf
 ## stars object with 2 dimensions and 1 attribute
@@ -199,11 +208,12 @@ transformation is stronger non-linear.
 An example of the reprojection of the grid created above is
 
 ``` r
+
 nc.st |> st_transform("+proj=laea +lat_0=34 +lon_0=-60") -> nc.curv
 nc.curv
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):
-##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max. NA's
+##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max.  NAs
 ## dens [1/km^2] 0.2545128 1.225654 1.9322 3.345956 3.825793 21.24795 4808
 ## dimension(s):
 ##   from  to                       refsys point                         values
@@ -229,6 +239,7 @@ on a (usually regular) grid in another CRS. We can do the transformation
 of the previous section by first creating a target grid:
 
 ``` r
+
 nc |> st_transform("+proj=laea +lat_0=34 +lon_0=-60") |> st_bbox() |>
     st_as_stars() -> newgrid
 ```
@@ -236,11 +247,12 @@ nc |> st_transform("+proj=laea +lat_0=34 +lon_0=-60") |> st_bbox() |>
 and then warping the old raster to the new
 
 ``` r
+
 nc.st |> st_warp(newgrid) -> nc.new
 nc.new 
 ## stars object with 2 dimensions and 1 attribute
 ## attribute(s):
-##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max.  NA's
+##                    Min.  1st Qu. Median     Mean  3rd Qu.     Max.   NAs
 ## dens [1/km^2] 0.2545128 1.225654 1.9322 3.344844 3.825793 21.24795 36155
 ## dimension(s):
 ##   from  to   offset delta                       refsys x/y

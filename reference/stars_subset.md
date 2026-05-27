@@ -158,7 +158,7 @@ plot(buf, add = TRUE, col = NA)
 x[x > 75] # generates lots of NA's; pattern for each band
 #> stars object with 3 dimensions and 1 attribute
 #> attribute(s):
-#>              Min. 1st Qu. Median     Mean 3rd Qu. Max.   NA's
+#>              Min. 1st Qu. Median     Mean 3rd Qu. Max.    NAs
 #> L7_ETMs.tif    76      82     90 94.40052     101  255 443210
 #> dimension(s):
 #>      from  to  offset delta                     refsys point x/y
@@ -168,7 +168,7 @@ x[x > 75] # generates lots of NA's; pattern for each band
 x[x[,,,1] > 75] # recycles a single band template for all bands
 #> stars object with 3 dimensions and 1 attribute
 #> attribute(s):
-#>              Min. 1st Qu. Median     Mean 3rd Qu. Max.   NA's
+#>              Min. 1st Qu. Median     Mean 3rd Qu. Max.    NAs
 #> L7_ETMs.tif     1      63     79 74.98075      93  255 318960
 #> dimension(s):
 #>      from  to  offset delta                     refsys point x/y

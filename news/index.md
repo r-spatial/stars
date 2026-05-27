@@ -1,5 +1,11 @@
 # Changelog
 
+## version 0.7-3
+
+- in [`st_extract()`](../reference/st_extract.md) with matrix `at`, drop
+  units and warn if units are incompatible;
+  [\#770](https://github.com/r-spatial/stars/issues/770)
+
 ## version 0.7-2
 
 CRAN release: 2026-04-03

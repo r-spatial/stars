@@ -31,6 +31,7 @@ spectral band and sensor form dimensions:
 or lower-dimensional cubes such as a raster image:
 
 ``` r
+
 library(dplyr)
 library(stars)
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
@@ -89,6 +90,7 @@ vignette](https://r-spatial.github.io/stars/articles/stars2.html).
 The following methods are currently available for `stars_proxy` objects:
 
 ``` r
+
 methods(class = "stars_proxy")
 #  [1] [               [[<-            [<-             adrop          
 #  [5] aggregate       aperm           as.data.frame   c              
@@ -110,6 +112,7 @@ In the following, a curvilinear grid with hourly precipitation values of
 a hurricane is imported and the first 12 time steps are plotted:
 
 ``` r
+
 prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
 (prec = read_stars(gdal_subdatasets(prec_file)[[1]]))
 # stars object with 3 dimensions and 1 attribute
@@ -145,6 +148,7 @@ the maximum precipitation intensity was obtained per county, and
 plotted:
 
 ``` r
+
 a = aggregate(prec, by = nc, FUN = max)
 plot(a, max.plot = 23, border = 'grey', lwd = .5)
 ```
@@ -156,6 +160,7 @@ maximum precipitation occurred. The following code finds the time index,
 and then the corresponding time value:
 
 ``` r
+
 index_max = function(x) ifelse(all(is.na(x)), NA, which.max(x))
 b = st_apply(a, "geom", index_max)
 b |> mutate(when = st_get_dimension_values(a, "time")[b$index_max]) |>
@@ -169,6 +174,7 @@ With package `cubble`, we can make a glyph map to see the magnitude and
 timings of county maximum precipitation:
 
 ``` r
+
 library(cubble)
 library(ggplot2)
 a |> setNames("precip") |>

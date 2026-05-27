@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>4. stars data model • stars</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="4. stars data model">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">stars</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7-3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -213,7 +213,7 @@ x and y coordinate values respectively.</li>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/image.html" class="external-link">image</a></span><span class="op">(</span><span class="va">s</span>, text_values <span class="op">=</span> <span class="cn">TRUE</span>, axes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="stars4_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="432"></p>
 <p>we see that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math>
 is the origin of the grid (grid corner), and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>
 the coordinate value increase from one index (row, col) to the next. It
@@ -223,7 +223,7 @@ grid cell size is constant everywhere.</p>
 <p>Many actual grid datasets have y coordinates (grid rows) going from
 North to South (top to bottom); this is realised with a negative value
 for <code>delta</code>. We see that the grid origin
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(0,0)</annotation></semantics></math>
 did not change:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"dimensions"</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">delta</span> <span class="op">=</span> <span class="op">-</span><span class="fl">1</span></span>
@@ -288,8 +288,8 @@ and grid cell sizes
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>y</mi></msub><annotation encoding="application/x-tex">d_y</annotation></semantics></math>
 by</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>o</mi><mi>x</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>d</mi><mi>x</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>a</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x = o_x + (i-1) d_x + (j-1) a_1</annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msub><mi>o</mi><mi>y</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>a</mi><mn>2</mn></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>d</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">y = o_y + (i-1) a_2 + (j-1) d_y</annotation></semantics></math>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>o</mi><mi>x</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><msub><mi>d</mi><mi>x</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><msub><mi>a</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x = o_x + (i-1) d_x + (j-1) a_1</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><msub><mi>o</mi><mi>y</mi></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><msub><mi>a</mi><mn>2</mn></msub><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><msub><mi>d</mi><mi>y</mi></msub></mrow><annotation encoding="application/x-tex">y = o_y + (i-1) a_2 + (j-1) d_y</annotation></semantics></math>
 Clearly, when
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>=</mo><msub><mi>a</mi><mn>2</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a_1=a_2=0</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
@@ -519,8 +519,8 @@ arrays are kept.</p>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] -3.301083e-05 1.868205e-05</span></span>
 <span><span class="co">##                                                Median         Mean      3rd Qu.</span></span>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 2.622178e-05 2.898976e-05 3.629641e-05</span></span>
-<span><span class="co">##                                                  Max. NA's</span></span>
-<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858  330</span></span>
+<span><span class="co">##                                                  Max. NAs</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 0.0003924858 330</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##      from  to         offset         refsys                             values</span></span>
 <span><span class="co">## x       1 450             NA WGS 84 (CRS84) [450x278] -5.811 [°],...,30.95 [°]</span></span>
@@ -557,8 +557,8 @@ plot this file:</p>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] -1.847503e-05 1.85778e-05 2.700901e-05</span></span>
 <span><span class="co">##                                                Mean      3rd Qu.         Max.</span></span>
 <span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2] 2.9113e-05 3.642568e-05 0.0001363282</span></span>
-<span><span class="co">##                                          NA's</span></span>
-<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2]   32</span></span>
+<span><span class="co">##                                          NAs</span></span>
+<span><span class="co">## nitrogendioxide_tropospheri... [mol/m^2]  32</span></span>
 <span><span class="co">## dimension(s):</span></span>
 <span><span class="co">##      from to         offset         refsys                           values x/y</span></span>
 <span><span class="co">## x       1 50             NA WGS 84 (CRS84) [50x31] -5.811 [°],...,30.14 [°] [x]</span></span>

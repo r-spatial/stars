@@ -5,6 +5,7 @@ procedures that involve random sampling. Remove this command if you want
 the random effect in outcomes.
 
 ``` r
+
 set.seed(131)
 ```
 
@@ -14,6 +15,7 @@ The usual way of statistical modelling in R uses `data.frame`s (or
 tibbles), and proceeds like
 
 ``` r
+
 m = model(formula, data)
 pr = predict(m, newdata)
 ```
@@ -36,6 +38,7 @@ The analogy of stars objects to `data.frame` is this:
 To see how this works with the 6-band example dataset, consider this:
 
 ``` r
+
 library(stars)
 ## Loading required package: abind
 ## Loading required package: sf
@@ -73,6 +76,7 @@ use the dedicated `split` method for `stars` objects, which resolves a
 dimension and splits it over attributes, one for each dimension value:
 
 ``` r
+
 l7 |> split("band") |>
   as.data.frame() |> 
   head()
@@ -129,6 +133,7 @@ coefficients for each pixel; this is shown next.
 We can read in the avhrr dataset, containing only 9 days:
 
 ``` r
+
 library(stars)
 x = c("avhrr-only-v2.19810901.nc",
 "avhrr-only-v2.19810902.nc",
@@ -151,6 +156,7 @@ argument of the function supplied to `st_apply`, and have `t` already
 defined. The function could look like
 
 ``` r
+
 slope = function(x) {
   if (any(is.na(x)))
     NA_real_
@@ -163,6 +169,7 @@ but we will optimize this a bit, using `anyNA` and `lm.fit` rather than
 `lm`:
 
 ``` r
+
 slope = function(x) {
   if (anyNA(x))
     NA_real_
@@ -174,6 +181,7 @@ slope = function(x) {
 The result is lazily defined by (`adrop` drops the singular dimension)
 
 ``` r
+
 out = st_apply(adrop(y), c(1,2), slope)
 ```
 
@@ -181,6 +189,7 @@ but only *computed* by the following command, where the computations are
 restricted to the pixels plotted:
 
 ``` r
+
 plot(out, breaks = "equal", main = "9-day time trend (slope)")
 ## downsample set to 1
 ```
@@ -201,6 +210,7 @@ In the first example, we build principal components on the entire
 dataset, because it is rather small.
 
 ``` r
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 r = split(read_stars(tif))
 pc = prcomp(as.data.frame(r)[,-(1:2)]) # based on all data
@@ -219,6 +229,7 @@ it, using `predict`, to pixels shown in the plot (i.e. at reduced rather
 than full resolution)
 
 ``` r
+
 granule = system.file("sentinel/S2A_MSIL1C_20180220T105051_N0206_R051_T32ULE_20180221T134037.zip", 
    package = "starsdata")
 s2 = paste0("SENTINEL2_L1C:/vsizip/", granule, 
@@ -234,6 +245,7 @@ Before plotting this, we’ll add country borders that delineate sea,
 obtained from the `mapdata` package:
 
 ``` r
+
 bb = st_bbox(p) |> 
   st_as_sfc() |>
   st_transform(4326) |>
@@ -249,6 +261,7 @@ We plot the results with independent color ranges, so every PC is
 stretched over the entire grey scale.
 
 ``` r
+
 plt_boundary = function() plot(m, border = 'orange', add = TRUE)
 plot(merge(out), hook = plt_boundary, join_zlim = FALSE)
 ## downsample set to 18
@@ -264,12 +277,14 @@ To compute full resolution (10000 x 10000 pixels) results and write them
 to a file, use
 
 ``` r
+
 write_stars(merge(out), "out.tif")
 ```
 
 ### K-means clustering
 
 ``` r
+
 library(clue)
 predict.kmeans = function(object, newdata, ...) {
     unclass(clue::cl_predict(object, newdata[, -c(1:2)], ...))
@@ -279,6 +294,7 @@ predict.kmeans = function(object, newdata, ...) {
 For a small dataset:
 
 ``` r
+
 tif = system.file("tif/L7_ETMs.tif", package = "stars")
 i = read_stars(tif, proxy = TRUE) |>
     split()
@@ -298,6 +314,7 @@ rural (3), and densely populated (1, 2).
 For the large(r) dataset:
 
 ``` r
+
 i = read_stars(s2, proxy = TRUE, NA_value = 0) |>
     split()
 sam = st_sample(i, 1000)
@@ -329,6 +346,7 @@ instructions found
 [here](https://www.qgistutorials.com/en/docs/digitizing_basics.html).)
 
 ``` r
+
 # for all, multi-resolution, use:
 bands = c("B04", "B03", "B02", "B08", "B01", "B05", "B06", "B07", "B8A", "B09", "B10", "B11", "B12")
 # bands = c("B04", "B03", "B02", "B08")
@@ -350,6 +368,7 @@ Next, we need points, sampled inside these polygons, for which we need
 to extract the satellite spectral data
 
 ``` r
+
 pts = st_sample(cl, 1000, "regular") |>
     st_as_sf() |>
     st_intersection(cl)
@@ -389,6 +408,7 @@ train
 ```
 
 ``` r
+
 library(randomForest)
 ## randomForest 4.7-1.2
 ## Type rfNews() to see new features/changes/bug fixes.

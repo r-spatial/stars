@@ -67,7 +67,7 @@ raster
 #>  assuming WGS84 Lat/Lon.
 #> stars object with 4 dimensions and 4 attributes
 #> attribute(s):
-#>                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
+#>                Min. 1st Qu. Median       Mean 3rd Qu.  Max.   NAs
 #> sst [°C]      -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
 #> anom [°C]     -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449
 #> err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448
@@ -81,7 +81,7 @@ raster
 (x = stars::st_xy2sfc(reduced_nc, as_points = TRUE, na.rm = FALSE))
 #> stars object with 3 dimensions and 4 attributes
 #> attribute(s):
-#>                Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
+#>                Min. 1st Qu. Median       Mean 3rd Qu.  Max.   NAs
 #> sst [°C]      -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
 #> anom [°C]     -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449
 #> err [°C]       0.11    0.16  0.270  0.2626872  0.3200  0.84  4448
@@ -99,7 +99,7 @@ raster
 st_sfc2xy(x, dims=c("X", "Y","zlev","time"))
 #> stars object with 4 dimensions and 4 attributes
 #> attribute(s):
-#>        Min. 1st Qu. Median       Mean 3rd Qu.  Max.  NA's
+#>        Min. 1st Qu. Median       Mean 3rd Qu.  Max.   NAs
 #> sst   -1.80   -0.03 13.655 12.9940841 24.8125 32.97  4448
 #> anom  -7.95   -0.58 -0.080 -0.1847324  0.2100  2.99  4449
 #> err    0.11    0.16  0.270  0.2626872  0.3200  0.84  4448
