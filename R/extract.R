@@ -213,9 +213,16 @@ st_extract.stars = function(x, at, ..., bilinear = FALSE, time_column =
 		}
 	}
 	if (NCOL(m[[1]]) > 1) { # multi-band:
-		if (inherits(at, "matrix"))
+		if (inherits(at, "matrix")) {
+			if (all(sapply(m, inherits, "units"))) {
+				u = lapply(m, units)
+				if (!all(sapply(u[-1], ud_are_convertible, u[[1]]))) {
+					warning("incompatible units merged in result matrix: dropping all units")
+					m = lapply(m, units::drop_units)
+				}
+			}
 			do.call(cbind, m)
-		else { # return stars:
+		} else { # return stars:
 			for (i in seq_along(x))
 				dim(m[[i]]) = c(length(at), dim(x)[-(1:2)])
 			d = structure(st_dimensions(x),

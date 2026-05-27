@@ -1,6 +1,6 @@
 Package: stars
 Title: Spatiotemporal Arrays, Raster and Vector Data Cubes
-Version: 0.7-2
+Version: 0.7-3
 Authors@R:
     c(person(given = "Edzer",
              family = "Pebesma",
@@ -89,7 +89,6 @@ Suggests:
     zoo
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 Collate: 
     'aggregate.R'
 	'cf.R'
@@ -129,3 +128,4 @@ Collate:
     'warp.R'
     'write.R'
     'xts.R'
+Config/roxygen2/version: 8.0.0

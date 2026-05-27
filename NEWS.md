@@ -1,3 +1,7 @@
+# version 0.7-3
+
+* in `st_extract()` with matrix `at`, drop units and warn if units are incompatible; #770
+
 # version 0.7-2
 
 * do not print the `.Environment` attribute of call list elements
