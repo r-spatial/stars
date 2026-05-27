@@ -17,7 +17,7 @@ x = st_join(pnt, st_as_sf(r))
 # Extract - 'st_extract'
 y = st_extract(r, pnt)
 
-# check there are NA's:
+# check there are NAs:
 any(is.na(x))
 # Compare
 all.equal(x$A1, y[[1]])
