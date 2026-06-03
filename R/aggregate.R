@@ -92,11 +92,15 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		warning("`weights` is ignored when `exact = FALSE`")
 	if (!is.null(transform)) {
 		tf = if (inherits(transform, "formula")) rlang::as_function(transform) else transform
+		# tf may return a vector or a matrix, the matrix branch appends a `term`
+		# dimension to x, the vector branch keeps dim(y). for example splines::bs(...)
+		# or ~ cbind(.x, .x^2, .x^3) returns a matrix while x^2 returns a vector
 		probe = tf(seq_len(8))
 		if (is.matrix(probe)) {
 			k = ncol(probe)
 			cn = colnames(probe)
-			term_names = if (is.null(cn) || any(is.na(cn) | !nzchar(cn))) paste0("t", seq_len(k)) else cn # any unnamed column defaults all to t1..tk
+			term_names = if (is.null(cn) || any(is.na(cn) | !nzchar(cn))) paste0("t", seq_len(k)) else cn
+			#^any unnamed column defaults all to t1..tk
 			old_d = st_dimensions(x)
 			a = attributes(old_d)
 			new_d = append(old_d, list(create_dimension(values = term_names)))
