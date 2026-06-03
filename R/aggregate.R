@@ -12,6 +12,8 @@
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @param exact logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells
+#' @param weights optional \code{SpatRaster} (or single-attribute \code{stars}) of secondary per-cell weights, e.g. population or cropland area
+#' @param transform optional function, or one-sided formula evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2}, \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}. Units on \code{x} are dropped when \code{transform} is non-NULL.
 #' @seealso \link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
 #' @export
 #' @aliases aggregate
@@ -69,7 +71,7 @@
 #' plot(agg)
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
-		left.open = FALSE, exact = FALSE) {
+		left.open = FALSE, exact = FALSE, weights = NULL, transform = NULL) {
 
 	fn_name = substr(deparse1(substitute(FUN)), 1, 20)
 	classes = c("sf", "sfc", "POSIXct", "Date", "character", "function", "stars")
@@ -85,18 +87,54 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	} else
 		geom = "geometry"
 	stopifnot(!missing(FUN), is.function(FUN))
+	
+	if (!exact && !is.null(weights))
+		warning("`weights` is ignored when `exact = FALSE`")
+	if (!is.null(transform)) {
+		tf = if (inherits(transform, "formula")) rlang::as_function(transform) else transform
+		probe = tf(seq_len(8))
+		if (is.matrix(probe)) {
+			k = ncol(probe)
+			cn = colnames(probe)
+			term_names = if (is.null(cn) || any(is.na(cn) | !nzchar(cn))) paste0("t", seq_len(k)) else cn # any unnamed column defaults all to t1..tk
+			old_d = st_dimensions(x)
+			a = attributes(old_d)
+			new_d = append(old_d, list(create_dimension(values = term_names)))
+			names(new_d)[length(new_d)] = "term"
+			attr(new_d, "raster") = a$raster
+			attr(new_d, "class") = a$class
+			x = st_as_stars(
+				lapply(x, function(y) array(tf(as.vector(y)), dim = c(dim(y), k))),
+				dimensions = new_d)
+		} else
+			x = st_as_stars(lapply(x, function(y) array(tf(as.vector(y)), dim = dim(y))),
+				dimensions = st_dimensions(x))
+	}
 
 	if (exact && inherits(by, c("sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
-    	if (!requireNamespace("raster", quietly = TRUE))
-        	stop("package raster required, please install it first") # nocov
+    	if (!requireNamespace("terra", quietly = TRUE))
+        	stop("package terra required, please install it first") # nocov
     	if (!requireNamespace("exactextractr", quietly = TRUE))
         	stop("package exactextractr required, please install it first") # nocov
 		x = st_upfront(x)
 		d = st_dimensions(x)[1:2]
 		r = st_as_stars(list(a = array(1, dim = dim(d))), dimensions = d)
-		e = exactextractr::coverage_fraction(as(r, "Raster"), by)
-		st = do.call(raster::stack, e)
-		m = raster::getValues(st)
+		template = methods::as(r, "SpatRaster")
+		e = exactextractr::coverage_fraction(template, by)
+		m = terra::values(do.call(c, e))
+		if (!is.null(weights)) {
+			if (inherits(weights, "stars"))
+				weights = methods::as(weights, "SpatRaster")
+			if (!inherits(weights, "SpatRaster"))
+				stop("`weights` must be a SpatRaster or single-attribute stars object")
+			if (terra::nlyr(weights) > 1L)
+				stop("`weights` must be a single-layer raster")
+			if (inherits(try(terra::compareGeom(weights, template), silent = TRUE), "try-error"))
+				stop("`weights` must align with `x` (same CRS, extent, resolution)")
+			w = terra::values(weights)[, 1]
+			w[is.na(w)] = 0
+			m = m * w
+		}
 		if (!identical(FUN, sum)) { # see https://github.com/r-spatial/stars/issues/289
 			if (isTRUE(as.character(as.list(FUN)[[3]])[2] == "mean"))
 				m = sweep(m, 2, colSums(m), "/") # mean: divide weights by the sum of weights
