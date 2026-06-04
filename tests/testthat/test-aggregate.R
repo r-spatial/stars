@@ -75,6 +75,16 @@ test_that("one-to-many transform falls back to t1, t2, ... when colnames are NUL
 	expect_equal(st_get_dimension_values(a, "term"), c("t1", "t2", "t3"))
 })
 
+test_that("one-to-many transform with partial colnames defaults all terms to t1, t2, ...", {
+	d = make_test_data()
+
+	# a single unnamed column makes every term fall back to t1..tk, not just the unnamed one
+	a = aggregate(d$x, d$polys, mean, exact = TRUE,
+		transform = ~ cbind(a = .x, .x^2))
+
+	expect_equal(st_get_dimension_values(a, "term"), c("t1", "t2"))
+})
+
 test_that("weights produces a different result from unweighted", {
 	d = make_test_data()
 
@@ -114,13 +124,26 @@ test_that("weighted mean matches hand calculation", {
 	expect_equal(as.numeric(a[[1]]), sum((1:16)^2) / sum(1:16), tolerance = 1e-9)
 })
 
+test_that("all-zero weights raise an error rather than silently returning NaN", {
+	skip_if_not_installed("exactextractr")
+	skip_if_not_installed("terra")
+
+	d = make_test_data()
+	w0 = methods::as(d$x, "SpatRaster")
+	terra::values(w0) = 0
+
+	expect_error(
+		aggregate(d$x, d$polys, mean, exact = TRUE, weights = w0),
+		"all zero")
+})
+
 test_that("weights warns when exact = FALSE", {
 	d = make_test_data()
 	w_raster = methods::as(d$x, "SpatRaster")
 
 	expect_warning(
 		aggregate(d$x, d$polys, mean, weights = w_raster),
-		"honoured only when")
+		"is ignored when")
 })
 
 test_that("transform applies in the non-exact path as well", {

@@ -12,8 +12,8 @@
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @param exact logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells
-#' @param weights optional \code{SpatRaster} (or single-attribute \code{stars}) of secondary per-cell weights, e.g. population or cropland area
-#' @param transform optional function, or one-sided formula evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2}, \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}. Units on \code{x} are dropped when \code{transform} is non-NULL.
+#' @param weights \code{SpatRaster} or single-attribute \code{stars} with secondary per-cell weights, e.g. population or cropland area; only used when \code{exact = TRUE}
+#' @param transform function or one-sided formula, evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2} or \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}; units on \code{x} are dropped when set
 #' @seealso \link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
 #' @export
 #' @aliases aggregate
@@ -137,6 +137,8 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				stop("`weights` must align with `x` (same CRS, extent, resolution)")
 			w = terra::values(weights)[, 1]
 			w[is.na(w)] = 0
+			if (all(w == 0))
+				stop("`weights` are all zero")
 			m = m * w
 		}
 		if (!identical(FUN, sum)) { # see https://github.com/r-spatial/stars/issues/289
