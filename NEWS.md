@@ -1,5 +1,7 @@
 # version 0.7-3
 
+* in `slice.stars()` and `[.stars()`, `drop` can now also specify names of dimensions to drop; #771
+
 * in `st_extract()` with matrix `at`, drop units and warn if units are incompatible; #770
 
 # version 0.7-2
