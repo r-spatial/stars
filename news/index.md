@@ -2,6 +2,10 @@
 
 ## version 0.7-3
 
+- in [`slice.stars()`](../reference/dplyr.md) and `[.stars()`, `drop`
+  can now also specify names of dimensions to drop;
+  [\#771](https://github.com/r-spatial/stars/issues/771)
+
 - in [`st_extract()`](../reference/st_extract.md) with matrix `at`, drop
   units and warn if units are incompatible;
   [\#770](https://github.com/r-spatial/stars/issues/770)

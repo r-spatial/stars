@@ -45,8 +45,9 @@ st_flip(x, which = 1)
 
 - drop:
 
-  logical; if `TRUE`, degenerate dimensions (with only one value) are
-  dropped
+  logical or character; if `TRUE`, degenerate dimensions (with only one
+  value) are dropped; if `character` name(s) of the degenerate
+  dimension(s) to drop
 
 - crop:
 
