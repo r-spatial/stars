@@ -9,7 +9,7 @@ st_contour(
   x,
   na.rm = TRUE,
   contour_lines = FALSE,
-  breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks
+  breaks = pretty(na.omit(as.vector(x[[1]])))
 )
 ```
 

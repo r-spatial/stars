@@ -2,12 +2,15 @@
 
 ## version 0.7-3
 
+- move dependency `classInt` to Suggests:, deal with simple cases
+  locally
+
 - in [`slice.stars()`](../reference/dplyr.md) and `[.stars()`, `drop`
   can now also specify names of dimensions to drop;
   [\#771](https://github.com/r-spatial/stars/issues/771)
 
-- in [`st_extract()`](../reference/st_extract.md) with matrix `at`, drop
-  units and warn if units are incompatible;
+- in [`st_extract()`](../reference/st_extract.md) with matrix `at`, if
+  units are incompatible drop them and warn;
   [\#770](https://github.com/r-spatial/stars/issues/770)
 
 ## version 0.7-2
