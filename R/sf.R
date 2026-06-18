@@ -258,7 +258,7 @@ st_as_sf.stars_proxy = function(x, ..., downsample = 0) {
 #' @seealso for polygonizing rasters following grid boundaries, see \link{st_as_sf} with arguments \code{as_points=FALSE} and \code{merge=TRUE}; \link{contour} plots contour lines using R's native algorithm (which also plots contour levels)
 #' @export
 st_contour = function(x, na.rm = TRUE, contour_lines = FALSE, 
-		breaks = classInt::classIntervals(na.omit(as.vector(x[[1]])))$brks) {
+		breaks = pretty(na.omit(as.vector(x[[1]])))) {
 #nocov start
 	x = st_normalize(x)
 	mask = if (na.rm) { 

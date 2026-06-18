@@ -5,7 +5,6 @@
 #' @importFrom tools file_ext
 #' @importFrom methods as slotNames new slot
 #' @importFrom abind abind adrop asub
-#' @importFrom classInt classIntervals
 #' @importFrom parallel parApply
 #' @importFrom rlang %||%
 #' @import sf
