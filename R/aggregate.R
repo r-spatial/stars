@@ -141,17 +141,22 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 				stop("`weights` are all zero")
 			m = m * w
 		}
-		if (!identical(FUN, sum)) { # see https://github.com/r-spatial/stars/issues/289
-			if (isTRUE(as.character(as.list(FUN)[[3]])[2] == "mean"))
-				m = sweep(m, 2, colSums(m), "/") # mean: divide weights by the sum of weights
-			else
-				stop("for exact=TRUE, FUN should either be mean or sum")
-		}
+		is_mean = !identical(FUN, sum) # see https://github.com/r-spatial/stars/issues/289
+		if (is_mean && !isTRUE(as.character(as.list(FUN)[[3]])[2] == "mean"))
+			stop("for exact=TRUE, FUN should either be mean or sum")
+		na.rm = isTRUE(list(...)$na.rm)
 		new_dim = c(prod(dim(x)[1:2]), prod(dim(x)[-(1:2)]))
 		out_dim = c(ncol(m), dim(x)[-(1:2)])
-		if (isTRUE(list(...)$na.rm))
-			x = st_as_stars(lapply(x, function(y) { y[is.na(y)] = 0.0; y }), dimensions = st_dimensions(x))
-		agg = lapply(x, function(a) array(t(m) %*% array(a, dim = new_dim), dim = out_dim))
+		agg = lapply(x, function(a) {
+			v = array(a, dim = new_dim)
+			present = if (na.rm) !is.na(v) else array(1, dim = dim(v))
+			if (na.rm) #drop NA cells from numerator AND denominator, else NA cells
+				v[is.na(v)] = 0 # still carry coverage*weight in the denominator
+			num = crossprod(m, v)
+			if (is_mean)
+				num = num / crossprod(m, present)
+			array(num, dim = out_dim)
+		})
 		# %*% dropped units, so to propagate units, if present we need to copy (mean/sum):
 		d = create_dimensions(append(setNames(list(create_dimension(values = by)), geom),
 			st_dimensions(x)[-(1:2)]))
