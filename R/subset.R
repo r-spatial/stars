@@ -5,7 +5,7 @@
 #' @param x object of class \code{stars}
 #' @param i first selector: integer, logical or character vector indicating attributes to select, or object of class \code{sf}, \code{sfc}, \code{bbox}, or \code{stars} used as spatial selector; see details
 #' @param ... further (logical or integer vector) selectors, matched by order, to select on individual dimensions
-#' @param drop logical; if \code{TRUE}, degenerate dimensions (with only one value) are dropped 
+#' @param drop logical or character; if \code{TRUE}, degenerate dimensions (with only one value) are dropped; if \code{character} name(s) of the degenerate dimension(s) to drop
 #' @param crop logical; if \code{TRUE} and parameter \code{i} is a spatial geometry (\code{sf} or \code{sfc}) object, the extent (bounding box) of the result is cropped to match the extent of \code{i} using \link{st_crop}. Cropping curvilinear grids is not supported.
 #' @details If \code{i} is an object of class \code{sf}, \code{sfc} or \code{bbox}, the spatial subset covering this geometry is selected, possibly followed by cropping the extent. Array values for which the cell centre is not inside the geometry are assigned \code{NA}. If \code{i} is of class \code{stars}, and attributes of \code{i} are \code{logical}, cells in \code{x} corresponding to \code{NA} or \code{FALSE} cells in \code{i} are assigned an \code{NA}. Dimension ranges containing negative values or \code{NA} may be partially supported. Character selectors are matched against the names of a dimension if it has names, otherwise to the dimension values.
 #' @export
@@ -72,6 +72,8 @@
 			mc[-(1:2)]
 		else
 			mc[-(1:3)]
+	if ("drop" %in% names(mc))
+		mc = mc[-match("drop", names(mc))]
 
 	do_select = FALSE
 	for (i in seq_along(mc)) { 
@@ -148,8 +150,12 @@
 		}
 	}
 	x = st_as_stars(x, dimensions = d)
-	if (drop)
+	if (is.character(drop))
+		drop = match(drop, names(dim(x)))
+	if (isTRUE(drop))
 		adrop(x)
+	else if (is.integer(drop) || length(drop) > 1)
+		adrop(x, drop = drop)
 	else
 		x
 }

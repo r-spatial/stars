@@ -295,11 +295,27 @@ get_breaks = function(x, breaks, nbreaks, logz = NULL) {
 			values = log10(values)
 		if (is.factor(values) || is.logical(values))
 			values = as.numeric(values)
-		n.unq = length(unique(na.omit(values)))
-		if (! all(is.na(values)) && n.unq > 1)
-			classInt::classIntervals(na.omit(values), min(nbreaks-1, n.unq), breaks,
-				warnSmallN = FALSE)$brks
-		else
+		values = na.omit(values)
+		n.unq = length(unique(values))
+		if (n.unq > 2) {
+			n = min(nbreaks - 1, n.unq)
+			if (breaks == "pretty")
+				pretty(values, n)
+			else if (breaks == "quantile")
+				setNames(quantile(values, seq(0., 1., 1./n)), NULL)
+			else if (breaks == "equal")
+				seq(min(values), max(values), length.out = n + 1)
+			else {
+				if (!requireNamespace("classInt", quietly = TRUE))
+					stop("package classInt required, please install it first")
+				classInt::classIntervals(na.omit(values), n, breaks,
+					warnSmallN = FALSE)$brks
+			}
+		} else if (n.unq == 2) {
+			r = range(values)
+			d = diff(r)
+			c(r[1] - 0.5 * d, mean(r), r[2] + 0.5 * d)
+		} else
 			range(values, na.rm = TRUE) # lowest and highest!
 	} else # breaks was given:
 		breaks
