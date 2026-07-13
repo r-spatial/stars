@@ -12,8 +12,8 @@
 #' @param left.open logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}
 #' @param as_points see \link[stars]{st_as_sf}: shall raster pixels be taken as points, or small square polygons?
 #' @param exact logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells
-#' @param weights \code{SpatRaster} or single-attribute \code{stars} with secondary per-cell weights, e.g. population or cropland area; only used when \code{exact = TRUE}
-#' @param transform function or one-sided formula, evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2} or \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}; units on \code{x} are dropped when set
+#' @param weights single-layer \code{SpatRaster} or \code{stars} object on the same grid as \code{x} with secondary per-cell weights, e.g. population or cropland area. Only used when \code{exact = TRUE}, and cells with \code{NA} weight are treated as zero weight. Not supported for \code{stars_proxy} objects
+#' @param transform function or one-sided formula, evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2} or \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}. Units on \code{x} are dropped when set. Note: any transform that derives parameters from the values it is given is applied separately to each attribute (and to each chunk for \code{stars_proxy} objects), so its results may not be comparable across attributes or chunks, e.g. \code{splines::bs(.x)} places knots at quantiles of its input, so fix such parameters explicitly, as in \code{splines::bs(.x, knots = ..., Boundary.knots = ...)}
 #' @seealso \link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
 #' @export
 #' @aliases aggregate
@@ -69,6 +69,16 @@
 #' }
 #' agg = aggregate(s, f, mean)
 #' plot(agg)
+#'
+#' # exact = TRUE with secondary weights: population-weighted mean
+#' # population density per municipality
+#' if (requireNamespace("exactextractr", quietly = TRUE) &&
+#'     requireNamespace("terra", quietly = TRUE)) {
+#'  dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", package = "exactextractr"))
+#'  pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
+#'  conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
+#'  aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
+#' }
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE, weights = NULL, transform = NULL) {
@@ -89,30 +99,32 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 	stopifnot(!missing(FUN), is.function(FUN))
 	
 	if (!exact && !is.null(weights))
-		warning("`weights` is ignored when `exact = FALSE`")
+		warning("for exact=FALSE, weights is ignored")
 	if (!is.null(transform)) {
-		tf = if (inherits(transform, "formula")) rlang::as_function(transform) else transform
+		tf = rlang::as_function(transform)
 		# tf may return a vector or a matrix, the matrix branch appends a `term`
 		# dimension to x, the vector branch keeps dim(y). for example splines::bs(...)
 		# or ~ cbind(.x, .x^2, .x^3) returns a matrix while x^2 returns a vector
-		probe = tf(seq_len(8))
-		if (is.matrix(probe)) {
-			k = ncol(probe)
-			cn = colnames(probe)
+		tr = lapply(x, function(y) tf(as.vector(y)))
+		d = st_dimensions(x)
+		if (is.matrix(tr[[1]])) {
+			k = ncol(tr[[1]])
+			if (!all(sapply(tr, function(v) is.matrix(v) && ncol(v) == k)))
+				stop("transform must return a matrix with the same number of columns for every attribute")
+			if (!all(mapply(function(v, y) nrow(v) == length(y), tr, x)))
+				stop("transform must return one row per cell value")
+			cn = colnames(tr[[1]])
+			# any unnamed column makes all names default to t1..tk:
 			term_names = if (is.null(cn) || any(is.na(cn) | !nzchar(cn))) paste0("t", seq_len(k)) else cn
-			#^any unnamed column defaults all to t1..tk
-			old_d = st_dimensions(x)
-			a = attributes(old_d)
-			new_d = append(old_d, list(create_dimension(values = term_names)))
-			names(new_d)[length(new_d)] = "term"
-			attr(new_d, "raster") = a$raster
-			attr(new_d, "class") = a$class
-			x = st_as_stars(
-				lapply(x, function(y) array(tf(as.vector(y)), dim = c(dim(y), k))),
-				dimensions = new_d)
-		} else
-			x = st_as_stars(lapply(x, function(y) array(tf(as.vector(y)), dim = dim(y))),
-				dimensions = st_dimensions(x))
+			d = create_dimensions(append(d, list(term = create_dimension(values = term_names))), attr(d, "raster"))
+			x = st_as_stars(mapply(function(v, y) array(v, dim = c(dim(y), k)), tr, x, SIMPLIFY = FALSE),
+				dimensions = d)
+		} else {
+			if (!all(mapply(function(v, y) length(v) == length(y), tr, x)))
+				stop("transform must return one value per cell value")
+			x = st_as_stars(mapply(function(v, y) array(v, dim = dim(y)), tr, x, SIMPLIFY = FALSE),
+				dimensions = d)
+		}
 	}
 
 	if (exact && inherits(by, c("sfc_POLYGON", "sfc_MULTIPOLYGON")) && has_raster(x)) {
@@ -123,22 +135,21 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		x = st_upfront(x)
 		d = st_dimensions(x)[1:2]
 		r = st_as_stars(list(a = array(1, dim = dim(d))), dimensions = d)
-		template = methods::as(r, "SpatRaster")
+		template = as(r, "SpatRaster")
 		e = exactextractr::coverage_fraction(template, by)
 		m = terra::values(do.call(c, e))
 		if (!is.null(weights)) {
 			if (inherits(weights, "stars"))
-				weights = methods::as(weights, "SpatRaster")
+				weights = as(weights, "SpatRaster")
 			if (!inherits(weights, "SpatRaster"))
-				stop("`weights` must be a SpatRaster or single-attribute stars object")
-			if (terra::nlyr(weights) > 1L)
-				stop("`weights` must be a single-layer raster")
-			if (inherits(try(terra::compareGeom(weights, template), silent = TRUE), "try-error"))
-				stop("`weights` must align with `x` (same CRS, extent, resolution)")
+				stop("weights must be a SpatRaster or single-attribute stars object")
+			if (terra::nlyr(weights) > 1)
+				stop("weights must be a single-layer raster")
+			terra::compareGeom(weights, template) # errors if weights does not align with x
 			w = terra::values(weights)[, 1]
 			w[is.na(w)] = 0
 			if (all(w == 0))
-				stop("`weights` are all zero")
+				stop("weights are all zero")
 			m = m * w
 		}
 		is_mean = !identical(FUN, sum) # see https://github.com/r-spatial/stars/issues/289
@@ -149,15 +160,16 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		out_dim = c(ncol(m), dim(x)[-(1:2)])
 		agg = lapply(x, function(a) {
 			v = array(a, dim = new_dim)
-			present = if (na.rm) !is.na(v) else array(1, dim = dim(v))
-			if (na.rm) #drop NA cells from numerator AND denominator, else NA cells
-				v[is.na(v)] = 0 # still carry coverage*weight in the denominator
+			nas = is.na(v)
+			v[nas] = 0
 			num = crossprod(m, v)
-			if (is_mean)
-				num = num / crossprod(m, present)
+			if (is_mean) # na.rm also drops NA cells from the denominator:
+				num = num / (if (na.rm) crossprod(m, !nas) else colSums(m))
+			if (!na.rm && any(nas)) # a group is NA when it covers an NA cell:
+				num[crossprod(m, nas) > 0] = NA
 			array(num, dim = out_dim)
 		})
-		# %*% dropped units, so to propagate units, if present we need to copy (mean/sum):
+		# crossprod dropped units, so to propagate units, if present we need to copy (mean/sum):
 		d = create_dimensions(append(setNames(list(create_dimension(values = by)), geom),
 			st_dimensions(x)[-(1:2)]))
 		for (i in seq_along(x)) {
@@ -167,6 +179,8 @@ aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects,
 		}
 		return(st_as_stars(agg, dimensions = d))
 	}
+	if (exact && !is.null(weights))
+		warning("weights is ignored: exact aggregation requires a polygonal `by' and a raster x")
 
 	values = NULL
 	drop_y = FALSE
@@ -321,6 +335,8 @@ aggregate.stars_proxy = function(x, by, FUN, ...) {
 		if (inherits(by, "stars"))
 			by = st_as_sfc(by, as_points = FALSE)
 		by = st_geometry(by)
+		if (isTRUE(list(...)$exact) && !is.null(list(...)$weights))
+			stop("weights is not supported for stars_proxy objects")
 
 		# this assumes each result of a [ selection is small enough to hold in memory
 		l = lapply(seq_along(by), 

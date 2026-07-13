@@ -137,13 +137,25 @@ test_that("all-zero weights raise an error rather than silently returning NaN", 
 		"all zero")
 })
 
+test_that("weights with stars_proxy input errors cleanly", {
+	d = make_test_data()
+
+	tif = system.file("tif/L7_ETMs.tif", package = "stars")
+	p = read_stars(tif, proxy = TRUE)
+	w = methods::as(d$x, "SpatRaster")
+
+	expect_error(
+		aggregate(p, d$polys, mean, exact = TRUE, weights = w),
+		"not supported for stars_proxy")
+})
+
 test_that("weights warns when exact = FALSE", {
 	d = make_test_data()
 	w_raster = methods::as(d$x, "SpatRaster")
 
 	expect_warning(
 		aggregate(d$x, d$polys, mean, weights = w_raster),
-		"is ignored when")
+		"weights is ignored")
 })
 
 test_that("transform applies in the non-exact path as well", {
@@ -152,4 +164,27 @@ test_that("transform applies in the non-exact path as well", {
 	a = aggregate(d$x, d$polys, mean, exact = FALSE, transform = ~ .x^2)
 
 	expect_s3_class(a, "stars")
+})
+
+test_that("na.rm drops NA cells from the mean denominator, not just numerator", {
+	skip_if_not_installed("exactextractr")
+	skip_if_not_installed("terra")
+
+	bb = sf::st_bbox(c(xmin = 0, ymin = 0, xmax = 2, ymax = 2), crs = 4326)
+	x = st_as_stars(bb, nx = 2, ny = 2, values = NA_real_)
+	x[[1]][] = c(10, 20, 30, NA)
+	poly = sf::st_as_sfc(bb)
+
+	# polygon covers all four cells (coverage 1); the mean must average the three
+	# non-NA cells, not divide their sum by all four
+	a = aggregate(x, poly, mean, exact = TRUE, na.rm = TRUE)
+	expect_equal(as.numeric(a[[1]]), mean(c(10, 20, 30)), tolerance = 1e-9)
+
+	# a heavily weighted NA cell must drop from both sides
+	x[[1]][] = c(20, 20, 20, NA)
+	w = x
+	w[[1]][] = c(1, 1, 1, 5)
+	aw = aggregate(x, poly, mean, exact = TRUE,
+		weights = methods::as(w, "SpatRaster"), na.rm = TRUE)
+	expect_equal(as.numeric(aw[[1]]), 20, tolerance = 1e-9)
 })

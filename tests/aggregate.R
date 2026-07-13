@@ -31,11 +31,27 @@ write_stars(st, tmp)
 sfc = st_set_crs(st_as_sfc(red, as_points = FALSE), st_crs(st))
 (a = aggregate(st, st_sf(a = 1, geom = sfc), mean))
 (a = aggregate(st, sfc, mean))
-if (require(raster)) {
+if (requireNamespace("terra", quietly = TRUE) && requireNamespace("exactextractr", quietly = TRUE)) {
  print(a <- aggregate(st, sfc, mean, exact = TRUE))
  print(a[[1]])
  print(sum(a[[1]])*30 == sum(1:720))
+ # weights:
+ w = st_as_stars(list(w = array(rep(1:5, 24), dim = c(x = 10, y = 12))), dimensions = st_dimensions(st)[1:2])
+ print(all.equal(aggregate(st, sfc, mean, exact = TRUE, weights = w)[[1]][1,1], weighted.mean(st[[1]][1:5,1:6,1], rep(1:5, 6))))
+ print(sum(aggregate(st, sfc, sum, exact = TRUE, weights = w)[[1]][,1]) == sum(st[[1]][,,1] * rep(1:5, 24)))
+ # na.rm: only groups covering an NA cell become NA
+ na_st = st
+ na_st[[1]][1,1,1] = NA
+ a = aggregate(na_st, sfc, mean, exact = TRUE)[[1]]
+ print(is.na(a[1,1]) && !anyNA(a[-1,]) && !anyNA(a[,-1]))
+ print(all.equal(aggregate(na_st, sfc, mean, exact = TRUE, na.rm = TRUE)[[1]][1,1], mean(na_st[[1]][1:5,1:6,1], na.rm = TRUE)))
 }
+
+# transform:
+print(all.equal(aggregate(st, sfc, mean, transform = ~ .x^2)[[1]], aggregate(st^2, sfc, mean)[[1]]))
+a = aggregate(st, sfc, mean, transform = ~ cbind(lin = .x, sq = .x^2))
+print(st_get_dimension_values(a, "term"))
+print(all.equal(unname(a[[1]][,,2]), unname(aggregate(st^2, sfc, mean)[[1]][,])))
 
 tm0 = as.Date("2019-02-19") + -1:8
 (a = aggregate(st, tm0, mean, na.rm = TRUE))
