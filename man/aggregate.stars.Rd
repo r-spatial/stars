@@ -15,7 +15,9 @@
   as_points = any(st_dimension(by) == 2, na.rm = TRUE),
   rightmost.closed = FALSE,
   left.open = FALSE,
-  exact = FALSE
+  exact = FALSE,
+  weights = NULL,
+  transform = NULL
 )
 }
 \arguments{
@@ -38,6 +40,10 @@
 \item{left.open}{logical; used for time intervals, see \link{findInterval} and \link{cut.POSIXt}}
 
 \item{exact}{logical; if \code{TRUE}, use \link[exactextractr]{coverage_fraction} to compute exact overlap fractions of polygons with raster cells}
+
+\item{weights}{single-layer \code{SpatRaster} or \code{stars} object on the same grid as \code{x} with secondary per-cell weights, e.g. population or cropland area. Only used when \code{exact = TRUE}, and cells with \code{NA} weight are treated as zero weight. Not supported for \code{stars_proxy} objects}
+
+\item{transform}{function or one-sided formula, evaluated by \code{rlang::as_function}, applied to cell values before aggregation; e.g. \code{~ .x^2} or \code{~ pmax(0, .x - 10) - pmax(0, .x - 30)}. Units on \code{x} are dropped when set. Note: any transform that derives parameters from the values it is given is applied separately to each attribute (and to each chunk for \code{stars_proxy} objects), so its results may not be comparable across attributes or chunks, e.g. \code{splines::bs(.x)} places knots at quantiles of its input, so fix such parameters explicitly, as in \code{splines::bs(.x, knots = ..., Boundary.knots = ...)}}
 }
 \description{
 spatially or temporally aggregate stars object, returning a data cube with lower spatial or temporal resolution
@@ -94,6 +100,16 @@ f = function(x, format = "\%B") {
 }
 agg = aggregate(s, f, mean)
 plot(agg)
+
+# exact = TRUE with secondary weights: population-weighted mean
+# population density per municipality
+if (requireNamespace("exactextractr", quietly = TRUE) &&
+    requireNamespace("terra", quietly = TRUE)) {
+ dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", package = "exactextractr"))
+ pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
+ conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
+ aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
+}
 }
 \seealso{
 \link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317
