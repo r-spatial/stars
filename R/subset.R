@@ -16,7 +16,7 @@
 #' x[,1:100,100:200,] # select x and y by range
 #' x["L7_ETMs.tif"] # select attribute
 #' xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462,
-#' 9111328.49619133)), .Names = c("x", "y"))
+#' 9111328.49619133)), names = c("x", "y"))
 #' pts = st_as_sf(data.frame(do.call(cbind, xy)), coords = c("x", "y"), crs = st_crs(x))
 #' image(x, axes = TRUE)
 #' plot(st_as_sfc(st_bbox(pts)), col = NA, add = TRUE)
