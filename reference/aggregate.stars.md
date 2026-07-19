@@ -188,9 +188,11 @@ plot(agg)
 if (requireNamespace("exactextractr", quietly = TRUE) &&
     requireNamespace("terra", quietly = TRUE)) {
   dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", 
-    package = "exactextractr"))
-  pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
-  conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
+     package = "exactextractr"))
+  pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", 
+     package = "exactextractr"))
+  conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", 
+     package = "exactextractr"))
   aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
 }
 #> stars object with 1 dimensions and 1 attribute
