@@ -17,7 +17,9 @@ aggregate(
   as_points = any(st_dimension(by) == 2, na.rm = TRUE),
   rightmost.closed = FALSE,
   left.open = FALSE,
-  exact = FALSE
+  exact = FALSE,
+  weights = NULL,
+  transform = NULL
 )
 ```
 
@@ -76,6 +78,26 @@ aggregate(
   logical; if `TRUE`, use
   [coverage_fraction](https://isciences.gitlab.io/exactextractr/reference/coverage_fraction.html)
   to compute exact overlap fractions of polygons with raster cells
+
+- weights:
+
+  single-layer `SpatRaster` or `stars` object on the same grid as `x`
+  with secondary per-cell weights, e.g. population or cropland area.
+  Only used when `exact = TRUE`, and cells with `NA` weight are treated
+  as zero weight. Not supported for `stars_proxy` objects
+
+- transform:
+
+  function or one-sided formula, evaluated by
+  [`rlang::as_function`](https://rlang.r-lib.org/reference/as_function.html),
+  applied to cell values before aggregation; e.g. `~ .x^2` or
+  `~ pmax(0, .x - 10) - pmax(0, .x - 30)`. Units on `x` are dropped when
+  set. Note: any transform that derives parameters from the values it is
+  given is applied separately to each attribute (and to each chunk for
+  `stars_proxy` objects), so its results may not be comparable across
+  attributes or chunks, e.g. `splines::bs(.x)` places knots at quantiles
+  of its input, so fix such parameters explicitly, as in
+  `splines::bs(.x, knots = ..., Boundary.knots = ...)`
 
 ## See also
 
@@ -159,4 +181,27 @@ f = function(x, format = "%B") {
 }
 agg = aggregate(s, f, mean)
 plot(agg)
+
+
+# exact = TRUE with secondary weights: population-weighted mean
+# population density per municipality
+if (requireNamespace("exactextractr", quietly = TRUE) &&
+    requireNamespace("terra", quietly = TRUE)) {
+  dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", 
+    package = "exactextractr"))
+  pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
+  conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
+  aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
+}
+#> stars object with 1 dimensions and 1 attribute
+#> attribute(s):
+#>                                     Min.  1st Qu.   Median     Mean  3rd Qu.
+#> gpw_v411_2020_density_2020.tif  254.4007 646.8237 1517.196 1338.555 2035.736
+#>                                     Max.
+#> gpw_v411_2020_density_2020.tif  2177.256
+#> dimension(s):
+#>      from to refsys point
+#> geom    1  6 WGS 84 FALSE
+#>                                                             values
+#> geom MULTIPOLYGON (((-25.49621...,...,MULTIPOLYGON (((-25.44345...
 ```

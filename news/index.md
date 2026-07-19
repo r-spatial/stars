@@ -2,6 +2,12 @@
 
 ## version 0.7-3
 
+- add weights and arbitrary transforms for
+  [`aggregate()`](../reference/aggregate.stars.md) when `exact=TRUE`;
+  [\#773](https://github.com/r-spatial/stars/issues/773),
+  [\#775](https://github.com/r-spatial/stars/issues/775) by
+  [@rariariari](https://github.com/rariariari)
+
 - move dependency `classInt` to Suggests:, deal with simple cases
   locally
 

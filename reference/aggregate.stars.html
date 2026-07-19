@@ -61,7 +61,9 @@
 <span>  as_points <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_query.html" class="external-link">st_dimension</a></span><span class="op">(</span><span class="va">by</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  rightmost.closed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  left.open <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  exact <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  exact <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transform <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -107,6 +109,14 @@
 
 <dt id="arg-exact">exact<a class="anchor" aria-label="anchor" href="#arg-exact"></a></dt>
 <dd><p>logical; if <code>TRUE</code>, use <a href="https://isciences.gitlab.io/exactextractr/reference/coverage_fraction.html" class="external-link">coverage_fraction</a> to compute exact overlap fractions of polygons with raster cells</p></dd>
+
+
+<dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
+<dd><p>single-layer <code>SpatRaster</code> or <code>stars</code> object on the same grid as <code>x</code> with secondary per-cell weights, e.g. population or cropland area. Only used when <code>exact = TRUE</code>, and cells with <code>NA</code> weight are treated as zero weight. Not supported for <code>stars_proxy</code> objects</p></dd>
+
+
+<dt id="arg-transform">transform<a class="anchor" aria-label="anchor" href="#arg-transform"></a></dt>
+<dd><p>function or one-sided formula, evaluated by <code><a href="https://rlang.r-lib.org/reference/as_function.html" class="external-link">rlang::as_function</a></code>, applied to cell values before aggregation; e.g. <code>~ .x^2</code> or <code>~ pmax(0, .x - 10) - pmax(0, .x - 30)</code>. Units on <code>x</code> are dropped when set. Note: any transform that derives parameters from the values it is given is applied separately to each attribute (and to each chunk for <code>stars_proxy</code> objects), so its results may not be comparable across attributes or chunks, e.g. <code>splines::bs(.x)</code> places knots at quantiles of its input, so fix such parameters explicitly, as in <code>splines::bs(.x, knots = ..., Boundary.knots = ...)</code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -189,6 +199,28 @@
 <span class="r-in"><span><span class="va">agg</span> <span class="op">=</span> <span class="fu">aggregate</span><span class="op">(</span><span class="va">s</span>, <span class="va">f</span>, <span class="va">mean</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="plot.html">plot</a></span><span class="op">(</span><span class="va">agg</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="aggregate.stars-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># exact = TRUE with secondary weights: population-weighted mean</span></span></span>
+<span class="r-in"><span><span class="co"># population density per municipality</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"exactextractr"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"terra"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">dens</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sao_miguel/gpw_v411_2020_density_2020.tif"</span>, </span></span>
+<span class="r-in"><span>    package <span class="op">=</span> <span class="st">"exactextractr"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">pop</span> <span class="op">=</span> <span class="fu"><a href="read_stars.html">read_stars</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sao_miguel/gpw_v411_2020_count_2020.tif"</span>, package <span class="op">=</span> <span class="st">"exactextractr"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">conc</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"sao_miguel/concelhos.gpkg"</span>, package <span class="op">=</span> <span class="st">"exactextractr"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">aggregate</span><span class="op">(</span><span class="va">dens</span>, <span class="va">conc</span>, <span class="va">mean</span>, exact <span class="op">=</span> <span class="cn">TRUE</span>, weights <span class="op">=</span> <span class="va">pop</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stars object with 1 dimensions and 1 attribute</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attribute(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                     Min.  1st Qu.   Median     Mean  3rd Qu.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gpw_v411_2020_density_2020.tif  254.4007 646.8237 1517.196 1338.555 2035.736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                     Max.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gpw_v411_2020_density_2020.tif  2177.256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dimension(s):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      from to refsys point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom    1  6 WGS 84 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                             values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom MULTIPOLYGON (((-25.49621...,...,MULTIPOLYGON (((-25.44345...</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -200,7 +232,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>
