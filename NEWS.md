@@ -1,5 +1,7 @@
 # version 0.7-3
 
+* add weights and arbitrary transforms for `aggregate()` when `exact=TRUE`; #773, #775 by @rariariari
+
 * move dependency `classInt` to Suggests:, deal with simple cases locally
 
 * in `slice.stars()` and `[.stars()`, `drop` can now also specify names of dimensions to drop; #771

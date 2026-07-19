@@ -74,10 +74,11 @@
 #' # population density per municipality
 #' if (requireNamespace("exactextractr", quietly = TRUE) &&
 #'     requireNamespace("terra", quietly = TRUE)) {
-#'  dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", package = "exactextractr"))
-#'  pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
-#'  conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
-#'  aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
+#'   dens = read_stars(system.file("sao_miguel/gpw_v411_2020_density_2020.tif", 
+#'     package = "exactextractr"))
+#'   pop = read_stars(system.file("sao_miguel/gpw_v411_2020_count_2020.tif", package = "exactextractr"))
+#'   conc = sf::read_sf(system.file("sao_miguel/concelhos.gpkg", package = "exactextractr"))
+#'   aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
 #' }
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
