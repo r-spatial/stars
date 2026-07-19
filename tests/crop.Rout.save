@@ -1,7 +1,7 @@
 
-R version 4.3.1 (2023-06-16) -- "Beagle Scouts"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.6.1 (2026-06-24) -- "Happy Hop"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 > tif = system.file("tif/L7_ETMs.tif", package = "stars")
 > x = read_stars(tif)
 > xy = structure(list(x = c(293253.999046018, 296400.196497684), y = c(9113801.64775462, 
-+ 9111328.49619133)), .Names = c("x", "y"))
++ 9111328.49619133)), names = c("x", "y"))
 > pts = st_as_sf(data.frame(do.call(cbind, xy)), coords = c("x", "y"), crs = st_crs(x))
 > image(x, axes = TRUE)
 > plot(st_as_sfc(st_bbox(pts)), col = NA, add = TRUE)
@@ -91,4 +91,4 @@ In st_crop.stars(l, b) : st_crop: bounding boxes of x and y do not overlap
 > 
 > proc.time()
    user  system elapsed 
-  3.523   0.835   3.478 
+  2.293   1.132   1.918 

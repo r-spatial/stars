@@ -1,7 +1,7 @@
 
-R version 4.3.2 (2023-10-31) -- "Eye Holes"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.6.1 (2026-06-24) -- "Happy Hop"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,14 +21,14 @@ Type 'q()' to quit R.
 > 
 > ## test package
 > test_check("stars")
-[ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
+[ FAIL 0 | WARN 1 | SKIP 4 | PASS 97 ]
 
 ══ Skipped tests (4) ═══════════════════════════════════════════════════════════
 • On CRAN (4): 'test-OpenStreetMap.R:2:3', 'test-ncdf.R:1:1',
   'test-ncproxy.R:1:1', 'test-rectilinear.R:89:3'
 
-[ FAIL 0 | WARN 1 | SKIP 4 | PASS 76 ]
+[ FAIL 0 | WARN 1 | SKIP 4 | PASS 97 ]
 > 
 > proc.time()
    user  system elapsed 
-  5.544   1.440   5.561 
+  9.287   1.234   9.058 

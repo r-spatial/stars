@@ -1,7 +1,7 @@
 
-R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
-Copyright (C) 2024 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R version 4.6.1 (2026-06-24) -- "Happy Hop"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,7 +19,7 @@ Type 'q()' to quit R.
 > library(stars)
 Loading required package: abind
 Loading required package: sf
-Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
+Linking to GEOS 3.12.2, GDAL 3.11.4, PROJ 9.4.1; sf_use_s2() is TRUE
 > ## IGNORE_RDIFF_END
 > 
 > if (suppressPackageStartupMessages(require(sp, quietly = TRUE)) && require(spacetime, quietly = TRUE)) {
@@ -104,12 +104,21 @@ t           1  6 2019-02-20 1 days   Date FALSE
                                                                 values
 geometry POLYGON ((0 12, 5 12, 5 6...,...,POLYGON ((5 6, 10 6, 10 0...
 t                                                                 NULL
-> if (require(raster)) {
+> if (requireNamespace("terra", quietly = TRUE) && requireNamespace("exactextractr", quietly = TRUE)) {
 +  print(a <- aggregate(st, sfc, mean, exact = TRUE))
 +  print(a[[1]])
 +  print(sum(a[[1]])*30 == sum(1:720))
++  # weights:
++  w = st_as_stars(list(w = array(rep(1:5, 24), dim = c(x = 10, y = 12))), dimensions = st_dimensions(st)[1:2])
++  print(all.equal(aggregate(st, sfc, mean, exact = TRUE, weights = w)[[1]][1,1], weighted.mean(st[[1]][1:5,1:6,1], rep(1:5, 6))))
++  print(sum(aggregate(st, sfc, sum, exact = TRUE, weights = w)[[1]][,1]) == sum(st[[1]][,,1] * rep(1:5, 24)))
++  # na.rm: only groups covering an NA cell become NA
++  na_st = st
++  na_st[[1]][1,1,1] = NA
++  a = aggregate(na_st, sfc, mean, exact = TRUE)[[1]]
++  print(is.na(a[1,1]) && !anyNA(a[-1,]) && !anyNA(a[,-1]))
++  print(all.equal(aggregate(na_st, sfc, mean, exact = TRUE, na.rm = TRUE)[[1]][1,1], mean(na_st[[1]][1:5,1:6,1], na.rm = TRUE)))
 + }
-Loading required package: raster
 stars object with 2 dimensions and 1 attribute
 attribute(s):
     Min. 1st Qu. Median  Mean 3rd Qu. Max.
@@ -127,13 +136,26 @@ t                                                                 NULL
 [3,]   88  208  328  448  568  688
 [4,]   93  213  333  453  573  693
 [1] TRUE
+[1] TRUE
+[1] TRUE
+[1] TRUE
+[1] TRUE
+> 
+> # transform:
+> print(all.equal(aggregate(st, sfc, mean, transform = ~ .x^2)[[1]], aggregate(st^2, sfc, mean)[[1]]))
+[1] TRUE
+> a = aggregate(st, sfc, mean, transform = ~ cbind(lin = .x, sq = .x^2))
+> print(st_get_dimension_values(a, "term"))
+[1] "lin" "sq" 
+> print(all.equal(unname(a[[1]][,,2]), unname(aggregate(st^2, sfc, mean)[[1]][,])))
+[1] TRUE
 > 
 > tm0 = as.Date("2019-02-19") + -1:8
 > (a = aggregate(st, tm0, mean, na.rm = TRUE))
 stars object with 3 dimensions and 1 attribute
 attribute(s):
-    Min. 1st Qu. Median  Mean 3rd Qu. Max.  NAs
-A1     1  180.75  360.5 360.5  540.25  720  480
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NAs
+A1     1  180.75  360.5 360.5  540.25  720 480
 dimension(s):
      from to     offset  delta refsys point x/y
 time    1 10 2019-02-18 1 days   Date    NA    
@@ -177,8 +199,8 @@ POINT (-10 -10)
 > (a = aggregate(st, sfc, mean))
 stars object with 2 dimensions and 1 attribute
 attribute(s):
-    Min. 1st Qu. Median  Mean 3rd Qu. Max.  NAs
-A1    28  194.25  360.5 360.5  526.75  693    6
+    Min. 1st Qu. Median  Mean 3rd Qu. Max. NAs
+A1    28  194.25  360.5 360.5  526.75  693   6
 dimension(s):
          from to     offset  delta refsys point
 geometry    1  5         NA     NA WGS 84 FALSE
@@ -201,4 +223,4 @@ t                                                                 NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.734   1.325   4.640 
+  4.871   1.125   4.488 
