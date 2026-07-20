@@ -70,6 +70,7 @@
 #' agg = aggregate(s, f, mean)
 #' plot(agg)
 #'
+#' \donttest{
 #' # exact = TRUE with secondary weights: population-weighted mean
 #' # population density per municipality
 #' if (requireNamespace("exactextractr", quietly = TRUE) &&
@@ -82,6 +83,7 @@
 #'      package = "exactextractr"))
 #'   aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
 #' }
+#' } # donttest
 aggregate.stars = function(x, by, FUN, ..., drop = FALSE, join = st_intersects, 
 		as_points = any(st_dimension(by) == 2, na.rm = TRUE), rightmost.closed = FALSE,
 		left.open = FALSE, exact = FALSE, weights = NULL, transform = NULL) {

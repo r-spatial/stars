@@ -86,6 +86,7 @@ if (require(ncmeta, quietly = TRUE)) {
  read_ncdf(f, ncsub = cbind(start = c(1, 1, 1, 1), count = c(10, 12, 1, 1)))
 }
 
+\donttest{
 if (require(ncmeta, quietly = TRUE)) {
  #' precipitation data in a curvilinear NetCDF
  prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
@@ -105,4 +106,5 @@ if (require(dplyr, quietly = TRUE)) {
   nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
   plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 }
+} # donttest
 }

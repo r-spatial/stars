@@ -101,6 +101,7 @@ f = function(x, format = "\%B") {
 agg = aggregate(s, f, mean)
 plot(agg)
 
+\donttest{
 # exact = TRUE with secondary weights: population-weighted mean
 # population density per municipality
 if (requireNamespace("exactextractr", quietly = TRUE) &&
@@ -113,6 +114,7 @@ if (requireNamespace("exactextractr", quietly = TRUE) &&
      package = "exactextractr"))
   aggregate(dens, conc, mean, exact = TRUE, weights = pop, na.rm = TRUE)
 }
+} # donttest
 }
 \seealso{
 \link[sf]{aggregate}, \link[sf]{st_interpolate_aw}, \link{st_extract}, https://github.com/r-spatial/stars/issues/317

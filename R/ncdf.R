@@ -54,6 +54,7 @@
 #' is \code{NA} then all steps are included. Axis order must match that of the variable/s being read.
 #' @export
 #' @examples
+#' \donttest{
 #' if (require(ncmeta, quietly = TRUE)) {
 #'  #' precipitation data in a curvilinear NetCDF
 #'  prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
@@ -73,6 +74,7 @@
 #'   nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
 #'   plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 #' }
+#' } # donttest
 read_ncdf = function(.x, ..., var = NULL, ncsub = NULL, curvilinear = character(0),
     eps = sqrt(.Machine$double.eps), ignore_bounds = FALSE, make_time = TRUE, make_units = TRUE,
     proxy = NULL, downsample = 0) {

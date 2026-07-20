@@ -73,16 +73,15 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 	else
 		ret
 }
-#' Coerce stars object into a Raster raster or brick
+#' Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster
 #'
-#' Coerce stars object into a Raster raster or brick
-#' @param from object to coerce
+#' Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster
 #' @name as
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Raster-method
 #' @aliases coerce,stars_proxy,Raster-method
 #' @returns RasterLayer or RasterBrick
-#' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick.
+#' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a raster brick or SpatRaster.
 setAs("stars", "Raster", function(from) {
 	if (!requireNamespace("sp", quietly = TRUE))
 		stop("package sp required, please install it first") # nocov
@@ -222,16 +221,11 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 	ret
 }
 
-#' Coerce stars object into a terra SpatRaster
-#'
-#' Coerce stars object into a terra SpatRaster
-#' @param from object to coerce
 #' @name as
 #' @rdname coerce-methods
 #' @aliases coerce,stars,Terra-method
 #' @aliases coerce,stars_proxy,Terra-method
 #' @returns SpatRaster
-#' @details If the stars object has more than three dimensions, all dimensions higher than the third will be collapsed into the third dimensions. If the stars object has only an x/y raster but multiple attributes, these are merged first, then put in a SpatRaster.
 setAs("stars", "SpatRaster", function(from) {
 	if (!requireNamespace("terra", quietly = TRUE))
 		stop("package terra required, please install it first") # nocov
