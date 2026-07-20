@@ -153,6 +153,7 @@ if (require(ncmeta, quietly = TRUE)) {
 #> zlev    1  1             NA    NA             NA    NA      0    
 #> time    1  1 1981-12-31 UTC    NA        POSIXct  TRUE   NULL    
 
+# \donttest{
 if (require(ncmeta, quietly = TRUE)) {
  #' precipitation data in a curvilinear NetCDF
  prec_file = system.file("nc/test_stageiv_xyt.nc", package = "stars")
@@ -179,4 +180,6 @@ if (require(dplyr, quietly = TRUE)) {
   nc = sf::read_sf(system.file("gpkg/nc.gpkg", package = "sf"), "nc.gpkg")
   plot(st_geometry(nc), add = TRUE, reset = FALSE, col = NA)
 }
+
+# } # donttest
 ```

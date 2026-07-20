@@ -17,7 +17,7 @@
   [`coerce,stars_proxy,Raster-method`](coerce-methods.md)
   [`coerce,stars,Terra-method`](coerce-methods.md)
   [`coerce,stars_proxy,Terra-method`](coerce-methods.md) : Coerce stars
-  object into a Raster raster or brick
+  object into a RasterLayer, RasterBrick, or SpatRaster
 - [`contour(`*`<stars>`*`)`](contour.stars.md) : plot contours of a
   stars object
 - [`cut(`*`<array>`*`)`](cut_stars.md)

@@ -183,6 +183,7 @@ agg = aggregate(s, f, mean)
 plot(agg)
 
 
+# \donttest{
 # exact = TRUE with secondary weights: population-weighted mean
 # population density per municipality
 if (requireNamespace("exactextractr", quietly = TRUE) &&
@@ -206,4 +207,5 @@ if (requireNamespace("exactextractr", quietly = TRUE) &&
 #> geom    1  6 WGS 84 FALSE
 #>                                                             values
 #> geom MULTIPOLYGON (((-25.49621...,...,MULTIPOLYGON (((-25.44345...
+# } # donttest
 ```
