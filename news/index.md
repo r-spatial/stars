@@ -2,6 +2,8 @@
 
 ## version 0.7-3
 
+CRAN release: 2026-07-20
+
 - add weights and arbitrary transforms for
   [`aggregate()`](../reference/aggregate.stars.md) when `exact=TRUE`;
   [\#773](https://github.com/r-spatial/stars/issues/773),
