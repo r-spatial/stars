@@ -2,6 +2,16 @@
 
 Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster
 
+## Usage
+
+``` r
+# S4 method for class 'stars,Raster'
+coerce(from, to = "Raster", strict = TRUE)
+
+# S4 method for class 'stars,SpatRaster'
+coerce(from, to = "SpatRaster", strict = TRUE)
+```
+
 ## Value
 
 RasterLayer or RasterBrick

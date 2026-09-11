@@ -12,12 +12,9 @@
   [`c(`*`<stars>`*`)`](c.stars.md) : combine multiple stars objects, or
   combine multiple attributes in a single stars object into a single
   array
-- [`as`](coerce-methods.md)
-  [`coerce,stars,Raster-method`](coerce-methods.md)
-  [`coerce,stars_proxy,Raster-method`](coerce-methods.md)
-  [`coerce,stars,Terra-method`](coerce-methods.md)
-  [`coerce,stars_proxy,Terra-method`](coerce-methods.md) : Coerce stars
-  object into a RasterLayer, RasterBrick, or SpatRaster
+- [`coerce(`*`<stars>`*`,`*`<Raster>`*`)`](coerce-methods.md)
+  [`coerce(`*`<stars>`*`,`*`<SpatRaster>`*`)`](coerce-methods.md) :
+  Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster
 - [`contour(`*`<stars>`*`)`](contour.stars.md) : plot contours of a
   stars object
 - [`cut(`*`<array>`*`)`](cut_stars.md)
