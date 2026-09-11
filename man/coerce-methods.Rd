@@ -7,6 +7,11 @@
 \alias{coerce,stars,Terra-method}
 \alias{coerce,stars_proxy,Terra-method}
 \title{Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster}
+\usage{
+\S4method{coerce}{stars,Raster}(from, to = "Raster", strict = TRUE)
+
+\S4method{coerce}{stars,SpatRaster}(from, to = "SpatRaster", strict = TRUE)
+}
 \value{
 RasterLayer or RasterBrick
 

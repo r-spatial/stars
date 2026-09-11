@@ -139,7 +139,6 @@ S3method(st_geometry,stars)
 S3method(st_geotransform,default)
 S3method(st_geotransform,dimensions)
 S3method(st_geotransform,stars)
-S3method(st_interpolate_aw,stars)
 S3method(st_intersects,bbox)
 S3method(st_intersects,stars)
 S3method(st_join,stars)
@@ -206,53 +205,65 @@ export(write_stars)
 exportMethods("%in%")
 import(sf)
 import(units)
-importFrom(abind,abind)
-importFrom(abind,adrop)
-importFrom(abind,asub)
-importFrom(grDevices,cm)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,dev.capabilities)
-importFrom(grDevices,dev.size)
-importFrom(grDevices,grey)
-importFrom(grDevices,rgb)
-importFrom(graphics,axis)
-importFrom(graphics,box)
-importFrom(graphics,contour)
-importFrom(graphics,hist)
-importFrom(graphics,image)
-importFrom(graphics,image.default)
-importFrom(graphics,layout)
-importFrom(graphics,lcm)
-importFrom(graphics,par)
-importFrom(graphics,plot)
-importFrom(graphics,plot.new)
-importFrom(graphics,plot.window)
-importFrom(graphics,rasterImage)
-importFrom(graphics,strwidth)
-importFrom(graphics,text)
-importFrom(graphics,title)
-importFrom(methods,as)
-importFrom(methods,new)
-importFrom(methods,slot)
-importFrom(methods,slotNames)
+importFrom(abind,
+  abind,
+  adrop,
+  asub
+)
+importFrom(grDevices,
+  cm,
+  col2rgb,
+  dev.capabilities,
+  dev.size,
+  grey,
+  rgb
+)
+importFrom(graphics,
+  axis,
+  box,
+  contour,
+  hist,
+  image,
+  image.default,
+  layout,
+  lcm,
+  par,
+  plot,
+  plot.new,
+  plot.window,
+  rasterImage,
+  strwidth,
+  text,
+  title
+)
+importFrom(methods,
+  as,
+  new,
+  slot,
+  slotNames
+)
 importFrom(parallel,parApply)
 importFrom(rlang,"%||%")
-importFrom(stats,aggregate)
-importFrom(stats,complete.cases)
-importFrom(stats,na.omit)
-importFrom(stats,na.pass)
-importFrom(stats,prcomp)
-importFrom(stats,predict)
-importFrom(stats,quantile)
-importFrom(stats,runif)
-importFrom(stats,setNames)
-importFrom(stats,time)
-importFrom(stats,var)
+importFrom(stats,
+  aggregate,
+  complete.cases,
+  na.omit,
+  na.pass,
+  prcomp,
+  predict,
+  quantile,
+  runif,
+  setNames,
+  time,
+  var
+)
 importFrom(tools,file_ext)
-importFrom(utils,head)
-importFrom(utils,methods)
-importFrom(utils,modifyList)
-importFrom(utils,packageVersion)
-importFrom(utils,setTxtProgressBar)
-importFrom(utils,tail)
-importFrom(utils,txtProgressBar)
+importFrom(utils,
+  head,
+  methods,
+  modifyList,
+  packageVersion,
+  setTxtProgressBar,
+  tail,
+  txtProgressBar
+)
