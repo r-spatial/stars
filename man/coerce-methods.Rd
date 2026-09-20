@@ -12,6 +12,13 @@
 
 \S4method{coerce}{stars,SpatRaster}(from, to = "SpatRaster", strict = TRUE)
 }
+\arguments{
+\item{from}{object of class `stars`}
+
+\item{to}{to object}
+
+\item{strict}{logical}
+}
 \value{
 RasterLayer or RasterBrick
 

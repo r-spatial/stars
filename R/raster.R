@@ -78,6 +78,9 @@ st_as_stars.Raster = function(.x, ..., att = 1, ignore_file = FALSE) {
 #' Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster
 #' @name as
 #' @rdname coerce-methods
+#' @param from object of class `stars`
+#' @param to to object
+#' @param strict logical
 #' @aliases coerce,stars,Raster-method
 #' @aliases coerce,stars_proxy,Raster-method
 #' @returns RasterLayer or RasterBrick
