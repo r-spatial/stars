@@ -12,6 +12,20 @@ coerce(from, to = "Raster", strict = TRUE)
 coerce(from, to = "SpatRaster", strict = TRUE)
 ```
 
+## Arguments
+
+- from:
+
+  object of class \`stars\`
+
+- to:
+
+  to object
+
+- strict:
+
+  logical
+
 ## Value
 
 RasterLayer or RasterBrick

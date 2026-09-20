@@ -1,5 +1,10 @@
 # Changelog
 
+## version 0.7-4
+
+- move `st_interpolate_aw.stars()` to sf 1.1-3; see
+  <https://github.com/r-spatial/sf/pull/2624>
+
 ## version 0.7-3
 
 CRAN release: 2026-07-20
