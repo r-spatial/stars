@@ -226,7 +226,7 @@ st_as_stars.SpatRaster = function(.x, ..., ignore_file = FALSE,
 
 #' @name as
 #' @rdname coerce-methods
-#' @aliases coerce,stars,Terra-method
+#' @aliases coerce,stars,SpatRaster-method
 #' @aliases coerce,stars_proxy,Terra-method
 #' @returns SpatRaster
 setAs("stars", "SpatRaster", function(from) {

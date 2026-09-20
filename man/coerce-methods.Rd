@@ -4,7 +4,7 @@
 \alias{as}
 \alias{coerce,stars,Raster-method}
 \alias{coerce,stars_proxy,Raster-method}
-\alias{coerce,stars,Terra-method}
+\alias{coerce,stars,SpatRaster-method}
 \alias{coerce,stars_proxy,Terra-method}
 \title{Coerce stars object into a RasterLayer, RasterBrick, or SpatRaster}
 \usage{
